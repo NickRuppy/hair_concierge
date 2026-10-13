@@ -4,7 +4,7 @@ import type {
   ProfileConcern,
   CuticleCondition,
   DryingMethod,
-  Goal,
+  EngineGoal,
   HairDensity,
   HairLength,
   HairTexture,
@@ -128,7 +128,7 @@ export interface RawHairProfileInput {
   hair_length: HairLength | null
   density: HairDensity | null
   concerns: ProfileConcern[]
-  goals: Goal[]
+  goals: EngineGoal[]
   shampoo_frequency: ProductFrequency | null
   heat_styling: HeatStyling | null
   styling_tools: StylingTool[] | null
@@ -168,7 +168,7 @@ export interface NormalizedProfile {
   thickness: HairThickness | null
   density: HairDensity | null
   concerns: ProfileConcern[]
-  goals: Goal[]
+  goals: EngineGoal[]
   shampooFrequency: ProductFrequency | null
   heatStyling: HeatStyling | null
   stylingTools: StylingTool[] | null

@@ -1,0 +1,148 @@
+{
+  "blindId": "VT09",
+  "inciFingerprintSha256": "da02a486122f7d259660e2f2026fe9613b7af885f06414ab20f5c5ad28840765",
+  "phase": "formula_pass_blind",
+  "standard": "classification-standard.md (candidate shampoo-classification-v1.6.1, scrubbed lane copy)",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "Packet list already ID-2 normalized (WATER/AQUA one entry); names matched case-insensitively; normalized one-based positions; 44 entries.",
+    "e3ProminenceCutoff": "FRAGRANCE/PERFUME @13; entries 1-12 prominent"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "provisional": false,
+      "rationale": "low by C6: no strong anionic; the earliest prominent cleansing surfactant is Cocamidopropyl Hydroxysultaine @2 (amphoteric), followed by mild anionics Disodium Laureth Sulfosuccinate @3, Sodium Lauryl Sulfoacetate @4, Sodium Lauroyl Sarcosinate @5. Cocamidopropylamine Oxide @18 and Sodium Laurate @29 are after the E3 point and recorded only. Counter-signal: three mild anionics.",
+      "ruleIds": ["C3", "C3b", "C4", "C6"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "provisional": false,
+      "rationale": "moderate: one meaningful system, prominent payload oils (Argania Spinosa Kernel Oil @7, Persea Gratissima Oil @8), plus light late routes (humectants Glycerin @15, Panthenol @17, Sodium PCA @21; weak refatter PEG-6 Caprylic/Capric Glycerides @25; cationic conditioners Cinnamidopropyltrimonium Chloride @26, Cocamidopropyl Dimethylamine @30; amino acids and Hydrolyzed Keratin @32-36). C2 not met: no cationic polymer and no pearlizing/fatty route. Counter-signal: no cationic polymer or silicone, so slip may be limited; neighbor low.",
+      "ruleIds": ["5", "C2", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "provisional": false,
+      "rationale": "moderate: two material plant oils (Argan @7, Avocado @8, both before the W-line @13) in a mild chassis (weak reset) plausibly leave noticeable lipid residue, but there is no silicone and no cationic polymer; the only cationic partners are two late quats (Cinnamidopropyltrimonium Chloride @26, Cocamidopropyl Dimethylamine @30) at trace position, weighed as weak evidence, so W-RICH's partner is not judged plausibly persistent and no second persistent family converges. Moderate confidence, neighbor high (heavier side realistic if the late quats are read as a persistent partner).",
+      "evidence": {
+        "silicone": [],
+        "cationic_polymer": [],
+        "cationic_conditioner": ["Cinnamidopropyltrimonium Chloride @26", "Cocamidopropyl Dimethylamine @30 (amidopropyl dimethylamine, cationic_conditioner per 6.3)"],
+        "payload_lipid": ["Argania Spinosa (Argan) Kernel Oil @7 (material)", "Persea Gratissima (Avocado) Oil @8 (material)"],
+        "weak_refatter": ["PEG-6 Caprylic/Capric Glycerides @25"],
+        "protein_film": ["Silk Amino Acids @32", "Keratin Amino Acids @33", "Hydrolyzed Keratin @36"],
+        "film_former": [],
+        "reset": ["Cocamidopropyl Hydroxysultaine @2", "Disodium Laureth Sulfosuccinate @3", "Sodium Lauryl Sulfoacetate @4", "Sodium Lauroyl Sarcosinate @5", "Cocamidopropylamine Oxide @18 (not prominent)", "Sodium Laurate @29 (soap, not prominent)"],
+        "humectantContext": ["Glycerin @15", "Panthenol @17", "Sodium PCA @21", "Butylene Glycol @31"],
+        "excluded": ["PEG-40 Hydrogenated Castor Oil @19 (solubilizer, 6.4)", "PEG-150 Pentaerythrityl Tetrastearate @24 (PEG thickener)", "Simmondsia Chinensis (Jojoba) Seed Extract @12 (extract, not a nonvolatile oil)", "botanical extracts @9-11"],
+        "unresolved": ["Sodium Polystyrene Sulfonate @14 (anionic sulfonated polymer, no cationic charge; post-fragrance; not plausibly band-moving)"]
+      },
+      "wLine": {
+        "position": 13,
+        "inci": "FRAGRANCE/PERFUME",
+        "classes": ["fragrance"],
+        "cap": "e3Point @13 (FRAGRANCE/PERFUME)",
+        "alphabeticalRuns": [],
+        "skipped": [],
+        "codes": [],
+        "payloadLipidMaterial": ["Argania Spinosa Kernel Oil @7", "Persea Gratissima Oil @8"],
+        "payloadLipidNonMaterial": [],
+        "note": "No class a-c candidate precedes the E3 marker; the marker itself is the earliest plausible candidate (W-LINE 3), so no fallback code."
+      },
+      "depositionLoad": "moderate",
+      "depositionLoadRationale": "Two prominent oils; other routes late and light.",
+      "persistence": "moderate",
+      "persistenceRationale": "Oils can persist under a mild chassis; no silicone/cationic polymer system.",
+      "resetCapacity": "weak",
+      "resetCapacityRationale": "C6 low chassis.",
+      "counterevidence": "W-RICH would be met if the late quats @26/@30 count as a plausibly persistent cationic partner; with weak reset that would reach the high anchor's rich route.",
+      "whyThisBand": "Material oils under weak reset make residue plausible but bounded.",
+      "whyNotNeighborBand": "high needs a plausibly persistent silicone/cationic partner for W-RICH or two converging persistent families; the only cationic entries are trace-position quats (@26, @30, after the chelators and citric acid) and the proteins are late amino acids. low is excluded: two material oils in a weak-reset chassis.",
+      "confidenceLimitingFactor": "Whether the late quats count as a plausibly persistent W-RICH partner (judgment; alternative high).",
+      "ruleIds": ["6.3", "6.6", "W-RICH", "W-LINE", "W2", "W3", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "provisional": true,
+      "rationale": "Provisional, claim-dependent: claims hidden. Moisture-leaning cluster (Argan/Avocado oils @7/@8 plus Glycerin @15, Panthenol @17, Sodium PCA @21) with late keratin/amino acids; provisional verdict moisture_supported.",
+      "careDirection": {
+        "verdict": "moisture_supported (provisional)",
+        "moistureRoutes": ["Argania Spinosa Kernel Oil @7", "Persea Gratissima Oil @8", "Glycerin @15", "Panthenol @17", "Sodium PCA @21"],
+        "repairRoutes": ["Silk Amino Acids @32", "Keratin Amino Acids @33", "Hydrolyzed Keratin @36 (late)"],
+        "sharedConditioningRoutes": ["Cinnamidopropyltrimonium Chloride @26", "Cocamidopropyl Dimethylamine @30"],
+        "limitation": "Humectants are after the fragrance; no cationic polymer."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "No claims visible in the blind pass.",
+      "ruleIds": ["3.1", "7.3", "F1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["repair"],
+      "provisional": true,
+      "rationale": "Provisional empty default.",
+      "ruleIds": ["8", "N-ALT"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "rationale": "Provisional default regular; not strong, no dandruff active; only frequency wording (U2) could move it.",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: positioning hidden. CSA met through prominent refatting routes (nonvolatile plant oils Argan @7, Avocado @8); no listed comfort route is prominent (Panthenol @17 after E3).",
+      "ruleIds": ["10", "CSA", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "provisional": false,
+      "rationale": "not_supported: complete INCI contains no recognized anti-dandruff active.",
+      "ruleIds": ["11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionic": [],
+      "mildAnionic": ["Disodium Laureth Sulfosuccinate @3", "Sodium Lauryl Sulfoacetate @4", "Sodium Lauroyl Sarcosinate @5", "Sodium Laurate @29 (soap, not prominent)"],
+      "amphoteric": ["Cocamidopropyl Hydroxysultaine @2", "Cocamidopropylamine Oxide @18 (C3b buffer only; not prominent)"],
+      "nonionicCleansing": [],
+      "notCleansing": ["PEG-40 Hydrogenated Castor Oil @19", "PEG-150 Pentaerythrityl Tetrastearate @24", "PEG-6 Caprylic/Capric Glycerides @25"],
+      "c6Reading": "earliest prominent cleansing surfactant amphoteric @2 -> low"
+    },
+    "conditioningRoutes": ["Argania Spinosa Kernel Oil @7", "Persea Gratissima Oil @8", "PEG-6 Caprylic/Capric Glycerides @25", "Cinnamidopropyltrimonium Chloride @26", "Cocamidopropyl Dimethylamine @30", "Silk Amino Acids @32", "Keratin Amino Acids @33", "Hydrolyzed Keratin @36"],
+    "humectants": ["Glycerin @15", "Panthenol @17", "Sodium PCA @21"],
+    "actives": ["Chamomilla Recutita Flower Extract @9", "Lavandula Angustifolia Flower Extract @10", "Rosmarinus Officinalis Leaf Extract @11", "Simmondsia Chinensis Seed Extract @12"],
+    "scalpExposure": ["FRAGRANCE/PERFUME @13", "Alpha-Isomethyl Ionone @43", "Linalool @44"],
+    "recognizedDandruffActives": [],
+    "preservatives": ["Phenoxyethanol @37", "Sodium Benzoate @38", "Chlorphenesin @39", "Potassium Sorbate @40"]
+  },
+  "unresolvedMaterialIngredients": [
+    "Sodium Polystyrene Sulfonate @14: role not named in 6.3/6.4; anionic, post-fragrance; recorded as unresolved, judged not band-moving."
+  ],
+  "uncertainties": [
+    "weightPotential moderate vs high: hinges on whether trace-position quats (@26, @30) are a plausibly persistent W-RICH partner; chose moderate, neighbor high.",
+    "conditioningLevel moderate vs low: oils are the only prominent system; chose moderate."
+  ]
+}

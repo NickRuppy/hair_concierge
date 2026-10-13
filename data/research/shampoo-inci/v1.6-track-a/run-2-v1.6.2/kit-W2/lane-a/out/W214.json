@@ -1,0 +1,330 @@
+{
+ "blindId": "W214",
+ "identity": {
+  "brand": "Pantene",
+  "productName": "Pantene Pro-V Volumen Pur Shampoo",
+  "packSize": "500 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "9b5e9427f281529f077e16f49cad7fe8f7383361a917fd3de236c76e46e7b6ca",
+  "normalization": "ID-2: no split synonym entries; packet positions equal normalized one-based positions.",
+  "completeness": "complete",
+  "formulaSourceTier": 3,
+  "identityConfidence": "high",
+  "e3ProminenceCutoff": "Parfum @6; positions 1-5 prominent"
+ },
+ "normalizedInci": [
+  "1 Aqua",
+  "2 Sodium Laureth Sulfate",
+  "3 Cocamidopropyl Betaine",
+  "4 Sodium Xylenesulfonate",
+  "5 Sodium Chloride",
+  "6 Parfum",
+  "7 Citric Acid",
+  "8 Sodium Benzoate",
+  "9 Sodium Citrate",
+  "10 Sodium Salicylate",
+  "11 Hydroxypropyl Methylcellulose",
+  "12 Sodium Hydroxide",
+  "13 Panthenol",
+  "14 Tetrasodium EDTA",
+  "15 Hexyl Cinnamal",
+  "16 Histidine",
+  "17 Glyoxal"
+ ],
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate @2, prominent buffer Cocamidopropyl Betaine @3, no reinforcing strong anionic. Sodium Xylenesulfonate @4 is a hydrotrope (not a route).",
+   "ruleIds": [
+    "C3",
+    "C4",
+    "C1"
+   ],
+   "counterSignal": "Sodium Xylenesulfonate hydrotrope only."
+  },
+  "conditioningLevel": {
+   "value": "low",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Low: purely cleansing-led; no cationic polymer, silicone, lipid, refatter, protein or pearlizer. The only care ingredient is a trace Panthenol @13 after Parfum @6; Hydroxypropyl Methylcellulose @11 is a nonionic thickener.",
+   "ruleIds": [
+    "5",
+    "C2"
+   ],
+   "counterSignal": "None."
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "evidence": {
+    "cationic_polymer": [],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Sodium Laureth Sulfate @2",
+     "Cocamidopropyl Betaine @3"
+    ],
+    "humectantContext": [
+     "Panthenol @13"
+    ],
+    "excluded": [
+     "Sodium Xylenesulfonate @4 (hydrotrope)",
+     "Hydroxypropyl Methylcellulose @11 (nonionic cellulose thickener, no cationic charge)",
+     "Histidine @16 (amino acid)",
+     "Glyoxal @17 (cellulose processing aid)"
+    ],
+    "unresolved": []
+   },
+   "wLine": {
+    "position": 6,
+    "inci": "Parfum",
+    "candidateClasses": [
+     "fragrance"
+    ],
+    "cap": "e3Point @6 (Parfum)",
+    "alphabeticalRun": "none",
+    "skipped": [],
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "light: no deposition family.",
+   "persistence": "low: nothing to persist.",
+   "resetCapacity": "moderate: C1 SLES/betaine chassis.",
+   "counterevidence": "None.",
+   "whyThisBand": "Low: deposition is absent.",
+   "whyNotNeighborBand": "Not moderate: no deposition family at all (no polymer, silicone, lipid, refatter, protein or film).",
+   "confidenceLimitingFactor": "None.",
+   "rationale": "Low with high confidence: no deposition evidence.",
+   "ruleIds": [
+    "6.3",
+    "6.6"
+   ],
+   "counterSignal": "None."
+  },
+  "focusPrimary": {
+   "value": "volume",
+   "confidence": "moderate",
+   "neighboringAlternative": "general",
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": "Basic cleansing formula with no care cluster; Histidine @16 is a trace amino acid."
+   },
+   "claimRole": "candidate",
+   "counterSignal": "No specific volume route beyond a light, residue-free formula; body copy is retailer-only.",
+   "decisionTrace": "Claim direction volume: 'Volumen' in the exact product name (CL-SRC high); retailer copy 'für voller aussehende Haare', 'speziell für feines, plattes Haar' (low) corroborates. Formula compatible: weightPotential low, conditioningLevel low (no deposition). Decision: volume.",
+   "rationale": "Volume: name-word positioning on a light, compatible formula.",
+   "ruleIds": [
+    "7.2",
+    "CL-SRC",
+    "F-TRACE"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "decisionTrace": "Empty default considered; 'Glanz', 'schützt die Haarbindungen' are retailer-only with no route.",
+   "rationale": "Secondary empty.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3",
+    "F-TRACE"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "moderate",
+   "neighboringAlternative": "frequent",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [
+    "frequent not fired: 'Für die tägliche Haarwäsche geeignet' is Müller retailer copy (low)"
+   ],
+   "rationale": "Default regular: no non-default trigger from a moderate/high-graded source.",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "CL-SRC",
+    "F-TRACE"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "not_targeted: no E2 sensitive or dry-scalp claim unit graded moderate/high (SC1 not met); CSA formula half recorded in the formula pass (not met).",
+   "csaRoute": "none: Panthenol only post-E3; MB excluded by Sodium Laureth Sulfate @2",
+   "ruleIds": [
+    "10",
+    "SC1",
+    "CSA",
+    "MB",
+    "E4",
+    "E2a"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No recognized anti-dandruff active in the complete INCI.",
+   "ruleIds": [
+    "11"
+   ],
+   "counterSignal": "none (mechanical recognition, Section 11)"
+  }
+ },
+ "formulaFacts": {
+  "surfactantClasses": {
+   "strongAnionicEtherSulfonate": [
+    "Sodium Laureth Sulfate @2 (defining)"
+   ],
+   "strongAnionicAlkylSulfate": [],
+   "mildAnionic": [],
+   "amphoteric": [
+    "Cocamidopropyl Betaine @3 (buffer)"
+   ],
+   "nonionicCleansing": [],
+   "notRouteNotBuffer": [
+    "Sodium Xylenesulfonate @4 (hydrotrope)"
+   ]
+  },
+  "conditioningRoutes": [],
+  "humectants": [
+   "Panthenol @13 (post-E3)"
+  ],
+  "actives": [
+   "Panthenol @13",
+   "Histidine @16"
+  ],
+  "recognizedDandruffActives": [],
+  "exposureFlags": [
+   "Parfum @6 (early)",
+   "Hexyl Cinnamal @15",
+   "no cooling agent",
+   "no essential oil"
+  ],
+  "chelatorsPhAdjusters": [
+   "Citric Acid @7",
+   "Sodium Citrate @9",
+   "Sodium Hydroxide @12",
+   "Tetrasodium EDTA @14"
+  ],
+  "preservatives": [
+   "Sodium Benzoate @8",
+   "Sodium Salicylate @10"
+  ]
+ },
+ "claimEvidence": [
+  {
+   "unit": "Volumen Pur (product name)",
+   "source": "name",
+   "grade": "high",
+   "use": "volume focus candidate"
+  },
+  {
+   "unit": "speziell für feines, plattes Haar",
+   "source": "retailer",
+   "grade": "low",
+   "use": "T2: never changes fit"
+  },
+  {
+   "unit": "Für die tägliche Haarwäsche geeignet",
+   "source": "retailer_mueller_de",
+   "grade": "low",
+   "use": "cannot fire frequent"
+  },
+  {
+   "unit": "schützt die Haarbindungen",
+   "source": "retailer",
+   "grade": "low",
+   "use": "no bond-building INCI; marketing note only"
+  }
+ ],
+ "reconciliation": [
+  "focusPrimary: general (provisional; neighbor volume) -> volume; reason: 'Volumen' in the exact product name on a light formula.",
+  "Other properties unchanged."
+ ],
+ "projection": {
+  "status": "proposal_ready_no_review_flags",
+  "thicknessFit": {
+   "fine": "ideal",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "high",
+   "normal": "high",
+   "coarse": "high"
+  },
+  "thicknessRationale": "T1 from weightPotential low (high, N-ALT none) and conditioningLevel low (high, N-ALT none): fine ideal, normal ideal, coarse acceptable; ordinary target, no T6; final fine ideal, normal ideal, coarse acceptable. T4: no neighbor lowers a final tier. T2: thickness/texture claims in the reveal were not used.",
+  "weight": "light",
+  "weightConfidence": "high",
+  "weightRationale": "W-LIVE: weightPotential low -> weight light, 1:1, confidence = weightPotential confidence (high). Claims never move it (6.5 step 5).",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "confidence": "moderate",
+    "rationale": "S-ORDINARY way 1: no qualifying E2 claim unit; retailer copy only, confidence moderate."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1: cleansingStrength moderate with D1 false -> regular. I3: no flag (cleansingStrength high confidence, neighbor none). Bucket expectations: normal expects regular.",
+  "explicitResetPositioning": false,
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D1 false: no Tiefenreinigung/Deep Clean/Clarifying Shampoo/Detox-Reinigung wording and no occasional-use directions from a manufacturer or pack source; D2 not met -> not_flagged.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [],
+  "informationalNotes": [],
+  "catalogDependent": "review_live_value_differs is resolved by the orchestrator against live rows after freeze (lane cannot see the catalog)."
+ },
+ "selfCheck": "6.11/standard self-check: fingerprint matches the frozen packet and the pinned formula-pass record (not edited); claims were hidden during the formula pass; no ingredient, family count or position window assigned the weight band (W-line only gates payload_lipid legs) and the W-line was derived from the frozen list with skipped candidates recorded; depositionLoad/persistence/resetCapacity present; whyNotNeighborBand is specific; N-ALT follows confidence for every property; claims graded per CL-SRC/E1 and none set cleansing, conditioning, weight, thickness fit or a formula gate; projection derived mechanically (T1/T6/T4, W-LIVE, I1/I3, D1-D3, 13.7 rows); no comparison with earlier values was made inside the lane.",
+ "uncertainties": [
+  "'Pro-V' / 'Active Nutri-Plex' map to Panthenol @13 and Histidine @16 (plausible); non-material."
+ ]
+}

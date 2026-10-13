@@ -1,0 +1,500 @@
+{
+  "blindId": "T202",
+  "inciFingerprintSha256": "fea3b6324477fc773b9a0c2ea2b465a6b458949dd3505a7937c284574670e015",
+  "identity": {
+    "productName": "Guhl Frische und Leichtigkeit",
+    "brand": "Guhl",
+    "market": "DE",
+    "packSize": "250 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "No split synonym entries; packet positions equal normalized positions.",
+    "sourceIds": [
+      "formula:T202 (tier 2, complete)",
+      "reveal:T202#0 manufacturer_de [manufacturer_de, grade moderate]",
+      "reveal:T202#1 retailer_dm_de [retailer, grade low]",
+      "reveal:T202#2 retailer_rossmann_de [retailer, grade low]"
+    ]
+  },
+  "status": "classified",
+  "policy": "shampoo-classification-v1.6",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic is ether/sulfonate type with at least one prominent buffer and no prominent reinforcing strong anionic -> moderate. SLES (2) buffered by CAPB (3) and Coco-Glucoside (4).",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 4
+        }
+      ],
+      "counterSignal": "Glyceryl Oleate (6) refatting; few conditioning routes so no strong counter-signal.",
+      "neighboringAlternative": "none",
+      "sourceIds": [
+        "formula:T202 (tier 2, complete)"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "One meaningful conditioning system: Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (8) plus light routes Glyceryl Oleate (6), Panthenol (11), Glycerin (15), Ascorbyl Palmitate (14). C2 not met (no silicone, payload lipid or pearlizer) -> moderate.",
+      "formulaFacts": [
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 8
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 6
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 11
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 15
+        }
+      ],
+      "counterSignal": "Only one cationic polymer and weak refatters; low is the realistic neighbor.",
+      "neighboringAlternative": "low",
+      "sourceIds": [
+        "formula:T202 (tier 2, complete)"
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: one cationic guar plus weak refatters against an effective SLES/betaine/glucoside reset.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Single cationic guar (8); Glyceryl Oleate (6) and Ascorbyl Palmitate (14) are weak refatters."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "No silicone, payload lipid or film former; guar alone is weakly retained."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 moderate SLES chassis with two buffers."
+        }
+      },
+      "evidenceByFamily": {
+        "cationic_polymer": [
+          [
+            "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+            8
+          ]
+        ],
+        "weak_refatter": [
+          [
+            "Glyceryl Oleate",
+            6
+          ],
+          [
+            "Ascorbyl Palmitate",
+            14
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            3
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Coco-Glucoside",
+            4
+          ]
+        ],
+        "humectant_context": [
+          [
+            "Panthenol",
+            11
+          ],
+          [
+            "Glycerin",
+            15
+          ]
+        ]
+      },
+      "excluded": [
+        [
+          "Sorbitan Caprylate",
+          7,
+          "preservative booster/emulsifier, no deposition role"
+        ],
+        [
+          "Zinc PCA",
+          10,
+          "sebum/zinc salt, not deposition"
+        ],
+        [
+          "Citrus Aurantium Peel Oil",
+          22,
+          "fragrance oil (6.4)"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "Guar is listed early (8) and could deposit noticeably with SLES coacervation.",
+      "whyThisBand": "The only deposition is one cationic guar plus weak refatters; reset is effective.",
+      "whyNotNeighborBand": "Not moderate (W2): the two families are a single cationic guar and weak refatters only; no silicone, lipid or film former to form a coacervate payload, and an effective SLES/betaine/glucoside reset faces only light routes.",
+      "confidenceLimitingFactor": "Guar level/charge density unknown; could move to moderate.",
+      "ruleNotes": [
+        "W2"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 8,
+          "family": "cationic_polymer"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 6,
+          "family": "weak_refatter"
+        },
+        {
+          "ingredient": "Ascorbyl Palmitate",
+          "position": 14,
+          "family": "weak_refatter"
+        },
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "family": "anionic_surfactant"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "family": "amphoteric_surfactant"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 4,
+          "family": "nonionic_surfactant"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 11,
+          "family": "humectant_context"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 15,
+          "family": "humectant_context"
+        }
+      ],
+      "canonicalFormula": {
+        "inciFingerprintSha256": "fea3b6324477fc773b9a0c2ea2b465a6b458949dd3505a7937c284574670e015",
+        "sourceTier": 2,
+        "completeness": "complete",
+        "identityConfidence": "high",
+        "captureDate": "not in sealed packet"
+      },
+      "sourceIds": [
+        "formula:T202 (tier 2, complete)"
+      ]
+    },
+    "focusPrimary": {
+      "value": "clarifying",
+      "confidence": "moderate",
+      "neighboringAlternative": "general",
+      "rationale": "Clarifying: the exact German manufacturer page (moderate) positions it as 'Anti-Fett Shampoo ... für normales bis schnell fettendes Haar' and 'Verzögert das Nachfetten' (E2 oily lexicon). F6 compatibility holds: cleansingStrength moderate, conditioningLevel moderate (not high), weightPotential low (not high).",
+      "counterSignal": "Product name ('Frische und Leichtigkeit') does not itself name oily scalp; formula is an ordinary C1 chassis, not a reset architecture; a dandruff active (Piroctone Olamine 13) is present without dandruff positioning.",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3
+        },
+        {
+          "ingredient": "Zinc PCA",
+          "position": 10
+        }
+      ],
+      "claimRole": "candidate",
+      "sourceIds": [
+        "formula:T202 (tier 2, complete)",
+        "reveal:T202#0 manufacturer_de [manufacturer_de, grade moderate]",
+        "reveal:T202#1 retailer_dm_de [retailer, grade low]",
+        "reveal:T202#2 retailer_rossmann_de [retailer, grade low]"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Empty: moisture ('spendet intensiv Feuchtigkeit') appears only in retailer copy (low); formula moisture verdict nonspecific.",
+      "counterSignal": "Secondary candidates fail Section 8 (distinct graded positioning plus independent route).",
+      "formulaFacts": [],
+      "sourceIds": [
+        "formula:T202 (tier 2, complete)",
+        "reveal:T202#0 manufacturer_de [manufacturer_de, grade moderate]",
+        "reveal:T202#1 retailer_dm_de [retailer, grade low]",
+        "reveal:T202#2 retailer_rossmann_de [retailer, grade low]"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Regular: oily-scalp reset intent (U4) exists at moderate grade, but cleansingStrength is moderate, so `alternating` cannot fire; no frequency wording.",
+      "counterSignal": "Reset intent present (Anti-Fett).",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [
+        "strong_plus_reset_intent: not fired (cleansingStrength moderate)"
+      ],
+      "formulaFacts": [],
+      "sourceIds": [
+        "formula:T202 (tier 2, complete)",
+        "reveal:T202#0 manufacturer_de [manufacturer_de, grade moderate]",
+        "reveal:T202#1 retailer_dm_de [retailer, grade low]",
+        "reveal:T202#2 retailer_rossmann_de [retailer, grade low]"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no E2 sensitive or dry scalp claim; 'ohne auszutrocknen' is protective wording (E2a).",
+      "counterSignal": "CSA formula half would pass (Panthenol 11).",
+      "formulaFacts": [
+        {
+          "ingredient": "Panthenol",
+          "position": 11
+        }
+      ],
+      "sourceIds": [
+        "formula:T202 (tier 2, complete)",
+        "reveal:T202#0 manufacturer_de [manufacturer_de, grade moderate]",
+        "reveal:T202#1 retailer_dm_de [retailer, grade low]",
+        "reveal:T202#2 retailer_rossmann_de [retailer, grade low]"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains Piroctone Olamine (position 13), a recognized anti-dandruff active (Section 11). Formula-only; whether a dandruff target projects depends on a dandruff claim (S-DANDRUFF, R17.3).",
+      "counterSignal": "None for the formula fact; positioning not yet visible.",
+      "neighboringAlternative": "none",
+      "sourceIds": [
+        "formula:T202 (tier 2, complete)"
+      ]
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "not_applicable",
+      "moistureRoutes": [],
+      "repairRoutes": [],
+      "sharedConditioningRoutes": [],
+      "limitation": "Focus is clarifying, not a repair/moisture decision."
+    },
+    "claimRole": "candidate",
+    "counterSignal": "Ordinary C1 chassis; oily claim not in product name.",
+    "neighboringAlternative": "general"
+  },
+  "decisionTrace": {
+    "primaryFocus": {
+      "claimDirection": "clarifying via oily-scalp positioning (manufacturer_de, moderate)",
+      "formulaCompatible": true,
+      "compatibleRoute": "C1 moderate SLES chassis, weightPotential low, conditioning moderate (F6)",
+      "decisionReason": "Oily-scalp positioning plus compatible architecture -> clarifying (7.2, F6)"
+    },
+    "secondaryFocus": {
+      "emptyDefaultConsidered": true,
+      "selectedValues": [],
+      "matchingDistinctClaims": [],
+      "independentRoutes": [],
+      "whyDistinctFromPrimary": "n/a",
+      "exceptionCode": null
+    },
+    "usageRole": {
+      "default": "regular",
+      "nonDefaultTriggerCode": "none",
+      "triggerEvidence": [
+        "'Anti-Fett Shampoo' (manufacturer_de, moderate) is reset intent but cleansingStrength is moderate"
+      ],
+      "rationale": "alternating needs a strong formula (Section 9)."
+    }
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W=low, C=moderate -> ideal for fine. Confidence = lowest of inputs (13.8): moderate. T2: thickness/texture claims ignored."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W=low, C=moderate -> ideal for normal. Confidence = lowest of inputs (13.8): moderate. T2: thickness/texture claims ignored."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W=low, C=moderate -> acceptable for coarse. Confidence = lowest of inputs (13.8): moderate. T2: thickness/texture claims ignored."
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential low -> light, 1:1; confidence = weightPotential confidence (13.8)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "oily",
+        "confidence": "moderate",
+        "rationale": "S-OILY: positioning 'Anti-Fett Shampoo', 'für normales bis schnell fettendes Haar', 'Verzögert das Nachfetten' (manufacturer_de, moderate, E1/E2). Formula clause: cleansingStrength moderate, weightPotential low, conditioningLevel moderate -> passes. Confidence = lowest of positioning (moderate), cleansingStrength (high), weightPotential (moderate), conditioningLevel (moderate) = moderate. S-DANDRUFF: active without dandruff claim -> no dandruff target (R17.3)."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate, D1 false -> regular. I3 checked against neighbor none for each projected bucket."
+    },
+    "positioning": {
+      "explicitResetPositioning": {
+        "value": false,
+        "confidence": "high",
+        "rationale": "D1: no 'tiefenrein', 'deep clean', 'clarifying shampoo' or 'detox-reinigung' stem in the name or a manufacturer/pack claim, and no occasional-use directions."
+      }
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "moderate",
+      "rationale": "D2 not met: D1 false (or formula not strong)."
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "dehydriert-fettig",
+        "scalp_route": "oily",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "expectedIntensity": "regular",
+        "liveMatch": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "dehydriert-fettig",
+        "scalp_route": "oily",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "expectedIntensity": "regular",
+        "liveMatch": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "dehydriert-fettig",
+        "scalp_route": "oily",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable",
+        "expectedIntensity": "regular",
+        "liveMatch": "supportive"
+      }
+    ],
+    "required_protocol_roles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_thickness_boundary",
+        "detail": "fine: ideal; weightPotential neighbor moderate -> acceptable"
+      }
+    ],
+    "informationalNotes": [
+      {
+        "code": "active_without_dandruff_positioning",
+        "detail": "Piroctone Olamine (13) present; no dandruff claim in any source."
+      }
+    ],
+    "researchCombinationTargets": [],
+    "researchCombinationConfidence": null,
+    "liveComparison": "review_live_value_differs not computed in the lane (catalog-dependent, resolved by the orchestrator after freeze, 14)."
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "general (provisional, low)",
+      "final": "clarifying",
+      "evidence": "manufacturer_de: 'Anti-Fett Shampoo', 'schnell fettendes Haar'",
+      "reason": "Post-unblind reconciliation (3.2): claims identify/confirm the candidate job; formula compatibility checked against the frozen verdict."
+    },
+    {
+      "property": "focusSecondary",
+      "blind": "[] (provisional, low)",
+      "final": "[] -> unchanged",
+      "evidence": "Revealed positioning",
+      "reason": "Section 8 / F2-F3 checked."
+    },
+    {
+      "property": "usageRole",
+      "blind": "regular (provisional, low)",
+      "final": "regular",
+      "evidence": "no qualifying trigger",
+      "reason": "Section 9 triggers checked mechanically with CL-SRC grades."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blind": "not_targeted (provisional, low; CSA recorded)",
+      "final": "not_targeted",
+      "evidence": "no sensitive/dry claim",
+      "reason": "SC1 positioning plus CSA formula half (Section 10)."
+    },
+    {
+      "property": "cleansingStrength / conditioningLevel / weightPotential / dandruffSupport",
+      "blind": "frozen formula values",
+      "final": "unchanged",
+      "evidence": "Claims may not assign or move formula properties (3.2, 6.5 step 5, C7).",
+      "reason": "No formula error found on reconciliation."
+    }
+  ],
+  "claimToInciChecks": [],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "formulaPassFile": "out/formula-pass/T202.json (frozen before reveal)",
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeWeightSubjudgmentsPresent": true,
+    "whyNotNeighborBandSpecific": true,
+    "w2AppliedWhereTwoOrMoreFamilies": true,
+    "confidenceNamesLimitingUncertainty": "Guar level/charge density unknown; could move to moderate.",
+    "comparisonWithEarlierValuesMadeInLane": false,
+    "noWebUsed": true
+  },
+  "uncertainties": [
+    "Piroctone Olamine without dandruff claim treated as a regular shampoo (R17.3); it restricts no target."
+  ]
+}

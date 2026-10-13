@@ -1,0 +1,600 @@
+{
+  "blindId": "T201",
+  "inciFingerprintSha256": "8c3575d78dbb8cccd4edf7ec1b0e2859980ec328ddca8923caeae347df5fcc90",
+  "identity": {
+    "productName": "Hask Curl Care Shampoo (dm/Müller: 'HASK Shampoo curls + coconut oil'; US: 'Curls + Coconut Oil, Argan Oil & Vitamin E Shampoo')",
+    "brand": "Hask",
+    "market": "DE",
+    "packSize": "473 ml",
+    "formulaSourceTier": 3,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "'Aqua/Water/Eau' is one entry; marker '*' stripped from Polyimide-1 and Polyquaternium-10 (kept as provenance). Normalized positions = packet positions.",
+    "sourceIds": [
+      "formula:T201 (tier 3, complete)",
+      "reveal:T201#0 retailer_dm_de [retailer, grade low]",
+      "reveal:T201#1 retailer_mueller_de [retailer, grade low]",
+      "reveal:T201#2 manufacturer_us [manufacturer_foreign, grade low]"
+    ]
+  },
+  "status": "classified",
+  "policy": "shampoo-classification-v1.6",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic is ether/sulfonate type with at least one prominent buffer and no prominent reinforcing strong anionic -> moderate. Olefin sulfonate at 2 buffered by CAPB (4) and Coco-Glucoside (11).",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium C14-16 Olefin Sulfonate",
+          "position": 2
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 11
+        }
+      ],
+      "counterSignal": "Two payload oils (7, 8), three cationic polymers and weak refatters argue for a softer net feel; sulfonate is a robust anionic. Neither moves the C1 convention.",
+      "neighboringAlternative": "none",
+      "sourceIds": [
+        "formula:T201 (tier 3, complete)"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "C2 met: prominent payload lipids Cocos Nucifera Oil (7) and Argania Spinosa Kernel Oil (8) take the early-silicone place; cationic polymers Polyquaternium-10 (13), Polyquaternium-7 (15), Guar Hydroxypropyltrimonium Chloride (18); pearlizing route Glycol Distearate (21); deliberate humectants Glycerin (5), Panthenol (10). Film former Polyimide-1 (12) and weak refatters (14, 16) add further routes. Multiple complementary systems -> high.",
+      "formulaFacts": [
+        {
+          "ingredient": "Cocos Nucifera Oil",
+          "position": 7
+        },
+        {
+          "ingredient": "Argania Spinosa Kernel Oil",
+          "position": 8
+        },
+        {
+          "ingredient": "Polyquaternium-10",
+          "position": 13
+        },
+        {
+          "ingredient": "Polyquaternium-7",
+          "position": 15
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 18
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 21
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 5
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 10
+        }
+      ],
+      "counterSignal": "No silicone; oils sit after Sodium Chloride, so their level is bounded. Strong-ish sulfonate chassis does not lower conditioning (C2).",
+      "neighboringAlternative": "none",
+      "sourceIds": [
+        "formula:T201 (tier 3, complete)"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: W-RICH holds (prominent oils converging with three cationic polymers), but reset is not limited (C1 sulfonate chassis, resetCapacity moderate), there is no silicone, and the oils are bounded by position; noticeable but bounded residue is the best-supported reading.",
+      "neighboringAlternative": "high",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "high",
+          "rationale": "Three cationic polymers (13, 15, 18), two prominent payload oils (7, 8), a film former (12) and two weak refatters (14, 16) converge."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Cationic polymers can build up, film former adds some persistence; no silicone or waxy lipid; liquid oils largely rinse in a sulfonate chassis."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 moderate chassis: olefin sulfonate buffered by betaine and glucoside; effective ordinary reset, not limited."
+        }
+      },
+      "evidenceByFamily": {
+        "payload_lipid": [
+          [
+            "Cocos Nucifera Oil",
+            7
+          ],
+          [
+            "Argania Spinosa Kernel Oil",
+            8
+          ]
+        ],
+        "film_former": [
+          [
+            "Polyimide-1",
+            12
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Polyquaternium-10",
+            13
+          ],
+          [
+            "Polyquaternium-7",
+            15
+          ],
+          [
+            "Guar Hydroxypropyltrimonium Chloride",
+            18
+          ]
+        ],
+        "weak_refatter": [
+          [
+            "Hydrogenated Palm Glycerides Citrate",
+            14
+          ],
+          [
+            "Glyceryl Oleate",
+            16
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium C14-16 Olefin Sulfonate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            4
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Coco-Glucoside",
+            11
+          ]
+        ],
+        "humectant_context": [
+          [
+            "Glycerin",
+            5
+          ],
+          [
+            "Panthenol",
+            10
+          ]
+        ]
+      },
+      "excluded": [
+        [
+          "Glycol Distearate",
+          21,
+          "pearlizing wax, excluded for weight (6.4)"
+        ],
+        [
+          "Cocamide MIPA",
+          3,
+          "alkanolamide thickener (C3)"
+        ],
+        [
+          "Tocopheryl Acetate",
+          9,
+          "antioxidant"
+        ],
+        [
+          "Tocopherol",
+          17,
+          "antioxidant"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "W-RICH present and three cationic polymers plus a film former is a lot of converging deposition; the heavier band is realistic.",
+      "whyThisBand": "Deposition is clearly plausible across several families, so calling it light would understate residue; W-RICH is present.",
+      "whyNotNeighborBand": "Not high: W-RICH alone does not reach high without limited reset (6.7 limited reset); the olefin sulfonate chassis is an effective reset, there is no silicone or waxy lipid, and the oils sit after Sodium Chloride, so a coating, movement-reducing result is not the best-supported reading.",
+      "confidenceLimitingFactor": "Unknown polymer charge density/levels and oil levels could move it to high.",
+      "ruleNotes": [
+        "W-RICH (limited reset not met)",
+        "W2",
+        "W3 considered: moderate judged better supported, not closely balanced"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Cocos Nucifera Oil",
+          "position": 7,
+          "family": "payload_lipid"
+        },
+        {
+          "ingredient": "Argania Spinosa Kernel Oil",
+          "position": 8,
+          "family": "payload_lipid"
+        },
+        {
+          "ingredient": "Polyimide-1",
+          "position": 12,
+          "family": "film_former"
+        },
+        {
+          "ingredient": "Polyquaternium-10",
+          "position": 13,
+          "family": "cationic_polymer"
+        },
+        {
+          "ingredient": "Polyquaternium-7",
+          "position": 15,
+          "family": "cationic_polymer"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 18,
+          "family": "cationic_polymer"
+        },
+        {
+          "ingredient": "Hydrogenated Palm Glycerides Citrate",
+          "position": 14,
+          "family": "weak_refatter"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 16,
+          "family": "weak_refatter"
+        },
+        {
+          "ingredient": "Sodium C14-16 Olefin Sulfonate",
+          "position": 2,
+          "family": "anionic_surfactant"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "family": "amphoteric_surfactant"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 11,
+          "family": "nonionic_surfactant"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 5,
+          "family": "humectant_context"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 10,
+          "family": "humectant_context"
+        }
+      ],
+      "canonicalFormula": {
+        "inciFingerprintSha256": "8c3575d78dbb8cccd4edf7ec1b0e2859980ec328ddca8923caeae347df5fcc90",
+        "sourceTier": 3,
+        "completeness": "complete",
+        "identityConfidence": "high",
+        "captureDate": "not in sealed packet"
+      },
+      "sourceIds": [
+        "formula:T201 (tier 3, complete)"
+      ]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "neighboringAlternative": "moisture",
+      "rationale": "General: the frozen formula verdict is dual_supported (moisture and repair both supported). Every moisture/repair claim is retailer or foreign-manufacturer copy graded low, and a low claim can never act as tie_breaker (CL-SRC), so the tie stays unresolved and the honest fallback applies (7.2, 7.3).",
+      "counterSignal": "Formula is a rich care architecture and the dominant (low-graded) claim is moisture ('Feuchtigkeitsspendend').",
+      "formulaFacts": [
+        {
+          "ingredient": "Glycerin",
+          "position": 5
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 10
+        },
+        {
+          "ingredient": "Cocos Nucifera Oil",
+          "position": 7
+        },
+        {
+          "ingredient": "Argania Spinosa Kernel Oil",
+          "position": 8
+        },
+        {
+          "ingredient": "Polyquaternium-10",
+          "position": 13
+        }
+      ],
+      "claimRole": "not_applicable",
+      "sourceIds": [
+        "formula:T201 (tier 3, complete)",
+        "reveal:T201#0 retailer_dm_de [retailer, grade low]",
+        "reveal:T201#1 retailer_mueller_de [retailer, grade low]",
+        "reveal:T201#2 manufacturer_us [manufacturer_foreign, grade low]"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "moisture"
+      ],
+      "rationale": "Empty: no claim graded moderate or high; low claims cannot open a secondary role.",
+      "counterSignal": "Secondary candidates fail Section 8 (distinct graded positioning plus independent route).",
+      "formulaFacts": [],
+      "sourceIds": [
+        "formula:T201 (tier 3, complete)",
+        "reveal:T201#0 retailer_dm_de [retailer, grade low]",
+        "reveal:T201#1 retailer_mueller_de [retailer, grade low]",
+        "reveal:T201#2 manufacturer_us [manufacturer_foreign, grade low]"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Regular: 'Ideal für die tägliche Haarwäsche' (dm) and 'Gentle enough for daily use' (US manufacturer) are graded low and cannot fire `frequent` (U2, CL-SRC).",
+      "counterSignal": "Daily-use wording exists only in low-graded sources.",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "formulaFacts": [],
+      "sourceIds": [
+        "formula:T201 (tier 3, complete)",
+        "reveal:T201#0 retailer_dm_de [retailer, grade low]",
+        "reveal:T201#1 retailer_mueller_de [retailer, grade low]",
+        "reveal:T201#2 manufacturer_us [manufacturer_foreign, grade low]"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no E2 sensitive or dry scalp claim unit; 'reinigt sanft' and 'ohne die natürlichen Öle anzugreifen' are mildness/protective wording (E2a).",
+      "counterSignal": "CSA formula half would pass (Panthenol 10, Glycerin 5).",
+      "formulaFacts": [
+        {
+          "ingredient": "Panthenol",
+          "position": 10
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 5
+        }
+      ],
+      "sourceIds": [
+        "formula:T201 (tier 3, complete)",
+        "reveal:T201#0 retailer_dm_de [retailer, grade low]",
+        "reveal:T201#1 retailer_mueller_de [retailer, grade low]",
+        "reveal:T201#2 manufacturer_us [manufacturer_foreign, grade low]"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11).",
+      "counterSignal": "None; formula complete (ID-1).",
+      "neighboringAlternative": "none",
+      "sourceIds": [
+        "formula:T201 (tier 3, complete)"
+      ]
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "dual_supported",
+      "moistureRoutes": [
+        "Glycerin 5",
+        "Panthenol 10"
+      ],
+      "repairRoutes": [
+        "Argania Spinosa Kernel Oil 8",
+        "Polyimide-1 12"
+      ],
+      "sharedConditioningRoutes": [
+        "Polyquaternium-10 13",
+        "Polyquaternium-7 15",
+        "Guar Hydroxypropyltrimonium Chloride 18",
+        "Cocos Nucifera Oil 7"
+      ],
+      "limitation": "Oil and polymer levels bounded by position; no protein or bond route; tie unresolved."
+    },
+    "claimRole": "not_applicable",
+    "counterSignal": "Low-graded moisture claim dominates the retailer copy.",
+    "neighboringAlternative": "moisture"
+  },
+  "decisionTrace": {
+    "primaryFocus": {
+      "claimDirection": "moisture (low-graded retailer/foreign copy)",
+      "formulaCompatible": true,
+      "compatibleRoute": "Glycerin 5 + Panthenol 10 + oils 7/8 + cationic polymers",
+      "decisionReason": "dual_supported tie cannot be broken by a low-graded claim (CL-SRC) -> general"
+    },
+    "secondaryFocus": {
+      "emptyDefaultConsidered": true,
+      "selectedValues": [],
+      "matchingDistinctClaims": [],
+      "independentRoutes": [],
+      "whyDistinctFromPrimary": "n/a",
+      "exceptionCode": null
+    },
+    "usageRole": {
+      "default": "regular",
+      "nonDefaultTriggerCode": "none",
+      "triggerEvidence": [
+        "'Ideal für die tägliche Haarwäsche' (retailer_dm_de, low) - cannot fire"
+      ],
+      "rationale": "No trigger from a moderate/high source."
+    }
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W=moderate, C=high -> acceptable for fine. Confidence = lowest of inputs (13.8): moderate. T2: thickness/texture claims ignored."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W=moderate, C=high -> ideal for normal. Confidence = lowest of inputs (13.8): moderate. T2: thickness/texture claims ignored."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W=moderate, C=high -> ideal for coarse. Confidence = lowest of inputs (13.8): moderate. T2: thickness/texture claims ignored."
+      }
+    ],
+    "weight": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential moderate -> moderate, 1:1; confidence = weightPotential confidence (13.8)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "moderate",
+        "sOrdinaryWays": [
+          1
+        ],
+        "rationale": "S-ORDINARY way 1: no qualifying E2 claim unit. Confidence moderate: only retailer copy and a foreign manufacturer page (graded like retailer copy, E1)."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate, D1 false -> regular. I3 checked against neighbor none for each projected bucket."
+    },
+    "positioning": {
+      "explicitResetPositioning": {
+        "value": false,
+        "confidence": "high",
+        "rationale": "D1: no 'tiefenrein', 'deep clean', 'clarifying shampoo' or 'detox-reinigung' stem in the name or a manufacturer/pack claim, and no occasional-use directions."
+      }
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "moderate",
+      "rationale": "D2 not met: D1 false (or formula not strong)."
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable",
+        "expectedIntensity": "regular",
+        "liveMatch": "supportive"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal",
+        "expectedIntensity": "regular",
+        "liveMatch": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal",
+        "expectedIntensity": "regular",
+        "liveMatch": "ideal"
+      }
+    ],
+    "required_protocol_roles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_thickness_boundary",
+        "detail": "fine: acceptable; weightPotential neighbor high -> not_suited"
+      },
+      {
+        "code": "review_thickness_boundary",
+        "detail": "normal: ideal; weightPotential neighbor high -> acceptable"
+      }
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "researchCombinationConfidence": null,
+    "liveComparison": "review_live_value_differs not computed in the lane (catalog-dependent, resolved by the orchestrator after freeze, 14)."
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "general (provisional, low)",
+      "final": "general",
+      "evidence": "Low-graded moisture claims; dual_supported verdict",
+      "reason": "Post-unblind reconciliation (3.2): claims identify/confirm the candidate job; formula compatibility checked against the frozen verdict."
+    },
+    {
+      "property": "focusSecondary",
+      "blind": "[] (provisional, low)",
+      "final": "[] -> unchanged",
+      "evidence": "Revealed positioning",
+      "reason": "Section 8 / F2-F3 checked."
+    },
+    {
+      "property": "usageRole",
+      "blind": "regular (provisional, low)",
+      "final": "regular",
+      "evidence": "Daily-use wording only in low sources",
+      "reason": "Section 9 triggers checked mechanically with CL-SRC grades."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blind": "not_targeted (provisional, low; CSA recorded)",
+      "final": "not_targeted",
+      "evidence": "No scalp claim",
+      "reason": "SC1 positioning plus CSA formula half (Section 10)."
+    },
+    {
+      "property": "cleansingStrength / conditioningLevel / weightPotential / dandruffSupport",
+      "blind": "frozen formula values",
+      "final": "unchanged",
+      "evidence": "Claims may not assign or move formula properties (3.2, 6.5 step 5, C7).",
+      "reason": "No formula error found on reconciliation."
+    }
+  ],
+  "claimToInciChecks": [],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "formulaPassFile": "out/formula-pass/T201.json (frozen before reveal)",
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeWeightSubjudgmentsPresent": true,
+    "whyNotNeighborBandSpecific": true,
+    "w2AppliedWhereTwoOrMoreFamilies": true,
+    "confidenceNamesLimitingUncertainty": "Unknown polymer charge density/levels and oil levels could move it to high.",
+    "comparisonWithEarlierValuesMadeInLane": false,
+    "noWebUsed": true
+  },
+  "uncertainties": [
+    "Polyimide-1 read as film_former (styling film polymer); alternative: unresolved. Either way weight stays moderate-or-high, not low.",
+    "weightPotential moderate vs high: W-RICH with moderate reset; chose moderate, neighbor high.",
+    "focusPrimary general vs moisture: a lane reading the frozen verdict as moisture_supported (polymers/oils as shared routes) would accept the low claim as candidate and pick moisture at moderate. Kept the frozen dual_supported verdict; claims cannot rewrite it.",
+    "Product name: frozen packet name 'Hask Curl Care Shampoo'; dm/Müller name 'curls + coconut oil'. Neither names a focus (curl is hair_texture, T2)."
+  ]
+}

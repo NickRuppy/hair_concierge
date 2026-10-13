@@ -1,0 +1,162 @@
+{
+  "blindId": "W415",
+  "inciFingerprintSha256": "3ceb8d138cc94cdce820a16cf86f74de83c92a71ee006b43f1753fb4214f4e2a",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, stage A only)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "packSize": "200 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "Packet list already one entry per ingredient; positions are normalized one-based positions (ID-2).",
+    "e3ProminenceCutoff": "Parfum @11; prominent = positions 1-10"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionicEtherSulfonate": ["Sodium Laureth Sulfate @2 (defining anionic)"],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": ["Sodium Lauroyl Sarcosinate @4 (prominent buffer)"],
+      "amphoteric": ["Cocamidopropyl Betaine @15 (after E3 point: recorded, not a buffer)"],
+      "nonionicCleansing": ["Lauryl Glucoside @3 (prominent buffer)"],
+      "notCleansingNotBuffer": ["Sodium Chloride @5", "Laureth-4 @16 (low-ethoxylate thickener)", "Lactic Acid @7", "Sodium Lactate @10"],
+      "reinforcingRoutes": [],
+      "c1c5c6Reading": "C1: ether-sulfate defining anionic, two prominent buffers, no reinforcing route"
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": ["Hydroxypropyl Oxidized Starch PG-Trimonium Chloride @13 (after E3 point)"],
+      "payload_lipid": [],
+      "weak_refatter": [],
+      "silicone": [],
+      "pearlizing_fatty_route": ["Glycol Distearate @12"],
+      "humectants": ["Glycerin @19 (own entry, last)"],
+      "notHumectantRoute": ["Sodium Lactate @10 (pH buffer for C2, F4)"]
+    },
+    "wLine": {
+      "wLine": "Piroctone Olamine @6",
+      "wLineClasses": ["preservative_or_capped_active"],
+      "cap": "e3Point @11 (Parfum)",
+      "alphabeticalRun": "none",
+      "candidatesTested": ["Piroctone Olamine @6: (i) SLES @2, Lauryl Glucoside @3, Sodium Lauroyl Sarcosinate @4 before it ok; (ii) positions 7-10 (Lactic Acid, Sodium Benzoate, Phenoxyethanol, Sodium Lactate) contain no cleansing surfactant, alkanolamide or pearlizer -> plausible"],
+      "skipped": [],
+      "codes": [],
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": []
+    },
+    "actives": {
+      "dandruffActives": ["Piroctone Olamine @6"],
+      "comfortRoutesE4Prominent": [],
+      "humectantRefattingRoutesE4Prominent": ["Sodium Lactate @10 (E4 humectant list)"],
+      "coolingAgents": [],
+      "essentialOils": [],
+      "fragranceMaterials": ["Parfum @11", "Pinene @18 (aroma chemical, not on the closed allergen list)"]
+    },
+    "scalpGateFormulaFacts": {
+      "CSA": "met via prominent E4 humectant route Sodium Lactate @10 (on the E4 humectant/refatting list although not a C2 humectant)",
+      "MB": "not met: Sodium Laureth Sulfate @2 prominent strong anionic",
+      "S-SENSITIVE formula half": "no prominent comfort route and no MB -> would fail",
+      "S-DRY formula half": "Sodium Lactate @10 -> would pass if targeted",
+      "S-OILY formula clause": "cleansing moderate, weight low, conditioning low -> clause passes",
+      "S-DANDRUFF formula half": "dandruffSupport supported"
+    }
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate @2 defining anionic buffered by prominent Lauryl Glucoside @3 and Sodium Lauroyl Sarcosinate @4, no reinforcing strong anionic; Cocamidopropyl Betaine @15 is after the E3 point and is recorded only.",
+      "ruleIds": ["C3", "C4", "C1"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Low: cleansing-led architecture; the only conditioning routes are a cationic starch (Hydroxypropyl Oxidized Starch PG-Trimonium Chloride @13) and a pearlizer (Glycol Distearate @12), both after the E3 point; no silicone, lipid, refatter or protein, and Glycerin is the last entry (@19). C2 not met; reasonable unknowns would not reach moderate.",
+      "ruleIds": ["Section 5 anchors", "C2"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "evidence": {
+        "cationic_polymer": ["Hydroxypropyl Oxidized Starch PG-Trimonium Chloride @13"],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Lauryl Glucoside @3", "Sodium Lauroyl Sarcosinate @4", "Cocamidopropyl Betaine @15 (late)"],
+        "humectantContext": ["Sodium Lactate @10", "Glycerin @19"],
+        "excluded": ["Glycol Distearate @12 (pearlizing wax, 6.4)", "Laureth-4 @16 (thickener)", "Parfum @11, Pinene @18", "Sodium Chloride @5, Lactic Acid @7, Sodium Citrate @14, Citric Acid @17, Sodium Benzoate @8, Phenoxyethanol @9", "Piroctone Olamine @6 (active)"],
+        "unresolved": []
+      },
+      "wLineRecord": "wLine Piroctone Olamine @6 (preservative_or_capped_active); cap e3Point @11; no alphabetical run; no skipped candidates; no codes; no payload_lipid present.",
+      "depositionLoad": "light: one late cationic starch.",
+      "persistence": "low: single late cationic starch; nothing waxy, no silicone.",
+      "resetCapacity": "moderate: C1 SLES chassis with glucoside and sarcosinate buffers.",
+      "counterevidence": "Cationic starch can deposit lightly.",
+      "whyThisBand": "A single late cationic polymer facing an effective sulfate chassis does not plausibly reduce movement or lift.",
+      "whyNotNeighborBand": "Not moderate: one deposition family only, listed after Parfum; no second family (W2 not triggered).",
+      "confidenceLimitingFactor": "None material.",
+      "rationale": "Low: single late cationic starch against moderate C1 reset.",
+      "ruleIds": ["6.3", "6.6", "W2", "W-LINE"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Hydroxypropyl Oxidized Starch PG-Trimonium Chloride @13"],
+        "limitation": "No lengths-care cluster."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Recognized dandruff active Piroctone Olamine @6; acidic lactic system.",
+      "decisionTrace": "Blind: claim direction null; formula compatible with scalp_active if dandruff positioning appears; F6 clarifying conditions also met; provisional general.",
+      "rationale": "Provisional general (claim-dependent; formula-only).",
+      "ruleIds": ["3.1", "7.2", "F6"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["clarifying"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty (claim-dependent).",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "treatment",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional regular (default). dandruffSupport supported: a qualifying dandruff claim graded moderate/high would fire treatment (U3).",
+      "ruleIds": ["Section 9", "U3"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional not_targeted (claims hidden). Formula half: CSA met via listed prominent humectant route Sodium Lactate @10 (E4 humectant/refatting list); MB not met (SLES @2). A dry-scalp unit could reach targeted; an S-SENSITIVE gate would still fail (no comfort route, no MB).",
+      "ruleIds": ["Section 10", "CSA", "MB", "E4", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Supported: the complete INCI contains Piroctone Olamine @6.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "notes": ["Claim-dependent properties are provisional."]
+}

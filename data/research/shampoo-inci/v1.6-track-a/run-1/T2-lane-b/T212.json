@@ -1,0 +1,691 @@
+{
+  "blindId": "T212",
+  "inciFingerprintSha256": "de1c1328234632643df7eaba5f5f27d554680f3efa2ed25ce77e6dcaa59ddc40",
+  "policyId": "shampoo-classification-v1.6",
+  "identity": {
+    "productName": "Syoss Shampoo Intense Keratin",
+    "brand": "Syoss",
+    "market": "DE",
+    "packSize": "440 ml",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "ID-2 split entry: packet entries 'Aqua (Water' and 'Eau)' merged into one entry 'Aqua (Water, Eau)'; all positions below are normalized (raw packet position minus 1 from SLES onward).",
+    "identityNotes": []
+  },
+  "claimGrading": [
+    {
+      "claim": "Repariert schwaches, leicht brüchiges Haar; Keratin-Aufbau-Komplex; füllt das Haar mit Keratin auf",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "use": "repair focus candidate; 'Keratin' maps to Hydrolyzed Keratin (6)"
+    },
+    {
+      "claim": "Intense Keratin (name)",
+      "source": "product name",
+      "grade": "high",
+      "use": "corroborating"
+    },
+    {
+      "claim": "Tiefenpflegende Formel; anschließend eine Tiefenspülung verwenden",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "use": "not D1 (Tiefenpflege/Tiefenspülung excluded)"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate (C1): Sodium Laureth Sulfate (2) defining anionic, buffered by Cocamidopropyl Betaine (3); no reinforcing strong anionic.",
+      "counterSignal": "Single buffer; silicone/refatter load does not move the convention.",
+      "neighboringAlternative": "none",
+      "ruleIds": [
+        "C1",
+        "C3",
+        "C4",
+        "ID-2"
+      ],
+      "sourceIds": [
+        "formula:T212:de1c13282346"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: one meaningful silicone/cationic deposition system (early Dimethicone 7, Amodimethicone 11, Guar Hydroxypropyltrimonium Chloride 12) with light routes Hydrolyzed Keratin (6), PEG-7 Glyceryl Cocoate (5), Glycol Distearate (14), Hydrogenated Castor Oil (13), Apricot Kernel Oil (20). C2 NOT met: no deliberate humectant route (none of Glycerin, Panthenol, Sodium Hyaluronate, Sodium PCA, Urea, Sorbitol, Betaine; Propylene Glycol does not count, R11). No W-RICH (no prominent payload lipid).",
+      "counterSignal": "The other three C2 elements are present (early silicone, cationic polymer, pearlizing route); the missing humectant route is the counter-signal, so high is the neighbor (C2 R11).",
+      "neighboringAlternative": "high",
+      "ruleIds": [
+        "C2",
+        "C2 humectant element (R11)",
+        "W-RICH"
+      ],
+      "sourceIds": [
+        "formula:T212:de1c13282346"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "PEG-7 Glyceryl Cocoate",
+          "position": 5,
+          "role": "weak_refatter / E4 refatting route"
+        },
+        {
+          "ingredient": "Hydrolyzed Keratin",
+          "position": 6,
+          "role": "protein_film"
+        },
+        {
+          "ingredient": "Dimethicone",
+          "position": 7,
+          "role": "early (prominent) silicone"
+        },
+        {
+          "ingredient": "Amodimethicone",
+          "position": 11,
+          "role": "amino-silicone"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 12,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 13,
+          "role": "payload_lipid (waxy), non-prominent"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 14,
+          "role": "pearlizing route"
+        },
+        {
+          "ingredient": "Prunus Armeniaca (Apricot) Kernel Oil",
+          "position": 20,
+          "role": "payload_lipid, trace"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: a persistent silicone system (prominent Dimethicone 7 plus Amodimethicone 11) converges with cationic guar (12) and a prominent keratin film (6); reset is an ordinary buffered SLES chassis and there is no rich lipid architecture.",
+      "formulaFacts": [
+        {
+          "ingredient": "Dimethicone",
+          "position": 7,
+          "family": "silicone"
+        },
+        {
+          "ingredient": "Amodimethicone",
+          "position": 11,
+          "family": "silicone"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 12,
+          "family": "cationic_polymer"
+        },
+        {
+          "ingredient": "Hydrolyzed Keratin",
+          "position": 6,
+          "family": "protein_film"
+        },
+        {
+          "ingredient": "PEG-7 Glyceryl Cocoate",
+          "position": 5,
+          "family": "weak_refatter"
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 13,
+          "family": "payload_lipid"
+        },
+        {
+          "ingredient": "Prunus Armeniaca (Apricot) Kernel Oil",
+          "position": 20,
+          "family": "payload_lipid"
+        },
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "family": "reset"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "family": "reset"
+        }
+      ],
+      "counterSignal": "Three converging deposition families including persistent silicones: high realistic (neighbor high).",
+      "neighboringAlternative": "high",
+      "weightRecord": {
+        "canonicalFormula": {
+          "blindId": "T212",
+          "inciFingerprintSha256": "de1c1328234632643df7eaba5f5f27d554680f3efa2ed25ce77e6dcaa59ddc40",
+          "sourceTier": 2,
+          "completeness": "complete",
+          "identityConfidence": "high",
+          "captureDate": "not stated in the frozen packet",
+          "normalization": "ID-2 split entry: packet entries 'Aqua (Water' and 'Eau)' merged into one entry 'Aqua (Water, Eau)'; all positions below are normalized (raw packet position minus 1 from SLES onward)."
+        },
+        "extractedEvidence": {
+          "silicone": [
+            {
+              "ingredient": "Dimethicone",
+              "position": 7
+            },
+            {
+              "ingredient": "Amodimethicone",
+              "position": 11
+            }
+          ],
+          "cationic_polymer": [
+            {
+              "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+              "position": 12
+            }
+          ],
+          "protein_film": [
+            {
+              "ingredient": "Hydrolyzed Keratin",
+              "position": 6
+            }
+          ],
+          "weak_refatter": [
+            {
+              "ingredient": "PEG-7 Glyceryl Cocoate",
+              "position": 5
+            }
+          ],
+          "payload_lipid": [
+            {
+              "ingredient": "Hydrogenated Castor Oil",
+              "position": 13
+            },
+            {
+              "ingredient": "Prunus Armeniaca (Apricot) Kernel Oil",
+              "position": 20
+            }
+          ],
+          "film_former": [],
+          "reset": [
+            {
+              "ingredient": "Sodium Laureth Sulfate",
+              "position": 2
+            },
+            {
+              "ingredient": "Cocamidopropyl Betaine",
+              "position": 3
+            }
+          ],
+          "excluded": [
+            {
+              "ingredient": "Glycol Distearate",
+              "position": 14,
+              "reason": "pearlizing wax"
+            },
+            {
+              "ingredient": "Laureth-4",
+              "position": 15,
+              "reason": "ethoxylate"
+            },
+            {
+              "ingredient": "PEG-40 Hydrogenated Castor Oil",
+              "position": 16,
+              "reason": "solubilizer (6.4)"
+            },
+            {
+              "ingredient": "PEG-120 Methyl Glucose Dioleate",
+              "position": 17,
+              "reason": "PEG thickener"
+            },
+            {
+              "ingredient": "Laureth-23",
+              "position": 19,
+              "reason": "emulsifier (silicone emulsion)"
+            },
+            {
+              "ingredient": "Trideceth-10",
+              "position": 21,
+              "reason": "emulsifier (silicone emulsion)"
+            }
+          ],
+          "context_humectants": []
+        },
+        "subjudgments": {
+          "depositionLoad": {
+            "value": "moderate",
+            "rationale": "Dimethicone prominent, amodimethicone and guar just after fragrance, keratin prominent; lipids trace."
+          },
+          "persistence": {
+            "value": "moderate",
+            "rationale": "Amodimethicone and dimethicone are substantive; hydrolyzed keratin light."
+          },
+          "resetCapacity": {
+            "value": "moderate",
+            "rationale": "C1 SLES + betaine."
+          }
+        },
+        "w1Check": "W1 conditions (a) and (b) hold (C1 chassis with buffer; silicone + guar + late amodimethicone), but (c) fails: a prominent protein film, Hydrolyzed Keratin (6), reinforces the set. W1 not cited; full 6.6 method decides.",
+        "counterevidence": "Three converging deposition families including persistent silicones: high realistic (neighbor high).",
+        "unresolvedFacts": [],
+        "proposedWeightPotential": "moderate",
+        "whyThisBand": "Silicone/guar/amodimethicone plus keratin give noticeable bounded residue; ordinary reset and no W-RICH keep it short of heavy.",
+        "whyNotNeighborBand": "Not high: no prominent payload lipid (no W-RICH), the keratin is hydrolyzed and light, lipids are trace, and the SLES chassis is effective; not low: a prominent silicone plus amodimethicone and guar is a persistent depositing system (W2).",
+        "confidence": "moderate",
+        "limitingFactor": "Three converging deposition families including persistent silicones: high realistic (neighbor high).",
+        "neighboringAlternative": "high",
+        "claimsAfterUnblind": "Revealed claims do not move the band (6.5 step 5)."
+      },
+      "ruleIds": [
+        "6.3",
+        "6.4",
+        "6.6",
+        "6.7",
+        "6.8"
+      ],
+      "sourceIds": [
+        "formula:T212:de1c13282346"
+      ]
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "moderate",
+      "neighboringAlternative": "general",
+      "rationale": "Repair: manufacturer damage/breakage positioning ('Repariert ... brüchiges Haar', keratin) over a repair_supported formula: Hydrolyzed Keratin (6) with a substantive silicone/amodimethicone/guar deposition cluster (7, 11, 12).",
+      "counterSignal": "Strength claims ('5x stärker') are marketing; repair verdict rests partly on shared silicone conditioning routes.",
+      "formulaFacts": [
+        {
+          "ingredient": "Hydrolyzed Keratin",
+          "position": 6
+        },
+        {
+          "ingredient": "Dimethicone",
+          "position": 7
+        },
+        {
+          "ingredient": "Amodimethicone",
+          "position": 11
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 12
+        }
+      ],
+      "ruleIds": [
+        "7.2",
+        "7.3",
+        "F1"
+      ],
+      "sourceIds": [
+        "reveal:manufacturer_de"
+      ],
+      "careDirection": {
+        "verdict": "repair_supported",
+        "moistureRoutes": [],
+        "repairRoutes": [
+          "Hydrolyzed Keratin 6",
+          "Amodimethicone 11"
+        ],
+        "sharedRoutes": [
+          "Dimethicone 7",
+          "Guar 12",
+          "PEG-7 Glyceryl Cocoate 5"
+        ],
+        "limitation": "No humectant cluster; deposition routes are shared conditioning."
+      },
+      "claimRole": "candidate"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Empty: no distinct secondary positioning.",
+      "counterSignal": "None.",
+      "formulaFacts": [],
+      "ruleIds": [
+        "8"
+      ],
+      "sourceIds": [
+        "reveal"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Regular.",
+      "counterSignal": "No competing trigger fired.",
+      "formulaFacts": [],
+      "ruleIds": [
+        "9",
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "CL-SRC"
+      ],
+      "sourceIds": [
+        "reveal"
+      ],
+      "triggerCode": "none"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no scalp claim.",
+      "counterSignal": "None.",
+      "formulaFacts": [],
+      "ruleIds": [
+        "10"
+      ],
+      "sourceIds": [
+        "reveal"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole; Sodium Salicylate (28) is a preservative.",
+      "neighboringAlternative": "none",
+      "counterSignal": "None: Section 11 is mechanical on the complete INCI.",
+      "formulaFacts": [],
+      "ruleIds": [
+        "11"
+      ]
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "repair_supported",
+      "moistureRoutes": [],
+      "repairRoutes": [
+        "Hydrolyzed Keratin 6",
+        "Amodimethicone 11"
+      ],
+      "sharedRoutes": [
+        "Dimethicone 7",
+        "Guar 12",
+        "PEG-7 Glyceryl Cocoate 5"
+      ],
+      "limitation": "No humectant cluster; deposition routes are shared conditioning."
+    },
+    "claimRole": "candidate",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "repair (moderate; name high)",
+        "formulaCompatible": true,
+        "compatibleRoute": "Hydrolyzed Keratin 6 + silicone/amodimethicone/guar deposition",
+        "decisionReason": "Claim plus repair_supported verdict."
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [],
+        "independentRoutes": [],
+        "whyDistinct": "None.",
+        "exceptionCode": null
+      },
+      "usage": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [
+          "No frequency wording; 'Tiefenpflegende Formel' / 'Tiefenspülung' are not D1 (care terms)."
+        ],
+        "losingTriggers": [],
+        "rationale": "Regular."
+      }
+    }
+  },
+  "weightRecord": {
+    "canonicalFormula": {
+      "blindId": "T212",
+      "inciFingerprintSha256": "de1c1328234632643df7eaba5f5f27d554680f3efa2ed25ce77e6dcaa59ddc40",
+      "sourceTier": 2,
+      "completeness": "complete",
+      "identityConfidence": "high",
+      "captureDate": "not stated in the frozen packet",
+      "normalization": "ID-2 split entry: packet entries 'Aqua (Water' and 'Eau)' merged into one entry 'Aqua (Water, Eau)'; all positions below are normalized (raw packet position minus 1 from SLES onward)."
+    },
+    "extractedEvidence": {
+      "silicone": [
+        {
+          "ingredient": "Dimethicone",
+          "position": 7
+        },
+        {
+          "ingredient": "Amodimethicone",
+          "position": 11
+        }
+      ],
+      "cationic_polymer": [
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 12
+        }
+      ],
+      "protein_film": [
+        {
+          "ingredient": "Hydrolyzed Keratin",
+          "position": 6
+        }
+      ],
+      "weak_refatter": [
+        {
+          "ingredient": "PEG-7 Glyceryl Cocoate",
+          "position": 5
+        }
+      ],
+      "payload_lipid": [
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 13
+        },
+        {
+          "ingredient": "Prunus Armeniaca (Apricot) Kernel Oil",
+          "position": 20
+        }
+      ],
+      "film_former": [],
+      "reset": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3
+        }
+      ],
+      "excluded": [
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 14,
+          "reason": "pearlizing wax"
+        },
+        {
+          "ingredient": "Laureth-4",
+          "position": 15,
+          "reason": "ethoxylate"
+        },
+        {
+          "ingredient": "PEG-40 Hydrogenated Castor Oil",
+          "position": 16,
+          "reason": "solubilizer (6.4)"
+        },
+        {
+          "ingredient": "PEG-120 Methyl Glucose Dioleate",
+          "position": 17,
+          "reason": "PEG thickener"
+        },
+        {
+          "ingredient": "Laureth-23",
+          "position": 19,
+          "reason": "emulsifier (silicone emulsion)"
+        },
+        {
+          "ingredient": "Trideceth-10",
+          "position": 21,
+          "reason": "emulsifier (silicone emulsion)"
+        }
+      ],
+      "context_humectants": []
+    },
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "moderate",
+        "rationale": "Dimethicone prominent, amodimethicone and guar just after fragrance, keratin prominent; lipids trace."
+      },
+      "persistence": {
+        "value": "moderate",
+        "rationale": "Amodimethicone and dimethicone are substantive; hydrolyzed keratin light."
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C1 SLES + betaine."
+      }
+    },
+    "w1Check": "W1 conditions (a) and (b) hold (C1 chassis with buffer; silicone + guar + late amodimethicone), but (c) fails: a prominent protein film, Hydrolyzed Keratin (6), reinforces the set. W1 not cited; full 6.6 method decides.",
+    "counterevidence": "Three converging deposition families including persistent silicones: high realistic (neighbor high).",
+    "unresolvedFacts": [],
+    "proposedWeightPotential": "moderate",
+    "whyThisBand": "Silicone/guar/amodimethicone plus keratin give noticeable bounded residue; ordinary reset and no W-RICH keep it short of heavy.",
+    "whyNotNeighborBand": "Not high: no prominent payload lipid (no W-RICH), the keratin is hydrolyzed and light, lipids are trace, and the SLES chassis is effective; not low: a prominent silicone plus amodimethicone and guar is a persistent depositing system (W2).",
+    "confidence": "moderate",
+    "limitingFactor": "Three converging deposition families including persistent silicones: high realistic (neighbor high).",
+    "neighboringAlternative": "high",
+    "claimsAfterUnblind": "Revealed claims do not move the band (6.5 step 5)."
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate -> acceptable; T4: neighbor weightPotential->high gives not_suited (lower tier) -> review_thickness_boundary"
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate -> ideal; T4: neighbor weightPotential->high gives acceptable (lower tier) -> review_thickness_boundary"
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate, C moderate -> acceptable; T4: no neighbor gives a lower final tier"
+      }
+    ],
+    "weight": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential moderate -> moderate (1:1)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "confidence": "high",
+        "sOrdinaryWays": [
+          1
+        ],
+        "rationale": "Ordinary (way 1): no E2 claim; manufacturer DE source -> high.",
+        "ruleIds": [
+          "S-ORDINARY",
+          "13.8"
+        ]
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate, D1 false -> regular."
+    },
+    "explicitResetPositioning": {
+      "value": false,
+      "confidence": "high",
+      "rationale": "D1 false: 'Tiefenpflegende' and 'Tiefenspülung' share the prefix but are excluded care terms (D1 details)."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "rationale": "D2 requires strong cleansing, clarifying focus, occasional_reset and D1 true; not met."
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable",
+        "bucketExpectedIntensity": "regular",
+        "liveMatch": "supportive"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal",
+        "bucketExpectedIntensity": "regular",
+        "liveMatch": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable",
+        "bucketExpectedIntensity": "regular",
+        "liveMatch": "supportive"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine",
+      "review_thickness_boundary:normal"
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "researchCombinationDetail": "Not a dandruff-primary product; E2b layer 2 does not apply."
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "repair (provisional, low)",
+      "final": "repair (moderate)",
+      "evidence": "manufacturer repair/keratin claims",
+      "reason": "Confirmed."
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedBand": true,
+    "threeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "comparisonWithEarlierValuesOutsideLane": true,
+    "blindRecordUnchangedAfterFreeze": true
+  },
+  "uncertainties": []
+}

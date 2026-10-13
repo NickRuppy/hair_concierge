@@ -4,11 +4,11 @@ Status: **prepared and rehearsed, NOT applied.** Production apply needs Nick's a
 
 | | |
 |---|---|
-| Migration | `supabase/migrations/20261011140000_catalog_completeness_fill_slice1.sql` (sorts after #660's `20261011120000`) |
+| Migration | `supabase/migrations/20261013130000_catalog_completeness_fill_slice1.sql` (sorts after main's latest `20261013120000`) |
 | Batch id (ledger receipts + evidence) | `S5R-06-catalog-completeness-slice1` |
 | Disposition batch (Garnier) | `S5-24-catalog-completeness-slice1` |
 | Content fingerprint | `bfc8bb73a8db3ed6fa73611b9f673278d68b0faa87edb82197105e048a42c823` |
-| Artifact manifest combined sha256 | `54282dbd25bbb096e9718a8d4dd2582ea0f76afe3a090383adb0fff6811e3999` |
+| Artifact manifest combined sha256 | `d25413b2ff1a41c0141424a22177f1f5b071598268e0702dc26074a4887d0ae7` |
 | Prestate capture | `2026-10-11T13:48:49.533788Z` (read-only, prod `pqdkhefxsxkyeqelqegq`) |
 | Schema capture | `2026-10-11T13:52:02.549733Z` (`fixtures/prod-schema-2026-10-11.json`) |
 | Template capture (Codex F01) | `2026-10-11T14:29:45.064989Z`: `application_guidance_protocols` rows of `scalp.rinse-off.v2`, the table's schema + `reject_active_application_content_mutation()`, and the two rinse-off peeling pointers (read-only; ledger re-checked: 376 rows, unchanged) |

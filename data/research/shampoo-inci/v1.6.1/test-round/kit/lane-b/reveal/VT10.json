@@ -1,0 +1,28 @@
+{
+  "blindId": "VT10",
+  "productName": "Curl Wow HOOKED 100% Clean Shampoo",
+  "brand": "Color Wow",
+  "positioningSources": [
+    {
+      "sourceType": "retailer_lookfantastic_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Das Hooked Shampoo mit Root-Locking Technology von Color Wow ist ideal für alle Lockentypen. Es entfernt Ablagerungen und Schmutz und sorgt für kräftiger aussehendes Haar. Das Shampoo wurde mit der Procapil®-Technologie der Marke entwickelt und schützt vor übermäßigem Haarausfall und Haarbruch. Die sanfte Formel spendet dem Haar Feuchtigkeit und sorgt für ein ultraweiches, glänzendes Finish.",
+      "directionsVerbatim": "Auf das nasse Haar auftragen und einmassieren, bis ein Schaum entsteht. Gründlich ausspülen und wiederholen. Wenn du keinen reichhaltigen Schaum erhältst, befinden sich viele Ablagerungen in deinem Haar und du musst das Shampoo möglicherweise ein drittes Mal anwenden."
+    },
+    {
+      "sourceType": "manufacturer_colorwow_uk (295 ml variant)",
+      "sourceKind": "manufacturer_foreign",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Curly Hooked 100% Clean Curl Shampoo with Root-Locking Technology. Residue-free, sulphate-free formula helps anchor hair to prevent shedding + reduce breakage in curly hair. Best for Hair Types: Curly, Coily Hair (Type 3a - 4c curls)",
+      "directionsVerbatim": "After treating with Snag-Free, apply to wet hair and massage into a lather. Rinse thoroughly and repeat. If you don’t achieve a rich, foamy lather, your hair has a lot of build-up and you may require a second shampoo application."
+    },
+    {
+      "sourceType": "manufacturer_colorwow_us (10 fl oz variant)",
+      "sourceKind": "manufacturer_foreign",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Residue-free, sulfate-free formula helps anchor hair to prevent shedding + reduce breakage in curly hair. Hooked curly hair shampoo features our proprietary Procapil® blend to help “anchor” strands at the root, preventing excessive shedding or hair loss from styling stressors (braids, weaves, extensions)",
+      "directionsVerbatim": "1. Apply to wet hair and massage into a lather. Rinse thoroughly and repeat. 2. If you don’t achieve a rich, foamy lather, this means your hair has a lot of buildup and you may require a third shampoo application."
+    }
+  ]
+}

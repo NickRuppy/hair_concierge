@@ -72,3 +72,17 @@ None. Production applies remain separate per-batch approvals.
 ## Superseded research statements
 - `research/r4-user-submitted-14/findings.md`: Bali Curls heat protection → superseded by H4 (no heat protection); Neqi spray ordinary shared protocols → superseded by A1 (bespoke heat-activated guidance in S3).
 - `research/x1-multi-use/facts.md` / `research/r3-*`: retiring the Balea Tiefenreinigung shampoo row → superseded (keeps both rows, Shampoo v1.6 R6); Pantene 7in1 retirement → moved to S5.
+
+
+## Nick's answers to the 11 open questions (2026-10-13)
+1. Bondbuilder tie without K18 → catalogue order, then price (OLAPLEX), Epres shown as equal option. ✔
+2. 68 already-finished drafts → silent assumed „Ist mir egal", nothing reopens. ✔
+3. „Shampoo & Spülung" 2-in-1 → no extra conditioner row. ✔
+4. iOS: only the „Auch nutzbar als" line + per-use view, no save sheet — OK for now, to be fixed later (iOS product saving = own project).
+5. Pantene 7in1: affected plans re-pick the next-best leave-in. ✔
+6. Dry shampoo tint → A: keep the decision-doc rule (universal product, no tint bonus).
+7. Hair-loss scalp care (Neqi rosemary vs L'Oréal Anti-Haarverlust): Nick asked whether L'Oréal's evidence is actually stronger → cited research running; ruling pending.
+8. Pantene HEAT&GLOW in 7 plans → be coherent with 5: affected plans re-pick the next-best alternative (reusable re-pick lane built in S3, reused by S5).
+9. Neqi Diamond Glass spray not actively recommended. ✔
+10. Heat-activated only for users who blow-dry ✔ — existing properties suffice (product `heat_activation_route` + profile heat events).
+11. Does plain blow-drying activate heat-activated products? → cited research running; ruling pending (currently built: only blow-drying with styling counts).

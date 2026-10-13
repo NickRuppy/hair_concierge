@@ -6208,6 +6208,30 @@ test("every committed-group reset also forgets a stale all-deselected grouped sc
   }
 })
 
+test("Hair Tools port: Stage 3 has no Tool-Checkpoint — it moved to the tools module's return", () => {
+  // The old port placed a recommendation-style tool checkpoint after the Stage-3 product
+  // decisions. Task 10 retires that placement: the checkpoint is a host stage after the tools
+  // module (`planStartModuleCompletionEffect`), never a Stage-3 step.
+  const stage3Source = readFileSync(
+    "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "utf8",
+  )
+  for (const retired of [
+    "Stage3ToolCheckpoint",
+    "buildToolCheckpointCards",
+    "data-stage3-tool-checkpoint",
+    "tool-checkpoint",
+    "ToolCheckpoint",
+  ]) {
+    assert.equal(stage3Source.includes(retired), false, `Stage 3 still references ${retired}`)
+  }
+  const hostSource = readFileSync("src/components/personal-plan-start/plan-start-flow.tsx", "utf8")
+  assert.equal(hostSource.includes("Stage3ToolCheckpoint"), false)
+  assert.equal(hostSource.includes("buildToolCheckpointCards"), false)
+  // The Stage-3 completion still opens the Routine directly.
+  assert.match(hostSource, /onOpenRoutine=\{openRoutine\}/)
+})
+
 /* ------------------------------------------------------------------ budget gate */
 
 function budgetStepOf(tree: ReactElement | null) {

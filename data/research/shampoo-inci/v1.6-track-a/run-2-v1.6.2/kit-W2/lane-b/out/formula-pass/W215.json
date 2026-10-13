@@ -1,0 +1,244 @@
+{
+ "blindId": "W215",
+ "inciFingerprintSha256": "926b4f48400d27a381a3854afd2573d0e1c4e1d435d55a78e60691c1f68f60ba",
+ "phase": "formula-pass (blind, stage A only; no reveal opened)",
+ "standard": "shampoo-classification-v1.6.2",
+ "lane": "lane-b",
+ "identity": {
+  "packSize": "250 ml",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high",
+  "normalization": "No synonym or split entries; normalized positions = packet positions (ID-2).",
+  "e3ProminenceCutoff": "Parfum @13; prominent = positions 1-12 (E3)."
+ },
+ "formulaFacts": {
+  "surfactants": {
+   "definingAnionic": "Sodium Laureth Sulfate @2 (strong anionic, ether type)",
+   "reinforcingRoutes": [],
+   "buffers": [
+    "Cocamidopropyl Hydroxysultaine @3 (amphoteric)",
+    "Coco-Glucoside @5 (nonionic glucoside)"
+   ],
+   "notCleansing": [
+    "Laureth-2 @12 (low-ethoxylate thickener)"
+   ],
+   "c3aOrC3b": "none"
+  },
+  "conditioningRoutes": {
+   "cationic_polymer": [
+    "Guar Hydroxypropyltrimonium Chloride @10"
+   ],
+   "protein_film": [
+    "Hydrolyzed Wheat Protein @6"
+   ],
+   "payload_lipid": [],
+   "silicone": [],
+   "weak_refatter": [],
+   "pearlizing": []
+  },
+  "humectants": [
+   "Glycerin @9"
+  ],
+  "actives": [
+   "Hydrolyzed Wheat Protein @6",
+   "Biotin @7 (hair-loss-type ingredient; never a focus route, F5)",
+   "Oryza Sativa Extract @8"
+  ],
+  "recognizedDandruffActives": [],
+  "exposure": {
+   "fragrance": "Parfum @13, Tetramethyl Acetyloctahydronaphthalenes @14, Linalool @15, Hexyl Cinnamal @16, Linalyl Acetate @17",
+   "coolingAgents": [],
+   "essentialOils": []
+  },
+  "csa": {
+   "listedComfortRoutesProminent": [],
+   "listedHumectantRefattingRoutesProminent": [
+    "Glycerin @9"
+   ],
+   "mildBase": "no: prominent Sodium Laureth Sulfate @2",
+   "csaHolds": true,
+   "note": "No prominent comfort route and no MB, so an S-SENSITIVE gate would fail."
+  },
+  "preservativesAndOther": [
+   "Sodium Chloride @4",
+   "Citric Acid @11",
+   "Sodium Benzoate @18"
+  ]
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Moderate: C1 - defining anionic Sodium Laureth Sulfate @2 with prominent buffers Cocamidopropyl Hydroxysultaine @3 and Coco-Glucoside @5, no reinforcing route.",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "E3"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "Moderate: one meaningful system (prominent cationic Guar HPTC @10) plus light routes (Hydrolyzed Wheat Protein @6, Glycerin @9). C2 not met (no silicone, payload lipid or pearlizer). Counter-signal: a single guar plus protein may give little slip; neighbor low.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "E3",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "Low: one cationic guar and one hydrolyzed protein against an effective C1 reset; no silicone, lipid or film former.",
+   "ruleIds": [
+    "6.6",
+    "W-LINE",
+    "W2",
+    "W3",
+    "N-ALT"
+   ],
+   "evidence": {
+    "cationic_polymer": [
+     "Guar Hydroxypropyltrimonium Chloride @10"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "silicone": [],
+    "protein_film": [
+     "Hydrolyzed Wheat Protein @6"
+    ],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Sodium Laureth Sulfate @2",
+     "Cocamidopropyl Hydroxysultaine @3",
+     "Coco-Glucoside @5"
+    ],
+    "humectantContext": [
+     "Glycerin @9"
+    ],
+    "excluded": [
+     "Biotin @7, Oryza Sativa Extract @8 (actives/extracts)",
+     "Laureth-2 @12"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": {
+     "position": 7,
+     "inci": "Biotin",
+     "classes": [
+      "sub1_active"
+     ]
+    },
+    "cap": {
+     "e3Point": 13
+    },
+    "alphabeticalRun": null,
+    "skipped": [],
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "light",
+   "persistence": "low",
+   "resetCapacity": "moderate",
+   "counterevidence": "Two families (cationic_polymer, protein_film, W2).",
+   "whyThisBand": "Deposition is limited to one guar polymer and a water-soluble protein film.",
+   "whyNotNeighborBand": "Not moderate: the families are one light conditioning polymer (guar @10, after the sub-1 % zone marked by Biotin @7) and a light hydrolyzed protein film, facing a moderate SLES/sultaine/glucoside reset (W2 reason: a moderate reset faces only light routes).",
+   "confidenceLimitingFactor": "Guar deposition at low dose; INCI-only."
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "low",
+   "neighboringAlternative": "volume",
+   "rationale": "Provisional, formula-only (claims hidden, 3.1): no exact-product claim is visible, so no focus candidate exists and 7.2 (\"unsupported/absent claims\") gives general. Formula care-direction verdict: nonspecific. Neighbor volume: a light, low-deposition architecture with protein is most compatible with a strength/volume role (hair-loss/biotin positioning would be ignored, F5). Final focus is decided only after the reveal (3.2, 7.2, F1-F7).",
+   "ruleIds": [
+    "3.1",
+    "7.2",
+    "7.3",
+    "F1",
+    "N-ALT"
+   ],
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "Glycerin @9"
+    ],
+    "repairRoutes": [
+     "Hydrolyzed Wheat Protein @6"
+    ],
+    "sharedConditioningRoutes": [
+     "Guar HPTC @10"
+    ],
+    "limitation": "One protein token is not a repair cluster; light generic conditioning. Biotin is out of scope (F5)."
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "No claim visible in the blind pass; formula verdict only. One protein token is not a repair cluster; light generic conditioning. Biotin is out of scope (F5).",
+   "decisionTrace": "Blind: claim direction null; formula verdict nonspecific; decision reason: no candidate claim, provisional general."
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "low",
+   "neighboringAlternative": [
+    "volume"
+   ],
+   "rationale": "Provisional, formula-only: secondary needs distinct exact-product positioning (Section 8), which is hidden in the blind pass; empty default.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3",
+    "N-ALT"
+   ],
+   "decisionTrace": "Empty default considered; no claims visible; no secondary selected."
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "low",
+   "neighboringAlternative": "frequent",
+   "rationale": "Provisional, formula-only: usage triggers need moderate/high-graded claims or directions (Section 9, CL-SRC), hidden in the blind pass; default regular. Neighbor: cleansingStrength is not strong, so explicit frequency wording (U2) could fire frequent.",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U4",
+    "CL-SRC",
+    "N-ALT"
+   ],
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": []
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "low",
+   "neighboringAlternative": "targeted",
+   "rationale": "Provisional, formula-only: positioning (SC1) is hidden, so the default is not_targeted. CSA holds only via the prominent listed humectant route Glycerin @9; no prominent comfort route and MB does not apply (prominent SLES @2). A sensitive/dry-scalp claim graded moderate/high would make it targeted.",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "MB",
+    "SC1",
+    "E4",
+    "N-ALT"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not supported: the complete INCI contains no Piroctone Olamine, Climbazole or Selenium (Di)Sulfide (Section 11).",
+   "ruleIds": [
+    "11",
+    "DS1"
+   ]
+  }
+ },
+ "unresolvedMaterialIngredients": []
+}

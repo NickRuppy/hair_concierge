@@ -15,7 +15,7 @@ import { parseDiscoveryHeatStyling } from "../src/lib/discovery/heat-styling"
 
 /** „Hitze & Styling" step list and the whole object its PUT sends (batch 7, plan §2.1 item 5). */
 
-test("steps: drying, tools, then per heat source its frequency — protection only where production asks", () => {
+test("steps: drying, tools, then per heat source its frequency — protection only where production asks (never for the Diffusor)", () => {
   const draft: DiscoveryHeatDraft = {
     dryingRoutes: ["air_dry", "ordinary_blow_dry", "diffuser_or_airflow_shaping"],
     additionalHeatTools: ["thermal_rollers", "dryer_brush"],
@@ -26,7 +26,6 @@ test("steps: drying, tools, then per heat source its frequency — protection on
     "tools",
     "frequency:ordinary_blow_dry",
     "frequency:diffuser_airflow_shaping",
-    "protection:diffuser_airflow_shaping",
     "frequency:dryer_brush",
     "protection:dryer_brush",
     "frequency:thermal_rollers",
@@ -81,4 +80,46 @@ test("„Keiner dieser Wege“ + „Keine weiteren Tools“ is a complete, valid
   assert.equal(heatSummaryLabel(body!), "Kein Hitze-Styling")
   assert.deepEqual(heatDraftFrom(null), { heatEvents: {} })
   assert.deepEqual(heatDraftFrom(body), body)
+})
+
+test("Diffusor rule: a Diffusor is plain blow-drying — frequency only, a saved protection value never reaches the PUT", () => {
+  const diffuserOnly: DiscoveryHeatDraft = {
+    dryingRoutes: ["diffuser_or_airflow_shaping"],
+    additionalHeatTools: [],
+    heatEvents: {},
+  }
+  assert.deepEqual(discoveryHeatSteps(diffuserOnly).map(heatStepKey), [
+    "drying",
+    "tools",
+    "frequency:diffuser_airflow_shaping",
+    "summary",
+  ])
+  const answered = setHeatEvent(diffuserOnly, "diffuser_airflow_shaping", {
+    frequency: "weekly_2x",
+  })
+  const body = toDiscoveryHeatStyling(answered)
+  assert.deepEqual(body, {
+    dryingRoutes: ["diffuser_or_airflow_shaping"],
+    additionalHeatTools: [],
+    heatEvents: { "heat:diffuser_airflow_shaping": { frequency: "weekly_2x" } },
+  })
+  assert.equal(parseDiscoveryHeatStyling(body).ok, true)
+
+  // She saved the Diffusor while the protection step still existed (4 production members did).
+  const saved = heatDraftFrom({
+    dryingRoutes: ["diffuser_or_airflow_shaping"],
+    additionalHeatTools: [],
+    heatEvents: {
+      "heat:diffuser_airflow_shaping": { frequency: "weekly_2x", protectionConsistency: "always" },
+    },
+  })
+  assert.deepEqual(discoveryHeatSteps(saved).map(heatStepKey), [
+    "drying",
+    "tools",
+    "frequency:diffuser_airflow_shaping",
+    "summary",
+  ])
+  assert.deepEqual(toDiscoveryHeatStyling(saved)?.heatEvents, {
+    "heat:diffuser_airflow_shaping": { frequency: "weekly_2x" },
+  })
 })

@@ -1,0 +1,149 @@
+{
+  "blindId": "W117",
+  "inciFingerprintSha256": "04a25bda52d67198d96cc864b3421d6fde98b6bc8c39f789a36aa09422e4194a",
+  "phase": "formula-pass (blind; stage-A packet only; no claims seen)",
+  "standard": "shampoo-classification-v1.6.2",
+  "formulaIdentity": {
+    "packSize": "250 ml",
+    "formulaSourceTier": 3,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "One entry per ingredient; normalized positions = packet positions (ID-2).",
+    "e3Point": "Parfum @8 (prominent = positions 1-7)"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "Sodium Laureth Sulfate @2 (strong anionic, ether/sulfonate type)",
+      "reinforcingRoutes": [],
+      "buffers": ["Cocamidopropyl Betaine @4 (amphoteric)"],
+      "notCleansing": ["Sodium Xylenesulfonate @5 (hydrotrope)"],
+      "c3aCheck": "No C16-C18 alkyl sulfate in the formula; C3a not applicable"
+    },
+    "conditioningRoutes": {
+      "payload_lipid": ["Stearyl Alcohol @6 (prominent fatty alcohol)", "Cetyl Alcohol @9 (fatty alcohol, not prominent)", "Trihydroxystearin @17 (waxy hydrogenated castor glyceride; not prominent)"],
+      "cationic_polymer": ["Polyquaternium-6 @14 (not prominent)", "Guar Hydroxypropyltrimonium Chloride @15 (not prominent)"],
+      "silicone": [],
+      "weak_refatter": [],
+      "pearlizingFattyRoute": ["Cetyl Alcohol @9 (fatty route)", "Trihydroxystearin @17"],
+      "humectants": ["Glycerin @12", "Panthenol @20", "Panthenyl Ethyl Ether @21", "Sodium Hyaluronate @23"]
+    },
+    "actives": ["Biotin @25"],
+    "exposure": {
+      "fragrance": "Parfum @8 (not prominent); Limonene @19",
+      "essentialOils": [],
+      "coolingAgents": [],
+      "otherNotes": "Sodium Salicylate @13 preservative; Histidine @22; Tetrasodium EDTA @18"
+    },
+    "wLine": {
+      "cap": "e3Point Parfum @8",
+      "wLine": "Parfum @8",
+      "wLineClasses": ["fragrance"],
+      "skippedCandidates": [],
+      "alphabeticalRun": "none",
+      "codes": [],
+      "plausibility": "No candidate before the cap; Parfum @8 plausible ((i) SLES @2 before; (ii) nothing between)",
+      "payloadLipidMaterial": ["Stearyl Alcohol @6"],
+      "payloadLipidNonMaterial": ["Cetyl Alcohol @9", "Trihydroxystearin @17"]
+    },
+    "csaListedProminentRoutes": [],
+    "unlistedRouteCandidates": ["Stearyl Alcohol @6 (prominent fatty alcohol; fatty alcohols are excluded from the E4 humectant/refatting list)"],
+    "mildBase": "not met: prominent strong anionic Sodium Laureth Sulfate @2"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate @2 with prominent buffer Cocamidopropyl Betaine @4, no reinforcing strong anionic (C3, C4, C1). Fatty alcohols and cationics are counter-signals only.",
+      "ruleIds": ["C3", "C4", "C1"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High: rich architecture (W-RICH, E3 reading for conditioning) - a prominent fatty-alcohol payload lipid (Stearyl Alcohol @6) converges with cationic deposition (Polyquaternium-6 @14, Guar Hydroxypropyltrimonium Chloride @15), supported by Cetyl Alcohol @9, Trihydroxystearin @17 and humectants (Glycerin @12, Panthenol @20, Sodium Hyaluronate @23). C2 is also satisfied on the lipid-substitute reading (prominent fatty alcohol in place of the silicone; cationic polymer; fatty route Cetyl Alcohol; humectant Glycerin). Counter-signal: both cationics and all humectants are post-fragrance, so moderate is the realistic neighbor.",
+      "ruleIds": ["Section 5", "W-RICH", "C2", "E3", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "cationic_polymer": ["Polyquaternium-6 @14", "Guar Hydroxypropyltrimonium Chloride @15"],
+        "payload_lipid": ["Stearyl Alcohol @6 (material, W-line @8)", "Cetyl Alcohol @9 (non-material)", "Trihydroxystearin @17 (non-material)"],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @4"],
+        "humectantContext": ["Glycerin @12", "Panthenol @20", "Panthenyl Ethyl Ether @21", "Sodium Hyaluronate @23"],
+        "excluded": ["Sodium Xylenesulfonate @5 (hydrotrope)", "Histidine @22 (amino acid additive)", "Biotin @25 (vitamin)"],
+        "unresolved": []
+      },
+      "depositionLoad": "moderate - a material fatty alcohol plus two (post-fragrance) cationic polymers; further fatty/waxy lipids post-line",
+      "persistence": "moderate - fatty alcohol/cationic gel-network deposits are substantive but rinse-off",
+      "resetCapacity": "moderate - buffered SLES chassis",
+      "counterevidence": "W-RICH is met for weight (material Stearyl Alcohol @6 + cationic partners, no position test on the partner); two cationic polymers plus a lipid = convergence on paper; post-line Cetyl Alcohol @9 and Trihydroxystearin @17 add lipid load.",
+      "whyThisBand": "Noticeable but bounded residue from a fatty-alcohol/cationic system (6.6 moderate anchor).",
+      "whyNotNeighborBand": "Not high: W-RICH is present but resetCapacity is moderate (effective C1 SLES chassis), so the rich route lacks limited reset; the convergence route rests on one material lipid and two cationics that are both post-fragrance trace, which the SLES/betaine reset plausibly offsets; the further lipids (Cetyl Alcohol @9, Trihydroxystearin @17) are at or after the W-line and do not count toward high (W-LINE item 6: confidence at most moderate, neighbor high). Not low: two deposition families with a material lipid (W2).",
+      "confidenceLimitingFactor": "W-RICH with moderate reset; post-line lipids named as what keeps it from high (W-LINE 6)",
+      "rationale": "Moderate: W-RICH without limited reset; post-line lipids recorded as counter-signal (6.6, W-RICH, W-LINE, W2). Neighbor high.",
+      "ruleIds": ["6.3", "6.6", "W-RICH", "W-LINE", "W2", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": ["Glycerin @12", "Panthenol @20", "Sodium Hyaluronate @23"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Stearyl Alcohol @6", "Cetyl Alcohol @9", "Polyquaternium-6 @14", "Guar Hydroxypropyltrimonium Chloride @15"],
+        "limitation": "Humectants all post-fragrance; generic conditioning distinguishes no direction"
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Fatty-alcohol/cationic conditioning could back a moisture or repair claim",
+      "decisionTrace": "PROVISIONAL (formula-only): no claim direction; nonspecific. Placeholder general until claims.",
+      "rationale": "Provisional general (claim-dependent, 7.2).",
+      "ruleIds": ["3.1", "7.2", "7.3"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["shine"],
+      "decisionTrace": "PROVISIONAL: empty default (Section 8).",
+      "rationale": "Provisional empty (claim-dependent).",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "PROVISIONAL: default regular; frequent possible with explicit frequency wording (U2).",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "rationale": "PROVISIONAL: CSA not met - no listed E4 route is prominent (Glycerin @12 and Panthenol @20 are post-fragrance; Stearyl Alcohol is a fatty alcohol, excluded from the E4 list) and MB is excluded (prominent SLES). A sensitive/dry claim would fail its formula gate.",
+      "ruleIds": ["10", "CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active; Sodium Salicylate @13 is a preservative (Section 11).",
+      "ruleIds": ["11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "Trihydroxystearin @17 assigned to payload_lipid (waxy hydrogenated lipid, used as suspending agent); non-material either way.",
+    "Weight moderate vs high: W-RICH present for weight; moderate chosen because reset is not limited and both cationics are post-fragrance."
+  ]
+}

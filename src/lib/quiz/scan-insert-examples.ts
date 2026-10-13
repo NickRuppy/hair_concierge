@@ -1,3 +1,4 @@
+import { SCAN_VERDICT_COPY } from "@/lib/scan/verdict-labels"
 import type { QuizAnswers, QuizStep } from "./types"
 
 /**
@@ -250,25 +251,18 @@ function buildDeviation(rows: ScanExampleRow[]): string {
 
 function buildVerdict(rows: ScanExampleRow[]): { verdict: ScanExampleStatus; headline: string } {
   const firstBad = rows.find((row) => row.status === "bad")
-  if (firstBad) {
+  if (firstBad || rows.filter((row) => row.status === "warn").length >= 2) {
     return {
       verdict: "bad",
-      headline:
-        firstBad.label === SCALP_ROW_LABEL
-          ? "Passt nicht zu deiner Kopfhaut"
-          : "Passt nicht zu deinem Haar",
+      headline: SCAN_VERDICT_COPY.mismatch.title,
     }
   }
   if (rows.some((row) => row.status === "warn")) {
-    return { verdict: "warn", headline: "Passt mit Einschränkung" }
+    return { verdict: "warn", headline: SCAN_VERDICT_COPY.supportive.title }
   }
-  // A card carrying a scalp row judges a scalp product; the negative verdict
-  // above already says "Kopfhaut", so the positive one must match it.
   return {
     verdict: "ok",
-    headline: rows.some((row) => row.label === SCALP_ROW_LABEL)
-      ? "Passt zu deiner Kopfhaut"
-      : "Passt zu deinem Haar",
+    headline: SCAN_VERDICT_COPY.ideal.title,
   }
 }
 
@@ -297,20 +291,25 @@ function buildHomeExample(answers: QuizAnswers): ScanExampleCard {
       status: scaleStatus(CARE_WEIGHT_SCALE, MASK_CARE_WEIGHT, careWeightTarget),
     },
     {
-      // The quiz asks no direction question, so every profile still aims at
-      // `ausgeglichen`. A moisture mask sits inside a balanced plan, so — like
-      // the scalp row — the product value covers the target instead of
-      // equalling it, and this row never deviates.
+      // The quiz has no direction question: the balanced target is one step
+      // from this moisture mask, and contributes to the additive verdict.
       label: "Pflegerichtung",
       productValue: MASK_CARE_DIRECTION,
       targetValue: CARE_DIRECTION_TARGET,
-      status: "ok",
+      status: scaleStatus(
+        ["Protein", "ausgeglichen", "Feuchtigkeit"],
+        MASK_CARE_DIRECTION,
+        CARE_DIRECTION_TARGET,
+      ),
     },
     {
       label: "Repair-Pflege",
       productValue: MASK_REPAIR,
       targetValue: repairTarget,
-      status: scaleStatus(REPAIR_SCALE, MASK_REPAIR, repairTarget),
+      status:
+        REPAIR_SCALE.indexOf(MASK_REPAIR) >= REPAIR_SCALE.indexOf(repairTarget)
+          ? "ok"
+          : scaleStatus(REPAIR_SCALE, MASK_REPAIR, repairTarget),
     },
   ]
   return { product: MASK, rows, ...buildVerdict(rows), deviation: buildDeviation(rows) }

@@ -1,0 +1,165 @@
+{
+  "blindId": "W411",
+  "inciFingerprintSha256": "ea583c276ba8648c7859a74cc4b46b845fa6743b80b4aeacd52f30a07f68f0b1",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, stage A only)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "packSize": "400 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "Packet entries 1 'Aqua (Water' and 2 'Eau)' are one split synonym entry, merged to normalized position 1 (ID-2); every later packet position is reduced by one. All positions below are normalized.",
+    "e3ProminenceCutoff": "Parfum (Fragrance) @15 (packet 16); prominent = normalized positions 1-14"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionicEtherSulfonate": ["Sodium Laureth Sulfate @2 (defining anionic)"],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": [],
+      "amphoteric": ["Cocamidopropyl Betaine @4 (prominent buffer)"],
+      "nonionicCleansing": [],
+      "notCleansingNotBuffer": ["Sodium Chloride @3", "Cocamide MEA @10 (alkanolamide)", "Laureth-4 @18", "Laureth-23 @19", "Trideceth-10 @22", "PEG-40 Hydrogenated Castor Oil @17"],
+      "reinforcingRoutes": [],
+      "c1c5c6Reading": "C1: ether-sulfate defining anionic, one prominent buffer, no reinforcing route"
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @5 (prominent)"],
+      "payload_lipid": ["Prunus Armeniaca (Apricot) Kernel Oil @7 (prominent; material)", "Hydrogenated Castor Oil @21 (non-material)"],
+      "weak_refatter": ["PEG-7 Glyceryl Cocoate @16"],
+      "silicone": ["Amodimethicone @13 (prominent)", "Dimethicone @14 (prominent)"],
+      "pearlizing_fatty_route": ["Glycol Distearate @12"],
+      "humectants": ["Panthenol @6", "Sorbitol @9"],
+      "notHumectantRoute": ["Propylene Glycol @20"]
+    },
+    "wLine": {
+      "wLine": "Parfum (Fragrance) @15 (= cap)",
+      "wLineClasses": ["fragrance"],
+      "cap": "e3Point @15",
+      "alphabeticalRun": "none (longest ascending runs 4 entries: 4-7, 13-16)",
+      "candidatesTested": [
+        "Panthenol @6 (sub1_active): (i) ok; (ii) FAILS - alkanolamide Cocamide MEA @10 and pearlizing wax Glycol Distearate @12 listed after it and before the cap",
+        "Parfum (Fragrance) @15: (i) ok; (ii) nothing between -> plausible"
+      ],
+      "skipped": ["w_line_skipped:Panthenol@6 (clause ii: Cocamide MEA @10, Glycol Distearate @12 after it)"],
+      "codes": [],
+      "payloadLipidMaterial": ["Prunus Armeniaca (Apricot) Kernel Oil @7"],
+      "payloadLipidNonMaterial": ["Hydrogenated Castor Oil @21"]
+    },
+    "actives": {
+      "dandruffActives": [],
+      "comfortRoutesE4Prominent": ["Panthenol @6"],
+      "humectantRefattingRoutesE4Prominent": ["Panthenol @6", "Prunus Armeniaca (Apricot) Kernel Oil @7", "Sorbitol @9"],
+      "coolingAgents": [],
+      "essentialOils": [],
+      "fragranceMaterials": ["Parfum @15", "Hexyl Cinnamal @24"],
+      "other": ["Cocos Nucifera (Coconut) Fruit Extract @8 (botanical extract, not an oil)"]
+    },
+    "scalpGateFormulaFacts": {
+      "CSA": "met via prominent E4 comfort route Panthenol @6 and humectant/refatting routes (Panthenol @6, Apricot Kernel Oil @7, Sorbitol @9)",
+      "MB": "not met: Sodium Laureth Sulfate @2 prominent strong anionic",
+      "S-SENSITIVE formula half": "comfort route Panthenol @6 -> would pass if targeted",
+      "S-DRY formula half": "humectant routes -> would pass if targeted",
+      "S-OILY formula clause": "conditioning high -> clause fails"
+    }
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate @2 defining anionic buffered by prominent Cocamidopropyl Betaine @4, no reinforcing strong anionic; ethoxylates and PEG esters are not cleansing routes.",
+      "ruleIds": ["C3", "C4", "C1"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "High: C2 met - early (prominent) silicones Amodimethicone @13 and Dimethicone @14, cationic Guar Hydroxypropyltrimonium Chloride @5, pearlizing Glycol Distearate @12 and deliberate humectants Panthenol @6 and Sorbitol @9 - and W-RICH also holds for conditioning (prominent Apricot Kernel Oil @7 with silicone/cationic deposition). Multiple complementary systems converge; reasonable unknowns would not drop it to moderate.",
+      "ruleIds": ["C2", "R11", "W-RICH", "Section 5 anchors"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @5"],
+        "payload_lipid": ["Prunus Armeniaca (Apricot) Kernel Oil @7 (material, < W-line 15)", "Hydrogenated Castor Oil @21 (non-material)"],
+        "weak_refatter": ["PEG-7 Glyceryl Cocoate @16"],
+        "silicone": ["Amodimethicone @13", "Dimethicone @14"],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @4"],
+        "humectantContext": ["Panthenol @6", "Sorbitol @9", "Propylene Glycol @20"],
+        "excluded": ["Glycol Distearate @12 (pearlizing wax, 6.4)", "Cocamide MEA @10 (alkanolamide)", "PEG-40 Hydrogenated Castor Oil @17 (solubilizer, 6.4)", "Laureth-4 @18, Laureth-23 @19, Trideceth-10 @22 (ethoxylates)", "Cocos Nucifera Fruit Extract @8 (botanical extract)", "Parfum @15, Hexyl Cinnamal @24"],
+        "unresolved": []
+      },
+      "wLineRecord": "wLine Parfum (Fragrance) @15 (fragrance) = cap e3Point @15; no alphabetical run; skipped w_line_skipped:Panthenol@6 (clause ii); no codes; material payload_lipid: Apricot Kernel Oil @7; non-material: Hydrogenated Castor Oil @21.",
+      "depositionLoad": "high-leaning moderate: guar, dimethicone plus amodimethicone and a material apricot oil, plus a refatter.",
+      "persistence": "moderate: amodimethicone and dimethicone persist and can build up; the apricot oil is a liquid oil sitting after the salt; no waxy material lipid.",
+      "resetCapacity": "moderate: C1 SLES/betaine chassis.",
+      "counterevidence": "W-RICH holds (material Apricot Kernel Oil @7 converging with silicone/cationic) and three deposition families (silicone, cationic_polymer, material payload_lipid) converge; W1 does not apply because a material oil converges.",
+      "whyThisBand": "An effective sulfate/betaine chassis rinses a silicone/guar/amodimethicone coacervate plus a modest liquid oil to a noticeable but bounded residue.",
+      "whyNotNeighborBand": "Not high: W-RICH is present but reset is moderate, so the rich route is closed (W-RICH limited reset); the convergence route rests on the silicone/guar/amodimethicone set that the W1 precedent rates moderate under this reset, and the only addition is one liquid oil listed after the salt, which is not judged enough to overcome the C1 reset. Close to the boundary, so confidence is moderate with neighbor high.",
+      "confidenceLimitingFactor": "W-RICH with moderate reset and three converging families: oil and silicone doses unknown; high is realistic.",
+      "rationale": "Moderate: full method 6.6 (W1 excluded by a material lipid); W-RICH recorded as counter-signal, high as neighbor.",
+      "ruleIds": ["6.3", "6.6", "W1", "W-RICH", "W-LINE", "W3", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "dual_supported",
+        "moistureRoutes": ["Panthenol @6", "Sorbitol @9", "Prunus Armeniaca Kernel Oil @7"],
+        "repairRoutes": ["Amodimethicone @13", "Dimethicone @14", "Guar Hydroxypropyltrimonium Chloride @5"],
+        "sharedConditioningRoutes": ["Glycol Distearate @12", "PEG-7 Glyceryl Cocoate @16"],
+        "limitation": "No protein route; repair rests on an amino-silicone/silicone deposition cluster; moisture rests on two humectants plus oil."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Blind pass: no claim; formula is dual_supported, so a claim would break the tie.",
+      "decisionTrace": "Blind: claim direction null; formula dual_supported (provisional); provisional general pending reveal.",
+      "rationale": "Provisional general (claim-dependent; formula-only).",
+      "ruleIds": ["3.1", "7.2", "7.3", "F1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["shine"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty (claim-dependent).",
+      "ruleIds": ["Section 8", "F2", "F3"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional regular (default); moderate formula cannot be alternating; no dandruff active.",
+      "ruleIds": ["Section 9"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional not_targeted (claims hidden). Formula half: CSA met via listed prominent comfort route Panthenol @6 (and humectant/refatting routes); MB not met (SLES @2).",
+      "ruleIds": ["Section 10", "CSA", "MB", "E4", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active in the complete INCI.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "notes": ["Split synonym entry merged (ID-2); every citation uses normalized positions.", "Claim-dependent properties are provisional."]
+}

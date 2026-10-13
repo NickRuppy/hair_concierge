@@ -1,0 +1,88 @@
+{
+  "slot": "A45",
+  "productId": "e4e4fd05-33fd-4048-9553-76815bff5d43",
+  "name": "schauma Shampoo Repair & Pflege",
+  "brand": "schauma",
+  "packSize": "400 ml",
+  "gtins": [
+    "4015100890372"
+  ],
+  "sources": [
+    {
+      "url": "https://www.allyoucare-byhenkel.com/de/de/marken/haar-und-koerperpflege/schauma/produkte/shampoo/repair-pflege-shampoo.html",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de (Henkel; schauma.de redirects here)",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "EAN string 4015100890372 present in page markup (retailer 'Jetzt kaufen' widget); size 400 ml per product-range overview",
+      "inciVerbatim": "Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Guar Hydroxypropyltrimonium Chloride, Panthenol, Prunus Armeniaca (Apricot) Kernel Oil, Cocos Nucifera (Coconut) Fruit Extract, Sorbitol, Cocamide MEA, Citric Acid, Glycol Distearate, Amodimethicone, Dimethicone, Parfum (Fragrance), PEG-7 Glyceryl Cocoate, PEG-40 Hydrogenated Castor Oil, Laureth-4, Laureth-23, Propylene Glycol, Hydrogenated Castor Oil, Trideceth-10, Sodium Hydroxide, Hexyl Cinnamal, Sodium Benzoate, Phenoxyethanol, Sodium Salicylate, CI 16255, CI 47005",
+      "claimsVerbatim": "Repair & Pflege Shampoo | Für strapaziertes & trockenes Haar | Die Formel mit Kokosextrakt repariert intensiv geschädigtes und trockenes Haar. Das Ergebnis? Das Haar ist sichtbar regeneriert und fühlt sich geschmeidig an. Mit Pro-Vitamin B5 für eine tiefenwirksame Pflege des Haares von innen. | Repair & Pflege: Repariere und regeneriere selbst stark geschädigtes Haar mit unseren besonders pflegenden Formeln. Für 100 % geschmeidigeres Haar. Mit Kokosextrakt und pflegendem Pro-Vitamin B5.",
+      "directionsVerbatim": "Auf das nasse Haar auftragen und sanft einmassieren. Kurz einwirken lassen. Gründlich ausspülen."
+    },
+    {
+      "url": "https://www.dm.de/p/d/1588724/schauma-shampoo-repair-und-pflege",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "GTIN: 4015100890372 (dm-Artikelnummer 1588724; 'Shampoo Repair & Pflege, 400 ml')",
+      "inciVerbatim": "Ingredients: Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Guar Hydroxypropyltrimonium Chloride, Panthenol, Prunus Armeniaca (Apricot) Kernel Oil, Cocos Nucifera (Coconut) Fruit Extract, Sorbitol, Cocamide MEA, Citric Acid, Glycol Distearate, Amodimethicone, Dimethicone, Parfum (Fragrance), PEG-7 Glyceryl Cocoate, PEG-40 Hydrogenated Castor Oil, Laureth-4, Laureth-23, Propylene Glycol, Hydrogenated Castor Oil, Trideceth-10, Sodium Hydroxide, Hexyl Cinnamal, Sodium Benzoate, Phenoxyethanol, Sodium Salicylate, CI 16255, CI 47005",
+      "claimsVerbatim": "Repair-Shampoo mit Kokos-Extrakt | Intensiv pflegende Formel | Ideal für geschädigtes und trockenes Haar | Glättet und repariert die Haarstruktur | Das Shampoo Repair & Pflege von schauma ist die perfekte Wahl für geschädigtes und trockenes Haar. Angereichert mit Kokos-Extrakt und Pro-Vitamin B5, glättet und pflegt es die Haarstruktur intensiv bis in die Spitzen. Die Formel kann dabei helfen, das Haar zu reparieren und Haarbruch zu reduzieren. Dank der veganen Zusammensetzung wird das Haar sichtbar regeneriert, fühlt sich geschmeidig an und erhält seine Kraft zurück. | Produkteigenschaften: Ohne Alkohol, ohne Aluminiumsalze (ACH), ohne Ammoniak",
+      "directionsVerbatim": "Sanft im feuchten Haar verteilen und kurz einwirken lassen. Dann gründlich ausspülen."
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-schauma-shampoo-repair-und-pflege/p/4015100890372",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "gtinShown": "GTIN in URL path /p/4015100890372; Artikelnummer 207970; '400 ml (1 L = 4,23 EUR)'",
+      "inciVerbatim": "Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Guar Hydroxypropyltrimonium Chloride, Panthenol, Prunus Armeniaca (Apricot) Kernel Oil, Cocos Nucifera (Coconut) Fruit Extract, Sorbitol, Cocamide MEA, Citric Acid, Glycol Distearate, Amodimethicone, Dimethicone, Parfum (Fragrance), PEG-7 Glyceryl Cocoate, PEG-40 Hydrogenated Castor Oil, Laureth-4, Laureth-23, Propylene Glycol, Hydrogenated Castor Oil, Trideceth-10, Sodium Hydroxide, Hexyl Cinnamal, Sodium Benzoate, Phenoxyethanol, Sodium Salicylate, CI 16255, CI 47005",
+      "claimsVerbatim": "SCHAUMA Shampoo Repair & Pflege – Hair Repair Shampoo für geschädigtes & trockenes Haar | Das SCHAUMA Shampoo Repair & Pflege mit Kokos-Extrakt glättet und pflegt die Haarstruktur und bietet eine intensive Pflege bis in die Spitzen – für sichtbar regeneriertes, geschmeidiges & und gesund aussehendes Haar. Die Formel ist vegan und damit frei von Inhaltsstoffen tierischen Ursprungs. Dank Sofort-Pflege-Effekt erhalten die Haare schon ab der ersten Anwendung ein gepflegteres Aussehen und Gefühl. Mit dem Power Inhaltsstoff Pro-Vitamin B5 pflegt und stärkt das SCHAUMA Shampoo das Haar, spendet Feuchtigkeit, glättet die Strähnen, reduziert Haarbruch und repariert geschädigtes Haar. | Shampoo mit Kokos-Extrakt | pflegende Formel für geschädigtes & trockenes Haar | repariert die Haarstruktur und repariert intensiv | mit Sofort-Pflege-Effekt",
+      "directionsVerbatim": "Sanft im feuchten Haar verteilen und kurz einwirken lassen. Dann gründlich ausspülen."
+    }
+  ],
+  "conflicts": [],
+  "canonicalInci": [
+    "Aqua (Water",
+    "Eau)",
+    "Sodium Laureth Sulfate",
+    "Sodium Chloride",
+    "Cocamidopropyl Betaine",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Panthenol",
+    "Prunus Armeniaca (Apricot) Kernel Oil",
+    "Cocos Nucifera (Coconut) Fruit Extract",
+    "Sorbitol",
+    "Cocamide MEA",
+    "Citric Acid",
+    "Glycol Distearate",
+    "Amodimethicone",
+    "Dimethicone",
+    "Parfum (Fragrance)",
+    "PEG-7 Glyceryl Cocoate",
+    "PEG-40 Hydrogenated Castor Oil",
+    "Laureth-4",
+    "Laureth-23",
+    "Propylene Glycol",
+    "Hydrogenated Castor Oil",
+    "Trideceth-10",
+    "Sodium Hydroxide",
+    "Hexyl Cinnamal",
+    "Sodium Benzoate",
+    "Phenoxyethanol",
+    "Sodium Salicylate",
+    "CI 16255",
+    "CI 47005"
+  ],
+  "canonicalReason": "Henkel DE manufacturer page, dm.de and Rossmann.de (both exact GTIN 4015100890372) agree verbatim on all 30 entries; identical to the Sept 2026 v1.4 wave-02 source packet. Tier 2.",
+  "inciFingerprintSha256": "ea583c276ba8648c7859a74cc4b46b845fa6743b80b4aeacd52f30a07f68f0b1",
+  "normalization": "Canonical list = one entry per ingredient exactly as published on the winning source (case and punctuation kept in canonicalInci; trailing period stripped; bullet/asterisk/comma separators dropped; split synonym entries such as 'Aqua (Water, Eau)' kept as one item). Fingerprint: per ingredient lower-case, trim, collapse internal whitespace; join with '|'; sha256 of the UTF-8 string. Earlier v1.3/v1.4 fingerprints were computed over comma-joined lists and are not comparable.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Prior v1.4 packet: plans/scan-db-expansion/research/shampoo-v14/pilot/waves/wave-02/schauma-repair-pflege/source-packet.json - raw INCI character-identical.",
+    "Claims 'Kokos-Extrakt' = Cocos Nucifera (Coconut) Fruit Extract; 'Pro-Vitamin B5' = Panthenol; 'vegan' - consistent with list (no animal-derived entries). Directions differ in wording between manufacturer ('Auf das nasse Haar...') and retailers ('Sanft im feuchten Haar verteilen und kurz einwirken lassen').",
+    "schauma.de/produkte/repair-pflege.html redirects to Henkel's allyoucare-byhenkel.com; cookie banner declined."
+  ]
+}

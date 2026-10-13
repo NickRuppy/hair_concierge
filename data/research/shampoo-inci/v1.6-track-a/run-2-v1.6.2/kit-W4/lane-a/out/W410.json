@@ -1,0 +1,332 @@
+{
+ "blindId": "W410",
+ "lane": "lane-a",
+ "phase": "2-final",
+ "policyId": "shampoo-classification-v1.6.2",
+ "formulaPassSha256": "420eeba920242db038040eadf8d265eadb3d4093591ee2c3138f751446a61a78",
+ "identity": {
+  "brand": "ISANA (Rossmann)",
+  "productName": "ISANA MED Shampoo Totes Meer, 200 ml",
+  "packSize": "200 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "0a9ce49c3c9a71eeb4cd8e8ebc4dc4b2431235b5e08cbd0e096985e48ddbbda3",
+  "normalization": "Packet list already normalized (synonym variants are single entries); positions cited are normalized one-based positions (ID-2), identical to the packet order.",
+  "completeness": "complete (formula source tier 1, identity confidence high)",
+  "e3ProminenceCutoff": "Parfum@7 (fragrance marker); prominent = positions 1-6",
+  "identityNotes": []
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`moderate` by C1: defining anionic Sodium Laureth Sulfate@2, prominent buffer Cocamidopropyl Betaine@3, no reinforcing strong anionic. Lauryl Lactate@4 is an emollient ester, not a lactylate surfactant (no C3 class); Laureth-4@9 is an ethoxylate (no route).",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "E3"
+   ],
+   "counterSignal": "Single betaine buffer. Convention value.",
+   "formulaFacts": [
+    "Sodium Laureth Sulfate@2 strong anionic ether type (defining)",
+    "Cocamidopropyl Betaine@3 amphoteric (buffer)"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "high",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "`high` by C2: prominent payload lipid Lauryl Lactate@4 (emollient ester, 6.3) in place of the early silicone, cationic Guar Hydroxypropyltrimonium Chloride@5, pearlizing Glycol Distearate@6, deliberate humectant Glycerin@17 (own entry, R11). Confidence moderate: the lipid element rests on reading Lauryl Lactate as a payload emollient ester rather than a light weak refatter (which would not satisfy C2 and give `moderate`), and the only humectant is near the end of the list.",
+   "ruleIds": [
+    "C2",
+    "R11",
+    "6.3",
+    "5",
+    "N-ALT"
+   ],
+   "counterSignal": "C2 lipid element rests on Lauryl Lactate as payload_lipid; humectant late.",
+   "formulaFacts": [
+    "payload lipid: Lauryl Lactate@4",
+    "cationic: Guar Hydroxypropyltrimonium Chloride@5",
+    "pearlizing: Glycol Distearate@6",
+    "humectant: Glycerin@17"
+   ]
+  },
+  "weightPotential": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "high",
+   "evidence": {
+    "cationic_polymer": [
+     "Guar Hydroxypropyltrimonium Chloride@5"
+    ],
+    "payload_lipid": [
+     "MATERIAL: Lauryl Lactate@4 (emollient ester)"
+    ],
+    "weak_refatter": [],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "anionic: Sodium Laureth Sulfate@2",
+     "amphoteric: Cocamidopropyl Betaine@3"
+    ],
+    "humectantContext": [
+     "Glycerin@17",
+     "Allantoin@11, Bisabolol@12 (comfort actives, context)"
+    ],
+    "excluded": [
+     "Glycol Distearate@6 (pearlizing wax)",
+     "Laureth-4@9 (low-ethoxylate thickener)",
+     "Menthol@8, Terpineol@19 (cooling/fragrance)",
+     "Maris Sal@10, Sodium Chloride@15 (salts)",
+     "Formic Acid@18, Citric Acid@16 (acids)"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": "7 Parfum",
+    "candidateClasses": [
+     "fragrance"
+    ],
+    "cap": "e3Point 7 (Parfum)",
+    "alphabeticalRun": "none",
+    "skipped": [],
+    "testedCandidate": "Parfum@7 is the only candidate up to the cap: (i) Sodium Laureth Sulfate@2 before it; (ii) nothing between it and the cap -> plausible; W-line = cap",
+    "codes": [],
+    "payloadLipidMaterial": [
+     "Lauryl Lactate@4"
+    ],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "moderate — one guar plus one material emollient ester; no silicone, no protein.",
+   "persistence": "low-to-moderate — Lauryl Lactate is a light, fairly polar emollient ester; guar coacervate deposition; no persistent silicone.",
+   "resetCapacity": "moderate — C1 ether-sulfate chassis with a betaine buffer.",
+   "counterevidence": "W-RICH holds for weight (material Lauryl Lactate@4 converging with guar@5), which argues for `high`; but reset is not limited.",
+   "whyThisBand": "Two interacting routes (guar + light ester) plausibly leave noticeable but bounded residue under an ordinary reset.",
+   "whyNotNeighborBand": "Not `high`: W-RICH requires limited reset (resetCapacity weak) and reset here is moderate; the convergence route's two families are a single guar and a light, low-persistence ester, not plausibly persistent systems that outrun an ordinary C1 reset. Not `low`: two families including a prominent material lipid (W2).",
+   "confidenceLimitingFactor": "W-RICH counter-signal; Lauryl Lactate family reading (payload_lipid vs weak_refatter) and doses unknown.",
+   "rationale": "`moderate`: W-RICH present but reset not limited; convergence light. Neighbor `high` (W-RICH counter-signal).",
+   "ruleIds": [
+    "6.6",
+    "W-RICH",
+    "W-LINE",
+    "W2",
+    "N-ALT"
+   ],
+   "counterSignal": "W-RICH holds for weight (material Lauryl Lactate@4 converging with guar@5), which argues for `high`; but reset is not limited."
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "scalp_active",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "Glycerin@17"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Lauryl Lactate@4",
+     "Guar Hydroxypropyltrimonium Chloride@5"
+    ],
+    "limitation": "no coherent lengths-care cluster"
+   },
+   "claimRole": "candidate",
+   "counterSignal": "Sensitive/itchy-scalp positioning (pack back, moderate) is the product's dominant claim, but the formula fails CSA.",
+   "decisionTrace": "Claim direction: sensitive/itchy scalp ('beruhigt empfindliche und juckende Kopfhaut', pack back, moderate). 7.2 requires `scalpComfortTarget: targeted` for scalp_active; it is `not_targeted` (CSA fails: Allantoin@11, Bisabolol@12 after Parfum@7; no MB). No other in-scope lengths claim. Decision: general.",
+   "rationale": "`general`: the sensitive-scalp claim has no formula-compatible route (CSA fails), and no other job is claimed.",
+   "ruleIds": [
+    "7.2",
+    "CSA",
+    "SC1",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "decisionTrace": "Empty default; no distinct second role.",
+   "rationale": "`[]`.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3",
+    "F4",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Default `regular`: no U2 wording, no directions in any source.",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "U5",
+    "CL-SRC",
+    "F-TRACE"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "csaRoute": "FAILS: E4 comfort routes Allantoin@11 and Bisabolol@12 are listed after Parfum@7 (not prominent); no prominent humectant/refatting route (Glycerin@17 late; Lauryl Lactate@4 is an emollient ester, excluded, and R18-rejected); MB excluded (Sodium Laureth Sulfate@2). unlisted_route_candidate:Lauryl Lactate",
+   "rationale": "`not_targeted`: SC1 positioning exists ('beruhigt empfindliche und juckende Kopfhaut', 'juckreizlindernder Wirkstoff-Komplex', moderate), but without a listed prominent route and without MB an explicitly positioned product is `not_targeted` (CSA); S-SENSITIVE therefore fails (S-FAIL).",
+   "counterSignal": "Menthol@8 cooling (just after the E3 point).",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "MB",
+    "SC1",
+    "E2a",
+    "E3",
+    "E4"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`not_supported`: the complete INCI contains none of Piroctone Olamine, Climbazole, Selenium Sulfide or Selenium Disulfide (Section 11, DS1).",
+   "ruleIds": [
+    "11",
+    "DS1",
+    "ID-1"
+   ],
+   "counterSignal": "none — mechanical recognition of the closed active list",
+   "formulaFacts": [
+    "Allantoin@11",
+    "Bisabolol@12",
+    "Maris Sal@10",
+    "no recognized anti-dandruff active"
+   ]
+  }
+ },
+ "formulaFacts": {
+  "surfactants": [
+   "Sodium Laureth Sulfate@2 strong anionic ether type (defining)",
+   "Cocamidopropyl Betaine@3 amphoteric (buffer)"
+  ],
+  "conditioningRoutes": [
+   "payload lipid: Lauryl Lactate@4",
+   "cationic: Guar Hydroxypropyltrimonium Chloride@5",
+   "pearlizing: Glycol Distearate@6",
+   "humectant: Glycerin@17"
+  ],
+  "comfortRoutes": "E4 comfort list: Allantoin@11, Bisabolol@12 (not prominent); E4 humectant/refatting: Glycerin@17 (not prominent); unlisted_route_candidate: Lauryl Lactate@4",
+  "actives": [
+   "Allantoin@11",
+   "Bisabolol@12",
+   "Maris Sal@10",
+   "no recognized anti-dandruff active"
+  ],
+  "exposureFlags": [
+   "Parfum@7",
+   "Menthol@8 (cooling, non-prominent)",
+   "Terpineol@19"
+  ],
+  "preservatives": [
+   "Sodium Benzoate@13",
+   "Potassium Sorbate@14",
+   "Formic Acid@18"
+  ]
+ },
+ "projection": {
+  "status": "proposal_blocked_by_review_flags",
+  "thicknessFit": {
+   "fine": "acceptable",
+   "normal": "ideal",
+   "coarse": "ideal"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 from weightPotential `moderate` and conditioningLevel `high` (coarse reads C); ordinary target: T1 unchanged (no T6); T4 checked against the N-ALT neighbors of W (all thicknesses) and C (coarse), after T6. T2: claims about hair type/texture ('none') never change fit.",
+  "weight": "moderate",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential `moderate` -> `moderate` 1:1; confidence = weightPotential confidence.",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "confidence": "moderate",
+    "rationale": "S-ORDINARY way 4 (S-FAIL, sensitive): E2 sensitive claim units graded moderate (pack back) pass positioning, but the S-SENSITIVE formula gate fails (scalpComfortTarget not_targeted: CSA fails; MB excluded). No other specialist target passes ('Schutz vor Austrocknung für Kopfhaut & Haar' is protective wording, not a dry claim, E2a). -> ordinary + review_specialist_gate_failed. Confidence moderate (way 4)."
+   },
+   "secondary": null,
+   "secondaryRationale": "No secondary target: no second qualifying distinct E2 claim unit with a passing gate (S-SECONDARY)."
+  },
+  "researchCombinationTargets": [],
+  "researchCombinationRationale": "Not a dandruff-primary product: research-only combination does not apply (E2b).",
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1: cleansingStrength `moderate` -> `regular` (formula plus D1 only; focus and usage role are not inputs). I3 checked with the N-ALT neighbor `none`.",
+  "explicitResetPositioning": false,
+  "explicitResetRationale": "D1 false: no D1 stem (tiefenrein, deep clean, clarifying shampoo, detox-reinigung) in the name or any manufacturer/pack claim, and no occasional-use direction.",
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserRecord": null,
+  "deepCleanserListingConfidence": "high",
+  "deepCleanserRationale": "D2 not satisfied (requires cleansingStrength strong, focus clarifying, usageRole occasional_reset and D1 true) -> not_flagged.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "acceptable"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "ideal"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   "review_specialist_gate_failed:sensitive (formula gate: scalpComfortTarget not_targeted — CSA fails, Allantoin@11/Bisabolol@12 not prominent, MB excluded by Sodium Laureth Sulfate@2; unlisted_route_candidate:Lauryl Lactate)",
+   "review_thickness_boundary:fine",
+   "review_thickness_boundary:normal",
+   "review_thickness_boundary:coarse"
+  ],
+  "informationalNotes": [],
+  "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; this lane sees no catalog values."
+ },
+ "reconciliation": [
+  "focusPrimary: provisional `general` (low) -> `general` (moderate); sensitive claim found but formula-incompatible.",
+  "scalpComfortTarget: `not_targeted` (high) confirmed — positioning present, CSA fails.",
+  "Scalp target: sensitive S-FAIL -> ordinary + review_specialist_gate_failed.",
+  "Source note: the Rossmann PDP is labelled sourceKind manufacturer_de (moderate) in the packet; it reproduces the pack-back claim, so the grade is moderate either way.",
+  "Formula properties unchanged."
+ ],
+ "selfCheck": "6.11: fingerprint equals the frozen formula packet and the hash-pinned formula pass; claims were hidden during the formula judgment (formula pass written before reveal, not edited); no ingredient, count or position window assigned the weight band; the W-line was derived exactly per W-LINE with skipped candidates recorded; all three subjudgments present; whyNotNeighborBand specific (W2 where two families); confidence names its limiting factor. Cleansing, conditioning, weight and dandruff values are unchanged from the blind pass (claims cannot move them, 3.2). Projection fields computed mechanically from final properties (T1/T6/T4, W-LIVE, I1/I3, 13.7).",
+ "uncertainties": [
+  "Conditioning `high` relies on Lauryl Lactate as payload_lipid (C2); as weak_refatter it would be `moderate` (coarse fit -> acceptable, already flagged by T4).",
+  "The E4 lists are closed: Allantoin and Bisabolol are listed but post-E3; Lauryl Lactate was rejected by R18. Nick may rule on the product (S-FAIL review)."
+ ]
+}

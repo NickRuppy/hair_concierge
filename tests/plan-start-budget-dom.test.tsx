@@ -246,7 +246,7 @@ function routeFetch(options: {
   return requests
 }
 
-function renderJourney(shoppingBudgetRequired: boolean, routes: string[]) {
+function renderJourney(shoppingBudgetRequired: boolean, routes: string[], reactStrictMode = false) {
   render(
     <PlanStartCustomerJourney
       initialPlan={{
@@ -263,6 +263,7 @@ function renderJourney(shoppingBudgetRequired: boolean, routes: string[]) {
       personalPlanId="plan-1"
       replaceRoute={(href) => routes.push(href)}
     />,
+    { reactStrictMode },
   )
 }
 
@@ -270,15 +271,34 @@ function renderJourney(shoppingBudgetRequired: boolean, routes: string[]) {
  * The Idealplan CTA, once enabled AND moved into its body portal (one animation frame after
  * mount) — a node found earlier is replaced by the portal and would swallow the click.
  */
-async function enabledCta(name: RegExp): Promise<HTMLElement> {
+async function enabledCta(name: RegExp, timeout = 1000): Promise<HTMLElement> {
   let button: HTMLElement | null = null
-  await waitFor(() => {
-    button = screen.getByRole("button", { name })
-    assert.ok(button.closest("nav")?.parentElement === document.body, "CTA not portaled yet")
-    assert.equal(button.hasAttribute("disabled"), false)
-  })
+  await waitFor(
+    () => {
+      button = screen.getByRole("button", { name })
+      assert.ok(button.closest("nav")?.parentElement === document.body, "CTA not portaled yet")
+      assert.equal(button.hasAttribute("disabled"), false)
+    },
+    { timeout },
+  )
   return button!
 }
+
+test("effect replay keeps failed previews to one request plus one retry and opens refinement", async () => {
+  let previews = 0
+  globalThis.fetch = (async () => {
+    previews += 1
+    return new Response(JSON.stringify({ error: "temporarily_unavailable" }), { status: 503 })
+  }) as typeof fetch
+  const routes: string[] = []
+  renderJourney(false, routes, true)
+
+  await act(async () => {})
+  assert.equal(previews, 2)
+  const accept = await enabledCta(new RegExp(PLAN_START_ACCEPT_LABEL), 5000)
+  await act(async () => fireEvent.click(accept))
+  assert.deepEqual(routes, ["/plan-start?refine=products"])
+})
 
 test("J5: „Weiter“ → budget → adjusted proposal with the swap note → a fresh tap accepts", async () => {
   const routes: string[] = []

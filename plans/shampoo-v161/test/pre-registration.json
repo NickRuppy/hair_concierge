@@ -1,0 +1,1049 @@
+{
+  "schema": "shampoo-v1.6.1-preregistration/2",
+  "preparedOn": "2026-10-12",
+  "standard": "plans/shampoo-v161/candidate/classification-standard.md (v1.6.1 candidate revision with rule-change rows 130-136: W-LINE scoped to payload_lipid only; D1-D6 decisions)",
+  "positions": "normalized one-based ID-2 positions; W-LINE now merges split synonym entries before counting (row 132), so G09 positions are normalized (packet positions +1 from entry 3)",
+  "wLineStateValues": "candidate = earliest plausible W-LINE candidate sets the line; fallback_e3 = w_line_fallback_e3; none_visible = w_line_none_visible",
+  "products": {
+    "A13": {
+      "name": "Hair Biology Revitalize & Soothe",
+      "baseline": "none under v1.6 (no lane record). Aug-26 approved weight high (shampoo-weight-v1); v1.4 weight-final-rerun-v3 adjudicated moderate (lane A high, lane B moderate)",
+      "wLine": {
+        "position": 11,
+        "inci": "Parfum",
+        "classes": [
+          "fragrance"
+        ]
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 11
+      },
+      "skipped": [],
+      "alphabeticalRun": null,
+      "material": [],
+      "nonMaterial": [],
+      "weightV16": null,
+      "weightV161": "not pre-registered (v1.6 whole-formula judgment; W-line has no effect: no payload_lipid)",
+      "weightV161Constraint": "W-LINE must not be cited; high reachable via silicone + cationic convergence as in v1.6 (reset strong argues moderate; v1.4 lanes split high/moderate)",
+      "moves": [],
+      "mustNotChange": [],
+      "note": "No v1.6 baseline. Aug-26 approval high is reachable again (row 130). Not scored.",
+      "otherFamilies": [
+        "Dimethiconol@10 silicone",
+        "Dimethicone@13 silicone",
+        "Guar Hydroxypropyltrimonium Chloride@15 cationic_polymer"
+      ]
+    },
+    "G05": {
+      "name": "Wahre Schaetze Sanfte Hafermilch",
+      "baseline": "v1.6 calibration round-2 lanes P06 (candidate ebe435c9); Aug-26 approved moderate",
+      "wLine": {
+        "position": 23,
+        "inci": "Tocopherol",
+        "classes": [
+          "sub1_active"
+        ]
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 27
+      },
+      "skipped": [],
+      "alphabeticalRun": null,
+      "material": [
+        "Glycine Soja Oil@6",
+        "Dicaprylyl Ether@13"
+      ],
+      "nonMaterial": [],
+      "weightV16": "moderate",
+      "weightV161": "moderate",
+      "moves": [],
+      "mustNotChange": [
+        "all eight direct properties incl. confidence and neighbor",
+        "thicknessFit fine acceptable / normal ideal / coarse ideal",
+        "weight moderate",
+        "target sensitive",
+        "cleansingIntensity regular",
+        "review flags"
+      ],
+      "otherFamilies": [
+        "HP Guar HPTC@19 cationic_polymer",
+        "Polyquaternium-7@22 cationic_polymer"
+      ]
+    },
+    "G09": {
+      "name": "Syoss Intense Curls",
+      "baseline": "v1.6 calibration round-2 lanes P10 (candidate ebe435c9); Aug-26 approved moderate",
+      "wLine": {
+        "position": 7,
+        "inci": "Panthenol",
+        "classes": [
+          "sub1_active"
+        ],
+        "packetPosition": 8
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 10,
+        "packetPosition": 11
+      },
+      "skipped": [],
+      "alphabeticalRun": null,
+      "material": [],
+      "nonMaterial": [
+        "Hydrogenated Castor Oil@15",
+        "Prunus Armeniaca Kernel Oil@21"
+      ],
+      "weightV16": "moderate",
+      "weightV161": "moderate",
+      "moves": [],
+      "mustNotChange": [
+        "all eight direct properties",
+        "fits",
+        "weight moderate",
+        "target ordinary",
+        "cleansingIntensity regular",
+        "conditioningLevel high (C2 keeps E3: Dimethicone@8 still prominent)"
+      ],
+      "note": "W-line 7 in normalized positions (row 132). Lipids are not material, so they never end W1 (c); same as the v1.6 E3 reading (Parfum @10). Conditioning stays high (C2 keeps E3).",
+      "otherFamilies": [
+        "PEG-7 Glyceryl Cocoate@5 weak_refatter",
+        "Hydrolyzed Keratin@6 protein_film",
+        "Dimethicone@8 silicone",
+        "Amodimethicone@12 silicone",
+        "Guar HPTC@13 cationic_polymer"
+      ]
+    },
+    "G12": {
+      "name": "Balea Professional Ultimate Volume",
+      "baseline": "v1.6 calibration round-2 lanes P11; Aug-26 approved low",
+      "wLine": {
+        "position": 7,
+        "inci": "Biotin",
+        "classes": [
+          "sub1_active"
+        ]
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 13
+      },
+      "skipped": [],
+      "alphabeticalRun": null,
+      "material": [],
+      "nonMaterial": [],
+      "weightV16": "low",
+      "weightV161": "low",
+      "moves": [],
+      "mustNotChange": [
+        "all eight direct properties (conditioningLevel lane split moderate/low is a v1.6 split, not scored)",
+        "fits",
+        "weight light",
+        "target ordinary",
+        "cleansingIntensity regular"
+      ],
+      "otherFamilies": [
+        "Hydrolyzed Wheat Protein@6 protein_film",
+        "Guar HPTC@10 cationic_polymer"
+      ]
+    },
+    "P01": {
+      "name": "Maria Nila Head & Hair Heal",
+      "baseline": "v1.6-profi kit PF34 (both lanes agree)",
+      "wLine": {
+        "position": 21,
+        "inci": "Benzoic Acid",
+        "classes": [
+          "preservative_or_capped_active"
+        ]
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 37
+      },
+      "skipped": [
+        "w_line_skipped:Biotinoyl Tripeptide-1@7 (ii: PPG-2 Hydroxyethyl Cocamide@19)",
+        "w_line_skipped:Acetyl Tetrapeptide-3@10 (ii)",
+        "w_line_skipped:Piroctone Olamine@12 (ii)",
+        "w_line_skipped:Tocopheryl Acetate@13 (ii)"
+      ],
+      "alphabeticalRun": null,
+      "material": [
+        "Helianthus Annuus Seed Oil@15"
+      ],
+      "nonMaterial": [],
+      "weightV16": "moderate",
+      "weightV161": "high",
+      "weightV161Confidence": "moderate (neighbor moderate)",
+      "moves": [
+        "weightPotential moderate -> high (W-RICH lipid leg now material: sunflower@15 before W-line 21; partner guar@16 / silicone@18 read as in v1.6; resetCapacity weak, C6 low)",
+        "weight moderate -> heavy",
+        "thicknessFit.normal ideal -> acceptable",
+        "thicknessFit.fine stays acceptable but via T6 (T1 not_suited): note scalp_concern_floor_applied:fine added",
+        "reviewFlags: review_thickness_boundary normal and coarse removed (W neighbor moderate only raises tiers)"
+      ],
+      "mustNotChange": [
+        "cleansingStrength low",
+        "conditioningLevel high",
+        "dandruffSupport supported",
+        "focusPrimary scalp_active",
+        "focusSecondary []",
+        "usageRole treatment",
+        "scalpComfortTarget not_targeted",
+        "targets dandruff only",
+        "researchCombinationTargets []",
+        "cleansingIntensity gentle",
+        "row set schuppen x fine/normal/coarse",
+        "notes hair_loss_claim_not_evaluated and dandruff_bundled_comfort_wording"
+      ],
+      "otherFamilies": [
+        "Tocopheryl Acetate@13 weak_refatter",
+        "Guar HPTC@16 cationic_polymer",
+        "Amodimethicone/Morpholinomethyl Silsesquioxane Copolymer@18 silicone",
+        "Quaternium-95@26 cationic_conditioner"
+      ]
+    },
+    "P02": {
+      "name": "Maria Nila Pure Volume",
+      "baseline": "v1.6-profi kit PF27 (agree on weight; focus split A volume / B repair)",
+      "wLine": {
+        "position": 21,
+        "inci": "Potassium Sorbate",
+        "classes": [
+          "preservative_or_capped_active"
+        ]
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 33
+      },
+      "skipped": [
+        "w_line_skipped:Panthenol@7 (ii: PPG-2 Hydroxyethyl Cocamide@17)"
+      ],
+      "alphabeticalRun": null,
+      "material": [
+        "Helianthus Annuus Seed Oil@8"
+      ],
+      "nonMaterial": [],
+      "weightV16": "high",
+      "weightV161": "high",
+      "moves": [],
+      "mustNotChange": [
+        "all eight direct properties incl. weight high|moderate|moderate",
+        "fits fine not_suited / normal acceptable / coarse ideal",
+        "weight heavy",
+        "target ordinary",
+        "cleansingIntensity gentle"
+      ],
+      "note": "focusPrimary lane split (volume/repair) is a v1.6 split unrelated to v1.6.1; not scored.",
+      "otherFamilies": [
+        "cationic wheat copolymer@9",
+        "Hydrolyzed Wheat Protein@11",
+        "silicone copolymer@12",
+        "silanetriol protein@13",
+        "Quaternium-95@16",
+        "Guar HPTC@18"
+      ]
+    },
+    "P03": {
+      "name": "Maria Nila True Soft",
+      "baseline": "v1.6-profi kit PF07",
+      "wLine": {
+        "position": 25,
+        "inci": "Alpha-Isomethyl Ionone",
+        "classes": [
+          "fragrance"
+        ]
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 31
+      },
+      "skipped": [
+        "w_line_skipped:Dehydroacetic Acid@19 (ii: PPG-2 Hydroxyethyl Cocamide@22)"
+      ],
+      "alphabeticalRun": null,
+      "material": [
+        "Argania Spinosa Kernel Oil@7",
+        "Helianthus Annuus Seed Oil@9"
+      ],
+      "nonMaterial": [],
+      "weightV16": "high",
+      "weightV161": "high",
+      "moves": [],
+      "mustNotChange": [
+        "all eight direct properties",
+        "fits",
+        "weight heavy",
+        "target ordinary",
+        "cleansingIntensity gentle"
+      ],
+      "otherFamilies": [
+        "proteins@8/@12",
+        "Guar HPTC@13",
+        "hydroxypropyldimonium quat@15",
+        "silicone copolymer@16",
+        "Quaternium-95@21"
+      ]
+    },
+    "P05": {
+      "name": "Davines NaturalTech Purifying",
+      "baseline": "v1.6-profi kit-r2 PR07 (supersedes kit PF17)",
+      "wLine": {
+        "position": 14,
+        "inci": "Sodium Benzoate",
+        "classes": [
+          "preservative_or_capped_active"
+        ]
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 21
+      },
+      "skipped": [
+        "w_line_skipped:Selenium Sulfide@9 (ii: Coco-Glucoside@12)"
+      ],
+      "alphabeticalRun": null,
+      "material": [],
+      "nonMaterial": [],
+      "weightV16": "low",
+      "weightV161": "low",
+      "dandruffSupportV161": "supported",
+      "dandruffPathPasses": true,
+      "dandruffPathCondition": "pack-front unit \"SHAMPOO FOR SCALP WITH OILY OR DRY DANDRUFF\" graded high (E1 pack text in any language, row 131); \"dandruff\" is on the closed English list",
+      "moves": [
+        "dandruffSupport not_supported -> supported (confidence high)",
+        "usageRole regular -> treatment",
+        "focusPrimary general -> scalp_active",
+        "primary target ordinary -> dandruff; rows normal x fine/normal/coarse -> schuppen x fine/normal/coarse (route dandruff)",
+        "requiredProtocolRoles shampoo_everyday -> shampoo_dandruff",
+        "reviewFlags: review_specialist_gate_failed:dandruff removed",
+        "informationalNotes: dandruff_oily_scalp_wording only if \"scalp with oily ... dandruff\" is read as the English term \"oily scalp\" (ambiguity R4); S-OILY clause fails on cleansingStrength low either way; not scored"
+      ],
+      "mustNotChange": [
+        "cleansingStrength low",
+        "conditioningLevel low",
+        "weightPotential low",
+        "scalpComfortTarget not_targeted",
+        "focusSecondary []",
+        "fits fine ideal / normal ideal / coarse acceptable",
+        "weight light",
+        "cleansingIntensity gentle (rows amber; dandruff role not ranked because intensity differs)",
+        "researchCombinationTargets []",
+        "note hair_loss_claim_not_evaluated"
+      ],
+      "otherFamilies": [
+        "Glyceryl Oleate@10 weak_refatter"
+      ]
+    },
+    "P06": {
+      "name": "KMS HeadRemedy Anti-Dandruff",
+      "baseline": "v1.6-profi kit PF25",
+      "wLine": {
+        "position": 9,
+        "inci": "Piroctone Olamine",
+        "classes": [
+          "preservative_or_capped_active"
+        ]
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 19
+      },
+      "skipped": [],
+      "alphabeticalRun": null,
+      "material": [],
+      "nonMaterial": [],
+      "weightV16": "low",
+      "weightV161": "low",
+      "cleansingStrengthV161": "low (moderate confidence, neighbor moderate; C6 earliest = Cocamidopropyl Betaine@2, so the C3b sulfolaurate limit does not apply)",
+      "moves": [],
+      "mustNotChange": [
+        "all eight direct properties incl. cleansingStrength low|moderate|moderate",
+        "target dandruff",
+        "fits",
+        "weight light",
+        "cleansingIntensity gentle"
+      ],
+      "note": "scalpComfortTarget and researchCombinationTargets lane splits are v1.6 splits; not scored.",
+      "otherFamilies": [
+        "PEG-7 Glyceryl Cocoate@10 weak_refatter",
+        "Polyquaternium-47@11 cationic_polymer"
+      ]
+    },
+    "P09": {
+      "name": "Kevin.Murphy Hydrate-Me.Wash",
+      "baseline": "v1.6-profi kit PF26",
+      "wLine": {
+        "position": 40,
+        "inci": "Phenoxyethanol",
+        "classes": [
+          "preservative_or_capped_active"
+        ]
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 45
+      },
+      "skipped": [
+        "w_line_skipped:Panthenol@11 (ii: Sodium Methyl Cocoyl Taurate@33)",
+        "w_line_skipped:Tocopherol@12 (ii)",
+        "w_line_skipped:Biotin@13 (ii)",
+        "w_line_skipped:Tocopheryl Acetate@15 (ii)"
+      ],
+      "alphabeticalRun": null,
+      "material": [
+        "Butyrospermum Parkii Butter@19",
+        "Oenothera Biennis Oil@20",
+        "Rosa Canina Fruit Oil@24",
+        "Jojoba Esters@25"
+      ],
+      "nonMaterial": [],
+      "weightV16": "high",
+      "weightV161": "high",
+      "moves": [],
+      "mustNotChange": [
+        "all eight direct properties",
+        "fits",
+        "weight heavy",
+        "target ordinary",
+        "cleansingIntensity gentle"
+      ],
+      "otherFamilies": [
+        "milk protein@26",
+        "Cetrimonium Chloride@29",
+        "Amodimethicone@30",
+        "Silicone Quaternium-18@31",
+        "Quaternium-95@32",
+        "Polyquaternium-10@37"
+      ]
+    },
+    "P25": {
+      "name": "OLAPLEX No.4 Bond Maintenance",
+      "baseline": "v1.6-profi kit-r2 PR05 (kit r1 PF21 has no lane output); lanes split weight high (A, low) / moderate (B, low); cautious high; needs_research",
+      "wLine": {
+        "position": 63,
+        "inci": "Benzoic Acid",
+        "classes": [
+          "preservative_or_capped_active"
+        ]
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 71
+      },
+      "skipped": [
+        "w_line_skipped:Biotin@12 (ii: Sodium Cocoyl Glutamate@36, Glycol Distearate@37)",
+        "w_line_skipped:Sodium Hyaluronate@13 (ii)",
+        "w_line_skipped:Panthenol@14 (ii)",
+        "w_line_skipped:Tocopherol@15 (ii)",
+        "w_line_skipped:Caprylyl Glycol@33 (ii: Sodium Cocoyl Glutamate@36)",
+        "w_line_skipped:Ethylhexylglycerin@43 (ii: Sodium Lauryl Sulfoacetate@44)"
+      ],
+      "alphabeticalRun": null,
+      "material": [
+        "Helianthus Annuus Seed Oil@24",
+        "Prunus Armeniaca Kernel Oil@25",
+        "Argania Spinosa Kernel Oil@26"
+      ],
+      "nonMaterial": [],
+      "weightV16": "high (cautious; lane B moderate)",
+      "weightV161": "high",
+      "weightV161Confidence": "low (formula not_known_complete, ID-1) -> needs_research",
+      "moves": [
+        "lane B weightPotential moderate -> high (lane-level; cautious value unchanged); lane-agreement on weight expected"
+      ],
+      "mustNotChange": [
+        "status needs_research",
+        "cleansingStrength low",
+        "conditioningLevel high",
+        "dandruffSupport (low confidence, formula incomplete)",
+        "target ordinary"
+      ],
+      "otherFamilies": [
+        "protein@28",
+        "PQ-10@30",
+        "PQ-11@31",
+        "Guar HPTC@32",
+        "Amodimethicone@34",
+        "Divinyldimethicone/Dimethicone Copolymer@35"
+      ]
+    },
+    "P29": {
+      "name": "Aveda Rosemary Mint Purifying",
+      "baseline": "v1.6-profi kit PF04; cleansing split A moderate / B strong",
+      "wLine": {
+        "position": 17,
+        "inci": "Fragrance (Parfum)",
+        "classes": [
+          "fragrance"
+        ]
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 17
+      },
+      "skipped": [],
+      "alphabeticalRun": null,
+      "material": [
+        "Helianthus Annuus Seed Oil@6"
+      ],
+      "nonMaterial": [],
+      "weightV16": "moderate",
+      "weightV161": "moderate",
+      "cleansingStrengthV161": "moderate (confidence moderate, neighbor strong): C5 with two prominent buffers (Babassuamidopropyl Betaine@4, Cocamidopropylamine Oxide@16); amine oxide decides the second buffer -> C3b limit",
+      "oilyClaimQualifies": true,
+      "oilyClaimEvidence": "DE manufacturer (Wayback capture 2026-04-16) 'Normales bis fettiges Haar wird mit diesem ... klaerenden Shampoo sanft gereinigt', graded moderate",
+      "sOilyFormulaClausePasses": true,
+      "moves": [
+        "lane B cleansingStrength strong -> moderate (lane A unchanged)",
+        "lane B usageRole alternating -> regular (moderate formula is never alternating)",
+        "primary target ordinary -> oily; rows normal/balanced -> dehydriert-fettig/oily for fine, normal, coarse",
+        "reviewFlags: review_thickness_boundary:fine removed (T6 floor after neighbor); review_thickness_boundary:normal stays",
+        "ordinary target confidence high -> oily target confidence moderate"
+      ],
+      "mustNotChange": [
+        "conditioningLevel moderate",
+        "weightPotential moderate",
+        "dandruffSupport not_supported",
+        "focusPrimary clarifying",
+        "scalpComfortTarget not_targeted",
+        "fits fine acceptable / normal ideal / coarse acceptable",
+        "weight moderate",
+        "cleansingIntensity regular",
+        "deepCleanserListing not_flagged",
+        "no secondary target"
+      ],
+      "otherFamilies": [
+        "Stearamidopropyl Dimethylamine@10 cationic_conditioner",
+        "Polyquaternium-4@12 cationic_polymer"
+      ],
+      "note": "Menthol@8 and Camphor@9 are not candidates (closed classic-26 allergen list, row 133) and are not recorded as skipped."
+    },
+    "P30": {
+      "name": "Moroccanoil Moisture Repair",
+      "baseline": "v1.6-profi kit PF08",
+      "wLine": {
+        "position": 16,
+        "inci": "FRAGRANCE",
+        "classes": [
+          "fragrance"
+        ]
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 16
+      },
+      "skipped": [],
+      "alphabeticalRun": null,
+      "material": [
+        "Argania Spinosa Kernel Oil@9",
+        "Persea Gratissima Oil@10"
+      ],
+      "nonMaterial": [],
+      "weightV16": "high",
+      "weightV161": "high",
+      "moves": [],
+      "mustNotChange": [
+        "all eight direct properties incl. weight high|high|none",
+        "fits",
+        "weight heavy",
+        "target ordinary",
+        "cleansingIntensity gentle"
+      ],
+      "otherFamilies": [
+        "Dimethicone@8",
+        "protein@15",
+        "silicones/quats @24-48"
+      ]
+    },
+    "P31": {
+      "name": "Vichy Dercos Anti-Schuppen normale bis fettige Kopfhaut",
+      "baseline": "v1.6-profi kit PF20",
+      "wLine": {
+        "position": 12,
+        "inci": "PARFUM / FRAGRANCE",
+        "classes": [
+          "fragrance",
+          "alphabetical_tail"
+        ]
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 12
+      },
+      "skipped": [],
+      "alphabeticalRun": {
+        "first": 11,
+        "last": 19
+      },
+      "material": [
+        "2-Oleamido-1,3-Octadecanediol@11 (if read as payload_lipid; v1.6 lanes did)"
+      ],
+      "nonMaterial": [],
+      "weightV16": "moderate",
+      "weightV161": "moderate",
+      "dandruffSupportV161": "supported",
+      "dandruffPathPasses": true,
+      "oilyClaimQualifies": true,
+      "oilyClaimEvidence": "name 'fuer normale bis fettige Kopfhaut' (high, already E2 in v1.6); directions 'fuer normales bis fettiges Haar' (manufacturer, moderate) newly E2 under S3; on the dandruff path both feed only the research-only combination",
+      "sOilyFormulaClausePasses": true,
+      "moves": [
+        "dandruffSupport not_supported -> supported (confidence high)",
+        "usageRole regular -> treatment",
+        "focusPrimary general -> scalp_active",
+        "primary target ordinary -> dandruff (no secondary); rows normal x 3 -> schuppen x 3 (route dandruff)",
+        "requiredProtocolRoles shampoo_everyday -> shampoo_dandruff",
+        "researchCombinationTargets [] -> [\"oily\"] with note suits_dandruff_with_oily_scalp",
+        "informationalNotes: dandruff_bundled_comfort_wording added ('Lindert Juckreiz auf der Kopfhaut'; S-SENSITIVE gate fails: no prominent E4 comfort route)",
+        "reviewFlags: review_specialist_gate_failed:dandruff removed; lane A review_thickness_boundary:fine removed (T6), lane A review_thickness_boundary:normal stays; lane B none"
+      ],
+      "mustNotChange": [
+        "cleansingStrength moderate",
+        "conditioningLevel moderate",
+        "weightPotential moderate",
+        "scalpComfortTarget not_targeted",
+        "focusSecondary []",
+        "fits fine acceptable / normal ideal / coarse acceptable",
+        "weight moderate",
+        "cleansingIntensity regular",
+        "explicitResetPositioning false (dandruff treatment schedule is not D1)"
+      ],
+      "otherFamilies": [
+        "Dimethicone@6 silicone",
+        "Tocopheryl Acetate@19 weak_refatter"
+      ],
+      "note": "W-line 12 (closed allergen list: Menthol@10 is not a candidate, row 133)."
+    },
+    "P32": {
+      "name": "Vichy Dercos Ultra-Sensitiv",
+      "baseline": "v1.6-profi kit PF30 (both lanes high)",
+      "wLine": {
+        "position": 10,
+        "inci": "BENZOIC ACID",
+        "classes": [
+          "preservative_or_capped_active",
+          "alphabetical_tail"
+        ]
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 38
+      },
+      "skipped": [],
+      "alphabeticalRun": {
+        "first": 9,
+        "last": 37
+      },
+      "material": [],
+      "nonMaterial": [
+        "Prunus Armeniaca Kernel Oil@30"
+      ],
+      "weightV16": "high",
+      "weightV161": "high",
+      "weightV161Confidence": "moderate (neighbor moderate), as v1.6",
+      "moves": [],
+      "mustNotChange": [
+        "all eight direct properties incl. weightPotential high|moderate|moderate",
+        "fits fine acceptable (T6) / normal acceptable / coarse ideal",
+        "weight heavy",
+        "targets dry + sensitive",
+        "cleansingIntensity gentle",
+        "review_intensity_boundary:trocken and :irritationen",
+        "notes active_without_dandruff_positioning and scalp_concern_floor_applied:fine",
+        "no review_thickness_boundary flags"
+      ],
+      "otherFamilies": [
+        "Amodimethicone@9 silicone",
+        "Cetrimonium Chloride@14 cationic_conditioner",
+        "Divinyldimethicone/Dimethicone Copolymer@18 silicone",
+        "Hydrogenated Coconut Acid@19 weak_refatter",
+        "Polyquaternium-10@25",
+        "Polyquaternium-7@26"
+      ],
+      "note": "W-RICH not established (apricot oil@30 after W-line 10), but the convergence route stays open: silicones, cationic polymers and the cationic conditioner count position-independently (row 130). The v1.6 high rested on that route."
+    },
+    "P34": {
+      "name": "GLYNT DERMA",
+      "baseline": "v1.6-profi kit PF39 (both lanes strong)",
+      "wLine": {
+        "position": 19,
+        "inci": "Piroctone Olamine",
+        "classes": [
+          "preservative_or_capped_active"
+        ]
+      },
+      "wLineAlternative": {
+        "position": 32,
+        "inci": "Parfum",
+        "condition": "only if Capryloyl Glycine@21 is read as a mild anionic glycinate for W-LINE (ii); the text leaves its surfactant status undecided (row 135). Band unaffected (ambiguity R2)"
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 32
+      },
+      "skipped": [],
+      "alphabeticalRun": null,
+      "material": [
+        "Lauryl/Myristyl Polyricinoleate@12"
+      ],
+      "nonMaterial": [
+        "Hydrogenated Castor Oil@23",
+        "Stearic Acid@24 / Palmitic Acid@25 (if read as payload_lipid)"
+      ],
+      "weightV16": "moderate",
+      "weightV161": "moderate",
+      "cleansingStrengthV161": "moderate (confidence moderate, neighbor strong): C5, Sulfated Castor Oil@16 is no longer a reinforcing route; buffers @3, @4, @5, @17",
+      "moves": [
+        "cleansingStrength strong -> moderate",
+        "usageRole neighboringAlternative alternating no longer reachable (value treatment unchanged)",
+        "lane B note dandruff_bundled_comfort_wording no longer names strong_cleansing",
+        "weight evidence: Sulfated Castor Oil@16 moves from a deposition family (lane A weak_refatter) to excluded; record only"
+      ],
+      "mustNotChange": [
+        "conditioningLevel high",
+        "weightPotential moderate",
+        "dandruffSupport supported",
+        "focusPrimary scalp_active",
+        "usageRole treatment",
+        "scalpComfortTarget not_targeted",
+        "target dandruff",
+        "researchCombinationTargets [] (S-OILY fails on conditioningLevel high)",
+        "fits fine acceptable / normal ideal / coarse ideal",
+        "weight moderate",
+        "cleansingIntensity regular",
+        "review_thickness_boundary normal, coarse"
+      ],
+      "otherFamilies": [
+        "HP Guar HPTC@10 cationic_polymer",
+        "Behenoyl PG-Trimonium Chloride@11 cationic_conditioner"
+      ],
+      "excluded": [
+        "Sulfated Castor Oil@16 (no weight family, row 136)"
+      ]
+    },
+    "P35": {
+      "name": "System Professional Purify P1",
+      "baseline": "v1.6-profi kit-r2 PR10",
+      "wLine": {
+        "position": 8,
+        "inci": "Piroctone Olamine",
+        "classes": [
+          "preservative_or_capped_active"
+        ]
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 11
+      },
+      "skipped": [],
+      "alphabeticalRun": null,
+      "material": [],
+      "nonMaterial": [],
+      "weightV16": "low",
+      "weightV161": "low",
+      "cleansingStrengthV161": "strong (confidence moderate, neighbor moderate): C1 with Sodium Laureth-8 Sulfate@4 as the only reinforcing route -> C3b limit",
+      "moves": [],
+      "mustNotChange": [
+        "all eight direct properties incl. cleansingStrength strong|moderate|moderate",
+        "target dandruff",
+        "usageRole treatment",
+        "fits",
+        "weight light",
+        "cleansingIntensity regular"
+      ],
+      "otherFamilies": [
+        "Polyquaternium-10@18"
+      ]
+    },
+    "P36": {
+      "name": "System Professional Purify Shampeeling P4",
+      "baseline": "v1.6-profi kit-r2 PR06",
+      "wLine": {
+        "position": 8,
+        "inci": "Piroctone Olamine",
+        "classes": [
+          "preservative_or_capped_active"
+        ]
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 10
+      },
+      "skipped": [],
+      "alphabeticalRun": null,
+      "material": [],
+      "nonMaterial": [],
+      "weightV16": "low",
+      "weightV161": "low",
+      "cleansingStrengthV161": "strong (confidence moderate, neighbor moderate): C1 with Sodium Laureth-8 Sulfate@4 as the only reinforcing route -> C3b limit",
+      "moves": [],
+      "mustNotChange": [
+        "all eight direct properties incl. cleansingStrength strong|moderate|moderate",
+        "target dandruff (EN pack-front, see defect D1)",
+        "usageRole treatment",
+        "fits",
+        "weight light",
+        "cleansingIntensity regular"
+      ],
+      "otherFamilies": [
+        "Polyquaternium-10@21"
+      ]
+    },
+    "P39": {
+      "name": "Color Wow Curl Wow HOOKED",
+      "baseline": "v1.6-profi kit PF02; cleansing split A low / B strong (low confidence, needs_research)",
+      "wLine": {
+        "position": 11,
+        "inci": "Fragrance/Parfum",
+        "classes": [
+          "fragrance"
+        ]
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 11
+      },
+      "skipped": [
+        "w_line_skipped:Phenoxyethanol@9 (ii: Disodium 2-Sulfolaurate@10)"
+      ],
+      "alphabeticalRun": null,
+      "material": [],
+      "nonMaterial": [],
+      "weightV16": "low",
+      "weightV161": "low",
+      "cleansingStrengthV161": "low (confidence moderate, neighbor moderate): C6, earliest = Sodium Methyl 2-Sulfolaurate@2 (mild anionic) with prominent amphoteric @3/@6 -> C3b limit",
+      "moves": [
+        "lane B cleansingStrength strong (low) -> low (moderate, neighbor moderate)",
+        "lane B cleansingIntensity regular -> gentle",
+        "lane B status needs_research -> projected"
+      ],
+      "mustNotChange": [
+        "lane A cleansingStrength low|moderate|moderate",
+        "conditioningLevel low",
+        "weightPotential low",
+        "dandruffSupport not_supported",
+        "focusPrimary general",
+        "usageRole regular",
+        "target ordinary",
+        "fits fine ideal / normal ideal / coarse acceptable",
+        "weight light"
+      ],
+      "otherFamilies": [
+        "Polyquaternium-22@15",
+        "Hydrolyzed Wheat Protein@24"
+      ]
+    },
+    "P40": {
+      "name": "Moroccanoil Clarifying",
+      "baseline": "v1.6-profi kit PF32",
+      "wLine": {
+        "position": 13,
+        "inci": "FRAGRANCE/PERFUME",
+        "classes": [
+          "fragrance"
+        ]
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 13
+      },
+      "skipped": [],
+      "alphabeticalRun": null,
+      "material": [
+        "Argania Spinosa Kernel Oil@7",
+        "Persea Gratissima Oil@8"
+      ],
+      "nonMaterial": [],
+      "weightV16": "moderate",
+      "weightV161": "moderate",
+      "cleansingStrengthV161": "low (unchanged; Cocamidopropylamine Oxide@18 is not prominent)",
+      "moves": [],
+      "mustNotChange": [
+        "all eight direct properties",
+        "fits",
+        "weight moderate",
+        "target ordinary",
+        "cleansingIntensity gentle",
+        "note deep_cleansing_name_ordinary_formula"
+      ],
+      "otherFamilies": [
+        "Cinnamidopropyltrimonium Chloride@26 cationic_conditioner",
+        "Cocamidopropyl Dimethylamine@30 cationic_conditioner",
+        "PEG-6 Caprylic/Capric Glycerides@25 weak_refatter",
+        "amino acids/keratin @32-36 protein_film"
+      ],
+      "note": "At risk (ambiguity R1): material lipid leg + cationic partners that now count \"wherever listed\" + weak reset (C6 low) could formally satisfy the W-RICH rich route -> high. Both v1.6 lanes refused W-RICH because the cationics are trace post-fragrance. Pre-registered SAME moderate (partners \"keep their v1.6 reading\"); a move to high is adjudicated as R1, not as a lane error."
+    },
+    "U2-04": {
+      "name": "John Frieda Violet Crush Intensiv Silber",
+      "baseline": "v1.6 calibration unseen-v2 Q01 (candidate 0d3bbe56)",
+      "wLine": {
+        "position": 11,
+        "inci": "Panthenol",
+        "classes": [
+          "sub1_active"
+        ]
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 14
+      },
+      "skipped": [],
+      "alphabeticalRun": null,
+      "material": [
+        "Hydrogenated Vegetable Oil@7"
+      ],
+      "nonMaterial": [],
+      "weightV16": "moderate",
+      "weightV161": "moderate",
+      "moves": [],
+      "mustNotChange": [
+        "all eight direct properties",
+        "fits",
+        "weight moderate",
+        "target ordinary",
+        "cleansingIntensity regular"
+      ],
+      "otherFamilies": [
+        "Glyceryl Oleate@8 weak_refatter",
+        "Guar HPTC@9 cationic_polymer"
+      ]
+    },
+    "U3": {
+      "name": "Plantur 39 Phyto-Coffein",
+      "baseline": "v1.6 calibration round-1 L04 (early candidate 6edd1b14; weaker comparator)",
+      "wLine": {
+        "position": 9,
+        "inci": "Caffeine",
+        "classes": [
+          "sub1_active"
+        ]
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 21
+      },
+      "skipped": [
+        "w_line_skipped:Panthenol@4 (ii: Disodium Laureth Sulfosuccinate@5, Sodium Lauroyl Glutamate@7)"
+      ],
+      "alphabeticalRun": null,
+      "material": [],
+      "nonMaterial": [],
+      "weightV16": "low",
+      "weightV161": "low",
+      "moves": [],
+      "mustNotChange": [
+        "weightPotential low",
+        "cleansingStrength moderate",
+        "dandruffSupport not_supported",
+        "target ordinary",
+        "fits",
+        "weight light",
+        "cleansingIntensity regular"
+      ],
+      "otherFamilies": [
+        "Polyquaternium-7@13",
+        "Hydrolyzed Wheat Protein@17"
+      ]
+    },
+    "U4": {
+      "name": "Wahre Schaetze Aktivkohle",
+      "baseline": "v1.6 calibration round-1 L02 (early candidate 6edd1b14; weaker comparator)",
+      "wLine": {
+        "position": 10,
+        "inci": "CITRIC ACID",
+        "classes": [
+          "alphabetical_tail"
+        ]
+      },
+      "wLineState": "candidate",
+      "cap": {
+        "type": "e3Point",
+        "position": 21
+      },
+      "skipped": [],
+      "alphabeticalRun": {
+        "first": 9,
+        "last": 15
+      },
+      "material": [
+        "Nigella Sativa Seed Oil@5"
+      ],
+      "nonMaterial": [],
+      "weightV16": "low",
+      "weightV161": "low",
+      "oilyClaimQualifies": true,
+      "oilyClaimEvidence": "manufacturer 'schnell fettende Kopfhaut' (already v1.6); retailer 'Haartyp: fettiges Haar' is an attribute field and never qualifies",
+      "moves": [],
+      "mustNotChange": [
+        "all eight direct properties",
+        "target oily",
+        "fits",
+        "weight light",
+        "cleansingIntensity clarifying",
+        "deepCleanserListing"
+      ],
+      "otherFamilies": [
+        "Guar HPTC@8 cationic_polymer"
+      ]
+    }
+  },
+  "expectedMovements": [
+    "P01 weightPotential moderate -> high; weight moderate -> heavy; fit.normal ideal -> acceptable; review_thickness_boundary normal and coarse removed; note scalp_concern_floor_applied:fine added",
+    "P31 dandruffSupport not_supported -> supported; usageRole regular -> treatment; focusPrimary general -> scalp_active; target ordinary -> dandruff; roles everyday -> dandruff; researchCombinationTargets [] -> [oily]; notes suits_dandruff_with_oily_scalp + dandruff_bundled_comfort_wording; S-FAIL flag removed; lane A T4 fine flag removed",
+    "P05 dandruffSupport not_supported -> supported; usageRole regular -> treatment; focusPrimary general -> scalp_active; target ordinary -> dandruff (gentle rows); roles everyday -> dandruff; S-FAIL flag removed",
+    "P29 target ordinary -> oily (dehydriert-fettig rows); target confidence high -> moderate; T4 fine flag removed; lane B cleansingStrength strong -> moderate and usageRole alternating -> regular",
+    "P34 cleansingStrength strong -> moderate (intensity regular unchanged); Sulfated Castor Oil recorded as excluded",
+    "P39 lane B cleansingStrength strong -> low; lane B intensity regular -> gentle; lane B needs_research -> projected",
+    "P25 lane B weightPotential moderate -> high (cautious value unchanged, needs_research)"
+  ],
+  "defects": [
+    "R1 (consequential) Non-lipid families 'keep their v1.6 reading ... wherever they are listed', and W-RICH's partner needs only to be 'present and plausibly persistent, wherever it is listed'. It is unclear whether a lane may still discount a trace post-fragrance silicone/cationic in depositionLoad/persistence, as both v1.6 lanes did for P40 (and lane B did for A13 in v1.4). Strict reading: P40 W-RICH + weak reset -> high. Fix: one sentence saying whether position may still inform depositionLoad/persistence for non-lipid families (W-RICH partner 'plausibly persistent' judgment).",
+    "R2 (record only) Capryloyl Glycine is not a candidate, but its surfactant status for W-LINE (ii) is undecided in the text; C3's unlisted-surfactant rule (acylate -> mild anionic) could make P34 Piroctone Olamine@19 implausible -> W-line 32. Band unaffected. Fix: say it is not a cleansing surfactant for (ii), or accept both records.",
+    "R3 (record only) payload_lipid vs weak_refatter for borderline lipids now decides whether the W-line applies at all: 2-Oleamido-1,3-Octadecanediol (P31@11), Hydrogenated Coconut Acid (P32@19), Stearic/Palmitic Acid (P34@24/25; v1.6 lanes split). No band affected in this cohort.",
+    "R4 (note only) P05 pack text 'SCALP WITH OILY OR DRY DANDRUFF': whether 'oily ... dandruff' matches the English term 'oily scalp'. Only the presence of note dandruff_oily_scalp_wording depends on it."
+  ],
+  "baselineGaps": [
+    "A13: no v1.6 lane record (only Aug-26 approval high and v1.4 rerun-v3 moderate, lanes high/moderate)",
+    "U3, U4: only round-1 lanes (candidate 6edd1b14, pre-round-2 text)",
+    "P25: kit r1 PF21 has no lane output; kit-r2 PR05 used"
+  ],
+  "supersedes": "pre-registration v1 (same date), written against rows 116-129 only",
+  "materialNote": "material/nonMaterial list payload_lipid members only (row 130). All other deposition families are read as in v1.6, position-independent, and are listed under otherFamilies.",
+  "changesVsV1": [
+    "P32: no longer moves; stays high/heavy, normal acceptable, floor note kept, no new T4 flags (row 130)",
+    "A13: W-line has no effect (no payload_lipid); high reachable again; not pre-registered as a constraint",
+    "Material/non-material lists now hold payload_lipid only; other families listed under otherFamilies",
+    "P31: W-line fixed at 12 (row 133); Menthol alternative removed",
+    "P29: Menthol/Camphor no longer recorded as skipped (row 133)",
+    "P05/P36: pack-front English grading now stated in the text (row 131)",
+    "G09: normalized W-line 7 now required by the text (row 132)",
+    "P34: Sulfated Castor Oil excluded (row 136); Capryloyl Glycine not a candidate (row 135), surfactant status residual",
+    "D3: no cohort product records w_line_fallback_e3 or w_line_none_visible (row 134)",
+    "New ambiguity R1 (P40 at risk of moderate -> high)"
+  ]
+}

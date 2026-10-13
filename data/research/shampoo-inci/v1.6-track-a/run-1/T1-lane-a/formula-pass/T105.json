@@ -1,0 +1,45 @@
+{
+  "blindId": "T105",
+  "inciFingerprintSha256": "ad4168be859a6e0b1b7a76ae82e1e72040e87afa86dcf97031a6745545d783f4",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {"normalization": "Packet list used as normalized; normalized one-based positions.", "completeness": "complete (ID-1)", "sourceTier": 2, "identityConfidence": "high", "e3ProminenceCutoff": "No Parfum declared -> preservative fallback: Sodium Benzoate at 15 -> positions 1-14 prominent"},
+  "directProperties": {
+    "cleansingStrength": {"value": "moderate", "confidence": "moderate", "neighboringAlternative": "low",
+      "rationale": "C4/C5: the earliest prominent strong anionic is Sodium Coco-Sulfate (4, alkyl sulfate) -> defining anionic; buffers Coco-Glucoside (2) and Sodium Cocoamphoacetate (5) (two buffers), no reinforcing route -> moderate.",
+      "counterSignals": "The glucoside is listed before the sulfate and Glycerin (3) sits before it too: a glucoside-led, buffered architecture argues toward low; the convention keeps moderate."},
+    "conditioningLevel": {"value": "moderate", "confidence": "moderate", "neighboringAlternative": "low",
+      "rationale": "One meaningful cationic system, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (12), plus light routes: weak refatters Glyceryl Oleate (11), Hydrogenated Palm Glycerides Citrate (13), Lecithin (14), and humectants Glycerin (3), Panthenol (7). C2 not met (no silicone, no payload lipid).",
+      "counterSignals": "No silicone or payload lipid; the refatters are weak."},
+    "weightPotential": {"value": "low", "confidence": "moderate", "neighboringAlternative": "moderate",
+      "rationale": "One cationic guar plus weak refatters; no silicone, payload lipid, protein or film former.",
+      "subjudgments": {
+        "depositionLoad": {"value": "light", "rationale": "Guar (12) and weak refatters (11, 13, 14) with Tocopherol/Ascorbyl Palmitate (9, 10)."},
+        "persistence": {"value": "low", "rationale": "No persistent silicone or lipid system."},
+        "resetCapacity": {"value": "moderate", "rationale": "Coco-sulfate with glucoside and amphoacetate (C5 moderate); a mild-leaning but complete chassis."}},
+      "evidenceByFamily": {"cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (12)"], "weak_refatter": ["Tocopherol (9)", "Ascorbyl Palmitate (10)", "Glyceryl Oleate (11)", "Hydrogenated Palm Glycerides Citrate (13)", "Lecithin (14)"], "anionic_surfactant": ["Sodium Coco-Sulfate (4)"], "nonionic_surfactant": ["Coco-Glucoside (2)"], "amphoteric_surfactant": ["Sodium Cocoamphoacetate (5)"], "humectant_context": ["Glycerin (3)", "Panthenol (7)", "Niacinamide (8)"]},
+      "excluded": [],
+      "unresolved": [],
+      "whyThisBand": "Deposition is light and weakly retained.",
+      "whyNotNeighborBand": "W2: two families, but the only families are a single guar and weak_refatters (plus humectants); no silicone/lipid/film former, so combined residue is plausibly below noticeable.",
+      "confidenceLimitingFactor": "Guar at 12 is fairly prominent in a short list; one step toward moderate is realistic."},
+    "focusPrimary": {"value": "provisional:pending_claims", "confidence": "low", "neighboringAlternative": "general",
+      "rationale": "Formula-only: mild, fragrance-free, comfort/humectant-rich (Glycerin, Panthenol, Niacinamide) -> plausible scalp_active (sensitive) or moisture candidate; no claims seen.",
+      "careDirectionVerdictProvisional": "moisture_supported (humectant cluster with guar/refatter support; modest)"},
+    "focusSecondary": {"value": [], "confidence": "low", "neighboringAlternative": ["moisture"], "rationale": "Empty default pending claims."},
+    "usageRole": {"value": "regular", "confidence": "low", "neighboringAlternative": "frequent", "rationale": "Default; frequent possible with explicit frequency wording (cleansing not strong)."},
+    "scalpComfortTarget": {"value": "provisional:not_targeted", "confidence": "low", "neighboringAlternative": "targeted", "rationale": "Positioning unknown. CSA formula half met: prominent comfort routes Panthenol (7), Niacinamide (8); humectant routes Glycerin (3), Glyceryl Oleate (11). Supportive: no declared fragrance."},
+    "dandruffSupport": {"value": "not_supported", "confidence": "high", "neighboringAlternative": "none", "rationale": "Neither Piroctone Olamine nor Climbazole in the complete INCI."}
+  },
+  "formulaFacts": [
+    {"ingredient": "Coco-Glucoside", "position": 2, "role": "buffer (nonionic glucoside)"},
+    {"ingredient": "Glycerin", "position": 3, "role": "humectant (C2/E4)"},
+    {"ingredient": "Sodium Coco-Sulfate", "position": 4, "role": "defining anionic (alkyl sulfate)"},
+    {"ingredient": "Sodium Cocoamphoacetate", "position": 5, "role": "buffer (amphoteric)"},
+    {"ingredient": "Panthenol", "position": 7, "role": "E4 comfort + humectant route"},
+    {"ingredient": "Niacinamide", "position": 8, "role": "E4 comfort route"},
+    {"ingredient": "Glyceryl Oleate", "position": 11, "role": "weak_refatter; E4 refatting"},
+    {"ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride", "position": 12, "role": "cationic_polymer"},
+    {"ingredient": "Sodium Benzoate", "position": 15, "role": "E3 preservative fallback marker"}
+  ],
+  "unresolvedMaterialIngredients": []
+}

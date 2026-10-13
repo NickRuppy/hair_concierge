@@ -40,7 +40,7 @@ import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contract
 
 const ROOT = new URL("../", import.meta.url)
 const SLICE = "plans/catalog-completeness-fill/slice1/"
-const MIGRATION = "supabase/migrations/20261011140000_catalog_completeness_fill_slice1.sql"
+const MIGRATION = "supabase/migrations/20261013130000_catalog_completeness_fill_slice1.sql"
 /** #660 step 2: in the repo chain before Slice 1, not yet applied in production at capture. */
 const CHAIN_BEFORE =
   "supabase/migrations/20261011120000_bondbuilder_retire_bond_repair_intensity.sql"

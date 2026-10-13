@@ -11,7 +11,9 @@ import {
 } from "@/components/personal-plan-journey"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import type { Stage1ToolBlock } from "@/lib/personal-plan/tools/read-view"
 import { NeedCard, NeedCardGroup, isNeedCardGroup, type PlanStartCardViewModel } from "./need-card"
+import { ToolBlock } from "./tool-block"
 
 export type NeedPlanScreenKind = "basis" | "optional"
 
@@ -24,6 +26,11 @@ export type NeedPlanScreenViewModel = {
   countLabel: string
   cards: PlanStartCardViewModel[]
   progress: 50 | 100
+  /**
+   * Tier-local Hair Tools block, rendered after this page's care-product cards. Absent whenever
+   * the Tools rollout is off or this tier has no Tool card (read-time, `buildToolView`).
+   */
+  toolBlock?: Stage1ToolBlock | null
 }
 
 export const PLAN_START_CATALOG_DISCLAIMER =
@@ -192,6 +199,8 @@ export function NeedPlanScreen({
             ),
           )}
         </div>
+
+        {screen.toolBlock ? <ToolBlock block={screen.toolBlock} /> : null}
       </main>
       {actionPortalTarget ? createPortal(actionNav, actionPortalTarget) : actionNav}
     </section>

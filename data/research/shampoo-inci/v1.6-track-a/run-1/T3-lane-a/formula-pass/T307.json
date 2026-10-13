@@ -1,0 +1,250 @@
+{
+  "blindId": "T307",
+  "inciFingerprintSha256": "38d60eb914c0fbbc85d1f4ecb3bb98f4815256077c20874ad004f0bda105591b",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "'Water (Aqua)' one entry; asterisk markers stripped (kept as provenance: * organic-type marker, ** fragrance-component marker). E3: Fragrance (Parfum) at 28; prominent = 1-27.",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "rawInciCount": 39
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C5: Sodium Coco-Sulfate (3) is the alkyl-sulfate defining anionic with three prominent buffers (Cocamidopropyl Betaine 5, Lauryl Glucoside 6, Coco-Glucoside 24) and no reinforcing route (Sodium Cetearyl Sulfate 19 is C3a emulsifier-grade with Cetearyl Alcohol 15) -> moderate.",
+      "neighboringAlternative": "none",
+      "counterSignal": "Alkyl-sulfate class is harsher than ether sulfate; buffers and lipids offset it under C5."
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "C2 met with lipids in place of the silicone: prominent payload lipid (Sunflower Seed Oil 11) + cationic guar (21) + fatty route (Cetearyl Alcohol 15) + humectants (Glycerin 4, Sodium Hyaluronate 10, Betaine 17); also W-RICH.",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "No silicone; oil and guar sit after Citric Acid and the fatty alcohol is part of an emulsifying-wax pair, so care could be bounded (moderate)."
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-RICH (sunflower oil + cetearyl alcohol converging with guar) with a moderate C5 reset -> not limited reset; bounded residue -> moderate.",
+      "neighboringAlternative": "high",
+      "counterSignal": "W-RICH present; three deposition families incl. a waxy fatty alcohol.",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "oil + fatty alcohol + guar + weak refatter, mid/late list"
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "cetearyl alcohol somewhat substantive; oil/guar light"
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C5 alkyl sulfate with three buffers"
+        }
+      },
+      "whyThisBand": "Converging lipid + cationic routes make bounded residue plausible; reset is effective.",
+      "whyNotNeighborBand": "high needs W-RICH plus weak reset or multiple clearly persistent systems not offset; reset is moderate and routes are late/light. low would understate the converging lipid + cationic residue (W2).",
+      "evidenceByFamily": {
+        "payload_lipid": [
+          [
+            "Helianthus Annuus Seed Oil",
+            11
+          ],
+          [
+            "Cetearyl Alcohol",
+            15
+          ]
+        ],
+        "weak_refatter": [
+          [
+            "PCA Glyceryl Oleate",
+            16
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Guar Hydroxypropyltrimonium Chloride",
+            21
+          ]
+        ],
+        "context_humectant": [
+          [
+            "Glycerin",
+            4
+          ],
+          [
+            "Sodium Hyaluronate",
+            10
+          ],
+          [
+            "Betaine",
+            17
+          ],
+          [
+            "Aloe Barbadensis Leaf Juice",
+            2
+          ]
+        ],
+        "excluded": [
+          [
+            "Sodium Cetearyl Sulfate",
+            19,
+            "C3a emulsifier"
+          ],
+          [
+            "Tridecane",
+            23,
+            "volatile alkane"
+          ],
+          [
+            "Undecane",
+            25,
+            "volatile alkane"
+          ],
+          [
+            "Citrus/Lavandula essential oils",
+            30,
+            "fragrance materials (6.4), positions 30-39"
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Coco-Sulfate",
+            3
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            5
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Lauryl Glucoside",
+            6
+          ],
+          [
+            "Coco-Glucoside",
+            24
+          ]
+        ],
+        "unresolved": []
+      }
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "moisture",
+      "confidence": "low",
+      "rationale": "Formula supports moisture; needs claim."
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low"
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low"
+    },
+    "scalpComfortTarget": {
+      "value": "unknown",
+      "confidence": "low",
+      "rationale": "CSA passes (Glycerin 4, Sodium Hyaluronate 10, Sunflower oil 11, Betaine 17 on E4 humectant list); no prominent E4 comfort route."
+    }
+  },
+  "careDirection": {
+    "verdict": "moisture_supported",
+    "rationale": "Coherent humectant cluster (Glycerin 4, Sodium Hyaluronate 10, Betaine 17, aloe juice) plus emollient (sunflower oil, cetearyl alcohol) and guar; no protein/damage cluster."
+  },
+  "formulaGateFacts": {
+    "csa": "pass",
+    "promComfortRoute": false,
+    "promHumectantRoute": true,
+    "sOilyFormulaClause": "fail (conditioning high)"
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Aloe Barbadensis Leaf Juice",
+      "position": 2,
+      "role": "plant juice (not a humectant route, C2)"
+    },
+    {
+      "ingredient": "Sodium Coco-Sulfate",
+      "position": 3,
+      "role": "defining anionic, alkyl sulfate type (C5)"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 4,
+      "role": "humectant; E4 route"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 5,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Lauryl Glucoside",
+      "position": 6,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Sodium Hyaluronate",
+      "position": 10,
+      "role": "humectant"
+    },
+    {
+      "ingredient": "Helianthus Annuus Seed Oil",
+      "position": 11,
+      "role": "payload_lipid"
+    },
+    {
+      "ingredient": "Cetearyl Alcohol",
+      "position": 15,
+      "role": "payload_lipid (fatty alcohol); fatty route"
+    },
+    {
+      "ingredient": "PCA Glyceryl Oleate",
+      "position": 16,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Betaine",
+      "position": 17,
+      "role": "humectant"
+    },
+    {
+      "ingredient": "Sodium Cetearyl Sulfate",
+      "position": 19,
+      "role": "C3a emulsifier-grade fatty sulfate (paired with Cetearyl Alcohol 15): not a route"
+    },
+    {
+      "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+      "position": 21,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Tridecane",
+      "position": 23,
+      "role": "volatile alkane, excluded"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 24,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Undecane",
+      "position": 25,
+      "role": "volatile alkane, excluded"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

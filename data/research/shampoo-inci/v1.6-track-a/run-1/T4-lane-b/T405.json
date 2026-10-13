@@ -1,0 +1,589 @@
+{
+  "blindId": "T405",
+  "inciFingerprintSha256": "d34e3d5a3b567d4779ae3dde69539e2d07abb7b1a44a1fa438f1396c24b0b46f",
+  "policyId": "shampoo-classification-v1.6",
+  "identity": {
+    "packSize": "350 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "productName": "Monday Haircare Volume Kraft & Fülle Shampoo",
+    "market": "DE",
+    "identityNote": ""
+  },
+  "normalization": "ID-2 applied; normalized one-based positions; no split entries; raw positions = normalized positions",
+  "e3ProminenceMarker": "Parfum/Fragrance at 12",
+  "surfactantArchitecture": "Sulfate-free: CAPB (2) amphoteric first, then mild anionics sulfosuccinate (3), isethionate (4), sarcosinate (9); C6 -> low.",
+  "formulaFacts": [
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 2,
+      "role": "amphoteric, earliest prominent cleansing surfactant"
+    },
+    {
+      "ingredient": "Disodium Laureth Sulfosuccinate",
+      "position": 3,
+      "role": "mild anionic"
+    },
+    {
+      "ingredient": "Sodium Cocoyl Isethionate",
+      "position": 4,
+      "role": "mild anionic"
+    },
+    {
+      "ingredient": "Phenoxyethanol",
+      "position": 7,
+      "role": "preservative"
+    },
+    {
+      "ingredient": "Sodium Lauroyl Sarcosinate",
+      "position": 9,
+      "role": "mild anionic"
+    },
+    {
+      "ingredient": "Cocos Nucifera (Coconut) Oil",
+      "position": 11,
+      "role": "payload lipid, prominent; E4 refatting route"
+    },
+    {
+      "ingredient": "Parfum (Fragrance)",
+      "position": 12,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Polyquaternium-10",
+      "position": 13,
+      "role": "cationic polymer"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 14,
+      "role": "nonionic (after E3 point)"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 15,
+      "role": "weak refatter"
+    },
+    {
+      "ingredient": "Acrylates Copolymer",
+      "position": 17,
+      "role": "excluded thickener"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 20,
+      "role": "cationic polymer"
+    },
+    {
+      "ingredient": "Polyquaternium-7",
+      "position": 21,
+      "role": "cationic polymer"
+    },
+    {
+      "ingredient": "Polyquaternium-11",
+      "position": 22,
+      "role": "cationic polymer"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 26,
+      "role": "humectant, late"
+    }
+  ],
+  "claimGrading": [
+    {
+      "claim": "Volume Kraft & Fülle (name)",
+      "grade": "high",
+      "use": "focus candidate"
+    },
+    {
+      "claim": "manufacturer_de text in English: 'add body to thin, fine or oily hair'; 'stimulate scalp'",
+      "grade": "low",
+      "use": "E1 foreign-language text, no German source repeats the oily claim -> low"
+    },
+    {
+      "claim": "retailer copy (Volumen, feines Haar, Haarwachstum)",
+      "grade": "low",
+      "use": "none"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: C6 - no prominent strong anionic; the earliest prominent cleansing surfactant is the amphoteric Cocamidopropyl Betaine (2), followed by the mild anionics Disodium Laureth Sulfosuccinate (3), Sodium Cocoyl Isethionate (4) and Sodium Lauroyl Sarcosinate (9).",
+      "counterSignal": "Three prominent mild anionics give a broad surfactant system that argues toward moderate.",
+      "neighboringAlternative": "moderate",
+      "rulesApplied": [
+        "C3",
+        "C4",
+        "C6"
+      ],
+      "carriedFromBlind": true
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High: rich architecture (W-RICH) - prominent payload lipid Cocos Nucifera (Coconut) Oil (11) converging with four cationic polymers (Polyquaternium-10 13, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride 20, Polyquaternium-7 21, Polyquaternium-11 22), plus Glyceryl Oleate (15) and Glycerin (26): multiple complementary systems.",
+      "counterSignal": "No silicone and no pearlizer; all cationic polymers sit after Parfum (12) and the coconut oil after two preservatives, so absolute levels are likely low.",
+      "neighboringAlternative": "moderate",
+      "rulesApplied": [
+        "5",
+        "W-RICH"
+      ],
+      "carriedFromBlind": true
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High: W-RICH (prominent coconut oil + cationic deposition) with limited reset (resetCapacity weak, C6 low chassis) meets the rich route of the high anchor; four converging cationic polymers make cumulative residue likely.",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "Coconut oil (11) plus four cationic polymers (13, 20, 21, 22) plus refatter; each likely at low level."
+        },
+        "persistence": {
+          "value": "high",
+          "rationale": "Several cationic polymers (incl. Polyquaternium-7/-10, known to accumulate) and a penetrating oil in a mild chassis are plausibly retained and cumulative."
+        },
+        "resetCapacity": {
+          "value": "weak",
+          "rationale": "C6 mild amphoteric/mild-anionic chassis (cleansingStrength low): limited reset."
+        }
+      },
+      "evidenceByFamily": {
+        "silicone": [],
+        "cationic_polymer": [
+          [
+            "Polyquaternium-10",
+            13
+          ],
+          [
+            "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+            20
+          ],
+          [
+            "Polyquaternium-7",
+            21
+          ],
+          [
+            "Polyquaternium-11",
+            22
+          ]
+        ],
+        "payload_lipid": [
+          [
+            "Cocos Nucifera (Coconut) Oil",
+            11
+          ]
+        ],
+        "weak_refatter": [
+          [
+            "Glyceryl Oleate",
+            15
+          ]
+        ],
+        "protein_film": [],
+        "film_former": [],
+        "humectant_context": [
+          [
+            "Glycerin",
+            26
+          ],
+          [
+            "Butylene Glycol",
+            25
+          ]
+        ],
+        "reset": [
+          [
+            "Cocamidopropyl Betaine",
+            2
+          ],
+          [
+            "Disodium Laureth Sulfosuccinate",
+            3
+          ],
+          [
+            "Sodium Cocoyl Isethionate",
+            4
+          ],
+          [
+            "Sodium Lauroyl Sarcosinate",
+            9
+          ],
+          [
+            "Coco-Glucoside",
+            14
+          ]
+        ]
+      },
+      "excludedEvidence": [
+        [
+          "Acrylates Copolymer",
+          17,
+          "anionic acrylate thickener, excluded (6.4)"
+        ],
+        [
+          "Cocamide MIPA",
+          6,
+          "thickener/foam booster"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "Each deposition route is listed late; no silicone.",
+      "whyThisBand": "High: W-RICH (prominent coconut oil + cationic deposition) with limited reset (resetCapacity weak, C6 low chassis) meets the rich route of the high anchor; four converging cationic polymers make cumulative residue likely.",
+      "whyNotNeighborBand": "Not moderate: the W-RICH limited-reset condition is met and multiple persistent cationic systems converge with nothing strong to remove them; calling it moderate would understate buildup risk.",
+      "confidenceLimitingFactor": "All deposition routes are late (after preservatives/Parfum), so actual load may be lower; realistic unknowns could move it to moderate.",
+      "neighboringAlternative": "moderate",
+      "rulesApplied": [
+        "6.5",
+        "6.6",
+        "W-RICH",
+        "W2"
+      ],
+      "carriedFromBlind": true
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "rationale": "general: the name's volume job is contradicted by the formula - weightPotential high (W-RICH with weak reset) makes loss of root lift likely, so volume is not formula-compatible (3.2: claims cannot override an incompatible formula); no other graded job remains.",
+      "counterSignal": "Name-level volume claim (high); 0% SLS mild chassis is consistent with a volumizing intent.",
+      "neighboringAlternative": "volume",
+      "formulaFacts": [
+        {
+          "ingredient": "Cocos Nucifera (Coconut) Oil",
+          "position": 11
+        },
+        {
+          "ingredient": "Polyquaternium-10",
+          "position": 13
+        }
+      ],
+      "sourceIds": [
+        "product name"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty.",
+      "counterSignal": "See decision trace.",
+      "neighboringAlternative": [
+        "volume"
+      ],
+      "formulaFacts": [],
+      "sourceIds": [],
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "candidatesConsidered": []
+      }
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "No graded trigger; cleansing low.",
+      "counterSignal": "Usage triggers are conjunctive and mechanical (Section 9); see trace.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "sourceIds": [],
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "decisionTrace": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [],
+        "rationale": "No graded trigger; cleansing low."
+      }
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "not_targeted: no SC1 unit.",
+      "counterSignal": "-",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "sourceIds": [],
+      "csaFormulaHalf": true,
+      "sc1Positioning": false
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11).",
+      "neighboringAlternative": "none",
+      "carriedFromBlind": true
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "not_applicable",
+      "routes": {},
+      "limitation": ""
+    },
+    "claimRole": "candidate",
+    "counterSignal": "Volume claim vs heavy formula.",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "volume (name)",
+        "formulaCompatible": false,
+        "compatibleRoute": null,
+        "reason": "weightPotential high incompatible with lift job -> general"
+      }
+    }
+  },
+  "weightRecord": {
+    "value": "high",
+    "confidence": "moderate",
+    "rationale": "High: W-RICH (prominent coconut oil + cationic deposition) with limited reset (resetCapacity weak, C6 low chassis) meets the rich route of the high anchor; four converging cationic polymers make cumulative residue likely.",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "moderate",
+        "rationale": "Coconut oil (11) plus four cationic polymers (13, 20, 21, 22) plus refatter; each likely at low level."
+      },
+      "persistence": {
+        "value": "high",
+        "rationale": "Several cationic polymers (incl. Polyquaternium-7/-10, known to accumulate) and a penetrating oil in a mild chassis are plausibly retained and cumulative."
+      },
+      "resetCapacity": {
+        "value": "weak",
+        "rationale": "C6 mild amphoteric/mild-anionic chassis (cleansingStrength low): limited reset."
+      }
+    },
+    "evidenceByFamily": {
+      "silicone": [],
+      "cationic_polymer": [
+        [
+          "Polyquaternium-10",
+          13
+        ],
+        [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          20
+        ],
+        [
+          "Polyquaternium-7",
+          21
+        ],
+        [
+          "Polyquaternium-11",
+          22
+        ]
+      ],
+      "payload_lipid": [
+        [
+          "Cocos Nucifera (Coconut) Oil",
+          11
+        ]
+      ],
+      "weak_refatter": [
+        [
+          "Glyceryl Oleate",
+          15
+        ]
+      ],
+      "protein_film": [],
+      "film_former": [],
+      "humectant_context": [
+        [
+          "Glycerin",
+          26
+        ],
+        [
+          "Butylene Glycol",
+          25
+        ]
+      ],
+      "reset": [
+        [
+          "Cocamidopropyl Betaine",
+          2
+        ],
+        [
+          "Disodium Laureth Sulfosuccinate",
+          3
+        ],
+        [
+          "Sodium Cocoyl Isethionate",
+          4
+        ],
+        [
+          "Sodium Lauroyl Sarcosinate",
+          9
+        ],
+        [
+          "Coco-Glucoside",
+          14
+        ]
+      ]
+    },
+    "excludedEvidence": [
+      [
+        "Acrylates Copolymer",
+        17,
+        "anionic acrylate thickener, excluded (6.4)"
+      ],
+      [
+        "Cocamide MIPA",
+        6,
+        "thickener/foam booster"
+      ]
+    ],
+    "unresolved": [],
+    "counterSignal": "Each deposition route is listed late; no silicone.",
+    "whyThisBand": "High: W-RICH (prominent coconut oil + cationic deposition) with limited reset (resetCapacity weak, C6 low chassis) meets the rich route of the high anchor; four converging cationic polymers make cumulative residue likely.",
+    "whyNotNeighborBand": "Not moderate: the W-RICH limited-reset condition is met and multiple persistent cationic systems converge with nothing strong to remove them; calling it moderate would understate buildup risk.",
+    "confidenceLimitingFactor": "All deposition routes are late (after preservatives/Parfum), so actual load may be lower; realistic unknowns could move it to moderate.",
+    "neighboringAlternative": "moderate",
+    "rulesApplied": [
+      "6.5",
+      "6.6",
+      "W-RICH",
+      "W2"
+    ],
+    "formulaFingerprint": "d34e3d5a3b567d4779ae3dde69539e2d07abb7b1a44a1fa438f1396c24b0b46f",
+    "sourceTier": 2,
+    "captureDate": "per frozen packet (not in lane kit)"
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "not_suited",
+        "t1Fit": "not_suited",
+        "t6Applied": false,
+        "confidence": "moderate",
+        "rationale": "not_suited: T1 (fine x W high) = not_suited; T2: thickness/texture claims ignored. Confidence = lowest input confidence (13.8)."
+      },
+      {
+        "thickness": "normal",
+        "fit": "acceptable",
+        "t1Fit": "acceptable",
+        "t6Applied": false,
+        "confidence": "moderate",
+        "rationale": "acceptable: T1 (normal x W high) = acceptable; T2: thickness/texture claims ignored. Confidence = lowest input confidence (13.8)."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "ideal",
+        "t1Fit": "ideal",
+        "t6Applied": false,
+        "confidence": "moderate",
+        "rationale": "ideal: T1 (coarse x W high, C high) = ideal; T2: thickness/texture claims ignored. Confidence = lowest input confidence (13.8)."
+      }
+    ],
+    "weight": {
+      "value": "heavy",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential high -> heavy; confidence = weightPotential confidence (13.8)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "moderate",
+        "rationale": "S-ORDINARY way 4 (+ way 2 for the low-graded growth wording): the oily-hair unit is graded low (English text, E1) so S-OILY positioning fails; its formula clause also fails (cleansingStrength low, weightPotential high, conditioningLevel high). No other target.",
+        "sOrdinaryWays": [
+          4,
+          2
+        ]
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "gentle",
+      "confidence": "moderate",
+      "rationale": "I1: cleansingStrength low, D1 false -> gentle; I2 written unchanged to every row."
+    },
+    "positioning": {
+      "explicitResetPositioning": false
+    },
+    "explicitResetPositioning": {
+      "value": false,
+      "confidence": "high",
+      "rationale": "D1 false: no tiefenrein/deep clean/clarifying shampoo/detox-reinigung stem in name or graded claims, no occasional-use directions."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "moderate",
+      "rationale": "D2 not met: D1 false"
+    },
+    "rows": [
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "heavy",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "heavy",
+        "tier": "ideal"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_specialist_gate_failed",
+        "detail": "oily: positioning gate failed (only unit 'thin, fine or oily hair' is English-language, graded low, E1); formula clause also fails (cleansingStrength low, weightPotential high, conditioningLevel high). X1 conditions not met either (needs cleansingStrength >= moderate and conditioningLevel not high)."
+      }
+    ],
+    "informationalNotes": [
+      {
+        "code": "hair_loss_claim_not_evaluated",
+        "detail": "retailer 'gesundes Haarwachstum' (low) and ginger 'stimulate scalp'"
+      }
+    ],
+    "researchCombinationTargets": [],
+    "researchCombinationRationale": "Not applicable: primary target is not dandruff (E2b)."
+  },
+  "blindToFinalChanges": [
+    {
+      "field": "focusPrimary",
+      "blind": "general (low)",
+      "final": "general (moderate)",
+      "evidence": "volume name vs W high",
+      "reason": "3.2/7.2"
+    },
+    {
+      "field": "usageRole/scalpComfortTarget",
+      "blind": "provisional",
+      "final": "regular / not_targeted",
+      "evidence": "no graded triggers",
+      "reason": "Sections 9-10"
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeWeightSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "comparisonWithEarlierValuesDoneInLane": false,
+    "weightPotentialUnchangedAfterUnblind": true
+  },
+  "uncertainties": [
+    {
+      "reading": "volume rejected as formula-incompatible with weightPotential high",
+      "alternative": "focusPrimary volume with the heavy formula recorded as trade-off (7.2 row 3)"
+    },
+    {
+      "reading": "English 'oily hair' treated as an E2 oily unit graded low",
+      "alternative": "not an E2 unit at all -> S-ORDINARY way 1, no review flag"
+    },
+    {
+      "reading": "the packet name matches the X1 register wording '... Volume Kraft & Fülle'; lane does not infer exceptions",
+      "alternative": "even if it is the X1 product, X1 cannot apply because cleansingStrength is low and conditioningLevel high (X1 scope)"
+    }
+  ]
+}

@@ -1,27 +1,46 @@
 # Shampoo ingredient research
 
-Status: **v1.6 is the active, locked research method (2026-10-10). v1.4 is the parked, frozen predecessor. Neither is active in production.**
+Status: **v1.6.2 is the active, locked research method (2026-10-12). v1.6.1 (locked 2026-10-12) is its frozen base, and v1.6 (locked 2026-10-10) the base of v1.6.1. v1.4 is the parked, frozen predecessor. None is active in production.**
 
 This directory is the durable entry point for the Shampoo ingredient-classification work. It separates formula-derived product research from user fit and from catalog or production activation. This README is the living entry point; it is not part of either version's frozen files.
 
 ## Start here
 
-1. Read the [v1.6 overview](./v1.6/README.md).
-2. Use the [v1.6 classification standard](./v1.6/classification-standard.md) for the eight direct product properties and the production projection block.
-3. Follow the [v1.6 research runbook](./v1.6/runbook.md) for a new German shampoo.
+1. Read the [v1.6.2 overview](./v1.6.2/README.md).
+2. Use the [v1.6.2 classification standard](./v1.6.2/classification-standard.md) for the eight direct product properties and the production projection block.
+3. Follow the [v1.6.2 research runbook](./v1.6.2/runbook.md) for a new German shampoo.
 4. Use the [category template](../category-classification-engine-template.md) when adapting the approach to another product category.
 
-## Active method: v1.6
+## Active method: v1.6.2
 
 | Layer | Canonical location | Purpose |
 | --- | --- | --- |
-| Locked standard | `docs/research/shampoo-inci/v1.6/classification-standard.md` | `shampoo-classification-v1.6` / `shampoo-inci-v1.6`: eight direct properties plus the production projection (Section 13). |
-| Rule changes | `docs/research/shampoo-inci/v1.6/rule-changes.md` | Every change from v1.4, with its source. |
-| Runbook | `docs/research/shampoo-inci/v1.6/runbook.md` | Formula freeze, sealed two-lane validation, adjudication, stop boundary. |
+| Locked standard | `docs/research/shampoo-inci/v1.6.2/classification-standard.md` | `shampoo-classification-v1.6.2` / `shampoo-inci-v1.6.2`: the v1.6.1 standard plus ruling R18 — the mild-base route for the irritated-scalp formula check, the closed-list batch decided with no additions, `Laureth-9` = Polidocanol, and the evidence boundary for user copy. |
+| Rule changes | `docs/research/shampoo-inci/v1.6.2/rule-changes.md` | Rows 138–144, every change from v1.6.1, with its source (row 144: review fix before publication). |
+| Runbook | `docs/research/shampoo-inci/v1.6.2/runbook.md` | Formula freeze, sealed two-lane validation, adjudication, stop boundary. |
+| Lock receipt and manifest | `data/research/shampoo-inci/v1.6.2/` | Hash pins for the locked files, the rulings ledger snapshot, the evidence inputs and the test-round corpus; checked by `tests/shampoo-research-v1-6-2-lock.test.ts`. |
+| Test-round evidence | `data/research/shampoo-inci/v1.6.2/test-round/` | Two sealed lanes, 9 Track A products, 150/153 = 98.0%; pre-registration, comparison and adjudication. |
+
+## Frozen base: v1.6.1
+
+| Layer | Canonical location | Purpose |
+| --- | --- | --- |
+| Locked standard | `docs/research/shampoo-inci/v1.6.1/classification-standard.md` | `shampoo-classification-v1.6.1` / `shampoo-inci-v1.6.1`: the v1.6 standard plus selenium sulfide (S1), the lipid weight line W-LINE (S2), oily-hair wording (S3) and four surfactant classes (S4). |
+| Rule changes | `docs/research/shampoo-inci/v1.6.1/rule-changes.md` | Rows 116–137, every change from v1.6, with its source (rows 1–115 in the v1.6 ledger). |
+| Runbook | `docs/research/shampoo-inci/v1.6.1/runbook.md` | Formula freeze, sealed two-lane validation, adjudication, stop boundary. |
+| Lock receipt and manifest | `data/research/shampoo-inci/v1.6.1/` | Hash pins for the locked files, the rulings ledger snapshot, the evidence inputs and the test-round corpus; checked by `tests/shampoo-research-v1-6-1-lock.test.ts`. |
+| Test-round evidence | `data/research/shampoo-inci/v1.6.1/test-round/` | Two sealed lanes, 23 products, 379/391 = 96.9%; pre-registration, comparison and adjudication. |
+
+## Frozen base: v1.6
+
+| Layer | Canonical location | Purpose |
+| --- | --- | --- |
+| Locked standard | `docs/research/shampoo-inci/v1.6/classification-standard.md` | `shampoo-classification-v1.6` / `shampoo-inci-v1.6`, byte-frozen; the base of v1.6.1. |
+| Rule changes | `docs/research/shampoo-inci/v1.6/rule-changes.md` | Rows 1–115, every change from v1.4, with its source. |
 | Lock receipt and manifest | `data/research/shampoo-inci/v1.6/` | Hash pins for the locked files, the rulings ledger snapshot and the calibration corpus; checked by `tests/shampoo-research-v1-6-lock.test.ts`. |
 | Calibration evidence | `data/research/shampoo-inci/v1.6/calibration/` | Round 1 (97.4%), round 2 (97.1%) and unseen check v2 (95.8%). |
 
-The shipped Production Light adapter (`src/lib/shampoo/production-light-adapter.ts`) is still pinned to v1.4; re-pinning it to v1.6 is a separate, reviewed change. Locking v1.6 authorizes no catalog, database or recommendation change.
+The shipped Production Light adapter (`src/lib/shampoo/production-light-adapter.ts`) is still pinned to v1.4; re-pinning it to v1.6.2 is a separate, reviewed change. Locking v1.6, v1.6.1 or v1.6.2 authorizes no catalog, database or recommendation change.
 
 ## Parked predecessor: v1.4
 
@@ -37,10 +56,10 @@ Everything below describes the parked v1.4 package. It stays frozen as provenanc
 | Final weight correction | `data/research/shampoo-inci/weight-final-rerun-v3/` | Four-case closure and whole-formula weight evidence. |
 | New-product scalability test | `data/research/shampoo-inci/holdout-v3/` | Ten new products, two independent lanes, adjudication and 18-profile replay. |
 | Reusable procedure | `docs/research/shampoo-inci/v1.4/` | The classification standard and new-product runbook to apply in a future research task. |
-| Integrity check | `scripts/shampoo-research/validate-parked-package.ts` | Verifies the frozen v1.4 package byte-for-byte and prevents its research-only boundary from drifting. Its archive scope excludes the v1.6 package and this living README. |
+| Integrity check | `scripts/shampoo-research/validate-parked-package.ts` | Verifies the frozen v1.4 package byte-for-byte and prevents its research-only boundary from drifting. Its archive scope excludes the v1.6 and v1.6.1 packages and this living README. |
 | Historical provenance | `v1.3/`, `v1.4-draft/`, `holdout-v1/`, `holdout-v2/`, and earlier weight runs | Evidence and evolution only; not the active method. |
 
-v1.4 was the active method until v1.6 was locked. Earlier rules must not be silently combined with it. In particular, historical route-count logic and “polymer means moderate” are not valid v1.4 weight rules.
+v1.4 was the active method until v1.6 was locked (v1.6.1 has been active since 2026-10-12). Earlier rules must not be silently combined with it. In particular, historical route-count logic and “polymer means moderate” are not valid v1.4 weight rules.
 
 ## What is parked here
 
@@ -65,7 +84,7 @@ This package does **not**:
 
 ## How the v1.4 runbook was used
 
-The v1.4 runbook ran in this order (new research follows the v1.6 runbook):
+The v1.4 runbook ran in this order (new research follows the v1.6.1 runbook):
 
 1. resolve the exact German product, size, GTIN aliases and current canonical formula;
 2. preserve conflicts and freeze the normalized INCI fingerprint;
@@ -87,11 +106,11 @@ npm run research:shampoo:validate-parked-v14
 Historical receipts and replay scripts inside the evidence folders record how
 earlier research runs were produced. They are provenance, not standalone tools:
 the experimental engine code they referenced is intentionally not part of this
-research-only archive. The v1.6 standard and runbook—not those historical scripts—
+research-only archive. The v1.6.1 standard and runbook—not those historical scripts—
 are the supported basis for a future research task.
 
 For a genuinely new research run, start a new versioned artifact root and follow
-the v1.6 runbook. Do not overwrite or regenerate the frozen historical results in
+the v1.6.1 runbook. Do not overwrite or regenerate the frozen historical results in
 this package.
 
 ## Future activation gate

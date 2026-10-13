@@ -1,0 +1,80 @@
+{
+  "slot": "A44",
+  "productId": "9d8d4709-4041-495e-98ee-e0261fa30e27",
+  "name": "Schauma Anti-Schuppen Classic Shampoo",
+  "brand": "Schauma",
+  "packSize": "400 ml",
+  "gtins": [
+    "4015100890730"
+  ],
+  "sources": [
+    {
+      "url": "https://www.schauma.de/produkte/anti-schuppen-classic/anti-schuppen-classic-400ml-shampoo.html (redirects to https://www.allyoucare-byhenkel.com/de/de/marken/haar-und-koerperpflege/schauma/produkte/shampoo/anti-schuppen-classic-400ml-shampoo.html)",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4015100890730 (page structured data 'gtin'; 400 ml in page URL/listing)",
+      "inciVerbatim": "Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Piroctone Olamine, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Panthenol, Aloe Barbadensis Leaf Extract, Hydrogenated Castor Oil, Coco-Glucoside, Glyceryl Oleate, Glycol Distearate, Propylene Glycol, Laureth-4, PEG-7 Glyceryl Cocoate, Citric Acid, Sodium Hydroxide, Parfum (Fragrance), Sodium Benzoate, CI 42053 (Green 3)",
+      "claimsVerbatim": "Anti-Schuppen Classic | Für schuppiges Haar | Die Formel mit Aloe-Vera-Extrakt schützt vor der Bildung neuer Schuppen**. | Das Ergebnis? Eine beruhigte, erfrischte Kopfhaut und bis zu 100% schuppenfreies Haar*. | Mit Pro-Vitamin B5 zur tiefen Pflege des Haares von innen. (footnote texts for * and ** were not rendered in the captured page)",
+      "directionsVerbatim": "Auf das nasse Haar auftragen und sanft einmassieren. Kurz einwirken lassen. Gründlich ausspülen."
+    },
+    {
+      "url": "https://www.dm.de/p/d/1588728/schauma-shampoo-anti-schuppen-classic",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "4015100890730 (page text 'GTIN'; dm-Artikelnummer 1588728; 'Shampoo Anti-Schuppen Classic, 400 ml')",
+      "inciVerbatim": "Ingredients: Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Piroctone Olamine, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Panthenol, Aloe Barbadensis Leaf Extract, Hydrogenated Castor Oil, Coco-Glucoside, Glyceryl Oleate, Glycol Distearate, Propylene Glycol, Laureth-4, PEG-7 Glyceryl Cocoate, Citric Acid, Sodium Hydroxide, Parfum (Fragrance), Sodium Benzoate, CI 42053 (Green 3)",
+      "claimsVerbatim": "Anti-Schuppen Shampoo mit Aloe Vera | Beruhigende Pflegeformel | Wirkt effektiv gegen Schuppen | Für die tägliche Haarwäsche geeignet | Das Shampoo Anti-Schuppen Classic von schauma wurde für die Bedürfnisse von schuppigem Haar entwickelt. Die Formel mit Aloe-Vera-Extrakt und Pro-Vitamin B5 bekämpft sichtbare Schuppen bereits ab der ersten Anwendung und beruhigt die Kopfhaut. Bei regelmäßiger Anwendung hilft das Shampoo dabei, einer Neubildung von Schuppen vorzubeugen. Dank der veganen Zusammensetzung wird das Haar gepflegt und die Kopfhaut fühlt sich erfrischt und entspannt an – für ein gepflegtes Erscheinungsbild. | Produkteigenschaften: Ohne Alkohol, ohne Silikone, ohne Aluminiumsalze (ACH), ohne Ammoniak",
+      "directionsVerbatim": "Sanft im feuchten Haar verteilen und kurz einwirken lassen. Dann gründlich ausspülen."
+    },
+    {
+      "url": "https://www.mueller.de/p/schauma-anti-schuppen-shampoo-classic-PPN3165991/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_mueller_de",
+      "sourceKind": "retailer",
+      "gtinShown": "4015100890730 (structured data gtin; Inhalt 400 ml)",
+      "inciVerbatim": "Ingredients: Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Piroctone Olamine, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Panthenol, Aloe Barbadensis Leaf Extract, Hydrogenated Castor Oil, Coco-Glucoside, Glyceryl Oleate, Glycol Distearate, Propylene Glycol, Laureth-4, PEG-7 Glyceryl Cocoate, Citric Acid, Sodium Hydroxide, Parfum (Fragrance), Sodium Benzoate, CI 42053 (Green 3)",
+      "claimsVerbatim": "Mit Aloe-Vera-Extrakt – Das SCHAUMA Shampoo mit Aloe-Vera-Extrakt beruhigt deine Kopfhaut und bekämpft sichtbare Schuppen ab der ersten Anwendung | Anti-Schuppen – Das Shampoo gegen Schuppen unterstützt dich mit reinigender und pflegender Formel im Kampf gegen Schuppen und schützt bei regelmäßiger Anwendung vor der Neubildung von Schuppen | Mit Pro-Vitamin B5 – Das Haarshampoo mit Pro-Vitamin B5 pflegt & stärkt das Haar, spendet Feuchtigkeit, glättet die Strähnen, reduziert Haarbruch und repariert geschädigtes Haar | Das Shampoo gegen Schuppen ist vegan",
+      "directionsVerbatim": "Sanft im feuchten Haar verteilen und kurz einwirken lassen. Dann gründlich ausspülen."
+    }
+  ],
+  "conflicts": [],
+  "canonicalInci": [
+    "Aqua (Water, Eau)",
+    "Sodium Laureth Sulfate",
+    "Sodium Chloride",
+    "Cocamidopropyl Betaine",
+    "Piroctone Olamine",
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+    "Panthenol",
+    "Aloe Barbadensis Leaf Extract",
+    "Hydrogenated Castor Oil",
+    "Coco-Glucoside",
+    "Glyceryl Oleate",
+    "Glycol Distearate",
+    "Propylene Glycol",
+    "Laureth-4",
+    "PEG-7 Glyceryl Cocoate",
+    "Citric Acid",
+    "Sodium Hydroxide",
+    "Parfum (Fragrance)",
+    "Sodium Benzoate",
+    "CI 42053 (Green 3)"
+  ],
+  "canonicalReason": "Manufacturer DE page (Henkel/schauma.de, GTIN 4015100890730 in structured data) and two German GTIN-anchored retailers (dm.de, Müller) agree verbatim and in order (retailers add an 'Ingredients:' label only).",
+  "inciFingerprintSha256": "105e7ebd0649e688f2427321a0648b9945d539dd1a158dcf0640d02303771f67",
+  "normalization": "Split the canonical raw INCI on ',' (not on commas inside locants such as '1,2-'), merged split synonym entries such as 'Aqua (Water)' / 'Aqua/Water/Eau' into one item each; per ingredient: lower-case, trim, collapse internal whitespace, remove whitespace around '/'; drop a trailing period and any leading label such as 'Inhaltsstoffe:'; keep parentheses, asterisks and hyphens as published; join the normalized ingredients with '|' and sha256 the UTF-8 string.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Prior v1.3/v1.4 capture used the same manufacturer list (fingerprint 293b5cea26d26ed2789bf21dd386e355a2b29a701b0391e91fffc6665a2d9400, comma-joined); list unchanged.",
+    "The catalog name 'Schauma Anti Schuppen' is bound to the 400 ml 'Anti-Schuppen Classic' (the only Schauma anti-dandruff shampoo on schauma.de).",
+    "'Aqua (Water, Eau)' kept as one item (published as one entry). Claims: Pro-Vitamin B5 = Panthenol (present), Aloe-Vera-Extrakt = Aloe Barbadensis Leaf Extract (present), 'vegan' / 'ohne Silikone' consistent with INCI; no claim-INCI conflicts.",
+    "CI 42053 (Green 3) colorant is the last item of the list.",
+    "Rossmann not checked (three agreeing sources suffice)."
+  ]
+}

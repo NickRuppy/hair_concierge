@@ -1,0 +1,117 @@
+{
+  "slot": "A52",
+  "productId": "515de93c-1c77-465d-ae0d-2a8d6ddb3d73",
+  "name": "Swiss-O-Par Teebaumöl Shampoo (Kurshampoo)",
+  "brand": "Swiss-O-Par",
+  "packSize": "250 ml",
+  "gtins": [
+    "4104260076501"
+  ],
+  "sources": [
+    {
+      "url": "https://swissopar.de/produkt/teebaumoel-shampoo/",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "manufacturer DE product page (Rufin Cosmetic); WordPress dateModified 2026-08-27T12:16:09Z; no GTIN or pack size on page",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "none on page",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Melaleuca Alternifolia Leaf Oil, Sodium Chloride, PEG-7 Glyceryl Cocoate, Coco-Betaine, Benzyl Alcohol, Phenoxyethanol, Sodium Benzoate, Coco-Glucoside, Glycol Distearate, Citric Acid, Terpineol, Potassium Sorbate, Pinene, Limonene, Glycerin, Tocopherol",
+      "claimsVerbatim": "Teebaumöl Shampoo | Gegen Kopfhautreizungen, Schuppen und fettiges Haar. | Die wertvollen Wirkstoffe reinen Teebaumöles fördern die Durchblutung der Kopfhaut. Die Tätigkeit der Talgdrüsen wird reguliert und die Fettabsonderung und Schuppenbildung spürbar gemindert. | Das Teebaumöl pflegt Haar und Kopfhaut mit natürlichen Pflanzenextrakten und schützt sie gleichzeitig vor schädlichen Umwelteinflüssen. | OHNE SILIKONE | Natürliche Pflege für Haar & Kopfhaut | Effektiv gegen Schuppen, Reizungen und Fett – ohne Silikone. (meta description: Teebaumöl-Pflege: Fördert die Durchblutung der Kopfhaut, reguliert Talgdrüsen und mindert Schuppenbildung. Schützt Haar und Kopfhaut.)",
+      "directionsVerbatim": "Das Haar mit dem Kurshampoo einschäumen, durchwaschen und ausspülen. Bei der Nachwäsche das Kurshampoo 3 Minuten auf dem Haar einwirken lassen, um die Wirkung der Pflegestoffe zu verstärken. Ausreichend für 25 bis 30 Haarwäschen."
+    },
+    {
+      "url": "https://www.dm.de/p/d/1028618/swiss-o-par-shampoo-teebaumoel",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "dm.de PDP (browser tab, Inhaltsstoffe accordion expanded); Anschrift: Rufin Cosmetic, Wedemark",
+      "sourceKind": "retailer",
+      "gtinShown": "4104260076501 (page 'GTIN:' line; dm-Artikelnummer 1028618; title 'Shampoo Teebaumöl, 250 ml'; Lieferbar)",
+      "inciVerbatim": "Ingredients: Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Melaleuca Alternifolia Leaf Oil, Sodium Chloride, PEG-7 Glyceryl Cocoate, Coco-Betaine, Phenoxyethanol, Benzyl Alcohol, Sodium Benzoate, Coco Glucoside, Citric Acid, Glycol Distearate, Potassium Sorbate, Limonene, Glycerin, Tocopherol",
+      "claimsVerbatim": "Das Swiss-O-Par Teebaum Shampoo bekämpft Kopfhautreizungen, Schuppen und beugt fettigem Haar vor. Der Gehalt von Australischem Teebaumöl beruhigt und fördert die Durchblutung der Kopfhaut. Die natürlichen Pflanzenextrakte schützen das Haar außerdem vor schädlichen Umwelteinflüssen. | Vegan. | Wirkung: Anti-Schuppen | Produkteigenschaften: vegan",
+      "directionsVerbatim": "Das Haar mit dem Teebaumöl Shampoo einschäumen, durchwaschen und ausspülen. Bei der Nachwäsche das Shampoo 3 Minuten auf dem Haar einwirken lassen, um die Wirkung der Pflegestoffe zu verstärken. Ausreichend für 25 bis 30 Haarwäschen."
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-swiss-o-par-teebaumoel-kurshampoo/p/4104260076501",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "Rossmann PDP (browser tab); JSON-LD sku 4104260076501; Rossmann Artikelnummer 037443; 250 ml; 2,49 EUR; title 'Teebaumöl Kurshampoo'",
+      "sourceKind": "retailer",
+      "gtinShown": "4104260076501 (URL path and JSON-LD sku)",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Melaleuca Alternifolia Leaf Oil, Sodium Chloride, PEG-7 Glyceryl Cocoate, Coco-Betaine, Glycol Distearate, Laureth-4, Limonene, Triethylene Glycol, Citric Acid, Benzyl Alcohol, Propylene Glycol, Formic Acid, Methylchloroisothiazolinone, Methylisothiazolinone, Magnesium Chloride, Magnesium Nitrate",
+      "claimsVerbatim": "Gegen Kopfreizungen, Schuppen und fettiges Haar. Die wertvollen Wirkstoffe reinen Teebaumöles fördern die Durchblutung der Kopfhaut. Die Tätigkeit der Talgdrüsen wird reguliert und die Fettabsonderung und Schuppenbildung spürbar gemindert. Das Teebaumöl pflegt Haar und Kopfhaut mit natürlichen Pflanzenextrakten und schützt sie gleichzeitig vor schädlichen Umwelteinflüssen.",
+      "directionsVerbatim": "not read (no Anwendung section located in the page extract)"
+    },
+    {
+      "url": "https://www.mueller.de/p/swiss-o-par-kur-shampoo-teebaumoel-8989/",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "Müller PDP (browser tab); found by GTIN search q=4104260076501 (1 hit); Hersteller Rufin Cosmetic GmbH; 250 ml; 2,45 EUR",
+      "sourceKind": "retailer",
+      "gtinShown": "search hit for 4104260076501 (GTIN not printed on PDP text)",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Melaleuca Alternifolia Leaf Oil, PEG-7 Glyceryl Cocoate, Sodium Chloride, Coco-Betaine, Glycol Distearate, Benzoic Acid, Laureth-4, Limonene, Benzyl Alcohol, Formic Acid, Methylchloroisothiazolinone, Methylisothiazolinone, Propylene Glycol, Triethylene Glycol, Magnesium Chloride, Magnesium Nitrate",
+      "claimsVerbatim": "Die wertvollen Bestandteile des reinen Teebaumöls unterstützen die Pflege der Kopfhaut. Das Kur-Shampoo trägt dazu bei, die Kopfhaut zu beruhigen und verleiht dem Haar ein frisches Gefühl. Gleichzeitig werden Haar und Kopfhaut mit natürlichen Pflanzenextrakten gepflegt. | Reguliert die Tätigkeit der Talgdrüsen | Vermindert die Fettabsonderung spürbar | Haartyp: fettiges Haar|schuppiges Haar",
+      "directionsVerbatim": "Das Haar mit dem Kurshampoo einschäumen, durchwaschen und ausspülen. Bei der Nachwäsche das Kurshampoo 3 Minuten auf dem Haar einwirken lassen, um die Wirkung der Pflegestoffe zu verstärken."
+    },
+    {
+      "url": "https://www.dm.de/p/d/1028618/swiss-o-par-shampoo-teebaumoel + https://swissopar.de/produkt/teebaumoel-shampoo/ (prior v1.3 captures)",
+      "retrievedAt": "2026-08-10 (data/research/shampoo-inci/v1.3/products/swiss-o-par-teebaumol/formula-source.json)",
+      "sourceType": "prior evidence: manufacturer and dm agreed on list B at that time",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4104260076501 (file-level)",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Melaleuca Alternifolia Leaf Oil, Sodium Chloride, PEG-7 Glyceryl Cocoate, Coco-Betaine, Phenoxyethanol, Benzyl Alcohol, Sodium Benzoate, Coco Glucoside, Citric Acid, Glycol Distearate, Potassium Sorbate, Limonene, Glycerin, Tocopherol",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "formula_conflict_three_versions",
+      "summary": "Three different complete lists are published today for the same GTIN 4104260076501 / 250 ml. List C (manufacturer, page modified 2026-08-27): phenoxyethanol system plus new 'Terpineol' and 'Pinene', 'Coco-Glucoside' (hyphenated), reordered. List B (dm.de now AND manufacturer+dm on 2026-08-10): same system without Terpineol/Pinene. List A (Rossmann and Müller): older-looking isothiazolinone-preserved formula (Methylchloroisothiazolinone, Methylisothiazolinone, Formic Acid, Magnesium Chloride/Nitrate, Laureth-4, no Phenoxyethanol, no Tocopherol, no Glycerin); Rossmann and Müller lists also differ from each other (Rossmann has Citric Acid, Müller has Benzoic Acid and different order). Not an ordering-only difference.",
+      "listC_manufacturer": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Melaleuca Alternifolia Leaf Oil, Sodium Chloride, PEG-7 Glyceryl Cocoate, Coco-Betaine, Benzyl Alcohol, Phenoxyethanol, Sodium Benzoate, Coco-Glucoside, Glycol Distearate, Citric Acid, Terpineol, Potassium Sorbate, Pinene, Limonene, Glycerin, Tocopherol",
+      "listB_dm": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Melaleuca Alternifolia Leaf Oil, Sodium Chloride, PEG-7 Glyceryl Cocoate, Coco-Betaine, Phenoxyethanol, Benzyl Alcohol, Sodium Benzoate, Coco Glucoside, Citric Acid, Glycol Distearate, Potassium Sorbate, Limonene, Glycerin, Tocopherol",
+      "listA_rossmann": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Melaleuca Alternifolia Leaf Oil, Sodium Chloride, PEG-7 Glyceryl Cocoate, Coco-Betaine, Glycol Distearate, Laureth-4, Limonene, Triethylene Glycol, Citric Acid, Benzyl Alcohol, Propylene Glycol, Formic Acid, Methylchloroisothiazolinone, Methylisothiazolinone, Magnesium Chloride, Magnesium Nitrate",
+      "listA_mueller": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Melaleuca Alternifolia Leaf Oil, PEG-7 Glyceryl Cocoate, Sodium Chloride, Coco-Betaine, Glycol Distearate, Benzoic Acid, Laureth-4, Limonene, Benzyl Alcohol, Formic Acid, Methylchloroisothiazolinone, Methylisothiazolinone, Propylene Glycol, Triethylene Glycol, Magnesium Chloride, Magnesium Nitrate"
+    },
+    {
+      "type": "sequence_hypothesis",
+      "summary": "Manufacturer page equalled dm (list B) on 2026-08-10 and changed by 2026-08-27, so list C looks like the newest batch label; dm lags at B; Rossmann and Müller show an older MCI/MI version (Müller reviews date back 3 years). This is an inference from dates, not confirmed by any pack."
+    },
+    {
+      "type": "claim_inci_mismatch",
+      "summary": "Manufacturer/dm/Rossmann claim 'natürlichen Pflanzenextrakten' but no plant extract appears in any published list (Melaleuca Alternifolia Leaf Oil and Tocopherol only).",
+      "quote": "Das Teebaumöl pflegt Haar und Kopfhaut mit natürlichen Pflanzenextrakten"
+    }
+  ],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Betaine",
+    "Melaleuca Alternifolia Leaf Oil",
+    "Sodium Chloride",
+    "PEG-7 Glyceryl Cocoate",
+    "Coco-Betaine",
+    "Benzyl Alcohol",
+    "Phenoxyethanol",
+    "Sodium Benzoate",
+    "Coco-Glucoside",
+    "Glycol Distearate",
+    "Citric Acid",
+    "Terpineol",
+    "Potassium Sorbate",
+    "Pinene",
+    "Limonene",
+    "Glycerin",
+    "Tocopherol"
+  ],
+  "canonicalReason": "PROVISIONAL: manufacturer list C chosen because the manufacturer DE page is the first-authority source and the only one changed after the 2026-08-10 captures. Condition 'manufacturer exact pack wins' is NOT met (page carries no GTIN/pack size) and no two GTIN-anchored retailers agree (dm=B, Rossmann=A, Müller=A'), so the list is frozen_with_conflict, not frozen. A pack photo or current-stock check would settle it.",
+  "inciFingerprintSha256": "fa74c91cc5f8d70b1c235670a06cded2f6b2285e95b63f24459c262283747419",
+  "normalization": "Canonical list split on ',' at parenthesis depth 0 (so synonym groups such as 'Aqua (Water, Eau)' stay one item), trailing full stop removed; per item: lower-case, trim, collapse internal whitespace; asterisks, parentheses and slashes kept as published; items joined with '|'; sha256 over the UTF-8 string.",
+  "identityConfidence": "moderate",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen_with_conflict",
+  "blockReason": null,
+  "notes": [
+    "NEEDS NICK: decide whether lanes see list C (recommended provisional) or all three versions; ideally obtain the current pack back (INCI printed) from a fresh purchase. Product is listed as live at dm, Rossmann and Müller.",
+    "Because Rossmann/Müller still list an MCI/MI-preserved formula, an older pack may still circulate; the scanned-product match in the app could hit either version.",
+    "Claim 'Teebaumöl' backed by Melaleuca Alternifolia Leaf Oil (#4) in all versions; 'ohne Silikone' consistent; 'Pflanzenextrakte' claim has no plant-extract INCI item in any version (only tea tree oil, tocopherol) - minor claim-INCI mismatch.",
+    "'Vegan' claim on dm: no animal-derived item evident in lists B/C.",
+    "Prior v1.4 fingerprint (comma-joined) 100ca80310a533808130ffaa9b058870f66bb97f39064e6c2908ff4abf4a691c refers to list B."
+  ]
+}

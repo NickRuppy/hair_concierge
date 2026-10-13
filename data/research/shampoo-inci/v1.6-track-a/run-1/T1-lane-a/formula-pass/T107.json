@@ -1,0 +1,44 @@
+{
+  "blindId": "T107",
+  "inciFingerprintSha256": "b4d05d43d9f88be1b079f69a1a0097118da48ed5d30dc75a6859b3a920018869",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {"normalization": "Aqua (Water) one entry; asterisk markers stripped from names and kept as provenance (Betula Alba Leaf Extract*, Aloe Barbadensis Leaf Juice Powder*, Parfum (Fragrance)**, Vanillin**); normalized one-based positions.", "completeness": "complete (ID-1)", "sourceTier": 2, "identityConfidence": "moderate", "e3ProminenceCutoff": "Parfum (Fragrance) at 20 -> positions 1-19 prominent"},
+  "directProperties": {
+    "cleansingStrength": {"value": "strong", "confidence": "high", "neighboringAlternative": "none",
+      "rationale": "C5: defining anionic Ammonium Lauryl Sulfate (2, alkyl sulfate) with only one prominent buffer, Cocamidopropyl Betaine (3) -> strong.",
+      "counterSignals": "Proteins (5, 7, 9), guar (8) and glycerin (6) add care but do not move C5."},
+    "conditioningLevel": {"value": "moderate", "confidence": "moderate", "neighboringAlternative": "low",
+      "rationale": "One meaningful cationic system, Guar Hydroxypropyltrimonium Chloride (8), plus protein film routes Hydrolyzed Corn (5), Wheat (7), Soy (9) Protein and humectant Glycerin (6). C2 not met (no silicone, no payload lipid, no pearlizing/fatty route).",
+      "counterSignals": "Hydrolyzed proteins give limited slip; no silicone/lipid; strong chassis (does not lower conditioning, C2). Low and high are both conceivable; low recorded as the tie neighbor (N-ALT lower value)."},
+    "weightPotential": {"value": "low", "confidence": "moderate", "neighboringAlternative": "moderate",
+      "rationale": "Hydrolyzed proteins plus one guar face a strong alkyl sulfate reset; no silicone, lipid or film former.",
+      "subjudgments": {
+        "depositionLoad": {"value": "light", "rationale": "Three hydrolyzed proteins (5, 7, 9) and guar (8)."},
+        "persistence": {"value": "low", "rationale": "Hydrolyzed proteins and a single guar are weakly retained under rinse."},
+        "resetCapacity": {"value": "strong", "rationale": "ALS with a single betaine buffer (C5 strong)."}},
+      "evidenceByFamily": {"protein_film": ["Hydrolyzed Corn Protein (5)", "Hydrolyzed Wheat Protein (7)", "Hydrolyzed Soy Protein (9)"], "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride (8)"], "anionic_surfactant": ["Ammonium Lauryl Sulfate (2)"], "amphoteric_surfactant": ["Cocamidopropyl Betaine (3)"], "humectant_context": ["Glycerin (6)", "Arginine (13)"]},
+      "excluded": ["Alcohol (11): solvent", "Betula Alba Leaf Extract (14), Aloe Barbadensis Leaf Juice Powder (16): extracts", "Leuconostoc/Radish Root Ferment Filtrate (15), Levulinic Acid (17), Sodium Levulinate (18), Benzoic Acid (12): preservation system"],
+      "unresolved": [],
+      "whyThisBand": "Light routes only, facing a strong reset.",
+      "whyNotNeighborBand": "W2: two families (protein_film, cationic_polymer), but a strong reset faces only light routes - low-persistence hydrolyzed proteins and a single guar, with no silicone, lipid or film former.",
+      "confidenceLimitingFactor": "Three proteins plus guar fairly early could leave bounded residue (one step toward moderate)."},
+    "focusPrimary": {"value": "provisional:pending_claims", "confidence": "low", "neighboringAlternative": "general",
+      "rationale": "Formula-only candidate: repair (three hydrolyzed proteins + guar) - a coherent protein cluster, though deposition is light. No claims seen.",
+      "careDirectionVerdictProvisional": "repair_supported (protein cluster; limited deposition support)"},
+    "focusSecondary": {"value": [], "confidence": "low", "neighboringAlternative": ["volume"], "rationale": "Empty default pending claims."},
+    "usageRole": {"value": "regular", "confidence": "low", "neighboringAlternative": "alternating", "rationale": "Default; cleansing strong, so alternating fires only if reset intent (U4) is revealed; strong cleansing alone is insufficient."},
+    "scalpComfortTarget": {"value": "provisional:not_targeted", "confidence": "low", "neighboringAlternative": "targeted", "rationale": "Positioning unknown. CSA formula half met via prominent humectant Glycerin (6); no comfort route. Counter-signal: strong cleansing. Aloe juice powder does not count (C2/CSA)."},
+    "dandruffSupport": {"value": "not_supported", "confidence": "high", "neighboringAlternative": "none", "rationale": "Neither Piroctone Olamine nor Climbazole."}
+  },
+  "formulaFacts": [
+    {"ingredient": "Ammonium Lauryl Sulfate", "position": 2, "role": "defining anionic (alkyl sulfate, C5)"},
+    {"ingredient": "Cocamidopropyl Betaine", "position": 3, "role": "single buffer"},
+    {"ingredient": "Hydrolyzed Corn Protein", "position": 5, "role": "protein_film"},
+    {"ingredient": "Glycerin", "position": 6, "role": "humectant (C2/E4)"},
+    {"ingredient": "Hydrolyzed Wheat Protein", "position": 7, "role": "protein_film"},
+    {"ingredient": "Guar Hydroxypropyltrimonium Chloride", "position": 8, "role": "cationic_polymer"},
+    {"ingredient": "Hydrolyzed Soy Protein", "position": 9, "role": "protein_film"},
+    {"ingredient": "Parfum (Fragrance)", "position": 20, "role": "E3 fragrance marker"}
+  ],
+  "unresolvedMaterialIngredients": []
+}

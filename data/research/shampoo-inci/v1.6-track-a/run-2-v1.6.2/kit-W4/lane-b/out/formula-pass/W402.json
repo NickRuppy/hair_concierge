@@ -1,0 +1,165 @@
+{
+  "blindId": "W402",
+  "inciFingerprintSha256": "d781cb2007e39fd64fe62e6bd73b3c65117915bcde182f6daf8d22763dfca1dc",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, stage A only)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "packSize": "200 ml",
+    "formulaSourceTier": 4,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "moderate",
+    "normalization": "Slash synonyms (AQUA / WATER, PARFUM / FRAGRANCE, CI 17200 / RED 33, CI 19140 / YELLOW 5) are single entries already; positions are normalized one-based positions (ID-2).",
+    "e3ProminenceCutoff": "PARFUM / FRAGRANCE @8; prominent = positions 1-7"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionicEtherSulfonate": ["Sodium C14-16 Olefin Sulfonate @2 (defining anionic, alpha-olefin sulfonate)"],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": ["Sodium Lauroyl Sarcosinate @7 (prominent buffer)"],
+      "amphoteric": ["Cocamidopropyl Betaine @5 (prominent buffer)", "Coco-Betaine @12 (after E3 point: recorded, not a buffer)"],
+      "nonionicCleansing": [],
+      "notCleansingNotBuffer": ["Cocamide MEA @3 (alkanolamide foam booster)", "PEG-55 Propylene Glycol Oleate @18 (PEG thickener)", "Sodium Chloride @14"],
+      "reinforcingRoutes": [],
+      "c1c5c6Reading": "C1: olefin-sulfonate defining anionic, two prominent buffers, no reinforcing route"
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @16 (not prominent)", "Polyquaternium-7 @20 (not prominent)"],
+      "payload_lipid": [],
+      "weak_refatter": [],
+      "silicone": [],
+      "pearlizing_fatty_route": ["Glycol Distearate @6"],
+      "humectants": ["Glycerin @4"],
+      "notHumectantRoute": ["Hexylene Glycol @9", "Propylene Glycol @27 (solvents)"]
+    },
+    "wLine": {
+      "wLine": "PARFUM / FRAGRANCE @8 (= cap)",
+      "wLineClasses": ["fragrance"],
+      "cap": "e3Point @8",
+      "alphabeticalRun": "none before the cap (longest ascending run 10-13, 4 entries, after the cap)",
+      "candidatesTested": ["PARFUM / FRAGRANCE @8: (i) surfactant before ok; (ii) nothing between candidate and cap -> plausible"],
+      "skipped": [],
+      "codes": [],
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": []
+    },
+    "actives": {
+      "dandruffActives": [],
+      "otherActives": ["Salicylic Acid @19 (not a recognized dandruff active)", "Glycolic Acid @35"],
+      "comfortRoutesE4Prominent": [],
+      "humectantRefattingRoutesE4Prominent": ["Glycerin @4"],
+      "coolingAgents": ["Carvone @29 (spearmint-type aroma chemical, late; not a listed cooling agent)"],
+      "essentialOils": ["Citrus Limon Peel Oil @33 (late)"],
+      "fragranceMaterials": ["Parfum @8", "Hydroxycitronellal @17", "Limonene @21", "Linalool @23", "Pinene @24", "Benzyl Benzoate @25", "Linalyl Acetate @26", "Geranyl Acetate @30", "Tetramethyl Acetyloctahydronaphthalenes @32", "Hexyl Cinnamal @34"]
+    },
+    "scalpGateFormulaFacts": {
+      "CSA": "met via prominent E4 humectant route Glycerin @4",
+      "MB": "not met: Sodium C14-16 Olefin Sulfonate @2 is a prominent strong anionic (sulfonate type)",
+      "S-SENSITIVE formula half": "no prominent E4 comfort route and no MB -> would fail",
+      "S-DRY formula half": "Glycerin @4 prominent humectant -> would pass if targeted",
+      "S-OILY formula clause": "cleansing moderate, weight low, conditioning low -> clause passes"
+    }
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "strong",
+      "rationale": "Moderate: C1 chassis with Sodium C14-16 Olefin Sulfonate @2 as the defining ether/sulfonate-type anionic, prominent buffers Cocamidopropyl Betaine @5 and Sodium Lauroyl Sarcosinate @7, and no reinforcing strong anionic. Counter-signals toward strong: the olefin sulfonate is the only early surfactant (alkanolamide and glycerin sit between it and the buffers), the buffers are mid-list, no conditioning lipid, plus late salicylic/glycolic acid and citrus oil; also identity confidence moderate with a tier-4 source. These lower confidence but do not move the C1 value.",
+      "ruleIds": ["C3", "C4", "C1", "N-ALT"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low: cleansing-led architecture with no silicone and no payload lipid; the only cationic polymers (Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @16, Polyquaternium-7 @20) sit after the fragrance, salt and preservative, so C2 is not met (no early silicone or prominent payload lipid). Counter-signal: two late cationic polymers plus Glycerin @4 and Glycol Distearate @6 could together read as several light routes (moderate).",
+      "ruleIds": ["Section 5 anchors", "C2"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @16", "Polyquaternium-7 @20"],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium C14-16 Olefin Sulfonate @2", "Cocamidopropyl Betaine @5", "Sodium Lauroyl Sarcosinate @7", "Coco-Betaine @12"],
+        "humectantContext": ["Glycerin @4", "Hexylene Glycol @9", "Propylene Glycol @27"],
+        "excluded": ["Cocamide MEA @3 (alkanolamide thickener)", "Glycol Distearate @6 (pearlizing wax, 6.4)", "PEG-55 Propylene Glycol Oleate @18 (PEG thickener, 6.4)", "Carbomer @28 (anionic acrylate rheology polymer, 6.4)", "Citrus Limon Peel Oil @33 (essential oil, 6.4)", "Parfum @8 and listed fragrance materials", "Salicylic Acid @19, Glycolic Acid @35, Citric Acid @31 (acids)"],
+        "unresolved": []
+      },
+      "wLineRecord": "wLine PARFUM / FRAGRANCE @8 (fragrance), equal to cap e3Point @8; no alphabetical run before the cap; no skipped candidates; no codes; no payload_lipid present.",
+      "depositionLoad": "light: one deposition family only (two late cationic polymers), no silicone, lipid or film former.",
+      "persistence": "low: late cationic polymers at trace-like positions; nothing waxy or silicone-based to accumulate.",
+      "resetCapacity": "moderate: C1 olefin-sulfonate chassis with betaine and sarcosinate buffers.",
+      "counterevidence": "Two cationic polymers (guar derivative and Polyquaternium-7) can deposit at low dose by dilution deposition.",
+      "whyThisBand": "A single, late cationic deposition family faces an effective sulfonate chassis; noticeable loss of movement or lift is unlikely.",
+      "whyNotNeighborBand": "Not moderate: only one deposition family (cationic_polymer) is present, both members listed after Parfum, salt and preservative, with no lipid, silicone or film route converging; moderate reset offsets them (W2 does not require more because no second family exists).",
+      "confidenceLimitingFactor": "Charge density and dose of the two cationic polymers are unknown; identity confidence moderate (tier-4 source).",
+      "rationale": "Low: single late cationic family, no lipid/silicone, moderate reset. W-line is the cap at Parfum @8 but no payload_lipid exists, so W-LINE gates nothing.",
+      "ruleIds": ["6.3", "6.4", "6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "clarifying",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Glycerin @4", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @16", "Polyquaternium-7 @20"],
+        "limitation": "No repair or moisture cluster: formula is cleansing-led; if a lengths-care claim appears the verdict would be nonspecific."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Blind pass: no claims. Formula is compatible with clarifying under F6 (cleansing moderate, conditioning not high, weight not high) if reset or oily positioning appears.",
+      "decisionTrace": "Blind: claim direction null; formula compatible with clarifying (F6 conditions met) or general; provisional general pending reveal.",
+      "rationale": "Provisional general (claim-dependent; formula-only).",
+      "ruleIds": ["3.1", "7.2", "F6"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["clarifying"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty (claim-dependent).",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional regular (default). A moderate formula can never be alternating; frequent needs U2 wording; no dandruff active, so no treatment.",
+      "ruleIds": ["Section 9", "U2", "U4"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional not_targeted (claims hidden). Formula half: CSA met via prominent E4 humectant route Glycerin @4 (listed route); MB not met (Sodium C14-16 Olefin Sulfonate @2 prominent). Counter-signals: citrus essential oil and many fragrance allergens (late).",
+      "ruleIds": ["Section 10", "CSA", "MB", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no Piroctone Olamine, Climbazole or Selenium Sulfide/Disulfide in the complete INCI; Salicylic Acid @19 alone does not count (Section 11).",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "notes": [
+    "Identity confidence moderate and source tier 4 (retailer fallback): recorded as a limiting factor; packet states the formula is complete.",
+    "Claim-dependent properties are provisional and formula-only."
+  ]
+}

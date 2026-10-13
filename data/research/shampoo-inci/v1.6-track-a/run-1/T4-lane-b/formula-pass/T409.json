@@ -1,0 +1,256 @@
+{
+  "blindId": "T409",
+  "inciFingerprintSha256": "d781cb2007e39fd64fe62e6bd73b3c65117915bcde182f6daf8d22763dfca1dc",
+  "phase": "blind_formula_pass",
+  "identity": {
+    "packSize": "200 ml",
+    "formulaSourceTier": 4,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "moderate"
+  },
+  "normalization": "ID-2 applied; normalized one-based positions; no split entries; raw positions = normalized positions",
+  "normalizedInciCount": 35,
+  "e3ProminenceMarker": "Parfum/Fragrance at 8",
+  "prominentThroughPosition": 7,
+  "surfactantArchitecture": "AOS (2) defining sulfonate anionic; CAPB (5), sarcosinate (7) buffers; C1 -> moderate.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: C1 ether/sulfonate chassis - defining anionic Sodium C14-16 Olefin Sulfonate (2) buffered by prominent Cocamidopropyl Betaine (5) and Sodium Lauroyl Sarcosinate (7); no prominent reinforcing strong anionic (C3, C4, C1).",
+      "counterSignal": "Cocamide MEA (3) is a foam booster, not a route; Coco-Betaine (12) is after Parfum. Source tier 4 / identity moderate noted, formula complete.",
+      "neighboringAlternative": "none",
+      "rulesApplied": [
+        "C3",
+        "C4",
+        "C1"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: prominent pearlizing Glycol Distearate (6) and Glycerin (4) with two late cationic polymers (Hydroxypropyl Guar Hydroxypropyltrimonium Chloride 16, Polyquaternium-7 20) - one meaningful conditioning system plus light routes; no silicone or lipid.",
+      "counterSignal": "Both cationic polymers sit after Parfum (8) and sodium chloride; argues toward low.",
+      "neighboringAlternative": "low",
+      "rulesApplied": [
+        "5",
+        "C2 not met"
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: a single deposition family (two late cationic polymers) faces an effective C1 reset; no silicone, lipid, protein or film former.",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Only cationic polymers (16, 20), both late."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Polyquaternium-7 can accumulate with repeated use; guar is weakly retained."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 AOS chassis with betaine and sarcosinate buffers."
+        }
+      },
+      "evidenceByFamily": {
+        "silicone": [],
+        "cationic_polymer": [
+          [
+            "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+            16
+          ],
+          [
+            "Polyquaternium-7",
+            20
+          ]
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "protein_film": [],
+        "film_former": [],
+        "humectant_context": [
+          [
+            "Glycerin",
+            4
+          ],
+          [
+            "Hexylene Glycol",
+            9
+          ],
+          [
+            "Propylene Glycol",
+            27
+          ]
+        ],
+        "reset": [
+          [
+            "Sodium C14-16 Olefin Sulfonate",
+            2
+          ],
+          [
+            "Cocamidopropyl Betaine",
+            5
+          ],
+          [
+            "Sodium Lauroyl Sarcosinate",
+            7
+          ],
+          [
+            "Coco-Betaine",
+            12
+          ]
+        ]
+      },
+      "excludedEvidence": [
+        [
+          "Glycol Distearate",
+          6,
+          "pearlizer, excluded (6.4)"
+        ],
+        [
+          "PEG-55 Propylene Glycol Oleate",
+          18,
+          "PEG thickener, excluded"
+        ],
+        [
+          "Carbomer",
+          28,
+          "anionic acrylate thickener, excluded (6.4)"
+        ],
+        [
+          "Cocamide MEA",
+          3,
+          "foam booster"
+        ],
+        [
+          "Citrus Limon Peel Oil",
+          33,
+          "essential oil"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "Polyquaternium-7 buildup tendency.",
+      "whyThisBand": "Low: a single deposition family (two late cationic polymers) faces an effective C1 reset; no silicone, lipid, protein or film former.",
+      "whyNotNeighborBand": "Not moderate: one family only, both members late (after Parfum and salt); no converging persistent system.",
+      "confidenceLimitingFactor": "Two polymers incl. Polyquaternium-7; levels unknown - moderate is a realistic neighbor.",
+      "neighboringAlternative": "moderate",
+      "rulesApplied": [
+        "6.5",
+        "6.6"
+      ]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional only: focus needs exact-product claims (7.2); blind default is the honest fallback `general`. ",
+      "neighboringAlternative": "moisture"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: secondary requires distinct exact-product positioning (Section 8); none visible blind."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional default `regular` (Section 9); triggers need graded claims.  `alternating` impossible: cleansingStrength is not strong."
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: positioning half (SC1) hidden until unblind. CSA formula half is met.",
+      "csaFormulaHalf": true
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11).",
+      "neighboringAlternative": "none"
+    }
+  },
+  "scalpGateFormulaFacts": {
+    "e4ComfortRoutes": [],
+    "e4HumectantRefattingRoutes": [
+      {
+        "ingredient": "GLYCERIN",
+        "position": 4,
+        "prominent": true
+      }
+    ],
+    "coolingAgents": [],
+    "promComfortRoute": false,
+    "promHumectantRoute": true,
+    "csaFormulaHalf": true
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium C14-16 Olefin Sulfonate",
+      "position": 2,
+      "role": "defining anionic (sulfonate type)"
+    },
+    {
+      "ingredient": "Cocamide MEA",
+      "position": 3,
+      "role": "foam booster"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 4,
+      "role": "humectant, prominent E4 route"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 5,
+      "role": "amphoteric buffer"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 6,
+      "role": "pearlizer"
+    },
+    {
+      "ingredient": "Sodium Lauroyl Sarcosinate",
+      "position": 7,
+      "role": "mild anionic buffer"
+    },
+    {
+      "ingredient": "Parfum / Fragrance",
+      "position": 8,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 16,
+      "role": "cationic polymer"
+    },
+    {
+      "ingredient": "Salicylic Acid",
+      "position": 19,
+      "role": "acid (not a dandruff active)"
+    },
+    {
+      "ingredient": "Polyquaternium-7",
+      "position": 20,
+      "role": "cationic polymer"
+    },
+    {
+      "ingredient": "Carbomer",
+      "position": 28,
+      "role": "excluded thickener"
+    }
+  ],
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    {
+      "reading": "Formula classified as given despite source tier 4 and identity confidence moderate",
+      "alternative": "If identity is later found materially uncertain, all properties drop to low (ID-3)"
+    }
+  ]
+}

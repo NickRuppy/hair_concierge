@@ -1,0 +1,155 @@
+{
+  "blindId": "T117",
+  "inciFingerprintSha256": "04a25bda52d67198d96cc864b3421d6fde98b6bc8c39f789a36aa09422e4194a",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "Packet canonicalInci used as normalized list (ID-2); positions are one-based on that list.",
+    "inciCount": 25,
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 3,
+    "identityConfidence": "high",
+    "e3ProminencePoint": "Parfum at 8: positions 1-7 prominent"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: SLES (2) defining, one prominent buffer (Cocamidopropyl Betaine 4), no reinforcing anionic -> moderate.",
+      "neighboringAlternative": "none"
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "C2 met with a payload lipid in place of the silicone: prominent Stearyl Alcohol (6), cationic polymers (Polyquaternium-6 14, Guar HPTC 15), fatty route (Cetyl Alcohol 9, Trihydroxystearin 17) and closed-list humectants (Glycerin 12, Panthenol 20, Sodium Hyaluronate 23) -> high. W-RICH also holds.",
+      "counterSignal": "Both cationic polymers and all humectants are after Parfum; fatty alcohols in a shampoo may act mainly as opacifier/structurant.",
+      "neighboringAlternative": "moderate"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-RICH (prominent stearyl alcohol + two cationic polymers) plausibly leaves bounded residue, but the C1 chassis gives moderate (not limited) reset -> moderate.",
+      "counterSignal": "W-RICH and two converging cationic polymers argue high.",
+      "neighboringAlternative": "high",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "Fatty alcohols 6/9, PQ-6 14, guar 15, trihydroxystearin 17."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Fatty-alcohol/cationic coacervate deposits moderately; no silicone."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 buffered SLES chassis."
+        }
+      },
+      "whyThisBand": "Converging lipid and cationic routes, ordinary reset.",
+      "whyNotNeighborBand": "Not high: W-RICH is present but reset is moderate (not limited), the cationics are after Parfum and there is no silicone. Not low: prominent fatty alcohols plus two cationic polymers are converging families (W2).",
+      "limitingFactor": "Role/level of the fatty alcohols and cationic polymers; W-RICH vs. moderate reset."
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Formula care-direction verdict recorded for reconciliation.",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "note": "Humectant route (Glycerin 12, Panthenol 20, Sodium Hyaluronate 23) with emollient/deposition support (fatty alcohols, two cationics). Humectants are late; could be nonspecific."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2)."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Default regular; triggers (U2-U5, D1, U3) need graded claims."
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). SC1 positioning unknown. CSA formula half fails: no prominent E4 comfort route; no prominent humectant/refatting route (fatty alcohols are excluded from the E4 list; Glycerin 12 after Parfum)."
+    }
+  },
+  "scalpGateFormulaHalves": "S-SENSITIVE / S-DRY fail. S-OILY clause fails on conditioningLevel high.",
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic, ether type"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Sodium Xylenesulfonate",
+      "position": 5,
+      "role": "hydrotrope"
+    },
+    {
+      "ingredient": "Stearyl Alcohol",
+      "position": 6,
+      "role": "payload_lipid (fatty alcohol), prominent"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 8,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Cetyl Alcohol",
+      "position": 9,
+      "role": "payload_lipid (fatty alcohol) / fatty route"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 12,
+      "role": "humectant (C2 list), after Parfum"
+    },
+    {
+      "ingredient": "Polyquaternium-6",
+      "position": 14,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+      "position": 15,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Trihydroxystearin",
+      "position": 17,
+      "role": "waxy rheology lipid"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 20,
+      "role": "humectant, late"
+    },
+    {
+      "ingredient": "Sodium Hyaluronate",
+      "position": 23,
+      "role": "humectant, late"
+    },
+    {
+      "ingredient": "Biotin",
+      "position": 25,
+      "role": "vitamin, no route"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

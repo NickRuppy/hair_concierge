@@ -1,0 +1,118 @@
+{
+  "slot": "A17",
+  "productId": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+  "name": "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege (dm: 'Shampoo Derma x Pro Sensitive Pflege')",
+  "brand": "Head & Shoulders",
+  "packSize": "250 ml",
+  "gtins": [
+    "8700216496032"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/2482704/head-und-shoulders-shampoo-derma-x-pro-sensitive-pflege",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "dm.de PDP (browser tab, Inhaltsstoffe accordion expanded); Anschrift: Procter & Gamble, Schwalbach",
+      "sourceKind": "retailer",
+      "gtinShown": "8700216496032 (page 'GTIN:' line; dm-Artikelnummer 2482704; title 'Shampoo Derma x Pro Sensitive Pflege, 250 ml'; status Lieferbar)",
+      "inciVerbatim": "Ingredients: Aqua, Sodium Laureth Sulfate, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Sodium Citrate, Piroctone Olamine, Dimethiconol, Parfum, Citric Acid, Cocamide MEA, Glycol Distearate, Sodium Chloride, Dimethicone, Guar Hydroxypropyltrimonium Chloride, Sodium Benzoate, TEA-Dodecylbenzenesulfonate, Sodium Salicylate, Tetrasodium EDTA, Trideceth-10, Sodium Hydroxide, Glycerin, Linalool, Butylene Glycol, Alpha-Isomethyl Ionone, Geraniol, Limonene, Mel Extract, Acetic acid, Oryza Sativa Bran Extract, Triethylene Glycol, Propylene Glycol, Benzyl Alcohol, Potassium Sorbate, Phenoxyethanol",
+      "claimsVerbatim": "Anti-Schuppen Shampoo | Mit Manuka-Honig und Ceramide-Komplex | Für trockene und schuppige Kopfhaut | Regeneriert und hilft | Feuchtigkeitsspendend | Das Shampoo DermaxPro Sensitive Pflege von head&shoulders eignet sich für trockene und schuppige Kopfhaut. Das Shampoo reinigt und bekämpft gleichzeitig die Ursache von Schuppen und versorgt die Haut während der Anwendung mit Feuchtigkeit. Zudem enthält die Haarpflege Manuka-Honig und Ceramide-Komplex. | Wirkung: Anti-Schuppen, Pflege, Feuchtigkeit",
+      "directionsVerbatim": "Shampoo im Haar verteilen. Aufschäumen, dann ausspülen."
+    },
+    {
+      "url": "https://www.headandshoulders.de/de-de/anti-schuppen-produkte/anti-schuppen-shampoo/sensitive-pflege/",
+      "retrievedAt": "2026-10-10 (HTTP 404 'Seite nicht gefunden', curl and browser tab)",
+      "sourceType": "manufacturer DE page captured 2026-08-24 in v1.3; now gone",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "none (page not retrievable; 2026-08-24 capture was an exact_variant match without GTIN)",
+      "inciVerbatim": "NOT RETRIEVABLE today. 2026-08-24 capture (data/research/shampoo-inci/v1.3/products/head-shoulders-dermaxpro-haarshampoo-sensitive-pflege/formula-source.json) was identical to the dm list above except 'Acetic Acid' capitalisation.",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-head-und-shoulders-dermaxpro-haarshampoo-sensitive-pflege/p/8700216496032",
+      "retrievedAt": "2026-10-10 (redirected to Haarpflege category with info=text.product.notAvailable.error)",
+      "sourceType": "Rossmann PDP; exact-GTIN URL captured 2026-08-24, now not available",
+      "sourceKind": "retailer",
+      "gtinShown": "8700216496032 (URL path); product page no longer served",
+      "inciVerbatim": "NOT RETRIEVABLE today. 2026-08-24 capture was identical to the dm list above.",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    },
+    {
+      "url": "https://www.codecheck.info/p/kosmetik/haarpflege/shampoo/2842564571.html",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "codecheck user-entered record (support only; EAN search hit)",
+      "sourceKind": "retailer",
+      "gtinShown": "search hit for 8700216496032; page 'Strichcode-Nummer' empty",
+      "inciVerbatim": "Aqua, sodium laureth sulfate, sodium xylenesulfate, cocamidopropyl betaine, sodium citrate, cocamide mea, gylcol distearate, sosium chloride, dimethicone, guar hydroxypropyltrimonium chloride, sodium benzoate, tea-dodecylbenzensulfonate, sodium salicylate, tetrasodium EDTA, trideceth-10, sodium hydroxide, glycerin, linalool, butylene glycol, alpha-isomethyl ionone, geraniol, limonene, mel extract, acetic acid, oryza sativa bran extract, triethylene glycol, propylene gylcol, benzyl alcohol, potassium sorbate, phenoxyethanol",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "source_availability",
+      "summary": "The manufacturer DE page for this exact product returns 404 and the exact-GTIN Rossmann page is 'not available' on 2026-10-10 although both served the same list on 2026-08-24. Only dm.de still lists the exact GTIN (Lieferbar). Possible delisting/rename/reformulation in progress; cannot be told apart from the evidence reachable today."
+    },
+    {
+      "type": "codecheck_typo_record",
+      "summary": "Codecheck's user-entered list omits Piroctone Olamine, Dimethiconol and Parfum and contains typos (xylenesulfate, gylcol, sosium, propylene gylcol). Treated as an incomplete transcription, not as a formula difference; support only."
+    },
+    {
+      "type": "claim_inci_mismatch",
+      "summary": "Claim 'Mit Manuka-Honig und Ceramide-Komplex' (dm PDP): INCI contains 'Mel Extract' but no ceramide-type ingredient and no manuka-specific name.",
+      "quote": "Zudem enthält die Haarpflege Manuka-Honig und Ceramide-Komplex."
+    }
+  ],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Sodium Xylenesulfonate",
+    "Cocamidopropyl Betaine",
+    "Sodium Citrate",
+    "Piroctone Olamine",
+    "Dimethiconol",
+    "Parfum",
+    "Citric Acid",
+    "Cocamide MEA",
+    "Glycol Distearate",
+    "Sodium Chloride",
+    "Dimethicone",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Sodium Benzoate",
+    "TEA-Dodecylbenzenesulfonate",
+    "Sodium Salicylate",
+    "Tetrasodium EDTA",
+    "Trideceth-10",
+    "Sodium Hydroxide",
+    "Glycerin",
+    "Linalool",
+    "Butylene Glycol",
+    "Alpha-Isomethyl Ionone",
+    "Geraniol",
+    "Limonene",
+    "Mel Extract",
+    "Acetic acid",
+    "Oryza Sativa Bran Extract",
+    "Triethylene Glycol",
+    "Propylene Glycol",
+    "Benzyl Alcohol",
+    "Potassium Sorbate",
+    "Phenoxyethanol"
+  ],
+  "canonicalReason": "dm.de, exact GTIN 8700216496032 / 250 ml, current 2026-10-10, publishes a complete 34-item list identical (item for item) to the 2026-08-24 manufacturer capture and the 2026-08-24 Rossmann exact-GTIN capture and the 2026-08-10 dm capture. No competing complete list exists. Claim-vs-INCI: 'Manuka-Honig' = Mel Extract (honey extract, not Leptospermum-specific in INCI) and 'Ceramide-Komplex' is NOT present as any ceramide INCI (no Ceramide NP/AP/EOP etc.) - recorded below.",
+  "inciFingerprintSha256": "6f2746c99f915a14f9f6c68c257e334283b7325a05e18abdbf2a60afb9d37e48",
+  "normalization": "Canonical list split on ',' at parenthesis depth 0 (so synonym groups such as 'Aqua (Water, Eau)' stay one item), trailing full stop removed; per item: lower-case, trim, collapse internal whitespace; asterisks, parentheses and slashes kept as published; items joined with '|'; sha256 over the UTF-8 string.",
+  "identityConfidence": "moderate",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 3,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Tier-3 basis is dm.de today plus identical exact-GTIN captures of Rossmann and the manufacturer page from 2026-08-24 (both now unreachable). Strictly on 2026-10-10 evidence alone this is a single live German retailer; treat as tier 3 only with that caveat.",
+    "NEEDS NICK: possible delisting at Rossmann and manufacturer site; catalog row should be checked for continued availability/GTIN (dm still sells it, 'Lieferbar').",
+    "Claim-INCI conflict: dm claims 'Mit Manuka-Honig und Ceramide-Komplex' and 'Feuchtigkeitsspendend', but the INCI has only 'Mel Extract' (honey) - no manuka-specific name and no ceramide ingredient. Also 'Regeneriert' claim has no INCI basis. Not a block.",
+    "The sibling DERMAXPRO products on headandshoulders.de are different GTINs ('Empfindliche Kopfhaut Shampoo' sku 8006530222037, 'Beruhigend' = G02 GTIN 8700216328661); the old 'Sensitive Pflege' slug is not in the 2026-10 sitemap.",
+    "Fingerprint: v1.3/v1.4 pinned e55154129f110538d1e307fb7dbd364767b1e08e47e0b7e5a1e40516d29bda12 (comma-joined)."
+  ]
+}

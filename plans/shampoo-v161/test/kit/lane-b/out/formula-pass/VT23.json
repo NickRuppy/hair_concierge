@@ -1,0 +1,154 @@
+{
+  "blindId": "VT23",
+  "inciFingerprintSha256": "d3dffe2380e8a781137164c899be8d8862b773c9122a91c8fac8668bc4d25462",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, claims hidden)",
+  "standard": "shampoo-classification-v1.6.1 candidate text (unlocked)",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "ID-2: AQUA / WATER / EAU, the two Taraxacum synonyms and PARFUM / FRAGRANCE each one entry; normalized one-based positions of the 21-entry list",
+    "e3ProminenceCutoff": "PARFUM / FRAGRANCE @21 -> positions 1-20 prominent"
+  },
+  "formulaFacts": {
+    "surfactantSystem": [
+      "Cocamidopropyl Betaine @2 - amphoteric, earliest prominent cleansing surfactant",
+      "Sodium Lauryl Glucose Carboxylate @4 - mild anionic (carboxylate; assigned by chemistry, C3)",
+      "Lauryl Glucoside @6 - nonionic glucoside",
+      "Sodium Lauroyl Methyl Isethionate @7 - mild anionic",
+      "Coco-Glucoside @12 - nonionic glucoside",
+      "No strong anionic",
+      "Not cleansing: Polysorbate 20 @13, Acrylates/C10-30 Alkyl Acrylate Crosspolymer @8"
+    ],
+    "conditioningAndWeightRoutes": {
+      "silicone": [],
+      "cationic_polymer": [],
+      "cationic_conditioner": [],
+      "payload_lipid": [],
+      "weak_refatter": ["Glyceryl Oleate @10"],
+      "protein_film": [],
+      "film_former": [],
+      "pearlizing_fatty_route_for_C2": [],
+      "humectantContext": ["Glycerin @5", "Propylene Glycol @3 (solvent)"],
+      "excluded": ["Acrylates/C10-30 Alkyl Acrylate Crosspolymer @8 (anionic acrylate suspending agent, 6.4)", "Polysorbate 20 @13 (solubilizer)", "Taraxacum Officinale Root Extract @11 (extract)", "Trisodium Ethylenediamine Disuccinate @17 (chelator)"]
+    },
+    "actives": ["Selenium Sulfide @9 - recognized anti-dandruff active (DS1)"],
+    "scalpExposureFlags": ["Parfum @21 last; Linalool @20; no cooling agent, no essential oil", "mild C6 chassis", "E4 comfort list: no route", "E4 humectant/refatting routes prominent: Glycerin @5, Glyceryl Oleate @10"]
+  },
+  "wLine": {
+    "wLine": "Sodium Benzoate @14",
+    "candidateClasses": ["preservative_or_capped_active"],
+    "cap": "e3Point @21 (Parfum)",
+    "alphabeticalRun": "none",
+    "skipped": [
+      "w_line_skipped:Selenium Sulfide@9 - clause (ii) failed: cleansing surfactant Coco-Glucoside @12 listed after it and before the cap"
+    ],
+    "plausibilityOfWLine": "Sodium Benzoate @14: (i) cleansing surfactants before; (ii) between @14 and @21 only Citric Acid, Sodium Chloride, chelator, Potassium Sorbate, 2-Bromo-2-Nitropropane-1,3-Diol (not on list b), Linalool - no cleansing surfactant, alkanolamide or pearlizing wax",
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Low by C6: no strong anionic; the earliest prominent cleansing surfactant is the amphoteric Cocamidopropyl Betaine @2, followed by glucosides and mild anionics. No C3b member involved.",
+      "ruleIds": ["C3", "C4", "C6"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Low: cleansing-led architecture with no silicone, cationic polymer, cationic conditioner or payload lipid; only Glycerin @5 and the weak refatter Glyceryl Oleate @10.",
+      "ruleIds": ["5", "C2"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "evidence": {
+        "silicone": [],
+        "cationic_polymer": [],
+        "cationic_conditioner": [],
+        "payload_lipid": [],
+        "weak_refatter": ["Glyceryl Oleate @10"],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["amphoteric @2", "mild anionic @4, @7", "nonionic @6, @12"],
+        "humectantContext": ["Glycerin @5"],
+        "excluded": ["Acrylates/C10-30 Alkyl Acrylate Crosspolymer @8", "Polysorbate 20 @13"],
+        "unresolved": []
+      },
+      "depositionLoad": "light - only a weak refatter",
+      "persistence": "low - glyceryl oleate is lightly retained",
+      "resetCapacity": "weak - mild C6 chassis, but nothing substantive to remove",
+      "counterevidence": "Selenium sulfide particles are suspended by the acrylate crosspolymer and may deposit on the scalp, but that is an active, not a hair-conditioning residue family.",
+      "whyThisBand": "Low: deposition is absent apart from one weak refatter; no architecture supports reduced movement or lift.",
+      "whyNotNeighborBand": "Not moderate: no depositing system (silicone, cationic, lipid, protein, film former) is present; a single weak refatter plus humectant cannot plausibly leave noticeable residue even against weak reset.",
+      "confidenceLimitingFactor": "None material.",
+      "rationale": "Low: only Glyceryl Oleate @10; no payload lipid (W-line Sodium Benzoate @14).",
+      "ruleIds": ["6.6", "W-LINE", "W2"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "not_applicable (provisional)",
+        "moistureRoutes": ["Glycerin @5"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [],
+        "limitation": "Claims hidden"
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "Selenium Sulfide @9 suggests an anti-dandruff role, but the path needs a dandruff claim (R17.3).",
+      "decisionTrace": "Claim direction null (blind); formula compatible with scalp_active if anti-dandruff positioning is revealed; provisional general.",
+      "rationale": "Provisional formula-only: general.",
+      "ruleIds": ["7.2", "11", "3.1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["moisture"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no positioning visible.",
+      "rationale": "Provisional [].",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "treatment",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": ["treatment possible if a qualifying dandruff claim is revealed", "frequent possible with U2 wording", "alternating impossible (low)"],
+      "rationale": "Provisional default regular.",
+      "ruleIds": ["9", "U1", "U3"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: positioning hidden. CSA formula half met via humectant/refatting routes Glycerin @5 and Glyceryl Oleate @10; no E4 comfort route (an S-SENSITIVE gate would fail on the comfort-route clause).",
+      "ruleIds": ["10", "CSA", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Supported: Selenium Sulfide @9 is a recognized active (DS1, exact INCI name). Formula-only.",
+      "ruleIds": ["11", "DS1"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "Sodium Lauryl Glucose Carboxylate assigned to mild anionic by its carboxylate chemistry (C3 unlisted-surfactant rule); does not affect C6 (betaine is earliest).",
+    "2-Bromo-2-Nitropropane-1,3-Diol @19 is a preservative not on W-LINE list b; not a candidate."
+  ]
+}

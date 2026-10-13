@@ -30,7 +30,10 @@ export default async function PersonalPlanStartLabPage({
   })
   if (computed.status !== "ready") notFound()
 
-  const plan = adaptInitialNeedSnapshotToPlanStartViewModel(computed.snapshot)
+  const plan = adaptInitialNeedSnapshotToPlanStartViewModel(computed.snapshot, {
+    // Tools-off: this lab previews the product-only journey.
+    toolsEnabled: false,
+  })
   if (!plan) notFound()
 
   return (

@@ -1,0 +1,188 @@
+{
+  "schema_version": "shampoo-research-logic-lock-receipt.v1.6.2",
+  "locked_standard_version": "1.6.2",
+  "policy_id": "shampoo-classification-v1.6.2",
+  "model_version": "shampoo-inci-v1.6.2",
+  "locked_at": "2026-10-12",
+  "decision": "approved_and_locked_for_reuse",
+  "decision_ruling": "Lock",
+  "decision_quote": "yes to both",
+  "decision_basis": "Nick's decision after the sealed two-lane test round (run log, 'Adjudication'); ledger entry 'Lock — test-round adjudication and lock (2026-10-12)'",
+  "normative_standard": {
+    "path": "docs/research/shampoo-inci/v1.6.2/classification-standard.md",
+    "bytes": 165970,
+    "sha256": "c490b3c5a002ba98aa66122f6f44c78782b2eef9dfc75ce33d9fe48aeada71a6"
+  },
+  "base_method": {
+    "policy_id": "shampoo-classification-v1.6.1",
+    "path": "docs/research/shampoo-inci/v1.6.1/classification-standard.md",
+    "sha256": "8bd97d31b433109e0bc79738163a41b3e644de9ab3e7312948ecaddea23d0a29"
+  },
+  "base_lineage": {
+    "policy_id": "shampoo-classification-v1.6",
+    "path": "docs/research/shampoo-inci/v1.6/classification-standard.md",
+    "sha256": "3b70a145e23e381f5c83ded0092d86d9642ddb7f570dfc9d7414a843659baf98"
+  },
+  "candidate_working_record": {
+    "path": "plans/shampoo-v162/candidate/classification-standard.md",
+    "sha256_at_lock": "c490b3c5a002ba98aa66122f6f44c78782b2eef9dfc75ce33d9fe48aeada71a6",
+    "sha256_tested": "f5ad0029e7ea8affd5d0edd9e97507a35795a8e3dbb76c4ddbee2e66d020a1f3",
+    "note": "Not normative and not pinned. The test round's lane kits were built from the candidate as committed in 41eac740 (sha256_tested). The locked text differs from it in the Version block (Status LOCKED, Lock receipt and Test-round evidence rows, rows 138–144 references) and in one review fix before publication (row 144: MB reads surfactant prominence under C4 including the no-marker fallback; stricter only, no Track A product affected)."
+  },
+  "approved_scope": {
+    "category": "shampoo",
+    "category_description": "current German-market regular shampoos for healthy users with cosmetic hair/scalp needs; explicit deep cleansers stay in the regular-shampoo cohort (deep-cleanser entry classified under its own category rules)",
+    "market": "DE",
+    "out_of_scope": [
+      "medical treatment",
+      "diagnosed disease",
+      "hair-loss efficacy"
+    ],
+    "direct_properties": [
+      "cleansingStrength",
+      "conditioningLevel",
+      "weightPotential",
+      "focusPrimary",
+      "focusSecondary",
+      "usageRole",
+      "scalpComfortTarget",
+      "dandruffSupport"
+    ],
+    "focus_values": [
+      "volume",
+      "shine",
+      "repair",
+      "moisture",
+      "clarifying",
+      "scalp_active",
+      "general"
+    ],
+    "projection_fields": [
+      "thicknesses[].fit",
+      "weight",
+      "scalpTargets.primary.target",
+      "scalpTargets.secondary.target",
+      "observedCleansingIntensity",
+      "positioning.explicitResetPositioning",
+      "deepCleanserListing",
+      "reviewFlags",
+      "informationalNotes",
+      "researchCombinationTargets"
+    ],
+    "research_only_fields": [
+      "researchCombinationTargets"
+    ],
+    "live_vocabulary": {
+      "thickness": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "shampoo_bucket": [
+        "normal",
+        "dehydriert-fettig",
+        "trocken",
+        "irritationen",
+        "schuppen"
+      ],
+      "scalp_route": [
+        "balanced",
+        "oily",
+        "dry",
+        "irritated",
+        "dandruff"
+      ],
+      "cleansing_intensity": [
+        "gentle",
+        "regular",
+        "clarifying"
+      ],
+      "weight": [
+        "light",
+        "moderate",
+        "heavy"
+      ]
+    }
+  },
+  "rulings": {
+    "ledger_snapshot": {
+      "path": "data/research/shampoo-inci/v1.6.2/rulings-ledger.md",
+      "bytes": 2950,
+      "sha256": "f3882b6be997360004f0e2437e64e254d090e5f6c798b6311e53a17a38e4cb1e"
+    },
+    "living_ledger_path": "plans/shampoo-v16/rulings.md (codex/shampoo-v16-rollout)",
+    "base_rulings": "v1.6 rulings R1-R17 and v1.6.1 rulings S1-S4, D1-D6, R1-R4 stay in force unchanged",
+    "applied": [
+      "R18.1",
+      "R18.2",
+      "R18.3",
+      "R18.4",
+      "R18.5"
+    ]
+  },
+  "test_round_evidence": {
+    "corpus_root": "data/research/shampoo-inci/v1.6.2/test-round/",
+    "copied_from": "plans/shampoo-v162/test/",
+    "evidence_root": "data/research/shampoo-inci/v1.6.2/evidence/",
+    "evidence_copied_from": "plans/shampoo-v162/inputs/",
+    "lanes_per_run": 2,
+    "lane_design": "two independent sealed Opus lanes; two-stage kit (scripts/shampoo-research/build-lane-kit.ts with --standard pointing at the candidate): blind formula packets first (stage-A normalization carries only the runbook rule), reveal packets released only after both lanes' formula-pass records were committed (c3adc93d); scrubbed standard copy without worked examples; no web",
+    "runs": [
+      {
+        "id": "v1.6.2-test-round",
+        "products": 9,
+        "composition": "9 Track A freeze packets not touched by v1.6.1 (mechanical screen): the R18 mover G03, sulfate-base controls A43/A24/A21, listed-route passes A05/A03/A40, dandruff-path combination controls G01/A06; blind ids VS01-VS09, seed 20261013",
+        "agreement": "150/153",
+        "raw_agreement": 0.98,
+        "report": "data/research/shampoo-inci/v1.6.2/test-round/run-log.md",
+        "compare_output": "data/research/shampoo-inci/v1.6.2/test-round/compare-output.txt",
+        "pre_registration": "data/research/shampoo-inci/v1.6.2/test-round/pre-registration.md"
+      }
+    ],
+    "adjudications": [
+      {
+        "product": "A21 ISANA MED Totes Meer",
+        "field": "weightPotential",
+        "value": "resolved in the Track A re-check; cautious moderate if still split (R14)",
+        "cause": "boundary_variance_not_v1.6.2"
+      },
+      {
+        "product": "A43 Sante Sensitive Care",
+        "field": "conditioningLevel",
+        "value": "no action (research-only, no projected change)",
+        "cause": "research_only_variance"
+      }
+    ]
+  },
+  "post_test_rulings": {
+    "applied": [
+      "A21 to the Track A re-check",
+      "A43 no action",
+      "Row 144 review fix (Codex): MB under C4 no-marker fallback"
+    ],
+    "rule_changes": [
+      "144 (review fix before publication, stricter only, no tested value affected)"
+    ],
+    "recalibrated": false,
+    "basis": "the test round passed; Nick adjudicated the two departures cause-coded without tuning and without changing a rule"
+  },
+  "known_limits_retained": [
+    "One sealed two-lane test round on 9 products; there is no separate unseen re-run for v1.6.2. The cohort products were known to the rule authors (Track A).",
+    "MB rests on consensus-level evidence (mild surfactant system), not controlled shampoo trials; the E4 lists likewise have no independent rinse-off soothing evidence (evidence/).",
+    "The first kit build carried a retailer name in the stage-A normalization text; it was rebuilt with the fix before any lane ran (run log).",
+    "Row 144 (review fix: MB under C4's no-marker fallback) was applied after the test round and was not exercised by the lanes; no Track A product lacks both a fragrance and an E3 preservative marker, so no tested or Track A value can change.",
+    "The archived check-preregistration.py reads plans/shampoo-v162/test; replay against the pinned copies with replay-check.py in the same folder (same output)."
+  ],
+  "separate_gates": {
+    "production_light_adapter_repin": false,
+    "live_weight_column_and_authority_rule": false,
+    "track_a_recheck_applied": false,
+    "n1_no_gap_preflight": false,
+    "individual_product_review_completed": false,
+    "catalog_activation": false,
+    "production_database_write": false,
+    "user_facing_copy_change": false
+  },
+  "separate_gates_note": "Every gate is false: none is authorized or done by this lock. The Production Light adapter stays pinned to v1.4; the Track A re-check, the N1 preflight and every catalog apply need their own approval.",
+  "production_writes": false
+}

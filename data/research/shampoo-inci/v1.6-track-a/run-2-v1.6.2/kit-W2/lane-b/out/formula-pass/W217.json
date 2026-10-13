@@ -1,0 +1,245 @@
+{
+ "blindId": "W217",
+ "inciFingerprintSha256": "0d5d537d9861521620fc808ebb0fe6b3b88decc120aff9d099b9890fc0c22fb1",
+ "phase": "formula-pass (blind, stage A only; no reveal opened)",
+ "standard": "shampoo-classification-v1.6.2",
+ "lane": "lane-b",
+ "identity": {
+  "packSize": "250 ml",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high",
+  "normalization": "No synonym or split entries; normalized positions = packet positions (ID-2).",
+  "e3ProminenceCutoff": "PARFUM @5; prominent = positions 1-4 (E3)."
+ },
+ "formulaFacts": {
+  "surfactants": {
+   "definingAnionic": "Sodium Laureth Sulfate @2 (strong anionic, ether type)",
+   "reinforcingRoutes": [],
+   "buffers": [
+    "Cocamidopropyl Betaine @3 (amphoteric)"
+   ],
+   "nonProminentSurfactants": [
+    "Coco-Glucoside @8 (after E3: recorded, not a buffer)"
+   ],
+   "c3aOrC3b": "none"
+  },
+  "conditioningRoutes": {
+   "cationic_polymer": [
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10"
+   ],
+   "weak_refatter": [
+    "Glyceryl Oleate @9",
+    "Hydrogenated Palm Glycerides Citrate @15",
+    "Lecithin @16",
+    "Ascorbyl Palmitate @17"
+   ],
+   "payload_lipid": [],
+   "silicone": [],
+   "pearlizing": []
+  },
+  "humectants": [
+   "Sodium Hyaluronate @13"
+  ],
+  "actives": [
+   "Aloe Barbadensis Leaf Juice Powder @11",
+   "Sodium Hyaluronate @13",
+   "Tocopherol @14"
+  ],
+  "recognizedDandruffActives": [],
+  "exposure": {
+   "fragrance": "Parfum @5 (no allergens declared)",
+   "coolingAgents": [],
+   "essentialOils": []
+  },
+  "csa": {
+   "listedComfortRoutesProminent": [],
+   "listedHumectantRefattingRoutesProminent": [],
+   "mildBase": "no: prominent Sodium Laureth Sulfate @2",
+   "csaHolds": false,
+   "note": "Glyceryl Oleate @9 and Sodium Hyaluronate @13 are listed routes but after Parfum @5."
+  },
+  "preservativesAndOther": [
+   "Sodium Chloride @4",
+   "Sodium Benzoate @6",
+   "Citric Acid @7",
+   "Potassium Sorbate @12"
+  ]
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Moderate: C1 - defining anionic Sodium Laureth Sulfate @2 with prominent buffer Cocamidopropyl Betaine @3 and no reinforcing route; Coco-Glucoside @8 is after Parfum and not counted.",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "E3"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "Low: cleansing-led - every conditioning route is after Parfum @5 and the preservative @6: one cationic HPG-HPTC @10 and weak refatters (Glyceryl Oleate @9, Hydrogenated Palm Glycerides Citrate @15, Lecithin @16), Sodium Hyaluronate @13. C2 not met. Neighbor moderate: the guar plus refatters could be read as one light system.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "E3",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "Low: one late cationic guar plus weak refatter esters against an effective C1 reset; no silicone, payload lipid, protein or film former.",
+   "ruleIds": [
+    "6.6",
+    "W-LINE",
+    "W2",
+    "W3",
+    "N-ALT"
+   ],
+   "evidence": {
+    "cationic_polymer": [
+     "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [
+     "Glyceryl Oleate @9",
+     "Hydrogenated Palm Glycerides Citrate @15",
+     "Lecithin @16",
+     "Ascorbyl Palmitate @17"
+    ],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Sodium Laureth Sulfate @2",
+     "Cocamidopropyl Betaine @3",
+     "Coco-Glucoside @8 (late)"
+    ],
+    "humectantContext": [
+     "Sodium Hyaluronate @13"
+    ],
+    "excluded": [
+     "Aloe Barbadensis Leaf Juice Powder @11 (plant juice)",
+     "Tocopherol @14 (antioxidant)"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": {
+     "position": 5,
+     "inci": "PARFUM",
+     "classes": [
+      "fragrance"
+     ]
+    },
+    "cap": {
+     "e3Point": 5
+    },
+    "alphabeticalRun": null,
+    "skipped": [],
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "light",
+   "persistence": "low",
+   "resetCapacity": "moderate",
+   "counterevidence": "Two families (cationic_polymer + weak_refatter, W2).",
+   "whyThisBand": "One late light cationic polymer plus weak refatters.",
+   "whyNotNeighborBand": "Not moderate: the only families are one guar polymer listed after Parfum and Sodium Benzoate (late) and weak_refatter esters/lecithin, facing a moderate SLES/betaine reset (W2 reason: weak refatters plus one late light polymer).",
+   "confidenceLimitingFactor": "Guar deposition at low dose; INCI-only."
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "low",
+   "neighboringAlternative": "moisture",
+   "rationale": "Provisional, formula-only (claims hidden, 3.1): no exact-product claim is visible, so no focus candidate exists and 7.2 (\"unsupported/absent claims\") gives general. Formula care-direction verdict: nonspecific. Neighbor moisture: Sodium Hyaluronate and aloe make a hydration claim the most plausible specialist role, though the formula verdict is nonspecific. Final focus is decided only after the reveal (3.2, 7.2, F1-F7).",
+   "ruleIds": [
+    "3.1",
+    "7.2",
+    "7.3",
+    "F1",
+    "N-ALT"
+   ],
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "Sodium Hyaluronate @13"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "HPG-HPTC @10",
+     "Glyceryl Oleate @9"
+    ],
+    "limitation": "Late hyaluronate and light conditioning do not form a coherent moisture cluster."
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "No claim visible in the blind pass; formula verdict only. Late hyaluronate and light conditioning do not form a coherent moisture cluster.",
+   "decisionTrace": "Blind: claim direction null; formula verdict nonspecific; decision reason: no candidate claim, provisional general."
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "low",
+   "neighboringAlternative": [
+    "moisture"
+   ],
+   "rationale": "Provisional, formula-only: secondary needs distinct exact-product positioning (Section 8), which is hidden in the blind pass; empty default.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3",
+    "N-ALT"
+   ],
+   "decisionTrace": "Empty default considered; no claims visible; no secondary selected."
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "low",
+   "neighboringAlternative": "frequent",
+   "rationale": "Provisional, formula-only: usage triggers need moderate/high-graded claims or directions (Section 9, CL-SRC), hidden in the blind pass; default regular. Neighbor: cleansingStrength is not strong, so explicit frequency wording (U2) could fire frequent.",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U4",
+    "CL-SRC",
+    "N-ALT"
+   ],
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": []
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not targeted (formula half fails, so no claim can make it targeted): no listed comfort or humectant/refatting route is prominent (all after Parfum @5) and MB fails (prominent SLES @2). An explicitly positioned product would still be not_targeted and fail its S-SENSITIVE/S-DRY gate (S-FAIL).",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "MB",
+    "E4",
+    "S-FAIL"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not supported: the complete INCI contains no Piroctone Olamine, Climbazole or Selenium (Di)Sulfide (Section 11).",
+   "ruleIds": [
+    "11",
+    "DS1"
+   ]
+  }
+ },
+ "unresolvedMaterialIngredients": []
+}

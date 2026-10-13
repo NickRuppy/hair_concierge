@@ -1,0 +1,59 @@
+{
+  "slot": "G03",
+  "productId": "e7bfd306-b128-4735-a9f8-0eeacdbd5013",
+  "name": "Sebamed Every-Day Shampoo",
+  "brand": "Sebamed",
+  "packSize": "200 ml",
+  "gtins": [
+    "4103040051752"
+  ],
+  "sources": [
+    {
+      "url": "https://sebamed.de/de/p/every-day-shampoo/",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "manufacturer_de",
+      "gtinShown": "4103040051752 (EAN field), PZN 07307813, 200 ml",
+      "inciVerbatim": "Aqua, Decyl Glucoside, Disodium Laureth Sulfosuccinate, Sodium Lauryl Sulfoacetate, PEG-55 Propylene Glycol Oleate, Propylene Glycol, Parfum, Phenoxyethanol, Sodium Benzoate, Citric Acid, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Lactic Acid, Sodium Chloride, Sodium Lactate",
+      "claimsVerbatim": "Schonende, seifenfreie Reinigung für empfindliche Kopfhaut | Die sebamed Hautreinigungs- und Pflegeprodukte sind besonders hautverträglich und stärken die Barrierefunktion der empfindlichen Haut und ihre Widerstandskräfte gegen Reizeinflüsse. | Das sebamed Every‑Day Shampoo ist ein seifenfreies Shampoo für die tägliche Haarwäsche. Die besonders milde, reinigende Zuckertensid‑Formel schützt Kopfhaut und Haar vor dem Austrocknen und trägt dazu bei, ihre natürliche Balance zu bewahren. Zusätzlich wird das Hautmikrobiom stabillisiert. | Der pH-Wert der gesunden Haut liegt durchschnittlich bei 5,5. sebamed mit dem pH-Wert 5,5 stärkt die Funktion des natürlichen Hautschutzmantels auch gegen schädliche Umwelteinflüsse und trägt zur Gesunderhaltung der Haut bei. Alle sebamed Produkte sind in über 400 Studien dermatologisch-klinisch getestet. | pH-Wert 5,5 | Der leicht saure pH-Wert entspricht dem natürlichen Milieu und unterstützt die gesunde Barrierefunktion und Mikrobiombalance der Haut | Haartyp: normal/jeder Haartyp",
+      "directionsVerbatim": "Shampoo in der Handinnenfläche aufschäumen und unter leichtem Massieren auf die Kopfhaut auftragen. Ausspülen. Für die tägliche Anwendung geeignet."
+    },
+    {
+      "url": "https://www.dm.de/p/d/1005244/sebamed-shampoo-every-day",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "retailer_dm_de",
+      "gtinShown": "4103040051752 (page text + JSON-LD; dm-Artikelnummer 1005244; \"Shampoo Every-Day, 200 ml\")",
+      "inciVerbatim": "Aqua, Decyl Glucoside, Disodium Laureth Sulfosuccinate, Sodium Lauryl Sulfoacetate, PEG-55 Propylene Glycol Oleate, Propylene Glycol, Parfum, Phenoxyethanol, Sodium Benzoate, Citric Acid, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Lactic Acid, Sodium Chloride, Sodium Lactate.",
+      "claimsVerbatim": "Sanfte Zuckertensid-Formel für milde Reinigung | Seifenfrei & schonend zur Kopfhaut | Schützt Haar & Kopfhaut vor Austrocknung | Geeignet für alle Haartypen & Haarstrukturen | Mit dem Every-Day Shampoo von sebamed gelingt die tägliche Haarpflege besonders sanft und schonend. Die milde Zuckertensid-Formel reinigt Kopfhaut und Haar gründlich, ohne zu reizen oder auszutrocknen. Durch die seifenfreie Rezeptur bleibt das natürliche Gleichgewicht der Kopfhaut erhalten und das Haar erhält mehr Fülle und Glanz. Für alle Haartypen geeignet, sorgt das Shampoo für ein angenehmes Frischegefühl und ein gepflegtes Aussehen – Tag für Tag. Die leichte Textur lässt sich mühelos ausspülen und hinterlässt ein geschmeidiges Haargefühl.",
+      "directionsVerbatim": "Das Haar anfeuchten, Shampoo in der Handinnenfläche verreiben, aufschäumen und unter leichtem Massieren auf die Kopfhaut auftragen. Gründlich ausspülen."
+    }
+  ],
+  "conflicts": [],
+  "canonicalReason": "Manufacturer DE page for the exact 200 ml pack (EAN 4103040051752) and dm.de (same GTIN) agree verbatim; identical to prior v1.3 capture.",
+  "identityConfidence": "high",
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Prior v1.3/v1.4 fingerprint (comma-joined) 0e36a3a2334bffd55bdda557abe9710e96326b15d6e506edce73b1b8bbb5bc02 - list unchanged.",
+    "Manufacturer page also sells 50 ml and 400 ml; manufacturer states ingredients 'entsprechen dem aktuellen Stand der Produktion ... immer sind die Informationen auf dem Produkt ausschlaggebend' (generic reformulation caveat). Only the 200 ml EAN was bound here.",
+    "dm INCI has a trailing period after 'Sodium Lactate'; stripped for the canonical list.",
+    "dm claim 'Haar erhält mehr Fülle und Glanz' is retailer-only wording; manufacturer page does not make a fullness/shine claim."
+  ],
+  "canonicalInci": [
+    "Aqua",
+    "Decyl Glucoside",
+    "Disodium Laureth Sulfosuccinate",
+    "Sodium Lauryl Sulfoacetate",
+    "PEG-55 Propylene Glycol Oleate",
+    "Propylene Glycol",
+    "Parfum",
+    "Phenoxyethanol",
+    "Sodium Benzoate",
+    "Citric Acid",
+    "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+    "Lactic Acid",
+    "Sodium Chloride",
+    "Sodium Lactate"
+  ],
+  "inciFingerprintSha256": "303653d5f86a174377761e891fefde597d7e15dc484437056bd83783230aa48f",
+  "normalization": "Split the canonical raw INCI on ',' (or '•' where the source uses bullets); per ingredient: lower-case, trim, collapse internal whitespace; drop leading code/prefix text that is not an ingredient (e.g. '1229017 - INGREDIENTS:'); keep asterisks, parentheses and slashes as published; join the normalized ingredients with '|' and sha256 the UTF-8 string. Note: the v1.3/v1.4 fingerprints in earlier files were computed over ', '-joined (comma, no space) lists, so they differ from this '|' fingerprint even for identical lists."
+}

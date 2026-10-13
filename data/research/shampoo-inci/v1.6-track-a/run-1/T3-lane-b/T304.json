@@ -1,0 +1,524 @@
+{
+  "blindId": "T304",
+  "inciFingerprintSha256": "40ead763a1b427f155a84a395ced2c62d6791b49f162ade2103ab9473ad978d7",
+  "policy": "shampoo-classification-v1.6",
+  "identity": {
+    "productName": "Head & Shoulders Anti Schuppen Sensitive",
+    "brand": "Head & Shoulders",
+    "market": "DE",
+    "packSize": "250 ml",
+    "identityConfidence": "high"
+  },
+  "normalizationNote": "No split synonym entries; packet positions are normalized positions.",
+  "claimUnitsReviewed": [
+    {
+      "unit": "Anti Schuppen Sensitive (product name)",
+      "source": "name",
+      "grade": "high",
+      "reading": "E2 dandruff; 'Sensitive' is a non-scalp name word"
+    },
+    {
+      "unit": "Head & Shoulders SENSITIVE KOPFHAUT Anti-Schuppen Shampoo mit Aloe Vera ...",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "reading": "dandruff unit; sensitive-scalp wording bundled (E2a/E2b)"
+    },
+    {
+      "unit": "3X SCHUTZ FORMEL: Bekämpft gezielt drei Kopfhautprobleme – Schuppen, Öl und Juckreiz im Zusammenhang mit Schuppen",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "reading": "dandruff unit with oily + itch wording"
+    },
+    {
+      "unit": "... (Schuppen, Juckreiz durch Schuppen und fettige Kopfhaut) ...",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "reading": "dandruff unit; 'fettige Kopfhaut' = E2 oily wording -> E2b layer 2 oily"
+    },
+    {
+      "unit": "... ideal für die tägliche Anwendung",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "reading": "U2 frequency wording"
+    },
+    {
+      "unit": "Anti-Schuppen Shampoo für empfindliche Kopfhaut / Aloe Vera ... bekannt für beruhigende Eigenschaften",
+      "source": "dm retailer",
+      "grade": "low",
+      "reading": "low; reputation sentence"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic Sodium Laureth Sulfate (2); prominent buffer Cocamidopropyl Betaine (4); no reinforcing route. Sodium Xylenesulfonate (3, hydrotrope) and Cocamide MEA (7, foam booster) are neither routes nor buffers. E3 point Parfum (11).",
+      "neighboringAlternative": "none",
+      "counterSignal": "Single buffer; hydrotrope early; nothing refatting. Argues toward strong but C1 fixes moderate.",
+      "sourceIds": [
+        "formula:40ead763a1b4"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic"
+        },
+        {
+          "ingredient": "Sodium Xylenesulfonate",
+          "position": 3,
+          "role": "hydrotrope"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Cocamide MEA",
+          "position": 7,
+          "role": "foam booster"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 8,
+          "role": "pearlizer"
+        },
+        {
+          "ingredient": "Piroctone Olamine",
+          "position": 9,
+          "role": "recognized anti-dandruff active"
+        },
+        {
+          "ingredient": "Parfum",
+          "position": 11,
+          "role": "E3 point"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 12,
+          "role": "cationic_polymer, non-prominent"
+        },
+        {
+          "ingredient": "Sodium Salicylate",
+          "position": 14,
+          "role": "preservative"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 22,
+          "role": "humectant, late"
+        },
+        {
+          "ingredient": "Avena Sativa Kernel Extract",
+          "position": 23,
+          "role": "comfort route, non-prominent"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Cleansing-led: the only cationic route is Guar Hydroxypropyltrimonium Chloride (12), listed after Parfum (11); Glycol Distearate (8) is a pearlizer; Glycerin (22) trace. No silicone or lipid.",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "Guar coacervate can give noticeable wet slip even when late.",
+      "sourceIds": [
+        "formula:40ead763a1b4"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic"
+        },
+        {
+          "ingredient": "Sodium Xylenesulfonate",
+          "position": 3,
+          "role": "hydrotrope"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Cocamide MEA",
+          "position": 7,
+          "role": "foam booster"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 8,
+          "role": "pearlizer"
+        },
+        {
+          "ingredient": "Piroctone Olamine",
+          "position": 9,
+          "role": "recognized anti-dandruff active"
+        },
+        {
+          "ingredient": "Parfum",
+          "position": 11,
+          "role": "E3 point"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 12,
+          "role": "cationic_polymer, non-prominent"
+        },
+        {
+          "ingredient": "Sodium Salicylate",
+          "position": 14,
+          "role": "preservative"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 22,
+          "role": "humectant, late"
+        },
+        {
+          "ingredient": "Avena Sativa Kernel Extract",
+          "position": 23,
+          "role": "comfort route, non-prominent"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Single late cationic polymer (guar 12, after Parfum) facing a C1 reset; no silicone, lipid, protein or film.",
+      "neighboringAlternative": "none",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "One late guar only."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "No persistent system."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES + betaine, hydrotrope."
+        }
+      },
+      "whyThisBand": "Absent/light deposition, ordinary reset.",
+      "whyNotNeighborBand": "moderate needs a plausibly persistent or second converging system; only one late guar.",
+      "counterSignal": "Guar Hydroxypropyltrimonium Chloride is a known depositing coacervate polymer.",
+      "excluded": [
+        "Glycol Distearate (8): pearlizer",
+        "Cocamide MEA (7): foam booster",
+        "Piroctone Olamine (9): active, not deposition",
+        "Aloe Barbadensis Leaf Juice (20), Avena Sativa Kernel Extract (23): late extracts"
+      ],
+      "sourceIds": [
+        "formula:40ead763a1b4"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic"
+        },
+        {
+          "ingredient": "Sodium Xylenesulfonate",
+          "position": 3,
+          "role": "hydrotrope"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Cocamide MEA",
+          "position": 7,
+          "role": "foam booster"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 8,
+          "role": "pearlizer"
+        },
+        {
+          "ingredient": "Piroctone Olamine",
+          "position": 9,
+          "role": "recognized anti-dandruff active"
+        },
+        {
+          "ingredient": "Parfum",
+          "position": 11,
+          "role": "E3 point"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 12,
+          "role": "cationic_polymer, non-prominent"
+        },
+        {
+          "ingredient": "Sodium Salicylate",
+          "position": 14,
+          "role": "preservative"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 22,
+          "role": "humectant, late"
+        },
+        {
+          "ingredient": "Avena Sativa Kernel Extract",
+          "position": 23,
+          "role": "comfort route, non-prominent"
+        }
+      ]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains Piroctone Olamine (9).",
+      "neighboringAlternative": "none",
+      "sourceIds": [
+        "formula:40ead763a1b4"
+      ],
+      "counterSignal": "Mechanical INCI check (Section 11); botanicals, salicylic acid or claims never change it.",
+      "formulaFacts": []
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "rationale": "Anti-dandruff positioning in the product name with recognized active Piroctone Olamine (9) -> scalp_active (7.2 problem-led row).",
+      "neighboringAlternative": "none",
+      "counterSignal": "Formula has no comfort architecture behind the 'Sensitive' wording.",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "limitation": "Focus is not a repair/moisture decision."
+      },
+      "claimRole": "candidate",
+      "decisionTrace": {
+        "primary": {
+          "claimDirection": "dandruff",
+          "formulaCompatible": true,
+          "compatibleRoute": "Piroctone Olamine 9",
+          "decisionReason": "problem-led product with recognized active"
+        }
+      },
+      "sourceIds": [
+        "reveal:name",
+        "reveal:manufacturer_de",
+        "formula"
+      ],
+      "formulaFacts": []
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "No lengths-care positioning; oily and sensitive wording sit inside dandruff units and are part of the scalp_active role.",
+      "neighboringAlternative": "none",
+      "counterSignal": "-",
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingClaims": [],
+        "independentRoutes": []
+      },
+      "sourceIds": [
+        "reveal:manufacturer_de"
+      ],
+      "formulaFacts": []
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "high",
+      "rationale": "dandruffSupport supported + qualifying E2 dandruff claim in the product name (high) -> treatment (U3). U1: treatment beats frequent.",
+      "neighboringAlternative": "none",
+      "counterSignal": "Daily-use wording also present.",
+      "decisionTrace": {
+        "default": "regular",
+        "triggerCode": "recognized_active_problem_led",
+        "triggerEvidence": [
+          "Name 'Anti Schuppen'",
+          "Piroctone Olamine (9)"
+        ],
+        "losingTriggers": [
+          {
+            "trigger": "explicit_frequent_non_strong",
+            "evidence": "'ideal für die tägliche Anwendung' (manufacturer_de)"
+          }
+        ],
+        "rationale": "dandruffSupport supported + qualifying E2 dandruff claim in the product name (high) -> treatment (U3). U1: treatment beats frequent."
+      },
+      "sourceIds": [
+        "reveal:name",
+        "formula"
+      ],
+      "formulaFacts": []
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "CSA fails: no prominent E4 comfort or humectant/refatting route (Avena Sativa Kernel Extract 23, Glycerin 22 after Parfum 11; aloe juice unlisted). Sensitive-scalp wording is bundled with dandruff claims anyway (not SC1); the separate dm unit is low-graded.",
+      "neighboringAlternative": "none",
+      "counterSignal": "Name word 'Sensitive' and dm 'für empfindliche Kopfhaut' (low).",
+      "sourceIds": [
+        "formula",
+        "reveal:manufacturer_de"
+      ],
+      "formulaFacts": []
+    }
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "scalp_active (low)",
+      "final": "scalp_active (high)",
+      "evidence": "name 'Anti Schuppen'",
+      "reason": "dandruff claim confirmed"
+    },
+    {
+      "property": "usageRole",
+      "blind": "treatment (low)",
+      "final": "treatment (high)",
+      "evidence": "name dandruff claim",
+      "reason": "U3 fired"
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blind": "not_targeted (moderate)",
+      "final": "not_targeted (high)",
+      "evidence": "sensitive wording bundled; CSA fails",
+      "reason": "both halves fail"
+    },
+    {
+      "property": "focusSecondary",
+      "blind": "[] (low)",
+      "final": "[] (high)",
+      "evidence": "-",
+      "reason": "-"
+    }
+  ],
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "t1Fit": "ideal",
+        "confidence": "high",
+        "rationale": "T1: W low -> ideal. Confidence = lowest T1 input (high). No T4 neighbor (high-confidence inputs)."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "t1Fit": "ideal",
+        "confidence": "high",
+        "rationale": "T1: W low -> ideal. Confidence = lowest T1 input (high). No T4 neighbor (high-confidence inputs)."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "t1Fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W low, C low -> acceptable. Confidence = lowest T1 input (moderate). T4: neighbor conditioningLevel=moderate would give acceptable"
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "high",
+      "rationale": "W-LIVE: weightPotential low -> 1:1."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "dandruff",
+        "confidence": "high",
+        "rationale": "S-DANDRUFF: E2 dandruff claim in product name (high) + dandruffSupport supported (high). Dandruff path (R17.1); no secondary target (R17.2, S-SECONDARY)."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate -> regular."
+    },
+    "explicitResetPositioning": {
+      "value": false,
+      "confidence": "high",
+      "rationale": "D1: no tiefenrein/deep clean/clarifying shampoo/detox-reinigung stem and no occasional-use direction in name or manufacturer/pack claims (n/a)."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged"
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "liveVerdictExpectation": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "liveVerdictExpectation": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable",
+        "liveVerdictExpectation": "supportive"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_dandruff"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [
+      {
+        "code": "suits_dandruff_with_oily_scalp",
+        "detail": "'Schuppen, Juckreiz durch Schuppen und fettige Kopfhaut' (manufacturer_de, moderate); S-OILY clause passed. Research-only."
+      },
+      {
+        "code": "dandruff_bundled_comfort_wording",
+        "detail": "'SENSITIVE KOPFHAUT Anti-Schuppen Shampoo', 'Juckreiz im Zusammenhang mit Schuppen' (manufacturer_de, moderate); failed clause: S-SENSITIVE formula gate (CSA: no prominent E4 route; no prominent comfort route)."
+      }
+    ],
+    "researchCombinationTargets": {
+      "value": [
+        "oily"
+      ],
+      "confidence": "moderate",
+      "rationale": "E2b layer 2: oily-scalp wording 'fettige Kopfhaut' (manufacturer, moderate) + S-OILY clause passes (cleansing moderate, weight low, conditioning low) -> oily; confidence = min(dandruff high, E1 moderate). Sensitive: bundled comfort wording ('Juckreiz im Zusammenhang mit Schuppen', 'SENSITIVE KOPFHAUT') but S-SENSITIVE formula gate fails (CSA fails, no prominent comfort route) -> not recorded. No dry wording."
+    },
+    "catalogDependentFieldsNotComputed": [
+      "review_live_value_differs (requires live rows; orchestrator after freeze)"
+    ]
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeWeightSubjudgmentsPresent": true,
+    "counterEvidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "noComparisonWithEarlierValuesInsideLane": true,
+    "weightUnchangedAfterUnblind": true
+  },
+  "uncertainties": [
+    {
+      "reading": "conditioningLevel low (only late guar after Parfum).",
+      "alternative": "moderate (N-ALT), would not change fits (coarse stays acceptable)."
+    },
+    {
+      "reading": "'Öl' in the 3X Schutz bullet read together with the explicit 'fettige Kopfhaut' paragraph as oily-scalp wording.",
+      "alternative": "-"
+    }
+  ],
+  "status": "classified"
+}

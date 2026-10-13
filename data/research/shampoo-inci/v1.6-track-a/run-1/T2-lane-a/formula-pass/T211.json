@@ -1,0 +1,311 @@
+{
+  "blindId": "T211",
+  "inciFingerprintSha256": "d5f7e210079ae4b8e0fa1afcb15470223370382bdb75d32d7d564076d52ba30a",
+  "fingerprintRecomputedMatches": true,
+  "formulaSource": {
+    "tier": 2,
+    "completeness": "complete",
+    "identityConfidence": "high"
+  },
+  "normalization": "'Aqua (Water, Eau)' one entry. Normalized positions = packet positions.",
+  "prominenceCutoff": "Parfum (Fragrance) at 8 -> positions 1-7 prominent (E3).",
+  "surfactantArchitecture": "Sodium Laureth Sulfate (2, defining); Cocamidopropyl Betaine (4) prominent buffer; Coco-Glucoside (13) after Parfum (not a buffer, C4); no reinforcing.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic is ether/sulfonate type with at least one prominent buffer and no prominent reinforcing strong anionic -> moderate. SLES (2) buffered by CAPB (4).",
+      "counterSignal": "Only one prominent buffer; refatters. No move.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 13
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "One meaningful system, Polyquaternium-10 (10), plus light routes: Glycosphingolipids (5), Hydrolyzed Silk (6), Sericin (7), PEG-7 Glyceryl Cocoate (9), Glyceryl Oleate (15), Glycol Distearate (17), Hydrogenated Castor Oil (18), Prunus Armeniaca Kernel Oil (21). C2 not met (no silicone, no prominent payload lipid, no deliberate humectant).",
+      "counterSignal": "PQ-10 and lipids are post-fragrance; low realistic.",
+      "neighboringAlternative": "low",
+      "formulaFacts": [
+        {
+          "ingredient": "Glycosphingolipids",
+          "position": 5
+        },
+        {
+          "ingredient": "Hydrolyzed Silk",
+          "position": 6
+        },
+        {
+          "ingredient": "Sericin",
+          "position": 7
+        },
+        {
+          "ingredient": "Polyquaternium-10",
+          "position": 10
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 17
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 18
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: many light families, but the only cationic is a post-fragrance Polyquaternium-10, the lipids are late/trace, and proteins are water-soluble; effective C1 reset.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "PQ-10 (10), proteins (6, 7), weak refatters (5, 9, 15), late lipids (18, 21)."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "No silicone; HCO and apricot oil trace after PEG-40 HCO; proteins rinse."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 moderate chassis."
+        }
+      },
+      "evidenceByFamily": {
+        "cationic_polymer": [
+          [
+            "Polyquaternium-10",
+            10
+          ]
+        ],
+        "protein_film": [
+          [
+            "Hydrolyzed Silk",
+            6
+          ],
+          [
+            "Sericin",
+            7
+          ]
+        ],
+        "weak_refatter": [
+          [
+            "Glycosphingolipids",
+            5
+          ],
+          [
+            "PEG-7 Glyceryl Cocoate",
+            9
+          ],
+          [
+            "Glyceryl Oleate",
+            15
+          ]
+        ],
+        "payload_lipid": [
+          [
+            "Hydrogenated Castor Oil",
+            18
+          ],
+          [
+            "Prunus Armeniaca Kernel Oil",
+            21
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            4
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Coco-Glucoside",
+            13
+          ]
+        ]
+      },
+      "excluded": [
+        [
+          "PEG-120 Methyl Glucose Dioleate",
+          12,
+          "PEG thickener"
+        ],
+        [
+          "PEG-40 Hydrogenated Castor Oil",
+          16,
+          "solubilizer (6.4)"
+        ],
+        [
+          "Glycol Distearate",
+          17,
+          "pearlizer"
+        ],
+        [
+          "Laureth-4",
+          20,
+          "thickener"
+        ],
+        [
+          "Butylene Glycol",
+          19,
+          "solvent"
+        ]
+      ],
+      "unresolved": [
+        [
+          "Glycosphingolipids",
+          5,
+          "lipid-like additive; read as weak_refatter (cf. Lecithin); level likely low despite position"
+        ]
+      ],
+      "counterSignal": "Four deposition families including PQ-10 and a waxy lipid; combined residue could be noticeable.",
+      "whyThisBand": "Every depositing family is light, late or water-soluble; reset is effective.",
+      "whyNotNeighborBand": "Not moderate (W2): the cationic family is a single PQ-10 after Parfum (10); proteins (6, 7) are water-soluble hydrolysates at marketing level (before Parfum but after Glycosphingolipids); the lipids are trace (HCO 18 and apricot oil 21, after PEG-40 HCO and the pearlizer); an effective SLES reset faces only light routes.",
+      "confidenceLimitingFactor": "Four light families; combined effect uncertain, moderate realistic.",
+      "ruleNotes": [
+        "W2"
+      ]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Repair compatible; claims will decide.",
+      "careDirection": {
+        "verdict": "repair_supported",
+        "basis": "Proteins Hydrolyzed Silk (6), Sericin (7) plus PQ-10 (10) deposition and lipids (Glycosphingolipids 5, HCO 18, apricot oil 21): a coherent, if light, substantive damage-care cluster. No deliberate humectant, so not moisture_supported."
+      },
+      "formulaCompatibleRoutes": [
+        "repair: Hydrolyzed Silk 6, Sericin 7, Glycosphingolipids 5, Polyquaternium-10 10",
+        "shine-compatible: silk proteins, light film"
+      ],
+      "counterSignal": "Light levels; no silicone.",
+      "neighboringAlternative": "repair"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Empty default; a secondary needs distinct positioning (Section 8), not visible yet.",
+      "counterSignal": "Positioning unknown.",
+      "neighboringAlternative": [
+        "shine"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Default regular (Section 9); triggers need graded claims. No trigger visible.",
+      "counterSignal": "No claims.",
+      "neighboringAlternative": "frequent"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). SC1 positioning not visible. CSA formula half: fails: no prominent listed E4 route (1-7). unlisted_route_candidate:Glycosphingolipids (5).",
+      "counterSignal": "Fragrance; parabens.",
+      "neighboringAlternative": "targeted",
+      "csaPasses": false
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11).",
+      "counterSignal": "None; formula complete (ID-1).",
+      "neighboringAlternative": "none"
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Glycosphingolipids",
+      "position": 5,
+      "role": "weak_refatter (lipid)"
+    },
+    {
+      "ingredient": "Hydrolyzed Silk",
+      "position": 6,
+      "role": "protein_film"
+    },
+    {
+      "ingredient": "Sericin",
+      "position": 7,
+      "role": "protein_film"
+    },
+    {
+      "ingredient": "Parfum (Fragrance)",
+      "position": 8,
+      "role": "E3 cutoff"
+    },
+    {
+      "ingredient": "PEG-7 Glyceryl Cocoate",
+      "position": 9,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Polyquaternium-10",
+      "position": 10,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 13,
+      "role": "not prominent"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 15,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 17,
+      "role": "pearlizer"
+    },
+    {
+      "ingredient": "Hydrogenated Castor Oil",
+      "position": 18,
+      "role": "payload_lipid (waxy, late)"
+    },
+    {
+      "ingredient": "Prunus Armeniaca Kernel Oil",
+      "position": 21,
+      "role": "payload_lipid (late)"
+    }
+  ],
+  "unresolvedMaterialIngredients": [],
+  "blindUncertainties": [
+    "Glycosphingolipids classified weak_refatter, not payload_lipid; if payload_lipid and prominent it could fill the C2 lipid slot, but C2 still fails on humectant, so conditioning stays moderate."
+  ]
+}

@@ -1,0 +1,279 @@
+{
+ "blindId": "W411",
+ "inciFingerprintSha256": "ea583c276ba8648c7859a74cc4b46b845fa6743b80b4aeacd52f30a07f68f0b1",
+ "lane": "lane-a",
+ "phase": "1-blind-formula-pass",
+ "policyId": "shampoo-classification-v1.6.2",
+ "formulaBlock": {
+  "packSize": "400 ml",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high",
+  "normalization": "Packet split one synonym entry into 'Aqua (Water' and 'Eau)'; merged into one entry 'Aqua (Water, Eau)' before numbering (ID-2). Every position cited is the NORMALIZED position = packet position - 1 for packet entries 3-30.",
+  "normalizedInci": [
+   "1. Aqua (Water, Eau)",
+   "2. Sodium Laureth Sulfate",
+   "3. Sodium Chloride",
+   "4. Cocamidopropyl Betaine",
+   "5. Guar Hydroxypropyltrimonium Chloride",
+   "6. Panthenol",
+   "7. Prunus Armeniaca (Apricot) Kernel Oil",
+   "8. Cocos Nucifera (Coconut) Fruit Extract",
+   "9. Sorbitol",
+   "10. Cocamide MEA",
+   "11. Citric Acid",
+   "12. Glycol Distearate",
+   "13. Amodimethicone",
+   "14. Dimethicone",
+   "15. Parfum (Fragrance)",
+   "16. PEG-7 Glyceryl Cocoate",
+   "17. PEG-40 Hydrogenated Castor Oil",
+   "18. Laureth-4",
+   "19. Laureth-23",
+   "20. Propylene Glycol",
+   "21. Hydrogenated Castor Oil",
+   "22. Trideceth-10",
+   "23. Sodium Hydroxide",
+   "24. Hexyl Cinnamal",
+   "25. Sodium Benzoate",
+   "26. Phenoxyethanol",
+   "27. Sodium Salicylate",
+   "28. CI 16255",
+   "29. CI 47005"
+  ],
+  "e3Point": "Parfum (Fragrance)@15 (normalized; fragrance marker); prominent = normalized positions 1-14"
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`moderate` by C1: defining anionic Sodium Laureth Sulfate@2, prominent buffer Cocamidopropyl Betaine@4, no reinforcing strong anionic. Cocamide MEA@10 alkanolamide and Laureth-4@18, Laureth-23@19, Trideceth-10@22 ethoxylates are no routes. (Normalized positions.)",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "E3",
+    "ID-2"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "high",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`high` by C2, all elements prominent: early silicones Amodimethicone@13 and Dimethicone@14, cationic Guar Hydroxypropyltrimonium Chloride@5, pearlizing Glycol Distearate@12, deliberate humectants Panthenol@6 and Sorbitol@9; additionally a prominent payload lipid Prunus Armeniaca (Apricot) Kernel Oil@7 (W-RICH for conditioning). Multiple complementary systems converge; realistic dose unknowns would not leave only one system.",
+   "ruleIds": [
+    "C2",
+    "R11",
+    "W-RICH",
+    "5",
+    "E3"
+   ]
+  },
+  "weightPotential": {
+   "value": "high",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "cationic_polymer": [
+     "Guar Hydroxypropyltrimonium Chloride@5"
+    ],
+    "payload_lipid": [
+     "MATERIAL: Prunus Armeniaca (Apricot) Kernel Oil@7",
+     "NON-MATERIAL: Hydrogenated Castor Oil@21"
+    ],
+    "weak_refatter": [
+     "PEG-7 Glyceryl Cocoate@16"
+    ],
+    "silicone": [
+     "Amodimethicone@13",
+     "Dimethicone@14"
+    ],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "anionic: Sodium Laureth Sulfate@2",
+     "amphoteric: Cocamidopropyl Betaine@4"
+    ],
+    "humectantContext": [
+     "Panthenol@6",
+     "Sorbitol@9",
+     "Propylene Glycol@20 (solvent)"
+    ],
+    "excluded": [
+     "Cocos Nucifera (Coconut) Fruit Extract@8 (aqueous botanical extract, not a nonvolatile oil)",
+     "Glycol Distearate@12 (pearlizing wax)",
+     "Cocamide MEA@10 (alkanolamide)",
+     "PEG-40 Hydrogenated Castor Oil@17 (solubilizer, 6.4)",
+     "Laureth-4@18, Laureth-23@19, Trideceth-10@22 (ethoxylates)",
+     "Hexyl Cinnamal@24",
+     "colourants CI 16255@28, CI 47005@29"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": "15 Parfum (Fragrance)",
+    "candidateClasses": [
+     "fragrance"
+    ],
+    "cap": "e3Point 15 (Parfum (Fragrance), normalized)",
+    "alphabeticalRun": "none",
+    "skipped": [
+     "w_line_skipped:Panthenol@6 — clause (ii) failed: alkanolamide Cocamide MEA@10 and pearlizing wax Glycol Distearate@12 listed after it and before the cap"
+    ],
+    "testedCandidate": "Parfum (Fragrance)@15: (i) Sodium Laureth Sulfate@2 before it; (ii) nothing between it and the cap -> plausible; W-line = cap, class fragrance, no fallback code",
+    "codes": [],
+    "payloadLipidMaterial": [
+     "Prunus Armeniaca (Apricot) Kernel Oil@7"
+    ],
+    "payloadLipidNonMaterial": [
+     "Hydrogenated Castor Oil@21"
+    ]
+   },
+   "depositionLoad": "high — amino-silicone plus dimethicone, cationic guar and a material plant oil, all prominent, plus a PEG glyceride refatter.",
+   "persistence": "high — amodimethicone is a substantive, wash-resistant amino-silicone; dimethicone and the guar coacervate add persistent deposit; the oil adds lipid load.",
+   "resetCapacity": "moderate — ordinary C1 ether-sulfate chassis with one betaine buffer.",
+   "counterevidence": "Reset is ordinary (not limited), so W-RICH alone would not reach `high`; holdout-v3 W1 kept a silicone/guar/late-amodimethicone set at moderate.",
+   "whyThisBand": "Three distinct, plausibly persistent deposition families converge (silicone system incl. prominent amodimethicone, cationic guar, material apricot oil): the high anchor's convergence route holds, and a single-buffer ordinary reset does not sufficiently offset it.",
+   "whyNotNeighborBand": "Not `moderate`: W1 does not apply — its condition (c) fails because a material payload lipid (Apricot Kernel Oil@7, before the W-line@15) converges, and the amodimethicone is prominent rather than late; beyond the W1 set the convergence of three persistent families (and W-RICH) points to a coating result that an ordinary reset does not offset.",
+   "confidenceLimitingFactor": "reset is moderate, not limited, so `high` rests on the convergence route alone; oil and silicone doses unknown (oil follows Panthenol@6).",
+   "rationale": "`high` via the convergence route: silicone + cationic + material lipid, beyond W1 (c); W-RICH recorded; ordinary reset not offsetting. Neighbor `moderate`.",
+   "ruleIds": [
+    "6.6",
+    "W1",
+    "W-RICH",
+    "W-LINE",
+    "W3",
+    "N-ALT"
+   ]
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "low",
+   "neighboringAlternative": "moisture",
+   "provisional": true,
+   "careDirection": {
+    "verdict": "dual_supported (provisional)",
+    "moistureRoutes": [
+     "Panthenol@6",
+     "Sorbitol@9",
+     "Prunus Armeniaca (Apricot) Kernel Oil@7"
+    ],
+    "repairRoutes": [
+     "Amodimethicone@13",
+     "Dimethicone@14",
+     "Guar Hydroxypropyltrimonium Chloride@5"
+    ],
+    "sharedConditioningRoutes": [
+     "Glycol Distearate@12",
+     "PEG-7 Glyceryl Cocoate@16"
+    ],
+    "limitation": "humectant cluster and deposition cluster both present; positioning must break the tie"
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Claims are hidden in the blind pass; focus is claim-led (7.2) and cannot be set from the formula alone.",
+   "decisionTrace": "Blind pass: claim direction null (hidden). Placeholder `general` (7.1 honest fallback) until reveal; formula routes recorded for reconciliation (3.2).",
+   "rationale": "Provisional (formula-only): `general` because no claim is visible; the formula care-direction verdict is recorded before claims (7.3) and the neighbor names the most plausible formula-compatible focus.",
+   "ruleIds": [
+    "3.1",
+    "7.2",
+    "7.3",
+    "F1",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "low",
+   "neighboringAlternative": [
+    "shine"
+   ],
+   "provisional": true,
+   "decisionTrace": "Blind pass: empty default considered; no distinct positioning visible (claims hidden), so no secondary can be selected (Section 8).",
+   "rationale": "Provisional (formula-only): `[]` — Section 8 requires distinct exact-product positioning, which is hidden in the blind pass.",
+   "ruleIds": [
+    "3.1",
+    "8",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "low",
+   "neighboringAlternative": "frequent",
+   "provisional": true,
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Provisional (formula-only): default `regular` (Section 9); every non-default trigger needs a moderate/high-graded claim or direction, all hidden in the blind pass. cleansingStrength `moderate` fixes which triggers remain possible: `frequent` possible with U2 wording; `alternating` impossible (not strong); `treatment` impossible (no active).",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "CL-SRC"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "low",
+   "neighboringAlternative": "targeted",
+   "provisional": true,
+   "csaRoute": "comfort list: Panthenol@6; humectant/refatting list: Panthenol@6, Sorbitol@9, Prunus Armeniaca (Apricot) Kernel Oil@7 (all prominent)",
+   "mildBase": "excluded — Sodium Laureth Sulfate@2 is a prominent strong anionic",
+   "rationale": "Provisional `not_targeted` (positioning half SC1 hidden in the blind pass). Formula half CSA is MET via listed prominent route(s): comfort list: Panthenol@6; humectant/refatting list: Panthenol@6, Sorbitol@9, Prunus Armeniaca (Apricot) Kernel Oil@7 (all prominent). MB: excluded — Sodium Laureth Sulfate@2 is a prominent strong anionic. If reveal shows a moderate/high-graded E2 sensitive or dry-scalp unit, the value becomes `targeted`.",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "MB",
+    "E3",
+    "E4",
+    "SC1"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`not_supported`: the complete INCI contains none of Piroctone Olamine, Climbazole, Selenium Sulfide or Selenium Disulfide (Section 11, DS1).",
+   "ruleIds": [
+    "11",
+    "DS1",
+    "ID-1"
+   ]
+  }
+ },
+ "formulaFacts": {
+  "surfactants": [
+   "Sodium Laureth Sulfate@2 strong anionic ether type (defining)",
+   "Cocamidopropyl Betaine@4 amphoteric (buffer)",
+   "Cocamide MEA@10 alkanolamide"
+  ],
+  "conditioningRoutes": [
+   "silicone: Amodimethicone@13, Dimethicone@14 (prominent)",
+   "cationic: Guar Hydroxypropyltrimonium Chloride@5",
+   "payload lipid: Apricot Kernel Oil@7 (material), Hydrogenated Castor Oil@21",
+   "pearlizing: Glycol Distearate@12",
+   "humectant: Panthenol@6, Sorbitol@9",
+   "refatter: PEG-7 Glyceryl Cocoate@16"
+  ],
+  "comfortRoutes": "E4 comfort list: Panthenol@6 (prominent); E4 humectant/refatting: Panthenol@6, Sorbitol@9, Apricot Kernel Oil@7 (prominent)",
+  "actives": [
+   "no recognized anti-dandruff active"
+  ],
+  "exposureFlags": [
+   "Parfum@15",
+   "Hexyl Cinnamal@24",
+   "no cooling agent, no essential oil"
+  ],
+  "preservatives": [
+   "Sodium Benzoate@25",
+   "Phenoxyethanol@26",
+   "Sodium Salicylate@27"
+  ]
+ },
+ "unresolvedMaterialIngredients": [],
+ "notes": []
+}

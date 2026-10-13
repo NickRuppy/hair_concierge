@@ -44,6 +44,12 @@ import {
   journeySaveStatus,
   type RefinementQuestionStatus,
 } from "./refinement-question"
+import { toolAnalytics, type ToolAnalyticsPort } from "@/lib/personal-plan/tools/analytics"
+import {
+  toolCheckpointInventory,
+  toolInventoryCompletedCounts,
+} from "@/lib/personal-plan/tools/checkpoint"
+import { TOOL_OVERVIEW_SECTIONS } from "@/lib/personal-plan/tools/labels"
 import { REFINEMENT_TELEMETRY_EVENTS } from "./refinement-options"
 
 export { REFINEMENT_TELEMETRY_EVENTS }
@@ -58,7 +64,8 @@ export type Stage2RefinementTelemetryFamily =
   | "heat_behavior"
   | "detangling_behavior"
   | "night_behavior"
-export type Stage2RefinementTelemetrySection = "current_products" | "hair_handling"
+  | "tool_inventory"
+export type Stage2RefinementTelemetrySection = "current_products" | "tools" | "hair_handling"
 
 export type Stage2RefinementTelemetryEvent =
   | { name: "personal_plan_stage2_started" }
@@ -249,6 +256,7 @@ export function RefinementFlow({
     initialView?.activeQuestionId ?? null,
   )
   const activeQuestionIdRef = useRef<Stage2QuestionId | null>(initialView?.activeQuestionId ?? null)
+  const toolsEntryTrackedRef = useRef(false)
   const [questionDirection, setQuestionDirection] =
     useState<PersonalPlanTransitionDirection>("forward")
   const [localAnswer, setLocalAnswer] = useState<unknown>(initialView?.localAnswer)
@@ -296,7 +304,9 @@ export function RefinementFlow({
       setSession(nextSession)
       setActiveQuestionId(nextQuestionId)
       setLocalAnswer(
-        nextQuestionId ? getAnswerForQuestion(nextSession.answers, nextQuestionId) : undefined,
+        nextQuestionId
+          ? getAnswerForQuestion(nextSession.answers, nextQuestionId, nextSession.prefillCare)
+          : undefined,
       )
       setStatus(options?.status ?? "idle")
       setLiveMessage(options?.liveMessage ?? "")
@@ -305,6 +315,10 @@ export function RefinementFlow({
           name: "personal_plan_stage2_question_viewed",
           section: getQuestionSection(nextQuestionId),
           family: getQuestionFamily(nextQuestionId),
+        })
+        toolsEntryTrackedRef.current = trackToolsInventoryEntered({
+          questionId: nextQuestionId,
+          alreadyTracked: toolsEntryTrackedRef.current,
         })
       }
     },
@@ -539,6 +553,11 @@ export function RefinementFlow({
         },
         {
           emit,
+          trackToolsInventoryCompleted: (hostSession) =>
+            toolAnalytics.track(
+              "personal_plan_tools_inventory_completed",
+              toolInventoryCompletedCounts(toolCheckpointInventory(hostSession)),
+            ),
           showCompletedSession: showCompletedStage2Session,
           showStage3Bridge: (bridgeSession, handoff) => {
             setSession(bridgeSession)
@@ -918,8 +937,31 @@ export function getCompletedHandoffForLoadedSession(
   return session.completedHandoff
 }
 
+/**
+ * `personal_plan_tools_inventory_entered`: once per flow mount, when the first tools question is
+ * shown (bounded count only). Returns the new "already tracked" state.
+ */
+export function trackToolsInventoryEntered(input: {
+  questionId: Stage2QuestionId
+  alreadyTracked: boolean
+  analytics?: ToolAnalyticsPort
+}): boolean {
+  if (input.alreadyTracked || getQuestionSection(input.questionId) !== "tools") {
+    return input.alreadyTracked
+  }
+  ;(input.analytics ?? toolAnalytics).track("personal_plan_tools_inventory_entered", {
+    sectionCount: TOOL_OVERVIEW_SECTIONS.length,
+  })
+  return true
+}
+
 export type Stage2ModuleCompletionEffects = {
   emit: (event: Stage2RefinementTelemetryEvent) => void
+  /**
+   * The tools module just completed: `personal_plan_tools_inventory_completed` with bounded
+   * family counts. Optional so hosts and tests that do not care about analytics stay unchanged.
+   */
+  trackToolsInventoryCompleted?: (hostSession: Stage2RefinementSession) => void
   /**
    * The closing module completed and the bridge shows: `products` (always —
    * `stage3Handoff`), or `habits` WITHOUT a post-accept origin (the
@@ -975,6 +1017,7 @@ export async function applyStage2ModuleCompletion(
     nextHref: moduleCompletion.nextHref,
   }
   effects.emit({ name: "personal_plan_stage2_module_completed", module: moduleCompletion.module })
+  if (moduleCompletion.module === "tools") effects.trackToolsInventoryCompleted?.(hostSession)
   if (moduleCompletion.status === "complete") {
     // `stage3Handoff` is only ever true for `products` — a closing `products`
     // completion ALWAYS bridges into Stage 3, post-accept or not, exactly as
@@ -1228,7 +1271,7 @@ function initialRefinementView(
     session,
     activeQuestionId: entry.activeQuestionId,
     localAnswer: entry.activeQuestionId
-      ? getAnswerForQuestion(session.answers, entry.activeQuestionId)
+      ? getAnswerForQuestion(session.answers, entry.activeQuestionId, session.prefillCare)
       : undefined,
     status: entry.status,
     mode: entry.mode,

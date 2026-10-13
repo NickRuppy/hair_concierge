@@ -1,0 +1,330 @@
+{
+  "blindId": "VT17",
+  "lane": "lane-b",
+  "phase": "final (post-unblind reconciliation)",
+  "standard": "shampoo-classification-v1.6.1 candidate text (unlocked)",
+  "identity": {
+    "brand": "Vichy",
+    "productName": "Dercos Anti-Schuppen Shampoo für normale bis fettige Kopfhaut",
+    "packSize": "200 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "6635962985f9b1a54602ba96907582a72056e007f26454febd9037f66aca91bb",
+    "normalization": "ID-2: AQUA / WATER, CI 19140 / YELLOW 5 and PARFUM / FRAGRANCE each one entry; normalized one-based positions of the 19-entry list",
+    "completeness": "complete (source tier 2, identity confidence high)",
+    "e3ProminenceCutoff": "PARFUM / FRAGRANCE @12 -> positions 1-11 prominent",
+    "identityNotes": []
+  },
+  "formulaFacts": {
+    "surfactantSystem": [
+      "Sodium Laureth Sulfate @2 - strong anionic, ether type, defining anionic",
+      "Coco-Betaine @4 - amphoteric, buffer",
+      "No reinforcing strong anionic",
+      "Not cleansing: Glycol Distearate @3, Carbomer @7, PPG-5-Ceteth-20 @13, Sodium Chloride @17"
+    ],
+    "conditioningAndWeightRoutes": {
+      "silicone": [
+        "Dimethicone @6"
+      ],
+      "cationic_polymer": [],
+      "cationic_conditioner": [],
+      "payload_lipid": [],
+      "weak_refatter": [
+        "2-Oleamido-1,3-Octadecanediol @11 (ceramide-type lipid additive)"
+      ],
+      "protein_film": [],
+      "film_former": [],
+      "pearlizing_fatty_route_for_C2": [
+        "Glycol Distearate @3"
+      ],
+      "humectantContext": [
+        "Glycerin @5"
+      ],
+      "excluded": [
+        "Glycol Distearate @3 (pearlizing wax)",
+        "Carbomer @7 (anionic acrylate thickener)",
+        "PPG-5-Ceteth-20 @13 (solubilizer)",
+        "Tocopheryl Acetate @19 (antioxidant)",
+        "Menthol @10 (cooling agent)"
+      ]
+    },
+    "actives": [
+      "Selenium Sulfide @15 - recognized anti-dandruff active (DS1)",
+      "Salicylic Acid @14 (does not upgrade)",
+      "Menthol @10"
+    ],
+    "scalpExposureFlags": [
+      "Menthol @10 - prominent cooling agent (CSA counter-signal)",
+      "Parfum @12",
+      "E4 comfort list: no route",
+      "E4 humectant/refatting route prominent: Glycerin @5"
+    ]
+  },
+  "claimEvidence": [
+    "product name (high): 'Dercos Anti-Schuppen Shampoo für normale bis fettige Kopfhaut'",
+    "manufacturer_de (moderate): 'Effektives Anti-Schuppen Shampoo für fettige Schuppen ...' / 'Lindert Juckreiz auf der Kopfhaut dank einem ausgeglichen Mikrobiom' / 'Anti-Rückfall-Effekt: Beugt Schuppen bis zu sechs Wochen lang vor'",
+    "manufacturer_de directions (moderate): '... In akuten Phasen dreimal wöchentlich über 4 Wochen anwenden. Danach einmal wöchentlich ...'",
+    "retailer (low): '100 % schuppenfrei ...', 'Reduziert Juckreiz um bis zu 91 %'"
+  ],
+  "reconciliation": [
+    "focusPrimary general low -> scalp_active high (anti-dandruff positioning + Selenium Sulfide).",
+    "focusSecondary [] low -> ['clarifying'] moderate (oily-scalp positioning in the name, F6-compatible, independent chassis route).",
+    "usageRole regular low -> treatment high (U3).",
+    "scalpComfortTarget not_targeted low -> not_targeted high (itch wording bundled with dandruff).",
+    "Formula properties unchanged."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate @2 with the prominent buffer Coco-Betaine @4 and no reinforcing strong anionic. Settled C1 core; no C3b member involved.",
+      "ruleIds": [
+        "C1",
+        "C3",
+        "C4"
+      ],
+      "counterSignal": "None material; settled C1 core (SLES + betaine).",
+      "sourceIds": [
+        "formula-pass/VT17.json (hash-pinned blind record)",
+        "stage-A formula packet VT17"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: C2 not met (no cationic polymer). One meaningful system: prominent Dimethicone @6 suspended by Glycol Distearate @3/Carbomer @7, plus Glycerin @5 and a trace ceramide @11. Counter-signal: without a cationic deposition aid in an SLES chassis, silicone deposition may be limited, so low is the realistic neighbor.",
+      "ruleIds": [
+        "C2",
+        "5",
+        "N-ALT"
+      ],
+      "counterSignal": "No cationic polymer to deposit the dimethicone.",
+      "sourceIds": [
+        "formula-pass/VT17.json (hash-pinned blind record)",
+        "stage-A formula packet VT17"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "evidence": {
+        "silicone": [
+          "Dimethicone @6"
+        ],
+        "cationic_polymer": [],
+        "cationic_conditioner": [],
+        "payload_lipid": [],
+        "weak_refatter": [
+          "2-Oleamido-1,3-Octadecanediol @11"
+        ],
+        "protein_film": [],
+        "film_former": [],
+        "reset": [
+          "strong anionic ether type: Sodium Laureth Sulfate @2",
+          "amphoteric: Coco-Betaine @4"
+        ],
+        "humectantContext": [
+          "Glycerin @5"
+        ],
+        "excluded": [
+          "Glycol Distearate @3",
+          "Carbomer @7",
+          "PPG-5-Ceteth-20 @13"
+        ],
+        "unresolved": []
+      },
+      "depositionLoad": "moderate - prominent dimethicone at @6 (suspended silicone system), no cationic co-deposition",
+      "persistence": "moderate - dimethicone is a persistent, non-water-soluble film where it deposits",
+      "resetCapacity": "moderate - C1 SLES/betaine chassis",
+      "counterevidence": "No cationic polymer to drive coacervate deposition; the only other family is a trace weak refatter; effective ordinary chassis.",
+      "whyThisBand": "Moderate: a prominent persistent silicone system is plausible enough that calling the product lightweight would understate residue risk.",
+      "whyNotNeighborBand": "Not low: the silicone is prominent (@6, before Parfum) and persistent; W2 - with two families present, a low call would need the routes to be late/trace, which the dimethicone is not. Not high: one deposition kind plus a trace refatter, no W-RICH, moderate reset.",
+      "confidenceLimitingFactor": "Deposition efficiency of dimethicone without a cationic polymer is unknown; could be one band lighter.",
+      "rationale": "Moderate: prominent Dimethicone @6 with moderate reset; no material payload lipid (W-line = Parfum @12, none listed); W1 not applicable (no guar, no amodimethicone).",
+      "ruleIds": [
+        "6.6",
+        "W1",
+        "W2",
+        "W-LINE",
+        "N-ALT"
+      ],
+      "counterSignal": "No cationic deposition aid; only other family is a trace weak refatter.",
+      "sourceIds": [
+        "formula-pass/VT17.json (hash-pinned blind record)",
+        "stage-A formula packet VT17"
+      ],
+      "wLineRecord": {
+        "wLine": "PARFUM / FRAGRANCE @12",
+        "candidateClasses": [
+          "fragrance",
+          "alphabetical_tail"
+        ],
+        "cap": "e3Point @12 (Parfum)",
+        "alphabeticalRun": "positions 11-19 (2-Oleamido-1,3-Octadecanediol, Parfum, PPG-5-Ceteth-20, Salicylic Acid, Selenium Sulfide, Sodium Benzoate, Sodium Chloride, Sodium Hydroxide, Tocopheryl Acetate; digit-led name sorts before letters); does not contain the earliest cleansing surfactant (SLES @2), so it is a tail; second entry = Parfum @12",
+        "skipped": [],
+        "plausibilityOfWLine": "Parfum @12 is the earliest candidate: (i) SLES @2 before; (ii) nothing between it and the cap (it is the cap). W-line = cap; no fallback code",
+        "codes": [],
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      }
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Scalp_active: problem-led product with a recognized anti-dandruff active (Selenium Sulfide @15) and anti-dandruff positioning in the exact product name ('Anti-Schuppen', high) and manufacturer text (7.2).",
+      "ruleIds": [
+        "7.2",
+        "F7",
+        "S-DANDRUFF"
+      ],
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [],
+        "limitation": "Scalp decision."
+      },
+      "claimRole": "candidate",
+      "counterSignal": "Oily-scalp positioning in the name ('für normale bis fettige Kopfhaut') points to clarifying; prominent Menthol @10.",
+      "decisionTrace": "Claim direction: anti-dandruff (name high, manufacturer moderate). Formula compatible: dandruffSupport supported (Selenium Sulfide @15). Decision: scalp_active (7.2 problem-led row; F7 step 1 - name names the dandruff role)."
+    },
+    "focusSecondary": {
+      "value": [
+        "clarifying"
+      ],
+      "confidence": "moderate",
+      "neighboringAlternative": [],
+      "rationale": "Clarifying as secondary: distinct oily-scalp positioning in the product name ('für normale bis fettige Kopfhaut', high), F6-compatible formula (cleansing moderate, conditioning and weight not high), independent route (the SLES/betaine cleansing chassis, not the selenium sulfide route of the primary).",
+      "ruleIds": [
+        "8",
+        "F3",
+        "F6"
+      ],
+      "decisionTrace": "Empty default considered. Selected: clarifying. Matching distinct claim: 'für normale bis fettige Kopfhaut' (name). Independent route: SLES @2 + Coco-Betaine @4 (primary route is Selenium Sulfide @15). Distinct from primary: oily scalp vs dandruff. One value, no exception code. Focus only; no projected oily target (R17.2)."
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Treatment: dandruffSupport supported and qualifying E2 dandruff claims graded high/moderate ('Anti-Schuppen' in name; 'Beugt Schuppen ... vor').",
+      "ruleIds": [
+        "9",
+        "U1",
+        "U3"
+      ],
+      "triggerCode": "recognized_active_problem_led",
+      "triggerEvidence": [
+        "product name: 'Anti-Schuppen'",
+        "manufacturer_de: 'Effektives Anti-Schuppen Shampoo ...', 'Beugt Schuppen bis zu sechs Wochen lang vor'",
+        "Selenium Sulfide @15"
+      ],
+      "losingTriggers": [
+        "occasional_reset considered: directions 'dreimal wöchentlich über 4 Wochen ... Danach einmal wöchentlich' are an anti-dandruff treatment schedule, not reset positioning -> D1 false"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: the only itch wording ('Lindert Juckreiz auf der Kopfhaut ...') is bundled with the dandruff units (E2b layer 1) and is not SC1 positioning; no separate sensitive or dry-scalp unit.",
+      "ruleIds": [
+        "10",
+        "SC1",
+        "E2a",
+        "E2b"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Supported: Selenium Sulfide @15 (DS1).",
+      "ruleIds": [
+        "11",
+        "DS1"
+      ]
+    }
+  },
+  "projection": {
+    "status": "projected_proposal",
+    "thicknessFit": {
+      "fine": "acceptable",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFitConfidence": {
+      "fine": "moderate",
+      "normal": "moderate",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": "T1 W moderate, C moderate: fine acceptable, normal ideal, coarse acceptable (T6 lifts nothing). T4: W neighbor low would raise fine and keep normal ideal; C neighbor low keeps coarse acceptable - no flag.",
+    "weight": "moderate",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: weightPotential moderate projects 1:1 to moderate; confidence = weightPotential confidence.",
+    "scalpTargets": {
+      "primary": {
+        "target": "dandruff",
+        "confidence": "high",
+        "rationale": "S-DANDRUFF passes: E2 dandruff claim in the exact product name ('Anti-Schuppen', high) plus dandruffSupport supported (high). Dandruff-primary: no secondary target (R17.2)."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [
+      "oily"
+    ],
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength moderate; D1 false -> regular. I3 recomputed with neighbor none.",
+    "explicitResetPositioning": false,
+    "explicitResetPositioningEvidence": "No D1 stem; directions set an anti-dandruff treatment schedule ('In akuten Phasen dreimal wöchentlich über 4 Wochen ... Danach einmal wöchentlich'), not occasional reset use.",
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserListingConfidence": "moderate",
+    "deepCleanserRationale": "D1 false -> not_flagged (D2).",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_dandruff"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [
+      "suits_dandruff_with_oily_scalp: oily-scalp wording 'für normale bis fettige Kopfhaut' (product name, high) + S-OILY clause passes (cleansing moderate, weight moderate, conditioning moderate); research-only",
+      "dandruff_bundled_comfort_wording: 'Lindert Juckreiz auf der Kopfhaut dank einem ausgeglichen Mikrobiom' (manufacturer, moderate, bundled with the dandruff units) - S-SENSITIVE combination gate failed: CSA met (Glycerin @5) but no prominent E4 comfort route; prominent Menthol @10 recorded"
+    ],
+    "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze (lane cannot see catalog)"
+  },
+  "selfCheck": "6.11/selfCheck: formula fingerprint matches the frozen stage-A packet; claims and identity were hidden during the formula pass and the hash-pinned formula-pass record was not edited after release; no ingredient, family count or position window assigned a band (the W-line only gated payload_lipid legs); W-line derived from the frozen list per W-LINE with every skipped candidate recorded; depositionLoad, persistence and resetCapacity present with rationales; counterevidence and whyNotNeighborBand specific (W2 where it applies); confidence names its limiting factor; N-ALT neighbors consistent with confidences; projection fields derived mechanically (T1, T6, T4, W-LIVE, I1, I3, D1-D3, 13.7, 13.8); no catalog, web or other-lane input.",
+  "uncertainties": [
+    "2-Oleamido-1,3-Octadecanediol @11 read as weak_refatter (ceramide-type lipid additive at trace level); if read as payload_lipid it would be material (before W-line @12), W-RICH would hold with Dimethicone @6, but reset is moderate so the band would still be moderate (with high as neighbor).",
+    "conditioningLevel moderate vs low (no cationic polymer).",
+    "'fettige Schuppen' read as a dandruff descriptor; the oily combination value rests on the name phrase 'für normale bis fettige Kopfhaut'.",
+    "focusSecondary clarifying vs []: alternative [] if the name's scalp-type phrase is read as suitability rather than a positioned job.",
+    "Selenium sulfide label-warning requirement (Annex III) recorded only as an informational fact (Section 11)."
+  ]
+}

@@ -1,0 +1,303 @@
+{
+  "blindId": "W310",
+  "policy": "shampoo-classification-v1.6.2",
+  "lane": "lane-a",
+  "phase": "final (post-unblind reconciliation)",
+  "formulaPassRecord": "out/formula-pass/W310.json (hash-pinned, unedited)",
+  "identity": {
+    "brand": "Schauma",
+    "productName": "Schauma Anti-Schuppen Classic Shampoo",
+    "packSize": "400 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "105e7ebd0649e688f2427321a0648b9945d539dd1a158dcf0640d02303771f67",
+    "normalization": "'Aqua (Water, Eau)' one entry; packet positions = normalized positions (ID-2). 20 entries.",
+    "completeness": "complete; formula source tier 2; identity confidence high",
+    "e3ProminenceCutoff": "Parfum (Fragrance) @18. Prominent = positions 1-17.",
+    "positioningSources": [
+      "manufacturer_de (moderate)",
+      "retailer dm (low)",
+      "retailer Müller (low)"
+    ]
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis. Defining anionic Sodium Laureth Sulfate @2 with prominent buffers Cocamidopropyl Betaine @4 and Coco-Glucoside @10; no reinforcing strong anionic. Laureth-4 @14 is a low-ethoxylate thickener (not cleansing, not a buffer).",
+      "ruleIds": [
+        "C1",
+        "C3",
+        "C4"
+      ],
+      "counterSignal": "None material."
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High: C2 met with a payload lipid in place of the silicone. Prominent cationic Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6; prominent waxy payload lipid Hydrogenated Castor Oil @9; pearlizing route Glycol Distearate @12; listed humectant Panthenol @7; plus refatters Glyceryl Oleate @11, PEG-7 Glyceryl Cocoate @15. Counter-signal: Hydrogenated Castor Oil in a pearlized shampoo is often a structurant at low level and there is no silicone, so bounded care (moderate) is realistic.",
+      "ruleIds": [
+        "C2",
+        "R11",
+        "Section 5 anchors"
+      ],
+      "counterSignal": "Hydrogenated Castor Oil is often a structurant; no silicone; bounded care (moderate) realistic."
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "cationic_polymer": [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6"
+        ],
+        "payload_lipid": [
+          "Hydrogenated Castor Oil @9 (material, waxy)"
+        ],
+        "weak_refatter": [
+          "Glyceryl Oleate @11",
+          "PEG-7 Glyceryl Cocoate @15"
+        ],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": [
+          "Sodium Laureth Sulfate @2",
+          "Cocamidopropyl Betaine @4",
+          "Coco-Glucoside @10"
+        ],
+        "humectantContext": [
+          "Panthenol @7",
+          "Aloe Barbadensis Leaf Extract @8",
+          "Propylene Glycol @13 (solvent)"
+        ],
+        "excluded": [
+          "Glycol Distearate @12 (pearlizing wax)",
+          "Laureth-4 @14 (low-EO thickener)",
+          "Piroctone Olamine @5 (active, no weight role)"
+        ],
+        "unresolved": []
+      },
+      "wLine": {
+        "wLine": "@18 Parfum (Fragrance)",
+        "classes": [
+          "fragrance"
+        ],
+        "cap": "e3Point @18 (Parfum (Fragrance))",
+        "alphabeticalRun": "none",
+        "skipped": [
+          "w_line_skipped:Piroctone Olamine@5 (clause ii: cleansing surfactant Coco-Glucoside @10 and pearlizing wax Glycol Distearate @12 after it and before the cap)",
+          "w_line_skipped:Panthenol@7 (clause ii: Coco-Glucoside @10 and Glycol Distearate @12 after it and before the cap)"
+        ],
+        "codes": [],
+        "payloadLipidMaterial": [
+          "Hydrogenated Castor Oil @9"
+        ],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "moderate",
+      "persistence": "moderate",
+      "resetCapacity": "moderate",
+      "counterevidence": "W-RICH holds formally (material waxy lipid @9 + prominent cationic guar @6); two families converge; waxy lipids are more persistent than liquid oils (6.4).",
+      "whyThisBand": "A prominent guar plus a waxy hydrogenated lipid and refatters plausibly leave noticeable but bounded residue.",
+      "whyNotNeighborBand": "Not high: reset is not limited (C1 chassis with two buffers, resetCapacity moderate), so W-RICH does not reach the high anchor; the only lipid is a single hydrogenated castor oil typically used as a structurant, with no silicone, protein or second cationic; convergence is not strong enough for a coating conclusion. Not low: guar + material waxy lipid are two families (W2).",
+      "confidenceLimitingFactor": "Role/dose of Hydrogenated Castor Oil unknown; W-RICH with moderate reset sits near the high boundary.",
+      "rationale": "Moderate: guar + waxy lipid vs ordinary C1 reset; W-RICH recorded as counter-signal.",
+      "ruleIds": [
+        "6.6",
+        "W-RICH",
+        "W-LINE",
+        "W2",
+        "N-ALT"
+      ],
+      "counterSignal": "W-RICH holds formally (material waxy lipid @9 + prominent cationic guar @6); two families converge; waxy lipids are more persistent than liquid oils (6.4)."
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [],
+        "limitation": "Active-led scalp focus."
+      },
+      "claimRole": "candidate",
+      "counterSignal": "Lengths-care wording (\"Mit Pro-Vitamin B5 zur tiefen Pflege des Haares\") and a C2-level conditioning formula.",
+      "decisionTrace": "Claim direction: anti-dandruff (name 'Anti-Schuppen', high). Formula compatible: Piroctone Olamine @5. Lengths-care wording is generic 'Pflege' (no repair/moisture unit), so F7 does not change the primary. Decision: scalp_active.",
+      "rationale": "scalp_active: anti-dandruff product with a recognized active.",
+      "ruleIds": [
+        "7.2",
+        "F7",
+        "Section 11"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "moisture"
+      ],
+      "decisionTrace": "Empty default considered; 'zur tiefen Pflege des Haares' is generic care, not a distinct repair/moisture claim (retailer bullets are low).",
+      "rationale": "Empty.",
+      "ruleIds": [
+        "Section 8",
+        "CL-SRC"
+      ]
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "recognized_active_problem_led",
+      "triggerEvidence": [
+        "Name 'Anti-Schuppen' (high) + Piroctone Olamine @5"
+      ],
+      "losingTriggers": [],
+      "rationale": "Treatment (U3). 'Für die tägliche Haarwäsche geeignet' is retailer-only (low) and fires nothing.",
+      "ruleIds": [
+        "Section 9",
+        "U1",
+        "U3",
+        "CL-SRC"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: the only comfort wording (\"Eine beruhigte, erfrischte Kopfhaut und bis zu 100% schuppenfreies Haar\") is bundled with the dandruff claim (E2b) and never counts as SC1. CSA itself is met (Panthenol @7).",
+      "ruleIds": [
+        "Section 10",
+        "SC1",
+        "E2b"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Supported: Piroctone Olamine @5 in the complete INCI.",
+      "ruleIds": [
+        "Section 11"
+      ],
+      "counterSignal": "None: Piroctone Olamine @5 on the closed list."
+    }
+  },
+  "formulaFacts": {
+    "surfactants": [
+      "Sodium Laureth Sulfate @2 (defining)",
+      "Cocamidopropyl Betaine @4 (buffer)",
+      "Coco-Glucoside @10 (buffer)",
+      "Laureth-4 @14 (thickener)"
+    ],
+    "conditioningRoutes": [
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6",
+      "Hydrogenated Castor Oil @9",
+      "Glyceryl Oleate @11",
+      "Glycol Distearate @12",
+      "PEG-7 Glyceryl Cocoate @15"
+    ],
+    "humectants": [
+      "Panthenol @7"
+    ],
+    "actives": [
+      "Piroctone Olamine @5 (anti-dandruff active)",
+      "Aloe Barbadensis Leaf Extract @8"
+    ],
+    "exposure": [
+      "Parfum (Fragrance) @18",
+      "CI 42053 @20"
+    ],
+    "preservatives": [
+      "Piroctone Olamine @5",
+      "Sodium Benzoate @19"
+    ]
+  },
+  "unresolvedMaterialIngredients": [],
+  "reconciliation": [
+    "focusPrimary: blind provisional general (low) -> final scalp_active (high).",
+    "usageRole: blind regular (low, neighbor treatment) -> final treatment.",
+    "scalpComfortTarget: blind not_targeted (low) -> final not_targeted (high): bundled wording is not SC1.",
+    "Formula properties unchanged."
+  ],
+  "projection": {
+    "status": "proposal_blocked_pending_review",
+    "thicknessFit": {
+      "fine": "acceptable",
+      "normal": "ideal",
+      "coarse": "ideal"
+    },
+    "thicknessFitConfidence": {
+      "fine": "moderate",
+      "normal": "moderate",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": "T1 (dandruff target): W=moderate, C=high -> fine acceptable, normal ideal, coarse ideal. T6 floor applies (scalp-concern targets): no not_suited cell to lift. T4 with N-ALT neighbors (W neighbor high at moderate confidence; C neighbor moderate at moderate confidence): flag normal,coarse. T2: thickness/texture claims ignored.",
+    "weight": "moderate",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: weightPotential moderate -> weight moderate; confidence = weightPotential confidence (moderate). Claims never adjust it.",
+    "scalpTargets": {
+      "primary": {
+        "target": "dandruff",
+        "confidence": "high",
+        "rationale": "S-DANDRUFF passes: name 'Anti-Schuppen' (high) + Piroctone Olamine @5 (supported). R17.1 primary dandruff; R17.2 no secondary target."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [
+      "sensitive"
+    ],
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength moderate, D1 false -> regular. I2: written unchanged to every row (bucket expectation schuppen expects regular). I3: cleansingStrength confidence high (neighbor none) -> no review_intensity_boundary.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserListingConfidence": "high",
+    "deepCleanserRationale": "D1 false. not_flagged.",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_dandruff"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:normal,coarse"
+    ],
+    "informationalNotes": [
+      "suits_dandruff_with_irritated_scalp: bundled comfort wording \"Eine beruhigte, erfrischte Kopfhaut und bis zu 100% schuppenfreies Haar\" (manufacturer, moderate) + S-SENSITIVE formula gate passed (CSA and prominent comfort route Panthenol @7). Research-only, confidence moderate."
+    ],
+    "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; lanes never see catalog ids."
+  },
+  "selfCheck": "6.11: fingerprint 105e7ebd0649 matches the frozen stage-A packet; claims were hidden during the formula pass (formula-pass record hash-pinned before release, not edited); no ingredient, family count or position window assigned the weight band, the W-line only gated payload_lipid legs; the W-line was derived from the frozen normalized list and every skipped candidate is recorded; depositionLoad/persistence/resetCapacity present with rationales; whyNotNeighborBand is specific (W2 where it applies); confidence names its limiting factor; no comparison with earlier values was made inside the lane. N-ALT neighbors follow confidence on every property; projection derived mechanically from final properties (T1/T6/T4, W-LIVE, I1-I3, S-gates, 13.7 row assembly, 13.8 confidence).",
+  "uncertainties": [
+    "Footnote texts for * and ** were not rendered; no effect on gates.",
+    "Weight moderate vs high and conditioning high vs moderate drive the normal and coarse T4 flags."
+  ]
+}

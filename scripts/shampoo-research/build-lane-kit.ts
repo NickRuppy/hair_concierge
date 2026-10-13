@@ -24,11 +24,12 @@
  * The tool enforces the formula-first order for honest operation by the orchestrator; it is not a
  * security boundary against someone with write access to the kit directory.
  *
- * Each lane also gets a scrubbed copy of the standard (Section 13.10 worked examples removed),
- * and the build fails if any batch brand or product name remains in it.
+ * Each lane also gets a scrubbed copy of the standard (Section 13.10 worked examples removed,
+ * batch brands, product names and product ids replaced by a placeholder), and the build fails
+ * if any batch brand or product name remains in it.
  *
  * Usage:
- *   npx tsx scripts/shampoo-research/build-lane-kit.ts build <full-packets-dir> <out-dir> --seed <n> [--prefix K]
+ *   npx tsx scripts/shampoo-research/build-lane-kit.ts build <full-packets-dir> <out-dir> --seed <n> [--prefix K] [--standard <path>]
  *   npx tsx scripts/shampoo-research/build-lane-kit.ts release <out-dir> <lane-a|lane-b>
  *
  * The historical builders in data/research/shampoo-inci/v1.6/calibration/ produced single
@@ -47,7 +48,37 @@ import {
 import path from "node:path"
 import { pathToFileURL } from "node:url"
 
-const STANDARD_PATH = "docs/research/shampoo-inci/v1.6/classification-standard.md"
+const STANDARD_PATH = "docs/research/shampoo-inci/v1.6.2/classification-standard.md"
+
+/** Stage-A normalization text: the runbook rule only. Freeze-worker notes can name retailers or
+ * brands (v1.6.2 seal fix; the same leak was fixed on the Track A rollout branch). */
+export const STAGE_A_NORMALIZATION =
+  "Runbook step 2: canonical list items lower-cased, trimmed, whitespace collapsed, joined with '|', SHA-256; split synonym entries (e.g. 'Aqua (Water, Eau)') merged before numbering."
+
+/** Stage A must not carry identity: freeze notes in `packSize` (brands, GTINs, retailers) are
+ * reduced to the first bare size, e.g. "300 ml", or "unknown". */
+export function blindPackSize(raw: string | null | undefined) {
+  const match = (raw ?? "").match(/(\d+(?:[.,]\d+)?)\s*(ml|l|g|oz)(?![\p{L}])/iu)
+  if (!match) return "unknown"
+  return `${match[1]!.replace(",", ".")} ${match[2]!.toLowerCase()}`
+}
+
+/** The locked v1.6.2 standard unless `--standard` names another text (e.g. a version candidate). */
+/** Reads `--name value` from CLI args. A flag given without a value (last argument, or followed
+ * by another flag) is an operator error, never "absent": it must not fall back to a default. */
+export function cliFlag(args: string[], name: string) {
+  const index = args.indexOf(name)
+  if (index < 0) return undefined
+  const value = args[index + 1]
+  if (value === undefined || value.startsWith("--")) throw new Error(`${name} needs a value`)
+  return value
+}
+
+export function resolveStandardPath(flagValue: string | undefined) {
+  if (flagValue === undefined) return STANDARD_PATH
+  if (!flagValue.trim()) throw new Error("--standard needs a path to a standard text")
+  return flagValue
+}
 const LANES = ["lane-a", "lane-b"] as const
 
 /** CL-SRC base grade per source kind. A word in the exact product name is always `high`, and a
@@ -132,21 +163,133 @@ function seededShuffle<T>(items: T[], seed: number) {
   return out
 }
 
-/** Section 13.10 and two catalog references name products (the same scrub as the historical
- * kits); they are dropped, and no batch brand or product name may remain. */
+const SCRUB_PLACEHOLDER = "[catalog product]"
+
+type ScrubTerm = {
+  text: string
+  /** A single capitalised word ("Being") whose lower-case form the standard also uses as an
+   * ordinary prose word matches only as written or in all caps. Every other term, including a
+   * single brand word that appears lower-case only inside slugs ("vichy-dercos-…"), is
+   * case-insensitive. */
+  caseSensitive: boolean
+}
+
+function escapeRegex(text: string) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+}
+
+function termPattern(term: ScrubTerm) {
+  const body = term.caseSensitive
+    ? `(?:${escapeRegex(term.text)}|${escapeRegex(term.text.toUpperCase())})`
+    : term.text.split(/\s+/).map(escapeRegex).join("\\s+")
+  return new RegExp(
+    `(?<![\\p{L}\\p{N}])${body}(?![\\p{L}\\p{N}])`,
+    term.caseSensitive ? "gu" : "giu",
+  )
+}
+
+/** The lower-case word occurs as an ordinary prose word: not glued to a letter, digit, hyphen or
+ * underscore, so slug segments ("vichy-dercos") do not count as prose. */
+function usedAsProseWord(word: string, text: string) {
+  return new RegExp(`(?<![\\p{L}\\p{N}_-])${escapeRegex(word)}(?![\\p{L}\\p{N}_-])`, "u").test(text)
+}
+
+function batchScrubTerms(packets: FreezePacket[], text: string): ScrubTerm[] {
+  const seen = new Map<string, ScrubTerm>()
+  const add = (raw: string | null | undefined) => {
+    const cleaned = (raw ?? "").replace(/\s+/g, " ").trim()
+    if (cleaned.length < 3) return
+    seen.set(cleaned, {
+      text: cleaned,
+      caseSensitive:
+        /^\p{Lu}\p{Ll}+$/u.test(cleaned) && usedAsProseWord(cleaned.toLowerCase(), text),
+    })
+  }
+  for (const p of packets) {
+    for (const raw of [p.brand, p.name]) {
+      add(raw)
+      add(raw?.replace(/\s*\([^)]*\)/g, ""))
+    }
+    // "Monday Volume" names the brand "Monday Haircare" by its first word. That word counts as a
+    // brand mention unless the standard also uses it lower-case as an ordinary word ("hair").
+    const brand = (p.brand ?? "").replace(/\s*\([^)]*\)/g, "").trim()
+    const first = brand.split(/\s+/)[0] ?? ""
+    if (
+      brand.includes(" ") &&
+      /^\p{Lu}\p{Ll}{3,}$/u.test(first) &&
+      !new RegExp(`(?<![\\p{L}\\p{N}])${first.toLowerCase()}(?![\\p{L}\\p{N}])`, "u").test(text)
+    )
+      add(first)
+  }
+  return [...seen.values()].sort((a, b) => b.text.length - a.text.length)
+}
+
+const SLUG_TOKEN = /[\p{L}\p{N}]+(?:[-_][\p{L}\p{N}]+)+/gu
+
+/** Replaces every hyphen/underscore-joined token (a record slug such as
+ * `vichy-dercos-anti-schuppen-sensitiv`) that contains a case-insensitive term as a run of whole
+ * segments; the whole slug goes, so the rest of a product name cannot survive beside it. */
+function scrubSlugs(text: string, terms: ScrubTerm[]) {
+  const slugs = terms
+    .filter((term) => !term.caseSensitive)
+    .map((term) =>
+      term.text
+        .toLowerCase()
+        .split(/[^\p{L}\p{N}]+/u)
+        .filter(Boolean)
+        .join("-"),
+    )
+    .filter(Boolean)
+  return text.replace(SLUG_TOKEN, (token) => {
+    const normalized = `-${token.toLowerCase().replace(/_/g, "-")}-`
+    return slugs.some((slug) => normalized.includes(`-${slug}-`)) ? SCRUB_PLACEHOLDER : token
+  })
+}
+
+function batchProductIds(packets: FreezePacket[]) {
+  return [
+    ...new Set(
+      packets.map((p) => p.productId).filter((id): id is string => !!id && id.length >= 8),
+    ),
+  ]
+}
+
+/** The lane copy of the standard: Section 13.10 (non-normative worked examples) is dropped as in
+ * the historical kits, the two catalog references are generalised, and every batch brand, product
+ * name and product id is replaced by a neutral placeholder (the register entry X1 names a batch
+ * product). The check then runs on the scrubbed text and fails closed if a name survives. The
+ * standard file itself is never modified. */
 export function scrubStandard(standardText: string, packets: FreezePacket[]) {
-  const scrubbed = standardText
+  let scrubbed = standardText
     .replace(/### 13\.10 Worked examples[\s\S]*?(?=### 13\.11)/, "")
     .replace(", e.g. OGX Renewing stays visible for normal hair", "")
     .replace(
       /\(pattern: Balea, regular-shampoo record `[^`]*` plus deep-cleanser record `[^`]*`, which owns the barcode\)/,
       "(an existing pattern in the catalog)",
     )
-  const leaks = packets
-    .flatMap((p) => [p.brand, p.name])
-    .filter((term) => term && scrubbed.toLowerCase().includes(term.toLowerCase()))
+  const ids = batchProductIds(packets)
+  for (const id of ids)
+    scrubbed = scrubbed.replace(new RegExp(escapeRegex(id), "gi"), SCRUB_PLACEHOLDER)
+  const terms = batchScrubTerms(packets, scrubbed)
+  scrubbed = scrubSlugs(scrubbed, terms)
+  for (const term of terms) scrubbed = scrubbed.replace(termPattern(term), SCRUB_PLACEHOLDER)
+  // Fail-closed check: stricter than the replacement (no word boundaries), so inflected or
+  // embedded forms the replacement skipped still stop the build.
+  const lowered = scrubbed.toLowerCase()
+  const leaks = [
+    ...ids.filter((id) => lowered.includes(id.toLowerCase())),
+    ...terms
+      .filter((term) =>
+        term.caseSensitive
+          ? scrubbed.includes(term.text) || scrubbed.includes(term.text.toUpperCase())
+          : lowered.includes(term.text.toLowerCase()),
+      )
+      .map((term) => term.text),
+  ]
   if (leaks.length)
-    throw new Error(`scrubbed standard still names batch products: ${leaks.join(", ")}`)
+    throw new Error(
+      `scrubbed standard still names batch products: ${[...new Set(leaks)].join(", ")}`,
+    )
   return scrubbed
 }
 
@@ -259,10 +402,10 @@ export function buildLaneKit(options: {
     const blindId = `${prefix}${String(index + 1).padStart(2, "0")}`
     const formula = {
       blindId,
-      packSize: p.packSize,
+      packSize: blindPackSize(p.packSize),
       canonicalInci: p.canonicalInci,
       inciFingerprintSha256: p.inciFingerprintSha256,
-      normalization: p.normalization,
+      normalization: STAGE_A_NORMALIZATION,
       formulaCompleteness: p.formulaCompleteness,
       formulaSourceTier: p.formulaSourceTier,
       identityConfidence: p.identityConfidence,
@@ -428,10 +571,7 @@ export function releaseReveal(outDir: string, lane: string) {
 
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
   const [command, ...args] = process.argv.slice(2)
-  const flag = (name: string) => {
-    const index = args.indexOf(name)
-    return index >= 0 ? args[index + 1] : undefined
-  }
+  const flag = (name: string) => cliFlag(args, name)
   if (command === "build" && args[0] && args[1] && flag("--seed")) {
     const packets = readdirSync(args[0])
       .filter((file) => file.endsWith(".json"))
@@ -439,7 +579,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
       .map((file) => JSON.parse(readFileSync(path.join(args[0]!, file), "utf8")) as FreezePacket)
     const { mapping } = buildLaneKit({
       packets,
-      standardText: readFileSync(STANDARD_PATH, "utf8"),
+      standardText: readFileSync(resolveStandardPath(flag("--standard")), "utf8"),
       outDir: args[1],
       seed: Number(flag("--seed")),
       prefix: flag("--prefix"),
@@ -451,7 +591,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
     console.log(`${releaseReveal(args[0], args[1]).length} reveal packets released to ${args[1]}`)
   } else {
     console.error(
-      "usage: build-lane-kit.ts build <full-packets-dir> <out-dir> --seed <n> [--prefix K]\n" +
+      "usage: build-lane-kit.ts build <full-packets-dir> <out-dir> --seed <n> [--prefix K] [--standard <path>]\n" +
         "       build-lane-kit.ts release <out-dir> <lane-a|lane-b>",
     )
     process.exit(2)

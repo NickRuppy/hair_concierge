@@ -1,0 +1,592 @@
+{
+  "blindId": "T210",
+  "inciFingerprintSha256": "ed76225ec79293dce5791880a50de40ba3ca27ba02c5e1e885ebed5214948b83",
+  "identity": {
+    "productName": "ISANA MED Shampoo Anti Schuppen, 200 ml",
+    "brand": "ISANA",
+    "market": "DE",
+    "packSize": "200 ml",
+    "formulaSourceTier": 1,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "No split synonym entries; packet positions equal normalized positions.",
+    "sourceIds": [
+      "formula:T210 (tier 1, complete)",
+      "reveal:T210#0 pack_photo_on_manufacturer_page [pack_back, grade moderate]",
+      "reveal:T210#1 manufacturer_de (Rossmann private label; Dirk Rossmann GmbH is brand owner) [manufacturer_de, grade moderate]"
+    ]
+  },
+  "status": "classified",
+  "policy": "shampoo-classification-v1.6",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "moderate",
+      "rationale": "C1: defining ether sulfate (SLES 2) plus prominent reinforcing ether sulfates (Sodium Laureth-8 Sulfate 14, Magnesium Laureth Sulfate 16, Magnesium Laureth-8 Sulfate 17, Sodium Oleth Sulfate 19, Magnesium Oleth Sulfate 20) -> strong by convention.",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 5
+        },
+        {
+          "ingredient": "Sodium Cocoyl Glutamate",
+          "position": 6
+        },
+        {
+          "ingredient": "Sodium Laureth-8 Sulfate",
+          "position": 14
+        },
+        {
+          "ingredient": "Magnesium Laureth Sulfate",
+          "position": 16
+        },
+        {
+          "ingredient": "Sodium Oleth Sulfate",
+          "position": 19
+        }
+      ],
+      "counterSignal": "The reinforcing ether sulfates are late (after Glycerin 13) and look like one mild magnesium/laureth-8 blend at low level; three buffers (3, 5, 6) and refatting (7). Realistic reading could be moderate; convention keeps strong, confidence moderate.",
+      "neighboringAlternative": "moderate",
+      "sourceIds": [
+        "formula:T210 (tier 1, complete)"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Cleansing-led: no cationic polymer, silicone or payload lipid; only Glyceryl Oleate (7), Panthenol (10), Glycerin (13), Glycol Distearate (15) and Hydrogenated Vegetable Glycerides Citrate (22). Little substantive slip.",
+      "formulaFacts": [
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 7
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 10
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 13
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 15
+        }
+      ],
+      "counterSignal": "Refatter plus pearlizer give some softness; not a substantive system.",
+      "neighboringAlternative": "none",
+      "sourceIds": [
+        "formula:T210 (tier 1, complete)"
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: only weak refatters; no cationic, silicone, lipid or film deposition; strong reset.",
+      "neighboringAlternative": "none",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Glyceryl Oleate (7), Hydrogenated Vegetable Glycerides Citrate (22) only."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "No persistent system."
+        },
+        "resetCapacity": {
+          "value": "strong",
+          "rationale": "Reinforced ether-sulfate chassis (C1 strong)."
+        }
+      },
+      "evidenceByFamily": {
+        "weak_refatter": [
+          [
+            "Glyceryl Oleate",
+            7
+          ],
+          [
+            "Hydrogenated Vegetable Glycerides Citrate",
+            22
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ],
+          [
+            "Sodium Cocoyl Glutamate",
+            6
+          ],
+          [
+            "Sodium Laureth-8 Sulfate",
+            14
+          ],
+          [
+            "Magnesium Laureth Sulfate",
+            16
+          ],
+          [
+            "Magnesium Laureth-8 Sulfate",
+            17
+          ],
+          [
+            "Sodium Oleth Sulfate",
+            19
+          ],
+          [
+            "Magnesium Oleth Sulfate",
+            20
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            3
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Coco-Glucoside",
+            5
+          ]
+        ],
+        "humectant_context": [
+          [
+            "Panthenol",
+            10
+          ],
+          [
+            "Glycerin",
+            13
+          ]
+        ]
+      },
+      "excluded": [
+        [
+          "Glycol Distearate",
+          15,
+          "pearlizer (6.4)"
+        ],
+        [
+          "Laureth-4",
+          18,
+          "thickener"
+        ],
+        [
+          "Caffeine",
+          11,
+          "no deposition role"
+        ],
+        [
+          "Menthol",
+          12,
+          "cooling agent"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "None material.",
+      "whyThisBand": "Single weak-refatter family, no deposition system.",
+      "whyNotNeighborBand": "Not moderate: only a weak-refatter family (one family, W2 not triggered) against a strong reset; nothing could plausibly leave noticeable residue.",
+      "confidenceLimitingFactor": "None material.",
+      "ruleNotes": [],
+      "formulaFacts": [
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 7,
+          "family": "weak_refatter"
+        },
+        {
+          "ingredient": "Hydrogenated Vegetable Glycerides Citrate",
+          "position": 22,
+          "family": "weak_refatter"
+        },
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "family": "anionic_surfactant"
+        },
+        {
+          "ingredient": "Sodium Cocoyl Glutamate",
+          "position": 6,
+          "family": "anionic_surfactant"
+        },
+        {
+          "ingredient": "Sodium Laureth-8 Sulfate",
+          "position": 14,
+          "family": "anionic_surfactant"
+        },
+        {
+          "ingredient": "Magnesium Laureth Sulfate",
+          "position": 16,
+          "family": "anionic_surfactant"
+        },
+        {
+          "ingredient": "Magnesium Laureth-8 Sulfate",
+          "position": 17,
+          "family": "anionic_surfactant"
+        },
+        {
+          "ingredient": "Sodium Oleth Sulfate",
+          "position": 19,
+          "family": "anionic_surfactant"
+        },
+        {
+          "ingredient": "Magnesium Oleth Sulfate",
+          "position": 20,
+          "family": "anionic_surfactant"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "family": "amphoteric_surfactant"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 5,
+          "family": "nonionic_surfactant"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 10,
+          "family": "humectant_context"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 13,
+          "family": "humectant_context"
+        }
+      ],
+      "canonicalFormula": {
+        "inciFingerprintSha256": "ed76225ec79293dce5791880a50de40ba3ca27ba02c5e1e885ebed5214948b83",
+        "sourceTier": 1,
+        "completeness": "complete",
+        "identityConfidence": "high",
+        "captureDate": "not in sealed packet"
+      },
+      "sourceIds": [
+        "formula:T210 (tier 1, complete)"
+      ]
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Scalp_active: 'Anti Schuppen' in the exact product name (high) plus pack/manufacturer dandruff claims (moderate) and a recognized active (Piroctone Olamine 8).",
+      "counterSignal": "Strong chassis; prominent Menthol (12); oily-hair claim.",
+      "formulaFacts": [
+        {
+          "ingredient": "Piroctone Olamine",
+          "position": 8
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 10
+        },
+        {
+          "ingredient": "Menthol",
+          "position": 12
+        }
+      ],
+      "claimRole": "candidate",
+      "sourceIds": [
+        "formula:T210 (tier 1, complete)",
+        "reveal:T210#0 pack_photo_on_manufacturer_page [pack_back, grade moderate]",
+        "reveal:T210#1 manufacturer_de (Rossmann private label; Dirk Rossmann GmbH is brand owner) [manufacturer_de, grade moderate]"
+      ]
+    },
+    "focusSecondary": {
+      "value": [
+        "clarifying"
+      ],
+      "confidence": "moderate",
+      "neighboringAlternative": [],
+      "rationale": "Clarifying: distinct oily positioning 'reinigt schnell fettendes Haar' (pack back, moderate; E2 oily) with an independent compatible route - the reinforced ether-sulfate chassis (SLES 2 plus reinforcing ether sulfates 14-20), not cited by the scalp_active route (Piroctone Olamine 8). F6 compatibility holds (cleansing strong, conditioning low, weight low). Not 'clarifying only because cleansing is strong': the oily claim is its own unit.",
+      "counterSignal": "On the dandruff path oily scalp is a research-only sub-feature for targets (R17.2); a lane may read the secondary focus as empty.",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2
+        },
+        {
+          "ingredient": "Sodium Laureth-8 Sulfate",
+          "position": 14
+        },
+        {
+          "ingredient": "Magnesium Laureth Sulfate",
+          "position": 16
+        }
+      ],
+      "sourceIds": [
+        "formula:T210 (tier 1, complete)",
+        "reveal:T210#0 pack_photo_on_manufacturer_page [pack_back, grade moderate]",
+        "reveal:T210#1 manufacturer_de (Rossmann private label; Dirk Rossmann GmbH is brand owner) [manufacturer_de, grade moderate]"
+      ]
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Treatment: recognized active + dandruff claim in the product name (high) (U3). `alternating` also fires (cleansing strong + oily reset intent 'reinigt schnell fettendes Haar', moderate, U4) but loses (U1).",
+      "counterSignal": "Strong reset chassis with oily positioning.",
+      "triggerCode": "recognized_active_problem_led",
+      "triggerEvidence": [
+        "'ISANA MED Shampoo Anti Schuppen' (name, high)",
+        "Piroctone Olamine (8)"
+      ],
+      "losingTriggers": [
+        "strong_plus_reset_intent ('reinigt schnell fettendes Haar', pack, moderate)"
+      ],
+      "formulaFacts": [],
+      "sourceIds": [
+        "formula:T210 (tier 1, complete)",
+        "reveal:T210#0 pack_photo_on_manufacturer_page [pack_back, grade moderate]",
+        "reveal:T210#1 manufacturer_de (Rossmann private label; Dirk Rossmann GmbH is brand owner) [manufacturer_de, grade moderate]"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "targeted",
+      "rationale": "Not targeted: the only dry-scalp unit, 'Coffein & Menthol gegen trockene Kopfhaut', is the list entry directly after 'Piroctone Olamine wirkt nachhaltig gegen Schuppen' (bundled, E2b) and is not SC1 positioning. CSA would pass (Panthenol 10, Glycerin 13).",
+      "counterSignal": "Prominent Menthol (12) and strong cleansing are counter-signals in any case.",
+      "formulaFacts": [
+        {
+          "ingredient": "Panthenol",
+          "position": 10
+        },
+        {
+          "ingredient": "Menthol",
+          "position": 12
+        }
+      ],
+      "sourceIds": [
+        "formula:T210 (tier 1, complete)",
+        "reveal:T210#0 pack_photo_on_manufacturer_page [pack_back, grade moderate]",
+        "reveal:T210#1 manufacturer_de (Rossmann private label; Dirk Rossmann GmbH is brand owner) [manufacturer_de, grade moderate]"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains Piroctone Olamine (position 8), a recognized anti-dandruff active (Section 11). Formula-only; whether a dandruff target projects depends on a dandruff claim (S-DANDRUFF, R17.3).",
+      "counterSignal": "None for the formula fact; positioning not yet visible.",
+      "neighboringAlternative": "none",
+      "sourceIds": [
+        "formula:T210 (tier 1, complete)"
+      ]
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "not_applicable",
+      "moistureRoutes": [],
+      "repairRoutes": [],
+      "sharedConditioningRoutes": [],
+      "limitation": "Scalp focus."
+    },
+    "claimRole": "candidate",
+    "counterSignal": "Strong chassis, Menthol.",
+    "neighboringAlternative": "none"
+  },
+  "decisionTrace": {
+    "primaryFocus": {
+      "claimDirection": "scalp_active / dandruff (name, high)",
+      "formulaCompatible": true,
+      "compatibleRoute": "Piroctone Olamine 8",
+      "decisionReason": "Problem-led product with recognized active -> scalp_active"
+    },
+    "secondaryFocus": {
+      "emptyDefaultConsidered": true,
+      "selectedValues": [
+        "clarifying"
+      ],
+      "matchingDistinctClaims": [
+        "'reinigt schnell fettendes Haar' (pack_back, moderate)"
+      ],
+      "independentRoutes": [
+        "Reinforced ether-sulfate chassis (2, 14-20)"
+      ],
+      "whyDistinctFromPrimary": "Primary route is the active; secondary rests on the surfactant chassis (F3)",
+      "exceptionCode": null
+    },
+    "usageRole": {
+      "default": "regular",
+      "nonDefaultTriggerCode": "recognized_active_problem_led",
+      "triggerEvidence": [
+        "'Anti Schuppen' (name, high)",
+        "Piroctone Olamine 8"
+      ],
+      "rationale": "U1: treatment beats alternating."
+    }
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "high",
+        "rationale": "T1: W=low, C=low -> ideal for fine. Confidence = lowest of inputs (13.8): high. T2: thickness/texture claims ignored."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "high",
+        "rationale": "T1: W=low, C=low -> ideal for normal. Confidence = lowest of inputs (13.8): high. T2: thickness/texture claims ignored."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "high",
+        "rationale": "T1: W=low, C=low -> acceptable for coarse. Confidence = lowest of inputs (13.8): high. T2: thickness/texture claims ignored."
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "high",
+      "rationale": "W-LIVE: weightPotential low -> light, 1:1; confidence = weightPotential confidence (13.8)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "dandruff",
+        "confidence": "high",
+        "rationale": "S-DANDRUFF: name 'Anti Schuppen' (high) + Piroctone Olamine (8). Dandruff path: no secondary target (R17.2); oily wording feeds only researchCombinationTargets."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "moderate",
+      "rationale": "I1: cleansingStrength strong, D1 false -> regular. I3 checked against neighbor moderate for each projected bucket."
+    },
+    "positioning": {
+      "explicitResetPositioning": {
+        "value": false,
+        "confidence": "high",
+        "rationale": "D1: no 'tiefenrein', 'deep clean', 'clarifying shampoo' or 'detox-reinigung' stem in the name or a manufacturer/pack claim, and no occasional-use directions."
+      }
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "moderate",
+      "rationale": "D2 not met: D1 false (or formula not strong)."
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "expectedIntensity": "regular",
+        "liveMatch": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "expectedIntensity": "regular",
+        "liveMatch": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable",
+        "expectedIntensity": "regular",
+        "liveMatch": "supportive"
+      }
+    ],
+    "required_protocol_roles": [
+      "shampoo_dandruff"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [
+      {
+        "code": "suits_dandruff_with_oily_scalp",
+        "detail": "'reinigt schnell fettendes Haar' (pack_back, moderate); S-OILY clause passes (cleansing strong, weight low, conditioning low)."
+      },
+      {
+        "code": "hair_loss_claim_not_evaluated",
+        "detail": "'Coffein hilft die Haarwurzel zu stärken' (hair-root/caffeine positioning, not evaluated)"
+      }
+    ],
+    "researchCombinationTargets": [
+      "oily"
+    ],
+    "researchCombinationConfidence": {
+      "oily": "moderate"
+    },
+    "liveComparison": "review_live_value_differs not computed in the lane (catalog-dependent, resolved by the orchestrator after freeze, 14)."
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "general (provisional, low)",
+      "final": "scalp_active",
+      "evidence": "name 'Anti Schuppen'",
+      "reason": "Post-unblind reconciliation (3.2): claims identify/confirm the candidate job; formula compatibility checked against the frozen verdict."
+    },
+    {
+      "property": "focusSecondary",
+      "blind": "[] (provisional, low)",
+      "final": "[] -> ['clarifying'] ('reinigt schnell fettendes Haar', moderate; independent chassis route)",
+      "evidence": "Revealed positioning",
+      "reason": "Section 8 / F2-F3 checked."
+    },
+    {
+      "property": "usageRole",
+      "blind": "regular (provisional, low)",
+      "final": "treatment",
+      "evidence": "U3",
+      "reason": "Section 9 triggers checked mechanically with CL-SRC grades."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blind": "not_targeted (provisional, low; CSA recorded)",
+      "final": "not_targeted",
+      "evidence": "dry wording bundled",
+      "reason": "SC1 positioning plus CSA formula half (Section 10)."
+    },
+    {
+      "property": "cleansingStrength / conditioningLevel / weightPotential / dandruffSupport",
+      "blind": "frozen formula values",
+      "final": "unchanged",
+      "evidence": "Claims may not assign or move formula properties (3.2, 6.5 step 5, C7).",
+      "reason": "No formula error found on reconciliation."
+    }
+  ],
+  "claimToInciChecks": [],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "formulaPassFile": "out/formula-pass/T210.json (frozen before reveal)",
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeWeightSubjudgmentsPresent": true,
+    "whyNotNeighborBandSpecific": true,
+    "w2AppliedWhereTwoOrMoreFamilies": true,
+    "confidenceNamesLimitingUncertainty": "None material.",
+    "comparisonWithEarlierValuesMadeInLane": false,
+    "noWebUsed": true
+  },
+  "uncertainties": [
+    "cleansingStrength strong rests on C4 counting the late magnesium/laureth-8 ether-sulfate blend (14-20) as reinforcing because it precedes Parfum; alternative moderate (blend treated as minor). Convention applied.",
+    "'Coffein & Menthol gegen trockene Kopfhaut' read as bundled (consecutive list entry after a dandruff entry). If separate: S-DRY gate (CSA + prominent Glycerin 13/Glyceryl Oleate 7) would pass, `dry` and `oily` would contradict, and neither would be recorded (contradictory_scalp_states). Projection unaffected.",
+    "focusSecondary ['clarifying'] vs []: alternative is reading oily wording on a dandruff product as absorbed for focus as well.",
+    "Caffeine hair-root claim recorded under hair_loss_claim_not_evaluated (conservative; no target effect)."
+  ]
+}

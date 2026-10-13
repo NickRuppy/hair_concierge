@@ -1,0 +1,87 @@
+{
+  "slot": "A55",
+  "productId": "0ab645f9-d46d-4cf2-96a5-b5e00f74cae2",
+  "name": "Syoss Shampoo Intense Keratin",
+  "brand": "Syoss",
+  "packSize": "440 ml",
+  "gtins": [
+    "4015100860344"
+  ],
+  "sources": [
+    {
+      "url": "https://www.syoss.de/haarpflege/shampoo/syoss-intense-keratin-aufbau-shampoo.html",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "EAN string 4015100860344 present in page markup (retailer 'Jetzt kaufen' widget); size not visible in text",
+      "inciVerbatim": "Aqua (Water · Eau) · Sodium Laureth Sulfate · Cocamidopropyl Betaine · Sodium Chloride · PEG-7 Glyceryl Cocoate · Hydrolyzed Keratin · Dimethicone · Sodium Benzoate · Parfum (Fragrance) · Citric Acid · Amodimethicone · Guar Hydroxypropyltrimonium Chloride · Hydrogenated Castor Oil · Glycol Distearate · Laureth-4 · PEG-40 Hydrogenated Castor Oil · PEG-120 Methyl Glucose Dioleate · Tetramethyl Acetyloctahydronaphthalenes · Laureth-23 · Prunus Armeniaca (Apricot) Kernel Oil · Trideceth-10 · Sodium Hydroxide · Linalool · Linalyl Acetate · Propylene Glycol · Acetyl Cedrene · Phenoxyethanol · Sodium Salicylate",
+      "claimsVerbatim": "Syoss Intense Keratin Aufbau Shampoo | Tiefenpflegende Formel mit 5% Keratin-Aufbau-Komplex, stärkt das Haar von innen. Für rundum schönes und gesund aussehendes Haar. | Mit 5% Keratin-Aufbau-Komplex | Repariert schwaches, leicht brüchiges Haar | Füllt das Haar mit Keratin auf | Für bis zu 5x stärkeres Haar* | Professionelle Leistung | *im Vergleich zu unbehandeltem Haar",
+      "directionsVerbatim": "Sanft im nassen Haar verteilen und gründlich ausspülen. Anschließend eine Tiefenspülung verwenden."
+    },
+    {
+      "url": "https://www.dm.de/p/d/3047030/syoss-shampoo-intense-keratin",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "GTIN: 4015100860344 (dm-Artikelnummer 3047030; 'Shampoo Intense Keratin, 440 ml')",
+      "inciVerbatim": "Ingredients: Aqua (Water, Eau), Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, PEG-7 Glyceryl Cocoate, Hydrolyzed Keratin, Dimethicone, Sodium Benzoate, Parfum (Fragrance), Citric Acid, Amodimethicone, Guar Hydroxypropyltrimonium Chloride, Hydrogenated Castor Oil, Glycol Distearate, Laureth-4, PEG-40 Hydrogenated Castor Oil, PEG-120 Methyl Glucose Dioleate, Tetramethyl Acetyloctahydronaphthalenes, Laureth-23, Prunus Armeniaca (Apricot) Kernel Oil, Trideceth-10, Sodium Hydroxide, Linalool, Linalyl Acetate, Propylene Glycol, Acetyl Cedrene, Phenoxyethanol, Sodium Salicylate",
+      "claimsVerbatim": "Haarshampoo | Ideal für brüchiges Haar | Mit 5 % Keratin-Komplex | Stärkt das Haar von innen | Das Intense Keratin Shampoo von Syoss ist speziell für schwaches und brüchiges Haar entwickelt. Mit einer Kombination aus pflegenden Inhaltsstoffen und 5 % Keratin bietet es eine intensive Haarpflege, die die Haare von innen stärkt. Keratin wirkt dabei unterstützend, um die Haarstruktur zu verbessern und die Widerstandsfähigkeit zu fördern. Dieses Shampoo reinigt sanft und schenkt dem Haar ein wunderschönes und vitales Aussehen. | Wirkung: leichte Kämmbarkeit, Pflege | Produkteigenschaften: Ohne Alkohol, ohne Ammoniak",
+      "directionsVerbatim": "Sanft im nassen Haar verteilen und ausspülen. Nutze anschließend eine Spülung."
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-syoss-shampoo-intense-keratin/p/4015100860344",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "gtinShown": "GTIN in URL path /p/4015100860344; Artikelnummer 179950; '440 ml (1 L = 9,07 EUR)'",
+      "inciVerbatim": "Aqua (Water, Eau), Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, PEG-7 Glyceryl Cocoate, Hydrolyzed Keratin, Dimethicone, Sodium Benzoate, Parfum (Fragrance), Citric Acid, Amodimethicone, Guar Hydroxypropyltrimonium Chloride, Hydrogenated Castor Oil, Glycol Distearate, Laureth-4, PEG-40 Hydrogenated Castor Oil, PEG-120 Methyl Glucose Dioleate, Tetramethyl Acetyloctahydronaphthalenes, Laureth-23, Prunus Armeniaca (Apricot) Kernel Oil, Trideceth-10, Sodium Hydroxide, Linalool, Linalyl Acetate, Propylene Glycol, Acetyl Cedrene, Phenoxyethanol, Sodium Salicylate",
+      "claimsVerbatim": "SYOSS Shampoo Keratin – Keratin Shampoo für schwaches und brüchiges Haar mit Keratin-Aufbau-Komplex Das SYOSS Keratin Shampoo füllt schwaches und brüchiges Haar mit Keratin auf. Es kombiniert pflegende Inhaltsstoffe mit 5% Keratin-Aufbau-Komplex, welcher die Haare von innen auffüllt. Beim Haarewaschen werden die Haare für eine Tiefenreparatur aufgefüllt und gestärkt. Die Formel enthält 88% Inhaltsstoffe natürlichen Ursprungs inklusive Wasser und der Flaschenkörper des Shampoos besteht aus 100% recyceltem Plastik (Kappe ausgenommen). | für brüchiges Haar | Hair Repair Wirkung | starkes Haar – ... für bis zu 5x stärkeres Haar* | Inhaltsstoffe natürlichen Ursprungs – 88% | 100% recyceltes Plastik | *im Vergleich zu unbehandeltem Haar",
+      "directionsVerbatim": "Sanft im nassen Haar verteilen und ausspülen. Nutze anschließend eine Spülung."
+    }
+  ],
+  "conflicts": [],
+  "canonicalInci": [
+    "Aqua (Water",
+    "Eau)",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Betaine",
+    "Sodium Chloride",
+    "PEG-7 Glyceryl Cocoate",
+    "Hydrolyzed Keratin",
+    "Dimethicone",
+    "Sodium Benzoate",
+    "Parfum (Fragrance)",
+    "Citric Acid",
+    "Amodimethicone",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Hydrogenated Castor Oil",
+    "Glycol Distearate",
+    "Laureth-4",
+    "PEG-40 Hydrogenated Castor Oil",
+    "PEG-120 Methyl Glucose Dioleate",
+    "Tetramethyl Acetyloctahydronaphthalenes",
+    "Laureth-23",
+    "Prunus Armeniaca (Apricot) Kernel Oil",
+    "Trideceth-10",
+    "Sodium Hydroxide",
+    "Linalool",
+    "Linalyl Acetate",
+    "Propylene Glycol",
+    "Acetyl Cedrene",
+    "Phenoxyethanol",
+    "Sodium Salicylate"
+  ],
+  "canonicalReason": "Syoss DE manufacturer page (bullet-separated list, EAN in markup), dm.de and Rossmann.de (both exact GTIN 4015100860344) agree on all 29 entries; identical to the Sept 2026 v1.4 pilot source packet (syoss-intense-keratin). Tier 2.",
+  "inciFingerprintSha256": "de1c1328234632643df7eaba5f5f27d554680f3efa2ed25ce77e6dcaa59ddc40",
+  "normalization": "Canonical list = one entry per ingredient exactly as published on the winning source (case and punctuation kept in canonicalInci; trailing period stripped; bullet/asterisk/comma separators dropped; split synonym entries such as 'Aqua (Water, Eau)' kept as one item). Fingerprint: per ingredient lower-case, trim, collapse internal whitespace; join with '|'; sha256 of the UTF-8 string. Earlier v1.3/v1.4 fingerprints were computed over comma-joined lists and are not comparable.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Prior v1.4 packet: plans/scan-db-expansion/research/shampoo-v14/pilot/syoss-intense-keratin/source-packet.json - raw INCI identical (manufacturer used ' * ' separators).",
+    "Manufacturer list separated by ' · ' bullets with 'Aqua (Water, Eau)' kept as one entry; treated as one item (synonym merge).",
+    "Claim '5% Keratin-Aufbau-Komplex' corresponds to Hydrolyzed Keratin (#6) - present. Natural-origin figure 88% (Rossmann) is a claim only. Cookie banner declined."
+  ]
+}

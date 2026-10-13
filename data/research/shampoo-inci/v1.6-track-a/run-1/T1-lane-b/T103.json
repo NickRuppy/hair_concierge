@@ -1,0 +1,443 @@
+{
+  "blindId": "T103",
+  "productName": "hair biology Shampoo Revitalize & Soothe (Meno Balance)",
+  "inciFingerprintSha256": "667bb736dc96760b8b9c2f7bb53340747ed7be081bd20ecc5c877feeb11c2408",
+  "normalization": "Packet canonicalInci is the normalized list (ID-2); all positions are normalized one-based positions on it. Parfum at 11: positions 1-10 prominent",
+  "status": "classified",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "high",
+      "rationale": "C1 with a reinforcing route: SLES (2) defining plus prominent Sodium Lauryl Sulfate (3) -> strong, despite the betaine buffer (6).",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic"
+        },
+        {
+          "ingredient": "Sodium Lauryl Sulfate",
+          "position": 3,
+          "role": "reinforcing route"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 6,
+          "role": "buffer"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "C2 met: early silicone (Dimethiconol 10, prominent; Dimethicone 13 supporting), cationic polymer (Guar HPTC 15), pearlizing route (Glycol Distearate 7) and a closed-list humectant (Panthenol 24) -> multiple complementary systems -> high, even in a strong chassis.",
+      "counterSignal": "Guar and Panthenol are late (15, 24) and the humectant element is trace; strong double-anionic cleansing.",
+      "neighboringAlternative": "moderate",
+      "formulaFacts": [
+        {
+          "ingredient": "Dimethiconol",
+          "position": 10,
+          "role": "early silicone"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 7,
+          "role": "pearlizing route"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 15,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 24,
+          "role": "humectant (C2)"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Silicone system (Dimethiconol 10, Dimethicone 13) with cationic guar (15) is a plausible deposition system; strong reset limits accumulation -> moderate. Not the W1 set (no amodimethicone), so the full method decides.",
+      "counterSignal": "Two silicones plus a guar coacervate are designed to deposit; strong reset argues lighter.",
+      "neighboringAlternative": "high",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "Two silicones (10, 13) plus cationic guar (15); no lipid, protein or film former."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Silicone deposited via guar coacervate is moderately persistent."
+        },
+        "resetCapacity": {
+          "value": "strong",
+          "rationale": "C1 reinforced: SLES + SLS (+ late TEA-DDBS)."
+        }
+      },
+      "whyThisBand": "One meaningfully persistent silicone/cationic deposition system, offset by strong reset.",
+      "whyNotNeighborBand": "Not high: no W-RICH (no prominent payload lipid), no second cationic or film former, and reset is strong. Not low: two distinct families (silicone + cationic polymer) form a deliberate deposition system; strong reset does not face only light routes (W2).",
+      "limitingFactor": "Silicone/guar levels unknown; reset vs. deposition balance.",
+      "canonicalFormula": {
+        "inciFingerprintSha256": "667bb736dc96760b8b9c2f7bb53340747ed7be081bd20ecc5c877feeb11c2408",
+        "formulaSourceTier": 4,
+        "formulaCompleteness": "complete",
+        "captureDate": "not in packet",
+        "identityConfidence": "moderate"
+      },
+      "evidenceByFamily": {
+        "silicone": [
+          {
+            "ingredient": "Dimethiconol",
+            "position": 10,
+            "role": "prominent"
+          },
+          {
+            "ingredient": "Dimethicone",
+            "position": 13,
+            "role": "after Parfum"
+          }
+        ],
+        "cationic_polymer": [
+          {
+            "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+            "position": 15,
+            "role": "after Parfum"
+          }
+        ],
+        "excluded": [
+          {
+            "ingredient": "Glycol Distearate",
+            "position": 7,
+            "role": "pearlizer (6.4)"
+          }
+        ],
+        "reset": [
+          {
+            "ingredient": "Sodium Laureth Sulfate",
+            "position": 2,
+            "role": "anionic"
+          },
+          {
+            "ingredient": "Sodium Lauryl Sulfate",
+            "position": 3,
+            "role": "anionic"
+          },
+          {
+            "ingredient": "Cocamidopropyl Betaine",
+            "position": 6,
+            "role": "amphoteric"
+          },
+          {
+            "ingredient": "TEA-Dodecylbenzenesulfonate",
+            "position": 16,
+            "role": "anionic, late"
+          }
+        ]
+      },
+      "formulaCounterevidence": "Two silicones plus a guar coacervate are designed to deposit; strong reset argues lighter.",
+      "unresolved": [],
+      "proposedWeightPotential": "moderate",
+      "confidenceLimitingFactor": "Silicone/guar levels unknown; reset vs. deposition balance.",
+      "postUnblindNote": "'ohne das Haar zu beschweren' (retailer, low) never lowers the band."
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "neighboringAlternative": "moisture",
+      "rationale": "General: every source is retailer copy graded low (dm.de and an Austrian pharmacy); the moisture claim ('Spendet trockenem Haar Feuchtigkeit') may act as candidate only with an independently supporting verdict, and the verdict is nonspecific. Thinning/density claims are ignored (F5).",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "Dimethiconol 10",
+          "Dimethicone 13",
+          "Guar 15"
+        ],
+        "limitation": "No humectant cluster (Panthenol 24 trace)."
+      },
+      "claimRole": "not_applicable",
+      "formulaFacts": [
+        {
+          "ingredient": "Dimethiconol",
+          "position": 10,
+          "role": "generic conditioning"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 15,
+          "role": "generic conditioning"
+        }
+      ],
+      "counterSignal": "Low-graded moisture and scalp-soothing claims; a C2 conditioning system exists.",
+      "decisionTrace": {
+        "claimDirection": "moisture (low-graded)",
+        "formulaCompatible": false,
+        "compatibleRoute": "none specific",
+        "decisionReason": "Low-graded claim over a nonspecific verdict -> general (CL-SRC, F1, F5)."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Empty: no moderate/high-graded distinct positioning.",
+      "counterSignal": "None.",
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [],
+        "independentRoutes": [],
+        "whyDistinctFromPrimary": "",
+        "exceptionCode": null
+      }
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Default regular. 'für den täglichen Gebrauch geeignet' is retailer copy (low) and cleansing is strong anyway, so frequent cannot fire.",
+      "counterSignal": "Daily-use wording (low).",
+      "decisionTrace": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "Default regular. 'für den täglichen Gebrauch geeignet' is retailer copy (low) and cleansing is strong anyway, so frequent cannot fire."
+      }
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: the dry-scalp and 'beruhigt die ... Kopfhaut' claim units are retailer-only (low, SC1 fails) and the formula has no prominent E4 comfort or humectant route (CSA fails); both halves fail.",
+      "counterSignal": "Sensitive/dry scalp wording exists (low).",
+      "formulaFacts": [
+        {
+          "ingredient": "Panthenol",
+          "position": 24,
+          "role": "comfort route, after Parfum"
+        },
+        {
+          "ingredient": "Niacinamide",
+          "position": 30,
+          "role": "comfort route, after Parfum"
+        }
+      ]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Piroctone Olamine (12) present -> supported.",
+      "neighboringAlternative": "none",
+      "counterSignal": "None in formula; claims never upgrade this property.",
+      "formulaFacts": [
+        {
+          "ingredient": "Piroctone Olamine",
+          "position": 12,
+          "role": "recognized anti-dandruff active"
+        }
+      ]
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic, ether type"
+    },
+    {
+      "ingredient": "Sodium Lauryl Sulfate",
+      "position": 3,
+      "role": "reinforcing route, alkyl sulfate"
+    },
+    {
+      "ingredient": "Sodium Xylenesulfonate",
+      "position": 5,
+      "role": "hydrotrope, not a route"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 6,
+      "role": "buffer, amphoteric"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 7,
+      "role": "pearlizing route (C2); excluded from weight"
+    },
+    {
+      "ingredient": "Dimethiconol",
+      "position": 10,
+      "role": "silicone, prominent (early)"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 11,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Piroctone Olamine",
+      "position": 12,
+      "role": "recognized anti-dandruff active"
+    },
+    {
+      "ingredient": "Dimethicone",
+      "position": 13,
+      "role": "silicone, after Parfum"
+    },
+    {
+      "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+      "position": 15,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "TEA-Dodecylbenzenesulfonate",
+      "position": 16,
+      "role": "strong anionic after E3 point (recorded only)"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 24,
+      "role": "humectant (C2 list), late"
+    },
+    {
+      "ingredient": "Niacinamide",
+      "position": 30,
+      "role": "E4 comfort list but late"
+    }
+  ],
+  "blindToFinalChanges": [
+    {
+      "property": "provisional properties",
+      "blind": "general/[]/regular/not_targeted (low, provisional)",
+      "final": "see records",
+      "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+      "reason": "post-unblind reconciliation (3.2)"
+    }
+  ],
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate -> acceptable; T2: thickness/texture claims do not change the fit. T4: neighbor weightPotential=high -> not_suited would lower the final tier -> review_thickness_boundary."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate -> ideal; T2: thickness/texture claims do not change the fit. T4: neighbor weightPotential=high -> acceptable would lower the final tier -> review_thickness_boundary."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate, C high -> ideal; T2: thickness/texture claims do not change the fit. T4: neighbor conditioningLevel=moderate -> acceptable would lower the final tier -> review_thickness_boundary."
+      }
+    ],
+    "weight": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential moderate -> moderate (1:1)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "moderate",
+        "rationale": "S-ORDINARY ways 2/3/4: sensitive ('Beruhigt die aus dem Gleichgewicht geratene Kopfhaut') and dry ('trockener Kopfhaut') claim units exist but only in retailer copy graded low, so both gates fail (S-FAIL, no other specialist target passes); Piroctone Olamine without dandruff claim (R17.3); thinning/density positioning ignored (S-HAIRLOSS). Confidence moderate."
+      },
+      "secondary": null,
+      "secondaryRationale": "No passing specialist target."
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength strong -> regular. I2: written unchanged to every row."
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "rationale": "No D1 wording."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "deepCleanserRecord": null,
+      "confidence": "high",
+      "rationale": "D2 not met (no D1) -> not_flagged."
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable",
+        "intensityMatchesBucket": true
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal",
+        "intensityMatchesBucket": true
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal",
+        "intensityMatchesBucket": true
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_specialist_gate_failed:sensitive(positioning low; formula: CSA fails, no prominent E4 comfort route),dry(positioning low; formula: CSA fails, no prominent E4 humectant route)",
+      "review_thickness_boundary:fine",
+      "review_thickness_boundary:normal",
+      "review_thickness_boundary:coarse"
+    ],
+    "informationalNotes": [
+      "active_without_dandruff_positioning",
+      "hair_loss_claim_not_evaluated"
+    ],
+    "researchCombinationTargets": [],
+    "researchCombinationRationale": "Not a dandruff-primary product: E2b layer 2 does not apply.",
+    "liveComparison": "review_live_value_differs is resolved by the orchestrator after freeze (lanes see no live rows)."
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientOrCountOrPositionAssignedWeightBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "comparisonWithEarlierValuesMadeInLane": false,
+    "nAltConsistent": true
+  },
+  "uncertainties": [
+    {
+      "reading": "S-FAIL for low-graded sensitive/dry units (review flag)",
+      "alternative": "treat as no qualifying unit (way 1, no flag) — rejected because S-FAIL explicitly covers units whose only grade is low"
+    },
+    {
+      "reading": "'dünner werdendes Haar ... dichtes, volleres Haar' = hair-density positioning (F5)",
+      "alternative": "cosmetic volume claim"
+    },
+    {
+      "reading": "conditioningLevel high via C2 with a trace Panthenol humectant element",
+      "alternative": "moderate"
+    }
+  ]
+}

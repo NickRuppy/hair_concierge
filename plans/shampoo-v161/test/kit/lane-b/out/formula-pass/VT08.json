@@ -1,0 +1,145 @@
+{
+  "blindId": "VT08",
+  "inciFingerprintSha256": "1c0e1718993b10abb9eac3fcd41301fb42e2d3df23243f852f963f79b895cb10",
+  "phase": "formula_pass_blind",
+  "standard": "classification-standard.md (candidate shampoo-classification-v1.6.1, scrubbed lane copy)",
+  "identity": {
+    "packSize": "150 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "moderate",
+    "normalization": "Packet list already ID-2 normalized (Aqua/Water/Eau one entry; colourant entries carry their CI aliases); normalized one-based positions; 47 entries.",
+    "e3ProminenceCutoff": "Parfum/Fragrance @10; entries 1-9 prominent"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "provisional": false,
+      "rationale": "strong by C1: defining anionic Sodium Laureth Sulfate @2 (ether type) reinforced by prominent Sodium Laureth-8 Sulfate @4 (C3b: strong anionic, ether type); buffer Cocamidopropyl Betaine @5. C3b limit: read as a buffer the laureth-8 sulfate would give moderate, so confidence at most moderate, neighbor moderate. Later ether sulfates (@13, @14, @15, @19) are after the E3 point and recorded only.",
+      "ruleIds": ["C1", "C3", "C3b", "C4", "N-ALT"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "provisional": false,
+      "rationale": "low: cleansing-led; the only substantive conditioner is Polyquaternium-10 @21 after the E3 point; PEG-3 Distearate @6 pearlizer adds little slip; no silicone or lipid. Counter-signal: a cationic polymer is present; neighbor moderate.",
+      "ruleIds": ["5", "C2", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "provisional": false,
+      "rationale": "low: one late cationic polymer (Polyquaternium-10 @21) is the only deposition family and faces a strong reset; no silicone, lipid, protein or film former. W2 does not apply (one family).",
+      "evidence": {
+        "silicone": [],
+        "cationic_polymer": ["Polyquaternium-10 @21"],
+        "cationic_conditioner": [],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Sodium Laureth-8 Sulfate @4", "Cocamidopropyl Betaine @5", "Magnesium Laureth Sulfate @13", "Magnesium Laureth-8 Sulfate @14", "Sodium Oleth Sulfate @15", "Magnesium Oleth Sulfate @19"],
+        "humectantContext": ["Propylene Glycol @3", "Glucose @31", "Calcium Pantothenate @41", "Inositol @42"],
+        "excluded": ["PEG-3 Distearate @6 (pearlizing PEG ester, 6.4)", "Acrylates/C10-30 Alkyl Acrylate Crosspolymer @12 (anionic acrylate rheology polymer, 6.4)", "PEG-30 Dipolyhydroxystearate @28 (emulsifier, not deposition)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 8,
+        "inci": "Piroctone Olamine",
+        "classes": ["preservative_or_capped_active"],
+        "cap": "e3Point @10 (Parfum/Fragrance)",
+        "alphabeticalRuns": [],
+        "skipped": [],
+        "codes": [],
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": [],
+        "note": "Climbazole @7 is not a W-line candidate (W-LINE 1b)."
+      },
+      "depositionLoad": "light",
+      "depositionLoadRationale": "One post-fragrance cationic polymer.",
+      "persistence": "low",
+      "persistenceRationale": "No persistent silicone or lipid system.",
+      "resetCapacity": "strong",
+      "resetCapacityRationale": "Reinforced ether-sulfate chassis (C1 strong).",
+      "counterevidence": "Polyquaternium-10 is substantive.",
+      "whyThisBand": "Deposition essentially absent; strong reset.",
+      "whyNotNeighborBand": "moderate needs a plausibly persistent system; one late polymer against a strong reset is not one.",
+      "confidenceLimitingFactor": "None material.",
+      "ruleIds": ["6.6", "W2", "W-LINE"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": true,
+      "rationale": "Provisional, claim-dependent: claims hidden. Two recognized dandruff actives (Climbazole @7, Piroctone Olamine @8) make scalp_active the likely candidate under dandruff positioning; Caffeine @20 is never a focus route (F5).",
+      "careDirection": {
+        "verdict": "not_applicable (provisional)",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Polyquaternium-10 @21"],
+        "limitation": "No lengths-care cluster."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "No claims visible in the blind pass.",
+      "ruleIds": ["3.1", "7.2", "F5"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["clarifying"],
+      "provisional": true,
+      "rationale": "Provisional empty default.",
+      "ruleIds": ["8", "N-ALT"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "treatment",
+      "provisional": true,
+      "triggerCode": "none",
+      "rationale": "Provisional default regular; a qualifying dandruff claim would fire treatment (U3); reset intent would fire alternating (strong formula); treatment wins precedence (U1).",
+      "ruleIds": ["9", "U1", "U3", "U4"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "provisional": false,
+      "rationale": "not_targeted whatever the positioning: CSA fails, no listed comfort or humectant/refatting route is prominent (Allantoin @18 and Niacinamide @29 after the E3 point @10; no Glycerin/Panthenol). Counter-signal: strong cleansing.",
+      "ruleIds": ["10", "CSA", "E3", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "provisional": false,
+      "rationale": "supported: complete INCI contains Climbazole @7 and Piroctone Olamine @8 (Section 11).",
+      "ruleIds": ["11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionic": ["Sodium Laureth Sulfate @2 (defining)", "Sodium Laureth-8 Sulfate @4 (reinforcing, C3b)", "Magnesium Laureth Sulfate @13", "Magnesium Laureth-8 Sulfate @14", "Sodium Oleth Sulfate @15", "Magnesium Oleth Sulfate @19 (all four not prominent)"],
+      "mildAnionic": [],
+      "amphoteric": ["Cocamidopropyl Betaine @5"],
+      "nonionicCleansing": [],
+      "notCleansing": ["PEG-3 Distearate @6", "PEG-30 Dipolyhydroxystearate @28"],
+      "c1Reading": "ether-type defining @2 + reinforcing @4 -> strong (C3b confidence cap)"
+    },
+    "conditioningRoutes": ["PEG-3 Distearate @6 (pearlizing)", "Polyquaternium-10 @21"],
+    "humectants": ["Glucose @31", "Calcium Pantothenate @41", "Inositol @42 (none on the C2/E4 lists)"],
+    "actives": ["Climbazole @7", "Piroctone Olamine @8", "Allantoin @18", "Caffeine @20", "Niacinamide @29", "botanical extracts @33-38", "Tocopherol @44"],
+    "scalpExposure": ["Parfum/Fragrance @10", "Benzyl Salicylate @25", "Hexyl Cinnamal @27", "Alcohol @30", "Rosmarinus Officinalis Leaf Extract @37", "Salvia Officinalis Leaf Extract @36"],
+    "recognizedDandruffActives": ["Climbazole @7", "Piroctone Olamine @8"],
+    "preservatives": ["Phenoxyethanol @9", "Sodium Benzoate @16", "Benzoic Acid @24", "Potassium Sorbate @39"]
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "conditioningLevel low vs moderate: single post-fragrance cationic polymer; chose low."
+  ]
+}

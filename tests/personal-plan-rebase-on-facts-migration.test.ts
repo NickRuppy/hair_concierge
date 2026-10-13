@@ -603,6 +603,47 @@ test("projection keys come from the SOURCE draft; `products.stage3Handoff` is ca
   }
 })
 
+test("a `tools` projection on the source draft is carried into the clone like the other module keys", async (t) => {
+  const pg = await freshDatabase(t)
+  const { planId, initialA } = await seedPlan(pg)
+  const sourceDraft = id(2, 2)
+  await insertOpenRefinementDraft(pg, {
+    draftId: sourceDraft,
+    userId: USER,
+    planId,
+    baseInitialNeedVersionId: initialA,
+  })
+  const toolsModule = await completeStage2Module(pg, {
+    userId: USER,
+    planId,
+    draftId: sourceDraft,
+    module: "tools",
+    expectedRevision: 0,
+    inputHash: hashOf("refined-A1"),
+  })
+  assert.equal(toolsModule.outcome, "completed")
+
+  const result = await rebaseOnFacts(
+    pg,
+    await baseInput(pg, planId, {
+      sourceDraftId: sourceDraft,
+      expectedDraftRevision: 0,
+      clone: CLONE,
+      refined: { inputHash: hashOf("refined-B1") },
+    }),
+  )
+
+  assert.equal(result.status, "rebased")
+  if (result.status !== "rebased") return
+  const clone = await draftRow(pg, result.cloneDraftId!)
+  // Without the widened module list the `tools` entry would be dropped and replaced by the
+  // `habits` fallback projection.
+  assert.deepEqual(Object.keys(clone.module_projections), ["tools"])
+  assert.equal(clone.module_projections.tools!.needVersionId, result.refinedNeedVersionId)
+  assert.equal(clone.module_projections.tools!.origin, "facts_rebase")
+  assert.equal(clone.module_projections.tools!.stage3Handoff, false)
+})
+
 test("a carried `products.stage3Handoff: true` survives into a COMPLETE clone (closing-completion shape)", async (t) => {
   const pg = await freshDatabase(t)
   const { planId, initialA } = await seedPlan(pg)

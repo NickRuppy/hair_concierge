@@ -1,0 +1,557 @@
+{
+  "blindId": "T409",
+  "inciFingerprintSha256": "d781cb2007e39fd64fe62e6bd73b3c65117915bcde182f6daf8d22763dfca1dc",
+  "policyId": "shampoo-classification-v1.6",
+  "identity": {
+    "packSize": "200 ml",
+    "formulaSourceTier": 4,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "moderate",
+    "productName": "Ultimate Shampoo (catalog) = L'Oréal Paris Elvital Glycolic Gloss Shampoo, 200 ml",
+    "market": "DE",
+    "identityNote": "Manufacturer page is for a different SKU (300 ml, sulfate-based) and is not evidence for this product; formula is sulfate-free (AOS), consistent with retailer 'ohne Sulfat'. Formula source tier 4."
+  },
+  "normalization": "ID-2 applied; normalized one-based positions; no split entries; raw positions = normalized positions",
+  "e3ProminenceMarker": "Parfum/Fragrance at 8",
+  "surfactantArchitecture": "AOS (2) defining sulfonate anionic; CAPB (5), sarcosinate (7) buffers; C1 -> moderate.",
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium C14-16 Olefin Sulfonate",
+      "position": 2,
+      "role": "defining anionic (sulfonate type)"
+    },
+    {
+      "ingredient": "Cocamide MEA",
+      "position": 3,
+      "role": "foam booster"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 4,
+      "role": "humectant, prominent E4 route"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 5,
+      "role": "amphoteric buffer"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 6,
+      "role": "pearlizer"
+    },
+    {
+      "ingredient": "Sodium Lauroyl Sarcosinate",
+      "position": 7,
+      "role": "mild anionic buffer"
+    },
+    {
+      "ingredient": "Parfum / Fragrance",
+      "position": 8,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 16,
+      "role": "cationic polymer"
+    },
+    {
+      "ingredient": "Salicylic Acid",
+      "position": 19,
+      "role": "acid (not a dandruff active)"
+    },
+    {
+      "ingredient": "Polyquaternium-7",
+      "position": 20,
+      "role": "cationic polymer"
+    },
+    {
+      "ingredient": "Carbomer",
+      "position": 28,
+      "role": "excluded thickener"
+    }
+  ],
+  "claimGrading": [
+    {
+      "claim": "Glycolic Gloss (name)",
+      "grade": "high",
+      "use": "shine focus"
+    },
+    {
+      "claim": "dm/Rossmann (Glanz, Geschmeidigkeit, stumpfes Haar, trockenes Haar)",
+      "grade": "low",
+      "use": "corroboration only"
+    },
+    {
+      "claim": "manufacturer page (different SKU)",
+      "grade": "excluded",
+      "use": "none"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: C1 ether/sulfonate chassis - defining anionic Sodium C14-16 Olefin Sulfonate (2) buffered by prominent Cocamidopropyl Betaine (5) and Sodium Lauroyl Sarcosinate (7); no prominent reinforcing strong anionic (C3, C4, C1).",
+      "counterSignal": "Cocamide MEA (3) is a foam booster, not a route; Coco-Betaine (12) is after Parfum. Source tier 4 / identity moderate noted, formula complete.",
+      "neighboringAlternative": "none",
+      "rulesApplied": [
+        "C3",
+        "C4",
+        "C1"
+      ],
+      "carriedFromBlind": true
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: prominent pearlizing Glycol Distearate (6) and Glycerin (4) with two late cationic polymers (Hydroxypropyl Guar Hydroxypropyltrimonium Chloride 16, Polyquaternium-7 20) - one meaningful conditioning system plus light routes; no silicone or lipid.",
+      "counterSignal": "Both cationic polymers sit after Parfum (8) and sodium chloride; argues toward low.",
+      "neighboringAlternative": "low",
+      "rulesApplied": [
+        "5",
+        "C2 not met"
+      ],
+      "carriedFromBlind": true
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: a single deposition family (two late cationic polymers) faces an effective C1 reset; no silicone, lipid, protein or film former.",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Only cationic polymers (16, 20), both late."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Polyquaternium-7 can accumulate with repeated use; guar is weakly retained."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 AOS chassis with betaine and sarcosinate buffers."
+        }
+      },
+      "evidenceByFamily": {
+        "silicone": [],
+        "cationic_polymer": [
+          [
+            "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+            16
+          ],
+          [
+            "Polyquaternium-7",
+            20
+          ]
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "protein_film": [],
+        "film_former": [],
+        "humectant_context": [
+          [
+            "Glycerin",
+            4
+          ],
+          [
+            "Hexylene Glycol",
+            9
+          ],
+          [
+            "Propylene Glycol",
+            27
+          ]
+        ],
+        "reset": [
+          [
+            "Sodium C14-16 Olefin Sulfonate",
+            2
+          ],
+          [
+            "Cocamidopropyl Betaine",
+            5
+          ],
+          [
+            "Sodium Lauroyl Sarcosinate",
+            7
+          ],
+          [
+            "Coco-Betaine",
+            12
+          ]
+        ]
+      },
+      "excludedEvidence": [
+        [
+          "Glycol Distearate",
+          6,
+          "pearlizer, excluded (6.4)"
+        ],
+        [
+          "PEG-55 Propylene Glycol Oleate",
+          18,
+          "PEG thickener, excluded"
+        ],
+        [
+          "Carbomer",
+          28,
+          "anionic acrylate thickener, excluded (6.4)"
+        ],
+        [
+          "Cocamide MEA",
+          3,
+          "foam booster"
+        ],
+        [
+          "Citrus Limon Peel Oil",
+          33,
+          "essential oil"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "Polyquaternium-7 buildup tendency.",
+      "whyThisBand": "Low: a single deposition family (two late cationic polymers) faces an effective C1 reset; no silicone, lipid, protein or film former.",
+      "whyNotNeighborBand": "Not moderate: one family only, both members late (after Parfum and salt); no converging persistent system.",
+      "confidenceLimitingFactor": "Two polymers incl. Polyquaternium-7; levels unknown - moderate is a realistic neighbor.",
+      "neighboringAlternative": "moderate",
+      "rulesApplied": [
+        "6.5",
+        "6.6"
+      ],
+      "carriedFromBlind": true
+    },
+    "focusPrimary": {
+      "value": "shine",
+      "confidence": "moderate",
+      "rationale": "shine: 'Gloss' in the exact name (high); formula compatible - acidic route (Glycolic Acid 35, Salicylic Acid 19, Citric Acid 31), pearlizer, light conditioning and low weight (7.1 shine).",
+      "counterSignal": "All descriptive claims are retailer (low); glycolic acid is late; identity moderate.",
+      "neighboringAlternative": "general",
+      "formulaFacts": [
+        {
+          "ingredient": "Glycolic Acid",
+          "position": 35
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 6
+        }
+      ],
+      "sourceIds": [
+        "product name"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty: moisture/geschmeidig only retailer (low).",
+      "counterSignal": "See decision trace.",
+      "neighboringAlternative": [
+        "moisture"
+      ],
+      "formulaFacts": [],
+      "sourceIds": [],
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "candidatesConsidered": []
+      }
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "No graded trigger.",
+      "counterSignal": "Usage triggers are conjunctive and mechanical (Section 9); see trace.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "sourceIds": [],
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "decisionTrace": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [],
+        "rationale": "No graded trigger."
+      }
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "not_targeted: no SC1 unit.",
+      "counterSignal": "-",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "sourceIds": [],
+      "csaFormulaHalf": true,
+      "sc1Positioning": false
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11).",
+      "neighboringAlternative": "none",
+      "carriedFromBlind": true
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "not_applicable",
+      "routes": {},
+      "limitation": ""
+    },
+    "claimRole": "candidate",
+    "counterSignal": "Retailer-only descriptive claims.",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "shine (name)",
+        "formulaCompatible": true,
+        "compatibleRoute": "acidic alignment (Glycolic/Salicylic/Citric Acid) + pearlizer",
+        "reason": "7.1/7.2"
+      }
+    }
+  },
+  "weightRecord": {
+    "value": "low",
+    "confidence": "moderate",
+    "rationale": "Low: a single deposition family (two late cationic polymers) faces an effective C1 reset; no silicone, lipid, protein or film former.",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "light",
+        "rationale": "Only cationic polymers (16, 20), both late."
+      },
+      "persistence": {
+        "value": "moderate",
+        "rationale": "Polyquaternium-7 can accumulate with repeated use; guar is weakly retained."
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C1 AOS chassis with betaine and sarcosinate buffers."
+      }
+    },
+    "evidenceByFamily": {
+      "silicone": [],
+      "cationic_polymer": [
+        [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          16
+        ],
+        [
+          "Polyquaternium-7",
+          20
+        ]
+      ],
+      "payload_lipid": [],
+      "weak_refatter": [],
+      "protein_film": [],
+      "film_former": [],
+      "humectant_context": [
+        [
+          "Glycerin",
+          4
+        ],
+        [
+          "Hexylene Glycol",
+          9
+        ],
+        [
+          "Propylene Glycol",
+          27
+        ]
+      ],
+      "reset": [
+        [
+          "Sodium C14-16 Olefin Sulfonate",
+          2
+        ],
+        [
+          "Cocamidopropyl Betaine",
+          5
+        ],
+        [
+          "Sodium Lauroyl Sarcosinate",
+          7
+        ],
+        [
+          "Coco-Betaine",
+          12
+        ]
+      ]
+    },
+    "excludedEvidence": [
+      [
+        "Glycol Distearate",
+        6,
+        "pearlizer, excluded (6.4)"
+      ],
+      [
+        "PEG-55 Propylene Glycol Oleate",
+        18,
+        "PEG thickener, excluded"
+      ],
+      [
+        "Carbomer",
+        28,
+        "anionic acrylate thickener, excluded (6.4)"
+      ],
+      [
+        "Cocamide MEA",
+        3,
+        "foam booster"
+      ],
+      [
+        "Citrus Limon Peel Oil",
+        33,
+        "essential oil"
+      ]
+    ],
+    "unresolved": [],
+    "counterSignal": "Polyquaternium-7 buildup tendency.",
+    "whyThisBand": "Low: a single deposition family (two late cationic polymers) faces an effective C1 reset; no silicone, lipid, protein or film former.",
+    "whyNotNeighborBand": "Not moderate: one family only, both members late (after Parfum and salt); no converging persistent system.",
+    "confidenceLimitingFactor": "Two polymers incl. Polyquaternium-7; levels unknown - moderate is a realistic neighbor.",
+    "neighboringAlternative": "moderate",
+    "rulesApplied": [
+      "6.5",
+      "6.6"
+    ],
+    "formulaFingerprint": "d781cb2007e39fd64fe62e6bd73b3c65117915bcde182f6daf8d22763dfca1dc",
+    "sourceTier": 4,
+    "captureDate": "per frozen packet (not in lane kit)"
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "t1Fit": "ideal",
+        "t6Applied": false,
+        "confidence": "moderate",
+        "rationale": "ideal: T1 (fine x W low) = ideal; T2: thickness/texture claims ignored. Confidence = lowest input confidence (13.8). T4: weightPotential neighbor moderate would lower the final tier -> review_thickness_boundary."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "t1Fit": "ideal",
+        "t6Applied": false,
+        "confidence": "moderate",
+        "rationale": "ideal: T1 (normal x W low) = ideal; T2: thickness/texture claims ignored. Confidence = lowest input confidence (13.8)."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "t1Fit": "acceptable",
+        "t6Applied": false,
+        "confidence": "moderate",
+        "rationale": "acceptable: T1 (coarse x W low, C moderate) = acceptable; T2: thickness/texture claims ignored. Confidence = lowest input confidence (13.8)."
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential low -> light; confidence = weightPotential confidence (13.8)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "moderate",
+        "rationale": "S-ORDINARY way 1: no E2 unit; only retailer copy applies to this SKU -> moderate (13.8).",
+        "sOrdinaryWays": [
+          1
+        ]
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate, D1 false -> regular; I2 written unchanged to every row."
+    },
+    "positioning": {
+      "explicitResetPositioning": false
+    },
+    "explicitResetPositioning": {
+      "value": false,
+      "confidence": "high",
+      "rationale": "D1 false: no tiefenrein/deep clean/clarifying shampoo/detox-reinigung stem in name or graded claims, no occasional-use directions."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "high",
+      "rationale": "D2 not met: D1 false"
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_thickness_boundary",
+        "detail": "fine: ideal; weightPotential neighbor moderate (T4, after T6)"
+      }
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "researchCombinationRationale": "Not applicable: primary target is not dandruff (E2b)."
+  },
+  "blindToFinalChanges": [
+    {
+      "field": "focusPrimary",
+      "blind": "general",
+      "final": "shine",
+      "evidence": "name 'Gloss'",
+      "reason": "7.2"
+    },
+    {
+      "field": "usageRole/scalpComfortTarget",
+      "blind": "provisional",
+      "final": "regular / not_targeted",
+      "evidence": "no triggers",
+      "reason": "-"
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeWeightSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "comparisonWithEarlierValuesDoneInLane": false,
+    "weightPotentialUnchangedAfterUnblind": true
+  },
+  "uncertainties": [
+    {
+      "reading": "Formula classified as given despite source tier 4 and identity confidence moderate",
+      "alternative": "If identity is later found materially uncertain, all properties drop to low (ID-3)"
+    },
+    {
+      "reading": "Identity moderate / tier-4 formula",
+      "alternative": "if formula proven not to match the SKU, all properties low (ID-3)"
+    }
+  ]
+}

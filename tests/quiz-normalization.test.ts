@@ -251,6 +251,12 @@ test("shared quiz values project once into the existing profile vocabulary", () 
     goals: ["manageability_styling", "volume_balance", "strength_ends"],
   })
 
-  assert.deepEqual(projected.concerns, ["hair_loss", "hair_damage", "frizz", "tangling"])
+  assert.deepEqual(projected.concerns, [
+    "hair_loss",
+    "hair_damage",
+    "frizz",
+    "tangling",
+    "low_shine",
+  ])
   assert.deepEqual(projected.goals, ["less_frizz", "less_volume", "anti_breakage"])
 })

@@ -1,0 +1,21 @@
+{
+  "blindId": "W210",
+  "productName": "ISANA MED Shampoo Anti Schuppen, 200 ml",
+  "brand": "ISANA",
+  "positioningSources": [
+    {
+      "sourceType": "pack_photo_on_manufacturer_page",
+      "sourceKind": "pack_back",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Anti Schuppenformel mit Piroctone Olamine – Ein bewährter Wirkkomplex zur Pflege der Kopfhaut mit nachhaltiger Wirkung gegen lästige Schuppen und deren Neubildung. | WIRKUNG: Das ISANA MED SHAMPOO befreit das Haar bei regelmäßiger Anwendung von störenden Schuppen und beugt effektiv deren Neubildung vor. | ohne Silikone & pH hautneutral | Coffein & Menthol | reinigt schnell fettendes Haar | HAUTVERTRÄGLICHKEIT: dermatologisch bestätigt. | vegan | Hergestellt in Deutschland | Hergestellt für Dirk Rossmann GmbH, Isernhägener Str. 16, DE-30938 Burgwedel",
+      "directionsVerbatim": ""
+    },
+    {
+      "sourceType": "manufacturer_de (Rossmann private label; Dirk Rossmann GmbH is brand owner)",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Das ISANA Med Anti Schuppen Shampoos befreit das Haar bei regelmäßiger Anwendung von störenden Schuppen und beugt effektiv deren Neubildung vor.Anti Schuppenformel mit Piroctone Olamine - ein bewährter Wirkkomplex zur Pflege der Kopfhaut mit nachhaltiger Wirkung gegen lästige Schuppen und deren Neubildung | ohne Silikone & pH 5,5 hautneutral | Coffein hilft die Haarwurzel zu stärken | Menthol erfrischt die Kopfhaut | Hautverträglichkeit: dermatologisch bestätigt. | Piroctone Olamine wirkt nachhaltig gegen Schuppen | Coffein & Menthol gegen trockene Kopfhaut",
+      "directionsVerbatim": ""
+    }
+  ]
+}

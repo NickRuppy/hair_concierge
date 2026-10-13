@@ -1,0 +1,146 @@
+{
+  "blindId": "VT11",
+  "inciFingerprintSha256": "22bedf0cd1a87fec074e6fba8724488bdfc5b3c97a6aa424e3512c022d440014",
+  "phase": "formula_pass_blind",
+  "standard": "classification-standard.md (candidate shampoo-classification-v1.6.1, scrubbed lane copy)",
+  "identity": {
+    "packSize": "UNRESOLVED per packet (pack size / GTIN binding conflict between two sizes; packet states the formula is identical across sizes)",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "moderate",
+    "normalization": "Packet list already ID-2 normalized (AQUA / WATER, GLYCINE SOJA OIL / SOYBEAN OIL, AVENA SATIVA KERNEL EXTRACT / OAT KERNEL EXTRACT, ORYZA SATIVA STARCH / RICE STARCH each one entry); batch code stripped from the Parfum entry as provenance; names matched case-insensitively; normalized one-based positions; 27 entries.",
+    "e3ProminenceCutoff": "PARFUM / FRAGRANCE @27; entries 1-26 prominent",
+    "identityNote": "The pack-size conflict is not material to any direct property (ID-3) because the packet states the formula is identical across sizes; recorded as a note. Seal incident: the stage-A packSize field names a brand and retailers; not used in any judgment."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "provisional": false,
+      "rationale": "moderate by C1: defining anionic Sodium Laureth Sulfate @2 (ether type) with prominent buffer Coco-Betaine @3 (amphoteric) and no reinforcing strong anionic (settled C1 core). Counter-signals: refatting/emollient routes (Soybean Oil @6, Dicaprylyl Ether @13).",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "provisional": false,
+      "rationale": "high by C2 with the payload-lipid substitute: prominent payload lipid Glycine Soja (Soybean) Oil @6 (plus Dicaprylyl Ether @13) in place of a silicone; cationic polymers Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @19 and Polyquaternium-7 @22; pearlizing route Glycol Distearate @4; humectant Glycerin @5. Counter-signal: no silicone; cationic polymers sit after salt and pH adjusters, so likely low-level; neighbor moderate.",
+      "ruleIds": ["C2", "E3", "R11", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "provisional": false,
+      "rationale": "moderate: material payload lipids (Soybean Oil @6, Dicaprylyl Ether @13, both before the W-line @23) converge with two cationic polymers (@19, @22), so bounded residue is plausible; W-RICH is formally established but the C1 SLES/betaine chassis gives resetCapacity moderate, so the rich route fails; without silicone and with the polymers late, the convergence route is judged offset by reset. W-RICH is the counter-signal; confidence moderate, neighbor high.",
+      "evidence": {
+        "silicone": [],
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @19", "Polyquaternium-7 @22"],
+        "cationic_conditioner": [],
+        "payload_lipid": ["Glycine Soja Oil / Soybean Oil @6 (material)", "Dicaprylyl Ether @13 (material)"],
+        "weak_refatter": [],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["Sodium Laureth Sulfate @2 (strong anionic, ether)", "Coco-Betaine @3 (amphoteric buffer)"],
+        "humectantContext": ["Glycerin @5", "Aloe Barbadensis Leaf Juice @7", "Propylene Glycol @18"],
+        "excluded": ["Glycol Distearate @4 (pearlizing wax, 6.4)", "PPG-5-Ceteth-20 @10, PEG-55 Propylene Glycol Oleate @11 (PEG/PPG thickeners/solubilizers, C3/6.4)", "PEG-60 Hydrogenated Castor Oil @12 (solubilizer, 6.4)", "Carbomer @15 (anionic acrylate rheology polymer, 6.4)", "Xanthan Gum @21 (thickener)", "Oryza Sativa Starch @9 (no deposition family)", "Dilauryl Thiodipropionate @14 (antioxidant)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 23,
+        "inci": "Tocopherol",
+        "classes": ["sub1_active"],
+        "cap": "e3Point @27 (PARFUM / FRAGRANCE)",
+        "alphabeticalRuns": [],
+        "skipped": [],
+        "codes": [],
+        "payloadLipidMaterial": ["Glycine Soja Oil / Soybean Oil @6", "Dicaprylyl Ether @13"],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "moderate",
+      "depositionLoadRationale": "Prominent soybean oil and an emollient ether plus two late cationic polymers.",
+      "persistence": "moderate",
+      "persistenceRationale": "Cationic polymers and oil can persist; no silicone.",
+      "resetCapacity": "moderate",
+      "resetCapacityRationale": "C1 SLES + betaine ordinary chassis.",
+      "counterevidence": "W-RICH formally met (material lipid + cationic polymers); two cationic polymers.",
+      "whyThisBand": "Plausible bounded residue from oil plus cationic polymers, offset by an effective ordinary chassis.",
+      "whyNotNeighborBand": "high needs W-RICH with limited reset (reset here is moderate) or converging persistent systems that the reset does not offset; with no silicone and the cationic polymers after salt and pH adjusters, the SLES/betaine reset is judged sufficient. low is excluded by a prominent material oil plus two cationic polymers (W2).",
+      "confidenceLimitingFactor": "Convergence-route judgment (oil + two cationic polymers vs moderate reset); alternative high.",
+      "ruleIds": ["6.6", "W-RICH", "W-LINE", "W2", "W3", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "provisional": true,
+      "rationale": "Provisional, claim-dependent: claims hidden. Moisture/nourish cluster (Glycerin @5, Soybean Oil @6, Aloe juice @7, Dicaprylyl Ether @13, cationic polymers) and a comfort route (Avena Sativa Kernel Extract @8); provisional verdict moisture_supported.",
+      "careDirection": {
+        "verdict": "moisture_supported (provisional)",
+        "moistureRoutes": ["Glycerin @5", "Glycine Soja Oil @6", "Dicaprylyl Ether @13"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @19", "Polyquaternium-7 @22", "Glycol Distearate @4"],
+        "limitation": "No claims; aloe juice is not a deliberate humectant route (C2)."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "No claims visible in the blind pass.",
+      "ruleIds": ["3.1", "7.3", "F1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["scalp_active"],
+      "provisional": true,
+      "rationale": "Provisional empty default.",
+      "ruleIds": ["8", "N-ALT"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "rationale": "Provisional default regular; not strong, no dandruff active; only frequency wording (U2) could move it.",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: positioning hidden. CSA met: prominent comfort route Avena Sativa Kernel Extract @8 (E4 comfort list) and prominent humectant/refatting routes Glycerin @5 and Soybean Oil @6. No cooling agent; Parfum @27 not prominent.",
+      "ruleIds": ["10", "CSA", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "provisional": false,
+      "rationale": "not_supported: complete INCI contains no recognized anti-dandruff active; Salicylic Acid @26 alone does not upgrade the property (Section 11).",
+      "ruleIds": ["11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionic": ["Sodium Laureth Sulfate @2 (ether type, defining)"],
+      "mildAnionic": [],
+      "amphoteric": ["Coco-Betaine @3 (buffer)"],
+      "nonionicCleansing": [],
+      "notCleansing": ["PPG-5-Ceteth-20 @10", "PEG-55 Propylene Glycol Oleate @11", "PEG-60 Hydrogenated Castor Oil @12"],
+      "c1Reading": "ether-type defining @2, prominent buffer @3, no reinforcing route -> moderate"
+    },
+    "conditioningRoutes": ["Glycol Distearate @4", "Glycine Soja Oil @6", "Dicaprylyl Ether @13", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @19", "Polyquaternium-7 @22"],
+    "humectants": ["Glycerin @5"],
+    "actives": ["Avena Sativa Kernel Extract @8", "Aloe Barbadensis Leaf Juice @7", "Tocopherol @23", "Salicylic Acid @26"],
+    "scalpExposure": ["PARFUM / FRAGRANCE @27"],
+    "recognizedDandruffActives": [],
+    "preservatives": ["Potassium Sorbate @24", "Sodium Benzoate @25", "Salicylic Acid @26 (probable preservative/pH role)"]
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "weightPotential moderate vs high: W-RICH formally met; reset moderate; convergence route judged offset -> moderate with high as neighbor.",
+    "Pack-size/GTIN conflict recorded as a non-material identity note (formula identical across sizes per packet)."
+  ]
+}

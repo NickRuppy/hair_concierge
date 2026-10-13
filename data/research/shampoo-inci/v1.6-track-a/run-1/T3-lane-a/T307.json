@@ -1,0 +1,818 @@
+{
+  "blindId": "T307",
+  "inciFingerprintSha256": "38d60eb914c0fbbc85d1f4ecb3bb98f4815256077c20874ad004f0bda105591b",
+  "identity": {
+    "productName": "Lavera Basis Sensitiv (Pflegeshampoo basis sensitive Hydrate & Care)",
+    "brand": "Lavera",
+    "market": "DE",
+    "formulaBlock": {
+      "normalization": "'Water (Aqua)' one entry; asterisk markers stripped (kept as provenance: * organic-type marker, ** fragrance-component marker). E3: Fragrance (Parfum) at 28; prominent = 1-27.",
+      "formulaCompleteness": "complete",
+      "formulaSourceTier": 2,
+      "identityConfidence": "high",
+      "rawInciCount": 39
+    }
+  },
+  "claimSources": [
+    {
+      "id": "S1",
+      "sourceKind": "manufacturer_de",
+      "grade": "moderate"
+    },
+    {
+      "id": "S2",
+      "sourceKind": "retailer",
+      "grade": "low"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C5: Sodium Coco-Sulfate (3) is the alkyl-sulfate defining anionic with three prominent buffers (Cocamidopropyl Betaine 5, Lauryl Glucoside 6, Coco-Glucoside 24) and no reinforcing route (Sodium Cetearyl Sulfate 19 is C3a emulsifier-grade with Cetearyl Alcohol 15) -> moderate.",
+      "neighboringAlternative": "none",
+      "counterSignal": "Alkyl-sulfate class is harsher than ether sulfate; buffers and lipids offset it under C5.",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T307"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Aloe Barbadensis Leaf Juice",
+          "position": 2,
+          "role": "plant juice (not a humectant route, C2)"
+        },
+        {
+          "ingredient": "Sodium Coco-Sulfate",
+          "position": 3,
+          "role": "defining anionic, alkyl sulfate type (C5)"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 4,
+          "role": "humectant; E4 route"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 5,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Lauryl Glucoside",
+          "position": 6,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Sodium Hyaluronate",
+          "position": 10,
+          "role": "humectant"
+        },
+        {
+          "ingredient": "Helianthus Annuus Seed Oil",
+          "position": 11,
+          "role": "payload_lipid"
+        },
+        {
+          "ingredient": "Cetearyl Alcohol",
+          "position": 15,
+          "role": "payload_lipid (fatty alcohol); fatty route"
+        },
+        {
+          "ingredient": "PCA Glyceryl Oleate",
+          "position": 16,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Betaine",
+          "position": 17,
+          "role": "humectant"
+        },
+        {
+          "ingredient": "Sodium Cetearyl Sulfate",
+          "position": 19,
+          "role": "C3a emulsifier-grade fatty sulfate (paired with Cetearyl Alcohol 15): not a route"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 21,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Tridecane",
+          "position": 23,
+          "role": "volatile alkane, excluded"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 24,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Undecane",
+          "position": 25,
+          "role": "volatile alkane, excluded"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "C2 met with lipids in place of the silicone: prominent payload lipid (Sunflower Seed Oil 11) + cationic guar (21) + fatty route (Cetearyl Alcohol 15) + humectants (Glycerin 4, Sodium Hyaluronate 10, Betaine 17); also W-RICH.",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "No silicone; oil and guar sit after Citric Acid and the fatty alcohol is part of an emulsifying-wax pair, so care could be bounded (moderate).",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T307"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Aloe Barbadensis Leaf Juice",
+          "position": 2,
+          "role": "plant juice (not a humectant route, C2)"
+        },
+        {
+          "ingredient": "Sodium Coco-Sulfate",
+          "position": 3,
+          "role": "defining anionic, alkyl sulfate type (C5)"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 4,
+          "role": "humectant; E4 route"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 5,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Lauryl Glucoside",
+          "position": 6,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Sodium Hyaluronate",
+          "position": 10,
+          "role": "humectant"
+        },
+        {
+          "ingredient": "Helianthus Annuus Seed Oil",
+          "position": 11,
+          "role": "payload_lipid"
+        },
+        {
+          "ingredient": "Cetearyl Alcohol",
+          "position": 15,
+          "role": "payload_lipid (fatty alcohol); fatty route"
+        },
+        {
+          "ingredient": "PCA Glyceryl Oleate",
+          "position": 16,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Betaine",
+          "position": 17,
+          "role": "humectant"
+        },
+        {
+          "ingredient": "Sodium Cetearyl Sulfate",
+          "position": 19,
+          "role": "C3a emulsifier-grade fatty sulfate (paired with Cetearyl Alcohol 15): not a route"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 21,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Tridecane",
+          "position": 23,
+          "role": "volatile alkane, excluded"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 24,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Undecane",
+          "position": 25,
+          "role": "volatile alkane, excluded"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-RICH (sunflower oil + cetearyl alcohol converging with guar) with a moderate C5 reset -> not limited reset; bounded residue -> moderate.",
+      "neighboringAlternative": "high",
+      "counterSignal": "W-RICH present; three deposition families incl. a waxy fatty alcohol.",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "oil + fatty alcohol + guar + weak refatter, mid/late list"
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "cetearyl alcohol somewhat substantive; oil/guar light"
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C5 alkyl sulfate with three buffers"
+        }
+      },
+      "whyThisBand": "Converging lipid + cationic routes make bounded residue plausible; reset is effective.",
+      "whyNotNeighborBand": "high needs W-RICH plus weak reset or multiple clearly persistent systems not offset; reset is moderate and routes are late/light. low would understate the converging lipid + cationic residue (W2).",
+      "evidenceByFamily": {
+        "payload_lipid": [
+          [
+            "Helianthus Annuus Seed Oil",
+            11
+          ],
+          [
+            "Cetearyl Alcohol",
+            15
+          ]
+        ],
+        "weak_refatter": [
+          [
+            "PCA Glyceryl Oleate",
+            16
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Guar Hydroxypropyltrimonium Chloride",
+            21
+          ]
+        ],
+        "context_humectant": [
+          [
+            "Glycerin",
+            4
+          ],
+          [
+            "Sodium Hyaluronate",
+            10
+          ],
+          [
+            "Betaine",
+            17
+          ],
+          [
+            "Aloe Barbadensis Leaf Juice",
+            2
+          ]
+        ],
+        "excluded": [
+          [
+            "Sodium Cetearyl Sulfate",
+            19,
+            "C3a emulsifier"
+          ],
+          [
+            "Tridecane",
+            23,
+            "volatile alkane"
+          ],
+          [
+            "Undecane",
+            25,
+            "volatile alkane"
+          ],
+          [
+            "Citrus/Lavandula essential oils",
+            30,
+            "fragrance materials (6.4), positions 30-39"
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Coco-Sulfate",
+            3
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            5
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Lauryl Glucoside",
+            6
+          ],
+          [
+            "Coco-Glucoside",
+            24
+          ]
+        ],
+        "unresolved": []
+      },
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T307"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Aloe Barbadensis Leaf Juice",
+          "position": 2,
+          "role": "plant juice (not a humectant route, C2)"
+        },
+        {
+          "ingredient": "Sodium Coco-Sulfate",
+          "position": 3,
+          "role": "defining anionic, alkyl sulfate type (C5)"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 4,
+          "role": "humectant; E4 route"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 5,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Lauryl Glucoside",
+          "position": 6,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Sodium Hyaluronate",
+          "position": 10,
+          "role": "humectant"
+        },
+        {
+          "ingredient": "Helianthus Annuus Seed Oil",
+          "position": 11,
+          "role": "payload_lipid"
+        },
+        {
+          "ingredient": "Cetearyl Alcohol",
+          "position": 15,
+          "role": "payload_lipid (fatty alcohol); fatty route"
+        },
+        {
+          "ingredient": "PCA Glyceryl Oleate",
+          "position": 16,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Betaine",
+          "position": 17,
+          "role": "humectant"
+        },
+        {
+          "ingredient": "Sodium Cetearyl Sulfate",
+          "position": 19,
+          "role": "C3a emulsifier-grade fatty sulfate (paired with Cetearyl Alcohol 15): not a route"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 21,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Tridecane",
+          "position": 23,
+          "role": "volatile alkane, excluded"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 24,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Undecane",
+          "position": 25,
+          "role": "volatile alkane, excluded"
+        }
+      ],
+      "formulaIdentifiers": {
+        "inciFingerprintSha256": "38d60eb914c0fbbc85d1f4ecb3bb98f4815256077c20874ad004f0bda105591b",
+        "sourceTier": 2,
+        "captureDate": "per frozen packet (not shown to lane)"
+      },
+      "confidenceLimitingFactor": "INCI-only: concentrations, charge density and deposition unknown"
+    },
+    "focusPrimary": {
+      "value": "moisture",
+      "confidence": "high",
+      "rationale": "Name 'Hydrate & Care' (high) and S1 'Spendet intensive Feuchtigkeit', 'hilft, Trockenheit spuerbar zu mildern' over a moisture_supported formula (F1).",
+      "counterSignal": "'basis sensitive' is mildness, not a focus; no repair cluster.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Glycerin",
+          "position": 4
+        },
+        {
+          "ingredient": "Sodium Hyaluronate",
+          "position": 10
+        },
+        {
+          "ingredient": "Betaine",
+          "position": 17
+        },
+        {
+          "ingredient": "Helianthus Annuus Seed Oil",
+          "position": 11
+        }
+      ],
+      "claimRole": "candidate",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": [
+          "Glycerin 4",
+          "Sodium Hyaluronate 10",
+          "Betaine 17"
+        ],
+        "repairRoutes": [],
+        "sharedRoutes": [
+          "Helianthus Annuus Seed Oil 11",
+          "Cetearyl Alcohol 15",
+          "Guar HPTC 21"
+        ],
+        "limitation": "Rinse-off."
+      },
+      "decisionTrace": {
+        "claimDirection": "moisture",
+        "formulaCompatible": "yes",
+        "compatibleRoute": "humectant cluster + emollients",
+        "decisionReason": "One dominant compatible claim."
+      },
+      "sourceIds": [
+        "name (high); S1 manufacturer_de (moderate); S2 dm (low)"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "No distinct second positioning.",
+      "counterSignal": "None.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "claims": [],
+        "routes": [],
+        "exception": null
+      },
+      "sourceIds": [
+        "name (high); S1 manufacturer_de (moderate); S2 dm (low)"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "rationale": "Default: 'Tag fuer Tag' is not on the U2 frequency list.",
+      "counterSignal": "'Fuer die extra Portion Feuchtigkeit - Tag fuer Tag' reads as daily use.",
+      "neighboringAlternative": "frequent",
+      "formulaFacts": [],
+      "decisionTrace": {
+        "default": "regular",
+        "trigger": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [
+          "explicit_frequent_non_strong considered: 'Tag fuer Tag' not U2 wording"
+        ],
+        "rationale": "U2 list closed in practice."
+      },
+      "sourceIds": [
+        "name (high); S1 manufacturer_de (moderate); S2 dm (low)"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Only protective/sparing ('Sanft zur Kopfhaut', 'Schont empfindliche Kopfhaut') and ingredient-reputation wording ('Bio-Aloe Vera ist bekannt dafuer, die Kopfhaut zu beruhigen') - not SC1 (E2a). Name 'Sensitiv' does not name the scalp.",
+      "counterSignal": "CSA would pass.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Glycerin",
+          "position": 4
+        }
+      ],
+      "sourceIds": [
+        "name (high); S1 manufacturer_de (moderate); S2 dm (low)"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T307"
+      ]
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "moisture_supported",
+      "moistureRoutes": [
+        "Glycerin 4",
+        "Sodium Hyaluronate 10",
+        "Betaine 17"
+      ],
+      "repairRoutes": [],
+      "sharedRoutes": [
+        "Helianthus Annuus Seed Oil 11",
+        "Cetearyl Alcohol 15",
+        "Guar HPTC 21"
+      ],
+      "limitation": "Rinse-off."
+    },
+    "claimRole": "candidate",
+    "counterSignal": "'basis sensitive' is mildness, not a focus; no repair cluster.",
+    "neighboringAlternative": "none",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "moisture",
+        "formulaCompatible": "yes",
+        "compatibleRoute": "humectant cluster + emollients",
+        "decisionReason": "One dominant compatible claim."
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "claims": [],
+        "routes": [],
+        "exception": null
+      },
+      "usageRole": {
+        "default": "regular",
+        "trigger": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [
+          "explicit_frequent_non_strong considered: 'Tag fuer Tag' not U2 wording"
+        ],
+        "rationale": "U2 list closed in practice."
+      }
+    }
+  },
+  "weightRecord": {
+    "value": "moderate",
+    "confidence": "moderate",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "moderate",
+        "rationale": "oil + fatty alcohol + guar + weak refatter, mid/late list"
+      },
+      "persistence": {
+        "value": "moderate",
+        "rationale": "cetearyl alcohol somewhat substantive; oil/guar light"
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C5 alkyl sulfate with three buffers"
+      }
+    },
+    "evidenceByFamily": {
+      "payload_lipid": [
+        [
+          "Helianthus Annuus Seed Oil",
+          11
+        ],
+        [
+          "Cetearyl Alcohol",
+          15
+        ]
+      ],
+      "weak_refatter": [
+        [
+          "PCA Glyceryl Oleate",
+          16
+        ]
+      ],
+      "cationic_polymer": [
+        [
+          "Guar Hydroxypropyltrimonium Chloride",
+          21
+        ]
+      ],
+      "context_humectant": [
+        [
+          "Glycerin",
+          4
+        ],
+        [
+          "Sodium Hyaluronate",
+          10
+        ],
+        [
+          "Betaine",
+          17
+        ],
+        [
+          "Aloe Barbadensis Leaf Juice",
+          2
+        ]
+      ],
+      "excluded": [
+        [
+          "Sodium Cetearyl Sulfate",
+          19,
+          "C3a emulsifier"
+        ],
+        [
+          "Tridecane",
+          23,
+          "volatile alkane"
+        ],
+        [
+          "Undecane",
+          25,
+          "volatile alkane"
+        ],
+        [
+          "Citrus/Lavandula essential oils",
+          30,
+          "fragrance materials (6.4), positions 30-39"
+        ]
+      ],
+      "anionic_surfactant": [
+        [
+          "Sodium Coco-Sulfate",
+          3
+        ]
+      ],
+      "amphoteric_surfactant": [
+        [
+          "Cocamidopropyl Betaine",
+          5
+        ]
+      ],
+      "nonionic_surfactant": [
+        [
+          "Lauryl Glucoside",
+          6
+        ],
+        [
+          "Coco-Glucoside",
+          24
+        ]
+      ],
+      "unresolved": []
+    },
+    "whyThisBand": "Converging lipid + cationic routes make bounded residue plausible; reset is effective.",
+    "whyNotNeighborBand": "high needs W-RICH plus weak reset or multiple clearly persistent systems not offset; reset is moderate and routes are late/light. low would understate the converging lipid + cationic residue (W2).",
+    "counterSignal": "W-RICH present; three deposition families incl. a waxy fatty alcohol.",
+    "neighboringAlternative": "high",
+    "formulaIdentifiers": {
+      "inciFingerprintSha256": "38d60eb914c0fbbc85d1f4ecb3bb98f4815256077c20874ad004f0bda105591b",
+      "sourceTier": 2,
+      "captureDate": "per frozen packet (not shown to lane)"
+    },
+    "confidenceLimitingFactor": "INCI-only: concentrations, charge density and deposition unknown"
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1 (fine, W moderate) = acceptable; ordinary target, T6 n/a; T4: neighbor would lower the tier -> review_thickness_boundary"
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1 (normal, W moderate) = ideal; ordinary target, T6 n/a; T4: neighbor would lower the tier -> review_thickness_boundary"
+      },
+      {
+        "thickness": "coarse",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1 (coarse, W moderate, C high) = ideal; ordinary target, T6 n/a; T4: neighbor would lower the tier -> review_thickness_boundary"
+      }
+    ],
+    "weight": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential moderate -> moderate."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "bucket": "normal",
+        "route": "balanced",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1: no qualifying E2 unit; 'trockenes Haar' is hair, not scalp; manufacturer source present."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate, D1 False -> regular."
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "evidence": "No D1 wording."
+    },
+    "explicitResetPositioning": false,
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "moderate",
+      "rationale": "D2 not met: D1 false"
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable",
+        "display": "amber"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal",
+        "display": "green"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal",
+        "display": "green"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_thickness_boundary",
+        "detail": "fine, normal, coarse"
+      }
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "catalogDependent": "review_live_value_differs not computed in lane (live rows unseen)."
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "moisture (provisional, low)",
+      "final": "moisture",
+      "evidence": "Name 'Hydrate & Care' (high) and S1 'Spendet intensive Feuchtigkeit', 'hilft, Trockenheit spuerbar zu mildern' over a moisture_supported formula (F1)."
+    },
+    {
+      "property": "focusSecondary",
+      "blind": "[] (provisional)",
+      "final": [],
+      "evidence": "No distinct second positioning."
+    },
+    {
+      "property": "usageRole",
+      "blind": "regular (provisional)",
+      "final": "regular",
+      "evidence": "Default: 'Tag fuer Tag' is not on the U2 frequency list."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blind": "unknown (positioning hidden)",
+      "final": "not_targeted",
+      "evidence": "Only protective/sparing ('Sanft zur Kopfhaut', 'Schont empfindliche Kopfhaut') and ingredient-reputation wording ('Bio-Aloe Vera ist bekannt dafuer, die Kopfhaut zu beruhigen') - not SC1 (E2a). Name 'Sensitiv' does not name the scalp."
+    },
+    {
+      "property": "cleansingStrength/conditioningLevel/weightPotential/dandruffSupport",
+      "blind": "frozen",
+      "final": "unchanged",
+      "evidence": "Claims cannot assign these (3.2); no revealed formula conflict."
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "noComparisonWithEarlierValues": true
+  },
+  "uncertainties": [
+    {
+      "reading": "'Tag fuer Tag' as U2 frequency wording",
+      "chosen": "not U2 -> regular",
+      "alternative": "frequent"
+    }
+  ]
+}

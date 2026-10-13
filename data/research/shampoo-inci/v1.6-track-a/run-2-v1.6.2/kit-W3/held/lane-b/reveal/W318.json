@@ -1,0 +1,28 @@
+{
+  "blindId": "W318",
+  "productName": "Being Big Hair Shampoo (Volumen Shampoo)",
+  "brand": "Being",
+  "positioningSources": [
+    {
+      "sourceType": "Rossmann PDP (browser tab, online only); JSON-LD sku 4895248005872; Rossmann Artikelnummer 191379; 354 ml; 6,79 EUR; Kontaktdaten Zuru Germany GmbH, Düsseldorf",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Das BIG HAIR Volumen Shampoo enthält belebendes Avocado- und Macadamiaöl für eine gründlich reinigende Haarwäsche. Das Haar fühlt sich leicht und voluminös an. | dermatologisch getestet | für glattes oder feines Haar",
+      "directionsVerbatim": "Auf das nasse Haar auftragen, aufschäumen und ausspülen."
+    },
+    {
+      "sourceType": "Hagel-Shop PDP (German retailer; GPSR Hersteller ZURU Germany GmbH, Einführer ARTIS BEAUTY GmbH)",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Haartyp: feines Haar | Wirkung: Klärend, Kräftigend, Pflegend, Reinigend, Struktur, Volumen | Besonderheit: Dermatologisch getestet, Silikonfrei, Sulfatfrei",
+      "directionsVerbatim": "not shown on the page extract"
+    },
+    {
+      "sourceType": "brand global (US) product page, English, 12 FL OZ / 354 mL; 'Shop @ Walmart'; not the German/EU pack",
+      "sourceKind": "manufacturer_foreign",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Being BIG HAIR Volumizing Shampoo is ideal for type 1A-1C hair, including those with straight and/or thin and fine hair who are looking for more fullness and body. This dermatologically tested, sulfate-free and silicone-free formula contains naturally derived ingredients such as Avocado Oil and Macadamia Oil for a thorough, clarifying wash. Hair is left feeling balanced, plump and full of body. | Invigorating daily shampoo | For straight or fine hair | Provides fullness and body | Contains Avocado Oil and Macadamia Oil | No sulfates, silicones, parabens or phthalates | Dermatologically tested | Certified cruelty-free | AVOCADO OIL lightly hydrating natural oil | MACADAMIA OIL doesn't weigh hair down",
+      "directionsVerbatim": "Apply to wet hair, lather and rinse well. Pair with Being Volumizing Conditioner, or mix-and-match with another Conditioner from the Being line depending on your hair type and texture."
+    }
+  ]
+}

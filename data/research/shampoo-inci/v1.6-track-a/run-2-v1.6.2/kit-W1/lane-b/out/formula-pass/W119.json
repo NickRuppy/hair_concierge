@@ -1,0 +1,141 @@
+{
+  "blindId": "W119",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, Section 3.1)",
+  "policyId": "shampoo-classification-v1.6.2",
+  "inciFingerprintSha256": "34968b63d2da1cd95df156622b7491e30a8066f23c0502def5800573b9cf23a4",
+  "formulaPacket": {
+    "packSize": "1000 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "Upper-case list read case-insensitively; AQUA / WATER, CI 60730 / EXT. VIOLET 2 and PARFUM / FRAGRANCE are single entries (ID-2); 27 entries; normalized one-based positions cited."
+  },
+  "e3Point": "Parfum/Fragrance@27 (declared last; prominent = positions 1-26)",
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "Sodium Laureth Sulfate@2 (strong anionic, ether/sulfonate type)",
+      "reinforcingRoutes": [],
+      "buffers": ["Cocamidopropyl Betaine@5 (amphoteric)", "Coco-Betaine@10 (amphoteric)"],
+      "nonCleansing": ["Cocamide MEA@9 (alkanolamide thickener)", "Steareth-6@14, PEG-100 Stearate@17 (emulsifiers)", "Trideceth-10@18, Trideceth-3@19 (ethoxylates/thickeners, no C3 cleansing class)"]
+    },
+    "conditioningRoutes": ["Glycol Distearate@3 (pearlizing route)", "Dimethicone@6 (silicone, prominent = early)", "Guar Hydroxypropyltrimonium Chloride@8 (cationic_polymer)", "Sodium Hyaluronate@13 (humectant)", "Amodimethicone@23 (silicone, late)"],
+    "humectants": ["Sodium Hyaluronate@13", "Hexylene Glycol@26 (solvent)"],
+    "actives": ["Salicylic Acid@20 (not a recognized dandruff active alone)"],
+    "e4ComfortRoutesProminent": [],
+    "e4HumectantRoutesProminent": ["Sodium Hyaluronate@13"],
+    "mildBase": "not met: Sodium Laureth Sulfate@2 prominent strong anionic",
+    "exposureFlags": ["Parfum/Fragrance@27 (last)", "Limonene@21", "colourant CI 60730 / Ext. Violet 2@7 (violet toning dye)"],
+    "otherIngredients": ["Acetic Acid@16, Fumaric Acid@22, Citric Acid@25 (acids)", "Carbomer@24 (acrylate thickener)"],
+    "preservatives": ["Sodium Benzoate@11", "Phenoxyethanol@15"]
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 - defining anionic Sodium Laureth Sulfate@2 with two prominent amphoteric buffers (Cocamidopropyl Betaine@5, Coco-Betaine@10) and no reinforcing strong anionic.",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High: C2 met - early silicone Dimethicone@6, cationic polymer Guar Hydroxypropyltrimonium Chloride@8, pearlizing route Glycol Distearate@3 and a deliberate humectant entry Sodium Hyaluronate@13; supporting late Amodimethicone@23. Counter-signal: the humectant is a single trace hyaluronate; moderate is the neighbor.",
+      "ruleIds": ["C2", "E3"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride@8"],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": ["Dimethicone@6", "Amodimethicone@23 (late)"],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate@2", "Cocamidopropyl Betaine@5", "Coco-Betaine@10"],
+        "humectantContext": ["Sodium Hyaluronate@13"],
+        "excluded": ["Glycol Distearate@3 (pearlizing wax, 6.4)", "Cocamide MEA@9 (alkanolamide thickener)", "Steareth-6@14, PEG-100 Stearate@17 (emulsifiers, not payload)", "Trideceth-10@18, Trideceth-3@19 (ethoxylates)", "Carbomer@24 (anionic acrylate rheology polymer, 6.4)", "Hexylene Glycol@26 (solvent)", "Parfum@27, Limonene@21"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 11,
+        "inci": "Sodium Benzoate",
+        "classes": ["preservative_or_capped_active"],
+        "e3Point": 27,
+        "alphabeticalRun": "none (longest ordered run 23-27, 5 entries)",
+        "skipped": [],
+        "codes": [],
+        "plausibility": "(i) Sodium Laureth Sulfate@2 before it; (ii) no cleansing surfactant (Trideceth-n and Steareth-6 are in no C3 cleansing class), no alkanolamide (Cocamide MEA@9 is before it) and no pearlizing wax after it before the cap",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "moderate - early dimethicone with guar coacervate plus a late amodimethicone",
+      "persistence": "moderate - silicone/guar deposition plausibly retained",
+      "resetCapacity": "moderate - C1 SLES chassis with two betaine buffers",
+      "counterevidence": "Dimethicone is early (@6, before the guar), which argues toward high.",
+      "whyThisBand": "W1 applies: (a) C1 sulfate chassis with prominent buffers, cleansingStrength moderate; (b) deposition is exactly silicone + cationic guar + late amodimethicone; (c) no further persistent family converges (no payload lipid, second cationic, film former or protein) and no rich architecture.",
+      "whyNotNeighborBand": "Not high: W1's settled set without W-RICH or any further converging family is moderate; the effective SLES/betaine reset bounds the silicone/guar deposit. Not low: the early silicone + guar system is plausible enough that calling it lightweight would understate residue.",
+      "confidenceLimitingFactor": "Early Dimethicone@6 dose unknown.",
+      "rationale": "Moderate: W1 set in an effective C1 chassis (6.7 W1).",
+      "ruleIds": ["W1", "6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "shine",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": ["Sodium Hyaluronate@13 (single trace humectant)"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Dimethicone@6", "Guar Hydroxypropyltrimonium Chloride@8", "Glycol Distearate@3", "Amodimethicone@23"],
+        "limitation": "generic silicone/guar conditioning; violet dye @7 suggests a toning role outside the focus vocabulary"
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "Violet toning colourant and acids could support a shine/colour-care positioning; nonspecific care.",
+      "decisionTrace": "Formula-only: claim direction null; nonspecific care; provisional general.",
+      "rationale": "Provisional general pending claims.",
+      "ruleIds": ["7.2", "7.3"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["shine"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty.",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional regular; moderate formula excludes alternating.",
+      "ruleIds": ["9"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: positioning unknown. CSA formally met via prominent humectant route Sodium Hyaluronate@13 (E4; Parfum last makes it prominent); no E4 comfort route; MB not met.",
+      "ruleIds": ["CSA", "MB", "E4", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active; Salicylic Acid@20 alone does not upgrade the property (Section 11).",
+      "ruleIds": ["11"]
+    }
+  },
+  "unresolvedMaterialIngredients": []
+}

@@ -12,7 +12,7 @@
  *   - target-state.json        (reviewable writes, evidence, receipts, preimage)
  *   - rollback.sql             (prepared, NOT a migration)
  *   - verify.sql               (read-only zero-row post-apply proof)
- *   - ../../../supabase/migrations/20261011140000_catalog_completeness_fill_slice1.sql
+ *   - ../../../supabase/migrations/20261013130000_catalog_completeness_fill_slice1.sql
  *   - artifact-manifest.json   (sha256 per input/output + combined hash)
  *
  * Run from the worktree root:
@@ -59,7 +59,7 @@ const rel = (path: string) => path.slice(ROOT.length + 1)
 const RESEARCH = resolve(HERE, "../research")
 const MIGRATION_PATH = resolve(
   ROOT,
-  "supabase/migrations/20261011140000_catalog_completeness_fill_slice1.sql",
+  "supabase/migrations/20261013130000_catalog_completeness_fill_slice1.sql",
 )
 const PRESTATE_PATH = resolve(HERE, "prestate.json")
 const SCHEMA_PATH = resolve(HERE, "fixtures/prod-schema-2026-10-11.json")

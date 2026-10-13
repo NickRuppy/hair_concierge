@@ -1,0 +1,129 @@
+{
+  "blindId": "T118",
+  "inciFingerprintSha256": "303653d5f86a174377761e891fefde597d7e15dc484437056bd83783230aa48f",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "Packet canonicalInci used as normalized list (ID-2); positions are one-based on that list.",
+    "inciCount": 14,
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "e3ProminencePoint": "Parfum at 7: positions 1-6 prominent"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "C6: no strong anionic; the earliest prominent surfactant is a nonionic glucoside (Decyl Glucoside 2), with mild anionics (3, 4) -> low.",
+      "neighboringAlternative": "none"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Cleansing-led: the only conditioning route is a cationic starch at 11, after Parfum; no silicone, lipid, protein or prominent humectant.",
+      "counterSignal": "The cationic starch provides some slip.",
+      "neighboringAlternative": "moderate"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Single light, late cationic starch -> low.",
+      "neighboringAlternative": "none",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Only the cationic starch (11)."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "Light starch polymer."
+        },
+        "resetCapacity": {
+          "value": "weak",
+          "rationale": "C6 glucoside-led mild system."
+        }
+      },
+      "whyThisBand": "One light family.",
+      "whyNotNeighborBand": "Single deposition family, late and light; nothing to accumulate.",
+      "limitingFactor": "None material."
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Formula care-direction verdict recorded for reconciliation.",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "note": "No repair or moisture route."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2)."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Default regular; triggers (U2-U5, D1, U3) need graded claims."
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). SC1 positioning unknown. CSA formula half fails: no prominent comfort or humectant/refatting route (Sodium Lactate 14 late)."
+    }
+  },
+  "scalpGateFormulaHalves": "S-SENSITIVE / S-DRY fail. S-OILY clause fails on cleansingStrength low.",
+  "formulaFacts": [
+    {
+      "ingredient": "Decyl Glucoside",
+      "position": 2,
+      "role": "nonionic glucoside, earliest surfactant"
+    },
+    {
+      "ingredient": "Disodium Laureth Sulfosuccinate",
+      "position": 3,
+      "role": "mild anionic"
+    },
+    {
+      "ingredient": "Sodium Lauryl Sulfoacetate",
+      "position": 4,
+      "role": "mild anionic"
+    },
+    {
+      "ingredient": "PEG-55 Propylene Glycol Oleate",
+      "position": 5,
+      "role": "PEG thickener, not a route; excluded"
+    },
+    {
+      "ingredient": "Propylene Glycol",
+      "position": 6,
+      "role": "solvent"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 7,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+      "position": 11,
+      "role": "cationic_polymer, after Parfum"
+    },
+    {
+      "ingredient": "Sodium Lactate",
+      "position": 14,
+      "role": "pH buffer, late"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

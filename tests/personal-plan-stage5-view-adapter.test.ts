@@ -89,7 +89,8 @@ test("adapts compiler output into the product-led Anwendung view", () => {
     ],
   )
   assert.equal(view.days[0].cadenceDe, "Bei deiner nächsten Haarwäsche")
-  assert.equal(view.days[0].shelf[0]?.category, "shampoo")
+  const firstSlot = view.days[0].shelf[0]
+  assert.equal(firstSlot?.kind === "product" ? firstSlot.category : null, "shampoo")
   assert.equal(
     view.days[0].steps.find((step) => step.kind === "product")?.imageUrl,
     "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/mildes-shampoo.webp",
@@ -271,7 +272,7 @@ test("passes a provisional-status block through the adapter without special visu
     ["confirmed", "provisional", "open"],
   )
   assert.deepEqual(
-    view.days[0]!.shelf.map((slot) => slot.category),
+    view.days[0]!.shelf.map((slot) => (slot.kind === "tool" ? null : slot.category)),
     ["shampoo", "conditioner", "leave_in"],
   )
 

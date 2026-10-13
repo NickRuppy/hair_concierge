@@ -31,7 +31,7 @@ The category-owned decisions are complete. Final plan-wide function ownership an
 | The legacy engine makes Mask relevant from medium-or-higher derived damage, a planned intervention, or an explicit request. | `adapt` | Replace broad damage relevance with the confirmed strong-need/exposure tier rules below. Explicit interest cannot override the underlying need tier. |
 | Legacy target weight uses thickness plus density and returns no target when either is absent. | `adapt` | Thickness anchors formula weight; explicit weighed-down sensitivity may shift it. Density and length affect amount and distribution. |
 | Legacy `DamageAssessment` supplies structural, heat, and mechanical lanes plus `repairPriority`. | `adapt` | Reimplement the confirmed shared policy in the plan-owned `PlanDamageAssessment`; its medium boundary intentionally follows the confirmed Personal Plan mapping rather than verbatim legacy parity. Do not call the legacy engine at runtime. |
-| Legacy Mask fit already has independent weight, balance, and repair-intensity comparisons and axis-level regression tests. | `adapt` | Preserve useful thresholds at the plan-owned Mask seam, add strict thickness, functional coverage, protocol completeness, and honest `unknown` semantics. |
+| Legacy Mask fit already has independent weight, balance, and repair-intensity comparisons and axis-level regression tests. | `adapt` | Preserve useful thresholds at the plan-owned Mask seam, add thickness distance, functional coverage, protocol completeness, and honest `unknown` semantics. |
 | `product_mask_specs.concentration` is the live storage field; the legacy Mask fit also declares a dead optional `repair_level` TypeScript branch and evaluates `repair_level ?? concentration`. | `adapt` | Make the existing storage field nullable without a breaking rename in this milestone, expose it only as canonical `repairSupportLevel` at the plan-owned domain boundary, and delete the dead Mask `repair_level` branch. |
 | The live catalog has no shared product-application protocol table or equivalent structured Mask protocol authority. | `missing` | Add the shared protocol structure, research the critical product facts, and keep Mask activation blocked until coverage is verified. |
 | Chat request context, intervention actions, and legacy ranking scores can independently change current behavior. | `reject` | They are prior art only and cannot become a second Personal Plan authority. |
@@ -199,7 +199,7 @@ Every ordinary Mask is already a deep-conditioning product by category. Do not a
 
 ### Exact-product selection order
 
-1. safety and strict suitable-thickness gate;
+1. safety gates and suitable-thickness distance (canonical model §2–§4);
 2. target weight;
 3. care direction;
 4. repair-support level;
@@ -263,7 +263,7 @@ Use the safe non-breaking rollout:
 2. map `concentration` to canonical `repairSupportLevel` only in the new `src/lib/personal-plan/**` catalog boundary. The plan-owned runtime, payloads, reasons, and tests never expose the legacy name;
 3. delete the dead optional Mask `repair_level` TypeScript field and `repair_level ?? concentration` branch from the legacy fit only when that consumer is deliberately updated; do not search for or migrate a nonexistent Mask database `repair_level` column;
 4. update validators, generated types, admin/intake readers, the `SECURITY DEFINER` product-intake approval functions, intake JSON row handling, and every script writer to accept a nullable stored value before any reviewed product may be set to `null`;
-5. use `null` for an unreviewed repair-support value, producing `unknown` / `noch in Prüfung` rather than an optimistic match;
+5. use `null` for an unreviewed repair-support value, producing `unknown` / `Nicht geprüft` rather than an optimistic match;
 6. reverify the preserved values during the Mask workstream of the shared cross-category follow-up enrichment PR; any value that lacks adequate finished-product support becomes `null` rather than a guessed level;
 7. add nullable constrained `functional_benefits` only in the enrichment change that supplies reviewed values; do not ship an all-null field that changes no output. Exact application facts remain solely in the shared protocol authority;
 8. assign the physical rename to `repair_support_level` to the shared cross-category follow-up enrichment workstream, not Stage 1. Use a repository-wide expand/backfill/contract rollout that includes the legacy engine, approval RPCs, generated types, admin/intake consumers, intake JSON rows, validators, selectors, tests, and every script writer. Temporary compatibility during deployment is transport safety, never a second editable product authority. The workstream is complete only after the new consumers and value fingerprints are verified and the legacy column can be contracted safely.
@@ -284,50 +284,9 @@ Mask reuses the confirmed Conditioner fit thresholds. The category adds only the
 - `repairSupportLevel: low | medium | high`;
 - verified `functionalBenefits[]` where available.
 
-### Layer 1 — strict suitability
+Fit verdicts and labels follow the [canonical fit-verdict model](../../fit-verdict-model.md) (§1–§5, ruled 2026-10-12): `ideal` = **Passt**, `supportive` = **Passt bedingt**, `mismatch` = **Passt nicht**, and `unknown` = **Nicht geprüft**. Thickness is a degree axis, never a hard gate; sum all axis distances (0 / 1 / ≥2 steps), let hard-gate failures take precedence, and allow a supportive recommendation with its evaluator reason when no ideal candidate exists in either Basis or optional tiers.
 
-- shared `suitableThicknesses = null` means not verified; a non-empty verified array must contain the user's thickness;
-- a verified thickness exclusion or safety conflict is `mismatch`;
-- missing suitability is `unknown`; empty arrays are invalid for active recommendable products, and legacy empty arrays remain `unknown` until researched and migrated;
-- pending or unresolved product identity remains `unknown` and cannot enter an executable recipe.
-
-### Layer 2 — core formula fit
-
-| Axis | Exact | Supportive | Mismatch |
-|---|---|---|---|
-| `weight` | Same level | One level lighter or richer | Two levels apart |
-| `careDirection` | Same direction | Either target or product is `balanced` | Direct `moisture` versus `protein` opposition |
-
-Thickness remains the strict eligibility gate; weight answers the separate question of how light or rich the complete formula should be.
-
-### Layer 3 — need coverage
-
-Repair support is directional:
-
-- exact product and target level = exact;
-- product one level below target = supportive;
-- product two levels below target = mismatch;
-- product above target = supportive because it is more repair-focused than necessary, never an exact match.
-
-Functional benefits refine an otherwise suitable product:
-
-- verified coverage of every required Mask function permits `ideal`;
-- partial or unverified material functional coverage produces `supportive` unless the need is explicitly covered elsewhere;
-- supporting benefits improve ranking and explanation;
-- benefits never rescue a strict or core mismatch.
-
-### Aggregate verdict
-
-| Engine result | User-facing verdict | Rule |
-|---|---|---|
-| `ideal` | `passt sehr gut` | Strict gates pass, core axes and repair target are exact, and required functions are verified or explicitly covered elsewhere. |
-| `supportive` | `passt mit Einschränkung` | No hard mismatch exists, but at least one core axis is a near-match, repair is above/one level below target, or material functional coverage is partial/unverified. |
-| `mismatch` | `wechseln empfohlen` | Verified thickness exclusion, safety conflict, two-level weight mismatch, direct required care-direction opposition, or repair two levels below target. |
-| `unknown` | `noch in Prüfung` | Identity is pending or a required strict/core field is unavailable. |
-
-Precedence is unresolved identity/pending review, safety and exclusions, strict thickness, hard core/repair mismatch, missing required data, supportive deviations, then ideal. Retain every axis-level fact for expanded explanation.
-
-Evaluate every owned Mask independently. For a new purchase, recommend an ideal product when available. A supportive product may be proposed only if no ideal candidate exists and its limitation is explicit. Never promote a known mismatch or unknown product as the confident recommendation.
+Repair at or above target is zero steps; accepted care directions retain the prior R12 set (§7a.3).
 
 Candidate selection is deterministic:
 
@@ -399,7 +358,7 @@ When exact directions do not specify otherwise:
 - A label that is silent only about Conditioner sequencing uses the plan-wide `replaces_conditioner` default. This fallback changes no product claim and never overrides an explicit verified `conditioner_before`, `conditioner_after`, or `no_conditioner` direction.
 - A verified product-specific maximum frequency caps the category cadence. Missing maximum-frequency metadata does not increase cadence and does not replace the confirmed conservative category recommendation.
 
-For a new recommendation, choose only a product whose critical Mask protocol is verified. An owned product with a critical gap remains visible as `noch in Prüfung`; the user may follow its packaging independently, but the Personal Plan does not fabricate a precise recipe.
+For a new recommendation, choose only a product whose critical Mask protocol is verified. An owned product with a critical gap remains visible as `Nicht geprüft`; the user may follow its packaging independently, but the Personal Plan does not fabricate a precise recipe.
 
 Only a confirmed in-hand primary compiles into Stage-3 steps. Shopping, pending, acquired-but-unconfirmed, inactive, declined, override-only, and unassigned alternative products do not compile. Optional Mask use may be selected only with a confirmed in-hand fitting Mask; it does not create an automatic occurrence.
 
@@ -541,15 +500,15 @@ Shared card-level reason salience remains deferred until every category is speci
 9. `mask-elasticity-only`: non-balanced elasticity = `optional`; it guides care direction without diagnosing deficiency.
 10. `mask-lightened-only`: optional Mask, high repair-support target if chosen, no automatic schedule.
 11. `mask-lightened-rough`: Basis, high repair support, observed-plus-high-repair cadence.
-12. `mask-strict-thickness-exclusion`: otherwise attractive Mask is `mismatch`.
+12. `mask-thickness-distance`: otherwise attractive Mask is `supportive` at one step and `mismatch` at two steps (canonical model §3–§4).
 13. `mask-thickness-metadata-missing`: otherwise attractive Mask is `unknown`.
 14. `mask-balanced-bridge`: strict gate passes and balanced care direction bridges moisture/protein as `supportive`.
 15. `mask-repair-one-level-low`: supportive limitation.
 16. `mask-repair-two-levels-low`: mismatch.
-17. `mask-higher-repair-than-needed`: supportive rather than ideal or mismatch.
-18. `mask-required-benefit-unverified`: core fit passes but material functional coverage is unverified = supportive.
+17. `mask-higher-repair-than-needed`: zero repair steps; ideal if all other axes and gates pass (canonical model §3).
+18. `mask-required-benefit-unverified`: a missing required fact is unknown (canonical model §4).
 19. `mask-one-primary-two-owned`: one primary receives the complete cadence; second fitting owned Mask remains independently evaluated and unassigned.
-20. `mask-pending-product`: visible as `noch in Prüfung`, excluded from precise recipes.
+20. `mask-pending-product`: visible as `Nicht geprüft`, excluded from precise recipes.
 21. `mask-missing-contact-time`: core fit retained, Mask occurrence protocol unknown, no invented waiting time.
 22. `mask-missing-conditioner-sequence`: if Mask placement, timing, and rinse behavior are verified, apply the shared `replaces_conditioner` default; an explicit product sequence still wins.
 23. `mask-verified-protocol`: exact contact time and Conditioner sequence override category fallback.
@@ -594,7 +553,7 @@ The minimum launch-blocking protocol package for every one of those 35 products 
 
 Hair state, placement, amount, sectioning, scalp permission, heat-cap or overnight support, multi-use behavior, and maximum-frequency caps are enriched where the exact product supplies them. The conservative category fallbacks remain valid only for the explicitly non-critical gaps defined above; they do not replace contact time or rinse behavior. The sole sequence fallback is that a Mask replaces Conditioner on its intensive-care wash when the exact directions are otherwise complete and silent only about Conditioner.
 
-Until all 35 critical packages pass review, the new Mask recommendation path remains inert. Individual incomplete products remain `unknown` / `noch in Prüfung` and cannot be compiled into a precise executable recipe. The shared cross-category follow-up enrichment PR must report Mask coverage counts, missing fields, source provenance, and deterministic protocol-validation results rather than activating on an assumed catalog default.
+Until all 35 critical packages pass review, the new Mask recommendation path remains inert. Individual incomplete products remain `unknown` / `Nicht geprüft` and cannot be compiled into a precise executable recipe. The shared cross-category follow-up enrichment PR must report Mask coverage counts, missing fields, source provenance, and deterministic protocol-validation results rather than activating on an assumed catalog default.
 
 ## Deferred shared dependencies
 

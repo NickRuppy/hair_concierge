@@ -15,10 +15,19 @@ const migration = new URL(
   "../supabase/migrations/20260925100000_hair_profiles_primary_concern.sql",
   import.meta.url,
 )
+// concern vocabulary widening, ruled 2026-10-11: apply the forward widening too.
+const wideningMigration = new URL(
+  "../supabase/migrations/20261012190000_widen_engine_concern_goal_vocabulary.sql",
+  import.meta.url,
+)
 const user = "11111111-1111-4111-8111-111111111111"
 
-async function fixture() {
+async function fixture(t: { after: (fn: () => Promise<void>) => void }) {
   const db = new PGlite()
+  t.after(async () => {
+    await db.close()
+  })
+  await db.exec("CREATE ROLE anon; CREATE ROLE authenticated; CREATE ROLE service_role;")
   // Narrow shape fixture of the real table (00001_initial_schema.sql).
   await db.exec(`create table public.hair_profiles(
     id uuid primary key default gen_random_uuid(),
@@ -27,6 +36,7 @@ async function fixture() {
     thickness text
   );`)
   await db.exec(await readFile(migration, "utf8"))
+  await db.exec(await readFile(wideningMigration, "utf8"))
   return db
 }
 
@@ -38,14 +48,17 @@ async function primaryConcern(db: PGlite): Promise<string | null> {
   return result.rows[0]?.primary_concern ?? null
 }
 
-test("the CHECK lists exactly the profile concern vocabulary", async () => {
-  const sql = await readFile(migration, "utf8")
-  const listed = [...sql.matchAll(/^\s+'([a-z_]+)',?$/gm)].map((match) => match[1])
+test("the CHECK lists exactly the profile concern vocabulary", async (t) => {
+  const db = await fixture(t)
+  const { rows } = await db.query<{ definition: string }>(
+    "SELECT pg_get_constraintdef(oid) AS definition FROM pg_constraint WHERE conrelid = 'public.hair_profiles'::regclass AND conname = 'hair_profiles_primary_concern_check'",
+  )
+  const listed = [...rows[0].definition.matchAll(/'([a-z_]+)'/g)].map((match) => match[1])
   assert.deepEqual([...listed].sort(), [...PROFILE_CONCERNS].sort())
 })
 
-test("a contained pick is stored; NULL stays allowed", async () => {
-  const db = await fixture()
+test("a contained pick is stored; NULL stays allowed", async (t) => {
+  const db = await fixture(t)
   await db.query(
     "insert into public.hair_profiles(user_id, concerns, primary_concern) values ($1, $2, $3)",
     [user, ["frizz", "breakage"], "frizz"],
@@ -57,18 +70,18 @@ test("a contained pick is stored; NULL stays allowed", async () => {
   assert.equal(await primaryConcern(db), null)
 })
 
-test("a value outside the vocabulary is rejected", async () => {
-  const db = await fixture()
+test("a value outside the vocabulary is rejected", async (t) => {
+  const db = await fixture(t)
   await assert.rejects(
     db.query(
       "insert into public.hair_profiles(user_id, concerns, primary_concern) values ($1, $2, $3)",
-      [user, ["low_shine"], "low_shine"],
+      [user, ["unknown_concern"], "unknown_concern"],
     ),
   )
 })
 
-test("a pick not among concerns is dropped on insert, never rejected", async () => {
-  const db = await fixture()
+test("a pick not among concerns is dropped on insert, never rejected", async (t) => {
+  const db = await fixture(t)
   await db.query(
     "insert into public.hair_profiles(user_id, concerns, primary_concern) values ($1, $2, $3)",
     [user, ["breakage"], "frizz"],
@@ -76,8 +89,8 @@ test("a pick not among concerns is dropped on insert, never rejected", async () 
   assert.equal(await primaryConcern(db), null)
 })
 
-test("a concerns-only edit that removes the pick clears it; one that keeps it does not", async () => {
-  const db = await fixture()
+test("a concerns-only edit that removes the pick clears it; one that keeps it does not", async (t) => {
+  const db = await fixture(t)
   await db.query(
     "insert into public.hair_profiles(user_id, concerns, primary_concern) values ($1, $2, $3)",
     [user, ["frizz", "breakage"], "frizz"],
@@ -95,8 +108,8 @@ test("a concerns-only edit that removes the pick clears it; one that keeps it do
   assert.equal(await primaryConcern(db), null)
 })
 
-test("edits of unrelated columns leave the pick alone", async () => {
-  const db = await fixture()
+test("edits of unrelated columns leave the pick alone", async (t) => {
+  const db = await fixture(t)
   await db.query(
     "insert into public.hair_profiles(user_id, concerns, primary_concern) values ($1, $2, $3)",
     [user, ["frizz", "breakage"], "breakage"],

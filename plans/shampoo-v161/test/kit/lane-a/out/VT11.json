@@ -1,0 +1,393 @@
+{
+ "blindId": "VT11",
+ "identity": {
+  "brand": "Garnier (Wahre Schätze)",
+  "productName": "Wahre Schätze Sanfte Hafermilch (Beruhigendes Shampoo Sanfte Hafermilch)",
+  "packSize": "unresolved: 250 ml vs 300 ml GTIN binding conflict per packet; formula identical across sizes",
+  "market": "DE",
+  "formulaFingerprintSha256": "22bedf0cd1a87fec074e6fba8724488bdfc5b3c97a6aa424e3512c022d440014",
+  "normalization": "ID-2: 'AQUA / WATER', 'GLYCINE SOJA OIL / SOYBEAN OIL', 'AVENA SATIVA KERNEL EXTRACT / OAT KERNEL EXTRACT', 'ORYZA SATIVA STARCH / RICE STARCH', 'PARFUM / FRAGRANCE' one entry each; F.I.L. code stripped as provenance; 27 normalized entries; normalized positions",
+  "completeness": "complete",
+  "e3ProminenceCutoff": "PARFUM / FRAGRANCE @27; prominent = positions 1-26",
+  "formulaSourceTier": 2,
+  "identityConfidence": "moderate",
+  "identityNotes": [
+   "Pack-size/GTIN conflict (ID-3): not material, the formula is the same across sizes. Claimed \"Hafermilch\" maps to Avena Sativa Kernel Extract @8, \"Reiscreme\" to Oryza Sativa Starch @9 (plausible mapping)."
+  ],
+  "formulaPassRecord": {
+   "path": "lane-a/out/formula-pass/VT11.json",
+   "sha256": "1e48b0d284bf72d1b553c61461864f9ff646c412901c8b81e5eb6ae7240169f1"
+  }
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "moderate by C1 (settled core): defining anionic Sodium Laureth Sulfate @2 (ether type) with prominent amphoteric buffer Coco-Betaine @3 and no reinforcing strong anionic. Counter-signals: Soybean Oil @6, Glycol Distearate @4.",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4"
+   ],
+   "counterSignal": "Soybean Oil @6 and Glycol Distearate @4 refat",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  },
+  "conditioningLevel": {
+   "value": "high",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "high by C2 with the payload-lipid substitution: prominent payload lipids Glycine Soja Oil @6 and Dicaprylyl Ether @13 take the place of the early silicone, cationic polymers Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @19 and Polyquaternium-7 @22, pearlizing route Glycol Distearate @4, deliberate humectant Glycerin @5. W-RICH (conditioning reading) also holds. Counter-signal: no silicone; cationic polymers are after salts and pH adjusters; neighbor moderate.",
+   "ruleIds": [
+    "C2",
+    "W-RICH",
+    "E3",
+    "N-ALT"
+   ],
+   "counterSignal": "no silicone; cationic polymers after salts",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  },
+  "weightPotential": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "high",
+   "evidence": {
+    "silicone": [],
+    "cationic_polymer": [
+     "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @19",
+     "Polyquaternium-7 @22"
+    ],
+    "cationic_conditioner": [],
+    "payload_lipid": {
+     "material": [
+      "Glycine Soja Oil / Soybean Oil @6",
+      "Dicaprylyl Ether @13"
+     ],
+     "nonMaterial": []
+    },
+    "weak_refatter": [],
+    "protein_film": [],
+    "film_former": [],
+    "reset": [
+     "strong anionic ether Sodium Laureth Sulfate @2",
+     "amphoteric Coco-Betaine @3"
+    ],
+    "humectantContext": [
+     "Glycerin @5",
+     "Aloe Barbadensis Leaf Juice @7",
+     "Propylene Glycol @18"
+    ],
+    "excluded": [
+     "Glycol Distearate @4 (pearlizing wax, 6.4)",
+     "PPG-5-Ceteth-20 @10, PEG-55 Propylene Glycol Oleate @11 (thickeners/solubilizers, C3 not-cleansing row)",
+     "PEG-60 Hydrogenated Castor Oil @12 (solubilizer, 6.4)",
+     "Carbomer @15 (anionic acrylate thickener, 6.4)",
+     "Xanthan Gum @21 (nonionic gum thickener)",
+     "Oryza Sativa Starch @9 (starch, no cationic charge)"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": {
+     "position": 23,
+     "inci": "Tocopherol",
+     "classes": [
+      "sub1_active"
+     ]
+    },
+    "cap": {
+     "e3Point": 27,
+     "inci": "PARFUM / FRAGRANCE"
+    },
+    "alphabeticalRun": null,
+    "skipped": [],
+    "codes": [],
+    "note": "No a-c candidate before @23 (Salicylic Acid @26 is never a candidate). Tocopherol @23: (i) SLES @2 before; (ii) only Potassium Sorbate @24, Sodium Benzoate @25, Salicylic Acid @26 before the cap. Both payload lipids (@6, @13) are material."
+   },
+   "depositionLoad": "moderate",
+   "persistence": "moderate",
+   "resetCapacity": "moderate",
+   "counterevidence": "W-RICH is established for weight (material Soybean Oil @6 and Dicaprylyl Ether @13 converging with two cationic polymers @19, @22), and the convergence route has three families (material lipid, two cationic polymers count as one family).",
+   "whyThisBand": "Plausible, bounded residue from an early plant oil, an emollient ether and two cationic polymers; an effective C1 SLES/betaine chassis (resetCapacity moderate) is not limited reset, so W-RICH does not reach the high anchor's rich route, and the convergence of a lipid with cationic polymers is offset enough by that chassis to stay bounded.",
+   "whyNotNeighborBand": "high: needs W-RICH with limited reset (reset here is moderate) or converging persistent systems that reset does not sufficiently offset; with no silicone and the cationic polymers late (after salts and pH adjusters), the coating case is not strong enough. low: an early oil plus two cationic polymers is clearly a plausible depositing system (W2).",
+   "confidenceLimitingFactor": "W-RICH present with moderate reset (6.7 limited reset): moderate confidence, neighbor high",
+   "rationale": "moderate: W-RICH with moderate reset falls to the rest of the method (6.7 W-RICH limited reset, 6.6); W-RICH recorded as counter-signal, neighbor high.",
+   "ruleIds": [
+    "6.3",
+    "6.6",
+    "W-RICH",
+    "W-LINE",
+    "W2",
+    "W3",
+    "N-ALT"
+   ],
+   "counterSignal": "W-RICH is established for weight (material Soybean Oil @6 and Dicaprylyl Ether @13 converging with two cationic polymers @19, @22), and the convergence route has three families (material lipid, two cationic polymers count as one family).",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  },
+  "focusPrimary": {
+   "value": "scalp_active",
+   "confidence": "moderate",
+   "neighboringAlternative": "moisture",
+   "careDirection": {
+    "verdict": "moisture_supported",
+    "repairRoutes": [],
+    "moistureRoutes": [
+     "Glycerin @5",
+     "Glycine Soja Oil @6",
+     "Dicaprylyl Ether @13"
+    ],
+    "sharedConditioningRoutes": [
+     "HP guar @19",
+     "Polyquaternium-7 @22",
+     "Glycol Distearate @4"
+    ],
+    "limitation": "verdict applies to the competing lengths-care claim (F7)"
+   },
+   "claimRole": "candidate",
+   "counterSignal": "a moisture lengths-care claim competes (\"spendet Feuchtigkeit\", \"geschmeidiges Haar\")",
+   "decisionTrace": {
+    "claimDirection": "sensitive scalp (\"wirkt beruhigend auf die juckende Kopfhaut\", \"Erleichterung bei juckender Kopfhaut\", manufacturer DE moderate) vs moisture of the hair (moderate)",
+    "formulaCompatible": true,
+    "compatibleRoute": "Avena Sativa Kernel Extract @8 (prominent E4 comfort route) with scalpComfortTarget targeted",
+    "decisionReason": "F7 step 2: neither role is named in the product name (\"Sanfte\", \"Beruhigendes\" do not name the scalp), so scalp_active is primary because it is formula-compatible (targeted)"
+   },
+   "rationale": "scalp_active: qualifying sensitive-scalp claim (moderate), targeted with a prominent comfort route; F7 step 2.",
+   "ruleIds": [
+    "7.2",
+    "F7",
+    "SC1",
+    "CSA",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [
+    "moisture"
+   ],
+   "confidence": "moderate",
+   "neighboringAlternative": [],
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [
+     "moisture"
+    ],
+    "matchingClaims": [
+     "\"spendet Feuchtigkeit und sorgt für geschmeidiges Haar\" (manufacturer DE, moderate)"
+    ],
+    "independentRoutes": [
+     "Glycerin @5 + Glycine Soja Oil @6 + Dicaprylyl Ether @13 with cationic polymers @19/@22 (moisture_supported)"
+    ],
+    "whyDistinct": "primary route cites Avena Sativa Kernel Extract @8 (comfort); the moisture route rests on different ingredients (F3); hydration of the lengths is not a restatement of scalp comfort",
+    "exceptionCode": null
+   },
+   "rationale": "[\"moisture\"]: distinct moderate claim and independent moisture_supported route (Section 8, F3, F7 step 3).",
+   "ruleIds": [
+    "8",
+    "F3",
+    "F7",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "counterSignal": "\"hochverträglich\", \"sanft\" are mildness, not frequency (U2)",
+   "decisionTrace": {
+    "default": "regular",
+    "nonDefaultTrigger": null,
+    "triggerEvidence": [],
+    "rationale": "no trigger"
+   },
+   "rationale": "regular.",
+   "ruleIds": [
+    "9",
+    "U2"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "targeted",
+   "confidence": "moderate",
+   "neighboringAlternative": "not_targeted",
+   "counterSignal": "positioning only moderate-graded; parts of the copy are tolerance wording (\"hochverträglich\", \"eignet sich ideal für ... sensible Kopfhaut\")",
+   "rationale": "targeted: SC1 met by \"Das Shampoo wirkt beruhigend auf die juckende Kopfhaut\" and \"Erleichterung bei juckender Kopfhaut\" (manufacturer DE, moderate; product acts on the scalp state); CSA met by prominent comfort route Avena Sativa Kernel Extract @8 and humectant/refatting routes Glycerin @5, Glycine Soja Oil @6; no strong cleansing, no prominent cooling agent or essential oil.",
+   "ruleIds": [
+    "10",
+    "SC1",
+    "CSA",
+    "E2",
+    "E2a",
+    "E4"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "not_supported: complete formula without a recognized dandruff active (Salicylic Acid @26 does not count).",
+   "ruleIds": [
+    "11"
+   ],
+   "counterSignal": "none",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  }
+ },
+ "formulaFacts": {
+  "surfactantClasses": {
+   "strongAnionicEther": [
+    "Sodium Laureth Sulfate @2 (defining)"
+   ],
+   "strongAnionicAlkylSulfate": [],
+   "mildAnionic": [],
+   "amphoteric": [
+    "Coco-Betaine @3 (prominent buffer)"
+   ],
+   "nonionicCleansing": [],
+   "notCleansing": [
+    "Glycol Distearate @4",
+    "PPG-5-Ceteth-20 @10",
+    "PEG-55 Propylene Glycol Oleate @11",
+    "PEG-60 Hydrogenated Castor Oil @12",
+    "Carbomer @15",
+    "Sodium Chloride @16"
+   ],
+   "c4": "defining SLES @2; buffer Coco-Betaine @3; no reinforcing route"
+  },
+  "conditioningRoutes": [
+   "Glycine Soja Oil @6",
+   "Dicaprylyl Ether @13",
+   "HP guar @19",
+   "Polyquaternium-7 @22",
+   "Glycol Distearate @4",
+   "Glycerin @5"
+  ],
+  "actives": [
+   "Avena Sativa Kernel Extract @8",
+   "Tocopherol @23",
+   "Salicylic Acid @26"
+  ],
+  "scalpExposure": [
+   "PARFUM / FRAGRANCE @27 (no allergens declared)",
+   "Salicylic Acid @26"
+  ],
+  "recognizedDandruffActives": []
+ },
+ "unresolvedMaterialIngredients": [],
+ "claimUnitsAndGrades": [
+  "product name \"Wahre Schätze Sanfte Hafermilch\" / full name with \"Beruhigendes Shampoo\" (high): non-scalp name words (F7)",
+  "manufacturer_de (moderate): \"wirkt beruhigend auf die juckende Kopfhaut\" (sensitive, qualifies); \"Erleichterung bei juckender Kopfhaut\" (qualifies); \"ideal für empfindliches Haar und sensible Kopfhaut\" (tolerance wording); \"spendet Feuchtigkeit und sorgt für geschmeidiges Haar\" (moisture, lengths)",
+  "retailer rossmann/dm (low): same themes; \"Die Hafermilch ist für ihre beruhigende Wirkung ... bekannt\" (ingredient reputation)"
+ ],
+ "reconciliation": [
+  {
+   "property": "focusPrimary",
+   "blind": "general (provisional)",
+   "final": "scalp_active",
+   "evidence": "itchy-scalp soothing claims",
+   "reason": "F7 step 2"
+  },
+  {
+   "property": "focusSecondary",
+   "blind": "[] (provisional)",
+   "final": "[\"moisture\"]",
+   "evidence": "\"spendet Feuchtigkeit\"",
+   "reason": "Section 8, F3"
+  },
+  {
+   "property": "scalpComfortTarget",
+   "blind": "not_targeted (provisional, low)",
+   "final": "targeted",
+   "evidence": "SC1 sensitive units (moderate)",
+   "reason": "SC1 + CSA"
+  },
+  {
+   "property": "usageRole",
+   "blind": "regular (provisional, low)",
+   "final": "regular (high)",
+   "evidence": "no U2",
+   "reason": "no trigger"
+  }
+ ],
+ "projection": {
+  "status": "proposal_blocked_by_review_flags",
+  "statusReasons": [],
+  "thicknessFit": {
+   "fine": "acceptable",
+   "normal": "ideal",
+   "coarse": "ideal"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 with W=moderate (neighbor high), C=high (neighbor moderate): fine acceptable, normal ideal, coarse ideal; T6 floor applies (scalp-concern target sensitive); T4 checked against the N-ALT neighbors after T6; thickness claims never change fit (T2).",
+  "weight": "moderate",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential moderate -> moderate, confidence moderate.",
+  "scalpTargets": {
+   "primary": {
+    "target": "sensitive",
+    "confidence": "moderate",
+    "rationale": "S-SENSITIVE: E2 sensitive claim (manufacturer DE, moderate) + scalpComfortTarget targeted + prominent comfort route Avena Sativa Kernel Extract @8; cleansing moderate (no review flag). No secondary scalp target (no dry or oily unit)."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "researchCombinationConfidence": null,
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1: cleansingStrength moderate with D1 false -> regular; bucket expects gentle (amber row, I2); I3 neighbor none.",
+  "explicitResetPositioning": false,
+  "explicitResetEvidence": "no D1 term",
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserRecord": null,
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D2 not met (D1 false)",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "irritationen",
+    "scalp_route": "irritated",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "acceptable"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "irritationen",
+    "scalp_route": "irritated",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "irritationen",
+    "scalp_route": "irritated",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "ideal"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   "review_thickness_boundary:normal",
+   "review_thickness_boundary:coarse"
+  ],
+  "informationalNotes": [],
+  "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; lanes never see catalog ids."
+ },
+ "selfCheck": "6.11: fingerprint matches the frozen packet; claims and labels were hidden during the formula pass (frozen before reveal, sha256 above); no ingredient, family count or position window assigned the weight band, the W-line only gated payload_lipid legs; the W-line was derived from the frozen list and every skipped candidate is recorded; depositionLoad/persistence/resetCapacity present; counterevidence and whyNotNeighborBand are specific; confidence names its limiting factor; no comparison with earlier values was made in this lane. Projection derived mechanically from final properties (T1/T6/T4, W-LIVE, I1/I3, D1-D3, 13.7, 13.8); N-ALT neighbors consistent with confidences.",
+ "uncertainties": [
+  "Secondary moisture vs []: alternative [] if one reads hydration as part of the same calming/caring role; F3 independence holds on ingredients.",
+  "Weight moderate vs high (W-RICH present with moderate reset) carried from the formula pass; raises T4 flags on normal and coarse.",
+  "weightPotential moderate vs high: W-RICH is formally present; the band rests on reading an SLES/betaine chassis as effective (resetCapacity moderate). Neighbor high, moderate confidence.",
+  "Pack size/GTIN conflict in the packet note: identity-level, no formula effect stated; carried as a note."
+ ]
+}

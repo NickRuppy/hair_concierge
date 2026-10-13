@@ -1,0 +1,184 @@
+{
+  "blindId": "T306",
+  "inciFingerprintSha256": "f63f993d63a9fa421eef25df232abb8f46d46bd5251f89608e49ba33a1f78fd5",
+  "phase": "blind_formula_pass",
+  "normalizationNote": "Formula source tier 4 (fallback retailer); packet marks completeness 'complete'. Positions as listed.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "C6: no strong anionic; earliest prominent surfactant is mild anionic Sodium Methyl Cocoyl Taurate (2) with prominent glucoside Decyl Glucoside (3) and amphoteric Cocamidopropyl Betaine (4) co-surfactants -> low. Parfum at 30, so all listed are prominent.",
+      "neighboringAlternative": "none",
+      "counterSignal": "Coconut Acid (13) and Disodium Tetrapropenyl Succinate (14) add some anionic cleansing; not strong anionics under C3."
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Silicone Amodimethicone (11, prominent) plus cationic Starch Hydroxypropyltrimonium Chloride (17) plus weak refatters (Glyceryl Oleate 15, Lecithin 16, Hydrogenated Palm Glycerides Citrate 23) and humectant Urea (25). C2 is not met because no pearlizing/fatty route is present (PEG-150 Distearate is a thickener; weak refatters do not substitute). One meaningful system plus light routes.",
+      "neighboringAlternative": "high",
+      "counterSignal": "Silicone + cationic + film-forming starch + refatters + Urea are close to multiple complementary systems."
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Converging amino-silicone (11), cationic starch (17), film-forming modified starch (10) and weak refatters in a mild C6 chassis with weak reset: bounded but noticeable residue plausible.",
+      "neighboringAlternative": "high",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "Amodimethicone after the essential-oil/cooling block, cationic starch late, film-forming starch, several weak refatters."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Amodimethicone is a substantive, persistent amino-silicone; others light."
+        },
+        "resetCapacity": {
+          "value": "weak",
+          "rationale": "C6 low: taurate + glucosides + betaine, no strong anionic."
+        }
+      },
+      "whyThisBand": "One meaningfully persistent system (amodimethicone) with light interacting routes and weak reset.",
+      "whyNotNeighborBand": "Not low: multiple families incl. a persistent amino-silicone and weak reset (W2). Not high: no payload lipid (no W-RICH), silicone and cationic sit mid/late after the oil/menthol block, so a strongly coating result is not established.",
+      "counterSignal": "Weak reset and film-former convergence argue toward high.",
+      "excluded": [
+        "Rosmarinus Officinalis Leaf Oil (6), Mentha Piperita Oil (7): essential oils",
+        "Menthol (8), Menthyl Lactate (9): cooling agents",
+        "PEG-150 Distearate (18): thickener",
+        "Hexylene Glycol (19): solvent"
+      ]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "rationale": "Provisional. Prominent rosemary/peppermint oils and menthol suggest a refresh/scalp role; lengths routes are nonspecific (silicone + refatters).",
+      "neighboringAlternative": "scalp_active",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "limitation": "Generic conditioning; no humectant cluster beyond late Urea, no protein."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "rationale": "Provisional empty default.",
+      "neighboringAlternative": [
+        "shine"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "rationale": "Provisional default; low cleansing could become frequent with frequency wording.",
+      "neighboringAlternative": "frequent"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "rationale": "Provisional pending positioning. CSA formula half passes: Urea (25) is a prominent E4 comfort and humectant route (Parfum at 30), Glyceryl Oleate (15) prominent refatting route. Prominent cooling agents (Menthol 8, Menthyl Lactate 9, Mentha Piperita Oil 7) and essential oil (6) are counter-signals capping targeted at moderate.",
+      "neighboringAlternative": "targeted",
+      "csaFormulaHalf": "pass",
+      "prominentComfortRoute": true,
+      "prominentHumectantRefattingRoute": true
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none"
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Methyl Cocoyl Taurate",
+      "position": 2,
+      "role": "mild anionic (taurate), earliest surfactant"
+    },
+    {
+      "ingredient": "Decyl Glucoside",
+      "position": 3,
+      "role": "glucoside buffer"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "amphoteric buffer"
+    },
+    {
+      "ingredient": "Rosmarinus Officinalis Leaf Oil",
+      "position": 6,
+      "role": "essential oil"
+    },
+    {
+      "ingredient": "Mentha Piperita Oil",
+      "position": 7,
+      "role": "essential/cooling"
+    },
+    {
+      "ingredient": "Menthol",
+      "position": 8,
+      "role": "cooling agent, prominent"
+    },
+    {
+      "ingredient": "Menthyl Lactate",
+      "position": 9,
+      "role": "cooling agent, prominent"
+    },
+    {
+      "ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+      "position": 10,
+      "role": "film_former (modified starch)"
+    },
+    {
+      "ingredient": "Amodimethicone",
+      "position": 11,
+      "role": "silicone (amino)"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 12,
+      "role": "glucoside"
+    },
+    {
+      "ingredient": "Coconut Acid",
+      "position": 13,
+      "role": "fatty acid/soap precursor"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 15,
+      "role": "weak_refatter; E4 refatting route"
+    },
+    {
+      "ingredient": "Lecithin",
+      "position": 16,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Starch Hydroxypropyltrimonium Chloride",
+      "position": 17,
+      "role": "cationic_polymer (6.4)"
+    },
+    {
+      "ingredient": "Urea",
+      "position": 25,
+      "role": "humectant; E4 comfort route (prominent)"
+    },
+    {
+      "ingredient": "Parfum/Fragrance",
+      "position": 30,
+      "role": "E3 point"
+    }
+  ],
+  "unresolvedMaterialIngredients": [
+    {
+      "ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+      "position": 10,
+      "issue": "Recorded as film_former (amphiphilic modified starch); exact deposition behavior unknown. It reinforces the moderate-vs-high boundary already reflected in moderate confidence; not judged to plausibly move the band two ways."
+    },
+    {
+      "ingredient": "Disodium Tetrapropenyl Succinate",
+      "position": 14,
+      "issue": "Alkenyl succinate surfactant, assigned mild anionic by chemistry; immaterial to C6 (taurate already earliest)."
+    }
+  ]
+}

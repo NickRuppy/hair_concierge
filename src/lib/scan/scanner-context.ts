@@ -143,6 +143,22 @@ export function scannerSourceHash(value: unknown): string {
 export function currentLegacyAnswers(profile: Record<string, unknown>): QuizAnswers {
   const lookup = (value: unknown, map: Record<string, string>) =>
     typeof value === "string" ? map[value] : undefined
+  const facts = scannerFacts(profile)
+  // A sole-concern column can be inferred. With authoritative facts, an absent pick must
+  // stay absent so a missing-field completion never labels it as a new user statement.
+  // Column-only legacy prefill historically omitted old primary-concern slugs. Widen
+  // that path only for the three newly retained values (ruling 2026-10-11).
+  const newColumnConcern =
+    profile.primary_concern === "low_shine" ||
+    profile.primary_concern === "lost_shape" ||
+    profile.primary_concern === "low_volume_or_weighed_down"
+  const primaryConcern =
+    (facts && facts.diagnostics.primaryConcern === undefined) || (!facts && !newColumnConcern)
+      ? undefined
+      : normalizeStoredQuizAnswers({
+          concerns: profile.concerns as QuizAnswers["concerns"],
+          primary_concern: profile.primary_concern as QuizAnswers["primary_concern"],
+        }).primary_concern
   return {
     structure: profile.hair_texture as string,
     thickness: profile.thickness as string,
@@ -179,6 +195,7 @@ export function currentLegacyAnswers(profile: Record<string, unknown>): QuizAnsw
       : undefined,
     goals: profile.goals as QuizAnswers["goals"],
     concerns: profile.concerns as QuizAnswers["concerns"],
+    ...(primaryConcern ? { primary_concern: primaryConcern } : {}),
   }
 }
 
@@ -706,7 +723,10 @@ export function prepareScannerContext(read: ScannerSourceRead): PreparedScannerC
     const ids = retainedIds
     if (ids.some((id) => !isStage2QuestionAnswerValid(id, retainedAnswers!)))
       throw new Error("scan_profile_context_unavailable")
-    const triggerContext = deriveStage2TriggerContext(base.snapshot)
+    const triggerContext = deriveStage2TriggerContext(base.snapshot, {
+      // Tools-off: scanner context reads product answers only; the Hair Tools path never applies.
+      toolsEnabled: false,
+    })
     const resolved = resolveAssumedAnswers({
       triggerContext,
       answers: retainedAnswers,

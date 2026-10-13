@@ -3,8 +3,10 @@ import { z } from "zod"
 import {
   createStage2HeatEventId,
   getSelectedStage2HeatEventSources,
+  ignoresStoredStage2HeatProtection,
   projectStage2HeatEvents,
   type ProjectedStage2HeatEvent,
+  type Stage2HeatRuleOptions,
 } from "@/lib/personal-plan/refinement/heat-events"
 import {
   ADDITIONAL_HEAT_TOOLS,
@@ -32,7 +34,7 @@ import { DISCOVERY_FREQUENCY_LABELS } from "./frequency"
  *   - „Keine weiteren Tools" = `additionalHeatTools: []`;
  *   - one heat event per heat source the routes and tools imply (air drying implies none),
  *     keyed `heat:<source>`, with a concrete `ProductFrequency` (no „Weiß ich nicht") and a
- *     `protectionConsistency` iff the source needs heat protection (plain föhnen does not).
+ *     `protectionConsistency` iff the source needs heat protection (plain föhnen and the Diffusor do not).
  * No towel / night / scalp answers (ruling F3.2).
  */
 
@@ -59,6 +61,13 @@ const heatEventAnswerSchema = z
     protectionConsistency: z.enum(HEAT_PROTECTION_CONSISTENCIES).optional(),
   })
   .strict()
+
+/**
+ * The Diffusor rule always applies in the Beratung intake — it has no rollout flag: a Diffusor
+ * is plain blow-drying, so it asks no protection question, and a value saved while it still did
+ * is tolerated and ignored (`heat-events.ts`).
+ */
+export const DISCOVERY_HEAT_RULE: Stage2HeatRuleOptions = { diffuserAsBlowDry: true }
 
 /** Shape only; `parseDiscoveryHeatStyling` adds the cross-field event rules. */
 export const discoveryHeatStylingSchema = z
@@ -89,7 +98,7 @@ export function discoveryHeatEventSources(heat: DiscoveryHeatStylingV1): Stage2H
 export function projectDiscoveryHeatEvents(
   heat: DiscoveryHeatStylingV1,
 ): ProjectedStage2HeatEvent[] {
-  return projectStage2HeatEvents(heat)
+  return projectStage2HeatEvents(heat, DISCOVERY_HEAT_RULE)
 }
 
 /**
@@ -172,9 +181,12 @@ export function describeDiscoveryHeatStyling(
         {
           label: HEAT_SOURCE_LABELS[source],
           frequency: DISCOVERY_FREQUENCY_LABELS[answer.frequency],
-          protection: answer.protectionConsistency
-            ? PROTECTION_LABELS[answer.protectionConsistency]
-            : null,
+          // A Diffusor value saved while the question still existed is ignored, not shown.
+          protection:
+            answer.protectionConsistency &&
+            !ignoresStoredStage2HeatProtection(source, DISCOVERY_HEAT_RULE)
+              ? PROTECTION_LABELS[answer.protectionConsistency]
+              : null,
         },
       ]
     }),

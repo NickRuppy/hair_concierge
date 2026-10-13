@@ -1,0 +1,433 @@
+{
+  "blindId": "T119",
+  "productName": "L'Oréal Paris Elvital Hydra Hyaluronic 72H Feuchtigkeit-Auffüllendes Shampoo",
+  "inciFingerprintSha256": "34968b63d2da1cd95df156622b7491e30a8066f23c0502def5800573b9cf23a4",
+  "normalization": "Packet canonicalInci is the normalized list (ID-2); all positions are normalized one-based positions on it. PARFUM / FRAGRANCE at 27 (last): positions 1-26 prominent",
+  "status": "classified",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: SLES (2) defining, buffers Cocamidopropyl Betaine (5) and Coco-Betaine (10), no reinforcing anionic -> moderate.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM LAURETH SULFATE",
+          "position": 2,
+          "role": "defining anionic (C1)"
+        },
+        {
+          "ingredient": "COCAMIDOPROPYL BETAINE",
+          "position": 5,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "COCO-BETAINE",
+          "position": 10,
+          "role": "buffer"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "C2 met: early silicone (Dimethicone 6), cationic polymer (Guar HPTC 8), pearlizing route (Glycol Distearate 3) and a closed-list humectant (Sodium Hyaluronate 13); late Amodimethicone (23) supports -> high.",
+      "counterSignal": "The humectant element is a single, probably trace, hyaluronate.",
+      "neighboringAlternative": "moderate",
+      "formulaFacts": [
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 6,
+          "role": "early silicone"
+        },
+        {
+          "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+          "position": 8,
+          "role": "cationic"
+        },
+        {
+          "ingredient": "GLYCOL DISTEARATE",
+          "position": 3,
+          "role": "pearlizing route"
+        },
+        {
+          "ingredient": "SODIUM HYALURONATE",
+          "position": 13,
+          "role": "humectant (C2)"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "W1 applies: C1 sulfate chassis with prominent buffers, deposition = silicone (Dimethicone 6) + cationic guar (8) + late amodimethicone (23), no further converging family (glycol distearate, PEG-100 stearate, steareth-6 and carbomer are excluded) and no W-RICH -> moderate.",
+      "neighboringAlternative": "none",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "Dimethicone 6 + guar 8 + amodimethicone 23."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Silicone/guar coacervate plus amino-silicone."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 buffered SLES chassis."
+        }
+      },
+      "whyThisBand": "Exact W1 set in a C1 chassis.",
+      "whyNotNeighborBand": "Not high: W1 conditions (a)-(c) all hold, no prominent payload lipid, protein or film former. Not low: an early silicone with a cationic guar is a deliberate deposition system.",
+      "limitingFactor": "None material (settled W1 pattern).",
+      "canonicalFormula": {
+        "inciFingerprintSha256": "34968b63d2da1cd95df156622b7491e30a8066f23c0502def5800573b9cf23a4",
+        "formulaSourceTier": 2,
+        "formulaCompleteness": "complete",
+        "captureDate": "not in packet",
+        "identityConfidence": "high"
+      },
+      "evidenceByFamily": {
+        "silicone": [
+          {
+            "ingredient": "DIMETHICONE",
+            "position": 6,
+            "role": "prominent"
+          },
+          {
+            "ingredient": "AMODIMETHICONE",
+            "position": 23,
+            "role": "late"
+          }
+        ],
+        "cationic_polymer": [
+          {
+            "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+            "position": 8,
+            "role": ""
+          }
+        ],
+        "excluded": [
+          {
+            "ingredient": "GLYCOL DISTEARATE",
+            "position": 3,
+            "role": "pearlizer"
+          },
+          {
+            "ingredient": "PEG-100 STEARATE",
+            "position": 17,
+            "role": "PEG emulsifier"
+          },
+          {
+            "ingredient": "STEARETH-6",
+            "position": 14,
+            "role": "emulsifier"
+          },
+          {
+            "ingredient": "CARBOMER",
+            "position": 24,
+            "role": "anionic acrylate thickener (6.4)"
+          }
+        ],
+        "reset": [
+          {
+            "ingredient": "SODIUM LAURETH SULFATE",
+            "position": 2,
+            "role": "anionic"
+          },
+          {
+            "ingredient": "COCAMIDOPROPYL BETAINE",
+            "position": 5,
+            "role": "amphoteric"
+          },
+          {
+            "ingredient": "COCO-BETAINE",
+            "position": 10,
+            "role": "amphoteric"
+          }
+        ]
+      },
+      "formulaCounterevidence": null,
+      "unresolved": [],
+      "proposedWeightPotential": "moderate",
+      "confidenceLimitingFactor": "None material (settled W1 pattern).",
+      "postUnblindNote": "'ganz ohne zu Beschweren' (moderate) never lowers the band; W1 decides."
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "neighboringAlternative": "moisture",
+      "rationale": "General: the name ('Hydra', 'Feuchtigkeit-Auffüllendes', high) positions moisture, but the formula verdict is nonspecific — a single (probably trace) Sodium Hyaluronate is not a coherent humectant cluster; the silicone/guar system is generic conditioning (F1).",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": [
+          "Sodium Hyaluronate 13"
+        ],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "Dimethicone 6",
+          "Guar 8",
+          "Amodimethicone 23"
+        ],
+        "limitation": "One humectant token."
+      },
+      "claimRole": "not_applicable",
+      "formulaFacts": [
+        {
+          "ingredient": "SODIUM HYALURONATE",
+          "position": 13,
+          "role": "single humectant"
+        },
+        {
+          "ingredient": "DIMETHICONE",
+          "position": 6,
+          "role": "generic conditioning"
+        }
+      ],
+      "counterSignal": "Strong, consistent moisture positioning.",
+      "decisionTrace": {
+        "claimDirection": "moisture",
+        "formulaCompatible": false,
+        "compatibleRoute": "none (single humectant token)",
+        "decisionReason": "Moisture claim over a nonspecific verdict -> general."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Empty: shine/Schwung are outcomes of the silicone route (F2).",
+      "counterSignal": "None.",
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [],
+        "independentRoutes": [],
+        "whyDistinctFromPrimary": "",
+        "exceptionCode": null
+      }
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Default regular.",
+      "counterSignal": "None.",
+      "decisionTrace": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "Default regular."
+      }
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No E2 scalp claim ('versorgt Kopfhaut und Längen mit Feuchtigkeit' does not name a dry/sensitive scalp state).",
+      "counterSignal": "Scalp-moisture wording.",
+      "formulaFacts": []
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole; salicylic acid alone does not count.",
+      "neighboringAlternative": "none",
+      "counterSignal": "None in formula; claims never upgrade this property.",
+      "formulaFacts": []
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "SODIUM LAURETH SULFATE",
+      "position": 2,
+      "role": "defining anionic, ether type"
+    },
+    {
+      "ingredient": "GLYCOL DISTEARATE",
+      "position": 3,
+      "role": "pearlizing route (C2); excluded from weight"
+    },
+    {
+      "ingredient": "COCAMIDOPROPYL BETAINE",
+      "position": 5,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "DIMETHICONE",
+      "position": 6,
+      "role": "silicone, prominent/early"
+    },
+    {
+      "ingredient": "CI 60730 / EXT. VIOLET 2",
+      "position": 7,
+      "role": "colorant"
+    },
+    {
+      "ingredient": "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+      "position": 8,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "COCAMIDE MEA",
+      "position": 9,
+      "role": "foam booster, not a route"
+    },
+    {
+      "ingredient": "COCO-BETAINE",
+      "position": 10,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "SODIUM HYALURONATE",
+      "position": 13,
+      "role": "humectant (C2/E4 list)"
+    },
+    {
+      "ingredient": "STEARETH-6",
+      "position": 14,
+      "role": "emulsifier, excluded"
+    },
+    {
+      "ingredient": "PEG-100 STEARATE",
+      "position": 17,
+      "role": "PEG emulsifier, excluded"
+    },
+    {
+      "ingredient": "SALICYLIC ACID",
+      "position": 20,
+      "role": "not a dandruff active (Section 11)"
+    },
+    {
+      "ingredient": "AMODIMETHICONE",
+      "position": 23,
+      "role": "amino-silicone, late"
+    },
+    {
+      "ingredient": "CARBOMER",
+      "position": 24,
+      "role": "anionic acrylate thickener, excluded (6.4)"
+    },
+    {
+      "ingredient": "HEXYLENE GLYCOL",
+      "position": 26,
+      "role": "solvent"
+    }
+  ],
+  "blindToFinalChanges": [
+    {
+      "property": "provisional properties",
+      "blind": "general/[]/regular/not_targeted (low, provisional)",
+      "final": "see records",
+      "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+      "reason": "post-unblind reconciliation (3.2)"
+    }
+  ],
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "acceptable",
+        "confidence": "high",
+        "rationale": "T1: W moderate -> acceptable; T2: thickness/texture claims do not change the fit."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "high",
+        "rationale": "T1: W moderate -> ideal; T2: thickness/texture claims do not change the fit."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate, C high -> ideal; T2: thickness/texture claims do not change the fit. T4: neighbor conditioningLevel=moderate -> acceptable would lower the final tier -> review_thickness_boundary."
+      }
+    ],
+    "weight": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "W-LIVE: weightPotential moderate -> moderate (1:1)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1; manufacturer source present -> high."
+      },
+      "secondary": null,
+      "secondaryRationale": "No qualifying claim unit."
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate -> regular. I2: written unchanged to every row."
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "rationale": "No D1 wording."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "deepCleanserRecord": null,
+      "confidence": "high",
+      "rationale": "D2 not met (no D1) -> not_flagged."
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable",
+        "intensityMatchesBucket": true
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal",
+        "intensityMatchesBucket": true
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal",
+        "intensityMatchesBucket": true
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:coarse"
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "researchCombinationRationale": "Not a dandruff-primary product: E2b layer 2 does not apply.",
+    "liveComparison": "review_live_value_differs is resolved by the orchestrator after freeze (lanes see no live rows)."
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientOrCountOrPositionAssignedWeightBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "comparisonWithEarlierValuesMadeInLane": false,
+    "nAltConsistent": true
+  },
+  "uncertainties": [
+    {
+      "reading": "focusPrimary general (single hyaluronate is nonspecific)",
+      "alternative": "moisture (dual/moisture_supported if the silicone/guar system is accepted as conditioning support for one humectant)"
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "blindId": "T206",
+  "inciFingerprintSha256": "add2a5261bec16c0e65c307a8d8b0d2c59883a946969bd260a455a950295a5af",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "completeness": "complete",
+    "sourceTier": 4,
+    "identityConfidence": "high",
+    "normalization": "Aqua [Water] one entry; positions = packet order (normalized, one-based).",
+    "prominenceCutoff": "E3: Parfum [Fragrance] at 6; positions 1-5 prominent."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low (C6): no strong anionic anywhere; the earliest prominent cleansing surfactant is the mild anionic Disodium Laureth Sulfosuccinate (2) with prominent amphoteric co-surfactants Cocamidopropyl Hydroxysultaine (3) and Cocamidopropyl Betaine (4).",
+      "counterSignal": "Sulfosuccinate leads the system; still a mild class under C3.",
+      "neighboringAlternative": "none",
+      "ruleIds": ["C6", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate (bounded): several light routes: PEG-18 Glyceryl Oleate/Cocoate refatter (5), Avena Sativa (Oat) Peptide (8), Glycol Distearate (14), Polyquaternium-11 (17), Panthenol (7), Glycerin (22). C2 not met (no silicone or prominent payload lipid).",
+      "counterSignal": "Polyquaternium-11 is a low-charge, fixative-type polymer listed late; all routes except the refatter are post-fragrance, so a cleansing-led low reading is realistic.",
+      "neighboringAlternative": "low",
+      "ruleIds": ["C2", "Section 5 anchors"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: deposition is light and late: one PEG glyceryl ester refatter, a peptide, a late Polyquaternium-11 and a trace C13-15 Alkane; no silicone, no oil or butter.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {"value": "light", "rationale": "Weak refatter (5), oat peptide (8), PQ-11 (17), C13-15 Alkane (21)."},
+        "persistence": {"value": "low", "rationale": "PQ-11 can film lightly; peptide and refatter weakly retained."},
+        "resetCapacity": {"value": "weak", "rationale": "C6 mild sulfosuccinate/sultaine/betaine system."}
+      },
+      "extractedEvidence": {
+        "weak_refatter": [{"ingredient": "PEG-18 Glyceryl Oleate/Cocoate", "position": 5}],
+        "protein_film": [{"ingredient": "Avena Sativa (Oat) Peptide", "position": 8}],
+        "cationic_polymer": [{"ingredient": "Polyquaternium-11", "position": 17}],
+        "payload_lipid": [{"ingredient": "C13-15 Alkane", "position": 21, "note": "light semi-volatile hydrocarbon emollient, trace"}],
+        "silicone": [], "film_former": [],
+        "reset": [{"ingredient": "Disodium Laureth Sulfosuccinate", "position": 2}, {"ingredient": "Cocamidopropyl Hydroxysultaine", "position": 3}, {"ingredient": "Cocamidopropyl Betaine", "position": 4}],
+        "excluded": [{"ingredient": "Juniperus Virginiana Oil", "position": 12, "reason": "fragrance oil (6.4)"}, {"ingredient": "Citrus Aurantium Peel Oil", "position": 13, "reason": "fragrance oil"}, {"ingredient": "Glycol Distearate", "position": 14, "reason": "pearlizing wax (6.4)"}, {"ingredient": "Cocamide MEA", "position": 18, "reason": "alkanolamide"}, {"ingredient": "Laureth-10", "position": 19, "reason": "ethoxylate emulsifier"}],
+        "context_humectants": [{"ingredient": "Panthenol", "position": 7}, {"ingredient": "Glycerin", "position": 22}]
+      },
+      "whyThisBand": "Only weak/late routes; reset is weak but there is little to reset.",
+      "whyNotNeighborBand": "W2: four families are listed, but the refatter is a weak PEG ester, the peptide and PQ-11 are post-fragrance (PQ-11 at 17, after citric acid), and the alkane is trace and light; no persistent silicone, oil or butter converges, so combined residue is unlikely to be noticeable.",
+      "limitingFactor": "Weak reset means even light routes are not offset (neighbor moderate)."
+    },
+    "focusPrimary": {"value": "general", "confidence": "low", "provisional": true, "rationale": "Pending claims. Care-direction verdict provisional: nonspecific (peptide + panthenol + light polymer); mildness is not a focus."},
+    "focusSecondary": {"value": [], "confidence": "low", "provisional": true, "rationale": "Empty default pending claims."},
+    "usageRole": {"value": "regular", "confidence": "low", "provisional": true, "rationale": "Default; frequent possible with explicit frequency wording."},
+    "scalpComfortTarget": {"value": "not_targeted", "confidence": "low", "provisional": true, "rationale": "CSA formula half NOT met: no prominent E4 route (Panthenol 7 is post-fragrance). Prominent PEG-18 Glyceryl Oleate/Cocoate (5) is not on the closed E4 list: unlisted_route_candidate:PEG-18 Glyceryl Oleate/Cocoate."},
+    "dandruffSupport": {"value": "not_supported", "confidence": "high", "rationale": "Neither Piroctone Olamine nor Climbazole in the complete INCI."}
+  },
+  "formulaFacts": [
+    {"ingredient": "Disodium Laureth Sulfosuccinate", "position": 2, "role": "mild anionic, earliest cleansing surfactant"},
+    {"ingredient": "Cocamidopropyl Hydroxysultaine", "position": 3, "role": "amphoteric"},
+    {"ingredient": "Cocamidopropyl Betaine", "position": 4, "role": "amphoteric"},
+    {"ingredient": "PEG-18 Glyceryl Oleate/Cocoate", "position": 5, "role": "weak_refatter; unlisted E4 candidate"},
+    {"ingredient": "Parfum [Fragrance]", "position": 6, "role": "E3 fragrance marker"},
+    {"ingredient": "Panthenol", "position": 7, "role": "comfort route, non-prominent"},
+    {"ingredient": "Avena Sativa (Oat) Peptide", "position": 8, "role": "protein_film (not the listed Avena Sativa Kernel Extract/Flour)"},
+    {"ingredient": "Juniperus Virginiana Oil", "position": 12, "role": "fragrance oil, excluded"},
+    {"ingredient": "Glycol Distearate", "position": 14, "role": "pearlizing route"},
+    {"ingredient": "Polyquaternium-11", "position": 17, "role": "cationic_polymer"},
+    {"ingredient": "Methylchloroisothiazolinone/Methylisothiazolinone", "position": 24, "role": "preservative (MCI at 24, MI at 25)"}
+  ],
+  "unresolvedMaterialIngredients": []
+}

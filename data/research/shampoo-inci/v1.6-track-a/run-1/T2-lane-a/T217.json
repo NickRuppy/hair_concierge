@@ -1,0 +1,495 @@
+{
+  "blindId": "T217",
+  "inciFingerprintSha256": "0d5d537d9861521620fc808ebb0fe6b3b88decc120aff9d099b9890fc0c22fb1",
+  "identity": {
+    "productName": "Balea PROFESSIONAL Shampoo Aqua Hyaluron",
+    "brand": "Balea",
+    "market": "DE",
+    "packSize": "250 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "No split synonym entries; packet positions equal normalized positions.",
+    "sourceIds": [
+      "formula:T217 (tier 2, complete)",
+      "reveal:T217#0 dm.de PDP, dm own brand (Anschrift des Unternehmens: dm-drogerie markt GmbH + Co. KG, Karlsruhe) [manufacturer_de, grade moderate]"
+    ]
+  },
+  "status": "classified",
+  "policy": "shampoo-classification-v1.6",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic is ether/sulfonate type with at least one prominent buffer and no prominent reinforcing strong anionic -> moderate. SLES (2) + CAPB (3).",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 8
+        }
+      ],
+      "counterSignal": "None material.",
+      "neighboringAlternative": "none",
+      "sourceIds": [
+        "formula:T217 (tier 2, complete)"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "One meaningful system, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (10), with light refatters Glyceryl Oleate (9), HPGC (15), Lecithin (16) and late Sodium Hyaluronate (13). C2 not met.",
+      "formulaFacts": [
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 9
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 10
+        },
+        {
+          "ingredient": "Sodium Hyaluronate",
+          "position": 13
+        }
+      ],
+      "counterSignal": "Everything is post-fragrance; low realistic.",
+      "neighboringAlternative": "low",
+      "sourceIds": [
+        "formula:T217 (tier 2, complete)"
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: one post-fragrance cationic guar plus weak refatters; effective C1 reset.",
+      "neighboringAlternative": "none",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Guar (10) and weak refatters (9, 15, 16, 17), all post-fragrance."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "No persistent system."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 moderate chassis."
+        }
+      },
+      "evidenceByFamily": {
+        "cationic_polymer": [
+          [
+            "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+            10
+          ]
+        ],
+        "weak_refatter": [
+          [
+            "Glyceryl Oleate",
+            9
+          ],
+          [
+            "Hydrogenated Palm Glycerides Citrate",
+            15
+          ],
+          [
+            "Lecithin",
+            16
+          ],
+          [
+            "Ascorbyl Palmitate",
+            17
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            3
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Coco-Glucoside",
+            8
+          ]
+        ],
+        "humectant_context": [
+          [
+            "Aloe Barbadensis Leaf Juice Powder",
+            11
+          ],
+          [
+            "Sodium Hyaluronate",
+            13
+          ]
+        ]
+      },
+      "excluded": [
+        [
+          "Tocopherol",
+          14,
+          "antioxidant"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "Two families.",
+      "whyThisBand": "Light, late routes only.",
+      "whyNotNeighborBand": "Not moderate (W2): the families are one post-fragrance guar and weak refatters, all late; no silicone, lipid or film former; effective reset.",
+      "confidenceLimitingFactor": "None material.",
+      "ruleNotes": [
+        "W2"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 10,
+          "family": "cationic_polymer"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 9,
+          "family": "weak_refatter"
+        },
+        {
+          "ingredient": "Hydrogenated Palm Glycerides Citrate",
+          "position": 15,
+          "family": "weak_refatter"
+        },
+        {
+          "ingredient": "Lecithin",
+          "position": 16,
+          "family": "weak_refatter"
+        },
+        {
+          "ingredient": "Ascorbyl Palmitate",
+          "position": 17,
+          "family": "weak_refatter"
+        },
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "family": "anionic_surfactant"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "family": "amphoteric_surfactant"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 8,
+          "family": "nonionic_surfactant"
+        },
+        {
+          "ingredient": "Aloe Barbadensis Leaf Juice Powder",
+          "position": 11,
+          "family": "humectant_context"
+        },
+        {
+          "ingredient": "Sodium Hyaluronate",
+          "position": 13,
+          "family": "humectant_context"
+        }
+      ],
+      "canonicalFormula": {
+        "inciFingerprintSha256": "0d5d537d9861521620fc808ebb0fe6b3b88decc120aff9d099b9890fc0c22fb1",
+        "sourceTier": 2,
+        "completeness": "complete",
+        "identityConfidence": "high",
+        "captureDate": "not in sealed packet"
+      },
+      "sourceIds": [
+        "formula:T217 (tier 2, complete)"
+      ]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "neighboringAlternative": "moisture",
+      "rationale": "General: moisture positioning ('Feuchtigkeitsspendendes Shampoo', 'Für trockenes & feuchtigkeitsbedürftiges Haar', dm own-brand, moderate) sits over a nonspecific formula verdict: the only humectant (Sodium Hyaluronate 13) and the guar (10) are post-fragrance, with no humectant cluster. F1: moisture language over a nonspecific formula stays general.",
+      "counterSignal": "Moderate-graded moisture claim plus a hyaluronate and a cationic guar.",
+      "formulaFacts": [
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 10
+        },
+        {
+          "ingredient": "Aloe Barbadensis Leaf Juice Powder",
+          "position": 11
+        },
+        {
+          "ingredient": "Sodium Hyaluronate",
+          "position": 13
+        }
+      ],
+      "claimRole": "candidate",
+      "sourceIds": [
+        "formula:T217 (tier 2, complete)",
+        "reveal:T217#0 dm.de PDP, dm own brand (Anschrift des Unternehmens: dm-drogerie markt GmbH + Co. KG, Karlsruhe) [manufacturer_de, grade moderate]"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Empty.",
+      "counterSignal": "Secondary candidates fail Section 8 (distinct graded positioning plus independent route).",
+      "formulaFacts": [],
+      "sourceIds": [
+        "formula:T217 (tier 2, complete)",
+        "reveal:T217#0 dm.de PDP, dm own brand (Anschrift des Unternehmens: dm-drogerie markt GmbH + Co. KG, Karlsruhe) [manufacturer_de, grade moderate]"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Regular: no trigger.",
+      "counterSignal": "None.",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "formulaFacts": [],
+      "sourceIds": [
+        "formula:T217 (tier 2, complete)",
+        "reveal:T217#0 dm.de PDP, dm own brand (Anschrift des Unternehmens: dm-drogerie markt GmbH + Co. KG, Karlsruhe) [manufacturer_de, grade moderate]"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: 'die Kopfhaut geschont' is sparing wording (E2a).",
+      "counterSignal": "None.",
+      "formulaFacts": [],
+      "sourceIds": [
+        "formula:T217 (tier 2, complete)",
+        "reveal:T217#0 dm.de PDP, dm own brand (Anschrift des Unternehmens: dm-drogerie markt GmbH + Co. KG, Karlsruhe) [manufacturer_de, grade moderate]"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11).",
+      "counterSignal": "None; formula complete (ID-1).",
+      "neighboringAlternative": "none",
+      "sourceIds": [
+        "formula:T217 (tier 2, complete)"
+      ]
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "nonspecific",
+      "moistureRoutes": [
+        "Sodium Hyaluronate 13",
+        "Aloe Barbadensis Leaf Juice Powder 11"
+      ],
+      "repairRoutes": [],
+      "sharedConditioningRoutes": [
+        "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride 10",
+        "Glyceryl Oleate 9"
+      ],
+      "limitation": "Single late humectant; no cluster."
+    },
+    "claimRole": "candidate",
+    "counterSignal": "Moisture claim (moderate).",
+    "neighboringAlternative": "moisture"
+  },
+  "decisionTrace": {
+    "primaryFocus": {
+      "claimDirection": "moisture (manufacturer_de, moderate)",
+      "formulaCompatible": false,
+      "compatibleRoute": "nonspecific verdict",
+      "decisionReason": "F1: moisture claim over nonspecific formula -> general"
+    },
+    "secondaryFocus": {
+      "emptyDefaultConsidered": true,
+      "selectedValues": [],
+      "matchingDistinctClaims": [],
+      "independentRoutes": [],
+      "whyDistinctFromPrimary": "n/a",
+      "exceptionCode": null
+    },
+    "usageRole": {
+      "default": "regular",
+      "nonDefaultTriggerCode": "none",
+      "triggerEvidence": [],
+      "rationale": "No trigger."
+    }
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "high",
+        "rationale": "T1: W=low, C=moderate -> ideal for fine. Confidence = lowest of inputs (13.8): high. T2: thickness/texture claims ignored."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "high",
+        "rationale": "T1: W=low, C=moderate -> ideal for normal. Confidence = lowest of inputs (13.8): high. T2: thickness/texture claims ignored."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W=low, C=moderate -> acceptable for coarse. Confidence = lowest of inputs (13.8): moderate. T2: thickness/texture claims ignored."
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "high",
+      "rationale": "W-LIVE: weightPotential low -> light, 1:1; confidence = weightPotential confidence (13.8)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "sOrdinaryWays": [
+          1
+        ],
+        "rationale": "S-ORDINARY way 1; manufacturer-grade (dm own brand) source -> high."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate, D1 false -> regular. I3 checked against neighbor none for each projected bucket."
+    },
+    "positioning": {
+      "explicitResetPositioning": {
+        "value": false,
+        "confidence": "high",
+        "rationale": "D1: no 'tiefenrein', 'deep clean', 'clarifying shampoo' or 'detox-reinigung' stem in the name or a manufacturer/pack claim, and no occasional-use directions."
+      }
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "moderate",
+      "rationale": "D2 not met: D1 false (or formula not strong)."
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "expectedIntensity": "regular",
+        "liveMatch": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "expectedIntensity": "regular",
+        "liveMatch": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable",
+        "expectedIntensity": "regular",
+        "liveMatch": "supportive"
+      }
+    ],
+    "required_protocol_roles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "researchCombinationConfidence": null,
+    "liveComparison": "review_live_value_differs not computed in the lane (catalog-dependent, resolved by the orchestrator after freeze, 14)."
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "general (provisional, low)",
+      "final": "general",
+      "evidence": "moisture claim over nonspecific verdict (F1)",
+      "reason": "Post-unblind reconciliation (3.2): claims identify/confirm the candidate job; formula compatibility checked against the frozen verdict."
+    },
+    {
+      "property": "focusSecondary",
+      "blind": "[] (provisional, low)",
+      "final": "[] -> unchanged",
+      "evidence": "Revealed positioning",
+      "reason": "Section 8 / F2-F3 checked."
+    },
+    {
+      "property": "usageRole",
+      "blind": "regular (provisional, low)",
+      "final": "regular",
+      "evidence": "no trigger",
+      "reason": "Section 9 triggers checked mechanically with CL-SRC grades."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blind": "not_targeted (provisional, low; CSA recorded)",
+      "final": "not_targeted",
+      "evidence": "sparing wording",
+      "reason": "SC1 positioning plus CSA formula half (Section 10)."
+    },
+    {
+      "property": "cleansingStrength / conditioningLevel / weightPotential / dandruffSupport",
+      "blind": "frozen formula values",
+      "final": "unchanged",
+      "evidence": "Claims may not assign or move formula properties (3.2, 6.5 step 5, C7).",
+      "reason": "No formula error found on reconciliation."
+    }
+  ],
+  "claimToInciChecks": [
+    {
+      "claim": "Hyaluron",
+      "inci": "Sodium Hyaluronate (13)",
+      "result": "match"
+    },
+    {
+      "claim": "Aloe Vera",
+      "inci": "Aloe Barbadensis Leaf Juice Powder (11)",
+      "result": "match"
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "formulaPassFile": "out/formula-pass/T217.json (frozen before reveal)",
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeWeightSubjudgmentsPresent": true,
+    "whyNotNeighborBandSpecific": true,
+    "w2AppliedWhereTwoOrMoreFamilies": true,
+    "confidenceNamesLimitingUncertainty": "None material.",
+    "comparisonWithEarlierValuesMadeInLane": false,
+    "noWebUsed": true
+  },
+  "uncertainties": [
+    "focusPrimary general vs moisture: hinges on the frozen nonspecific verdict (late single humectant). A lane reading hyaluronate + guar + refatters as a moisture cluster would choose moisture at moderate."
+  ]
+}

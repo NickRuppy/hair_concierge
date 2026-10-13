@@ -93,7 +93,9 @@ function readyPlan() {
   })
   assert.equal(result.status, "ready")
   if (result.status !== "ready") throw new Error("expected ready snapshot")
-  const plan = adaptInitialNeedSnapshotToPlanStartViewModel(result.snapshot)
+  const plan = adaptInitialNeedSnapshotToPlanStartViewModel(result.snapshot, {
+    toolsEnabled: false,
+  })
   assert.ok(plan)
   return { ...plan, personalPlanId: "plan-1" }
 }

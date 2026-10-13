@@ -1,0 +1,28 @@
+{
+  "blindId": "VT19",
+  "productName": "Moisture Repair Shampoo",
+  "brand": "Moroccanoil",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_moroccanoil_de",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Reparieren Sie das durch Farbe, chemische Behandlungen oder Hitze-Styling geschädigte Haar. Moroccanoil® regenerierendes Shampoo reinigt und belebt das Haar sanft und effektiv und sorgt für ein genährtes, geschmeidiges und starkes Ergebnis. Reich an Antioxidantien, Keratin, Fettsäuren, Proteine und andere Nährstoffe. Diese Inhaltsstoffe wirken auf zwei molekularen Ebenen, das Haar wird von der Spitze bis in die Wurzel gestärkt und schützt das Haar vor dem Verblassen - für ein gesundes und strahlendes Aussehen. (Produktname DE: Feuchtigkeitsspendendes Reparatur-Shampoo)",
+      "directionsVerbatim": "Moroccanoil® Regenerierendes Shampoo in das nasse Haar und in die Kopfhaut einmassieren und durch die Zugabe von Wasser die hochkonzentrierte Formel zu einem üppigen Schaum verarbeiten. Gründlich ausspülen, bis das Wasser klar abläuft. Bei Bedarf wiederholen und anschließen mit Moroccanoil® Regenerierender Conditioner behandeln."
+    },
+    {
+      "sourceType": "manufacturer_moroccanoil_eu_english",
+      "sourceKind": "manufacturer_foreign",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Repair damaged hair caused by color, chemical processing, or heat styling. Moroccanoil® Moisture Repair Shampoo gently and effectively cleanses and revives hair, leaving it nourished, manageable, and strong. Infused with antioxidant-rich argan oil, keratin proteins, and fatty acids, this moisturizing shampoo helps strengthen broken strands and dead ends, helps the hair recover its natural elasticity, and promotes a healthier look and feel. Color-safe. Sulfate-free, phosphate-free and paraben-free.",
+      "directionsVerbatim": "Massage Moroccanoil® Moisture Repair Shampoo throughout wet hair and scalp. Continue to add water to activate a rich lather from the highly concentrated formula. Rinse thoroughly until water runs clear. Repeat if needed, and follow with Moroccanoil Moisture Repair Conditioner."
+    },
+    {
+      "sourceType": "retailer_flaconi_de_PHASE1_NOT_REREAD",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Pack (Flaconi image, phase 1): color safe; sulfate-, phosphate-, paraben-free",
+      "directionsVerbatim": ""
+    }
+  ]
+}

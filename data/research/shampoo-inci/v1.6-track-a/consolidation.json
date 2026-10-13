@@ -1,0 +1,2318 @@
+{
+ "products": 73,
+ "adjudications": [
+  {
+   "productId": "0017381a-84ba-46dd-9b6e-7ef457e8b5b4",
+   "slot": "A09",
+   "needsResearch": true,
+   "flags": []
+  },
+  {
+   "productId": "3f3c7d89-9e7b-4e91-85f7-d3c58d304918",
+   "slot": "A34",
+   "needsResearch": false,
+   "flags": [
+    "tier ('coarse', 'normal'): A ideal / B acceptable -> acceptable"
+   ]
+  },
+  {
+   "productId": "1f51a69f-c946-4898-9091-2fd2c59fb467",
+   "slot": "A08",
+   "needsResearch": false,
+   "flags": [
+    "tier ('fine', 'normal'): A acceptable / B ideal -> acceptable"
+   ]
+  }
+ ],
+ "diff": [
+  {
+   "productId": "0017381a-84ba-46dd-9b6e-7ef457e8b5b4",
+   "slot": "A09",
+   "status": "needs_research (live unchanged)"
+  },
+  {
+   "productId": "02afbd03-1c7d-467c-8a07-a8b226d6f535",
+   "slot": "A11",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "irritationen"
+    ],
+    [
+     "coarse",
+     "trocken"
+    ],
+    [
+     "fine",
+     "irritationen"
+    ],
+    [
+     "fine",
+     "trocken"
+    ],
+    [
+     "normal",
+     "trocken"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [
+    [
+     [
+      "normal",
+      "irritationen"
+     ],
+     "gentle",
+     "regular"
+    ]
+   ],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "irritationen"
+    ],
+    [
+     "coarse",
+     "trocken"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "03b847e5-01b9-40e5-950a-98efc73abb3a",
+   "slot": "G06",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "dehydriert-fettig"
+    ],
+    [
+     "normal",
+     "dehydriert-fettig"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [
+    [
+     [
+      "fine",
+      "dehydriert-fettig"
+     ],
+     "clarifying",
+     "regular"
+    ]
+   ],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "dehydriert-fettig"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "088b1427-ed22-424e-8cfd-ea2578120ae6",
+   "slot": "G02",
+   "recommended": true,
+   "added": [
+    [
+     "normal",
+     "schuppen"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [
+    [
+     [
+      "coarse",
+      "schuppen"
+     ],
+     "gentle",
+     "regular"
+    ],
+    [
+     [
+      "fine",
+      "schuppen"
+     ],
+     "gentle",
+     "regular"
+    ]
+   ],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "schuppen"
+    ],
+    [
+     "fine",
+     "schuppen"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "0ab645f9-d46d-4cf2-96a5-b5e00f74cae2",
+   "slot": "A55",
+   "recommended": false,
+   "added": [
+    [
+     "fine",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "0d341836-96b3-4364-9319-a7f0884b3da9",
+   "slot": "U3",
+   "recommended": false,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "0d68d56f-7e82-41d0-a2a8-bbf8f02e0b33",
+   "slot": "G05",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "irritationen"
+    ],
+    [
+     "fine",
+     "irritationen"
+    ],
+    [
+     "normal",
+     "irritationen"
+    ]
+   ],
+   "removed": [
+    [
+     "normal",
+     "trocken"
+    ]
+   ],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "irritationen"
+    ],
+    [
+     "fine",
+     "irritationen"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "0f71ff9d-bf1e-4d76-883a-e1a9e6a2094c",
+   "slot": "U1",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "dehydriert-fettig"
+    ],
+    [
+     "normal",
+     "dehydriert-fettig"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [
+    [
+     [
+      "fine",
+      "dehydriert-fettig"
+     ],
+     "clarifying",
+     "regular"
+    ]
+   ],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "dehydriert-fettig"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "1311e51c-7941-4d2c-b9b4-7a450ee37f15",
+   "slot": "A04",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [
+    [
+     [
+      "fine",
+      "normal"
+     ],
+     "gentle",
+     "regular"
+    ]
+   ],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "1623a993-3ff4-43be-82c1-95a1ee57ec52",
+   "slot": "A27",
+   "recommended": true,
+   "added": [
+    [
+     "fine",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "16ebefbe-48d8-4c7f-9c81-b903651a6e03",
+   "slot": "G11",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [
+    [
+     [
+      "fine",
+      "normal"
+     ],
+     "gentle",
+     "regular"
+    ]
+   ],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "17b6d50e-ca5b-4f66-bdd7-39bd19afe748",
+   "status": "not_researched (blocked or new)"
+  },
+  {
+   "productId": "1e61a644-94b0-4356-ab55-f58572fa1e18",
+   "slot": "U5",
+   "recommended": false,
+   "added": [],
+   "removed": [
+    [
+     "coarse",
+     "dehydriert-fettig"
+    ],
+    [
+     "fine",
+     "dehydriert-fettig"
+    ],
+    [
+     "normal",
+     "dehydriert-fettig"
+    ]
+   ],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "schuppen"
+    ],
+    [
+     "fine",
+     "schuppen"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "1ef2be82-259c-4a1f-af2e-3ac3403f9731",
+   "slot": "A40",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "irritationen"
+    ],
+    [
+     "coarse",
+     "trocken"
+    ],
+    [
+     "fine",
+     "trocken"
+    ],
+    [
+     "normal",
+     "irritationen"
+    ],
+    [
+     "normal",
+     "trocken"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [
+    [
+     [
+      "fine",
+      "irritationen"
+     ],
+     "gentle",
+     "regular"
+    ]
+   ],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "irritationen"
+    ],
+    [
+     "coarse",
+     "trocken"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "1f51a69f-c946-4898-9091-2fd2c59fb467",
+   "slot": "A08",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "22f95dcb-12de-4d62-b206-f03dbd6e94a0",
+   "slot": "G07",
+   "recommended": false,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "261e5c9f-d312-4206-82da-fbd0ab6f3614",
+   "slot": "A41",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "schuppen"
+    ],
+    [
+     "normal",
+     "schuppen"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "schuppen"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "286071ba-9c9a-4c60-979c-7e51df949fbf",
+   "slot": "G10",
+   "recommended": false,
+   "added": [
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "2e887538-3b92-4344-9bbd-1761383ba4a6",
+   "slot": "A18",
+   "recommended": false,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [
+    [
+     [
+      "fine",
+      "normal"
+     ],
+     "regular",
+     "gentle"
+    ],
+    [
+     [
+      "normal",
+      "normal"
+     ],
+     "regular",
+     "gentle"
+    ]
+   ],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+   "slot": "A35",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "303b4c0c-53a4-46de-883d-c29e448ee590",
+   "slot": "A49",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "schuppen"
+    ],
+    [
+     "normal",
+     "schuppen"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "schuppen"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "3405f33b-ae5f-4185-b72b-68c9a87f7c06",
+   "slot": "A47",
+   "recommended": false,
+   "added": [
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "34697aec-761c-45e7-9a92-986f786dd022",
+   "slot": "A23",
+   "recommended": false,
+   "added": [
+    [
+     "coarse",
+     "schuppen"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "schuppen"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "3d94c017-9edb-4ba0-accd-4772e262f012",
+   "slot": "G13",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [
+    [
+     "normal",
+     "irritationen"
+    ]
+   ],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "3f3c7d89-9e7b-4e91-85f7-d3c58d304918",
+   "slot": "A34",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [
+    [
+     [
+      "fine",
+      "normal"
+     ],
+     "regular",
+     "gentle"
+    ]
+   ],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "41b99629-5a1c-402f-a486-d41780e89e66",
+   "slot": "U2",
+   "recommended": false,
+   "added": [],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "4988d0c9-fc92-4bf2-aa5c-bcc7cd8c7946",
+   "slot": "G09",
+   "recommended": true,
+   "added": [
+    [
+     "fine",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [
+    [
+     [
+      "coarse",
+      "normal"
+     ],
+     "gentle",
+     "regular"
+    ]
+   ],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "4a45948b-53a6-48ac-9c02-20718c1d19c4",
+   "slot": "A07",
+   "recommended": false,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "515de93c-1c77-465d-ae0d-2a8d6ddb3d73",
+   "slot": "A52",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [
+    [
+     "fine",
+     "dehydriert-fettig"
+    ]
+   ],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "51a0b647-2794-49a3-96e1-e7695432561e",
+   "slot": "A51",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "irritationen"
+    ],
+    [
+     "coarse",
+     "trocken"
+    ],
+    [
+     "normal",
+     "irritationen"
+    ],
+    [
+     "normal",
+     "trocken"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [
+    [
+     [
+      "fine",
+      "irritationen"
+     ],
+     "gentle",
+     "regular"
+    ],
+    [
+     [
+      "fine",
+      "trocken"
+     ],
+     "gentle",
+     "regular"
+    ]
+   ],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "irritationen"
+    ],
+    [
+     "coarse",
+     "trocken"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "57bae8c8-0ebd-4722-b955-c760d8ffcdbb",
+   "slot": "A42",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "5effc311-25d7-44dd-8c16-b93c182068d3",
+   "slot": "A37",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "schuppen"
+    ],
+    [
+     "fine",
+     "schuppen"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "schuppen"
+    ],
+    [
+     "fine",
+     "schuppen"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "64fb44d5-8701-46ab-bcba-f1747f071e48",
+   "slot": "A31",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [
+    [
+     [
+      "fine",
+      "normal"
+     ],
+     "regular",
+     "gentle"
+    ]
+   ],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "678119a0-9070-4faf-b9ed-7c0ac008767e",
+   "slot": "A43",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [
+    [
+     "coarse",
+     "irritationen"
+    ]
+   ],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "6dc65df2-2466-43e4-bdc2-3a05803f305c",
+   "slot": "A29",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [
+    [
+     "coarse",
+     "dehydriert-fettig"
+    ],
+    [
+     "normal",
+     "dehydriert-fettig"
+    ]
+   ],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "6fde3fe2-3850-4502-b9f2-ebb17eb13bad",
+   "slot": "A39",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [
+    [
+     "fine",
+     "dehydriert-fettig"
+    ]
+   ],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "716a4f4e-6ba4-4742-a1cf-75e90ae1da3f",
+   "slot": "A16",
+   "recommended": true,
+   "added": [
+    [
+     "fine",
+     "schuppen"
+    ],
+    [
+     "normal",
+     "schuppen"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "schuppen"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "7200bb0b-7463-433b-86c8-744f5c1431de",
+   "slot": "U4",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [
+    [
+     "normal",
+     "dehydriert-fettig"
+    ]
+   ],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "7373656d-5fd7-46e8-81a3-2ef29e3c4c18",
+   "slot": "G04",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [
+    [
+     "fine",
+     "irritationen"
+    ]
+   ],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "744de604-d266-453b-a56b-eea92c5ca565",
+   "slot": "G01",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "schuppen"
+    ],
+    [
+     "fine",
+     "schuppen"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "schuppen"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "7b5ec424-d21f-4eb8-999e-7aed98e94b86",
+   "slot": "A36",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [
+    [
+     "normal",
+     "dehydriert-fettig"
+    ]
+   ],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "7e95671b-41a7-4f5c-9188-e535e46678ba",
+   "slot": "A50",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "schuppen"
+    ],
+    [
+     "fine",
+     "schuppen"
+    ],
+    [
+     "normal",
+     "schuppen"
+    ]
+   ],
+   "removed": [
+    [
+     "fine",
+     "dehydriert-fettig"
+    ]
+   ],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "schuppen"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "86f44889-b2c9-40a1-9190-58d7f738b6ca",
+   "slot": "A24",
+   "recommended": false,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [
+    [
+     "fine",
+     "irritationen"
+    ],
+    [
+     "normal",
+     "irritationen"
+    ]
+   ],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "88c230c5-1020-4648-a10e-c2a1e8c87e0e",
+   "slot": "A25",
+   "recommended": false,
+   "added": [],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "8a90f0fa-9cb1-458a-93f3-c2374e6d8f16",
+   "slot": "A21",
+   "recommended": false,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [
+    [
+     "fine",
+     "irritationen"
+    ],
+    [
+     "normal",
+     "irritationen"
+    ]
+   ],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "94829f16-b21d-4061-9dcc-cbd43dcb4274",
+   "slot": "A22",
+   "recommended": false,
+   "added": [
+    [
+     "coarse",
+     "irritationen"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "irritationen"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "9bfad335-a086-45a0-9af7-f26b36b4ecff",
+   "slot": "A12",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [
+    [
+     "normal",
+     "dehydriert-fettig"
+    ]
+   ],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "9d8d4709-4041-495e-98ee-e0261fa30e27",
+   "slot": "A44",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "schuppen"
+    ],
+    [
+     "fine",
+     "schuppen"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "schuppen"
+    ],
+    [
+     "fine",
+     "schuppen"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "a06cfc4d-c4f5-457e-a94e-26559f96f0e9",
+   "slot": "A13",
+   "recommended": false,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [
+    [
+     "normal",
+     "trocken"
+    ]
+   ],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "a1451c9b-fb55-406d-a81f-c513cc4ddcdf",
+   "slot": "A20",
+   "recommended": false,
+   "added": [
+    [
+     "coarse",
+     "irritationen"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "irritationen"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+   "slot": "G08",
+   "recommended": true,
+   "added": [
+    [
+     "fine",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [
+    [
+     [
+      "coarse",
+      "normal"
+     ],
+     "gentle",
+     "regular"
+    ]
+   ],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "a79513be-e34b-4a1e-b7eb-b3d4b58160be",
+   "slot": "A05",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "irritationen"
+    ],
+    [
+     "normal",
+     "irritationen"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [
+    [
+     [
+      "fine",
+      "irritationen"
+     ],
+     "gentle",
+     "regular"
+    ]
+   ],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "irritationen"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "a7ff335a-7e81-4cf4-9c20-9209bff4386b",
+   "slot": "A30",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "removed": [
+    [
+     "fine",
+     "trocken"
+    ]
+   ],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "a836ef4f-f406-4557-b908-0155919e2c4f",
+   "slot": "A19",
+   "recommended": false,
+   "added": [
+    [
+     "coarse",
+     "schuppen"
+    ]
+   ],
+   "removed": [
+    [
+     "fine",
+     "dehydriert-fettig"
+    ],
+    [
+     "normal",
+     "dehydriert-fettig"
+    ]
+   ],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "schuppen"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "b000d235-1fc6-434c-9ba1-f1207d36cded",
+   "slot": "A01",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "irritationen"
+    ],
+    [
+     "coarse",
+     "trocken"
+    ],
+    [
+     "fine",
+     "irritationen"
+    ],
+    [
+     "normal",
+     "irritationen"
+    ],
+    [
+     "normal",
+     "trocken"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [
+    [
+     [
+      "fine",
+      "trocken"
+     ],
+     "gentle",
+     "regular"
+    ]
+   ],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "irritationen"
+    ],
+    [
+     "coarse",
+     "trocken"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "b761256d-c0d2-4413-9fa5-8ab950ef69bf",
+   "slot": "A53",
+   "recommended": false,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "bb1b029f-a8fa-4276-8268-f6ce418128c7",
+   "slot": "A48",
+   "recommended": false,
+   "added": [
+    [
+     "fine",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+   "slot": "U6",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [
+    [
+     "coarse",
+     "trocken"
+    ]
+   ],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "c07a181b-3d55-4d47-ad68-9c1e324d4496",
+   "slot": "A14",
+   "recommended": true,
+   "added": [
+    [
+     "fine",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [
+    [
+     [
+      "coarse",
+      "normal"
+     ],
+     "gentle",
+     "regular"
+    ]
+   ],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "cc9318d2-13af-4c83-8b5e-7effb687c92f",
+   "slot": "A26",
+   "recommended": false,
+   "added": [
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+   "slot": "A10",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "dehydriert-fettig"
+    ],
+    [
+     "fine",
+     "dehydriert-fettig"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "dehydriert-fettig"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "d01de47e-e360-4b31-9924-e3e5bc31ccdc",
+   "slot": "G12",
+   "recommended": false,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "d408aca9-cd16-4cb0-90e7-bab26a698000",
+   "slot": "A17",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [
+    [
+     "coarse",
+     "irritationen"
+    ]
+   ],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "e4e4fd05-33fd-4048-9553-76815bff5d43",
+   "slot": "A45",
+   "recommended": false,
+   "added": [
+    [
+     "fine",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "e76e0ed4-bd20-40cd-84ae-e93030610d40",
+   "slot": "A28",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "e7bfd306-b128-4735-a9f8-0eeacdbd5013",
+   "slot": "G03",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [
+    [
+     "fine",
+     "irritationen"
+    ]
+   ],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "e859d6e0-e991-4081-84b5-b81862c82475",
+   "slot": "A46",
+   "recommended": false,
+   "added": [
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "ead1333b-6839-464d-b272-673d39bb95a4",
+   "slot": "A02",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [
+    [
+     [
+      "fine",
+      "normal"
+     ],
+     "gentle",
+     "regular"
+    ]
+   ],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "eafe4cfa-f4a9-47b3-a36d-b689f1da5c7d",
+   "slot": "A03",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "irritationen"
+    ],
+    [
+     "coarse",
+     "trocken"
+    ],
+    [
+     "fine",
+     "irritationen"
+    ],
+    [
+     "fine",
+     "trocken"
+    ],
+    [
+     "normal",
+     "trocken"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [
+    [
+     [
+      "normal",
+      "irritationen"
+     ],
+     "gentle",
+     "regular"
+    ]
+   ],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "irritationen"
+    ],
+    [
+     "coarse",
+     "trocken"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "eb99d805-20d4-4dbb-9651-17c9e954a769",
+   "slot": "A32",
+   "recommended": false,
+   "added": [
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "f033afbe-281a-419e-a245-3ad83d721bd0",
+   "slot": "A33",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [
+    [
+     "normal",
+     "trocken"
+    ]
+   ],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "f184aef4-d8f9-4956-bcd6-ba1bf1ebeace",
+   "slot": "A06",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "schuppen"
+    ],
+    [
+     "normal",
+     "schuppen"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "schuppen"
+    ]
+   ],
+   "scalpConcernChange": true
+  },
+  {
+   "productId": "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
+   "slot": "A54",
+   "recommended": false,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [
+    [
+     [
+      "fine",
+      "normal"
+     ],
+     "gentle",
+     "regular"
+    ]
+   ],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  },
+  {
+   "productId": "fcbc469f-93c8-4be5-85db-e789b09189c7",
+   "slot": "A38",
+   "recommended": true,
+   "added": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "normal",
+     "normal"
+    ]
+   ],
+   "removed": [],
+   "intensityChanged": [
+    [
+     [
+      "fine",
+      "normal"
+     ],
+     "gentle",
+     "regular"
+    ]
+   ],
+   "amberUnderT7": [
+    [
+     "coarse",
+     "normal"
+    ],
+    [
+     "fine",
+     "normal"
+    ]
+   ],
+   "scalpConcernChange": false
+  }
+ ],
+ "coverage": {
+  "before_any": {
+   "coarse\u00d7balanced": 4,
+   "coarse\u00d7dandruff": 2,
+   "coarse\u00d7dry": 2,
+   "coarse\u00d7irritated": 2,
+   "coarse\u00d7oily": 1,
+   "fine\u00d7balanced": 7,
+   "fine\u00d7dandruff": 4,
+   "fine\u00d7dry": 3,
+   "fine\u00d7irritated": 5,
+   "fine\u00d7oily": 5,
+   "normal\u00d7balanced": 4,
+   "normal\u00d7dandruff": 3,
+   "normal\u00d7dry": 2,
+   "normal\u00d7irritated": 3,
+   "normal\u00d7oily": 5
+  },
+  "after_any": {
+   "coarse\u00d7balanced": 28,
+   "coarse\u00d7dandruff": 9,
+   "coarse\u00d7dry": 6,
+   "coarse\u00d7irritated": 7,
+   "coarse\u00d7oily": 3,
+   "fine\u00d7balanced": 25,
+   "fine\u00d7dandruff": 9,
+   "fine\u00d7dry": 5,
+   "fine\u00d7irritated": 7,
+   "fine\u00d7oily": 3,
+   "normal\u00d7balanced": 28,
+   "normal\u00d7dandruff": 9,
+   "normal\u00d7dry": 5,
+   "normal\u00d7irritated": 7,
+   "normal\u00d7oily": 3
+  },
+  "after_green_t7": {
+   "coarse\u00d7balanced": 3,
+   "coarse\u00d7dry": 1,
+   "fine\u00d7balanced": 12,
+   "fine\u00d7dandruff": 6,
+   "fine\u00d7dry": 5,
+   "fine\u00d7irritated": 6,
+   "fine\u00d7oily": 3,
+   "normal\u00d7balanced": 25,
+   "normal\u00d7dandruff": 9,
+   "normal\u00d7dry": 5,
+   "normal\u00d7irritated": 7,
+   "normal\u00d7oily": 3
+  }
+ }
+}

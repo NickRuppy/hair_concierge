@@ -19,6 +19,8 @@ import {
   personalPlanLeadRequestSchema,
 } from "@/lib/personal-plan-quiz/persistence"
 import { checkRateLimit, QUIZ_LEAD_RATE_LIMIT } from "@/lib/rate-limit"
+import { resolveLeadIdentityPolicy } from "@/lib/quiz/lead-identity"
+import { createClient as createSessionClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { FUNNEL_SESSION_COOKIE, FUNNEL_TOUCH_COOKIE } from "@/lib/funnel/cookie"
 import {
@@ -42,6 +44,7 @@ interface PersonalPlanLeadPostDependencies {
   checkRateLimit: typeof checkRateLimit
   checkEmailDeliverability: typeof checkEmailDeliverability
   recordEmailDeliverabilityOutcome: typeof recordEmailDeliverabilityOutcome
+  createSessionClient: typeof createSessionClient
   createAdminClient: typeof createAdminClient
   cookies: typeof cookies
   issueResultReturn: typeof issuePersonalPlanResultReturn
@@ -65,6 +68,7 @@ export function createPersonalPlanLeadPostHandler(
     checkEmailDeliverability,
     recordEmailDeliverabilityOutcome,
     createAdminClient,
+    createSessionClient,
     cookies,
     issueResultReturn: issuePersonalPlanResultReturn,
     enqueueMetaLead,
@@ -165,6 +169,14 @@ export function createPersonalPlanLeadPostHandler(
           { status: 403 },
         )
       }
+      const identityPolicy =
+        moderator.kind === "authorized"
+          ? { authenticatedSameEmail: true, allowIdentityTraits: true }
+          : await resolveLeadIdentityPolicy(
+              supabase,
+              deliverableEmail,
+              dependencies.createSessionClient,
+            )
       const { data: savedLeads, error: saveError } = await supabase.rpc(
         moderator.kind === "authorized"
           ? "save_personal_plan_moderator_lead_with_artifact"
@@ -177,7 +189,11 @@ export function createPersonalPlanLeadPostHandler(
                 p_confirmed_email: moderator.email,
                 p_funnel_session_id: moderator.funnelSessionId,
               }
-            : { p_email: deliverableEmail }),
+            : {
+                p_email: deliverableEmail,
+                p_identity_traits_allowed: identityPolicy.allowIdentityTraits,
+                p_authenticated_same_email: identityPolicy.authenticatedSameEmail,
+              }),
           p_marketing_consent: parsed.marketingConsent,
           p_quiz_answers: quizAnswers,
           p_artifact_id: parsed.preparedPlan.artifactId,

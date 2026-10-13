@@ -1,0 +1,268 @@
+{
+  "blindId": "T206",
+  "inciFingerprintSha256": "add2a5261bec16c0e65c307a8d8b0d2c59883a946969bd260a455a950295a5af",
+  "fingerprintRecomputedMatches": true,
+  "formulaSource": {
+    "tier": 4,
+    "completeness": "complete",
+    "identityConfidence": "high"
+  },
+  "normalization": "'Aqua [Water]' is one entry. Normalized positions = packet positions.",
+  "prominenceCutoff": "Parfum [Fragrance] at 6 -> positions 1-5 prominent (E3).",
+  "surfactantArchitecture": "Disodium Laureth Sulfosuccinate (2, mild anionic, earliest cleansing surfactant); Cocamidopropyl Hydroxysultaine (3) and Cocamidopropyl Betaine (4) prominent amphoterics; Cocamide MEA (18) thickener; Laureth-10 (19) late. No strong anionic.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "C6: no prominent strong anionic; earliest prominent cleansing surfactant is a mild anionic sulfosuccinate (2) with prominent amphoteric co-surfactants (3, 4) -> low.",
+      "counterSignal": "None material; sulfosuccinate is an ether-derived mild anionic.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Disodium Laureth Sulfosuccinate",
+          "position": 2
+        },
+        {
+          "ingredient": "Cocamidopropyl Hydroxysultaine",
+          "position": 3
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Little substantive slip: prominent route only PEG-18 Glyceryl Oleate/Cocoate (5, weak refatter); Panthenol (7), Avena Sativa Peptide (8), Glycol Distearate (14), Polyquaternium-11 (17), Glycerin (22) are post-fragrance light routes.",
+      "counterSignal": "Several light routes together could read as moderate.",
+      "neighboringAlternative": "moderate",
+      "formulaFacts": [
+        {
+          "ingredient": "PEG-18 Glyceryl Oleate/Cocoate",
+          "position": 5
+        },
+        {
+          "ingredient": "Avena Sativa Peptide",
+          "position": 8
+        },
+        {
+          "ingredient": "Polyquaternium-11",
+          "position": 17
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: weak refatter, a late oat peptide and a late Polyquaternium-11; no silicone or payload lipid.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "PEG-18 Glyceryl Oleate/Cocoate (5), Avena Sativa Peptide (8), Polyquaternium-11 (17), trace C13-15 Alkane (21)."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "Water-soluble peptide, low-charge PQ-11, weak refatter."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "Mild sulfosuccinate/amphoteric chassis; gentle but sufficient against these light routes (weak-to-moderate)."
+        }
+      },
+      "evidenceByFamily": {
+        "weak_refatter": [
+          [
+            "PEG-18 Glyceryl Oleate/Cocoate",
+            5
+          ]
+        ],
+        "protein_film": [
+          [
+            "Avena Sativa Peptide",
+            8
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Polyquaternium-11",
+            17
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Disodium Laureth Sulfosuccinate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Hydroxysultaine",
+            3
+          ],
+          [
+            "Cocamidopropyl Betaine",
+            4
+          ]
+        ],
+        "humectant_context": [
+          [
+            "Panthenol",
+            7
+          ],
+          [
+            "Glycerin",
+            22
+          ]
+        ]
+      },
+      "excluded": [
+        [
+          "Juniperus Virginiana Oil",
+          12,
+          "fragrance oil (6.4)"
+        ],
+        [
+          "Citrus Aurantium Peel Oil",
+          13,
+          "fragrance oil"
+        ],
+        [
+          "Glycol Distearate",
+          14,
+          "pearlizer"
+        ],
+        [
+          "Cocamide MEA",
+          18,
+          "thickener"
+        ],
+        [
+          "C13-15 Alkane",
+          21,
+          "light volatile-leaning emollient/solvent, trace"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "Three deposition families; mild chassis offers less reset.",
+      "whyThisBand": "Only light, low-persistence routes; nothing substantive is prominent.",
+      "whyNotNeighborBand": "Not moderate (W2): families are a weak refatter, a post-fragrance water-soluble peptide (8) and a late PQ-11 (17); no silicone, lipid or strong cationic, so combined residue stays below noticeable even with a mild reset.",
+      "confidenceLimitingFactor": "Mild chassis gives less reset; realistic unknowns could move to moderate.",
+      "ruleNotes": [
+        "W2"
+      ]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Mild, light formula; no specialist route evident.",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "basis": "Light peptide, panthenol and extracts; no coherent cluster."
+      },
+      "formulaCompatibleRoutes": [
+        "none specific"
+      ],
+      "counterSignal": "Fragrance, essential oils, MCI/MI.",
+      "neighboringAlternative": "moisture"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Empty default; a secondary needs distinct positioning (Section 8), not visible yet.",
+      "counterSignal": "Positioning unknown.",
+      "neighboringAlternative": [
+        "shine"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Default regular (Section 9); triggers need graded claims. frequent possible (cleansing low) with explicit frequency wording.",
+      "counterSignal": "No claims.",
+      "neighboringAlternative": "frequent"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). SC1 positioning not visible. CSA formula half: fails: no prominent listed E4 route; Panthenol (7) and Glycerin (22) are after Parfum. unlisted_route_candidate:PEG-18 Glyceryl Oleate/Cocoate (5).",
+      "counterSignal": "Fragrance + essential oils + MCI/MI.",
+      "neighboringAlternative": "targeted",
+      "csaPasses": false
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11).",
+      "counterSignal": "None; formula complete (ID-1).",
+      "neighboringAlternative": "none"
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Disodium Laureth Sulfosuccinate",
+      "position": 2,
+      "role": "mild anionic, earliest surfactant"
+    },
+    {
+      "ingredient": "Cocamidopropyl Hydroxysultaine",
+      "position": 3,
+      "role": "amphoteric"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "amphoteric"
+    },
+    {
+      "ingredient": "PEG-18 Glyceryl Oleate/Cocoate",
+      "position": 5,
+      "role": "weak_refatter (unlisted for E4)"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 6,
+      "role": "E3 cutoff"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 7,
+      "role": "comfort (not prominent)"
+    },
+    {
+      "ingredient": "Avena Sativa Peptide",
+      "position": 8,
+      "role": "protein_film"
+    },
+    {
+      "ingredient": "Juniperus Virginiana Oil",
+      "position": 12,
+      "role": "fragrance oil"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 14,
+      "role": "pearlizer"
+    },
+    {
+      "ingredient": "Polyquaternium-11",
+      "position": 17,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Methylchloroisothiazolinone",
+      "position": 24,
+      "role": "preservative"
+    }
+  ],
+  "unresolvedMaterialIngredients": [],
+  "blindUncertainties": [
+    "C13-15 Alkane (21) treated as trace light emollient/solvent, excluded; even as payload_lipid it is trace."
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "blindId": "W308",
+  "inciFingerprintSha256": "67f890bcc445fdb931de50ce96290cf6c902dfc338f8ebebd46019bf413d661f",
+  "phase": "formula-pass (blind, claims hidden)",
+  "formulaBlock": {
+    "packSize": "300 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 1,
+    "identityConfidence": "high",
+    "normalization": "No split synonym entries; packet positions = normalized ID-2 positions (26 entries).",
+    "e3Point": "Parfum @6. Prominent = positions 1-5."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate @2 with prominent buffer Cocamidopropyl Betaine @3, no reinforcing strong anionic. Coco-Glucoside @8 is after Parfum (not prominent).",
+      "ruleIds": ["C1", "C4", "E3"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low: no conditioning system is prominent; all care routes follow Parfum @6 (Glyceryl Oleate @7, PEG-3 Distearate @9, Hydrolyzed Wheat Protein @10, Panthenol @12, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @15 after two preservatives, Glycerin @18). Counter-signal: several light routes (protein, guar, refatter) together could give noticeable slip, so moderate is the neighbor.",
+      "ruleIds": ["5", "C2", "E3"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "silicone": [],
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @15"],
+        "cationic_conditioner": [],
+        "payload_lipid": [],
+        "weak_refatter": ["Glyceryl Oleate @7", "Hydrogenated Palm Glycerides Citrate @25"],
+        "protein_film": ["Hydrolyzed Wheat Protein @10"],
+        "film_former": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @3", "Coco-Glucoside @8"],
+        "humectantContext": ["Panthenol @12", "Glycerin @18", "Pantolactone @20", "Propylene Glycol @19 (solvent)"],
+        "excluded": ["PEG-3 Distearate @9 (pearlizing/thickening ester, 6.4)", "Niacinamide @13 (active)", "Terpineol @17 (fragrance)", "Tocopherol @23", "Centaurea/Gossypium extracts @24/@26"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 6,
+        "inci": "Parfum",
+        "classes": ["fragrance"],
+        "cap": "e3Point @6 (Parfum)",
+        "alphabeticalRun": null,
+        "skipped": [],
+        "codes": [],
+        "note": "No candidate before the cap; Parfum @6 plausible ((i) SLES @2 before it).",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light",
+      "persistence": "low",
+      "resetCapacity": "moderate",
+      "counterevidence": "Three deposition families (weak_refatter, protein_film, cationic_polymer) are present.",
+      "whyThisBand": "All deposition routes are light kinds and all sit after Parfum @6; reset is an effective C1 chassis.",
+      "whyNotNeighborBand": "Not moderate (W2 named evidence): every deposition family is listed after Parfum @6 - the weak refatter @7, the wheat protein @10 and the hydroxypropyl guar @15 after two preservatives (@11, @14) - i.e. trace-level light routes; there is no silicone, payload lipid or prominent polymer, and a moderate C1 reset faces only these light routes.",
+      "confidenceLimitingFactor": "Three light families converge; their combined effect is a judgment, so moderate is a realistic neighbor.",
+      "rationale": "Low: only late light routes (refatter @7, protein @10, guar @15) against moderate reset; neighbor moderate.",
+      "ruleIds": ["6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "repair",
+      "provisional": "formula-only; claims hidden",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": ["Panthenol @12", "Glycerin @18"],
+        "repairRoutes": ["Hydrolyzed Wheat Protein @10"],
+        "sharedConditioningRoutes": ["Glyceryl Oleate @7", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @15"],
+        "limitation": "One late protein token is not a repair cluster; humectants are late."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Wheat protein @10 hints at a repair/strength claim.",
+      "decisionTrace": "Claim direction null (blind); formula nonspecific -> provisional general.",
+      "rationale": "Provisional general pending claims.",
+      "ruleIds": ["7.2", "7.3", "3.1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": ["shine"],
+      "provisional": "formula-only; claims hidden",
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty secondary.",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "frequent",
+      "provisional": "formula-only; claims hidden",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional default regular; frequent possible with frequency wording.",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "provisional": "formula half decided; positioning hidden",
+      "rationale": "Not_targeted whatever the positioning: CSA fails. No E4 comfort or humectant/refatting route is prominent (Panthenol @12, Niacinamide @13, Glyceryl Oleate @7, Glycerin @18 all after Parfum @6); MB excluded by prominent Sodium Laureth Sulfate @2.",
+      "ruleIds": ["10", "CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active.",
+      "ruleIds": ["11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionicEther": ["Sodium Laureth Sulfate @2"],
+      "amphoteric": ["Cocamidopropyl Betaine @3"],
+      "nonionicGlucoside": ["Coco-Glucoside @8 (not prominent)"],
+      "notCleansing": ["Sodium Chloride @4", "Citric Acid @5", "PEG-3 Distearate @9"]
+    },
+    "conditioningRoutes": ["Glyceryl Oleate @7", "PEG-3 Distearate @9", "Hydrolyzed Wheat Protein @10", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @15"],
+    "weightRoutes": ["weak_refatter @7/@25", "protein_film @10", "cationic_polymer @15"],
+    "humectants": ["Panthenol @12", "Glycerin @18", "Pantolactone @20"],
+    "actives": ["Niacinamide @13 (not prominent)"],
+    "exposure": ["Parfum @6 (early)", "Terpineol @17"],
+    "mildBase": "excluded: prominent strong anionic Sodium Laureth Sulfate @2",
+    "preservatives": ["Sodium Benzoate @11", "Potassium Sorbate @14", "Benzoic Acid @16", "Phenoxyethanol @22"]
+  },
+  "unresolvedMaterialIngredients": []
+}

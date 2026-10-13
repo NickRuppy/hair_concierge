@@ -1,0 +1,141 @@
+{
+  "blindId": "T309",
+  "inciFingerprintSha256": "42d23057f1c7cc44bcd54e6daf5cf4f74665b06b45b7a455daba19641aa8188d",
+  "phase": "blind_formula_pass",
+  "normalizationNote": "No split synonym entries; packet positions are normalized positions.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic Sodium Laureth Sulfate (2); prominent buffers Cocamidopropyl Hydroxysultaine (4), Coco-Glucoside (6); no reinforcing route. No Parfum; first preservative Sodium Benzoate (16) is the E3 point.",
+      "neighboringAlternative": "none",
+      "counterSignal": "Glycerin at 3 and refatters argue milder, but C1 fixes moderate."
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "One meaningful system: Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (10) with weak refatters Glyceryl Oleate (7), Hydrogenated Vegetable Glycerides Citrate (11) and humectants Glycerin (3), Panthenol (8). No silicone, payload lipid or pearlizer; C2 not met.",
+      "neighboringAlternative": "low",
+      "counterSignal": "Only one cationic route; refatters are weak."
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Single cationic guar (10) plus weak refatters; humectants context; ordinary C1 reset.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "One guar + weak refatters."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "No persistent silicone/lipid/film."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES + sultaine + glucoside."
+        }
+      },
+      "whyThisBand": "Light routes with ordinary reset.",
+      "whyNotNeighborBand": "W2: only a single light polymer plus weak_refatter family (Glyceryl Oleate, glycerides citrate) and humectants; no silicone, payload lipid or film, so combined residue stays below noticeable.",
+      "counterSignal": "Guar at 10 is mid-list.",
+      "excluded": [
+        "Allantoin (9): comfort active",
+        "Sodium Sulfate (14): salt"
+      ]
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "low",
+      "rationale": "Provisional. Fragrance-free formula with prominent comfort routes Panthenol (8), Allantoin (9) and Glycerin (3) suggests a sensitive-scalp role; needs SC1 positioning.",
+      "neighboringAlternative": "general",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "limitation": "Scalp-comfort candidate."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "rationale": "Provisional empty default.",
+      "neighboringAlternative": [
+        "moisture"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "rationale": "Provisional default; frequency wording would fire frequent (cleansing not strong).",
+      "neighboringAlternative": "frequent"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "low",
+      "rationale": "Provisional pending SC1. CSA formula half passes strongly: prominent Panthenol (8), Allantoin (9) (comfort), Glycerin (3), Glyceryl Oleate (7) (humectant/refatting); no declared fragrance; no cooling agents.",
+      "neighboringAlternative": "not_targeted",
+      "csaFormulaHalf": "pass",
+      "prominentComfortRoute": true,
+      "prominentHumectantRefattingRoute": true
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none"
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 3,
+      "role": "humectant"
+    },
+    {
+      "ingredient": "Cocamidopropyl Hydroxysultaine",
+      "position": 4,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 6,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 7,
+      "role": "weak_refatter; E4 refatting"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 8,
+      "role": "humectant; E4 comfort"
+    },
+    {
+      "ingredient": "Allantoin",
+      "position": 9,
+      "role": "E4 comfort"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 10,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Hydrogenated Vegetable Glycerides Citrate",
+      "position": 11,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Sodium Benzoate",
+      "position": 16,
+      "role": "E3 point (no Parfum)"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

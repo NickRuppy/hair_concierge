@@ -1,0 +1,140 @@
+{
+  "blindId": "VT04",
+  "inciFingerprintSha256": "1be03cbd54a1c200191dd75353289d693de9ce603fc87def5de78ebc4f4bd5ce",
+  "phase": "formula_pass_blind",
+  "standard": "shampoo-classification-v1.6.1 candidate (lane-a scrubbed copy); not a locked policy id",
+  "formulaBlock": {
+    "packSize": "350 ml",
+    "normalization": "ID-2: 'Aqua/Water/Eau' one entry; colour entries one each; 35 normalized entries; normalized positions",
+    "completeness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "e3Point": "Parfum/Fragrance @33; prominent = positions 1-32 (the declared allergens @27-31 precede Parfum in this list)"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "low by C6: no strong anionic; earliest prominent cleansing surfactant is the mild anionic Sodium Lauroyl Methyl Isethionate @2 with prominent amphoteric Cocamidopropyl Betaine @3; further mild anionics Disodium Laureth Sulfosuccinate @4, Sodium Lauryl Sulfoacetate @5. Counter-signal: three mild anionic routes.",
+      "ruleIds": ["C3", "C4", "C6"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "high by the Section 5 high anchor (multiple complementary systems): prominent amino-silicone copolymer @12, two cationic polymers (Ethyltrimonium Chloride Methacrylate/Hydrolyzed Wheat Protein Copolymer @9, Guar Hydroxypropyltrimonium Chloride @18), cationic conditioner Quaternium-95 @16, three protein routes (@9, @11, @13), payload lipid Sunflower Seed Oil @8, humectants Glycerin @6, Panthenol @7. C2 itself is not cleanly met (no pearlizing wax or fatty alcohol; a plant oil is read as the payload lipid, not as the pearlizing/fatty element). Counter-signal: everything after Panthenol @7 is plausibly sub-1 %; neighbor moderate.",
+      "ruleIds": ["5", "C2", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "silicone": ["Amodimethicone/Morpholinomethyl Silsesquioxane Copolymer @12"],
+        "cationic_polymer": ["Ethyltrimonium Chloride Methacrylate/Hydrolyzed Wheat Protein Copolymer @9", "Guar Hydroxypropyltrimonium Chloride @18"],
+        "cationic_conditioner": ["Quaternium-95 @16 (quaternary by name)"],
+        "payload_lipid": {"material": ["Helianthus Annuus (Sunflower) Seed Oil @8"], "nonMaterial": []},
+        "weak_refatter": [],
+        "protein_film": ["Hydrolyzed Wheat Protein @11", "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol @13", "(protein part of the cationic copolymer @9)"],
+        "film_former": [],
+        "reset": ["mild anionic Sodium Lauroyl Methyl Isethionate @2, Disodium Laureth Sulfosuccinate @4, Sodium Lauryl Sulfoacetate @5", "amphoteric Cocamidopropyl Betaine @3"],
+        "humectantContext": ["Glycerin @6", "Panthenol @7", "Propanediol @19"],
+        "excluded": ["Trideceth-5 @14 (ethoxylate solubilizer)", "PEG-150 Pentaerythrityl Tetrastearate @15 (PEG thickener)", "PPG-2 Hydroxyethyl Cocamide @17 (alkanolamide thickener)", "Phyllostachys Nigra Leaf Extract @10 (extract)"],
+        "unresolved": []
+      },
+      "wLineRecord": {
+        "wLine": {"position": 21, "inci": "Potassium Sorbate", "classes": ["preservative_or_capped_active"]},
+        "cap": {"e3Point": 33, "inci": "Parfum/Fragrance"},
+        "alphabeticalRun": null,
+        "skipped": [
+          "w_line_skipped:Panthenol@7 (ii) alkanolamide-type thickener PPG-2 Hydroxyethyl Cocamide@17 listed after it before the cap"
+        ],
+        "codes": [],
+        "note": "No a-c candidate between @8 and @20 besides Panthenol @7. Potassium Sorbate @21: (i) surfactants before; (ii) nothing of the structurant classes between @22 and @32. Sunflower Seed Oil @8 is material."
+      },
+      "depositionLoad": "moderate",
+      "persistence": "high",
+      "resetCapacity": "weak",
+      "counterevidence": "All deposition after Panthenol @7 (typically about 1 % or less) is plausibly small; the material status of the oil @8 depends on the alkanolamide skip of Panthenol.",
+      "whyThisBand": "W-RICH holds: material Sunflower Seed Oil @8 converging with a persistent amino-silicone copolymer @12 and cationic polymers @9/@18 (plus Quaternium-95 @16); reset is limited (C6 low, resetCapacity weak). The convergence route (silicone, two cationic polymers, cationic conditioner, protein film, material lipid) also holds.",
+      "whyNotNeighborBand": "moderate would need reset to offset five converging families; a mild C6 chassis does not. The case for moderate rests only on unknown small amounts.",
+      "confidenceLimitingFactor": "amounts in the probable sub-1 % zone; W-line one skip away from excluding the oil",
+      "rationale": "high: W-RICH with limited reset and multiple converging persistent families (6.6, 6.7); moderate confidence, neighbor moderate.",
+      "ruleIds": ["6.3", "6.6", "W-RICH", "W-LINE", "P0", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "repair",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "dual_supported",
+        "repairRoutes": ["Ethyltrimonium Chloride Methacrylate/Hydrolyzed Wheat Protein Copolymer @9", "Hydrolyzed Wheat Protein @11", "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol @13", "Amodimethicone/Morpholinomethyl Silsesquioxane Copolymer @12"],
+        "moistureRoutes": ["Glycerin @6", "Panthenol @7", "Sunflower Seed Oil @8"],
+        "sharedConditioningRoutes": ["Guar Hydroxypropyltrimonium Chloride @18", "Quaternium-95 @16"],
+        "limitation": "formula-only; the repair cluster (three protein routes + amino-silicone) is somewhat stronger than the moisture cluster"
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "routes after Panthenol @7 are plausibly small amounts",
+      "decisionTrace": "Blind pass: claim direction null; formula dual_supported (repair-leaning); provisional general until a claim selects or tie-breaks (F1).",
+      "rationale": "provisional general (formula-only).",
+      "ruleIds": ["7.2", "7.3", "F1", "3.1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["moisture"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "provisional [] (Section 8).",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "provisional regular; frequent possible with U2 wording (cleansing low); no dandruff active.",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "provisional not_targeted (no positioning visible). CSA met: prominent comfort route Panthenol @7; humectant/refatting routes Glycerin @6, Panthenol @7, Sunflower Seed Oil @8; mild C6 chassis supportive.",
+      "ruleIds": ["10", "CSA", "SC1", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "not_supported: complete formula with no Piroctone Olamine, Climbazole or Selenium Sulfide/Disulfide.",
+      "ruleIds": ["11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactantClasses": {
+      "strongAnionicEther": [],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": ["Sodium Lauroyl Methyl Isethionate @2", "Disodium Laureth Sulfosuccinate @4", "Sodium Lauryl Sulfoacetate @5"],
+      "amphoteric": ["Cocamidopropyl Betaine @3"],
+      "nonionicCleansing": [],
+      "notCleansing": ["Trideceth-5 @14", "PEG-150 Pentaerythrityl Tetrastearate @15", "PPG-2 Hydroxyethyl Cocamide @17 (alkanolamide-type)", "Sodium Chloride @23"],
+      "c4": "no defining anionic; C6 earliest prominent = Sodium Lauroyl Methyl Isethionate @2 with amphoteric @3"
+    },
+    "conditioningRoutes": ["@9 cationic protein copolymer", "@12 amino-silicone copolymer", "@16 Quaternium-95", "@18 guar", "@8 sunflower oil", "@11, @13 proteins", "@6 Glycerin, @7 Panthenol"],
+    "actives": ["Panthenol @7", "proteins @9, @11, @13"],
+    "scalpExposure": ["Benzyl Alcohol @27, Linalool @28, Hexyl Cinnamal @29, Benzyl Salicylate @30, Citronellol @31", "Parfum/Fragrance @33"],
+    "recognizedDandruffActives": []
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "C2 'pearlizing/fatty route': no pearlizing wax or fatty alcohol; I did not let the sunflower oil fill both the lipid and the fatty element. conditioningLevel high is reached by the high anchor's multiple complementary systems instead; alternative moderate (neighbor).",
+    "weightPotential high vs moderate as in VT03-type formulas: formally W-RICH plus weak reset; amounts plausibly small; moderate confidence."
+  ]
+}

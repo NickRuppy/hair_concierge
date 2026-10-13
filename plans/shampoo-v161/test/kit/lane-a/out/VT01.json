@@ -1,0 +1,451 @@
+{
+ "blindId": "VT01",
+ "identity": {
+  "brand": "OLAPLEX",
+  "productName": "No.4 Bond Maintenance Shampoo",
+  "packSize": "250 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "20095fda08db7cf6d7179a0c4c9a1868d04d612e21bd9863bae76fcf10ef6ce3",
+  "normalization": "ID-2: 'Aqua (Water, Eau)' already one entry; no split synonym entries; 78 normalized entries; all positions below are normalized one-based positions",
+  "completeness": "not_known_complete (ID-1): every completeness-dependent property (Sections 6, 10, 11) is unknown or low confidence",
+  "e3ProminenceCutoff": "Parfum (Fragrance) @71; prominent = positions 1-70",
+  "formulaSourceTier": 4,
+  "identityConfidence": "moderate",
+  "identityNotes": [
+   "Formula not_known_complete (ID-1), source tier 4.",
+   "Marketplace retailer (low) says \"frei von Sulfaten\"; the list has Disodium Laureth Sulfosuccinate @42, which is a sulfosuccinate, not a sulfate: no conflict (note only)."
+  ],
+  "formulaPassRecord": {
+   "path": "lane-a/out/formula-pass/VT01.json",
+   "sha256": "8df1ab06ffd24b382e99f13878703e8ea919b96b38766a7d1308823b4214ce70"
+  }
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "low by C6: no prominent strong anionic; the earliest prominent cleansing surfactant is the mild anionic Sodium Lauroyl Methyl Isethionate @2 with prominent amphoteric Cocamidopropyl Hydroxysultaine @3 and nonionic Decyl Glucoside @10. Counter-signals: a broad mild-anionic system (Potassium Cocoyl Glycinate @4, Disodium Cocoyl Glutamate @5, Sodium Lauroyl Sarcosinate @7, plus the soap Potassium Cocoate @6, read as a carboxylate mild anionic); formula not known complete and source tier 4, so a missing or misread strong anionic cannot be excluded. Confidence moderate, neighbor moderate (N-ALT).",
+   "ruleIds": [
+    "C3",
+    "C4",
+    "C6",
+    "ID-1",
+    "N-ALT"
+   ],
+   "counterSignal": "broad mild-anionic system incl. soap Potassium Cocoate @6; formula not known complete",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  },
+  "conditioningLevel": {
+   "value": "high",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "high by C2: early (prominent, E3) silicones Amodimethicone @34 and Divinyldimethicone/Dimethicone Copolymer @35, cationic polymers Polyquaternium-10 @30, Polyquaternium-11 @31, Guar Hydroxypropyltrimonium Chloride @32, pearlizing route Glycol Distearate @37, deliberate humectants Sodium Hyaluronate @13, Panthenol @14, Glycerin @48; plus prominent oils @24-26, protein @28, Quaternium-95 @52. Counter-signal: all deposition sits after a long run of botanical extracts in a 78-entry list (plausibly small amounts each) and the formula is not known complete; neighbor moderate.",
+   "ruleIds": [
+    "C2",
+    "E3",
+    "ID-1",
+    "N-ALT"
+   ],
+   "counterSignal": "all deposition behind a long extract run; formula not known complete",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  },
+  "weightPotential": {
+   "value": "high",
+   "confidence": "low",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "silicone": [
+     "Amodimethicone @34",
+     "Divinyldimethicone/Dimethicone Copolymer @35"
+    ],
+    "cationic_polymer": [
+     "Polyquaternium-10 @30",
+     "Polyquaternium-11 @31",
+     "Guar Hydroxypropyltrimonium Chloride @32"
+    ],
+    "cationic_conditioner": [
+     "Quaternium-95 @52 (quaternary by name; exact chemistry not resolved)"
+    ],
+    "payload_lipid": {
+     "material": [
+      "Helianthus Annuus (Sunflower) Seed Oil @24",
+      "Prunus Armeniaca (Apricot) Kernel Oil @25",
+      "Argania Spinosa Kernel Oil @26"
+     ],
+     "nonMaterial": []
+    },
+    "weak_refatter": [
+     "Palmitoyl Myristyl Serinate @29 (pseudo-ceramide lipid additive; read as weak_refatter, see uncertainties)"
+    ],
+    "protein_film": [
+     "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol @28"
+    ],
+    "film_former": [],
+    "reset": [
+     "mild anionic: Sodium Lauroyl Methyl Isethionate @2, Potassium Cocoyl Glycinate @4, Disodium Cocoyl Glutamate @5, Potassium Cocoate @6 (soap), Sodium Lauroyl Sarcosinate @7, Sodium Cocoyl Glutamate @36, Disodium Laureth Sulfosuccinate @42, Sodium Lauryl Sulfoacetate @44, Sodium Laurate @57 (soap)",
+     "amphoteric: Cocamidopropyl Hydroxysultaine @3, Cocamidopropylamine Oxide @41 (buffer only, C3b)",
+     "nonionic: Decyl Glucoside @10"
+    ],
+    "humectantContext": [
+     "Glycereth-26 @9",
+     "Sodium Hyaluronate @13",
+     "Panthenol @14",
+     "Methyl Gluceth-20 @38",
+     "Glycerin @48",
+     "Propanediol @53"
+    ],
+    "excluded": [
+     "Glycol Distearate @37 (pearlizing wax, 6.4)",
+     "Acrylates Copolymer @39 (anionic acrylate thickener, 6.4)",
+     "PEG-120 Methyl Glucose Dioleate @40 (PEG thickener, 6.4)",
+     "Sodium Polyacrylate @58 (anionic acrylate rheology polymer, no cationic charge; excluded by the 6.4 acrylate reading)",
+     "Citrus Aurantium Peel Oil @73, Menthol @76 (fragrance/cooling, 6.4)",
+     "Sodium Methyl Isethionate @8 (short-chain isethionate salt, no fatty chain; not a surfactant route)",
+     "Laureth-9 @46, Laureth-10 @49, Trideceth-12 @47, C11-15 Alketh-7 @45, C12-13 Alketh-23 @50, C12-13 Alketh-3 @51 (alcohol-ethoxylate solubilizers/thickeners, not a C3 cleansing class)"
+    ],
+    "unresolved": [
+     "Bis-Aminopropyl Diglycol Dimaleate @11 (bond-repair small molecule; no deposition family, immaterial for weight)",
+     "PEG-8/SMDI Copolymer @55 (PEG-urethane; role not named, trace, after the W-line)"
+    ]
+   },
+   "wLineRecord": {
+    "wLine": {
+     "position": 63,
+     "inci": "Benzoic Acid",
+     "classes": [
+      "preservative_or_capped_active"
+     ]
+    },
+    "cap": {
+     "e3Point": 71,
+     "inci": "Parfum (Fragrance)"
+    },
+    "alphabeticalRun": null,
+    "skipped": [
+     "w_line_skipped:Biotin@12 (ii) cleansing surfactant Sodium Cocoyl Glutamate@36 (also Glycol Distearate@37, Cocamidopropylamine Oxide@41, Disodium Laureth Sulfosuccinate@42, Sodium Lauryl Sulfoacetate@44, Sodium Laurate@57) listed after it before the cap",
+     "w_line_skipped:Sodium Hyaluronate@13 (ii) same later cleansing surfactants/pearlizing wax",
+     "w_line_skipped:Panthenol@14 (ii) same",
+     "w_line_skipped:Tocopherol@15 (ii) same",
+     "w_line_skipped:Caprylyl Glycol@33 (ii) booster candidate (preservatives declared); Sodium Cocoyl Glutamate@36, Glycol Distearate@37 and later surfactants follow",
+     "w_line_skipped:Ethylhexylglycerin@43 (ii) booster candidate; Sodium Lauryl Sulfoacetate@44 and Sodium Laurate@57 follow"
+    ],
+    "codes": [],
+    "note": "If Sodium Laurate @57 were not read as a cleansing surfactant the W-line is still Benzoic Acid @63 (no a-c candidate between 45 and 62). No alphabetical run of seven entries."
+   },
+   "depositionLoad": "high",
+   "persistence": "high",
+   "resetCapacity": "weak",
+   "counterevidence": "Every deposition route sits at @24 or later behind eight botanical extracts in a 78-entry list, so each is plausibly a small amount; late cleansing surfactants (@36-@57) show the list is not in descending order below about 1 %, which also blurs what is truly prominent. Formula not known complete.",
+   "whyThisBand": "W-RICH holds: material payload_lipid (three oils @24-26, before the W-line @63) converging with silicone (@34, @35) and cationic (@30-32, @52) systems, and reset is limited (C6 low mild chassis, resetCapacity weak). Independently, the convergence route holds: silicone + cationic polymer + material payload_lipid + protein film, all plausibly persistent (amodimethicone and a silicone copolymer).",
+   "whyNotNeighborBand": "moderate would require reset to offset the converging deposition; a mild C6 chassis does not. The realistic argument for moderate is that each route is plausibly trace, which the frozen list cannot decide.",
+   "confidenceLimitingFactor": "ID-1 not_known_complete forces low confidence for Section 6; the moderate/high boundary is also closely balanced on unknown amounts (W3).",
+   "rationale": "high (low confidence, provisional): W-RICH with limited reset and multiple converging persistent families (6.6, 6.7 W-RICH, W-LINE); ID-1 and W3 cap confidence at low; P0 keeps the heavier band.",
+   "ruleIds": [
+    "6.3",
+    "6.4",
+    "6.6",
+    "W-RICH",
+    "W-LINE",
+    "W2",
+    "W3",
+    "ID-1",
+    "P0",
+    "N-ALT"
+   ],
+   "counterSignal": "Every deposition route sits at @24 or later behind eight botanical extracts in a 78-entry list, so each is plausibly a small amount; late cleansing surfactants (@36-@57) show the list is not in descending order below about 1 %, which also blurs what is truly prominent. Formula not known complete.",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  },
+  "focusPrimary": {
+   "value": "repair",
+   "confidence": "moderate",
+   "neighboringAlternative": "general",
+   "careDirection": {
+    "verdict": "dual_supported",
+    "repairRoutes": [
+     "Bis-Aminopropyl Diglycol Dimaleate @11",
+     "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol @28",
+     "Amodimethicone @34",
+     "Palmitoyl Myristyl Serinate @29"
+    ],
+    "moistureRoutes": [
+     "Sodium Hyaluronate @13",
+     "Panthenol @14",
+     "Glycerin @48",
+     "oils @24-26"
+    ],
+    "sharedConditioningRoutes": [
+     "Polyquaternium-10 @30",
+     "Polyquaternium-11 @31",
+     "Guar Hydroxypropyltrimonium Chloride @32",
+     "Divinyldimethicone/Dimethicone Copolymer @35"
+    ],
+    "limitation": "formula not known complete; routes after a long extract run"
+   },
+   "claimRole": "tie_breaker",
+   "counterSignal": "moisture routes (Sodium Hyaluronate @13, Panthenol @14, Glycerin @48, oils) are equally coherent; formula not known complete",
+   "decisionTrace": {
+    "claimDirection": "repair (manufacturer DE, moderate: \"repariert ... geschädigtem Haar, Spliss ... indem es gebrochene Bindungen wieder repariert\"; \"reduziert nachweislich Brüche\")",
+    "formulaCompatible": true,
+    "compatibleRoute": "Bis-Aminopropyl Diglycol Dimaleate @11 + Hydrolyzed Vegetable Protein PG-Propyl Silanetriol @28 + Amodimethicone @34",
+    "decisionReason": "dual_supported formula; a moderate-graded damage/bond claim breaks the tie toward repair (F1, 7.3)"
+   },
+   "rationale": "repair: moderate-graded bond/damage claim tie-breaks a dual_supported formula (7.2, 7.3, F1, CL-SRC).",
+   "ruleIds": [
+    "7.2",
+    "7.3",
+    "F1",
+    "CL-SRC",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "shine"
+   ],
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingClaims": [
+     "\"glänzt\" (moderate)",
+     "\"Frizz\" (moderate)"
+    ],
+    "independentRoutes": [],
+    "whyDistinct": "shine/frizz are outcomes of the same silicone/cationic deposition route used by repair (F2, F3)",
+    "exceptionCode": null
+   },
+   "rationale": "[]: shine is an outcome of the primary deposition route (F2/F3).",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "counterSignal": "cleansingStrength low would allow frequent, but no U2 frequency wording exists (\"mit jeder Anwendung\" is not frequency wording); \"Schonender Reiniger\" is retailer-only (low)",
+   "decisionTrace": {
+    "default": "regular",
+    "nonDefaultTrigger": null,
+    "triggerEvidence": [],
+    "rationale": "no non-default trigger from a moderate/high source"
+   },
+   "rationale": "regular: no non-default trigger (Section 9, U2).",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "CL-SRC"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "counterSignal": "CSA formula half would be met (Panthenol @14) but there is no positioning",
+   "rationale": "not_targeted: no E2 sensitive or dry claim unit in any source (SC1); without positioning the completeness gap cannot change the decision (Section 10), so unknown is no longer needed.",
+   "ruleIds": [
+    "10",
+    "SC1",
+    "CSA",
+    "ID-1"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "unknown",
+   "confidence": "low",
+   "neighboringAlternative": "not_supported",
+   "rationale": "unknown: no Piroctone Olamine, Climbazole or Selenium Sulfide/Disulfide in the frozen list, but the formula is not known complete (Section 11 table, ID-1).",
+   "ruleIds": [
+    "11",
+    "DS1",
+    "ID-1"
+   ],
+   "counterSignal": "no recognized active in the frozen list, but completeness unknown",
+   "blindToFinal": "unchanged from the hash-pinned formula pass (formula-only property; claims cannot move it, 3.2)"
+  }
+ },
+ "formulaFacts": {
+  "surfactantClasses": {
+   "strongAnionicEther": [],
+   "strongAnionicAlkylSulfate": [],
+   "mildAnionic": [
+    "Sodium Lauroyl Methyl Isethionate @2",
+    "Potassium Cocoyl Glycinate @4",
+    "Disodium Cocoyl Glutamate @5",
+    "Potassium Cocoate @6 (soap; assigned mild anionic carboxylate by chemistry)",
+    "Sodium Lauroyl Sarcosinate @7",
+    "Sodium Cocoyl Glutamate @36",
+    "Disodium Laureth Sulfosuccinate @42",
+    "Sodium Lauryl Sulfoacetate @44",
+    "Sodium Laurate @57 (soap)"
+   ],
+   "amphoteric": [
+    "Cocamidopropyl Hydroxysultaine @3",
+    "Cocamidopropylamine Oxide @41 (C3b buffer only)"
+   ],
+   "nonionicCleansing": [
+    "Decyl Glucoside @10"
+   ],
+   "notCleansing": [
+    "Sodium Methyl Isethionate @8",
+    "Glycereth-26 @9",
+    "Glycol Distearate @37",
+    "Methyl Gluceth-20 @38",
+    "PEG-120 Methyl Glucose Dioleate @40",
+    "alcohol ethoxylates @45-47, @49-51",
+    "Lauric Acid @56",
+    "Sodium Chloride @70"
+   ],
+   "c4": "defining anionic: none; C6 reads Sodium Lauroyl Methyl Isethionate @2 with prominent amphoteric @3 and glucoside @10"
+  },
+  "conditioningRoutes": [
+   "silicones @34, @35",
+   "cationic polymers @30, @31, @32",
+   "Quaternium-95 @52",
+   "oils @24-26",
+   "protein @28",
+   "Glycol Distearate @37",
+   "humectants @13, @14, @48"
+  ],
+  "weightRoutes": "see weightPotential.evidence",
+  "actives": [
+   "Bis-Aminopropyl Diglycol Dimaleate @11",
+   "Biotin @12",
+   "Sodium Hyaluronate @13",
+   "Panthenol @14",
+   "Tocopherol @15"
+  ],
+  "scalpExposure": [
+   "Parfum @71 with Citral @72, Hexyl Cinnamal @74, Limonene @75",
+   "Citrus Aurantium Peel Oil @73",
+   "Menthol @76 (cooling, not prominent)"
+  ],
+  "recognizedDandruffActives": []
+ },
+ "unresolvedMaterialIngredients": [
+  "Formula completeness itself (not_known_complete, source tier 4): blocks dandruffSupport and scalpComfortTarget and caps weight confidence at low.",
+  "Quaternium-95 @52: read as cationic_conditioner by name; immaterial to the band because silicone and cationic polymers already converge."
+ ],
+ "claimUnitsAndGrades": [
+  "manufacturer_de (moderate): repair/bond/breakage claims; \"glänzt\"; color safe",
+  "retailer lookfantastic (low): directions only",
+  "retailer shop-apotheke marketplace (low): \"Schonender Reiniger für alle Haartypen\", \"frei von Sulfaten\""
+ ],
+ "reconciliation": [
+  {
+   "property": "focusPrimary",
+   "blind": "general (provisional)",
+   "final": "repair",
+   "evidence": "manufacturer DE (moderate): bond repair, damaged hair, Spliss, reduces breakage",
+   "reason": "claim tie-breaks dual_supported verdict (F1)"
+  },
+  {
+   "property": "focusSecondary",
+   "blind": "[] (provisional)",
+   "final": "[]",
+   "evidence": "\"glänzt\" shares the primary route",
+   "reason": "F2/F3"
+  },
+  {
+   "property": "usageRole",
+   "blind": "regular (provisional, low)",
+   "final": "regular (high)",
+   "evidence": "no U2 wording in moderate sources",
+   "reason": "no trigger"
+  },
+  {
+   "property": "scalpComfortTarget",
+   "blind": "unknown (provisional)",
+   "final": "not_targeted",
+   "evidence": "no scalp positioning in any source",
+   "reason": "SC1: without positioning, completeness no longer prevents the decision"
+  }
+ ],
+ "projection": {
+  "status": "needs_research",
+  "statusReasons": [
+   "weightPotential confidence low",
+   "dandruffSupport confidence low",
+   "dandruffSupport unknown",
+   "weight",
+   "fit_fine",
+   "fit_normal",
+   "fit_coarse"
+  ],
+  "thicknessFit": {
+   "fine": "not_suited",
+   "normal": "acceptable",
+   "coarse": "ideal"
+  },
+  "thicknessFitConfidence": {
+   "fine": "low",
+   "normal": "low",
+   "coarse": "low"
+  },
+  "thicknessRationale": "T1 with W=high (neighbor moderate), C=high (neighbor moderate): fine not_suited, normal acceptable, coarse ideal; ordinary target, no T6; T4 checked against the N-ALT neighbors after T6; thickness claims never change fit (T2).",
+  "weight": "heavy",
+  "weightConfidence": "low",
+  "weightRationale": "W-LIVE: weightPotential high -> heavy, confidence low.",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "confidence": "high",
+    "rationale": "S-ORDINARY way 1: no qualifying E2 claim unit after E2a; manufacturer source present (13.8 high)."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "researchCombinationConfidence": null,
+  "cleansingIntensity": "gentle",
+  "cleansingIntensityConfidence": "moderate",
+  "cleansingIntensityRationale": "I1: cleansingStrength low with D1 false -> gentle; bucket expects regular (amber row, I2); I3 neighbor moderate.",
+  "explicitResetPositioning": false,
+  "explicitResetEvidence": "no D1 lexicon term in name, claims or directions",
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserRecord": null,
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D2 not met (D1 false)",
+  "rows": [
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "gentle",
+    "weight": "heavy",
+    "tier": "acceptable"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "gentle",
+    "weight": "heavy",
+    "tier": "ideal"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [],
+  "informationalNotes": [],
+  "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; lanes never see catalog ids."
+ },
+ "selfCheck": "6.11: fingerprint matches the frozen packet; claims and labels were hidden during the formula pass (frozen before reveal, sha256 above); no ingredient, family count or position window assigned the weight band, the W-line only gated payload_lipid legs; the W-line was derived from the frozen list and every skipped candidate is recorded; depositionLoad/persistence/resetCapacity present; counterevidence and whyNotNeighborBand are specific; confidence names its limiting factor; no comparison with earlier values was made in this lane. Projection derived mechanically from final properties (T1/T6/T4, W-LIVE, I1/I3, D1-D3, 13.7, 13.8); N-ALT neighbors consistent with confidences.",
+ "uncertainties": [
+  "dandruffSupport stays unknown (formula not known complete); together with weightPotential low confidence the product returns needs_research. Alternative if a complete canonical INCI is captured: not_supported.",
+  "Focus repair vs moisture: dual_supported; the claim is clearly damage/bond-led, so repair.",
+  "Potassium Cocoate @6 / Sodium Laurate @57 (soaps) read as mild anionic carboxylates; alternative: unlisted class. Neither reading creates a strong anionic, so C6 low is unchanged; the W-line stays @63 either way.",
+  "Alcohol ethoxylates (Laureth-9/10, Trideceth-12, C11-15 Alketh-7, C12-13 Alketh-23/-3) read as solubilizers outside the C3 cleansing classes; reading them as cleansing surfactants would not move the W-line (@63) or C6.",
+  "Palmitoyl Myristyl Serinate @29 read as weak_refatter; alternative payload_lipid. It is before the W-line either way and the band is already high.",
+  "Weight high vs moderate rests on unknown amounts of late routes; recorded at low confidence (ID-1, W3)."
+ ]
+}

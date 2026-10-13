@@ -1,0 +1,358 @@
+{
+  "blindId": "T116",
+  "productName": "Herbal Essences Shampoo Fiji (Schwerelose Feuchtigkeit)",
+  "inciFingerprintSha256": "057ef537b8cb1c0e3bfe089504cba2f2348f6018980b584cd9e903664c0292dc",
+  "normalization": "Packet canonicalInci is the normalized list (ID-2); all positions are normalized one-based positions on it. Parfum at 8: positions 1-7 prominent",
+  "status": "classified",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "C6: no strong anionic; earliest prominent surfactant is a mild anionic (Sodium Cocoyl Isethionate 2) with prominent amphoteric co-surfactants (3, 4) -> low.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Cocoyl Isethionate",
+          "position": 2,
+          "role": "mild anionic"
+        },
+        {
+          "ingredient": "Lauramidopropyl Betaine",
+          "position": 3,
+          "role": "amphoteric"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "role": "amphoteric"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Cleansing-led: the only conditioning route is Polyquaternium-10 at 11, after Parfum; no silicone, lipid, protein or prominent humectant.",
+      "counterSignal": "PQ-10 can give noticeable wet slip even at modest levels.",
+      "neighboringAlternative": "moderate",
+      "formulaFacts": [
+        {
+          "ingredient": "Polyquaternium-10",
+          "position": 11,
+          "role": "cationic, after Parfum"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Single late cationic polymer (PQ-10, 11), no other family -> low even under weak reset.",
+      "neighboringAlternative": "none",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Polyquaternium-10 only."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "Single light polymer."
+        },
+        "resetCapacity": {
+          "value": "weak",
+          "rationale": "C6 mild isethionate/betaine system."
+        }
+      },
+      "whyThisBand": "One light family.",
+      "whyNotNeighborBand": "Single deposition family without reinforcement, listed after Parfum; no silicone or lipid to accumulate.",
+      "limitingFactor": "None material.",
+      "canonicalFormula": {
+        "inciFingerprintSha256": "057ef537b8cb1c0e3bfe089504cba2f2348f6018980b584cd9e903664c0292dc",
+        "formulaSourceTier": 3,
+        "formulaCompleteness": "complete",
+        "captureDate": "not in packet",
+        "identityConfidence": "high"
+      },
+      "evidenceByFamily": {
+        "cationic_polymer": [
+          {
+            "ingredient": "Polyquaternium-10",
+            "position": 11,
+            "role": "after Parfum"
+          }
+        ],
+        "excluded": [
+          {
+            "ingredient": "Citrus Aurantium Peel Oil",
+            "position": 17,
+            "role": "essential oil"
+          }
+        ],
+        "reset": [
+          {
+            "ingredient": "Sodium Cocoyl Isethionate",
+            "position": 2,
+            "role": "mild anionic"
+          },
+          {
+            "ingredient": "Lauramidopropyl Betaine",
+            "position": 3,
+            "role": "amphoteric"
+          },
+          {
+            "ingredient": "Cocamidopropyl Betaine",
+            "position": 4,
+            "role": "amphoteric"
+          },
+          {
+            "ingredient": "Sodium Lauroyl Sarcosinate",
+            "position": 5,
+            "role": "mild anionic"
+          }
+        ]
+      },
+      "formulaCounterevidence": null,
+      "unresolved": [],
+      "proposedWeightPotential": "low",
+      "confidenceLimitingFactor": "None material.",
+      "postUnblindNote": "'schwerelose Feuchtigkeit' / 'ohne zu beschweren' never lowers the band. 'Kokosnussextrakt' maps to Cocos Nucifera Fruit Juice (25)."
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "neighboringAlternative": "moisture",
+      "rationale": "General: moisture positioning ('Shampoo für schwerelose Feuchtigkeit', manufacturer, moderate; 'Feuchtigkeitsshampoo', retailer) over a nonspecific formula (no humectant cluster: Glycerin 24 late; only PQ-10 after Parfum) -> F1 general.",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [],
+        "limitation": ""
+      },
+      "claimRole": "not_applicable",
+      "formulaFacts": [
+        {
+          "ingredient": "Polyquaternium-10",
+          "position": 11,
+          "role": "light conditioning"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 24,
+          "role": "late humectant"
+        }
+      ],
+      "counterSignal": "Consistent moisture positioning.",
+      "decisionTrace": {
+        "claimDirection": "moisture",
+        "formulaCompatible": false,
+        "compatibleRoute": "none",
+        "decisionReason": "Moisture claim over a nonspecific verdict -> general."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Empty.",
+      "counterSignal": "None.",
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [],
+        "independentRoutes": [],
+        "whyDistinctFromPrimary": "",
+        "exceptionCode": null
+      }
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Default regular.",
+      "counterSignal": "None.",
+      "decisionTrace": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "Default regular."
+      }
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No scalp claim.",
+      "counterSignal": "None.",
+      "formulaFacts": []
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none",
+      "counterSignal": "None in formula; claims never upgrade this property.",
+      "formulaFacts": []
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Cocoyl Isethionate",
+      "position": 2,
+      "role": "mild anionic (isethionate), earliest surfactant"
+    },
+    {
+      "ingredient": "Lauramidopropyl Betaine",
+      "position": 3,
+      "role": "amphoteric co-surfactant"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "amphoteric co-surfactant"
+    },
+    {
+      "ingredient": "Sodium Lauroyl Sarcosinate",
+      "position": 5,
+      "role": "mild anionic"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 8,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Polyquaternium-10",
+      "position": 11,
+      "role": "cationic_polymer, after Parfum (11)"
+    },
+    {
+      "ingredient": "Citrus Aurantium Peel Oil",
+      "position": 17,
+      "role": "essential oil, excluded"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 24,
+      "role": "humectant, late"
+    },
+    {
+      "ingredient": "Cocos Nucifera Fruit Juice",
+      "position": 25,
+      "role": "plant juice, not a humectant route"
+    }
+  ],
+  "blindToFinalChanges": [
+    {
+      "property": "provisional properties",
+      "blind": "general/[]/regular/not_targeted (low, provisional)",
+      "final": "see records",
+      "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+      "reason": "post-unblind reconciliation (3.2)"
+    }
+  ],
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "high",
+        "rationale": "T1: W low -> ideal; T2: thickness/texture claims do not change the fit."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "high",
+        "rationale": "T1: W low -> ideal; T2: thickness/texture claims do not change the fit."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W low, C low -> acceptable; T2: thickness/texture claims do not change the fit."
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "high",
+      "rationale": "W-LIVE: weightPotential low -> light (1:1)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1; manufacturer source present -> high."
+      },
+      "secondary": null,
+      "secondaryRationale": "No qualifying claim unit."
+    },
+    "observedCleansingIntensity": {
+      "value": "gentle",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength low -> gentle. I2: written unchanged to every row."
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "rationale": "No D1 wording."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "deepCleanserRecord": null,
+      "confidence": "high",
+      "rationale": "D2 not met (no D1) -> not_flagged."
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "light",
+        "tier": "ideal",
+        "intensityMatchesBucket": false
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "light",
+        "tier": "ideal",
+        "intensityMatchesBucket": false
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "light",
+        "tier": "acceptable",
+        "intensityMatchesBucket": false
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "researchCombinationRationale": "Not a dandruff-primary product: E2b layer 2 does not apply.",
+    "liveComparison": "review_live_value_differs is resolved by the orchestrator after freeze (lanes see no live rows)."
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientOrCountOrPositionAssignedWeightBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "comparisonWithEarlierValuesMadeInLane": false,
+    "nAltConsistent": true
+  },
+  "uncertainties": [
+    {
+      "reading": "focusPrimary general (nonspecific verdict)",
+      "alternative": "moisture"
+    }
+  ]
+}

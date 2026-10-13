@@ -18,9 +18,9 @@
   },
   "outputs": {
     "plans/catalog-completeness-fill/slice1/target-state.json": "cbdbef0b8c292a8a3680e409a3801007772fd936f1a11fa12fcb12d2008ff2f2",
-    "supabase/migrations/20261011140000_catalog_completeness_fill_slice1.sql": "695be2f8ae77740b44a4c32359d56ce7886615f4556c4c662f43ffbcf4e55f68",
+    "supabase/migrations/20261013130000_catalog_completeness_fill_slice1.sql": "695be2f8ae77740b44a4c32359d56ce7886615f4556c4c662f43ffbcf4e55f68",
     "plans/catalog-completeness-fill/slice1/rollback.sql": "aa8c7940636433f404d29596a0422cc845d71ae2e6c2920d1eccb67f6d8ddbe0",
     "plans/catalog-completeness-fill/slice1/verify.sql": "d706d76926ab02a7d6f7570139ec5b85d7053bac97b3f61c2a4b09c0861be453"
   },
-  "combined_sha256": "54282dbd25bbb096e9718a8d4dd2582ea0f76afe3a090383adb0fff6811e3999"
+  "combined_sha256": "d25413b2ff1a41c0141424a22177f1f5b071598268e0702dc26074a4887d0ae7"
 }

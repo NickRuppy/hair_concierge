@@ -1,0 +1,98 @@
+{
+  "slot": "A54",
+  "productId": "f8a8fd56-aeb0-4096-8d9d-5af484e3889f",
+  "name": "Syoss Intense Volume Shampoo (dm: 'Shampoo Intense Volume'; syoss.de: 'Intense Volume Leichtes Shampoo')",
+  "brand": "Syoss",
+  "packSize": "440 ml",
+  "gtins": [
+    "4015100860481"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/3047032/syoss-shampoo-intense-volume",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "4015100860481 (page text 'GTIN'; dm-Artikelnummer 3047032; 'Shampoo Intense Volume, 440 ml')",
+      "inciVerbatim": "Ingredients: Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Hydrolyzed Keratin, Hydrolyzed Collagen, Sodium Benzoate, Parfum (Fragrance), Coco-Glucoside, Glyceryl Oleate, Citric Acid, PEG-7 Glyceryl Cocoate, Glycol Distearate, Laureth-4, PEG-120 Methyl Glucose Dioleate, Hydrogenated Castor Oil, Benzyl Salicylate, Hexyl Cinnamal, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Citronellol, Tetramethyl Acetyloctahydronaphthalenes, Sodium Hydroxide, Limonene, Linalyl Acetate, Linalool, Propylene Glycol, Sorbic Acid",
+      "claimsVerbatim": "Ideal für feines und plattes Haar | Verleiht bis zu 48 Stunden Volumen | 3 % Kollagen-Lift-Komplex | Für die tägliche Reinigung geeignet | Das Intense Volume Shampoo von Syoss ist die perfekte Wahl für feines und plattes Haar, das mehr Fülle benötigt. Es reinigt sanft und verleiht bis zu 48 Stunden Volumen, sodass das Haar lebendig und voller Schwung aussieht. Mit einem 3 % Kollagen-Lift-Komplex angereichert, stärkt es die Haare von innen und sorgt für eine verbesserte Haarstruktur. Dank der pflegenden Inhaltsstoffe und der milden Formulierung eignet sich dieses Shampoo hervorragend für die tägliche Anwendung und ist somit ideal für alle, die ihr Haar regelmäßig pflegen möchten. | Produkteigenschaften: Ohne Alkohol, ohne Silikone, ohne Ammoniak",
+      "directionsVerbatim": "Sanft im nassen Haar verteilen und ausspülen."
+    },
+    {
+      "url": "https://www.mueller.de/p/syoss-shampoo-intense-volume-IPN3077510/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_mueller_de",
+      "sourceKind": "retailer",
+      "gtinShown": "4015100860481 (structured data gtin + page; Artikelnr. 3077510; Inhalt 440 ml)",
+      "inciVerbatim": "Ingredients: Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Hydrolyzed Keratin, Hydrolyzed Collagen, Sodium Benzoate, Parfum (Fragrance), Coco-Glucoside, Glyceryl Oleate, Citric Acid, PEG-7 Glyceryl Cocoate, Glycol Distearate, Laureth-4, PEG-120 Methyl Glucose Dioleate, Hydrogenated Castor Oil, Benzyl Salicylate, Hexyl Cinnamal, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Citronellol, Tetramethyl Acetyloctahydronaphthalenes, Sodium Hydroxide, Limonene, Linalyl Acetate, Linalool, Propylene Glycol, Sorbic Acid",
+      "claimsVerbatim": "Das syoss Shampoo Intense Volume wurde speziell für die Bedürfnisse von feinem und plattem Haar konzipiert. Es reinigt die Haare sanft, ohne sie zu beschweren, und sorgt für ein Gefühl von Fülle. | Verleiht dem Haar ein sichtbar voluminöses Aussehen für bis zu 48 Stunden | Die Formel ist mit einem 3 % Kollagen-Lift-Komplex angereichert | Eignet sich dank der milden Zusammensetzung für die tägliche Haarwäsche | Besteht zu 93 % aus Inhaltsstoffen natürlichen Ursprungs, inklusive Wasser",
+      "directionsVerbatim": "Sanft im nassen Haar verteilen und ausspülen."
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-syoss-shampoo-intense-volume/p/4015100860481",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "gtinShown": "4015100860481 (product URL id; search for the GTIN returns this single product; 440 ml)",
+      "inciVerbatim": "Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Hydrolyzed Keratin, Hydrolyzed Collagen, Sodium Benzoate, Parfum (Fragrance), Coco-Glucoside, Glyceryl Oleate, Citric Acid, PEG-7 Glyceryl Cocoate, Glycol Distearate, Laureth-4, PEG-120 Methyl Glucose Dioleate, Hydrogenated Castor Oil, Benzyl Salicylate, Hexyl Cinnamal, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Citronellol, Tetramethyl Acetyloctahydronaphthalenes, Sodium Hydroxide, Limonene, Linalyl Acetate, Linalool, Propylene Glycol, Sorbic Acid",
+      "claimsVerbatim": "SYOSS Shampoo Intense Volume – Leichtes Shampoo für feines, plattes Haar mit Kollagen-Lift-Komplex Das SYOSS Intense Volume Shampoo reinigt feines und plattes Haar sanft und verleiht bis zu 48 h Volumen. Es kombiniert pflegende Inhaltsstoffe mit einem 3% Kollagen-Lift-Komplex und stärkt die Haare von innen. Dank seiner milden Formel eignet sich das Shampoo für die tägliche Haarwäsche. Die Formel enthält 93% Inhaltsstoffe natürlichen Ursprungs inklusive Wasser und der Flaschenkörper des Shampoos besteht aus 100% recyceltem Plastik (Kappe ausgenommen).",
+      "directionsVerbatim": null
+    },
+    {
+      "url": "https://www.syoss.de/haarpflege/shampoo/syoss-intense-volume-leichtes-shampoo.html",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4015100860481 (page structured data 'gtin'; no pack size shown in text)",
+      "inciVerbatim": "Shampoo:Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Hydrolyzed Keratin, Hydrolyzed Collagen, Sodium Benzoate, Parfum (Fragrance), Coco-Glucoside, Glyceryl Oleate, Citric Acid, PEG-7 Glyceryl Cocoate, Glycol Distearate, Laureth-4, PEG-120 Methyl Glucose Dioleate, Hydrogenated Castor Oil, Hexyl Cinnamal, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Citronellol, Tetramethyl Acetyloctahydronaphthalenes, Sodium Hydroxide, Limonene, Linalyl Acetate, Linalool, Propylene Glycol, Potassium Sorbate, Phenoxyethanol",
+      "claimsVerbatim": "LEICHTES SHAMPOO INTENSE VOLUME | Tiefenpflegende Formel mit 3% Kollagen-Lift-Komplex, stärkt das Harr von innen. Für rundum schönes und gesund aussehendes Haar. | Mit 3% Kollagen-Lift-Komplex Reinigt feines, plattes Haar | Milde Formel für die tägliche Haarwäsche ohne zu beschweren | Bis zu 48 Stunden langanhaltendes Volumen | Professionelle Leistung",
+      "directionsVerbatim": "Sanft im nassen Haar verteilen und gründlich ausspülen"
+    }
+  ],
+  "conflicts": [
+    "INCI divergence between the manufacturer page and three German retailers on the same GTIN 4015100860481: syoss.de (manufacturer_de) ends '... Linalool, Propylene Glycol, Potassium Sorbate, Phenoxyethanol' and has no Benzyl Salicylate; dm.de, Müller and Rossmann (all identical) list 'Benzyl Salicylate' (after Hydrogenated Castor Oil) and end '... Propylene Glycol, Sorbic Acid' (no Potassium Sorbate, no Phenoxyethanol). 27 vs 27 items; the lists differ by two items on each side (Benzyl Salicylate + Sorbic Acid vs Potassium Sorbate + Phenoxyethanol), all other items and the order are identical. The manufacturer page is plausibly a stale (older) formula generation, but no pack photo was available to decide."
+  ],
+  "canonicalInci": [
+    "Aqua (Water, Eau)",
+    "Sodium Laureth Sulfate",
+    "Sodium Chloride",
+    "Cocamidopropyl Betaine",
+    "Hydrolyzed Keratin",
+    "Hydrolyzed Collagen",
+    "Sodium Benzoate",
+    "Parfum (Fragrance)",
+    "Coco-Glucoside",
+    "Glyceryl Oleate",
+    "Citric Acid",
+    "PEG-7 Glyceryl Cocoate",
+    "Glycol Distearate",
+    "Laureth-4",
+    "PEG-120 Methyl Glucose Dioleate",
+    "Hydrogenated Castor Oil",
+    "Benzyl Salicylate",
+    "Hexyl Cinnamal",
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+    "Citronellol",
+    "Tetramethyl Acetyloctahydronaphthalenes",
+    "Sodium Hydroxide",
+    "Limonene",
+    "Linalyl Acetate",
+    "Linalool",
+    "Propylene Glycol",
+    "Sorbic Acid"
+  ],
+  "canonicalReason": "Three independent German GTIN-anchored retailers (dm.de GTIN text, Müller structured-data GTIN, Rossmann GTIN URL) agree verbatim (Benzyl Salicylate / Sorbic Acid version). The manufacturer page differs in the preservative system and the fragrance allergen list; it is preserved as a conflict. Retailer list chosen because >=2 GTIN-anchored sources agree and the retailer pages are more likely to reflect current production, but the manufacturer-page mismatch cannot be closed without the physical pack.",
+  "inciFingerprintSha256": "4c38ef0d7ffbc91af71108552246f97aaa83f57cf580e03e067bce3dc2a2de89",
+  "normalization": "Split the canonical raw INCI on ',' (not on commas inside locants such as '1,2-'), merged split synonym entries such as 'Aqua (Water)' / 'Aqua/Water/Eau' into one item each; per ingredient: lower-case, trim, collapse internal whitespace, remove whitespace around '/'; drop a trailing period and any leading label such as 'Inhaltsstoffe:'; keep parentheses, asterisks and hyphens as published; join the normalized ingredients with '|' and sha256 the UTF-8 string.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 3,
+  "status": "frozen_with_conflict",
+  "blockReason": null,
+  "notes": [
+    "Prior v1.3/v1.4 capture used the syoss.de list (fingerprint a36c64cee462d3e2902a1ca4917cc501c22a7ebd92458b76854dd19568cff79d, comma-joined). The canonical list of this packet is therefore DIFFERENT from the v1.4 formula (retailer generation with Benzyl Salicylate + Sorbic Acid); the change is in minor/functional-preservative items only and does not touch the surfactant/conditioning core (SLES-led, Hydrolyzed Keratin/Collagen, guar quat, no silicone).",
+    "Product naming differs by source: dm 'Shampoo Intense Volume, 440 ml', Rossmann 'Syoss Shampoo Intense Volume', syoss.de 'Intense Volume Leichtes Shampoo'. All share GTIN 4015100860481; identity high.",
+    "'Aqua (Water, Eau)' is merged into one item before hashing.",
+    "Claims: 'Ohne Silikone' (dm) consistent with INCI; '3% Kollagen-Lift-Komplex' realised via Hydrolyzed Keratin + Hydrolyzed Collagen - no claim/INCI contradiction found."
+  ]
+}

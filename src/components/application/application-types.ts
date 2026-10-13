@@ -2,6 +2,9 @@ import type {
   ApplicationDayTypeKey,
   PersonalPlanCategory,
 } from "@/lib/routines/personal-plan/application/contracts"
+import type { ToolShelfSlotView, ToolUseSectionView } from "@/lib/personal-plan/tools/application"
+
+export type { ToolShelfSlotView, ToolUseSectionView }
 
 export type ApplicationProductActionView = {
   actionKey: string
@@ -50,6 +53,7 @@ export type ApplicationOuterStepView =
   | ApplicationProductStepView
   | ApplicationUnresolvedProductStepView
   | ApplicationTransitionStepView
+  | ToolUseSectionView
 
 export type ApplicationDayView = {
   dayType: ApplicationDayTypeKey
@@ -65,6 +69,7 @@ export type ApplicationDayView = {
 }
 
 export type ApplicationShelfSlotView =
+  | ToolShelfSlotView
   | {
       kind: "product"
       productId: string

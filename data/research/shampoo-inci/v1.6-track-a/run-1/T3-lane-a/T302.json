@@ -1,0 +1,813 @@
+{
+  "blindId": "T302",
+  "inciFingerprintSha256": "b9564870c023e1c44e5c052c119b82d7aea1eeae3cd60526408174a222911572",
+  "identity": {
+    "productName": "NIVEA Power Repair Reparatur Shampoo",
+    "brand": "NIVEA",
+    "market": "DE",
+    "formulaBlock": {
+      "normalization": "No split synonym entries; normalized positions = packet positions. E3: Parfum at 22; prominent = 1-21.",
+      "formulaCompleteness": "complete",
+      "formulaSourceTier": 2,
+      "identityConfidence": "high",
+      "rawInciCount": 22
+    }
+  },
+  "claimSources": [
+    {
+      "id": "S1",
+      "sourceKind": "manufacturer_de",
+      "grade": "moderate"
+    },
+    {
+      "id": "S2",
+      "sourceKind": "retailer",
+      "grade": "low"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: SLES (2) defining, buffered by Cocamidopropyl Betaine (3), Decyl Glucoside (4), Coco-Glucoside (5); no reinforcing anionic -> moderate.",
+      "neighboringAlternative": "none",
+      "counterSignal": "Three buffers plus lipids argue toward the milder side; C1 convention holds the value.",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T302"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic, ether type"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Decyl Glucoside",
+          "position": 4,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 5,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Citric Acid",
+          "position": 7,
+          "role": "pH adjuster"
+        },
+        {
+          "ingredient": "Squalane",
+          "position": 9,
+          "role": "payload_lipid (emollient)"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 10,
+          "role": "humectant; E4 comfort route"
+        },
+        {
+          "ingredient": "Cocos Nucifera Oil",
+          "position": 11,
+          "role": "payload_lipid"
+        },
+        {
+          "ingredient": "Dicaprylyl Ether",
+          "position": 12,
+          "role": "payload_lipid (emollient ether)"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 13,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 14,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 15,
+          "role": "humectant"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 17,
+          "role": "pearlizing route (C2); excluded for weight"
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 18,
+          "role": "payload_lipid (waxy)"
+        },
+        {
+          "ingredient": "Parfum",
+          "position": 22,
+          "role": "E3 marker"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "C2 met with a payload lipid in place of the silicone: prominent payload lipids (Squalane 9, Cocos Nucifera Oil 11, Dicaprylyl Ether 12, Hydrogenated Castor Oil 18) + cationic polymer (Guar HPTC 13) + pearlizing route (Glycol Distearate 17) + humectants (Panthenol 10, Glycerin 15); also W-RICH.",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "No silicone; every lipid and the guar sit after Citric Acid (7), so levels are plausibly low and the care could be bounded (moderate).",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T302"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic, ether type"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Decyl Glucoside",
+          "position": 4,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 5,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Citric Acid",
+          "position": 7,
+          "role": "pH adjuster"
+        },
+        {
+          "ingredient": "Squalane",
+          "position": 9,
+          "role": "payload_lipid (emollient)"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 10,
+          "role": "humectant; E4 comfort route"
+        },
+        {
+          "ingredient": "Cocos Nucifera Oil",
+          "position": 11,
+          "role": "payload_lipid"
+        },
+        {
+          "ingredient": "Dicaprylyl Ether",
+          "position": 12,
+          "role": "payload_lipid (emollient ether)"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 13,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 14,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 15,
+          "role": "humectant"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 17,
+          "role": "pearlizing route (C2); excluded for weight"
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 18,
+          "role": "payload_lipid (waxy)"
+        },
+        {
+          "ingredient": "Parfum",
+          "position": 22,
+          "role": "E3 marker"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-RICH (prominent payload lipids converging with a cationic guar) but resetCapacity moderate (C1 with three buffers), so the high route needs converging persistent systems that reset does not offset; lipids are mostly liquid/light and late after Citric Acid -> moderate.",
+      "neighboringAlternative": "high",
+      "counterSignal": "W-RICH present; three deposition families (payload_lipid, cationic_polymer, weak_refatter) incl. a waxy Hydrogenated Castor Oil.",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "several lipids + one guar + weak refatter, all mid/late list"
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "coconut oil and hydrogenated castor oil are somewhat substantive; squalane/ether are light"
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "effective C1 chassis with three buffers"
+        }
+      },
+      "whyThisBand": "Plausible bounded conditioning residue from lipids + guar; not limited reset.",
+      "whyNotNeighborBand": "high needs W-RICH plus limited (weak) reset, or multiple persistent systems not offset by reset; reset is moderate and the lipids are late/light. low would understate the converging lipid + cationic residue (W2).",
+      "evidenceByFamily": {
+        "payload_lipid": [
+          [
+            "Squalane",
+            9
+          ],
+          [
+            "Cocos Nucifera Oil",
+            11
+          ],
+          [
+            "Dicaprylyl Ether",
+            12
+          ],
+          [
+            "Hydrogenated Castor Oil",
+            18
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Guar Hydroxypropyltrimonium Chloride",
+            13
+          ]
+        ],
+        "weak_refatter": [
+          [
+            "Glyceryl Oleate",
+            14
+          ]
+        ],
+        "context_humectant": [
+          [
+            "Panthenol",
+            10
+          ],
+          [
+            "Glycerin",
+            15
+          ],
+          [
+            "Pantolactone",
+            16
+          ]
+        ],
+        "excluded": [
+          [
+            "Glycol Distearate",
+            17,
+            "pearlizer (6.4)"
+          ],
+          [
+            "Gardenia Taitensis Flower Extract",
+            8,
+            "botanical extract, no deposition role"
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            3
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Decyl Glucoside",
+            4
+          ],
+          [
+            "Coco-Glucoside",
+            5
+          ]
+        ],
+        "unresolved": []
+      },
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T302"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic, ether type"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Decyl Glucoside",
+          "position": 4,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 5,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Citric Acid",
+          "position": 7,
+          "role": "pH adjuster"
+        },
+        {
+          "ingredient": "Squalane",
+          "position": 9,
+          "role": "payload_lipid (emollient)"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 10,
+          "role": "humectant; E4 comfort route"
+        },
+        {
+          "ingredient": "Cocos Nucifera Oil",
+          "position": 11,
+          "role": "payload_lipid"
+        },
+        {
+          "ingredient": "Dicaprylyl Ether",
+          "position": 12,
+          "role": "payload_lipid (emollient ether)"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 13,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 14,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 15,
+          "role": "humectant"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 17,
+          "role": "pearlizing route (C2); excluded for weight"
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 18,
+          "role": "payload_lipid (waxy)"
+        },
+        {
+          "ingredient": "Parfum",
+          "position": 22,
+          "role": "E3 marker"
+        }
+      ],
+      "formulaIdentifiers": {
+        "inciFingerprintSha256": "b9564870c023e1c44e5c052c119b82d7aea1eeae3cd60526408174a222911572",
+        "sourceTier": 2,
+        "captureDate": "per frozen packet (not shown to lane)"
+      },
+      "confidenceLimitingFactor": "INCI-only: concentrations, charge density and deposition unknown"
+    },
+    "focusPrimary": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "rationale": "Formula verdict moisture_supported (Panthenol 10, Glycerin 15, Pantolactone 16 with emollient lipids and guar). The dominant name claim 'Repair/Reparatur' needs repair_supported or dual_supported, which the formula does not give (no protein/damage-care cluster; lipids act as emollient support). The moisture claims ('Versorgt das Haar mit lang anhaltender Feuchtigkeit', 'spendet dem Haar Feuchtigkeit', S1 moderate) are the next dominant compatible job (7.2, F1).",
+      "counterSignal": "The product name positions repair; a reader who counts the lipid + guar deposition cluster as a substantive repair cluster would get dual_supported and repair by name tie-break.",
+      "neighboringAlternative": "repair",
+      "formulaFacts": [
+        {
+          "ingredient": "Panthenol",
+          "position": 10
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 15
+        },
+        {
+          "ingredient": "Squalane",
+          "position": 9
+        },
+        {
+          "ingredient": "Cocos Nucifera Oil",
+          "position": 11
+        }
+      ],
+      "claimRole": "candidate",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": [
+          "Panthenol 10",
+          "Glycerin 15",
+          "Pantolactone 16"
+        ],
+        "repairRoutes": [],
+        "sharedRoutes": [
+          "Squalane 9",
+          "Cocos Nucifera Oil 11",
+          "Dicaprylyl Ether 12",
+          "Guar HPTC 13"
+        ],
+        "limitation": "Rinse-off; humectants mid/late list."
+      },
+      "decisionTrace": {
+        "claimDirection": "repair (name, high) + moisture (S1 moderate)",
+        "formulaCompatible": "repair: no (moisture_supported only); moisture: yes",
+        "compatibleRoute": "humectant cluster + emollient lipids",
+        "decisionReason": "Dominant repair claim incompatible; moisture is the dominant compatible job."
+      },
+      "sourceIds": [
+        "S1 manufacturer_de Beiersdorf (moderate); S2 dm retailer (low); product name (high)"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Repair is incompatible; 'ohne zu beschweren', 'Widerstandskraft' and gentle scalp cleansing are not focus routes.",
+      "counterSignal": "None.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "claims": [
+          "repair (incompatible)"
+        ],
+        "routes": [],
+        "exception": null
+      },
+      "sourceIds": [
+        "S1 manufacturer_de Beiersdorf (moderate); S2 dm retailer (low); product name (high)"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Default; no frequency wording, no reset intent, cleansing moderate.",
+      "counterSignal": "'Reinigt sanft die Kopfhaut' is mildness, not frequency (U2).",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "decisionTrace": {
+        "default": "regular",
+        "trigger": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "No trigger."
+      },
+      "sourceIds": [
+        "S1 manufacturer_de Beiersdorf (moderate); S2 dm retailer (low); product name (high)"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "No scalp-state positioning; 'Hautvertraeglichkeit dermatologisch bestaetigt' and 'reinigt sanft die Kopfhaut' are protective/mildness wording (SC1).",
+      "counterSignal": "CSA would pass (Panthenol 10).",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Panthenol",
+          "position": 10
+        }
+      ],
+      "sourceIds": [
+        "S1 manufacturer_de Beiersdorf (moderate); S2 dm retailer (low); product name (high)"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T302"
+      ]
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "moisture_supported",
+      "moistureRoutes": [
+        "Panthenol 10",
+        "Glycerin 15",
+        "Pantolactone 16"
+      ],
+      "repairRoutes": [],
+      "sharedRoutes": [
+        "Squalane 9",
+        "Cocos Nucifera Oil 11",
+        "Dicaprylyl Ether 12",
+        "Guar HPTC 13"
+      ],
+      "limitation": "Rinse-off; humectants mid/late list."
+    },
+    "claimRole": "candidate",
+    "counterSignal": "The product name positions repair; a reader who counts the lipid + guar deposition cluster as a substantive repair cluster would get dual_supported and repair by name tie-break.",
+    "neighboringAlternative": "repair",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "repair (name, high) + moisture (S1 moderate)",
+        "formulaCompatible": "repair: no (moisture_supported only); moisture: yes",
+        "compatibleRoute": "humectant cluster + emollient lipids",
+        "decisionReason": "Dominant repair claim incompatible; moisture is the dominant compatible job."
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "claims": [
+          "repair (incompatible)"
+        ],
+        "routes": [],
+        "exception": null
+      },
+      "usageRole": {
+        "default": "regular",
+        "trigger": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "No trigger."
+      }
+    }
+  },
+  "weightRecord": {
+    "value": "moderate",
+    "confidence": "moderate",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "moderate",
+        "rationale": "several lipids + one guar + weak refatter, all mid/late list"
+      },
+      "persistence": {
+        "value": "moderate",
+        "rationale": "coconut oil and hydrogenated castor oil are somewhat substantive; squalane/ether are light"
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "effective C1 chassis with three buffers"
+      }
+    },
+    "evidenceByFamily": {
+      "payload_lipid": [
+        [
+          "Squalane",
+          9
+        ],
+        [
+          "Cocos Nucifera Oil",
+          11
+        ],
+        [
+          "Dicaprylyl Ether",
+          12
+        ],
+        [
+          "Hydrogenated Castor Oil",
+          18
+        ]
+      ],
+      "cationic_polymer": [
+        [
+          "Guar Hydroxypropyltrimonium Chloride",
+          13
+        ]
+      ],
+      "weak_refatter": [
+        [
+          "Glyceryl Oleate",
+          14
+        ]
+      ],
+      "context_humectant": [
+        [
+          "Panthenol",
+          10
+        ],
+        [
+          "Glycerin",
+          15
+        ],
+        [
+          "Pantolactone",
+          16
+        ]
+      ],
+      "excluded": [
+        [
+          "Glycol Distearate",
+          17,
+          "pearlizer (6.4)"
+        ],
+        [
+          "Gardenia Taitensis Flower Extract",
+          8,
+          "botanical extract, no deposition role"
+        ]
+      ],
+      "anionic_surfactant": [
+        [
+          "Sodium Laureth Sulfate",
+          2
+        ]
+      ],
+      "amphoteric_surfactant": [
+        [
+          "Cocamidopropyl Betaine",
+          3
+        ]
+      ],
+      "nonionic_surfactant": [
+        [
+          "Decyl Glucoside",
+          4
+        ],
+        [
+          "Coco-Glucoside",
+          5
+        ]
+      ],
+      "unresolved": []
+    },
+    "whyThisBand": "Plausible bounded conditioning residue from lipids + guar; not limited reset.",
+    "whyNotNeighborBand": "high needs W-RICH plus limited (weak) reset, or multiple persistent systems not offset by reset; reset is moderate and the lipids are late/light. low would understate the converging lipid + cationic residue (W2).",
+    "counterSignal": "W-RICH present; three deposition families (payload_lipid, cationic_polymer, weak_refatter) incl. a waxy Hydrogenated Castor Oil.",
+    "neighboringAlternative": "high",
+    "formulaIdentifiers": {
+      "inciFingerprintSha256": "b9564870c023e1c44e5c052c119b82d7aea1eeae3cd60526408174a222911572",
+      "sourceTier": 2,
+      "captureDate": "per frozen packet (not shown to lane)"
+    },
+    "confidenceLimitingFactor": "INCI-only: concentrations, charge density and deposition unknown"
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1 (fine, W moderate) = acceptable; ordinary target, T6 n/a; T4: neighbor would lower the tier -> review_thickness_boundary"
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1 (normal, W moderate) = ideal; ordinary target, T6 n/a; T4: neighbor would lower the tier -> review_thickness_boundary"
+      },
+      {
+        "thickness": "coarse",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1 (coarse, W moderate, C high) = ideal; ordinary target, T6 n/a; T4: neighbor would lower the tier -> review_thickness_boundary"
+      }
+    ],
+    "weight": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential moderate -> moderate."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "bucket": "normal",
+        "route": "balanced",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1: no qualifying E2 claim unit; manufacturer source present."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate, D1 False -> regular."
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "evidence": "No D1 wording."
+    },
+    "explicitResetPositioning": false,
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "moderate",
+      "rationale": "D2 not met: D1 false"
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable",
+        "display": "amber"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal",
+        "display": "green"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal",
+        "display": "green"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_thickness_boundary",
+        "detail": "fine, normal, coarse"
+      }
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "catalogDependent": "review_live_value_differs not computed in lane (live rows unseen)."
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "moisture (provisional, low)",
+      "final": "moisture",
+      "evidence": "Formula verdict moisture_supported (Panthenol 10, Glycerin 15, Pantolactone 16 with emollient lipids and guar). The dominant name claim 'Repair/Reparatur' needs repair_supported or dual_supported, which the formula does not give (no protein/damage-care cluster; lipids act as emollient support). The moisture claims ('Versorgt das Haar mit lang anhaltender Feuchtigkeit', 'spendet dem Haar Feuchtigkeit', S1 moderate) are the next dominant compatible job (7.2, F1)."
+    },
+    {
+      "property": "focusSecondary",
+      "blind": "[] (provisional)",
+      "final": [],
+      "evidence": "Repair is incompatible; 'ohne zu beschweren', 'Widerstandskraft' and gentle scalp cleansing are not focus routes."
+    },
+    {
+      "property": "usageRole",
+      "blind": "regular (provisional)",
+      "final": "regular",
+      "evidence": "Default; no frequency wording, no reset intent, cleansing moderate."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blind": "unknown (positioning hidden)",
+      "final": "not_targeted",
+      "evidence": "No scalp-state positioning; 'Hautvertraeglichkeit dermatologisch bestaetigt' and 'reinigt sanft die Kopfhaut' are protective/mildness wording (SC1)."
+    },
+    {
+      "property": "cleansingStrength/conditioningLevel/weightPotential/dandruffSupport",
+      "blind": "frozen",
+      "final": "unchanged",
+      "evidence": "Claims cannot assign these (3.2); no revealed formula conflict."
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "noComparisonWithEarlierValues": true
+  },
+  "uncertainties": [
+    {
+      "reading": "care-direction verdict (blind moisture_supported kept)",
+      "chosen": "moisture_supported -> focus moisture",
+      "alternative": "dual_supported -> focus repair by name tie-break"
+    },
+    {
+      "reading": "conditioningLevel C2 via lipid substitution (blind)",
+      "chosen": "high",
+      "alternative": "moderate (lipids after Citric Acid)"
+    }
+  ]
+}

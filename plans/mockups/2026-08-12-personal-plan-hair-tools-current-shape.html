@@ -1,0 +1,1982 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Personal Plan Hair Tools · revidierter Produktionsabgleich</title>
+    <style>
+      :root {
+        --ink: #291a43;
+        --sub: #706a65;
+        --plum: #6b50a0;
+        --plum-soft: #f1eef5;
+        --coral: #d75f6a;
+        --paper: #fdfbf9;
+        --cream: #f5f0e5;
+        --blue: #edf3f5;
+        --green: #edf4f0;
+        --rose: #f5edef;
+        --line: #e5dfd8;
+        --ok: #2f817a;
+        --warn: #9a6c1e;
+        --shadow: 0 24px 70px rgba(41, 26, 67, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 8% 0%, rgba(215, 95, 106, 0.12), transparent 27rem),
+          radial-gradient(circle at 92% 8%, rgba(107, 80, 160, 0.13), transparent 30rem), #f7f3ef;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      p {
+        margin-top: 0;
+      }
+      h1,
+      h2,
+      .brand {
+        font-family: Georgia, "Times New Roman", serif;
+      }
+      button {
+        font: inherit;
+      }
+      .review {
+        width: min(1540px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 44px 0 70px;
+      }
+      .hero {
+        padding: clamp(24px, 5vw, 58px);
+        border: 1px solid rgba(107, 80, 160, 0.13);
+        border-radius: 32px;
+        background: rgba(253, 251, 249, 0.9);
+        box-shadow: var(--shadow);
+      }
+      .eyebrow {
+        margin-bottom: 8px;
+        color: var(--plum);
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+      .hero h1 {
+        max-width: 980px;
+        margin-bottom: 15px;
+        font-size: clamp(36px, 6vw, 72px);
+        line-height: 1.02;
+        letter-spacing: -0.035em;
+      }
+      .hero > p:not(.eyebrow) {
+        max-width: 900px;
+        margin-bottom: 20px;
+        color: var(--sub);
+        font-size: clamp(16px, 2vw, 20px);
+        line-height: 1.55;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .chip,
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        font-weight: 800;
+      }
+      .chip {
+        padding: 8px 12px;
+        background: var(--plum-soft);
+        color: var(--plum);
+        font-size: 12px;
+      }
+      .badge {
+        padding: 5px 8px;
+        background: var(--plum-soft);
+        color: var(--plum);
+        font-size: 9px;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+      .badge.rec {
+        background: #e5f0ed;
+        color: var(--ok);
+      }
+      .badge.alt {
+        background: #f8edd9;
+        color: var(--warn);
+      }
+      .badge.coral {
+        background: #fae7e9;
+        color: #a23f49;
+      }
+
+      section.review-section {
+        margin-top: 48px;
+      }
+      .section-head {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(280px, 1.1fr);
+        gap: 28px;
+        align-items: end;
+        margin-bottom: 18px;
+        padding: 0 6px;
+      }
+      .section-head h2 {
+        margin-bottom: 0;
+        font-size: clamp(30px, 4vw, 48px);
+        line-height: 1.05;
+      }
+      .section-head > p {
+        margin-bottom: 0;
+        color: var(--sub);
+        font-size: 15px;
+        line-height: 1.55;
+      }
+      .variant-grid,
+      .journey-grid {
+        display: grid;
+        gap: 18px;
+      }
+      .variant-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .journey-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .panel {
+        min-width: 0;
+        padding: 16px;
+        border: 1px solid rgba(107, 80, 160, 0.12);
+        border-radius: 26px;
+        background: rgba(253, 251, 249, 0.9);
+        box-shadow: 0 18px 50px rgba(41, 26, 67, 0.08);
+      }
+      .panel-head {
+        padding: 5px 6px 14px;
+      }
+      .panel-head h3 {
+        margin: 9px 0 6px;
+        font-size: 20px;
+      }
+      .panel-head p {
+        margin-bottom: 0;
+        color: var(--sub);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+      .annotation {
+        margin: 13px 5px 2px;
+        color: var(--sub);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .phone {
+        width: min(100%, 410px);
+        min-height: 720px;
+        margin: 0 auto;
+        overflow: hidden;
+        border: 6px solid #241a2c;
+        border-radius: 34px;
+        background: var(--paper);
+        box-shadow: 0 20px 50px rgba(41, 26, 67, 0.2);
+      }
+      .phone.compact {
+        min-height: 640px;
+      }
+      .phone-top {
+        height: 21px;
+        background: #241a2c;
+      }
+      .brandbar {
+        display: grid;
+        grid-template-columns: 44px 1fr 44px;
+        align-items: center;
+        min-height: 54px;
+        padding: 5px 10px;
+        border-bottom: 1px solid var(--line);
+      }
+      .back {
+        display: grid;
+        width: 38px;
+        height: 38px;
+        place-items: center;
+        border: 1px solid #dcd2ec;
+        border-radius: 12px;
+        background: #f7f3ff;
+        color: var(--plum);
+        font-size: 24px;
+      }
+      .brand {
+        text-align: center;
+        font-size: 22px;
+        font-weight: 700;
+      }
+      .saved {
+        color: var(--ok);
+        font-size: 9px;
+        font-weight: 800;
+        text-align: right;
+      }
+      .rail {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 3px;
+        padding: 8px 12px 7px;
+        border-bottom: 1px solid var(--line);
+      }
+      .rail span {
+        position: relative;
+        padding-top: 7px;
+        color: #756f6a;
+        font-size: 7.7px;
+        text-align: center;
+      }
+      .rail span::before {
+        position: absolute;
+        inset: 0 0 auto;
+        height: 3px;
+        border-radius: 2px;
+        background: #e2dcd7;
+        content: "";
+      }
+      .rail .active {
+        color: var(--ink);
+        font-weight: 900;
+      }
+      .rail .active::before,
+      .rail .done::before {
+        background: var(--plum);
+      }
+      .content {
+        padding: 14px 12px 96px;
+      }
+      .content h3 {
+        margin: 4px 0 5px;
+        font-family: Georgia, serif;
+        font-size: 24px;
+        line-height: 1.1;
+      }
+      .lead {
+        margin-bottom: 10px;
+        color: var(--sub);
+        font-size: 11px;
+        line-height: 1.48;
+      }
+      .disclaimer {
+        color: #837c76;
+        font-size: 9.5px;
+        line-height: 1.45;
+      }
+      .progress {
+        height: 4px;
+        margin: 11px 0 13px;
+        border-radius: 4px;
+        background: #e5dfd8;
+      }
+      .progress span {
+        display: block;
+        height: 100%;
+        width: 54%;
+        border-radius: inherit;
+        background: var(--plum);
+      }
+      .section-label {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 8px;
+        margin: 10px 2px 7px;
+      }
+      .section-label b {
+        font-size: 12px;
+      }
+      .section-label span {
+        color: var(--plum);
+        font-size: 8.5px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .product-card,
+      .tool-panel,
+      .choice,
+      .routine-card,
+      .step-card,
+      .assumptions,
+      .day-card {
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: white;
+      }
+      .product-card {
+        display: grid;
+        grid-template-columns: 58px minmax(0, 1fr) 14px;
+        gap: 10px;
+        align-items: center;
+        padding: 10px;
+        background: var(--cream);
+        border-color: #e2d4b8;
+      }
+      .pack {
+        display: grid;
+        width: 58px;
+        height: 74px;
+        place-items: center;
+        border-radius: 14px;
+        background: #f4efe9;
+        color: var(--plum);
+        font-size: 29px;
+        font-weight: 900;
+      }
+      .product-card small,
+      .routine-card small {
+        color: var(--plum);
+        font-size: 7.5px;
+        font-weight: 900;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+      .product-card strong,
+      .routine-card strong {
+        display: block;
+        margin-top: 2px;
+        font-size: 12px;
+        line-height: 1.2;
+      }
+      .product-card p,
+      .routine-card p {
+        margin: 2px 0 0;
+        color: var(--sub);
+        font-size: 8.8px;
+        line-height: 1.35;
+      }
+      .meta {
+        margin-top: 5px;
+        color: #65567d;
+        font-size: 8px;
+        font-weight: 700;
+      }
+
+      .tool-panel {
+        padding: 11px;
+        border-color: #d9d0e6;
+        background: linear-gradient(135deg, #f6f2fb, #fff);
+      }
+      .tool-head {
+        display: flex;
+        gap: 9px;
+        align-items: flex-start;
+      }
+      .tool-icon {
+        display: grid;
+        width: 34px;
+        height: 34px;
+        flex: 0 0 34px;
+        place-items: center;
+        border-radius: 10px;
+        background: var(--plum);
+        color: white;
+        font-weight: 900;
+      }
+      .tool-head strong {
+        display: block;
+        font-size: 12px;
+      }
+      .tool-head p {
+        margin: 2px 0 0;
+        color: var(--sub);
+        font-size: 9px;
+        line-height: 1.35;
+      }
+      .tool-rows {
+        display: grid;
+        gap: 6px;
+        margin-top: 9px;
+      }
+      .tool-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px;
+        align-items: center;
+        padding-top: 6px;
+        border-top: 1px solid rgba(107, 80, 160, 0.1);
+      }
+      .tool-row:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+      .tool-row b {
+        display: block;
+        font-size: 10px;
+      }
+      .tool-row small {
+        display: block;
+        margin-top: 1px;
+        color: var(--sub);
+        font-size: 8.2px;
+        line-height: 1.3;
+      }
+      .state {
+        color: var(--plum);
+        font-size: 7.8px;
+        font-weight: 900;
+        white-space: nowrap;
+      }
+      .state.unknown {
+        color: var(--warn);
+      }
+
+      .dock {
+        position: absolute;
+        inset: auto 0 0;
+        padding: 10px 12px 13px;
+        border-top: 1px solid var(--line);
+        background: rgba(253, 251, 249, 0.97);
+      }
+      .screen {
+        position: relative;
+        min-height: 699px;
+      }
+      .phone.compact .screen {
+        min-height: 619px;
+      }
+      .cta,
+      .secondary {
+        display: grid;
+        min-height: 48px;
+        place-items: center;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 900;
+        text-align: center;
+      }
+      .cta {
+        background: var(--coral);
+        color: white;
+      }
+      .secondary {
+        margin-top: 7px;
+        border: 1.5px solid var(--plum);
+        color: var(--plum);
+        background: transparent;
+      }
+
+      .choice-list {
+        display: grid;
+        gap: 6px;
+      }
+      .visual-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+      .visual-choice {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid #d9d0e6;
+        border-radius: 16px;
+        background: white;
+      }
+      .visual-choice.selected {
+        border-color: var(--plum);
+        box-shadow: 0 0 0 2px rgba(107, 80, 160, 0.16);
+      }
+      .visual-art {
+        position: relative;
+        display: grid;
+        min-height: 92px;
+        place-items: center;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 28% 20%, rgba(255, 255, 255, 0.86), transparent 32%),
+          linear-gradient(145deg, #ece5f6, #f7f2eb);
+      }
+      .visual-art svg {
+        width: 74%;
+        height: 74px;
+        filter: drop-shadow(0 8px 10px rgba(41, 26, 67, 0.18));
+      }
+      .visual-copy {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 19px;
+        gap: 6px;
+        min-height: 55px;
+        align-items: start;
+        padding: 8px;
+      }
+      .visual-copy b {
+        display: block;
+        font-size: 9px;
+        line-height: 1.25;
+      }
+      .visual-copy small {
+        display: block;
+        margin-top: 2px;
+        color: var(--sub);
+        font-size: 7.3px;
+        line-height: 1.3;
+      }
+      .choice {
+        display: grid;
+        grid-template-columns: 28px minmax(0, 1fr) 20px;
+        gap: 8px;
+        align-items: center;
+        padding: 8px;
+      }
+      .choice.selected {
+        border-color: #aa96ca;
+        background: #f6f2fb;
+      }
+      .choice i {
+        display: grid;
+        width: 28px;
+        height: 28px;
+        place-items: center;
+        border-radius: 9px;
+        background: var(--plum-soft);
+        color: var(--plum);
+        font-style: normal;
+        font-size: 13px;
+        font-weight: 900;
+      }
+      .choice b {
+        display: block;
+        font-size: 9.5px;
+      }
+      .choice small {
+        display: block;
+        margin-top: 1px;
+        color: var(--sub);
+        font-size: 7.5px;
+        line-height: 1.25;
+      }
+      .check {
+        display: grid;
+        width: 19px;
+        height: 19px;
+        place-items: center;
+        border: 1px solid #d8d1cc;
+        border-radius: 50%;
+        color: white;
+        font-size: 10px;
+      }
+      .selected .check {
+        border-color: var(--plum);
+        background: var(--plum);
+      }
+
+      .assumptions {
+        padding: 12px;
+        background: #f6efe7;
+      }
+      .assumptions h4 {
+        margin-bottom: 7px;
+        font-size: 9px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .assumptions ul {
+        margin: 0;
+        padding-left: 17px;
+        color: var(--sub);
+        font-size: 9.2px;
+        line-height: 1.6;
+      }
+      .assumptions li.tools {
+        color: var(--warn);
+        font-weight: 800;
+      }
+      .fork-title {
+        margin: 12px auto 8px !important;
+        max-width: 14ch;
+        text-align: center;
+        font-size: 29px !important;
+      }
+      .fork-lead {
+        max-width: 26ch;
+        margin: 0 auto 12px;
+        text-align: center;
+        color: var(--sub);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .recommend-card {
+        padding: 12px;
+        border: 1px solid #d7cde5;
+        border-radius: 18px;
+        background: white;
+      }
+      .recommend-card.selectable {
+        position: relative;
+        min-height: 144px;
+      }
+      .recommend-card.selectable.selected {
+        border-color: var(--plum);
+        box-shadow: 0 0 0 2px rgba(107, 80, 160, 0.18);
+      }
+      .selection-mark {
+        display: grid;
+        width: 22px;
+        height: 22px;
+        place-items: center;
+        border: 1px solid #d4c9e3;
+        border-radius: 50%;
+        color: transparent;
+        background: white;
+        font-size: 11px;
+        font-weight: 900;
+      }
+      .selected .selection-mark {
+        border-color: var(--plum);
+        color: white;
+        background: var(--plum);
+      }
+      .recommend-top {
+        display: grid;
+        grid-template-columns: 48px minmax(0, 1fr) auto;
+        gap: 9px;
+        align-items: start;
+      }
+      .recommend-top .pack {
+        width: 48px;
+        height: 58px;
+        font-size: 21px;
+      }
+      .recommend-top strong {
+        display: block;
+        font-size: 11px;
+      }
+      .recommend-top p {
+        margin: 2px 0 0;
+        color: var(--sub);
+        font-size: 8.5px;
+        line-height: 1.35;
+      }
+      .facts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 8px;
+      }
+      .fact {
+        padding: 4px 6px;
+        border-radius: 999px;
+        background: var(--plum-soft);
+        color: #5c477d;
+        font-size: 7.5px;
+        font-weight: 800;
+      }
+      .fact.unknown {
+        background: #f8edd9;
+        color: var(--warn);
+      }
+      .alternative {
+        margin-top: 7px;
+        padding: 9px;
+        border: 1px dashed #cbbce0;
+        border-radius: 14px;
+        background: #faf8fc;
+      }
+      .alternative b {
+        font-size: 9.5px;
+      }
+      .alternative p {
+        margin: 2px 0 0;
+        color: var(--sub);
+        font-size: 8px;
+        line-height: 1.35;
+      }
+
+      .routine-card {
+        display: grid;
+        grid-template-columns: 38px minmax(0, 1fr);
+        gap: 9px;
+        align-items: center;
+        padding: 9px;
+        margin-bottom: 6px;
+      }
+      .routine-card .pack {
+        width: 38px;
+        height: 48px;
+        border-radius: 10px;
+        font-size: 17px;
+      }
+      .routine-tools {
+        display: grid;
+        gap: 1px;
+        overflow: hidden;
+        border: 1px solid #d9d0e6;
+        border-radius: 16px;
+        background: #d9d0e6;
+      }
+      .routine-tool {
+        display: grid;
+        grid-template-columns: 42px minmax(0, 1fr) auto;
+        gap: 8px;
+        align-items: center;
+        padding: 9px;
+        background: white;
+      }
+      .routine-tool i {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        place-items: center;
+        border-radius: 9px;
+        background: var(--plum-soft);
+        color: var(--plum);
+        font-style: normal;
+        font-weight: 900;
+      }
+      .tool-thumb {
+        display: grid;
+        width: 42px;
+        height: 42px;
+        place-items: center;
+        overflow: hidden;
+        border-radius: 10px;
+        background: linear-gradient(145deg, #eee7f7, #f6f0e9);
+      }
+      .tool-thumb svg {
+        width: 36px;
+        height: 36px;
+        filter: drop-shadow(0 4px 5px rgba(41, 26, 67, 0.16));
+      }
+      .routine-tool b {
+        display: block;
+        font-size: 9.5px;
+      }
+      .routine-tool small {
+        display: block;
+        margin-top: 1px;
+        color: var(--sub);
+        font-size: 7.5px;
+      }
+
+      .day-card {
+        padding: 11px;
+        margin-bottom: 8px;
+      }
+      .day-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .day-head h4 {
+        margin-bottom: 2px;
+        font-size: 13px;
+      }
+      .day-head p {
+        margin-bottom: 0;
+        color: var(--sub);
+        font-size: 8.5px;
+      }
+      .shelf {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 7px;
+        min-height: 86px;
+        margin-top: 8px;
+        padding: 8px 12px 7px;
+        border-bottom: 5px solid #d9b99c;
+      }
+      .shelf-tool {
+        display: grid;
+        width: 50px;
+        height: 62px;
+        place-items: center;
+        border-radius: 10px 10px 4px 4px;
+        background: linear-gradient(145deg, #ece5f6, #f7f2eb);
+      }
+      .shelf-tool svg {
+        width: 44px;
+        height: 50px;
+        filter: drop-shadow(0 5px 6px rgba(41, 26, 67, 0.18));
+      }
+      .bottle {
+        width: 30px;
+        height: 64px;
+        border: 2px solid #d0a43c;
+        border-radius: 7px 7px 3px 3px;
+        background: var(--cream);
+      }
+      .bottle.blue {
+        height: 54px;
+        border-color: #67abc4;
+        background: var(--blue);
+      }
+      .step-card {
+        display: grid;
+        grid-template-columns: 26px minmax(0, 1fr);
+        gap: 8px;
+        padding: 10px;
+        margin-bottom: 7px;
+        background: var(--plum-soft);
+        border-color: #d7cde5;
+      }
+      .step-no {
+        display: grid;
+        width: 24px;
+        height: 24px;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--plum);
+        color: white;
+        font-size: 9px;
+        font-weight: 900;
+      }
+      .step-card h4 {
+        margin-bottom: 3px;
+        font-size: 10.5px;
+      }
+      .step-card p {
+        margin-bottom: 6px;
+        color: var(--sub);
+        font-size: 8.3px;
+        line-height: 1.4;
+      }
+      .tool-use-card {
+        display: grid;
+        grid-template-columns: 72px minmax(0, 1fr);
+        gap: 10px;
+        align-items: start;
+        padding: 10px;
+        margin-bottom: 7px;
+        border: 1px solid #d7cde5;
+        border-radius: 18px;
+        background: white;
+      }
+      .tool-use-image {
+        display: grid;
+        width: 72px;
+        height: 88px;
+        place-items: center;
+        overflow: hidden;
+        border-radius: 14px;
+        background: linear-gradient(145deg, #ece5f6, #f7f2eb);
+      }
+      .tool-use-image svg {
+        width: 62px;
+        height: 72px;
+        filter: drop-shadow(0 7px 8px rgba(41, 26, 67, 0.18));
+      }
+      .tool-use-card small {
+        color: var(--plum);
+        font-size: 7.5px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .tool-use-card h4 {
+        margin: 3px 0;
+        font-size: 11px;
+      }
+      .tool-use-card p {
+        margin-bottom: 5px;
+        color: var(--sub);
+        font-size: 8px;
+        line-height: 1.4;
+      }
+      .caution {
+        margin-top: 5px;
+        color: #81464c;
+        font-size: 7.4px;
+        line-height: 1.35;
+      }
+
+      .state-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+      .state-card {
+        padding: 17px;
+        border: 1px solid rgba(107, 80, 160, 0.14);
+        border-radius: 19px;
+        background: white;
+      }
+      .state-card h3 {
+        margin: 9px 0 5px;
+        font-size: 15px;
+      }
+      .state-card p {
+        margin-bottom: 0;
+        color: var(--sub);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+      .signoff {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-top: 18px;
+      }
+      .signoff > div {
+        padding: 18px;
+        border-radius: 18px;
+        background: var(--ink);
+        color: white;
+      }
+      .signoff b {
+        display: block;
+        margin-bottom: 5px;
+      }
+      .signoff p {
+        margin-bottom: 0;
+        color: rgba(255, 255, 255, 0.76);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      @media (max-width: 1080px) {
+        .journey-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .state-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 760px) {
+        .review {
+          width: min(100% - 16px, 1540px);
+          padding-top: 12px;
+        }
+        .hero {
+          padding: 24px 18px;
+          border-radius: 24px;
+        }
+        .section-head {
+          grid-template-columns: 1fr;
+          gap: 9px;
+        }
+        .variant-grid,
+        .journey-grid,
+        .state-grid,
+        .signoff {
+          grid-template-columns: 1fr;
+        }
+        .panel {
+          padding: 10px;
+          border-radius: 22px;
+        }
+        .phone {
+          border-width: 5px;
+          border-radius: 31px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="review">
+      <header class="hero">
+        <p class="eyebrow">Personal Plan · Hair Tools · Produktionsstand 21.08.2026</p>
+        <h1>Tools ergänzen den live Idealplan – ohne Besitz oder Kauf zu erfinden.</h1>
+        <p>
+          Die Kategorien und Regeln bleiben bestehen. Neu ist die Einpassung in konkrete
+          Idealplan-Produkte, Direktübernahme, aktive Routine und die heutige Anwendung mit
+          Produktregal. Tools bleiben ein eigener, kompakter Asset-Layer.
+        </p>
+        <div class="chips">
+          <span class="chip">8 produktbenannte Familien</span>
+          <span class="chip">Produktkarten und Tools getrennt</span>
+          <span class="chip">„Nutze deins“ vor Neukauf</span>
+          <span class="chip">Heat und heatless gleichwertig</span>
+          <span class="chip">Visuelle Tool-Auswahl</span>
+          <span class="chip">Keine angenommene Technik</span>
+        </div>
+      </header>
+
+      <section class="review-section">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Entscheidung 1</p>
+            <h2>Wo Tools im Idealplan leben</h2>
+          </div>
+          <p>
+            Der live Idealplan ist in Basis und Optional geteilt und zeigt konkrete Produkte.
+            Deshalb vergleichen wir jetzt eine tier-lokale Tool-Fläche mit einer zusätzlichen
+            dritten Idealplan-Seite.
+          </p>
+        </div>
+        <div class="variant-grid">
+          <article class="panel">
+            <div class="panel-head">
+              <span class="badge rec">A · bestätigt</span>
+              <h3>Tool-Block im jeweiligen Tier</h3>
+              <p>
+                Basis-Tools stehen bei Basis, optionale Tools bei Optional – nach den Produktkarten.
+              </p>
+            </div>
+            <div class="phone compact">
+              <div class="screen">
+                <div class="phone-top"></div>
+                <div class="brandbar">
+                  <span></span><span class="brand">chaarlie</span><span></span>
+                </div>
+                <div class="rail">
+                  <span class="active">Idealplan</span><span>Feinschliff</span><span>Produkte</span
+                  ><span>Routine</span><span>Anwendung</span>
+                </div>
+                <div class="content">
+                  <p class="eyebrow">Dein persönlicher Plan</p>
+                  <h3>Deine Basis</h3>
+                  <p class="lead">Die Grundlagen für deine Routine.</p>
+                  <p class="disclaimer">
+                    Für jede Pflegekategorie haben wir das passendste Produkt aus unserem Katalog
+                    gewählt.
+                  </p>
+                  <div class="progress"><span></span></div>
+                  <div class="section-label">
+                    <b>Von uns klar empfohlen</b><span>5 Kategorien</span>
+                  </div>
+                  <div class="product-card">
+                    <span class="pack">▯</span>
+                    <div>
+                      <small>Shampoo</small><strong>Sanftes Reinigungsshampoo</strong>
+                      <p>Entfernt Rückstände, ohne unnötig zu reizen.</p>
+                      <div class="meta">sanft · 3–4×/Woche</div>
+                    </div>
+                    <span>›</span>
+                  </div>
+                  <div class="section-label"><b>Deine Tools</b><span>Basis · 2 Typen</span></div>
+                  <div class="tool-panel">
+                    <div class="tool-head">
+                      <span class="tool-icon">✦</span>
+                      <div>
+                        <strong>Für deinen Alltag sinnvoll</strong>
+                        <p>Produktart steht fest. Vorhandenen Bestand prüfen wir im Feinschliff.</p>
+                      </div>
+                    </div>
+                    <div class="tool-rows">
+                      <div class="tool-row">
+                        <div>
+                          <b>Grobzinkiger Kamm</b
+                          ><small>Sanft entwirren und Produkt verteilen</small>
+                        </div>
+                        <span class="state unknown">Bestand prüfen</span>
+                      </div>
+                      <div class="tool-row">
+                        <div>
+                          <b>Föhn + Diffusor</b
+                          ><small>Schonend trocknen und Definition unterstützen</small>
+                        </div>
+                        <span class="state unknown">Bestand prüfen</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="dock"><div class="cta">Optionale Empfehlungen ›</div></div>
+              </div>
+            </div>
+            <p class="annotation">
+              <b>Warum A:</b> Das bestehende Role-Tier-Modell bleibt sichtbar. Tools übernehmen
+              weder Preis-/Katalogversprechen noch Rhythmuszeilen der Pflegeproduktkarte.
+            </p>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <span class="badge coral">B · verworfen</span>
+              <h3>Eine dritte Idealplan-Seite</h3>
+              <p>
+                Alle Tools an einem Ort – dafür ein zusätzlicher Schritt zwischen Optional und der
+                Plan-Weiche.
+              </p>
+            </div>
+            <div class="phone compact">
+              <div class="screen">
+                <div class="phone-top"></div>
+                <div class="brandbar">
+                  <span class="back">‹</span><span class="brand">chaarlie</span><span></span>
+                </div>
+                <div class="rail">
+                  <span class="active">Idealplan</span><span>Feinschliff</span><span>Produkte</span
+                  ><span>Routine</span><span>Anwendung</span>
+                </div>
+                <div class="content">
+                  <p class="eyebrow">Idealplan · Seite 3</p>
+                  <h3>Deine Tools</h3>
+                  <p class="lead">
+                    Produktarten für Basis und optionale Ziele – noch ohne Bestandsabgleich.
+                  </p>
+                  <div class="tool-panel">
+                    <div class="tool-head">
+                      <span class="tool-icon">✦</span>
+                      <div>
+                        <strong>Basis</strong>
+                        <p>Zwei Produkttypen gehören zu deinem Grundplan.</p>
+                      </div>
+                    </div>
+                    <div class="tool-rows">
+                      <div class="tool-row">
+                        <div><b>Grobzinkiger Kamm</b><small>Entwirren</small></div>
+                        <span class="state">Basis</span>
+                      </div>
+                      <div class="tool-row">
+                        <div><b>Föhn + Diffusor</b><small>Trocknen & Definition</small></div>
+                        <span class="state">Basis</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tool-panel" style="margin-top: 8px">
+                    <div class="tool-head">
+                      <span class="tool-icon">+</span>
+                      <div>
+                        <strong>Optional</strong>
+                        <p>Ergänzungen für weitere Styling-Ziele.</p>
+                      </div>
+                    </div>
+                    <div class="tool-rows">
+                      <div class="tool-row">
+                        <div><b>Heatless Curl Set</b><small>Wellen oder Volumen setzen</small></div>
+                        <span class="state">Optional</span>
+                      </div>
+                      <div class="tool-row">
+                        <div><b>Nachtschutz</b><small>Reibung und Form kontrollieren</small></div>
+                        <span class="state">Optional</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="dock"><div class="cta">Idealplan abschließen ›</div></div>
+              </div>
+            </div>
+            <p class="annotation">
+              <b>Risiko B:</b> Übersichtlicher Asset-Ort, aber Basis/Optional werden aus ihren
+              heutigen Seiten herausgelöst und Stage 1 erhält eine neue dritte Unterseite.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="review-section">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Entscheidung 2</p>
+            <h2>Direkt übernehmen, ohne Besitz zu behaupten</h2>
+          </div>
+          <p>
+            Die Direktübernahme bleibt optisch so ruhig wie heute. Der Tool-Default wird nur mit der
+            bestehenden Nachtschutz-Annahme kombiniert; der interne Bestand bleibt trotzdem ehrlich
+            unbekannt.
+          </p>
+        </div>
+        <div class="variant-grid">
+          <article class="panel">
+            <div class="panel-head">
+              <span class="badge rec">Struktur bestätigt</span>
+              <h3>Kein neuer Disclaimer auf der Plan-Weiche</h3>
+              <p>Kein Blockieren, keine neue Tool-Fläche, kein stiller Kauf.</p>
+            </div>
+            <div class="phone compact">
+              <div class="screen">
+                <div class="phone-top"></div>
+                <div class="brandbar">
+                  <span class="back">‹</span><span class="brand">chaarlie</span><span></span>
+                </div>
+                <div class="rail">
+                  <span class="done">Idealplan</span><span class="active">Feinschliff</span
+                  ><span>Produkte</span><span>Routine</span><span>Anwendung</span>
+                </div>
+                <div class="content">
+                  <h3 class="fork-title">Dein Idealplan steht.</h3>
+                  <p class="fork-lead">
+                    Du kannst ihn direkt umsetzen – oder wir passen ihn an deinen Alltag und deine
+                    Produkte an.
+                  </p>
+                  <div class="assumptions">
+                    <h4>Dafür haben wir angenommen</h4>
+                    <ul>
+                      <li>Haarwäsche 2× pro Woche</li>
+                      <li>Haare sanft ausdrücken</li>
+                      <li>Lufttrocknen, keine Hitze-Geräte</li>
+                      <li>Keine weiteren Tools oder besonderer Nachtschutz eingeplant</li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="dock">
+                  <div class="cta">Feinschliff starten · ca. 2 Min.</div>
+                  <div class="secondary">Plan direkt übernehmen</div>
+                </div>
+              </div>
+            </div>
+            <p class="annotation">
+              Der Bildschirm erhält bewusst keinen zusätzlichen Hinweis. Technisch bleibt Tool-
+              Bestand <b>unbekannt</b>; erst der Feinschliff löst konkrete Tool-Schritte auf. Die
+              kombinierte Zeile ersetzt nur die bisherige Nachtschutz-Zeile.
+            </p>
+          </article>
+          <article class="panel">
+            <div class="panel-head">
+              <span class="badge coral">Verworfen</span>
+              <h3>Direktübernahme wegen Tools blockieren</h3>
+              <p>
+                Wäre zwar streng, würde den neuen Fast Path aber für fast jeden Nutzer entwerten.
+              </p>
+            </div>
+            <div class="state-grid" style="grid-template-columns: 1fr; margin-top: 20px">
+              <div class="state-card">
+                <span class="badge coral">Problem</span>
+                <h3>Besitz unbekannt ≠ Plan unvollständig</h3>
+                <p>
+                  Ein generischer Produkttyp kann sinnvoll sein, ohne dass wir wissen, ob er schon
+                  im Bad liegt.
+                </p>
+              </div>
+              <div class="state-card">
+                <span class="badge coral">Problem</span>
+                <h3>Exakten Kauf voraussetzen</h3>
+                <p>
+                  Würde „Nutze deins“ umgehen und aus einem minimalen Tool-Hinweis unnötig einen
+                  Kaufplan machen.
+                </p>
+              </div>
+              <div class="state-card">
+                <span class="badge rec">Sichere Grenze</span>
+                <h3>Ausführung pro Occurrence</h3>
+                <p>
+                  Unbekannte Tool-Schritte bleiben bedingt; Pflegeprodukt-Schritte und behavior-only
+                  Hinweise bleiben verfügbar.
+                </p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="review-section">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Aktualisierte Reise</p>
+            <h2>Feinschliff bis Anwendung</h2>
+          </div>
+          <p>
+            Die folgenden Screens verwenden die heutige Hierarchie und die bereits bestätigte
+            Tool-Logik.
+          </p>
+        </div>
+        <div class="journey-grid">
+          <article class="panel">
+            <div class="panel-head">
+              <span class="badge">2 · Feinschliff</span>
+              <h3>Erst vier visuelle Abschnitte</h3>
+              <p>
+                Große Bildkarten wie bei der Haarstruktur-Frage. Die Überschriften gliedern nur den
+                Weg; sie ersetzen nicht die acht Produktkategorien.
+              </p>
+            </div>
+            <div class="phone">
+              <div class="screen">
+                <div class="phone-top"></div>
+                <div class="brandbar">
+                  <span class="back">‹</span><span class="brand">chaarlie</span
+                  ><span class="saved">Gespeichert</span>
+                </div>
+                <div class="rail">
+                  <span class="done">Idealplan</span><span class="active">Feinschliff</span
+                  ><span>Produkte</span><span>Routine</span><span>Anwendung</span>
+                </div>
+                <div class="content">
+                  <p class="eyebrow">Feinschliff · Deine Tools</p>
+                  <h3>Welche Bereiche nutzt du bereits?</h3>
+                  <p class="lead">
+                    Wähle alle Bilder, die ungefähr passen. Danach fragen wir nur nach den konkreten
+                    Tool-Arten.
+                  </p>
+                  <div class="section-label"><b>Dein Tool-Check</b><span>1 von 5</span></div>
+                  <div class="visual-grid">
+                    <div class="visual-choice selected">
+                      <div class="visual-art">
+                        <svg aria-hidden="true" viewBox="0 0 120 80">
+                          <path
+                            d="M20 31c0-9 7-16 16-16h30c7 0 13 6 13 13v16H36c-9 0-16-5-16-13Z"
+                            fill="#7258a6"
+                          />
+                          <path d="M76 26h23l12 10-12 10H76Z" fill="#4f3d76" />
+                          <path d="M48 43h17l-4 29H45Z" fill="#5c477d" />
+                          <circle cx="45" cy="30" r="9" fill="#f1eef5" />
+                        </svg>
+                      </div>
+                      <div class="visual-copy">
+                        <div><b>Trocknen & Stylen</b><small>Föhn, Hitze oder heatless</small></div>
+                        <span class="check">✓</span>
+                      </div>
+                    </div>
+                    <div class="visual-choice selected">
+                      <div class="visual-art">
+                        <svg aria-hidden="true" viewBox="0 0 120 80">
+                          <path d="M29 13h13v54H29z" fill="#7258a6" />
+                          <path d="M48 13h13v54H48z" fill="#4f3d76" />
+                          <path
+                            d="M35 20h20M35 29h20M35 38h20M35 47h20M35 56h20"
+                            stroke="#f1eef5"
+                            stroke-width="3"
+                          />
+                          <path
+                            d="M78 12v56M88 12v56M98 12v56"
+                            stroke="#7258a6"
+                            stroke-width="5"
+                            stroke-linecap="round"
+                          />
+                        </svg>
+                      </div>
+                      <div class="visual-copy">
+                        <div>
+                          <b>Entwirren & Fixieren</b><small>Bürsten, Kämme, Clips, Bänder</small>
+                        </div>
+                        <span class="check">✓</span>
+                      </div>
+                    </div>
+                    <div class="visual-choice">
+                      <div class="visual-art">
+                        <svg aria-hidden="true" viewBox="0 0 120 80">
+                          <rect x="25" y="19" width="39" height="49" rx="5" fill="#e7b5a8" />
+                          <rect x="31" y="12" width="27" height="12" rx="4" fill="#7258a6" />
+                          <path
+                            d="M78 15c14 8 15 37 0 51"
+                            fill="none"
+                            stroke="#7258a6"
+                            stroke-width="8"
+                            stroke-linecap="round"
+                          />
+                          <circle cx="79" cy="13" r="7" fill="#4f3d76" />
+                        </svg>
+                      </div>
+                      <div class="visual-copy">
+                        <div>
+                          <b>Waschen & Auftragen</b><small>Scalp Brush und Applikatoren</small>
+                        </div>
+                        <span class="check"></span>
+                      </div>
+                    </div>
+                    <div class="visual-choice selected">
+                      <div class="visual-art">
+                        <svg aria-hidden="true" viewBox="0 0 120 80">
+                          <path d="M19 41c13-23 70-26 84 0-14 23-71 23-84 0Z" fill="#d8b7bb" />
+                          <path d="M30 41c14-12 47-13 63 0-16 12-49 12-63 0Z" fill="#f5edef" />
+                          <rect x="35" y="56" width="49" height="12" rx="5" fill="#7258a6" />
+                        </svg>
+                      </div>
+                      <div class="visual-copy">
+                        <div>
+                          <b>Tücher & Nachtschutz</b
+                          ><small>Tuch, Wrap, Bonnet oder Kissenbezug</small>
+                        </div>
+                        <span class="check">✓</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="disclaimer" style="margin-top: 9px">
+                    Bereits beantwortete Angaben sind vorausgewählt. „Nichts davon“ ist eine
+                    ausdrückliche Auswahl – nicht der Standard für übersprungene Seiten.
+                  </p>
+                </div>
+                <div class="dock"><div class="cta">Auswahl übernehmen</div></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <span class="badge">2 · Feinschliff · Folgeseite</span>
+              <h3>Dann konkrete Produktarten</h3>
+              <p>Maximal vier Bildoptionen pro Seite. Marke und Modell bleiben außen vor.</p>
+            </div>
+            <div class="phone">
+              <div class="screen">
+                <div class="phone-top"></div>
+                <div class="brandbar">
+                  <span class="back">‹</span><span class="brand">chaarlie</span
+                  ><span class="saved">Gespeichert</span>
+                </div>
+                <div class="rail">
+                  <span class="done">Idealplan</span><span class="active">Feinschliff</span
+                  ><span>Produkte</span><span>Routine</span><span>Anwendung</span>
+                </div>
+                <div class="content">
+                  <p class="eyebrow">Trocknen & Stylen · 2 von 5</p>
+                  <h3>Welche Luft-Tools nutzt du?</h3>
+                  <p class="lead">Wähle die Produktarten, die du bereits zu Hause hast.</p>
+                  <div class="section-label">
+                    <b>Haartrockner & Luftstyler</b><span>Mehrfachauswahl</span>
+                  </div>
+                  <div class="visual-grid">
+                    <div class="visual-choice selected">
+                      <div class="visual-art">
+                        <svg aria-hidden="true" viewBox="0 0 120 80">
+                          <path
+                            d="M18 30c0-9 7-15 16-15h33c8 0 14 6 14 14v15H34c-9 0-16-5-16-14Z"
+                            fill="#7258a6"
+                          />
+                          <path d="M78 25h23l12 11-12 10H78Z" fill="#4f3d76" />
+                          <path d="M47 43h18l-4 29H44Z" fill="#5c477d" />
+                        </svg>
+                      </div>
+                      <div class="visual-copy">
+                        <div><b>Föhn</b><small>ohne besonderen Aufsatz</small></div>
+                        <span class="check">✓</span>
+                      </div>
+                    </div>
+                    <div class="visual-choice selected">
+                      <div class="visual-art">
+                        <svg aria-hidden="true" viewBox="0 0 120 80">
+                          <path
+                            d="M15 29c0-8 7-14 15-14h31c8 0 14 6 14 14v14H30c-8 0-15-5-15-14Z"
+                            fill="#7258a6"
+                          />
+                          <path d="M72 24h18l9 8-9 8H72Z" fill="#4f3d76" />
+                          <path d="M43 42h18l-4 29H40Z" fill="#5c477d" />
+                          <path
+                            d="M96 17v37M105 21v29M113 26v19"
+                            stroke="#7258a6"
+                            stroke-width="4"
+                            stroke-linecap="round"
+                          />
+                        </svg>
+                      </div>
+                      <div class="visual-copy">
+                        <div><b>Föhn + Diffusor</b><small>breiter Schalenaufsatz</small></div>
+                        <span class="check">✓</span>
+                      </div>
+                    </div>
+                    <div class="visual-choice">
+                      <div class="visual-art">
+                        <svg aria-hidden="true" viewBox="0 0 120 80">
+                          <path
+                            d="M28 38h60"
+                            stroke="#7258a6"
+                            stroke-width="18"
+                            stroke-linecap="round"
+                          />
+                          <path
+                            d="M42 25v26M51 24v28M60 24v28M69 24v28M78 25v26"
+                            stroke="#f1eef5"
+                            stroke-width="3"
+                          />
+                          <path
+                            d="M88 38h20"
+                            stroke="#4f3d76"
+                            stroke-width="10"
+                            stroke-linecap="round"
+                          />
+                        </svg>
+                      </div>
+                      <div class="visual-copy">
+                        <div><b>Föhnbürste</b><small>Warmluft + Bürstenkopf</small></div>
+                        <span class="check"></span>
+                      </div>
+                    </div>
+                    <div class="visual-choice">
+                      <div class="visual-art">
+                        <svg aria-hidden="true" viewBox="0 0 120 80">
+                          <rect x="26" y="18" width="33" height="43" rx="8" fill="#7258a6" />
+                          <rect x="36" y="60" width="14" height="13" fill="#4f3d76" />
+                          <path
+                            d="M76 15v50M88 19v42M100 25v30"
+                            stroke="#7258a6"
+                            stroke-width="8"
+                            stroke-linecap="round"
+                          />
+                        </svg>
+                      </div>
+                      <div class="visual-copy">
+                        <div>
+                          <b>Heißluft-Multistyler</b><small>Gerät mit Wechselaufsätzen</small>
+                        </div>
+                        <span class="check"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="dock"><div class="cta">Weiter zu Hitze & heatless</div></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <span class="badge">3 · Produkte</span>
+              <h3>Vorhandenes Tool führt</h3>
+              <p>Keine Modellbewertung und keine künstliche Vergleichstabelle.</p>
+            </div>
+            <div class="phone">
+              <div class="screen">
+                <div class="phone-top"></div>
+                <div class="brandbar">
+                  <span class="back">‹</span><span class="brand">chaarlie</span
+                  ><span class="saved">Gespeichert</span>
+                </div>
+                <div class="rail">
+                  <span class="done">Idealplan</span><span class="done">Feinschliff</span
+                  ><span class="active">Produkte</span><span>Routine</span><span>Anwendung</span>
+                </div>
+                <div class="content">
+                  <p class="eyebrow">Tools für deinen Plan</p>
+                  <h3>Definition beim Trocknen</h3>
+                  <p class="lead">Dein vorhandenes Tool deckt diese Aufgabe ab.</p>
+                  <div class="recommend-card">
+                    <div class="recommend-top">
+                      <span class="tool-thumb"
+                        ><svg aria-hidden="true" viewBox="0 0 60 60">
+                          <path
+                            d="M5 22c0-7 6-12 13-12h19c6 0 11 5 11 11v10H18C11 31 5 28 5 22Z"
+                            fill="#7258a6"
+                          />
+                          <path d="M45 17h10l5 8-5 7H45Z" fill="#4f3d76" />
+                          <path d="M24 30h14l-4 26H22Z" fill="#5c477d" />
+                          <path
+                            d="M52 9v32M57 13v24"
+                            stroke="#7258a6"
+                            stroke-width="3"
+                            stroke-linecap="round"
+                          /></svg
+                      ></span>
+                      <div>
+                        <strong>Dein Föhn + Diffusor</strong>
+                        <p>Breite Produktart · kein konkretes Modell bewertet</p>
+                      </div>
+                      <span class="badge rec">Nutze deins</span>
+                    </div>
+                  </div>
+                  <div class="section-label">
+                    <b>Gleichwertiger anderer Weg</b><span>Optional</span>
+                  </div>
+                  <div class="alternative">
+                    <b>Heatless Set + Lufttrocknen</b>
+                    <p>
+                      Ähnliches Formziel ohne direkte Hitze, dafür mehr Setzzeit. Nur eine
+                      Alternative – kein Vorab-Fragebogen.
+                    </p>
+                  </div>
+                </div>
+                <div class="dock"><div class="cta">Mit meinem Tool fortfahren</div></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <span class="badge">3 · Produkte · Phase 2</span>
+              <h3>Fehlende Route: klare Peer-Auswahl</h3>
+              <p>Zwei gleichwertige Karten, eine markierte Auswahl und genau eine Hauptaktion.</p>
+            </div>
+            <div class="phone">
+              <div class="screen">
+                <div class="phone-top"></div>
+                <div class="brandbar">
+                  <span class="back">‹</span><span class="brand">chaarlie</span
+                  ><span class="saved">Gespeichert</span>
+                </div>
+                <div class="rail">
+                  <span class="done">Idealplan</span><span class="done">Feinschliff</span
+                  ><span class="active">Produkte</span><span>Routine</span><span>Anwendung</span>
+                </div>
+                <div class="content">
+                  <p class="eyebrow">Bürsten & Kämme</p>
+                  <h3>Sanft entwirren</h3>
+                  <p class="lead">Wähle die Tool-Art, die du einplanen möchtest.</p>
+                  <div class="recommend-card selectable selected">
+                    <div class="recommend-top">
+                      <span class="tool-thumb"
+                        ><svg aria-hidden="true" viewBox="0 0 60 60">
+                          <path d="M17 6h22v48H17z" fill="#7258a6" />
+                          <path d="M21 11v30M27 11v30M33 11v30" stroke="#f1eef5" stroke-width="3" />
+                          <path d="M39 6h7v48h-7z" fill="#4f3d76" /></svg
+                      ></span>
+                      <div>
+                        <strong>Grobzinkiger Kamm</strong>
+                        <p>Beispielprodukt · Marke Modell · 12,90 €</p>
+                      </div>
+                      <span class="selection-mark">✓</span>
+                    </div>
+                    <p class="annotation">Für nasses oder produktbeschichtetes Haar geeignet.</p>
+                  </div>
+                  <div class="recommend-card selectable" style="margin-top: 8px">
+                    <div class="recommend-top">
+                      <span class="tool-thumb"
+                        ><svg aria-hidden="true" viewBox="0 0 60 60">
+                          <rect x="14" y="7" width="28" height="35" rx="10" fill="#7258a6" />
+                          <path
+                            d="M19 13v24M25 11v28M31 11v28M37 13v24"
+                            stroke="#f1eef5"
+                            stroke-width="3"
+                          />
+                          <rect x="23" y="39" width="10" height="16" rx="4" fill="#4f3d76" /></svg
+                      ></span>
+                      <div>
+                        <strong>Flexible Entwirrbürste</strong>
+                        <p>Beispielprodukt · Marke Modell · 16,90 €</p>
+                      </div>
+                      <span class="selection-mark">✓</span>
+                    </div>
+                    <p class="annotation">Alternative Form mit flexiblem Bürstenkörper.</p>
+                  </div>
+                  <p class="disclaimer" style="margin-top: 10px">
+                    Erst der Button übernimmt die markierte Karte. Das Öffnen einer Karte verändert
+                    den Plan nicht.
+                  </p>
+                </div>
+                <div class="dock"><div class="cta">Dieses Tool einplanen</div></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <span class="badge">4 · Routine</span>
+              <h3>Produkte zuerst, Tools danach</h3>
+              <p>Eine Asset-Liste, keine zweite Routine und keine Kaufbestätigung.</p>
+            </div>
+            <div class="phone">
+              <div class="screen">
+                <div class="phone-top"></div>
+                <div class="brandbar">
+                  <span></span><span class="brand">chaarlie</span
+                  ><span class="saved">Gespeichert</span>
+                </div>
+                <div class="rail">
+                  <span class="done">Idealplan</span><span class="done">Feinschliff</span
+                  ><span class="done">Produkte</span><span class="active">Routine</span
+                  ><span>Anwendung</span>
+                </div>
+                <div class="content">
+                  <p class="eyebrow" style="color: var(--ok)">✓ Routine aktiv</p>
+                  <h3>Deine Routine</h3>
+                  <p class="lead">Deine Routine mit 5 Produkten.</p>
+                  <div class="section-label"><b>Deine Basis</b><span>Produkte</span></div>
+                  <div class="routine-card">
+                    <span class="pack">S</span>
+                    <div>
+                      <small>Shampoo</small><strong>Sanftes Reinigungsshampoo</strong>
+                      <p>3–4× pro Woche</p>
+                    </div>
+                  </div>
+                  <div class="routine-card">
+                    <span class="pack">H</span>
+                    <div>
+                      <small>Hitzeschutz</small><strong>Heat Protect Spray</strong>
+                      <p>Vor jeder Hitze-Anwendung</p>
+                    </div>
+                  </div>
+                  <div class="section-label"><b>Deine Tools</b><span>3 Assets</span></div>
+                  <div class="routine-tools">
+                    <div class="routine-tool">
+                      <span class="tool-thumb"
+                        ><svg aria-hidden="true" viewBox="0 0 60 60">
+                          <path
+                            d="M5 22c0-7 6-12 13-12h19c6 0 11 5 11 11v10H18C11 31 5 28 5 22Z"
+                            fill="#7258a6"
+                          />
+                          <path d="M45 17h10l5 8-5 7H45Z" fill="#4f3d76" />
+                          <path d="M24 30h14l-4 26H22Z" fill="#5c477d" />
+                          <path
+                            d="M52 9v32M57 13v24"
+                            stroke="#7258a6"
+                            stroke-width="3"
+                            stroke-linecap="round"
+                          /></svg
+                      ></span>
+                      <div><b>Föhn + Diffusor</b><small>Trocknen & Formgebung</small></div>
+                      <span class="state">Nutze deins</span>
+                    </div>
+                    <div class="routine-tool">
+                      <span class="tool-thumb"
+                        ><svg aria-hidden="true" viewBox="0 0 60 60">
+                          <path d="M17 6h22v48H17z" fill="#7258a6" />
+                          <path d="M21 11v30M27 11v30M33 11v30" stroke="#f1eef5" stroke-width="3" />
+                          <path d="M39 6h7v48h-7z" fill="#4f3d76" /></svg
+                      ></span>
+                      <div><b>Grobzinkiger Kamm</b><small>Entwirren & Verteilen</small></div>
+                      <span class="state">Eingeplant</span>
+                    </div>
+                    <div class="routine-tool">
+                      <span class="tool-thumb"
+                        ><svg aria-hidden="true" viewBox="0 0 60 60">
+                          <path d="M8 16h44v31c-10 7-34 7-44 0Z" fill="#d8b7bb" />
+                          <path
+                            d="M12 20c12 6 24 6 36 0M13 30c11 5 23 5 34 0"
+                            fill="none"
+                            stroke="#f5edef"
+                            stroke-width="3"
+                          /></svg
+                      ></span>
+                      <div>
+                        <b>Mikrofaser-Tuch</b><small>Direktübernahme · Bestand offen</small>
+                      </div>
+                      <span class="state unknown">Abgleichen</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="dock"><div class="cta">Anwendung ansehen</div></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <span class="badge">5 · Anwendung</span>
+              <h3>Tools stehen mit im Regal</h3>
+              <p>Eigene Bildobjekte wie Produkte – keine neue Pill-Zeile darunter.</p>
+            </div>
+            <div class="phone">
+              <div class="screen">
+                <div class="phone-top"></div>
+                <div class="brandbar">
+                  <span class="back">‹</span><span class="brand">chaarlie</span
+                  ><span class="saved">Gespeichert</span>
+                </div>
+                <div class="rail">
+                  <span class="done">Idealplan</span><span class="done">Feinschliff</span
+                  ><span class="done">Produkte</span><span class="done">Routine</span
+                  ><span class="active">Anwendung</span>
+                </div>
+                <div class="content">
+                  <p class="eyebrow">Anwendung</p>
+                  <h3>Was passt heute?</h3>
+                  <p class="lead">Wähle deinen Tag.</p>
+                  <div class="day-card">
+                    <div class="day-head">
+                      <div>
+                        <h4>Waschtag</h4>
+                        <p>Waschen, pflegen und sanft trocknen.</p>
+                      </div>
+                      <span>›</span>
+                    </div>
+                    <div class="shelf">
+                      <span class="bottle"></span><span class="bottle blue"></span
+                      ><span class="bottle" style="height: 48px; border-color: #d98271"></span
+                      ><span class="shelf-tool"
+                        ><svg aria-hidden="true" viewBox="0 0 60 60">
+                          <path
+                            d="M5 22c0-7 6-12 13-12h19c6 0 11 5 11 11v10H18C11 31 5 28 5 22Z"
+                            fill="#7258a6"
+                          />
+                          <path d="M45 17h10l5 8-5 7H45Z" fill="#4f3d76" />
+                          <path d="M24 30h14l-4 26H22Z" fill="#5c477d" />
+                          <path
+                            d="M52 9v32M57 13v24"
+                            stroke="#7258a6"
+                            stroke-width="3"
+                            stroke-linecap="round"
+                          /></svg></span
+                      ><span class="shelf-tool"
+                        ><svg aria-hidden="true" viewBox="0 0 60 60">
+                          <path d="M17 6h22v48H17z" fill="#7258a6" />
+                          <path d="M21 11v30M27 11v30M33 11v30" stroke="#f1eef5" stroke-width="3" />
+                          <path d="M39 6h7v48h-7z" fill="#4f3d76" /></svg
+                      ></span>
+                    </div>
+                  </div>
+                  <div class="day-card">
+                    <div class="day-head">
+                      <div>
+                        <h4>Stylingtag</h4>
+                        <p>Definition oder Form nach Bedarf.</p>
+                      </div>
+                      <span>›</span>
+                    </div>
+                    <div class="shelf" style="min-height: 72px">
+                      <span class="shelf-tool"
+                        ><svg aria-hidden="true" viewBox="0 0 60 60">
+                          <path
+                            d="M5 22c0-7 6-12 13-12h19c6 0 11 5 11 11v10H18C11 31 5 28 5 22Z"
+                            fill="#7258a6"
+                          />
+                          <path d="M45 17h10l5 8-5 7H45Z" fill="#4f3d76" />
+                          <path d="M24 30h14l-4 26H22Z" fill="#5c477d" />
+                          <path
+                            d="M52 9v32M57 13v24"
+                            stroke="#7258a6"
+                            stroke-width="3"
+                            stroke-linecap="round"
+                          /></svg
+                      ></span>
+                    </div>
+                  </div>
+                  <div class="day-card">
+                    <div class="day-head">
+                      <div>
+                        <h4>Pausentag</h4>
+                        <p>Heute ist keine Anwendung nötig.</p>
+                      </div>
+                      <span>›</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-head">
+              <span class="badge">5 · Anwendung</span>
+              <h3>Ein Bildabschnitt pro Tool-Nutzung</h3>
+              <p>Analog zur Produktnutzung, in der richtigen Reihenfolge und ohne neue Pills.</p>
+            </div>
+            <div class="phone">
+              <div class="screen">
+                <div class="phone-top"></div>
+                <div class="brandbar">
+                  <span class="back">‹</span><span class="brand">chaarlie</span
+                  ><span class="saved">Gespeichert</span>
+                </div>
+                <div class="rail">
+                  <span class="done">Idealplan</span><span class="done">Feinschliff</span
+                  ><span class="done">Produkte</span><span class="done">Routine</span
+                  ><span class="active">Anwendung</span>
+                </div>
+                <div class="content">
+                  <p class="eyebrow">Waschtag</p>
+                  <h3>Waschen & sanft trocknen</h3>
+                  <p class="lead">
+                    Folge der Reihenfolge. Produkt und Tool bleiben im selben Ablauf.
+                  </p>
+                  <div class="step-card">
+                    <span class="step-no">1</span>
+                    <div>
+                      <h4>Wasser sanft ausdrücken</h4>
+                      <p>Nicht rubbeln. Drücke überschüssiges Wasser mit den Händen aus.</p>
+                    </div>
+                  </div>
+                  <div class="step-card">
+                    <span class="step-no">2</span>
+                    <div>
+                      <h4>Hitzeschutz auftragen</h4>
+                      <p>Folge dem verifizierten Protokoll deines ausgewählten Produkts.</p>
+                    </div>
+                  </div>
+                  <div class="tool-use-card">
+                    <span class="tool-use-image"
+                      ><svg aria-hidden="true" viewBox="0 0 60 80">
+                        <path d="M13 5h25v69H13z" fill="#7258a6" />
+                        <path d="M18 12v43M25 12v43M32 12v43" stroke="#f1eef5" stroke-width="3" />
+                        <path d="M38 5h9v69h-9z" fill="#4f3d76" /></svg
+                    ></span>
+                    <div>
+                      <small>3 · Dein Tool</small>
+                      <h4>Produkt sanft verteilen</h4>
+                      <p>Führe den grobzinkigen Kamm ohne Zug durch kleine Partien.</p>
+                    </div>
+                  </div>
+                  <div class="tool-use-card">
+                    <span class="tool-use-image"
+                      ><svg aria-hidden="true" viewBox="0 0 70 80">
+                        <path
+                          d="M4 27c0-9 7-16 16-16h29c8 0 14 6 14 14v16H20C11 41 4 36 4 27Z"
+                          fill="#7258a6"
+                        />
+                        <path d="M59 20h9l6 10-6 9h-9Z" fill="#4f3d76" />
+                        <path d="M27 40h18l-4 35H24Z" fill="#5c477d" />
+                        <path
+                          d="M63 7v44M69 12v34"
+                          stroke="#7258a6"
+                          stroke-width="4"
+                          stroke-linecap="round"
+                        /></svg
+                    ></span>
+                    <div>
+                      <small>4 · Dein Tool</small>
+                      <h4>Mit Diffusor trocknen</h4>
+                      <p>Nutze einen sanften Luftstrom und arbeite abschnittsweise.</p>
+                      <div class="caution">
+                        <b>Sicherheitsgrenze:</b> Keine genaue Temperatur oder Stufe ohne
+                        verifiziertes Modell. Reduziere Hitze oder Abstand bei unangenehmer Wärme.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="review-section">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Vertrauensvertrag</p>
+            <h2>Was der Motor niemals zusammenzieht</h2>
+          </div>
+          <p>
+            Diese Zustände sind absichtlich getrennt, damit die Empfehlung ehrlich und rücksetzbar
+            bleibt.
+          </p>
+        </div>
+        <div class="state-grid">
+          <article class="state-card">
+            <span class="badge alt">Unbekannt</span>
+            <h3>Noch nicht gefragt</h3>
+            <p>Keine Aussage über Besitz. Direktübernahme darf diesen Zustand behalten.</p>
+          </article>
+          <article class="state-card">
+            <span class="badge coral">Nicht vorhanden</span>
+            <h3>Explizit beantwortet</h3>
+            <p>Erst dann darf eine fehlende Route eine konkrete Tool-Option auslösen.</p>
+          </article>
+          <article class="state-card">
+            <span class="badge rec">Vorhanden</span>
+            <h3>Breite Form reicht</h3>
+            <p>„Nutze deins“ ohne erfundene Marke, Modellpassung oder Temperatur.</p>
+          </article>
+          <article class="state-card">
+            <span class="badge">Exakt gewählt</span>
+            <h3>Sofort im Plan</h3>
+            <p>
+              Die bewusste Auswahl macht das Tool zum Routine-Mitglied; Link öffnen reicht nicht.
+            </p>
+          </article>
+        </div>
+        <div class="signoff">
+          <div>
+            <b>✓ Idealplan-Platzierung</b>
+            <p>Bestätigt: tier-lokale Tool-Blöcke, keine dritte Idealplan-Seite.</p>
+          </div>
+          <div>
+            <b>✓ Direktübernahme & Visuals</b>
+            <p>
+              Bestätigt: kein neuer Disclaimer; visuelle Feinschliff-, Routine- und
+              Tool-Use-Flächen.
+            </p>
+          </div>
+          <div>
+            <b>✓ Implementierungsfolge</b>
+            <p>Bestätigt: Phase 1 generisch; exakte Tool-Produkte nach Kandidatenfreigabe.</p>
+          </div>
+          <div>
+            <b>✓ Routine-Autorität</b>
+            <p>
+              Bestätigt: Tool-Assets und Nutzungen werden bereits in Phase 1 in Routine V2
+              gespeichert.
+            </p>
+          </div>
+          <div>
+            <b>✓ eine ruhige Copy-Zeile</b>
+            <p>„Keine weiteren Tools oder besonderer Nachtschutz eingeplant.“</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

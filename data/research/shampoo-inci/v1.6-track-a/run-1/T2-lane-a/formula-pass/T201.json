@@ -1,0 +1,341 @@
+{
+  "blindId": "T201",
+  "inciFingerprintSha256": "8c3575d78dbb8cccd4edf7ec1b0e2859980ec328ddca8923caeae347df5fcc90",
+  "fingerprintRecomputedMatches": true,
+  "formulaSource": {
+    "tier": 3,
+    "completeness": "complete",
+    "identityConfidence": "high"
+  },
+  "normalization": "'Aqua/Water/Eau' is one entry; marker '*' stripped from Polyimide-1 and Polyquaternium-10 (kept as provenance). Normalized positions = packet positions.",
+  "prominenceCutoff": "Parfum/Fragrance at 26 -> positions 1-25 prominent (E3).",
+  "surfactantArchitecture": "Sodium C14-16 Olefin Sulfonate (2, strong anionic sulfonate type, defining); Cocamidopropyl Betaine (4, amphoteric buffer); Coco-Glucoside (11, nonionic glucoside buffer); Cocamide MIPA (3, alkanolamide thickener, not a route). No reinforcing strong anionic.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic is ether/sulfonate type with at least one prominent buffer and no prominent reinforcing strong anionic -> moderate. Olefin sulfonate at 2 buffered by CAPB (4) and Coco-Glucoside (11).",
+      "counterSignal": "Two payload oils (7, 8), three cationic polymers and weak refatters argue for a softer net feel; sulfonate is a robust anionic. Neither moves the C1 convention.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium C14-16 Olefin Sulfonate",
+          "position": 2
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 11
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "C2 met: prominent payload lipids Cocos Nucifera Oil (7) and Argania Spinosa Kernel Oil (8) take the early-silicone place; cationic polymers Polyquaternium-10 (13), Polyquaternium-7 (15), Guar Hydroxypropyltrimonium Chloride (18); pearlizing route Glycol Distearate (21); deliberate humectants Glycerin (5), Panthenol (10). Film former Polyimide-1 (12) and weak refatters (14, 16) add further routes. Multiple complementary systems -> high.",
+      "counterSignal": "No silicone; oils sit after Sodium Chloride, so their level is bounded. Strong-ish sulfonate chassis does not lower conditioning (C2).",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Cocos Nucifera Oil",
+          "position": 7
+        },
+        {
+          "ingredient": "Argania Spinosa Kernel Oil",
+          "position": 8
+        },
+        {
+          "ingredient": "Polyquaternium-10",
+          "position": 13
+        },
+        {
+          "ingredient": "Polyquaternium-7",
+          "position": 15
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 18
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 21
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 5
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 10
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: W-RICH holds (prominent oils converging with three cationic polymers), but reset is not limited (C1 sulfonate chassis, resetCapacity moderate), there is no silicone, and the oils are bounded by position; noticeable but bounded residue is the best-supported reading.",
+      "neighboringAlternative": "high",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "high",
+          "rationale": "Three cationic polymers (13, 15, 18), two prominent payload oils (7, 8), a film former (12) and two weak refatters (14, 16) converge."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Cationic polymers can build up, film former adds some persistence; no silicone or waxy lipid; liquid oils largely rinse in a sulfonate chassis."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 moderate chassis: olefin sulfonate buffered by betaine and glucoside; effective ordinary reset, not limited."
+        }
+      },
+      "evidenceByFamily": {
+        "payload_lipid": [
+          [
+            "Cocos Nucifera Oil",
+            7
+          ],
+          [
+            "Argania Spinosa Kernel Oil",
+            8
+          ]
+        ],
+        "film_former": [
+          [
+            "Polyimide-1",
+            12
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Polyquaternium-10",
+            13
+          ],
+          [
+            "Polyquaternium-7",
+            15
+          ],
+          [
+            "Guar Hydroxypropyltrimonium Chloride",
+            18
+          ]
+        ],
+        "weak_refatter": [
+          [
+            "Hydrogenated Palm Glycerides Citrate",
+            14
+          ],
+          [
+            "Glyceryl Oleate",
+            16
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium C14-16 Olefin Sulfonate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            4
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Coco-Glucoside",
+            11
+          ]
+        ],
+        "humectant_context": [
+          [
+            "Glycerin",
+            5
+          ],
+          [
+            "Panthenol",
+            10
+          ]
+        ]
+      },
+      "excluded": [
+        [
+          "Glycol Distearate",
+          21,
+          "pearlizing wax, excluded for weight (6.4)"
+        ],
+        [
+          "Cocamide MIPA",
+          3,
+          "alkanolamide thickener (C3)"
+        ],
+        [
+          "Tocopheryl Acetate",
+          9,
+          "antioxidant"
+        ],
+        [
+          "Tocopherol",
+          17,
+          "antioxidant"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "W-RICH present and three cationic polymers plus a film former is a lot of converging deposition; the heavier band is realistic.",
+      "whyThisBand": "Deposition is clearly plausible across several families, so calling it light would understate residue; W-RICH is present.",
+      "whyNotNeighborBand": "Not high: W-RICH alone does not reach high without limited reset (6.7 limited reset); the olefin sulfonate chassis is an effective reset, there is no silicone or waxy lipid, and the oils sit after Sodium Chloride, so a coating, movement-reducing result is not the best-supported reading.",
+      "confidenceLimitingFactor": "Unknown polymer charge density/levels and oil levels could move it to high.",
+      "ruleNotes": [
+        "W-RICH (limited reset not met)",
+        "W2",
+        "W3 considered: moderate judged better supported, not closely balanced"
+      ]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Formula is a rich care architecture compatible with moisture or repair; claims will decide (dual_supported tie-break needs a moderate/high claim).",
+      "careDirection": {
+        "verdict": "dual_supported",
+        "basis": "Moisture: Glycerin (5), Panthenol (10) plus emollient oils and cationic polymers. Repair/nourishment: substantive deposition cluster of oils, three cationic polymers and a film former. Neither direction dominates on formula alone."
+      },
+      "formulaCompatibleRoutes": [
+        "moisture: Glycerin 5, Panthenol 10, Cocos Nucifera Oil 7",
+        "repair: Argania Spinosa Kernel Oil 8, Polyquaternium-10 13, Polyquaternium-7 15, Polyimide-1 12"
+      ],
+      "counterSignal": "Formula alone does not distinguish moisture from repair.",
+      "neighboringAlternative": "moisture"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Empty default; a secondary needs distinct positioning (Section 8), not visible yet.",
+      "counterSignal": "Positioning unknown.",
+      "neighboringAlternative": [
+        "shine"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Default regular (Section 9); triggers need graded claims. cleansingStrength moderate, so alternating/occasional_reset need not apply; frequent possible only with explicit frequency wording.",
+      "counterSignal": "No claims visible.",
+      "neighboringAlternative": "frequent"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). SC1 positioning not visible. CSA formula half: passes: prominent comfort route Panthenol (10); prominent humectant Glycerin (5); payload oils (7, 8).",
+      "counterSignal": "Fragrance declared; olefin sulfonate chassis.",
+      "neighboringAlternative": "targeted",
+      "csaPasses": true
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11).",
+      "counterSignal": "None; formula complete (ID-1).",
+      "neighboringAlternative": "none"
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium C14-16 Olefin Sulfonate",
+      "position": 2,
+      "role": "defining anionic, sulfonate type"
+    },
+    {
+      "ingredient": "Cocamide MIPA",
+      "position": 3,
+      "role": "thickener, not a route"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "amphoteric buffer"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 5,
+      "role": "humectant (C2, E4)"
+    },
+    {
+      "ingredient": "Cocos Nucifera Oil",
+      "position": 7,
+      "role": "payload_lipid"
+    },
+    {
+      "ingredient": "Argania Spinosa Kernel Oil",
+      "position": 8,
+      "role": "payload_lipid"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 10,
+      "role": "humectant/comfort (C2, E4)"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 11,
+      "role": "nonionic buffer"
+    },
+    {
+      "ingredient": "Polyimide-1",
+      "position": 12,
+      "role": "film_former"
+    },
+    {
+      "ingredient": "Polyquaternium-10",
+      "position": 13,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Hydrogenated Palm Glycerides Citrate",
+      "position": 14,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Polyquaternium-7",
+      "position": 15,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 16,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+      "position": 18,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 21,
+      "role": "pearlizing route (C2), excluded for weight"
+    },
+    {
+      "ingredient": "Sodium Salicylate",
+      "position": 23,
+      "role": "preservative"
+    },
+    {
+      "ingredient": "Parfum/Fragrance",
+      "position": 26,
+      "role": "E3 cutoff"
+    }
+  ],
+  "unresolvedMaterialIngredients": [],
+  "blindUncertainties": [
+    "Polyimide-1 read as film_former (styling film polymer); alternative: unresolved. Either way weight stays moderate-or-high, not low.",
+    "weightPotential moderate vs high: W-RICH with moderate reset; chose moderate, neighbor high."
+  ]
+}
