@@ -138,3 +138,11 @@ Source: `data/research/styling-inci/v1.0/round-4/report.md` and `diff.json` (imp
 | R4-Q7 | **A product-type noun in the name names the job; a shine/strength qualifier is the finish/grade** (as „Haarspray Glanz"): Taft Gel Wax Glanz ⇒ `molding`, finish „glänzend", D8b flag kept internally; got2b Texture Clay ⇒ main job hold. |
 | R4-T | **Round-4 register RG4-1…RG4-27 approved as proposed for the remaining items** (I-2 mechanical items and all I-3 calculation-log items per R4-L), plus packet fixes P4-1…P4-4. Next: fold into v0.5, re-freeze the affected records, final confirmation round (R3-L / R4-L: only user-facing differences count). |
 | R4-H | **Housekeeping for v0.5 §13.4 (Claude, from the rulings' own logic; all calculation-log or already-ruled):** (1) no opaque `registry_row` pointer is added — registry rows are matched by brand + pack name (R4-Q6); (2) the Taft Gel Wax D8b flag is internal only (R4-L) and follows §7.5 as written; (3) where a promise line has no recorded position, §4.2 step 2 reads packet order; (4) Bumble and bumble „brilliantine" is a one-job C1 name under R4-Q1 (shine) — consistent with its registry row; (5) typed hold lines are secondary-job candidates only through the §6.10 hold_fix rule (RG3-16). The Leave-in addendum draft (v1.2) is updated after lock for R4-Q4 and the §4.1(d) rows. |
+
+## Final confirmation round (r6) rulings (2026-10-13)
+
+Source: `data/research/styling-inci/v1.0/round-6/report.md` and `diff.json` (scored by Codex CLI, verified Claude-side).
+
+| ID | Ruling |
+|---|---|
+| R6-Q1 | **Blow-out / smoothing sprays whose main active is a heat-activated smoothing film (e.g. Polysilicone-29), with only trace care (care actives at or after the first preservative) and no fixative ⇒ Styling `smoothing_styler`** („heat-activated coats", the subtype's original definition), held under PH2-2/PH1-16 until the Leave-in addendum. Owner: John Frieda Frizz Ease Unendlich Smooth Salon Blow-Out Spray, **NEQI Diamond Glass Ultimate and NEQI Diamond Glass All** ⇒ held `smoothing_styler`. **This reopens and replaces D3's NEQI outcome and R2-Q4** (owner-approved move of already-ruled Leave-in products, PH1-16); the Leave-in addendum must carry it. Brand line names („Frizz Ease", „Glow & Shine", „Nutricurls") are never job words. Reason: same as R3-Q4 — a smoothing styler must not reach curly users as care. |
