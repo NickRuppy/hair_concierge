@@ -852,11 +852,11 @@
     },
     {
       "path": "docs/research/styling-inci/v1.0/00_category_charter.md",
-      "sha256": "ad7fb3c7b144a61fc5baef5a8213112beb47f36acf1a458d20395c1b279c2539"
+      "sha256": "5a587304d95457fde967a50dd6182334f1750a7f351915f68553bf449497892b"
     },
     {
       "path": "docs/research/styling-inci/v1.0/01_property-set-v0.md",
-      "sha256": "41cc233031b1852a330f1ce32627b5bac220845df594454101c6627ce54c9a5b"
+      "sha256": "eeef6ccef013330ac12ab568998afe03da016a965d5a863032f85df424c66dd6"
     },
     {
       "path": "docs/research/styling-inci/v1.0/02_evidence_lexicon.v0.1.md",
@@ -876,15 +876,15 @@
     },
     {
       "path": "docs/research/styling-inci/v1.0/02_evidence_lexicon.v0.5.md",
-      "sha256": "7851ca150c726e36e430f9ca321953741f6e621f00056d70badb928ed5cb0171"
+      "sha256": "c6f908668c817876fb8d744ea2728ee036ff3ca9bcc578e9eb408b14d600bfb2"
     },
     {
       "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-      "sha256": "fdcba3ceeaa2b355fb39f0a3e69462be0e1a609185f3aa272fe2cd0c227ac23d"
+      "sha256": "68de9e68f5cdbb20e961ea2628d2c3bb899c28e4c01a96a365c15b5416a27927"
     },
     {
       "path": "plans/styling-concept/02-rulings.md",
-      "sha256": "67c60b1165450a477fc8244deda0693a86299f66369110bc5214322e521acfda"
+      "sha256": "9bb5a03a6fa4fd036ae027dcf4cc9d39bc38f51e0fe15bc4527b31ed2ed3390f"
     }
   ],
   "normalisation": [
@@ -1510,13 +1510,13 @@
       "rules": [
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "Humidity and duration lines never state a job; an explicit anti-frizz word in them does"
         },
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "the confirmed name's job words first (after the primary, in name order), then the C1/C2 promise lines in packet order, each line's job words in text order"
         },
@@ -1650,13 +1650,13 @@
       "rules": [
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "a hold claim with a strength word **or a brand number** states `hold_fix`"
         },
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "the confirmed name's job words first (after the primary, in name order), then the C1/C2 promise lines in packet order, each line's job words in text order"
         },
@@ -1685,9 +1685,9 @@
       ],
       "stale_example": {
         "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-        "line": 1063,
+        "line": 1081,
         "section": "§11.3 worked example",
-        "quote": "secondary `volume` („lebendige Sprungkraft"
+        "quote": "secondaries `volume` („lebendige Sprungkraft"
       },
       "correct_value": [
         "hold_fix",
@@ -1971,25 +1971,25 @@
       "rules": [
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "the first **job-bearing** phrase of the lead promise"
         },
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "the confirmed name's job words first (after the primary, in name order), then the C1/C2 promise lines in packet order, each line's job words in text order"
         },
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 1006,
+          "line": 1024,
           "section": "§10.2 claim normalisation",
           "quote": "| **Claim normalisation** (two independent passes; PH1-11 (c))"
         },
         {
           "path": "docs/research/styling-inci/v1.0/01_property-set-v0.md",
-          "line": 455,
+          "line": 465,
           "section": "§7 C fields",
           "quote": "| **Authoritative claim capture (C; not blind;"
         }
@@ -2291,25 +2291,25 @@
       "rules": [
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "the first **job-bearing** phrase of the lead promise"
         },
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "the confirmed name's job words first (after the primary, in name order), then the C1/C2 promise lines in packet order, each line's job words in text order"
         },
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 1006,
+          "line": 1024,
           "section": "§10.2 claim normalisation",
           "quote": "| **Claim normalisation** (two independent passes; PH1-11 (c))"
         },
         {
           "path": "docs/research/styling-inci/v1.0/01_property-set-v0.md",
-          "line": 455,
+          "line": 465,
           "section": "§7 C fields",
           "quote": "| **Authoritative claim capture (C; not blind;"
         }
@@ -2502,21 +2502,21 @@
       "rules": [
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "the first **job-bearing** phrase of the lead promise"
         },
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 732,
+          "line": 748,
           "section": "§6.10",
-          "quote": "one primary, ≤ 2 secondaries from"
+          "quote": "one primary (or `null` under the no-vocabulary-job rule below), ≤ 2 secondaries from"
         },
         {
           "path": "docs/research/styling-inci/v1.0/01_property-set-v0.md",
-          "line": 207,
+          "line": 217,
           "section": "§2.12 source assumption",
-          "quote": "These always exist, because S0 requires a C1/C2 promise."
+          "quote": "A C1/C2 promise need not supply a vocabulary job"
         },
         {
           "path": "plans/styling-concept/02-rulings.md",
@@ -2698,19 +2698,19 @@
       "rules": [
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "the first **job-bearing** phrase of the lead promise"
         },
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "Schwung, Sprungkraft, Spannkraft, Fülle ⇒ `volume`"
         },
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "the confirmed name's job words first (after the primary, in name order), then the C1/C2 promise lines in packet order, each line's job words in text order"
         }
@@ -2893,19 +2893,19 @@
       "rules": [
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "the first **job-bearing** phrase of the lead promise"
         },
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "Schwung, Sprungkraft, Spannkraft, Fülle ⇒ `volume`"
         },
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "the confirmed name's job words first (after the primary, in name order), then the C1/C2 promise lines in packet order, each line's job words in text order"
         }
@@ -3059,13 +3059,13 @@
       "rules": [
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "Humidity and duration lines never state a job; an explicit anti-frizz word in them does"
         },
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "the confirmed name's job words first (after the primary, in name order), then the C1/C2 promise lines in packet order, each line's job words in text order"
         },
@@ -3199,13 +3199,13 @@
       "rules": [
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "a hold claim with a strength word **or a brand number** states `hold_fix`"
         },
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "the confirmed name's job words first (after the primary, in name order), then the C1/C2 promise lines in packet order, each line's job words in text order"
         },
@@ -3234,9 +3234,9 @@
       ],
       "stale_example": {
         "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-        "line": 1063,
+        "line": 1081,
         "section": "§11.3 worked example",
-        "quote": "secondary `volume` („lebendige Sprungkraft"
+        "quote": "secondaries `volume` („lebendige Sprungkraft"
       },
       "correct_value": [
         "hold_fix",
@@ -3520,25 +3520,25 @@
       "rules": [
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "the first **job-bearing** phrase of the lead promise"
         },
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "the confirmed name's job words first (after the primary, in name order), then the C1/C2 promise lines in packet order, each line's job words in text order"
         },
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 1006,
+          "line": 1024,
           "section": "§10.2 claim normalisation",
           "quote": "| **Claim normalisation** (two independent passes; PH1-11 (c))"
         },
         {
           "path": "docs/research/styling-inci/v1.0/01_property-set-v0.md",
-          "line": 455,
+          "line": 465,
           "section": "§7 C fields",
           "quote": "| **Authoritative claim capture (C; not blind;"
         }
@@ -3840,25 +3840,25 @@
       "rules": [
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "the first **job-bearing** phrase of the lead promise"
         },
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "the confirmed name's job words first (after the primary, in name order), then the C1/C2 promise lines in packet order, each line's job words in text order"
         },
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 1006,
+          "line": 1024,
           "section": "§10.2 claim normalisation",
           "quote": "| **Claim normalisation** (two independent passes; PH1-11 (c))"
         },
         {
           "path": "docs/research/styling-inci/v1.0/01_property-set-v0.md",
-          "line": 455,
+          "line": 465,
           "section": "§7 C fields",
           "quote": "| **Authoritative claim capture (C; not blind;"
         }
@@ -4038,19 +4038,19 @@
       "rules": [
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "the first **job-bearing** phrase of the lead promise"
         },
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "Schwung, Sprungkraft, Spannkraft, Fülle ⇒ `volume`"
         },
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "the confirmed name's job words first (after the primary, in name order), then the C1/C2 promise lines in packet order, each line's job words in text order"
         }
@@ -4233,19 +4233,19 @@
       "rules": [
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "the first **job-bearing** phrase of the lead promise"
         },
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "Schwung, Sprungkraft, Spannkraft, Fülle ⇒ `volume`"
         },
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "the confirmed name's job words first (after the primary, in name order), then the C1/C2 promise lines in packet order, each line's job words in text order"
         }
@@ -4440,21 +4440,21 @@
       "rules": [
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 733,
+          "line": 750,
           "section": "§6.10",
           "quote": "the first **job-bearing** phrase of the lead promise"
         },
         {
           "path": "docs/research/styling-inci/v1.0/styling-classification-standard.md",
-          "line": 732,
+          "line": 748,
           "section": "§6.10",
-          "quote": "one primary, ≤ 2 secondaries from"
+          "quote": "one primary (or `null` under the no-vocabulary-job rule below), ≤ 2 secondaries from"
         },
         {
           "path": "docs/research/styling-inci/v1.0/01_property-set-v0.md",
-          "line": 207,
+          "line": 217,
           "section": "§2.12 source assumption",
-          "quote": "These always exist, because S0 requires a C1/C2 promise."
+          "quote": "A C1/C2 promise need not supply a vocabulary job"
         },
         {
           "path": "plans/styling-concept/02-rulings.md",

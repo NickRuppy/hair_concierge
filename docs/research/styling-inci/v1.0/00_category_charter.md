@@ -1,13 +1,20 @@
 # Styling v1.0 category charter
 
-Status: **Phase 2 ruled 2026-10-11 (PH2-1…12); blind calibration rounds 1–3 run 2026-10-12 and the confirmation round 4 on 2026-10-13, their rulings folded into standard v0.5 / lexicon v0.5 (round 4: R4-L, R4-Q1…R4-Q7, R4-T, 2026-10-13); amended 2026-10-13 after the Codex review (text aligned with R3-H2, R3-H4 (e), R3-H5, R4-Q4 and R4-H); final R6-Q1/R6-T owner rulings folded in; next: targeted `r7/` re-check under R3-L / R4-L — round 5 was aborted before scoring for S0 hold-grade leaks — then the lock and the Leave-in addendum.** Phase 1 ruled 2026-10-09 (PH1-1…16). Not locked. Encodes Nick's rulings SD1–SD5, D1–D8b, PH1-1…PH1-16 (2026-10-09) and PH2-1…PH2-12 (2026-10-11); the round-1, round-2 and round-3 rulings (R1-*, R2-*, incl. the post-recheck R2-H1…R2-H6, and R3-L, R3-Q1…R3-Q4, R3-H, R3-T, 2026-10-12, with R3-H2…R3-H4, 2026-10-13; R4-L, R4-Q1…R4-Q7, R4-T, 2026-10-13) live in the standard and are reflected here where a boundary case, the hold-conflict rule or the lock criteria change. The former proposals P1–P4 are ruled (§15). Items that are still open are listed in §15.2 and marked **Open** where they occur.
+Status: **v0.5 amended (R6/R7) — lock suspended pending targeted re-check r8 (LOCK-1-S)**.
 Version: 1.0 (artifact root; the classification standard is being drafted)
 Market: Germany/EU
 Date: 2026-10-09
 Governing inputs: `plans/styling-concept/02-rulings.md` (owner rulings — **governs** where any other source differs), `plans/styling-concept/01-styling-concept.md` (concept Rev. 2), `plans/styling-concept/03-d5-evidence.md`, `data/research/styling-inci/concept-v0/round2/` (calibration round 2; for the D6 border also `round2/care-vs-trace-rule.md` and `round2/parked-border-questions.md`).
 Inherited method: Leave-In Standard v1.0 (`docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md`, cited as "LI §x"), with the v1.1 overlay where it applies.
 
-**R6-T application/job alignment:** `target_zone` reads the main required application; optional/conditional extra sites do not widen it, and required sequential sites give `all` (Balea Volumenpuder Spray ⇒ `roots`; Redken Root Tease ⇒ `all`). `definition` requires an explicit curl/wave define-or-shape promise; „definierter Look“ alone gives no definition job (alverde Beach Waves). Standard §6.10/§6.12 governs.
+**R6-T application/job alignment:** `target_zone` reads the main required application; optional/conditional extra sites do not widen it, and required sequential sites give `all` (Balea Volumenpuder Spray ⇒ `roots`; Redken Root Tease ⇒ `all`). In descriptive sentences `definition` requires an explicit curl/wave define-or-shape promise (R7-Q2 separately admits curl/wave words in the product's own name); „definierter Look“ alone gives no definition job (alverde Beach Waves). Standard §6.10/§6.12 governs.
+
+### Amendment (R7 rulings, 2026-10-13)
+
+| Change | Ruling | Where |
+|---|---|---|
+| Lock suspended until review findings are closed and the targeted r8 re-check is confirmed. No catalog or production action follows from this amendment. | LOCK-1-S, L2 | header; standard §14.1 |
+| Missing vocabulary jobs use `primary_job: null`; a later eligible C1/C2 promise line's job becomes primary when the lead has none. Adjectives do not create separate jobs; product-name curl/wave words count, while descriptive sentences need an explicit define/shape-curls-or-waves promise. Brand line / collection names never count as jobs. | R7-F, R7-Q1…R7-Q3 | standard §4.2 / §6.10; property set §2.12 |
 
 ## 1. Purpose and scope
 
