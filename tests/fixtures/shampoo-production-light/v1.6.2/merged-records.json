@@ -1,0 +1,317 @@
+{
+  "mergeContract": "consolidate_run2.py: row intersection, heavier weight, lower research tier, lane-A observed intensity; reviewed projection statuses recorded separately from sealed sources",
+  "products": [
+    {
+      "slot": "A09",
+      "productId": "0017381a-84ba-46dd-9b6e-7ef457e8b5b4",
+      "input": "A09.json",
+      "needsResearch": true,
+      "sources": [
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W1/lane-a/out/W104.json",
+          "sha256": "412528c4173605675cdbc67004c9ad6b8d49e98b3cccf25bf770315f29e34832"
+        },
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W1/lane-b/out/W104.json",
+          "sha256": "300b1245e39832fe153c28472b8cd0b55389227637223dd19bc0ae7cb616e2ff"
+        }
+      ],
+      "laneProjectionStatuses": [
+        "needs_research",
+        "proposal_blocked_pending_review"
+      ],
+      "laneReviewFlags": [
+        [
+          "review_thickness_boundary:fine"
+        ],
+        [
+          "review_thickness_boundary:fine (weightPotential neighbor moderate -> acceptable)"
+        ]
+      ],
+      "reviewBasis": "plans/shampoo-v16-rollout/track-a/apply/apply-plan.json; plans/shampoo-v16/rulings.md R19/R20. Generic parity excludes A09: needs_research remains blocked here despite named R20.2 catalog override."
+    },
+    {
+      "slot": "U2",
+      "productId": "41b99629-5a1c-402f-a486-d41780e89e66",
+      "input": "U2.json",
+      "needsResearch": false,
+      "sources": [
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W1/lane-a/out/W109.json",
+          "sha256": "fa63fc0efe0cecc07cff1b8df555d4aff282ed3cdbcdc2561b92d54e35d95292"
+        },
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W1/lane-b/out/W109.json",
+          "sha256": "8afd2241e6f29b906097c96a0ead184a148bc4eb9763bc7909dac7247684b48f"
+        }
+      ],
+      "laneProjectionStatuses": [
+        "proposed",
+        "proposal"
+      ],
+      "laneReviewFlags": [
+        [],
+        []
+      ],
+      "reviewBasis": "plans/shampoo-v16-rollout/track-a/apply/apply-plan.json; plans/shampoo-v16/rulings.md R19/R20. Generic parity excludes A09: needs_research remains blocked here despite named R20.2 catalog override."
+    },
+    {
+      "slot": "U6",
+      "productId": "bef4f219-2c1f-4e02-8e3a-93056b95465a",
+      "input": "U6.json",
+      "needsResearch": false,
+      "sources": [
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W1/lane-a/out/W113.json",
+          "sha256": "ac7bbd02e7b7e157469438abae84dfbf3c08b862bd0365214054a4872d3feee0"
+        },
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W1/lane-b/out/W113.json",
+          "sha256": "eec2ca64fe01538dee58246733f1458b37d448751938836230c3a747b4b9f72c"
+        }
+      ],
+      "laneProjectionStatuses": [
+        "proposed",
+        "proposal"
+      ],
+      "laneReviewFlags": [
+        [],
+        []
+      ],
+      "reviewBasis": "plans/shampoo-v16-rollout/track-a/apply/apply-plan.json; plans/shampoo-v16/rulings.md R19/R20. Generic parity excludes A09: needs_research remains blocked here despite named R20.2 catalog override."
+    },
+    {
+      "slot": "A01",
+      "productId": "b000d235-1fc6-434c-9ba1-f1207d36cded",
+      "input": "A01.json",
+      "needsResearch": false,
+      "sources": [
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W1/lane-a/out/W115.json",
+          "sha256": "9b22675044bacd9bc174b1a86d8131daab58e846a40ad0902c8183a8ff115b7e"
+        },
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W1/lane-b/out/W115.json",
+          "sha256": "e35507b890008f901de05a39a65408453edd4ad41325f4dc29d0db5c0eb8fac3"
+        }
+      ],
+      "laneProjectionStatuses": [
+        "proposed",
+        "proposal"
+      ],
+      "laneReviewFlags": [
+        [],
+        []
+      ],
+      "reviewBasis": "plans/shampoo-v16-rollout/track-a/apply/apply-plan.json; plans/shampoo-v16/rulings.md R19/R20. Generic parity excludes A09: needs_research remains blocked here despite named R20.2 catalog override."
+    },
+    {
+      "slot": "A10",
+      "productId": "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+      "input": "A10.json",
+      "needsResearch": false,
+      "sources": [
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W2/lane-a/out/W202.json",
+          "sha256": "9280d06ebf8c80d5721391af1a4abf2be1ed70ed4ada66ed0dd5482e0d639c14"
+        },
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W2/lane-b/out/W202.json",
+          "sha256": "682401e24e2993bee2002d6e4b0097b0a64deb1cb4d1d622b26c0abc79f34b0e"
+        }
+      ],
+      "laneProjectionStatuses": [
+        "proposal_blocked_pending_review",
+        "proposal"
+      ],
+      "laneReviewFlags": [
+        [
+          "review_thickness_boundary:fine (weightPotential neighbor -> acceptable)"
+        ],
+        [
+          "review_thickness_boundary:fine (neighbor weightPotential=moderate gives acceptable)"
+        ]
+      ],
+      "reviewBasis": "plans/shampoo-v16-rollout/track-a/apply/apply-plan.json; plans/shampoo-v16/rulings.md R19/R20. Generic parity excludes A09: needs_research remains blocked here despite named R20.2 catalog override."
+    },
+    {
+      "slot": "A51",
+      "productId": "51a0b647-2794-49a3-96e1-e7695432561e",
+      "input": "A51.json",
+      "needsResearch": false,
+      "sources": [
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W2/lane-a/out/W205.json",
+          "sha256": "02ff08f80ff8637db742830f47e814db9f185bab4333d88df3d28aedacb93a73"
+        },
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W2/lane-b/out/W205.json",
+          "sha256": "4ff3e600d74e960884ac08cf60bcd5b25fa6b590678f4a14810e80ca3ce832a5"
+        }
+      ],
+      "laneProjectionStatuses": [
+        "proposal_ready_no_review_flags",
+        "proposal"
+      ],
+      "laneReviewFlags": [
+        [],
+        [
+          "review_thickness_boundary:fine (neighbor weightPotential=moderate gives acceptable)"
+        ]
+      ],
+      "reviewBasis": "plans/shampoo-v16-rollout/track-a/apply/apply-plan.json; plans/shampoo-v16/rulings.md R19/R20. Generic parity excludes A09: needs_research remains blocked here despite named R20.2 catalog override."
+    },
+    {
+      "slot": "A19",
+      "productId": "a836ef4f-f406-4557-b908-0155919e2c4f",
+      "input": "A19.json",
+      "needsResearch": false,
+      "sources": [
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W2/lane-a/out/W210.json",
+          "sha256": "c3f42fbbc24159bac0481ccbc62ab9e15bbd361dd2b73c81ee964f58002d797c"
+        },
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W2/lane-b/out/W210.json",
+          "sha256": "739b25b9bd0f1676640e14d79331fb402a82d8d49345c30ac949bddef99de9a1"
+        }
+      ],
+      "laneProjectionStatuses": [
+        "proposal_ready_no_review_flags",
+        "proposal"
+      ],
+      "laneReviewFlags": [
+        [],
+        []
+      ],
+      "reviewBasis": "plans/shampoo-v16-rollout/track-a/apply/apply-plan.json; plans/shampoo-v16/rulings.md R19/R20. Generic parity excludes A09: needs_research remains blocked here despite named R20.2 catalog override."
+    },
+    {
+      "slot": "A47",
+      "productId": "3405f33b-ae5f-4185-b72b-68c9a87f7c06",
+      "input": "A47.json",
+      "needsResearch": false,
+      "sources": [
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W2/lane-a/out/W211.json",
+          "sha256": "7845847ae1d3988788d66a632177d763616fe7c5318df8b04c5d89a9a8af2a25"
+        },
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W2/lane-b/out/W211.json",
+          "sha256": "8c12be12f8987cf89238a406b6366cdd61a684f75bc55f4b100c38ae72243cf0"
+        }
+      ],
+      "laneProjectionStatuses": [
+        "proposal_ready_no_review_flags",
+        "proposal"
+      ],
+      "laneReviewFlags": [
+        [],
+        []
+      ],
+      "reviewBasis": "plans/shampoo-v16-rollout/track-a/apply/apply-plan.json; plans/shampoo-v16/rulings.md R19/R20. Generic parity excludes A09: needs_research remains blocked here despite named R20.2 catalog override."
+    },
+    {
+      "slot": "A35",
+      "productId": "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+      "input": "A35.json",
+      "needsResearch": false,
+      "sources": [
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W2/lane-a/out/W213.json",
+          "sha256": "87bcd4ee54d6857da4820abf542634910fdea54a14d7bf7c48bed61a3fce0e34"
+        },
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W2/lane-b/out/W213.json",
+          "sha256": "7f836a6b06a85776789fab79b965fbce4dffbd0f4ec66bcb55382830bfc14932"
+        }
+      ],
+      "laneProjectionStatuses": [
+        "proposal_ready_no_review_flags",
+        "proposal"
+      ],
+      "laneReviewFlags": [
+        [],
+        []
+      ],
+      "reviewBasis": "plans/shampoo-v16-rollout/track-a/apply/apply-plan.json; plans/shampoo-v16/rulings.md R19/R20. Generic parity excludes A09: needs_research remains blocked here despite named R20.2 catalog override."
+    },
+    {
+      "slot": "A39",
+      "productId": "6fde3fe2-3850-4502-b9f2-ebb17eb13bad",
+      "input": "A39.json",
+      "needsResearch": false,
+      "sources": [
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W2/lane-a/out/W214.json",
+          "sha256": "4660a7f1404ff60d4d1a9fed77edccdc474409ee13a012d7497f435a399d9ee5"
+        },
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W2/lane-b/out/W214.json",
+          "sha256": "93b34513d2a394fcc4fcbc67e6ae0e2238ae85dbd70e64e3e7eb1d9a77ddea6e"
+        }
+      ],
+      "laneProjectionStatuses": [
+        "proposal_ready_no_review_flags",
+        "proposal"
+      ],
+      "laneReviewFlags": [
+        [],
+        []
+      ],
+      "reviewBasis": "plans/shampoo-v16-rollout/track-a/apply/apply-plan.json; plans/shampoo-v16/rulings.md R19/R20. Generic parity excludes A09: needs_research remains blocked here despite named R20.2 catalog override."
+    },
+    {
+      "slot": "A02",
+      "productId": "ead1333b-6839-464d-b272-673d39bb95a4",
+      "input": "A02.json",
+      "needsResearch": false,
+      "sources": [
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W2/lane-a/out/W217.json",
+          "sha256": "21370875cbda29d253f566acf38c46e75aa2fcd8b8326023ed5ffbb65fd6e4ab"
+        },
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W2/lane-b/out/W217.json",
+          "sha256": "caa4ad541dee5ceb98c0f085ed1db174922e3e144c85b4cc8e704e959a05d590"
+        }
+      ],
+      "laneProjectionStatuses": [
+        "proposal_ready_no_review_flags",
+        "proposal"
+      ],
+      "laneReviewFlags": [
+        [],
+        [
+          "review_thickness_boundary:fine (neighbor weightPotential=moderate gives acceptable)"
+        ]
+      ],
+      "reviewBasis": "plans/shampoo-v16-rollout/track-a/apply/apply-plan.json; plans/shampoo-v16/rulings.md R19/R20. Generic parity excludes A09: needs_research remains blocked here despite named R20.2 catalog override."
+    },
+    {
+      "slot": "A08",
+      "productId": "1f51a69f-c946-4898-9091-2fd2c59fb467",
+      "input": "A08.json",
+      "needsResearch": false,
+      "sources": [
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W4/lane-a/out/W417.json",
+          "sha256": "bb86e1dff97f0729b6bde7ab183a0bdd8e38aeeac8f215272354c8618295b6f1"
+        },
+        {
+          "path": "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W4/lane-b/out/W417.json",
+          "sha256": "7ff765d5a68be75ff6a5c996a33d2a7a5475f289d40a320d2aa006ef8e6db0e5"
+        }
+      ],
+      "laneProjectionStatuses": [
+        "proposal",
+        "proposal_ready"
+      ],
+      "laneReviewFlags": [
+        [],
+        []
+      ],
+      "reviewBasis": "plans/shampoo-v16-rollout/track-a/apply/apply-plan.json; plans/shampoo-v16/rulings.md R19/R20. Generic parity excludes A09: needs_research remains blocked here despite named R20.2 catalog override."
+    }
+  ]
+}

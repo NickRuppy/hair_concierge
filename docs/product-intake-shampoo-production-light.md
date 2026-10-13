@@ -7,7 +7,8 @@ shampoos with the full Shampoo INCI method, but only needs the production
 Shampoo database properties as the reviewed output.
 
 “Light” means reduced output, not reduced research. The operator still resolves
-the exact product/formula and applies the full Shampoo v1.4 method first. The
+the exact product/formula and applies the full pinned method first: v1.6.2 for
+new research, v1.4 for historical replay. The
 adapter then projects that reviewed product truth into the smaller field set
 used by the current production catalog.
 
@@ -29,11 +30,57 @@ Do not use it for:
 - medical treatment claims, diagnosed scalp disease or hair-loss efficacy;
 - database import, publication or user-facing activation.
 
-The full Shampoo v1.4 engine remains independent and unchanged. Use
+The older sections below document historical v1.4 replay. For new research, use
+the v1.6.2 lane described next. The full Shampoo v1.4 engine remains independent
+and unchanged. Use
 `docs/research/shampoo-inci/v1.4/` for complete eight-property research,
 method validation, holdouts and future ingredient-based matching. This adapter
 does not replace that engine and does not activate its eight-property model in
 production.
+
+## Locked v1.6.2 lane and storage adaptation
+
+New research uses `shampoo-classification-v1.6.2` / `shampoo-inci-v1.6.2` and
+the hash-pinned [standard](research/shampoo-inci/v1.6.2/classification-standard.md)
+and [runbook](research/shampoo-inci/v1.6.2/runbook.md). The input policy pin
+selects the contract; unknown or contradictory pins fail closed. Existing
+four-pin v1.4 envelopes retain their historical output.
+
+The v1.6.2 input uses the native final record (`identity`, eight
+`directProperties`, `projection`) with `standard`, `policyId` or `policy` as its
+pin, or the full four-pin `researchMethod` metadata from the adapter. Attach an
+explicit pin to records that have none. For batch manifests, add
+`identity.productId` and `identity.gtinAliases`; native single records otherwise
+use `blindId` in their summary, without establishing catalog ownership.
+
+The locked research model proposes ideal + acceptable rows with research
+weight. The current storage adaptation follows Track A `build_apply.py` and
+rulings R19/R21 instead of adding a live weight column or extra fit axis:
+
+- Balanced scalp (`normal`) stores only researched T7 **full-fit** thicknesses:
+  `light` → `fine, normal`; `moderate` → `normal`; `heavy` → `coarse`.
+  The fit-verdict evaluator computes **Passt bedingt** from thickness distance,
+  with intensity distance added. Balanced scalp still expects `regular`, so
+  `gentle` is one intensity step away (R21).
+- Scalp-concern buckets (`schuppen`, `dehydriert-fettig`, `irritationen`,
+  `trocken`) retain **every researched thickness**; thickness is ignored for
+  fit in these cells (R19).
+- Low strength → `gentle`; moderate → `regular`; strong → `clarifying` **only
+  with explicit D1 positioning**, otherwise `regular`. D2 flags a separate
+  deep-cleanser listing and retains regular-shampoo rows; it never uses the
+  historical v1.4 `routed_deep_cleansing` outcome.
+- `needs_research`, blocked statuses, unresolved review flags and low final
+  confidence emit no payload. Sealed blocks need adjudication before clearing.
+  Roles come from emitted buckets: `shampoo_dandruff` for `schuppen`,
+  `shampoo_everyday` for other buckets. Verified protocols remain an intake gate.
+
+Weight stays in the research review summary, alongside method version and D2
+listing. CLI summaries identify v1.6.2 members, including blocked ones.
+Fixtures retain both lane hashes, original blocks and the reviewed merge basis;
+eleven products match the Track A apply plan. Named catalog overrides are not
+general rules: Garnier Honig remains `needs_research` here despite R20.2;
+Monday X1 and Balea R20.1 are outside this parity sample. The locked standard's
+historical live-weight instructions remain unchanged. All outputs stay offline.
 
 ## Source-of-truth stack
 
@@ -322,9 +369,10 @@ the repair/moisture boundary, record one formula verdict:
 `not_applicable`. Claims may break a genuinely `dual_supported` tie, but cannot
 turn `nonspecific` formula evidence into a confident specialist focus.
 
-The research validator and local Lab can consume the overlay. The unchanged
-Production Light v1 adapter continues to accept only its frozen v1.4 input enum;
-in particular, `moisture` in a Production Light input is intentionally invalid.
+The research validator and local Lab can consume the overlay. The historical v1.4
+Production Light lane continues to accept only its frozen v1.4 input enum;
+in particular, `moisture` in a v1.4 Production Light input is intentionally invalid. The
+separately pinned v1.6.2 native-record lane accepts its own `moisture` focus.
 
 Validate one completed research directory or a same-shape dataset without
 modifying its artifacts:
@@ -368,7 +416,7 @@ Batch:
 `global_recommendation_ready`. It only says the Shampoo property lane is
 reviewable.
 
-## Production fields emitted
+## Historical v1.4 production fields emitted
 
 For `property_lane_ready`, the JSON contains the exact current production
 Shampoo fields:
@@ -389,7 +437,7 @@ The adapter does not produce `products` rows, GTIN ownership, image URLs,
 affiliate links, prices or exact `product_application_protocols` rows. Product
 Intake owns those.
 
-## Projection semantics
+## Historical v1.4 projection semantics
 
 ### Observed cleansing intensity
 

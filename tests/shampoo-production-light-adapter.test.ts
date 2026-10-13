@@ -1,11 +1,13 @@
 import assert from "node:assert/strict"
 import { createHash } from "node:crypto"
 import test from "node:test"
+import { readFileSync } from "node:fs"
 
 import {
   projectShampooProductionLight,
   renderShampooProductionLightMarkdown,
   SHAMPOO_PRODUCTION_LIGHT_RESEARCH_METHOD,
+  type ShampooProductionLightV162Input,
   type ShampooProductionLightInput,
 } from "../src/lib/shampoo/production-light-adapter"
 
@@ -473,4 +475,228 @@ test("rejects invalid secondary-focus values and renders a stable Markdown revie
   assert.match(markdown, /Conditional thicknesses \(not emitted\): coarse/)
   assert.match(markdown, /Projected rationale and confidence/)
   assert.match(markdown, /Warnings/)
+})
+
+function v162Input(slot = "A39"): ShampooProductionLightV162Input {
+  return JSON.parse(
+    readFileSync(`tests/fixtures/shampoo-production-light/v1.6.2/${slot}.json`, "utf8"),
+  )
+}
+
+test("v1.6.2 refuses blocked research, unresolved flags and unsupported pins without a payload", () => {
+  const cases: Array<[string, (input: ShampooProductionLightV162Input) => void]> = [
+    [
+      "record blocked",
+      (input) => {
+        input.status = "blocked"
+      },
+    ],
+    [
+      "projection blocked",
+      (input) => {
+        input.projection.status = "proposal_blocked_pending_review"
+      },
+    ],
+    [
+      "alternate projection status",
+      (input) => {
+        input.projection.projectionStatus = "needs_research"
+      },
+    ],
+    [
+      "research flag",
+      (input) => {
+        input.needsResearch = true
+      },
+    ],
+    [
+      "unresolved review flag",
+      (input) => {
+        input.projection.reviewFlags = ["review_thickness_boundary:fine"]
+      },
+    ],
+    [
+      "unknown status",
+      (input) => {
+        input.projection.status = "something_else"
+      },
+    ],
+    [
+      "low projected confidence",
+      (input) => {
+        input.projection.thicknessFitConfidence.fine = "low"
+      },
+    ],
+    [
+      "low direct confidence",
+      (input) => {
+        input.directProperties.weightPotential.confidence = "low"
+      },
+    ],
+    [
+      "missing formula",
+      (input) => {
+        input.identity.completeness = "incomplete"
+      },
+    ],
+    [
+      "bad hash",
+      (input) => {
+        ;(input.researchMethod as { policySha256: string }).policySha256 = "0".repeat(64)
+      },
+    ],
+    [
+      "bad runbook",
+      (input) => {
+        ;(input.researchMethod as { runbookSha256: string }).runbookSha256 = "0".repeat(64)
+      },
+    ],
+    [
+      "unknown model",
+      (input) => {
+        ;(input.researchMethod as { modelVersion: string }).modelVersion = "shampoo-inci-v1.6.3"
+      },
+    ],
+    [
+      "unknown policy",
+      (input) => {
+        ;(input.researchMethod as { policyId: string }).policyId = "shampoo-classification-v1.6.3"
+      },
+    ],
+  ]
+  for (const [name, mutate] of cases) {
+    const input = v162Input()
+    mutate(input)
+    const outcome = projectShampooProductionLight(input)
+    assert.equal(outcome.status, "needs_research", name)
+    assert.equal("payload" in outcome, false, name)
+  }
+})
+
+test("v1.6.2 keeps D2 regular rows and uses D1 alone to distinguish strong clarifying intensity", () => {
+  const reset = v162Input("U2")
+  const dual = projectShampooProductionLight(reset)
+  assert.equal(dual.status, "property_lane_ready")
+  if (dual.status !== "property_lane_ready") return
+  assert.equal(dual.summary.deepCleanserListing, "flagged")
+  assert.ok(
+    dual.payload.category_specs.product_shampoo_specs.every(
+      (row) => row.cleansing_intensity === "clarifying",
+    ),
+  )
+  assert.match(renderShampooProductionLightMarkdown(dual), /Research weight \(not stored\): light/)
+  reset.projection.explicitResetPositioning = false
+  reset.directProperties.usageRole.value = "alternating"
+  reset.projection.cleansingIntensity = "regular"
+  reset.projection.deepCleanserListing = "not_flagged"
+  for (const row of reset.projection.rows) row.cleansing_intensity = "regular"
+  const strong = projectShampooProductionLight(reset)
+  assert.equal(strong.status, "property_lane_ready")
+  if (strong.status === "property_lane_ready") {
+    assert.equal(strong.summary.deepCleanserListing, "not_flagged")
+    assert.ok(
+      strong.payload.category_specs.product_shampoo_specs.every(
+        (row) => row.cleansing_intensity === "regular",
+      ),
+    )
+  }
+  const ordinaryD1 = v162Input()
+  ordinaryD1.projection.explicitResetPositioning = true
+  assert.equal(projectShampooProductionLight(ordinaryD1).status, "property_lane_ready")
+})
+
+test("v1.6.2 rejects inconsistent mechanical facts, scalp rows and missing dandruff protocol authority", () => {
+  const cases: Array<[string, string, (input: ShampooProductionLightV162Input) => void]> = [
+    [
+      "intensity",
+      "A39",
+      (input) => {
+        input.projection.cleansingIntensity = "clarifying"
+      },
+    ],
+    [
+      "weight",
+      "A39",
+      (input) => {
+        input.projection.weight = "heavy"
+      },
+    ],
+    [
+      "D2 listing",
+      "U2",
+      (input) => {
+        input.projection.deepCleanserListing = "not_flagged"
+      },
+    ],
+    [
+      "route",
+      "A39",
+      (input) => {
+        input.projection.rows[0].scalp_route = "oily"
+      },
+    ],
+    [
+      "row weight",
+      "A39",
+      (input) => {
+        input.projection.rows[0].weight = "heavy"
+      },
+    ],
+    [
+      "duplicate",
+      "A39",
+      (input) => {
+        input.projection.rows.push({ ...input.projection.rows[0] })
+      },
+    ],
+    [
+      "dandruff role",
+      "A19",
+      (input) => {
+        input.projection.requiredProtocolRoles = ["shampoo_everyday"]
+      },
+    ],
+    [
+      "dandruff support",
+      "A19",
+      (input) => {
+        input.directProperties.dandruffSupport.value = "not_supported"
+      },
+    ],
+    [
+      "scalp comfort",
+      "A01",
+      (input) => {
+        input.directProperties.scalpComfortTarget.value = "not_targeted"
+      },
+    ],
+  ]
+  for (const [name, slot, mutate] of cases) {
+    const input = v162Input(slot)
+    mutate(input)
+    const outcome = projectShampooProductionLight(input)
+    assert.equal(outcome.status, "needs_research", name)
+    assert.equal("payload" in outcome, false, name)
+  }
+})
+
+test("v1.6.2 accepts the sealed native record shape by its policy pin and preserves raw blocks", () => {
+  const native = JSON.parse(
+    readFileSync(
+      "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W1/lane-a/out/W109.json",
+      "utf8",
+    ),
+  )
+  const outcome = projectShampooProductionLight(native)
+  assert.equal(outcome.status, "property_lane_ready")
+  if (outcome.status === "property_lane_ready") assert.equal(outcome.summary.productId, "W109")
+  native.standard = "shampoo-classification-v1.6.3"
+  assert.equal(projectShampooProductionLight(native).status, "needs_research")
+  const blocked = JSON.parse(
+    readFileSync(
+      "data/research/shampoo-inci/v1.6-track-a/run-2-v1.6.2/kit-W1/lane-a/out/W102.json",
+      "utf8",
+    ),
+  )
+  assert.equal(projectShampooProductionLight(blocked).status, "needs_research")
 })
