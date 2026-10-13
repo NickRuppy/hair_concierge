@@ -1,0 +1,42 @@
+{
+  "blindId": "W106",
+  "productName": "Neqi Moisture Mystery",
+  "brand": "Neqi",
+  "positioningSources": [
+    {
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Die milde Reinigungsformel des MOISTURE MYSTERY Shampoos passt zu jedem Haartyp – sei es normales, trockenes, feines, fettiges oder dünnes Haar. Mit kostbarem Algenextrakt angereichert, bietet das Shampoo eine sanfte Reinigung und versorgt das Haar gleichzeitig mit intensiver Feuchtigkeit für ein gesundes Erscheinungsbild. | sanfte, feuchtigkeitsspendende Reinigung | mit Algenextrakt | sulfatfrei | für alle Haartypen",
+      "directionsVerbatim": "Shampoo auf das nasse Haar auftragen. Sanft einmassieren und aufschäumen. Gründlich ausspülen."
+    },
+    {
+      "sourceType": "retailer_notino_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "NEQI Moisture Mystery hydratisierendes Shampoo für alle Haartypen | Enthält keine Sulfate.",
+      "directionsVerbatim": "(none shown)"
+    },
+    {
+      "sourceType": "manufacturer_de (German-language NEQI storefront; prices shown in CHF, so possibly the Swiss storefront)",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Entdecke das MOISTURE MYSTERY Shampoo: Intensive Feuchtigkeitspflege mit Algenextrakten – deine professionelle Haarpflege für Zuhause! | Die sanfte Reinigungsformel unseres MOISTURE MYSTERY Shampoos ist perfekt für alle Haartypen geeignet – egal ob normales, trockenes, feines, fettiges oder dünnes Haar. Angereichert mit wertvollem Algenextrakt reinigt das Shampoo nicht nur schonend, sondern spendet auch intensive Feuchtigkeit für gesund aussehendes Haar. | Frei von Sulfaten | Sanfte Reinigung von Haaren und Kopfhaut, ohne zu strapazieren | VEGAN UND SULFATFREI | Die Basis aller NEQI-Pflegeprodukte ist eine sulfatfreie, reichhaltige, vegane Formulierung. Der besondere Signature Blend – ein speziell zusammengesetzter Wirkstoffkomplex – mit Peptiden und exotischen Pflanzenextrakten, versiegelt die Haarstruktur und sorgt für unvergleichliche Geschmeidigkeit und strahlenden Glanz. Die enthaltenen Di- und Tri-Peptide aus biologisch angebautem Hafer beugen Haarbruch vor und stärken das Haar von Innen. Hemisqualan hilft, Haarschäden vorzubeugen, die Kämmbarkeit zu erleichtern und Frizz zu verringern. Es verhindert Feuchtigkeitsverlust, ohne das Haar zu beschweren. Goji-Extrakt verleiht dem Haar Geschmeidigkeit und Glanz. Malven-Extrakt lindert Trockenheit und fördert so die Haargesundheit. Monoi-Extrakt pflegt stark strapazierte und poröse Haare, verleiht ihnen mehr Elastizität und stärkt die Widerstandsfähigkeit. | Hergestellt in Italien",
+      "directionsVerbatim": "1. Shampoo auf das nasse Haar auftragen. Sanft in das Haar einmassieren und aufschäumen. 2. Gründlich ausspülen. 3. Für die Extraportion Feuchtigkeit, MOISTURE MYSTERY Conditioner und Leave-In Cream verwenden."
+    },
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Feuchtigkeits-Shampoo | Für alle Haartypen geeignet | Mit Algen-Extrakt | Für eine sanfte Reinigung | Das Shampoo Moisture Mystery von NEQI sorgt für eine sanfte und feuchtigkeitsspendende Reinigung. Das Shampoo mit Algenextrakt eignet sich für alle Haartypen und versorgt das Haar bis in die Wurzeln mit Nährstoffen und das ganz ohne zu beschweren. | Produkteigenschaften: ohne Silikone, ohne Sulfat | Wirkung: Pflege, Feuchtigkeit | Haartyp: alle Haartypen",
+      "directionsVerbatim": "Das Shampoo auf das nasse Haar auftragen. Sanft ins Haar einmassieren und aufschäumen. Gründlich ausspülen."
+    },
+    {
+      "sourceType": "pack_photo_dm_gallery",
+      "sourceKind": "pack_back",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "(not transcribed; claims taken from the existing sources)",
+      "directionsVerbatim": "(not transcribed)"
+    }
+  ]
+}

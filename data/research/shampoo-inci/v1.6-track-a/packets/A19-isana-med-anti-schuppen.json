@@ -1,0 +1,82 @@
+{
+  "slot": "A19",
+  "productId": "a836ef4f-f406-4557-b908-0155919e2c4f",
+  "name": "ISANA MED Shampoo Anti Schuppen, 200 ml",
+  "brand": "ISANA",
+  "packSize": "200 ml",
+  "gtins": [
+    "4305615629209"
+  ],
+  "sources": [
+    {
+      "url": "https://www.rossmann.de/media-neu/567/MAM_56762621/MAM_56762621_SHOP_IMAGE_1.4.png (pack-back photo, 928x2400, shown in the gallery of the Rossmann product page; barcode 4 305615 629209, '200 ml' legible on the photo)",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "pack_photo_on_manufacturer_page",
+      "sourceKind": "pack_back",
+      "gtinShown": "4305615629209 (barcode printed on the pack-back photo)",
+      "inciVerbatim": "INGREDIENTS: Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Coco-Glucoside, Sodium Cocoyl Glutamate, Glyceryl Oleate, Piroctone Olamine, Sodium Salicylate, Panthenol, Caffeine, Menthol, Glycerin, Sodium Laureth-8 Sulfate, Glycol Distearate, Magnesium Laureth Sulfate, Magnesium Laureth-8 Sulfate, Laureth-4, Sodium Oleth Sulfate, Magnesium Oleth Sulfate, Parfum, Hydrogenated Vegetable Glycerides Citrate, Tocopherol, Citric Acid, Sodium Citrate, Propylene Glycol, Formic Acid, Sodium Benzoate, Potassium Sorbate.",
+      "claimsVerbatim": "Anti Schuppenformel mit Piroctone Olamine – Ein bewährter Wirkkomplex zur Pflege der Kopfhaut mit nachhaltiger Wirkung gegen lästige Schuppen und deren Neubildung. | WIRKUNG: Das ISANA MED SHAMPOO befreit das Haar bei regelmäßiger Anwendung von störenden Schuppen und beugt effektiv deren Neubildung vor. | ohne Silikone & pH hautneutral | Coffein & Menthol | reinigt schnell fettendes Haar | HAUTVERTRÄGLICHKEIT: dermatologisch bestätigt. | vegan | Hergestellt in Deutschland | Hergestellt für Dirk Rossmann GmbH, Isernhägener Str. 16, DE-30938 Burgwedel",
+      "directionsVerbatim": null
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-anti-schuppen/p/4305615629209",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de (Rossmann private label; Dirk Rossmann GmbH is brand owner)",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4305615629209 (product URL id; 200 ml (1 L = 4,95 €))",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Coco-Glucoside, Sodium Cocoyl Glutamate, Glyceryl Oleate, Piroctone Olamine, Sodium Salicylate, Panthenol, Caffeine, Menthol, Glycerin, Sodium Laureth-8 Sulfate, Glycol Distearate, Magnesium Laureth Sulfate, Magnesium Laureth-8 Sulfate, Laureth-4, Sodium Oleth Sulfate, Magnesium Oleth Sulfate, Parfum, Hydrogenated Vegetable Glycerides Citrate, Tocopherol,Citric Acid, Sodium Citrate, Propylene Glycol, Formic Acid, Sodium Benzoate, Potassium Sorbate",
+      "claimsVerbatim": "Das ISANA Med Anti Schuppen Shampoos befreit das Haar bei regelmäßiger Anwendung von störenden Schuppen und beugt effektiv deren Neubildung vor.Anti Schuppenformel mit Piroctone Olamine - ein bewährter Wirkkomplex zur Pflege der Kopfhaut mit nachhaltiger Wirkung gegen lästige Schuppen und deren Neubildung | ohne Silikone & pH 5,5 hautneutral | Coffein hilft die Haarwurzel zu stärken | Menthol erfrischt die Kopfhaut | Hautverträglichkeit: dermatologisch bestätigt. | Piroctone Olamine wirkt nachhaltig gegen Schuppen | Coffein & Menthol gegen trockene Kopfhaut",
+      "directionsVerbatim": null
+    }
+  ],
+  "conflicts": [
+    "Positioning conflict pack vs web: the pack-back photo says 'reinigt schnell fettendes Haar' while the Rossmann web copy says 'Coffein & Menthol gegen trockene Kopfhaut' (and not the oily-hair line). The INCI is identical either way; this only matters for the oily/dry scalp secondary route. Carried over from the Track B consultant brief.",
+    "Claim vs INCI: web copy 'Coffein hilft die Haarwurzel zu stärken' / 'Menthol erfrischt die Kopfhaut' - both Caffeine and Menthol are present (positions 11 and 12); no named-ingredient claim is missing from the INCI."
+  ],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Betaine",
+    "Sodium Chloride",
+    "Coco-Glucoside",
+    "Sodium Cocoyl Glutamate",
+    "Glyceryl Oleate",
+    "Piroctone Olamine",
+    "Sodium Salicylate",
+    "Panthenol",
+    "Caffeine",
+    "Menthol",
+    "Glycerin",
+    "Sodium Laureth-8 Sulfate",
+    "Glycol Distearate",
+    "Magnesium Laureth Sulfate",
+    "Magnesium Laureth-8 Sulfate",
+    "Laureth-4",
+    "Sodium Oleth Sulfate",
+    "Magnesium Oleth Sulfate",
+    "Parfum",
+    "Hydrogenated Vegetable Glycerides Citrate",
+    "Tocopherol",
+    "Citric Acid",
+    "Sodium Citrate",
+    "Propylene Glycol",
+    "Formic Acid",
+    "Sodium Benzoate",
+    "Potassium Sorbate"
+  ],
+  "canonicalReason": "Current pack-back photo (tier 1) and the Rossmann DE product page text (the private-label owner's page) give the identical 29-item list in the same order; the barcode on the photo equals the catalog GTIN. Also consistent with the Track B consultant brief ('INCI headline (29)'; pack-back image on rossmann.de) and the intake package payload (EAN 4305615629209).",
+  "inciFingerprintSha256": "ed76225ec79293dce5791880a50de40ba3ca27ba02c5e1e885ebed5214948b83",
+  "normalization": "Split the canonical raw INCI on ',' (not on commas inside locants such as '1,2-'), merged split synonym entries such as 'Aqua (Water)' / 'Aqua/Water/Eau' into one item each; per ingredient: lower-case, trim, collapse internal whitespace, remove whitespace around '/'; drop a trailing period and any leading label such as 'Inhaltsstoffe:'; keep parentheses, asterisks and hyphens as published; join the normalized ingredients with '|' and sha256 the UTF-8 string.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 1,
+  "status": "frozen_with_conflict",
+  "blockReason": null,
+  "notes": [
+    "Status frozen_with_conflict solely because of the oily-hair (pack) vs dry-scalp (web) positioning difference; the formula itself is not in doubt.",
+    "I read the pack-back photo at screen resolution (the image is displayed downscaled in the browser); the web text and the photo agree item by item, so no transcription difference was found. The web list has a missing space after 'Tocopherol,' which is normalised.",
+    "The photo is Rossmann's own shop image 'MAM_56762621' (SHOP_IMAGE_1.4) captured 2026-10-09 from the product-page gallery (the intake payload of 2026-10-06 cites the sibling front image MAM_56762622 of the same listing).",
+    "Not the Ultra Sensitiv+ Anti-Schuppen (EAN 4068134169129). Rossmann page shows no 'Anwendung und Gebrauch' text and the pack-back photo shows no directions (they may be on the front/side), so directionsVerbatim is null.",
+    "Intake package ops/product-intake-research/2026-10-06/337d26bc-0cf8-4471-a536-434f75bdae7f was consulted (payload cites the Rossmann page, EAN and article number 042813)."
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "slot": "A48",
+  "productId": "bb1b029f-a8fa-4276-8268-f6ce418128c7",
+  "name": "Schwarzkopf GLISS Shampoo Total Repair, 250 ml",
+  "brand": "Schwarzkopf GLISS (Henkel)",
+  "packSize": "250 ml",
+  "gtins": [
+    "4015100812435"
+  ],
+  "sources": [
+    {
+      "url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/total-repair/total-repair-shampoo.html",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4015100812435 (schema.org gtin); '250 ml'",
+      "inciVerbatim": "Aqua (Water, Eau), Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Dimethicone, Hydrolyzed Keratin, Combretum Farinosum Flower Nectar, Parfum (Fragrance), Sodium Benzoate, PEG-7 Glyceryl Cocoate, Citric Acid, Amodimethicone, Guar Hydroxypropyltrimonium Chloride, Glycol Distearate, Laureth-4, PEG-120 Methyl Glucose Dioleate, Glycerin, Hydrogenated Castor Oil, Laureth-23, Trideceth-10, Sodium Hydroxide, Citrus Aurantium Peel Oil, Limonene, Phenoxyethanol, Propylene Glycol, Sodium Salicylate, Benzyl Alcohol, Potassium Sorbate",
+      "claimsVerbatim": "Geschmeidigkeit und Glanz – Das GLISS Total Repair Shampoo reinigt, pflegt und schützt das Haar und macht es geschmeidig und glänzend | Flüssiges Keratin & Blütennektar – Dank flüssigem Keratin und Blütennektar schützt das Repair Shampoo trockenes, geschädigtes Haar und macht es geschmeidig und glänzend | Total Repair – Das Shampoo für geschädigtes und trockenes Haar sorgt für eine Tiefenreparatur der Haare, reduziert Haarbruch¹ und stärkt die Haarfaser (1 Im Vergleich zu unbehandeltem Haar) | Geeignet für: Trockenes, geschädigtes Haar | Formel: Mit flüssigem Keratin und Blütennektar. Macht das Haar geschmeidig und glänzend.",
+      "directionsVerbatim": "Sanft im feuchten Haar verteilen & gut ausspülen. Regelmäßig zur Haarpflege für trockenes Haar anwenden und für optimale Ergebnisse anschließend die Total Repair Spülung verwenden"
+    },
+    {
+      "url": "https://www.dm.de/p/d/1430913/schwarzkopf-gliss-shampoo-total-repair",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "4015100812435 (dm-Artikelnummer 1430913; 'Shampoo Total Repair, 250 ml'; Henkel AG & Co. KGaA, Düsseldorf; lieferbar)",
+      "inciVerbatim": "Ingredients: Aqua (Water, Eau), Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Dimethicone, Hydrolyzed Keratin, Combretum Farinosum Flower Nectar, Parfum (Fragrance), Sodium Benzoate, PEG-7 Glyceryl Cocoate, Citric Acid, Amodimethicone, Guar Hydroxypropyltrimonium Chloride, Glycol Distearate, Laureth-4, PEG-120 Methyl Glucose Dioleate, Glycerin, Hydrogenated Castor Oil, Laureth-23, Trideceth-10, Sodium Hydroxide, Citrus Aurantium Peel Oil, Limonene, Phenoxyethanol, Propylene Glycol, Sodium Salicylate, Benzyl Alcohol, Potassium Sorbate",
+      "claimsVerbatim": "Für trockenes, geschädigtes Haar | Sorgt für geschmeidiges und glänzendes Haar | Intensive Reinigung | Das Shampoo Total Repair von Schwarzkopf GLISS ist ideal für trockenes und geschädigtes Haar geeignet. Das Shampoo kombiniert flüssiges Keratin und Blütennektar, um die Haarfaser zu schützen. Zudem reinigt und pflegt es das Haar und sorgt für ein geschmeidiges Haargefühl. | Wirkung: Pflege, Glanz, Anti-Spliss",
+      "directionsVerbatim": "Sanft im feuchten Haar verteilen. Gut ausspülen! Regelmäßig anwenden."
+    },
+    {
+      "url": "https://www.dm.at/p/d/1430913/schwarzkopf-gliss-shampoo-total-repair",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_at (Austrian; Henkel Central Eastern Europe GmbH, Wien) - regional conflict, not used",
+      "sourceKind": "retailer",
+      "gtinShown": "4015100812435 (dm-Artikelnummer 1430913; same GTIN as the German pack)",
+      "inciVerbatim": "Aqua (Water, Eau),Sodium Laureth Sulfate,Cocamidopropyl Betaine,Sodium Chloride,Dimethicone,Hydrolyzed Keratin,Combretum Farinosum Flower Nectar,PEG-7 Glyceryl Cocoate,Parfum (Fragrance),Sodium Benzoate,Citric Acid,Amodimethicone,Guar Hydroxypropyltrimonium Chloride,Hydrogenated Castor Oil,Glycol Distearate,Laureth-4,PEG-120 Methyl Glucose Dioleate,Glycerin,Laureth-23,Trideceth-10, Sodium Hydroxide,Limonene,Benzyl Salicylate,Phenoxyethanol,Hexyl Cinnamal,Propylene Glycol,Sodium Salicylate,Benzyl Alcohol, Potassium Sorbate",
+      "claimsVerbatim": "(not captured)",
+      "directionsVerbatim": "Sanft im feuchten Haar verteilen. Gut ausspülen! Regelmäßig anwenden."
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "regional_formula_difference",
+      "quote": "dm.at (same GTIN 4015100812435, Henkel CEE Wien): 'Aqua (Water, Eau),Sodium Laureth Sulfate,Cocamidopropyl Betaine,Sodium Chloride,Dimethicone,Hydrolyzed Keratin,Combretum Farinosum Flower Nectar,PEG-7 Glyceryl Cocoate,Parfum (Fragrance),Sodium Benzoate,Citric Acid,Amodimethicone,Guar Hydroxypropyltrimonium Chloride,Hydrogenated Castor Oil,Glycol Distearate,Laureth-4,PEG-120 Methyl Glucose Dioleate,Glycerin,Laureth-23,Trideceth-10, Sodium Hydroxide,Limonene,Benzyl Salicylate,Phenoxyethanol,Hexyl Cinnamal,Propylene Glycol,Sodium Salicylate,Benzyl Alcohol, Potassium Sorbate' - differs from the German list: different order (PEG-7 Glyceryl Cocoate before Parfum, Hydrogenated Castor Oil before Glycol Distearate), has Benzyl Salicylate and Hexyl Cinnamal, lacks Citrus Aurantium Peel Oil. Pilot packet 2026-09-03 additionally recorded brack.ch (CH) with a differing formula (text not re-fetched).",
+      "resolution": "Austrian/Swiss regional or older formula for the same EAN, not merged. German manufacturer + dm.de agree verbatim and are canonical for the German market."
+    }
+  ],
+  "canonicalInci": [
+    "Aqua (Water, Eau)",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Betaine",
+    "Sodium Chloride",
+    "Dimethicone",
+    "Hydrolyzed Keratin",
+    "Combretum Farinosum Flower Nectar",
+    "Parfum (Fragrance)",
+    "Sodium Benzoate",
+    "PEG-7 Glyceryl Cocoate",
+    "Citric Acid",
+    "Amodimethicone",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Glycol Distearate",
+    "Laureth-4",
+    "PEG-120 Methyl Glucose Dioleate",
+    "Glycerin",
+    "Hydrogenated Castor Oil",
+    "Laureth-23",
+    "Trideceth-10",
+    "Sodium Hydroxide",
+    "Citrus Aurantium Peel Oil",
+    "Limonene",
+    "Phenoxyethanol",
+    "Propylene Glycol",
+    "Sodium Salicylate",
+    "Benzyl Alcohol",
+    "Potassium Sorbate"
+  ],
+  "canonicalReason": "schwarzkopf.de (manufacturer DE, exact 250 ml, GTIN in schema.org) and dm.de (same GTIN) agree verbatim on the complete 28-item list; identical to the 2026-09-03 pilot packet. dm.at conflicts but is Austrian (different responsible company).",
+  "inciFingerprintSha256": "2a1ff767a69fcac5c26fe83c1b9704cfec8842d07b1eebd72c46e2178fbd4177",
+  "normalization": "Split the canonical INCI on ',' (or '|' / '•' separators where the source uses them; dm renders a non-breaking hyphen as '|' inside names, e.g. 'COCO|GLUCOSIDE' = 'Coco-Glucoside'); per ingredient: trim, collapse internal whitespace, merge split synonym entries (e.g. 'Aqua (Water, Eau)' stays one item), strip trailing full stop; canonicalInci keeps the published capitalisation/asterisks; for the hash each item is lower-cased; items joined with '|' and sha256 over the UTF-8 string.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Contains Dimethicone + Amodimethicone (silicones). Claim-INCI check: 'flüssiges Keratin' = Hydrolyzed Keratin, 'Blütennektar' = Combretum Farinosum Flower Nectar, both present; 'reduziert Haarbruch' is a performance claim. No missing named ingredient.",
+    "Same EAN carries different formulas in AT/CH vs DE: anyone scanning the EAN abroad would see a different list. Relevant if the scanner ever resolves by EAN only.",
+    "Manufacturer page does not state the dm article; no pack photo inspected."
+  ]
+}

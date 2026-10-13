@@ -1,0 +1,21 @@
+{
+  "blindId": "W309",
+  "productName": "ISANA MED Shampoo Jeden Tag (Ultra Sensitiv), 200 ml",
+  "brand": "ISANA",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_de (Rossmann own brand; page lists Dirk Rossmann GmbH as Kontaktdaten)",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Das ISANA Med Shampoo berücksichtigt die besonderen Bedürfnisse sehr sensibler und empfindlicher Kopfhaut. | schützt Kopfhaut und Haar vor Austrocknung | hautberuhigende Formel | pH hautneutral | Allantoin | Allergie getestet** | Mikrobiom Balance* | 0% Parfüm, 0% Farbstoffe, 0% Silikon | GETESTET UND EMPFOHLEN: vom Deutschen Allergie- und Asthmabund (DAAB) - ISANA Med Ultra sensitiv 10/2023 | * Unterstützt den Erhalt einer intakten Hautbarriere sowie ein ausgeglichenes Haut-Mikrobiom. ** Allergie getestet - in dermatologischen Tests wurde die Hautverträglichkeit auf sehr empfindlicher, zu Allergien neigender Haut getestet und bestätigt.",
+      "directionsVerbatim": "(none on rossmann.de page)"
+    },
+    {
+      "sourceType": "prior_evidence (codecheck support + pack front text)",
+      "sourceKind": "pack_front",
+      "sourceGrade": "high",
+      "claimsVerbatim": "Pack front (as recorded 2026-10-06): ISANA MED · ULTRA SENSITIV · SHAMPOO · Allantoin · Allergie getestet** · Mikrobiom Balance* · 0% Parfüm, Farbstoffe, Silikon · KLINISCH GETESTET, dermatologisch bestätigt · ROSSMANN. Note: pack-front image shows front only; INCI back panel not read from pack.",
+      "directionsVerbatim": "(none; prior research found only a Rossmann Turkey text 'lather, rinse, repeat if needed')"
+    }
+  ]
+}

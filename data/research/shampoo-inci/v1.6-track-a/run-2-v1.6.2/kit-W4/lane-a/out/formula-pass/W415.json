@@ -1,0 +1,237 @@
+{
+ "blindId": "W415",
+ "inciFingerprintSha256": "3ceb8d138cc94cdce820a16cf86f74de83c92a71ee006b43f1753fb4214f4e2a",
+ "lane": "lane-a",
+ "phase": "1-blind-formula-pass",
+ "policyId": "shampoo-classification-v1.6.2",
+ "formulaBlock": {
+  "packSize": "200 ml",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high",
+  "normalization": "Packet list already normalized (synonym variants are single entries); positions cited are normalized one-based positions (ID-2), identical to the packet order.",
+  "normalizedInci": [
+   "1. Aqua",
+   "2. Sodium Laureth Sulfate",
+   "3. Lauryl Glucoside",
+   "4. Sodium Lauroyl Sarcosinate",
+   "5. Sodium Chloride",
+   "6. Piroctone Olamine",
+   "7. Lactic Acid",
+   "8. Sodium Benzoate",
+   "9. Phenoxyethanol",
+   "10. Sodium Lactate",
+   "11. Parfum",
+   "12. Glycol Distearate",
+   "13. Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+   "14. Sodium Citrate",
+   "15. Cocamidopropyl Betaine",
+   "16. Laureth-4",
+   "17. Citric Acid",
+   "18. Pinene",
+   "19. Glycerin"
+  ],
+  "e3Point": "Parfum@11 (fragrance marker); prominent = positions 1-10"
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`moderate` by C1: defining anionic Sodium Laureth Sulfate@2, prominent buffers Lauryl Glucoside@3 (nonionic glucoside) and Sodium Lauroyl Sarcosinate@4 (mild anionic), no reinforcing strong anionic. Cocamidopropyl Betaine@15 is after the E3 point (recorded, not a buffer); Laureth-4@16 ethoxylate.",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "E3"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "`low`: cleansing-led architecture; the only conditioning polymer, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride@13 (cationic, 6.3), and the pearlizer Glycol Distearate@12 sit after the fragrance marker; Glycerin@19 is last; Sodium Lactate@10 is a pH buffer, not a C2 humectant. No silicone, lipid or refatter. Neighbor `moderate`: cationic starch plus pearlizer and glycerin could add up to bounded care.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "R11",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "cationic_polymer": [
+     "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride@13"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "anionic: Sodium Laureth Sulfate@2, Sodium Lauroyl Sarcosinate@4",
+     "nonionic: Lauryl Glucoside@3",
+     "amphoteric: Cocamidopropyl Betaine@15 (non-prominent)"
+    ],
+    "humectantContext": [
+     "Sodium Lactate@10 (pH buffer)",
+     "Glycerin@19"
+    ],
+    "excluded": [
+     "Glycol Distearate@12 (pearlizing wax)",
+     "Laureth-4@16 (ethoxylate)",
+     "Pinene@18 (fragrance terpene)",
+     "Lactic Acid@7, Citric Acid@17, Sodium Citrate@14 (acids/buffers)"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": "6 Piroctone Olamine",
+    "candidateClasses": [
+     "preservative_or_capped_active"
+    ],
+    "cap": "e3Point 11 (Parfum)",
+    "alphabeticalRun": "none",
+    "skipped": [],
+    "testedCandidate": "Piroctone Olamine@6: (i) Sodium Laureth Sulfate@2 before it; (ii) entries 7-10 (Lactic Acid, Sodium Benzoate, Phenoxyethanol, Sodium Lactate) contain no cleansing surfactant, alkanolamide or pearlizing wax -> plausible",
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "light — one cationic starch after the fragrance marker.",
+   "persistence": "low — no silicone, lipid, protein or film former.",
+   "resetCapacity": "moderate — C1 ether-sulfate chassis with glucoside and sarcosinate buffers.",
+   "counterevidence": "A cationic starch can deposit lightly; dose unknown.",
+   "whyThisBand": "Single light late polymer facing an ordinary reset (6.6 low anchor).",
+   "whyNotNeighborBand": "Not `moderate`: single deposition family, after the fragrance marker; nothing converges (W2 not triggered).",
+   "confidenceLimitingFactor": "cationic starch dose/charge unknown.",
+   "rationale": "`low`: single late cationic route, ordinary reset. Neighbor `moderate`.",
+   "ruleIds": [
+    "6.6",
+    "6.3",
+    "W-LINE",
+    "N-ALT"
+   ]
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "low",
+   "neighboringAlternative": "scalp_active",
+   "provisional": true,
+   "careDirection": {
+    "verdict": "not_applicable (provisional)",
+    "moistureRoutes": [
+     "Glycerin@19"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride@13"
+    ],
+    "limitation": "recognized dandruff active present; scalp_active depends on a dandruff claim at reveal"
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Claims are hidden in the blind pass; focus is claim-led (7.2) and cannot be set from the formula alone.",
+   "decisionTrace": "Blind pass: claim direction null (hidden). Placeholder `general` (7.1 honest fallback) until reveal; formula routes recorded for reconciliation (3.2).",
+   "rationale": "Provisional (formula-only): `general` because no claim is visible; the formula care-direction verdict is recorded before claims (7.3) and the neighbor names the most plausible formula-compatible focus.",
+   "ruleIds": [
+    "3.1",
+    "7.2",
+    "7.3",
+    "F1",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "low",
+   "neighboringAlternative": [
+    "clarifying"
+   ],
+   "provisional": true,
+   "decisionTrace": "Blind pass: empty default considered; no distinct positioning visible (claims hidden), so no secondary can be selected (Section 8).",
+   "rationale": "Provisional (formula-only): `[]` — Section 8 requires distinct exact-product positioning, which is hidden in the blind pass.",
+   "ruleIds": [
+    "3.1",
+    "8",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "low",
+   "neighboringAlternative": "treatment",
+   "provisional": true,
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Provisional (formula-only): default `regular` (Section 9); every non-default trigger needs a moderate/high-graded claim or direction, all hidden in the blind pass. cleansingStrength `moderate` fixes which triggers remain possible: `treatment` fires only with a moderate/high-graded E2 dandruff claim (U3) — Piroctone Olamine present; `alternating` impossible (not strong).",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "CL-SRC"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "low",
+   "neighboringAlternative": "targeted",
+   "provisional": true,
+   "csaRoute": "humectant/refatting list: Sodium Lactate@10 (prominent); comfort list: none prominent",
+   "mildBase": "excluded — Sodium Laureth Sulfate@2 is a prominent strong anionic",
+   "rationale": "Provisional `not_targeted` (positioning half SC1 hidden in the blind pass). Formula half CSA is MET via listed prominent route(s): humectant/refatting list: Sodium Lactate@10 (prominent); comfort list: none prominent. MB: excluded — Sodium Laureth Sulfate@2 is a prominent strong anionic. S-SENSITIVE formula gate would fail (no prominent comfort route, no MB); S-DRY formula route present (Sodium Lactate@10). If reveal shows a moderate/high-graded E2 sensitive or dry-scalp unit, the value becomes `targeted`.",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "MB",
+    "E3",
+    "E4",
+    "SC1"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`supported`: complete INCI contains Piroctone Olamine@6 (Section 11 table). Formula-only property; a dandruff target additionally needs a dandruff claim (S-DANDRUFF, R17.3).",
+   "ruleIds": [
+    "11",
+    "ID-1"
+   ]
+  }
+ },
+ "formulaFacts": {
+  "surfactants": [
+   "Sodium Laureth Sulfate@2 strong anionic ether type (defining)",
+   "Lauryl Glucoside@3 nonionic glucoside (buffer)",
+   "Sodium Lauroyl Sarcosinate@4 mild anionic (buffer)",
+   "Cocamidopropyl Betaine@15 amphoteric (after E3)"
+  ],
+  "conditioningRoutes": [
+   "cationic: Hydroxypropyl Oxidized Starch PG-Trimonium Chloride@13",
+   "pearlizing: Glycol Distearate@12",
+   "humectant: Glycerin@19"
+  ],
+  "comfortRoutes": "E4 comfort list: none; E4 humectant/refatting: Sodium Lactate@10 (prominent), Glycerin@19 (not prominent)",
+  "actives": [
+   "Piroctone Olamine@6 (recognized anti-dandruff active)"
+  ],
+  "exposureFlags": [
+   "Parfum@11",
+   "Pinene@18",
+   "no cooling agent, no essential oil"
+  ],
+  "preservatives": [
+   "Sodium Benzoate@8",
+   "Phenoxyethanol@9"
+  ]
+ },
+ "unresolvedMaterialIngredients": [],
+ "notes": []
+}

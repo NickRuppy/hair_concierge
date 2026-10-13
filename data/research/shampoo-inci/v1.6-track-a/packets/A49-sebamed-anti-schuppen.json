@@ -1,0 +1,78 @@
+{
+  "slot": "A49",
+  "productId": "303b4c0c-53a4-46de-883d-c29e448ee590",
+  "name": "Sebamed Anti-Schuppen Shampoo",
+  "brand": "Sebamed",
+  "packSize": "200 ml",
+  "gtins": [
+    "4103040051691"
+  ],
+  "sources": [
+    {
+      "url": "https://sebamed.de/de/p/antischuppen-shampoo-2/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4103040051691 (EAN field; PZN 07307836; 200 ml; 400 ml variant selectable on page)",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Lauryl Glucoside, Sodium Lauroyl Sarcosinate, Sodium Chloride, Piroctone Olamine, Lactic Acid, Sodium Benzoate, Phenoxyethanol, Sodium Lactate, Parfum, Glycol Distearate, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Sodium Citrate, Cocamidopropyl Betaine, Laureth-4, Citric Acid, Pinene, Glycerin",
+      "claimsVerbatim": "Nach 4 Wochen bis zu 95% weniger Schuppen* | Das sebamed Anti‑Schuppen Shampoo ist eine seifenfreie Pflege zur täglichen Reinigung, die speziell auf die Bedürfnisse empfindlicher Kopfhaut abgestimmt ist. Mit dem Wirkstoff Piroctone Olamine hilft es, Schuppen nachhaltig zu bekämpfen und das natürliche Gleichgewicht der Kopfhaut zu unterstützen. Bereits nach vier Wochen Anwendung kann die Schuppenbildung um bis zu 95 % reduziert werden.* Zusätzlich wird das Hautmikrobiom stabilisiert. | pH-Wert 5,5 | Haartyp: schuppiges Haar, fettiges Haar, normal/jeder Haartyp | * Studie “Antischuppen-Wirkung” Institut Dr. Schrader 2006 | Anti-Schuppen Shampoo für normales Haar und Anti-Schuppen Shampoo PLUS für fettendes Haar",
+      "directionsVerbatim": "Shampoo in der Handinnenfläche aufschäumen und unter leichtem Massieren auf die Kopfhaut auftragen. Ausspülen. Täglich oder 2-3x pro Woche anwenden."
+    },
+    {
+      "url": "https://www.dm.de/p/d/1023236/sebamed-shampoo-anti-schuppen",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "4103040051691 (page text 'GTIN'; dm-Artikelnummer 1023236; 'Shampoo Anti-Schuppen, 200 ml')",
+      "inciVerbatim": "Ingredients: Aqua, Sodium Laureth Sulfate, Lauryl Glucoside, Sodium Lauroyl Sarcosinate, Sodium Chloride, Piroctone Olamine, Lactic Acid, Sodium Benzoate, Phenoxyethanol, Sodium Lactate, Parfum, Glycol Distearate, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Sodium Citrate, Cocamidopropyl Betaine, Laureth-4, Citric Acid, Pinene, Glycerin.",
+      "claimsVerbatim": "Für empfindliche Kopfhaut | Reinigt sanft | Geeignet für die tägliche Anwendung | Ohne Mikroplastik & Silikone | Das Shampoo Anti Schuppen von sebamed wurde speziell für die Bedürfnisse empfindlicher und schuppender Kopfhaut entwickelt. Mit Piroctone Olamine hilft es, Schuppen effektiv zu reduzieren. Die milde Formel reinigt sanft und ist für die tägliche Anwendung geeignet. Ein zuverlässiger Begleiter für gepflegtes Haar und ein angenehmes Gefühl der Kopfhaut.",
+      "directionsVerbatim": "Das Haar anfeuchten, Shampoo in der Handinnenfläche verreiben, aufschäumen und unter leichtem Massieren auf die Kopfhaut auftragen. Gründlich ausspülen."
+    },
+    {
+      "url": "https://www.mueller.de/p/sebamed-anti-schuppen-shampoo-2190713/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_mueller_de",
+      "sourceKind": "retailer",
+      "gtinShown": "4103040051691 (structured data gtin; Artikelnr. 2190713; Inhalt 200 ml)",
+      "inciVerbatim": "Ingredients: Aqua, Sodium Laureth Sulfate, Lauryl Glucoside, Sodium Lauroyl Sarcosinate, Sodium Chloride, Piroctone Olamine, Lactic Acid, Sodium Benzoate, Phenoxyethanol, Sodium Lactate, Parfum, Glycol Distearate, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Sodium Citrate, Cocamidopropyl Betaine, Laureth-4, Citric Acid, Pinene, Glycerin.",
+      "claimsVerbatim": "Das Sebamed Anti-Schuppen Shampoo reinigt das Haar und ist speziell für die Anwendung bei empfindlicher und zu Schuppen neigender Kopfhaut konzipiert. | Formel mit dem Wirkstoff Pirocton Olamin zur Reinigung bei Schuppen | Der pH-Wert 5,5 unterstützt den natürlichen Schutzmantel der Kopfhaut | Eignet sich für die tägliche Haarwäsche bei normalem Haar | Zusammensetzung ohne Silikone und Mikroplastik | Die seifenfreie Waschformel reinigt mild und verleiht dem Haar ein gepflegtes Aussehen. | Produkteigenschaft: feuchtigkeitsspendend | Haartyp: schuppiges Haar",
+      "directionsVerbatim": "Das Haar anfeuchten, Shampoo in der Handinnenfläche verreiben, aufschäumen und unter leichtem Massieren auf die Kopfhaut auftragen. Gründlich ausspülen."
+    }
+  ],
+  "conflicts": [],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Lauryl Glucoside",
+    "Sodium Lauroyl Sarcosinate",
+    "Sodium Chloride",
+    "Piroctone Olamine",
+    "Lactic Acid",
+    "Sodium Benzoate",
+    "Phenoxyethanol",
+    "Sodium Lactate",
+    "Parfum",
+    "Glycol Distearate",
+    "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+    "Sodium Citrate",
+    "Cocamidopropyl Betaine",
+    "Laureth-4",
+    "Citric Acid",
+    "Pinene",
+    "Glycerin"
+  ],
+  "canonicalReason": "Manufacturer DE page for the exact 200 ml pack (EAN 4103040051691) and two German GTIN-anchored retailers (dm.de, Müller) agree verbatim and in order (retailers add an 'Ingredients:' label and trailing period only).",
+  "inciFingerprintSha256": "3ceb8d138cc94cdce820a16cf86f74de83c92a71ee006b43f1753fb4214f4e2a",
+  "normalization": "Split the canonical raw INCI on ',' (not on commas inside locants such as '1,2-'), merged split synonym entries such as 'Aqua (Water)' / 'Aqua/Water/Eau' into one item each; per ingredient: lower-case, trim, collapse internal whitespace, remove whitespace around '/'; drop a trailing period and any leading label such as 'Inhaltsstoffe:'; keep parentheses, asterisks and hyphens as published; join the normalized ingredients with '|' and sha256 the UTF-8 string.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Prior v1.3/v1.4 capture used the same manufacturer list (fingerprint f4cab713df054bb6696e14f75c21e97a31131e14b05b38362ac03fc9fe99a865, comma-joined); list unchanged.",
+    "Manufacturer states the INCI reflects current production and that the pack is authoritative (generic reformulation caveat); no pack photo available to this worker.",
+    "Claim 'Ohne Silikone/Mikroplastik' consistent with INCI. Manufacturer page also sells 400 ml; only the 200 ml EAN was bound. Müller attribute 'feuchtigkeitsspendend' is retailer taxonomy, not a manufacturer claim.",
+    "Rossmann not checked (three agreeing sources suffice)."
+  ]
+}

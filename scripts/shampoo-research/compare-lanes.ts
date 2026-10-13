@@ -51,22 +51,31 @@ const str = (x: unknown) => JSON.stringify(x ?? null)
 
 /** One record's compared decisions, each serialized so equality is exact. */
 export function comparisonFields(record: LaneRecord): Record<string, string> {
-  const dp = record.directProperties
+  // Standard §1.1 nests properties under `directProperties`; accept a flat record too.
+  const dp = (record.directProperties ?? record) as Record<string, unknown>
   const pj = record.projection
-  const fit = pj.thicknessFit as Record<string, unknown>
+  // Standard §1.2 shape (`thicknesses` list) or the calibration-era `thicknessFit` map.
+  const fit: Record<string, unknown> = Array.isArray(pj.thicknesses)
+    ? Object.fromEntries(
+        (pj.thicknesses as Array<{ thickness: string; fit: unknown }>).map((t) => [
+          t.thickness,
+          t.fit,
+        ]),
+      )
+    : ((pj.thicknessFit ?? {}) as Record<string, unknown>)
   const scalp = (pj.scalpTargets ?? {}) as Record<string, unknown>
   const out: Record<string, string> = {}
   for (const key of JUDGED_DIRECT) out[key] = str(valueOf(dp[key]))
   out.focusSecondary = sortedList(valueOf(dp.focusSecondary))
   for (const thickness of ["fine", "normal", "coarse"])
     out[`fit.${thickness}`] = str(fit[thickness])
-  out.weight = str(pj.weight)
+  out.weight = str(valueOf(pj.weight))
   out["target.primary"] = str(targetOf(scalp.primary))
   out["target.secondary"] = str(targetOf(scalp.secondary))
-  out.cleansingIntensity = str(pj.cleansingIntensity)
-  out.deepCleanserListing = str(pj.deepCleanserListing)
+  out.cleansingIntensity = str(valueOf(pj.observedCleansingIntensity ?? pj.cleansingIntensity))
+  out.deepCleanserListing = str(valueOf(pj.deepCleanserListing))
   if ("researchCombinationTargets" in pj)
-    out.researchCombinationTargets = sortedList(pj.researchCombinationTargets)
+    out.researchCombinationTargets = sortedList(valueOf(pj.researchCombinationTargets))
   return out
 }
 

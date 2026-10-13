@@ -1,0 +1,365 @@
+{
+  "blindId": "W409",
+  "lane": "lane-b",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "brand": "Balea PROFESSIONAL (dm)",
+    "productName": "Balea PROFESSIONAL Shampoo Tiefenreinigung, 250 ml",
+    "packSize": "250 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "c9faf0a554eb9cfc104111236fb4f01e3302870bca19e9218540a49a7ddb83bb",
+    "normalization": "Packet list already one entry per ingredient; positions are normalized one-based positions (ID-2).",
+    "completeness": "complete (packet; source tier 2, identity confidence high)",
+    "e3ProminenceCutoff": "PARFUM @11; prominent = positions 1-10"
+  },
+  "formulaPassReference": "out/formula-pass/W409.json (hash-pinned; not edited)",
+  "claimEvidence": [
+    "Product name 'Tiefenreinigung' (D1 lexicon, high).",
+    "manufacturer_de (moderate, dm own brand): 'Tiefenreinigendes Shampoo für alle Haartypen'; 'Befreit das Haar von Styling-Rückständen'; 'Für ein Gefühl von Leichtigkeit und Glanz'; 'Silikonfreie Rezeptur mit Menthol'; 'entfernt wirksam Styling-Rückstände sowie überschüssiges Fett von Haar und Kopfhaut'; 'Deep-Cleanse-System'; 'für die tägliche Anwendung geeignet'; 'Wirkung: Pflege, Glanz'."
+  ],
+  "reconciliation": [
+    "D1 true (name 'Tiefenreinigung', high; also 'Tiefenreinigendes', 'Deep-Cleanse', moderate). cleansingStrength stays moderate (claims never move it) -> D3 ordinary-strength: no deep-cleanser entry, note deep_cleansing_name_ordinary_formula; intensity regular (I1).",
+    "usageRole provisional regular -> occasional_reset (explicit_deep_cleansing, D1). Daily-use directions do not make D1 false (U5); conflict recorded inside the D3 note (no review flag: formula not strong). frequent also fires and loses (U1).",
+    "focusPrimary provisional general -> clarifying (explicit deep-cleaning product; F6 compatible: cleansing moderate, conditioning moderate, weight low).",
+    "'überschüssiges Fett von Haar und Kopfhaut' is not an E2 oily lexicon term ('überschüssiger Talg', 'fettige Kopfhaut', 'Anti-Fett' ... are); it does not qualify and is recorded (E2). 'Leichtigkeit' alone never qualifies. -> no oily target.",
+    "cleansingStrength, conditioningLevel, weightPotential and dandruffSupport unchanged from the hash-pinned blind pass (formula-only; claims cannot move them, 3.2)."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate @2 defining anionic buffered by prominent Cocamidopropyl Betaine @3, no reinforcing strong anionic.",
+      "ruleIds": [
+        "C3",
+        "C4",
+        "C1"
+      ],
+      "counterSignal": "none material (strong-cleansing name cannot move cleansing, 3.2).",
+      "formulaFacts": {
+        "strongAnionicEtherSulfonate": [
+          "Sodium Laureth Sulfate @2 (defining anionic)"
+        ],
+        "strongAnionicAlkylSulfate": [],
+        "mildAnionic": [],
+        "amphoteric": [
+          "Cocamidopropyl Betaine @3 (prominent buffer)"
+        ],
+        "nonionicCleansing": [],
+        "notCleansingNotBuffer": [
+          "Sodium Chloride @4",
+          "Zinc Sulfate @8",
+          "Citric Acid @10"
+        ],
+        "reinforcingRoutes": [],
+        "c1c5c6Reading": "C1: ether-sulfate defining anionic, one prominent buffer, no reinforcing route"
+      },
+      "blindToFinal": "unchanged: formula-only property; claims may not set or move it (3.2)"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: several light routes give noticeable but bounded care - a prominent cationic guar (Guar Hydroxypropyltrimonium Chloride @7), a protein route (Hydrolyzed Keratin @6) and a humectant (Glycerin @5). C2 not met (no early silicone, payload lipid or pearlizer). Counter-signal: no silicone or lipid, everything after the salt, and a cooling agent - realistic unknowns could make it low.",
+      "ruleIds": [
+        "Section 5 anchors",
+        "C2"
+      ],
+      "counterSignal": "No silicone or lipid; cooling agent; could be low.",
+      "formulaFacts": {
+        "cationic_polymer": [
+          "Guar Hydroxypropyltrimonium Chloride @7 (prominent)"
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [
+          "Hydrolyzed Keratin @6 (prominent)"
+        ],
+        "pearlizing_fatty_route": [],
+        "humectants": [
+          "Glycerin @5 (prominent)"
+        ]
+      },
+      "blindToFinal": "unchanged: formula-only property; claims may not set or move it (3.2)"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": [
+          "Guar Hydroxypropyltrimonium Chloride @7"
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [
+          "Hydrolyzed Keratin @6"
+        ],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": [
+          "Sodium Laureth Sulfate @2",
+          "Cocamidopropyl Betaine @3"
+        ],
+        "humectantContext": [
+          "Glycerin @5"
+        ],
+        "excluded": [
+          "Zinc Sulfate @8 (inorganic salt, not deposition)",
+          "Menthol @9 (cooling agent)",
+          "Parfum @11",
+          "Sodium Chloride @4, Citric Acid @10, Sodium Benzoate @12"
+        ],
+        "unresolved": []
+      },
+      "wLineRecord": "wLine PARFUM @11 (fragrance) = cap e3Point @11; no alphabetical run; no skipped candidates; no codes; no payload_lipid present.",
+      "depositionLoad": "light: one guar plus a keratin hydrolysate; no silicone, lipid or film former.",
+      "persistence": "low: hydrolysed keratin is a small-peptide, weakly retained route; single guar.",
+      "resetCapacity": "moderate: C1 SLES/betaine chassis.",
+      "counterevidence": "Two deposition families (cationic_polymer, protein_film) are both prominent.",
+      "whyThisBand": "Light, low-persistence routes facing an effective sulfate chassis; noticeable loss of movement is unlikely.",
+      "whyNotNeighborBand": "Not moderate (W2): the two families are a single guar listed after the salt and a hydrolysed keratin (small peptides, low persistence in rinse-off); neither is a persistent silicone, lipid or film system, and the moderate C1 reset faces only these light routes.",
+      "confidenceLimitingFactor": "Two prominent families: guar dose/charge and keratin amount unknown could move it to moderate.",
+      "rationale": "Low: guar plus keratin hydrolysate against moderate C1 reset; W2 reason recorded. W-line is the cap; no payload_lipid exists.",
+      "ruleIds": [
+        "6.3",
+        "6.6",
+        "W2",
+        "W-LINE",
+        "N-ALT"
+      ],
+      "counterSignal": "Two deposition families (cationic_polymer, protein_film) are both prominent.",
+      "formulaFacts": {
+        "wLine": "PARFUM @11 (= cap)",
+        "wLineClasses": [
+          "fragrance"
+        ],
+        "cap": "e3Point @11",
+        "alphabeticalRun": "none",
+        "candidatesTested": [
+          "PARFUM @11: (i) ok; (ii) nothing between candidate and cap -> plausible (no a-c candidate earlier: Glycerin, Zinc Sulfate and Menthol are on none of the lists)"
+        ],
+        "skipped": [],
+        "codes": [],
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "identifiers": {
+        "formulaFingerprintSha256": "c9faf0a554eb9cfc104111236fb4f01e3302870bca19e9218540a49a7ddb83bb",
+        "sourceTier": 2,
+        "captureDate": "not stated in the frozen packet"
+      },
+      "blindToFinal": "unchanged: weight is formula-only; claims cannot decide the band (6.5 step 5)"
+    },
+    "focusPrimary": {
+      "value": "clarifying",
+      "confidence": "moderate",
+      "neighboringAlternative": "general",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "Guar Hydroxypropyltrimonium Chloride @7",
+          "Hydrolyzed Keratin @6",
+          "Glycerin @5"
+        ],
+        "limitation": "Not a repair/moisture decision."
+      },
+      "claimRole": "candidate",
+      "counterSignal": "Formula is an ordinary C1 chassis (moderate), not a strong reset; the deep-clean role rests on positioning plus a merely compatible formula.",
+      "decisionTrace": "Claim direction deep cleansing (name 'Tiefenreinigung', high). Formula compatible under F6: cleansingStrength moderate, conditioningLevel moderate (not high), weightPotential low (not high). Route: SLES @2 chassis with light deposition. Decision clarifying; intensity unaffected (I1, R16.2).",
+      "rationale": "Clarifying: explicit deep-cleaning product with F6-compatible architecture (7.2, F6).",
+      "formulaFacts": null,
+      "ruleIds": [
+        "7.1",
+        "7.2",
+        "F6",
+        "D1",
+        "CL-SRC"
+      ],
+      "blindToFinal": "provisional general -> clarifying (explicit deep-cleansing name with F6-compatible formula)"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "shine"
+      ],
+      "decisionTrace": "Empty default considered; 'Glanz'/'Leichtigkeit' have no independent formula route (only Citric Acid, F4, which cannot create a secondary shine).",
+      "rationale": "Empty: no distinct secondary positioning with an independent compatible route (Section 8, F2, F3).",
+      "counterSignal": "none",
+      "formulaFacts": [],
+      "ruleIds": [
+        "Section 8",
+        "F2",
+        "F3"
+      ],
+      "blindToFinal": "provisional [] -> []"
+    },
+    "usageRole": {
+      "value": "occasional_reset",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "explicit_deep_cleansing",
+      "triggerEvidence": [
+        "Product name 'Tiefenreinigung' (D1, high)",
+        "manufacturer: 'Tiefenreinigendes Shampoo', 'Deep-Cleanse-System' (moderate)"
+      ],
+      "losingTriggers": [
+        "frequent (explicit_frequent_non_strong): manufacturer 'für die tägliche Anwendung geeignet' (moderate), cleansing moderate - loses to occasional_reset (U1)",
+        "alternating not possible (cleansing not strong); reset intent present (U4: 'Rückstände', D1 terms)"
+      ],
+      "rationale": "occasional_reset: D1 true (U1 first precedence). Daily-use directions recorded as conflict (U5); with a moderate formula this goes into the note deep_cleansing_name_ordinary_formula (D3, R16.3).",
+      "counterSignal": "Daily-use directions ('für die tägliche Anwendung geeignet') contradict an occasional reset role (U5).",
+      "formulaFacts": "cleansingStrength moderate (high); dandruffSupport not_supported",
+      "ruleIds": [
+        "Section 9",
+        "U1",
+        "U2",
+        "U4",
+        "U5",
+        "D1"
+      ],
+      "decisionTrace": "Default regular; triggers occasional_reset and frequent fire; U1 -> occasional_reset; U5 conflict recorded.",
+      "blindToFinal": "provisional regular -> occasional_reset"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no E2 sensitive or dry scalp claim unit graded moderate/high exists (SC1), so the product is not explicitly positioned; CSA met via prominent Glycerin @5 (prominent Menthol @9 counter-signal); MB not met. 'pH-hautneutral' is protective (E2a).",
+      "counterSignal": "none; mildness/protective wording is not targeting (E2a)",
+      "formulaFacts": {
+        "CSA": "met via prominent E4 humectant route Glycerin @5; counter-signal prominent Menthol @9",
+        "MB": "not met: Sodium Laureth Sulfate @2 prominent strong anionic",
+        "S-SENSITIVE formula half": "no prominent comfort route and no MB -> would fail",
+        "S-DRY formula half": "Glycerin @5 -> would pass if targeted (menthol counter-signal)",
+        "S-OILY formula clause": "cleansing moderate, weight low, conditioning moderate -> clause passes"
+      },
+      "csaRoute": "CSA met via prominent Glycerin @5 (prominent Menthol @9 counter-signal); MB not met.",
+      "ruleIds": [
+        "Section 10",
+        "SC1",
+        "E2a",
+        "CSA",
+        "MB"
+      ],
+      "blindToFinal": "unchanged; claims show no SC1 positioning"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no Piroctone Olamine, Climbazole or Selenium Sulfide/Disulfide; Zinc Sulfate @8 is not a recognized active (Section 11).",
+      "ruleIds": [
+        "Section 11"
+      ],
+      "counterSignal": "none (mechanical table, Section 11)",
+      "formulaFacts": [],
+      "blindToFinal": "unchanged (formula-only)"
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "not_applicable",
+      "moistureRoutes": [],
+      "repairRoutes": [],
+      "sharedConditioningRoutes": [
+        "Guar Hydroxypropyltrimonium Chloride @7",
+        "Hydrolyzed Keratin @6",
+        "Glycerin @5"
+      ],
+      "limitation": "Not a repair/moisture decision."
+    },
+    "claimRole": "candidate",
+    "decisionTrace": {
+      "primary": "Claim direction deep cleansing (name 'Tiefenreinigung', high). Formula compatible under F6: cleansingStrength moderate, conditioningLevel moderate (not high), weightPotential low (not high). Route: SLES @2 chassis with light deposition. Decision clarifying; intensity unaffected (I1, R16.2).",
+      "secondary": "Empty default considered; 'Glanz'/'Leichtigkeit' have no independent formula route (only Citric Acid, F4, which cannot create a secondary shine).",
+      "usageRole": "Default regular; triggers occasional_reset and frequent fire; U1 -> occasional_reset; U5 conflict recorded."
+    }
+  },
+  "weightRecord": "see directProperties.weightPotential (6.8 fields: evidence by family, wLineRecord/formulaFacts, subjudgments, counterevidence, whyThisBand, whyNotNeighborBand, confidence and limiting factor, neighbor)",
+  "projection": {
+    "status": "proposal_blocked_by_review_flags",
+    "thicknessFitT1": {
+      "fine": "ideal",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFit": {
+      "fine": "ideal",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFitConfidence": {
+      "fine": "moderate",
+      "normal": "moderate",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": " T1 with W=low (moderate, neighbor moderate) and C=moderate (moderate, neighbor low): fine ideal, normal ideal, coarse acceptable; target ordinary -> T6 not applicable (ordinary). T4 computed from N-ALT neighbors after T6; T2: thickness/texture claims never change fit.",
+    "weight": "light",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: weightPotential low projects 1:1 to light; confidence = weightPotential confidence.",
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1: no qualifying E2 scalp claim unit after E2a; packet has a manufacturer/pack source -> high (13.8). 'überschüssiges Fett von Haar und Kopfhaut' is not in the closed E2 oily lexicon (recorded, does not qualify)."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength moderate, D1 true -> regular. I3: neighbor none (high confidence, no I3 review).",
+    "explicitResetPositioning": true,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserListingConfidence": "moderate",
+    "deepCleanserRationale": "D1 true (name 'Tiefenreinigung', high) but cleansingStrength moderate: D2 requires a strong formula, so not_flagged; D3 ordinary-strength branch -> no deep-cleanser entry, no review flag, note deep_cleansing_name_ordinary_formula (R16.3).",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine"
+    ],
+    "informationalNotes": [
+      "deep_cleansing_name_ordinary_formula: D1 wording 'Tiefenreinigung' (name), 'Tiefenreinigendes Shampoo', 'Deep-Cleanse-System' (manufacturer); cleansingStrength moderate (C1); daily-use directions 'für die tägliche Anwendung geeignet' (U5)."
+    ],
+    "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; lanes never see catalog ids."
+  },
+  "unresolvedMaterialIngredients": [],
+  "selfCheck": "6.11: fingerprint c9faf0a554eb... matches the frozen packet; claims were hidden during the formula pass (formula-pass file hash-pinned before release); no ingredient, family count or position window assigned the weight band; W-line derived per W-LINE with every skipped candidate recorded; three subjudgments present; whyNotNeighborBand specific (W2 where it applies); confidence names its limiting factor; no comparison with earlier values inside the lane. N-ALT: every high confidence has neighbor none, every moderate/low names one neighbor. Projection derived mechanically from final properties; P0 applied where readings were uncertain.",
+  "uncertainties": [
+    "Oily reading: 'entfernt ... überschüssiges Fett von Haar und Kopfhaut' is semantically close to oily-scalp positioning but is not a closed-lexicon term ('überschüssiger Talg', 'fettige Kopfhaut', 'Anti-Fett'); not qualified (P0: no target). If it qualified, S-OILY would pass (moderate/low/moderate) and project an oily target with clarifying focus.",
+    "Weight low vs moderate (guar + keratin, W2 reason recorded; T4 flag on fine)."
+  ]
+}

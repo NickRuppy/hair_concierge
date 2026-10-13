@@ -1,0 +1,28 @@
+{
+  "blindId": "W402",
+  "productName": "Ultimate Shampoo (catalog) = L'Oréal Paris Elvital Glycolic Gloss Shampoo, 200 ml",
+  "brand": "L'Oréal Paris",
+  "positioningSources": [
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Haarshampoo | Schenkt mehr Glanz und Geschmeidigkeit | Füllt die Haarfasern mit Pflege auf | Für stumpfes und glanzloses Haar | Das Shampoo Glycolic Gloss von L’ORÈAL PARiS füllt die Haarfasern mit Pflege auf. Stumpfes und glanzloses Haar wird wieder geschmeidig gepflegt, während die Formulierung diesem einen unglaublichen Glanz verleiht. Die Oberfläche der Haare wird spiegelglatt wodurch das Licht auf natürlich schöne Weise abprallt und für einen natürlich schönen Look sorgt. | Wirkung: Pflege, Glanz | Produkteigenschaften: ohne Sulfat | Haartyp: alle Haartypen, trockenes Haar, glanzloses Haar",
+      "directionsVerbatim": "Glycolic Gloss Shampoo: Sulfatfrei - Auf das nasse Haar auftragen und einmassieren, danach ausspülen. Für ein optimales Ergebnis danach die GLYCOLIC GLOSS SPÜLUNG und anschließend die GLYCOLIC GLOSS 5 MINUTEN HAAR-LAMINIERUNG verwenden. Außerhalb der Reichweite von Kindern aufbewahren. Kontakt mit den Augen vermeiden. Bei Kontakt mit den Augen sofort gründlich ausspülen. | Aufbewahrung: Kühl und trocken lagern."
+    },
+    {
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Glänzendes Haar steht für gesundes Haar, das Licht dank seiner spiegelglatten Oberfläche perfekt reflektiert. Haarschäden irritieren die Schuppenschicht, wodurch die Haarfasern spröde, rau und stumpf aussehen und Licht nicht mehr reflektieren können. Die GlanzBehandlung für zu Hause mit [Glykolsäure] bestehend aus: Shampoo, Spülung, 5 Minuten Haar-Laminierung und Serum. Regeneriert die Haarfaser, verbessert die Haarqualität und versiegelt das Haar mit Glanz. | für glänzendes und gesundes Haar, füllt die Haarfasern mit Pflege auf. 2x mehr Glanz +88% Geschmeidigkeit | Shampoo für spiegelglattes und gepflegtes Haar | füllt die Haarfasern mit Pflege auf | für stumpfes und glanzloses Haar",
+      "directionsVerbatim": "Glycolic Gloss Shampoo: Sulfatfrei - Auf das nasse Haar auftragen und einmassieren, danach ausspülen. Für ein optimales Ergebnis danach die GLYCOLIC GLOSS SPÜLUNG und anschließend die GLYCOLIC GLOSS 5 MINUTEN HAAR-LAMINIERUNG verwenden."
+    },
+    {
+      "sourceType": "manufacturer_de (DIFFERENT SKU: current Glycolic Gloss Spiegelglanz Shampoo 300 ml, GTIN 3600524230548; no 200 ml offered)",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Das Elvital Glycolic Gloss Shampoo reinigt Kopfhaut und Haar und sorgt für einen strahlenden Spiegelglanz, der alle Blicke auf sich zieht. Gleichzeitig betört es mit einem fruchtig-floralen Duft. (page for the sulfate-based 300 ml product; not evidence for the 200 ml SKU)",
+      "directionsVerbatim": "Eine kleine Menge des Elvital Glycolic Gloss Shampoos von L’Oréal Paris auf das nasse Haar auftragen und aufschäumen. Anschließend das Shampoo mit einer sanften Kopfmassage sorgfältig verteilen und gründlich mit klarem Wasser ausspülen, bis keine Rückstände mehr im Haar vorhanden sind. Für optimale Pflege und maximalen Spiegelglanz empfiehlt sich im Anschluss die Verwendung der Elvital Glycolic Gloss Spülung sowie des passenden Leave-in-Serums."
+    }
+  ]
+}

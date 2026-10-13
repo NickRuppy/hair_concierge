@@ -1,0 +1,518 @@
+{
+  "blindId": "T406",
+  "inciFingerprintSha256": "ea15e539c6477bb039c7ba86cf7ceb1d8bcc429a2f5fe581850cd59e14e15b7c",
+  "policyId": "shampoo-classification-v1.6",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "productName": "Salthouse Anti Schuppen",
+    "market": "DE",
+    "identityNote": ""
+  },
+  "normalization": "ID-2 applied; normalized one-based positions; no split entries; raw positions = normalized positions",
+  "e3ProminenceMarker": "no Parfum declared; first listed preservative Sodium Benzoate at 8",
+  "surfactantArchitecture": "SLES (2) defining; CAPB (3) buffer; C1 -> moderate.",
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 3,
+      "role": "amphoteric buffer"
+    },
+    {
+      "ingredient": "Piroctone Olamine",
+      "position": 5,
+      "role": "recognized anti-dandruff active"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 6,
+      "role": "cationic polymer, prominent"
+    },
+    {
+      "ingredient": "Sodium Benzoate",
+      "position": 8,
+      "role": "E3 marker (no Parfum)"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 11,
+      "role": "humectant, not prominent"
+    },
+    {
+      "ingredient": "Melaleuca Alternifolia (Tea Tree) Leaf Oil",
+      "position": 12,
+      "role": "essential oil (irritation counter-signal)"
+    }
+  ],
+  "claimGrading": [
+    {
+      "claim": "Anti Schuppen (name)",
+      "grade": "high",
+      "use": "E2 dandruff"
+    },
+    {
+      "claim": "wirkt wohltuend bei irritierter, trockener und dadurch schuppenanfälliger Kopfhaut; Hautproblem: Juckreiz, ... Schuppen, ... Spannungsgefühle",
+      "grade": "moderate",
+      "use": "dandruff units with comfort/dryness wording (bundled, E2a/E2b)"
+    },
+    {
+      "claim": "Für die tägliche Haarwäsche geeignet",
+      "grade": "moderate",
+      "use": "U2 frequency (loses to treatment)"
+    },
+    {
+      "claim": "Neurodermitis/Psoriasis Basispflege; Hauttyp empfindliche Haut",
+      "grade": "moderate",
+      "use": "medical/skin wording, not E2 scalp claims"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: C1 ether/sulfonate chassis - defining anionic Sodium Laureth Sulfate (2) buffered by prominent Cocamidopropyl Betaine (3); no prominent reinforcing strong anionic (C3, C4, C1).",
+      "counterSignal": "No Parfum declared - prominence via first preservative Sodium Benzoate (8). Silt (19) and Maris Sal (9) are not routes.",
+      "neighboringAlternative": "none",
+      "rulesApplied": [
+        "C3",
+        "C4",
+        "C1"
+      ],
+      "carriedFromBlind": true
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: one meaningful conditioning system - prominent Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (6) - with Glycerin (11) as a light humectant route.",
+      "counterSignal": "No silicone, lipid or pearlizer; essential oils and silt are not conditioning; cleansing-led architecture argues toward low.",
+      "neighboringAlternative": "low",
+      "rulesApplied": [
+        "5",
+        "C2 not met"
+      ],
+      "carriedFromBlind": true
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: one light cationic polymer is the only deposition route, facing an effective C1 reset.",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Single deposition family: one cationic guar (6)."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "Guar alone is weakly retained in an SLES base."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES/betaine chassis."
+        }
+      },
+      "evidenceByFamily": {
+        "silicone": [],
+        "cationic_polymer": [
+          [
+            "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+            6
+          ]
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "protein_film": [],
+        "film_former": [],
+        "humectant_context": [
+          [
+            "Glycerin",
+            11
+          ],
+          [
+            "Aloe Barbadensis Leaf Juice Powder",
+            14
+          ]
+        ],
+        "reset": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ],
+          [
+            "Cocamidopropyl Betaine",
+            3
+          ]
+        ]
+      },
+      "excludedEvidence": [
+        [
+          "Melaleuca Alternifolia (Tea Tree) Leaf Oil",
+          12,
+          "essential oil, excluded (6.4)"
+        ],
+        [
+          "Citrus Limon Peel Oil",
+          16,
+          "essential oil"
+        ],
+        [
+          "Citrus Sinensis Peel Oil Expressed",
+          17,
+          "essential oil"
+        ],
+        [
+          "Litsea Cubeba Fruit Oil",
+          18,
+          "essential oil"
+        ],
+        [
+          "Silt",
+          19,
+          "mineral, not deposition"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "Guar is prominent.",
+      "whyThisBand": "Low: one light cationic polymer is the only deposition route, facing an effective C1 reset.",
+      "whyNotNeighborBand": "Not moderate: no second deposition family; essential oils are fragrance materials, not payload (6.4).",
+      "confidenceLimitingFactor": "None material.",
+      "neighboringAlternative": "none",
+      "rulesApplied": [
+        "6.5",
+        "6.6"
+      ],
+      "carriedFromBlind": true
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "rationale": "scalp_active: anti-dandruff name claim (high) + Piroctone Olamine (5).",
+      "counterSignal": "Medical (Neurodermitis/Psoriasis) wording is out of scope.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Piroctone Olamine",
+          "position": 5
+        }
+      ],
+      "sourceIds": [
+        "product name",
+        "manufacturer_de"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty: 'feuchtigkeitsspendende Aloe Vera' is ingredient reputation; no distinct role.",
+      "counterSignal": "See decision trace.",
+      "neighboringAlternative": [
+        "moisture"
+      ],
+      "formulaFacts": [],
+      "sourceIds": [],
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "candidatesConsidered": []
+      }
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "high",
+      "rationale": "U3; U1 precedence over frequent.",
+      "counterSignal": "Trigger fires mechanically from graded claim plus final cleansingStrength.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "sourceIds": [],
+      "triggerCode": "recognized_active_problem_led",
+      "triggerEvidence": [
+        "name 'Anti Schuppen'",
+        "Piroctone Olamine (5)"
+      ],
+      "losingTriggers": [
+        {
+          "code": "explicit_frequent_non_strong",
+          "evidence": "Für die tägliche Haarwäsche geeignet (manufacturer)"
+        }
+      ],
+      "decisionTrace": {
+        "default": "regular",
+        "triggerCode": "recognized_active_problem_led",
+        "triggerEvidence": [
+          "name 'Anti Schuppen'",
+          "Piroctone Olamine (5)"
+        ],
+        "rationale": "U3; U1 precedence over frequent."
+      }
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "not_targeted: comfort/dryness words sit inside dandruff units (E2a, not SC1); 'empfindliche Haut' does not name the scalp; CSA fails (no prominent E4 route before Sodium Benzoate 8).",
+      "counterSignal": "Tea tree and citrus oils; none prominent.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "sourceIds": [],
+      "csaFormulaHalf": false,
+      "sc1Positioning": false
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains Piroctone Olamine (5) (Section 11).",
+      "neighboringAlternative": "none",
+      "carriedFromBlind": true
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "not_applicable",
+      "routes": {},
+      "limitation": ""
+    },
+    "claimRole": "candidate",
+    "counterSignal": "Medical-adjacent wording ignored.",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "anti-dandruff",
+        "formulaCompatible": true,
+        "compatibleRoute": "Piroctone Olamine (5)",
+        "reason": "7.2 dandruff row"
+      }
+    }
+  },
+  "weightRecord": {
+    "value": "low",
+    "confidence": "high",
+    "rationale": "Low: one light cationic polymer is the only deposition route, facing an effective C1 reset.",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "light",
+        "rationale": "Single deposition family: one cationic guar (6)."
+      },
+      "persistence": {
+        "value": "low",
+        "rationale": "Guar alone is weakly retained in an SLES base."
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C1 SLES/betaine chassis."
+      }
+    },
+    "evidenceByFamily": {
+      "silicone": [],
+      "cationic_polymer": [
+        [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          6
+        ]
+      ],
+      "payload_lipid": [],
+      "weak_refatter": [],
+      "protein_film": [],
+      "film_former": [],
+      "humectant_context": [
+        [
+          "Glycerin",
+          11
+        ],
+        [
+          "Aloe Barbadensis Leaf Juice Powder",
+          14
+        ]
+      ],
+      "reset": [
+        [
+          "Sodium Laureth Sulfate",
+          2
+        ],
+        [
+          "Cocamidopropyl Betaine",
+          3
+        ]
+      ]
+    },
+    "excludedEvidence": [
+      [
+        "Melaleuca Alternifolia (Tea Tree) Leaf Oil",
+        12,
+        "essential oil, excluded (6.4)"
+      ],
+      [
+        "Citrus Limon Peel Oil",
+        16,
+        "essential oil"
+      ],
+      [
+        "Citrus Sinensis Peel Oil Expressed",
+        17,
+        "essential oil"
+      ],
+      [
+        "Litsea Cubeba Fruit Oil",
+        18,
+        "essential oil"
+      ],
+      [
+        "Silt",
+        19,
+        "mineral, not deposition"
+      ]
+    ],
+    "unresolved": [],
+    "counterSignal": "Guar is prominent.",
+    "whyThisBand": "Low: one light cationic polymer is the only deposition route, facing an effective C1 reset.",
+    "whyNotNeighborBand": "Not moderate: no second deposition family; essential oils are fragrance materials, not payload (6.4).",
+    "confidenceLimitingFactor": "None material.",
+    "neighboringAlternative": "none",
+    "rulesApplied": [
+      "6.5",
+      "6.6"
+    ],
+    "formulaFingerprint": "ea15e539c6477bb039c7ba86cf7ceb1d8bcc429a2f5fe581850cd59e14e15b7c",
+    "sourceTier": 2,
+    "captureDate": "per frozen packet (not in lane kit)"
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "t1Fit": "ideal",
+        "t6Applied": false,
+        "confidence": "high",
+        "rationale": "ideal: T1 (fine x W low) = ideal; T2: thickness/texture claims ignored. Confidence = lowest input confidence (13.8)."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "t1Fit": "ideal",
+        "t6Applied": false,
+        "confidence": "high",
+        "rationale": "ideal: T1 (normal x W low) = ideal; T2: thickness/texture claims ignored. Confidence = lowest input confidence (13.8)."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "t1Fit": "acceptable",
+        "t6Applied": false,
+        "confidence": "moderate",
+        "rationale": "acceptable: T1 (coarse x W low, C moderate) = acceptable; T2: thickness/texture claims ignored. Confidence = lowest input confidence (13.8)."
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "high",
+      "rationale": "W-LIVE: weightPotential low -> light; confidence = weightPotential confidence (13.8)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "dandruff",
+        "confidence": "high",
+        "rationale": "S-DANDRUFF: name claim (high) + supported; no secondary (R17.2)."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate, D1 false -> regular; I2 written unchanged to every row."
+    },
+    "positioning": {
+      "explicitResetPositioning": false
+    },
+    "explicitResetPositioning": {
+      "value": false,
+      "confidence": "high",
+      "rationale": "D1 false: no tiefenrein/deep clean/clarifying shampoo/detox-reinigung stem in name or graded claims, no occasional-use directions."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "high",
+      "rationale": "D2 not met: D1 false"
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_dandruff"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [
+      {
+        "code": "dandruff_bundled_comfort_wording",
+        "detail": "'wirkt wohltuend bei irritierter ... schuppenanfälliger Kopfhaut', 'Juckreiz ... Spannungsgefühle' (manufacturer, moderate); S-SENSITIVE formula gate failed: CSA not met, no prominent E4 comfort route"
+      }
+    ],
+    "researchCombinationTargets": [],
+    "researchCombinationRationale": "sensitive: bundled comfort wording graded moderate but S-SENSITIVE gate fails (CSA) -> not recorded; dry: dryness only inside the dandruff unit (absorbed, R16.1); oily: none."
+  },
+  "blindToFinalChanges": [
+    {
+      "field": "focusPrimary",
+      "blind": "general",
+      "final": "scalp_active",
+      "evidence": "name",
+      "reason": "7.2"
+    },
+    {
+      "field": "usageRole",
+      "blind": "regular",
+      "final": "treatment",
+      "evidence": "name + Piroctone",
+      "reason": "U3/U1"
+    },
+    {
+      "field": "scalpComfortTarget",
+      "blind": "not_targeted (low)",
+      "final": "not_targeted (high)",
+      "evidence": "bundled wording only",
+      "reason": "SC1/E2a"
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeWeightSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "comparisonWithEarlierValuesDoneInLane": false,
+    "weightPotentialUnchangedAfterUnblind": true
+  },
+  "uncertainties": [
+    {
+      "reading": "Neurodermitis/Psoriasis basis-care wording treated as medical, ignored",
+      "alternative": "none in scope"
+    }
+  ]
+}

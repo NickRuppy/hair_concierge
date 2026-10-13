@@ -1,0 +1,198 @@
+{
+  "W313": {
+    "brand": "Wahre Schätze (Garnier)",
+    "name": "Wahre Schätze Sanfte Hafermilch (Garnier Wahre Schätze Beruhigendes Shampoo Sanfte Hafermilch)",
+    "sources": ["manufacturer_de (moderate)", "retailer Rossmann (low)", "retailer dm (low)"],
+    "csCounter": "Soybean oil @6 and glycerin @5 refatting; single buffer.",
+    "clCounter": "Both cationics late (@19, @22); bounded care (moderate) realistic.",
+    "focusPrimary": {
+      "value": "scalp_active", "confidence": "moderate", "neighboringAlternative": "moisture",
+      "careDirection": {"verdict": "moisture_supported", "moistureRoutes": ["Glycerin @5", "Glycine Soja Oil @6", "Dicaprylyl Ether @13"], "repairRoutes": [], "sharedConditioningRoutes": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @19", "Polyquaternium-7 @22", "Glycol Distearate @4"], "limitation": "Verdict recorded for the competing moisture claim; scalp focus chosen by F7."},
+      "claimRole": "candidate",
+      "counterSignal": "Competing lengths-moisture claim (\"spendet Feuchtigkeit und sorgt für geschmeidiges Haar\") with a moisture_supported formula; ordinary SLES chassis.",
+      "decisionTrace": "Claims: sensitive/itchy scalp (\"wirkt beruhigend auf die juckende Kopfhaut\", \"Erleichterung bei juckender Kopfhaut\", manufacturer moderate) and lengths moisture (manufacturer moderate). F7: the product name ('Beruhigendes Shampoo Sanfte Hafermilch') names neither role ('Beruhigendes' does not name the scalp) -> scalp_active primary, formula-compatible (targeted: Avena Sativa Kernel Extract @8). Route: Avena Sativa Kernel Extract @8. Decision: scalp_active.",
+      "rationale": "scalp_active by F7 step 2; moisture passes Section 8 as secondary.",
+      "ruleIds": ["7.2", "F7", "SC1", "CSA"]
+    },
+    "focusSecondary": {"value": ["moisture"], "confidence": "moderate", "neighboringAlternative": [], "decisionTrace": "Empty default considered. Distinct positioning: \"spendet Feuchtigkeit und sorgt für geschmeidiges Haar\" (manufacturer, moderate). Independent route (F3): Glycerin @5, Glycine Soja Oil @6, guar/PQ-7, none cited by the scalp route (Avena @8). Not a synonym of scalp_active. One value.", "rationale": "Secondary moisture (F7 step 3).", "ruleIds": ["Section 8", "F3", "F7"]},
+    "usageRole": {"value": "regular", "confidence": "high", "neighboringAlternative": "none", "triggerCode": "none", "triggerEvidence": [], "losingTriggers": [], "rationale": "No U2 wording.", "ruleIds": ["Section 9"]},
+    "scalpComfortTarget": {"value": "targeted", "confidence": "moderate", "neighboringAlternative": "not_targeted", "rationale": "Targeted: SC1 units \"Das Shampoo wirkt beruhigend auf die juckende Kopfhaut\" and \"Erleichterung bei juckender Kopfhaut\" (manufacturer, moderate; the product acts on the scalp state); CSA via listed prominent comfort route Avena Sativa Kernel Extract @8 and humectant/refatting Glycerin @5, Glycine Soja Oil @6. MB excluded (SLES @2). No prominent counter-signal. Confidence moderate: positioning only manufacturer-graded.", "ruleIds": ["Section 10", "SC1", "CSA", "E2a", "E4"]},
+    "primary": {"target": "sensitive", "confidence": "moderate", "rationale": "S-SENSITIVE passes: E2 sensitive units (juckende Kopfhaut, sensible Kopfhaut; manufacturer, moderate) + targeted + prominent comfort route Avena Sativa Kernel Extract @8; cleansing moderate."},
+    "secondary": null,
+    "notes": [],
+    "d1": false, "d1Grade": "moderate",
+    "dclRat": "D1 false. not_flagged.",
+    "reconciliation": [
+      "focusPrimary: blind provisional general (low, neighbor moisture) -> final scalp_active (moderate) by F7.",
+      "focusSecondary: blind [] -> final [moisture].",
+      "scalpComfortTarget: blind not_targeted (low, CSA met) -> final targeted (moderate).",
+      "Formula properties unchanged."
+    ],
+    "uncertainties": [
+      "ECARF/'hochverträglich'/'allergikerfreundlich' are protective wording, no effect.",
+      "Weight moderate near high (W-RICH, moderate reset): T4 flags normal and coarse; fine is held at acceptable by T6."
+    ]
+  },
+  "W314": {
+    "brand": "Balea PROFESSIONAL (dm-Eigenmarke)",
+    "name": "Balea PROFESSIONAL Shampoo Kopfhaut Sensitive",
+    "sources": ["dm own-brand page (packet kind manufacturer_de, moderate)", "Open Beauty Facts (low, empty)"],
+    "csCounter": "None material.",
+    "clCounter": "Guar and keratin behind low-dose actives; light care (low) realistic.",
+    "focusPrimary": {
+      "value": "scalp_active", "confidence": "high", "neighboringAlternative": "none",
+      "careDirection": {"verdict": "not_applicable", "moistureRoutes": [], "repairRoutes": [], "sharedConditioningRoutes": [], "limitation": "Scalp focus."},
+      "claimRole": "candidate",
+      "counterSignal": "Ordinary SLES chassis; shine wording (\"erhält einen seidigen Glanz\").",
+      "decisionTrace": "Claim direction: sensitive scalp (name 'Kopfhaut Sensitive', high; \"Beruhigendes Shampoo für empfindliche Kopfhaut\", \"Kann Juckreiz und Spannungsgefühle mildern\", moderate). Formula compatible: targeted (Allantoin @8, Bisabolol @9, Panthenol @11). F7: the name names the scalp role -> primary scalp_active. Decision: scalp_active.",
+      "rationale": "scalp_active: name-level sensitive-scalp positioning with three listed comfort routes.",
+      "ruleIds": ["7.2", "F7", "SC1", "CSA"]
+    },
+    "focusSecondary": {"value": [], "confidence": "moderate", "neighboringAlternative": ["shine"], "decisionTrace": "Empty default considered. Shine wording (\"Das Haar wird sanft gepflegt und erhält einen seidigen Glanz\") is a side outcome of generic conditioning (guar/pearlizer), not distinct shine positioning with an independent smoothing route (F2); 'Haartyp: glanzloses Haar' is a listing attribute.", "rationale": "Empty.", "ruleIds": ["Section 8", "F2", "F3"]},
+    "usageRole": {"value": "regular", "confidence": "high", "neighboringAlternative": "none", "triggerCode": "none", "triggerEvidence": [], "losingTriggers": [], "rationale": "No U2 wording.", "ruleIds": ["Section 9"]},
+    "scalpComfortTarget": {"value": "targeted", "confidence": "high", "neighboringAlternative": "none", "rationale": "Targeted: SC1 (name 'Kopfhaut Sensitive', high; manufacturer-graded units) and CSA via listed prominent comfort routes Allantoin @8, Bisabolol @9, Panthenol @11, humectant Glycerin @5. MB excluded (SLES @3). No prominent cooling/essential-oil counter-signal.", "ruleIds": ["Section 10", "SC1", "CSA", "E4"]},
+    "primary": {"target": "sensitive", "confidence": "high", "rationale": "S-SENSITIVE passes: name 'Kopfhaut Sensitive' (high) + targeted + prominent comfort routes; cleansing moderate. S-PRIMARY: sensitive named in the product name."},
+    "secondary": {"target": "dry", "confidence": "moderate", "rationale": "S-DRY passes: \"speziell für die Bedürfnisse von sensibler und trockener Kopfhaut entwickelt\" and \"Kann Juckreiz und Spannungsgefühle mildern\" (moderate) + targeted + prominent humectant routes Glycerin @5, Panthenol @11."},
+    "notes": [],
+    "d1": false, "d1Grade": "moderate",
+    "dclRat": "D1 false. not_flagged.",
+    "reconciliation": [
+      "focusPrimary: blind provisional general (low, neighbor scalp_active) -> final scalp_active (high).",
+      "scalpComfortTarget: blind not_targeted (low, CSA met) -> final targeted (high).",
+      "Formula properties unchanged."
+    ],
+    "uncertainties": [
+      "The dm own-brand page is graded manufacturer_de (moderate) per the packet; the name is high either way.",
+      "Dry secondary rests on a unit naming sensitive and dry together (E2a counts both) plus tension wording."
+    ]
+  },
+  "W315": {
+    "brand": "Schwarzkopf GLISS (Henkel)",
+    "name": "Schwarzkopf GLISS Shampoo Total Repair, 250 ml",
+    "sources": ["manufacturer_de (moderate)", "retailer dm (low)", "retailer dm.at (low, regional, not used)"],
+    "csCounter": "None material.",
+    "clCounter": "Guar, pearlizer and humectant are all after Parfum; bounded care (moderate) realistic.",
+    "focusPrimary": {
+      "value": "repair", "confidence": "moderate", "neighboringAlternative": "general",
+      "careDirection": {"verdict": "repair_supported", "moistureRoutes": ["Glycerin @17 (late)"], "repairRoutes": ["Hydrolyzed Keratin @6", "Dimethicone @5", "Amodimethicone @12"], "sharedConditioningRoutes": ["Guar Hydroxypropyltrimonium Chloride @13", "Glycol Distearate @14"], "limitation": "Protein is a small hydrolysate; 'flüssiges Keratin' cannot prove concentration."},
+      "claimRole": "candidate",
+      "counterSignal": "Moisture/dry-hair wording ('trockenes, geschädigtes Haar') has no independent moisture route (glycerin late).",
+      "decisionTrace": "Claim direction: repair (name 'Total Repair', high; 'Tiefenreparatur', 'reduziert Haarbruch', moderate). Formula compatible: repair_supported (blind). Route: Hydrolyzed Keratin @6 + Dimethicone @5 + Amodimethicone @12. Decision: repair.",
+      "rationale": "Repair: name-level repair positioning on a repair_supported formula.",
+      "ruleIds": ["7.2", "7.3", "F1"]
+    },
+    "focusSecondary": {"value": [], "confidence": "moderate", "neighboringAlternative": ["shine"], "decisionTrace": "Empty default considered. 'geschmeidig und glänzend' is delivered by the same silicone/smoothing route as repair (F2), no independent shine route (F3).", "rationale": "Empty.", "ruleIds": ["Section 8", "F2", "F3"]},
+    "usageRole": {"value": "regular", "confidence": "high", "neighboringAlternative": "none", "triggerCode": "none", "triggerEvidence": [], "losingTriggers": [], "rationale": "'Regelmäßig ... anwenden' is not U2 frequency wording.", "ruleIds": ["Section 9", "U2"]},
+    "scalpComfortTarget": {"value": "not_targeted", "confidence": "high", "neighboringAlternative": "none", "rationale": "Not targeted: no scalp positioning; CSA not met in any case.", "ruleIds": ["Section 10"]},
+    "primary": {"target": "ordinary", "confidence": "high", "rationale": "S-ORDINARY way 1: no E2 scalp claim; manufacturer source present."},
+    "secondary": null,
+    "notes": [],
+    "d1": false, "d1Grade": "moderate",
+    "dclRat": "D1 false ('Tiefenreparatur' is not a D1 stem; retailer 'Intensive Reinigung' is low and not D1). not_flagged.",
+    "reconciliation": [
+      "focusPrimary: blind provisional general (low, neighbor repair) -> final repair (moderate).",
+      "Formula properties unchanged."
+    ],
+    "uncertainties": [
+      "W1 not applied because the prominent keratin converges; weight moderate with high as neighbor (post-line HCO, W-LINE item 6)."
+    ]
+  },
+  "W316": {
+    "brand": "Syoss",
+    "name": "Syoss Intense Curls Locken Shampoo",
+    "sources": ["manufacturer_de (moderate)", "retailer Rossmann exact GTIN (low)", "retailer dm exact GTIN (low)"],
+    "csCounter": "None material.",
+    "clCounter": "Guar and pearlizer after Parfum; bounded care (moderate) realistic.",
+    "focusPrimary": {
+      "value": "general", "confidence": "moderate", "neighboringAlternative": "moisture",
+      "careDirection": {"verdict": "repair_supported", "moistureRoutes": ["Panthenol @7"], "repairRoutes": ["Hydrolyzed Keratin @6", "Dimethicone @8", "Amodimethicone @12"], "sharedConditioningRoutes": ["Guar Hydroxypropyltrimonium Chloride @13", "Glycol Distearate @16", "PEG-7 Glyceryl Cocoate @5"], "limitation": "Blind verdict kept; a single humectant (panthenol) is not a coherent humectant cluster, so moisture is not supported; the '3% Panthenol' claim cannot prove concentration (3.2)."},
+      "claimRole": "not_applicable",
+      "counterSignal": "Dominant moisture positioning ('3% Panthenol-Feuchtigkeits-Komplex', 'Spendet langanhaltende Feuchtigkeit') and a prominent Panthenol @7 with PEG-7 Glyceryl Cocoate @5.",
+      "decisionTrace": "Claim direction: moisture/nourishment for curls (manufacturer moderate; curl/texture wording is not a focus, T2). Formula compatible? Blind verdict repair_supported; F1 maps moisture positioning to moisture only for moisture_supported or dual_supported -> not compatible. Repair positioning is not present ('stärkt das Haar von innen' is strengthening, not damage care). Decision: general.",
+      "rationale": "General: moisture positioning over a repair_supported (not moisture_supported) verdict; no repair claim.",
+      "ruleIds": ["7.2", "7.3", "F1", "T2"]
+    },
+    "focusSecondary": {"value": [], "confidence": "moderate", "neighboringAlternative": ["moisture"], "decisionTrace": "Empty default considered; no supported secondary.", "rationale": "Empty.", "ruleIds": ["Section 8"]},
+    "usageRole": {"value": "regular", "confidence": "high", "neighboringAlternative": "none", "triggerCode": "none", "triggerEvidence": [], "losingTriggers": [], "rationale": "No U2 wording; 'Tiefenspülung' in the directions is a conditioner reference and not D1.", "ruleIds": ["Section 9", "D1"]},
+    "scalpComfortTarget": {"value": "not_targeted", "confidence": "high", "neighboringAlternative": "none", "rationale": "Not targeted: 'Reinigt sanft die Kopfhaut' is mildness, no SC1 unit.", "ruleIds": ["Section 10", "SC1", "E2a"]},
+    "primary": {"target": "ordinary", "confidence": "high", "rationale": "S-ORDINARY way 1: no E2 scalp claim; manufacturer source present."},
+    "secondary": null,
+    "notes": [],
+    "d1": false, "d1Grade": "moderate",
+    "dclRat": "D1 false ('Tiefenpflegende Formel', 'Tiefenspülung' are excluded care terms). not_flagged.",
+    "reconciliation": [
+      "focusPrimary: blind provisional general (low, neighbor repair) -> final general (moderate, neighbor moisture).",
+      "Formula properties unchanged; curl/texture claims ignored for fit (T2)."
+    ],
+    "uncertainties": [
+      "Care-direction verdict kept repair_supported from the blind pass. A dual_supported reading (Panthenol @7 + PEG-7 Glyceryl Cocoate @5 + deposition) would let the manufacturer moisture claim tie-break to moisture. Projection unaffected.",
+      "Weight moderate near high: post-line lipids (HCO @15, apricot kernel oil @21) keep W-RICH closed (W-LINE item 6)."
+    ]
+  },
+  "W317": {
+    "brand": "Langhaarmädchen (dm-Eigenmarke)",
+    "name": "LANGHAARMÄDCHEN Shampoo Lovely Long, 300 ml",
+    "sources": ["dm.de own-brand page (packet kind retailer, low)", "dm.at own-brand page (retailer, low)"],
+    "csCounter": "None material.",
+    "clCounter": "None realistic: multiple prominent complementary systems.",
+    "focusPrimary": {
+      "value": "general", "confidence": "moderate", "neighboringAlternative": "repair",
+      "careDirection": {"verdict": "dual_supported", "moistureRoutes": ["Glycerin @5", "Argania Spinosa Kernel Oil @7"], "repairRoutes": ["Hydrolyzed Wheat Protein @6", "Bis-(Isostearoyl/Oleoyl Isopropyl) Dimonium Methosulfate @9"], "sharedConditioningRoutes": ["Guar Hydroxypropyltrimonium Chloride @8", "Glycol Distearate @15"], "limitation": "Tie unresolved: only low-graded positioning exists."},
+      "claimRole": "not_applicable",
+      "counterSignal": "Repair wording ('Kann Haarbruch reduzieren und das Haar reparieren') and a formula that supports repair.",
+      "decisionTrace": "Claims: hair growth/density ('gegen Haarausfall', 'Haarwachstum zu stimulieren') -> ignored (F5); repair/breakage (retailer only, low). Formula verdict dual_supported. A low-graded claim can never act as tie_breaker (CL-SRC), so the dual tie stays unresolved. Decision: general.",
+      "rationale": "General: hair-loss claims out of scope; low-graded repair claim cannot break the dual tie.",
+      "ruleIds": ["7.2", "F1", "F5", "CL-SRC"]
+    },
+    "focusSecondary": {"value": [], "confidence": "moderate", "neighboringAlternative": ["shine"], "decisionTrace": "Empty default considered; only low-graded claims.", "rationale": "Empty.", "ruleIds": ["Section 8", "CL-SRC"]},
+    "usageRole": {"value": "regular", "confidence": "high", "neighboringAlternative": "none", "triggerCode": "none", "triggerEvidence": [], "losingTriggers": [], "rationale": "No trigger; low-graded claims cannot fire one.", "ruleIds": ["Section 9", "CL-SRC"]},
+    "scalpComfortTarget": {"value": "not_targeted", "confidence": "high", "neighboringAlternative": "none", "rationale": "Not targeted: no sensitive/dry-scalp unit ('pflegt zudem die Kopfhaut' is generic).", "ruleIds": ["Section 10", "SC1"]},
+    "primary": {"target": "ordinary", "confidence": "moderate", "rationale": "S-ORDINARY ways 1 and 2: no qualifying E2 scalp claim, and the only scalp-adjacent positioning is hair growth/hair loss (S-HAIRLOSS, not evaluated). Way 1 with retailer-only sources -> moderate; way 2 -> moderate."},
+    "secondary": null,
+    "notes": ["hair_loss_claim_not_evaluated: 'Wirkung: gegen Haarausfall', 'Haarwachstum zu stimulieren', 'dichteres Haar' (retailer, low)"],
+    "d1": false, "d1Grade": "low",
+    "dclRat": "D1 false. not_flagged.",
+    "reconciliation": [
+      "focusPrimary: blind provisional general (low, verdict dual_supported) -> final general (moderate): only low-graded claims.",
+      "Formula properties unchanged."
+    ],
+    "uncertainties": [
+      "All positioning is dm own-brand copy graded retailer/low by the packet; had it been graded manufacturer (moderate), the repair claim would tie-break to repair. Projection unaffected.",
+      "Weight moderate vs high is close (four converging families, W-RICH, moderate reset). Not recorded as W3-balanced; T4 flags fine and normal.",
+      "Identity confidence moderate (packet)."
+    ]
+  },
+  "W318": {
+    "brand": "Being",
+    "name": "Being Big Hair Shampoo (Volumen Shampoo)",
+    "sources": ["retailer Rossmann (low)", "retailer Hagel-Shop (low)", "manufacturer_foreign US page (low)"],
+    "csCounter": "None material.",
+    "clCounter": "Both cationics after Parfum; no pearlizer/silicone; bounded care (moderate) realistic.",
+    "focusPrimary": {
+      "value": "general", "confidence": "moderate", "neighboringAlternative": "volume",
+      "careDirection": {"verdict": "not_applicable", "moistureRoutes": [], "repairRoutes": [], "sharedConditioningRoutes": [], "limitation": "Candidate job is volume, not repair/moisture."},
+      "claimRole": "not_applicable",
+      "counterSignal": "Volume positioning ('Volumen Shampoo', 'leicht und voluminös'), retailer/foreign only.",
+      "decisionTrace": "Claim direction: volume (retailer and foreign manufacturer, all low). A low-graded claim may be a candidate only when the formula independently supports that focus; the formula (conditioning high via W-RICH, weight moderate, two oils, two cationics) does not independently support volume. Decision: general.",
+      "rationale": "General: low-graded volume claim without independent formula support.",
+      "ruleIds": ["7.2", "CL-SRC"]
+    },
+    "focusSecondary": {"value": [], "confidence": "moderate", "neighboringAlternative": ["clarifying"], "decisionTrace": "Empty default considered; only low-graded claims.", "rationale": "Empty.", "ruleIds": ["Section 8"]},
+    "usageRole": {"value": "regular", "confidence": "high", "neighboringAlternative": "none", "triggerCode": "none", "triggerEvidence": [], "losingTriggers": [], "rationale": "'Invigorating daily shampoo' and 'Klärend' are low-graded (foreign/retailer) and fire no trigger.", "ruleIds": ["Section 9", "CL-SRC"]},
+    "scalpComfortTarget": {"value": "not_targeted", "confidence": "high", "neighboringAlternative": "none", "rationale": "Not targeted: no scalp positioning.", "ruleIds": ["Section 10"]},
+    "primary": {"target": "ordinary", "confidence": "moderate", "rationale": "S-ORDINARY way 1: no E2 scalp claim; retailer/foreign copy only -> moderate (13.8)."},
+    "secondary": null,
+    "notes": [],
+    "d1": false, "d1Grade": "low",
+    "dclRat": "D1 false: 'clarifying wash'/'Klärend' are low-graded and not D1 stems. not_flagged.",
+    "reconciliation": [
+      "focusPrimary: blind provisional general (low, neighbor moisture) -> final general (moderate, neighbor volume).",
+      "Thickness claims ('für feines Haar', 'type 1A-1C') ignored (T2). 'doesn't weigh hair down' does not lower weight (6.5).",
+      "Formula properties unchanged."
+    ],
+    "uncertainties": [
+      "No German manufacturer or pack source; identity moderate and formula source tier 3 (packet).",
+      "Weight moderate near high (W-RICH with material oils at W-line - 1/-2, moderate reset)."
+    ]
+  }
+}

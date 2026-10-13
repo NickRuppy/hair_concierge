@@ -1,0 +1,148 @@
+{
+  "blindId": "T304",
+  "inciFingerprintSha256": "40ead763a1b427f155a84a395ced2c62d6791b49f162ade2103ab9473ad978d7",
+  "phase": "blind_formula_pass",
+  "normalizationNote": "No split synonym entries; packet positions are normalized positions.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic Sodium Laureth Sulfate (2); prominent buffer Cocamidopropyl Betaine (4); no reinforcing route. Sodium Xylenesulfonate (3, hydrotrope) and Cocamide MEA (7, foam booster) are neither routes nor buffers. E3 point Parfum (11).",
+      "neighboringAlternative": "none",
+      "counterSignal": "Single buffer; hydrotrope early; nothing refatting. Argues toward strong but C1 fixes moderate."
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Cleansing-led: the only cationic route is Guar Hydroxypropyltrimonium Chloride (12), listed after Parfum (11); Glycol Distearate (8) is a pearlizer; Glycerin (22) trace. No silicone or lipid.",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "Guar coacervate can give noticeable wet slip even when late."
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Single late cationic polymer (guar 12, after Parfum) facing a C1 reset; no silicone, lipid, protein or film.",
+      "neighboringAlternative": "none",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "One late guar only."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "No persistent system."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES + betaine, hydrotrope."
+        }
+      },
+      "whyThisBand": "Absent/light deposition, ordinary reset.",
+      "whyNotNeighborBand": "moderate needs a plausibly persistent or second converging system; only one late guar.",
+      "counterSignal": "Guar Hydroxypropyltrimonium Chloride is a known depositing coacervate polymer.",
+      "excluded": [
+        "Glycol Distearate (8): pearlizer",
+        "Cocamide MEA (7): foam booster",
+        "Piroctone Olamine (9): active, not deposition",
+        "Aloe Barbadensis Leaf Juice (20), Avena Sativa Kernel Extract (23): late extracts"
+      ]
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "low",
+      "rationale": "Provisional: recognized anti-dandruff active Piroctone Olamine (9) present; scalp_active requires a dandruff claim after unblind (F7, R17.3). Without it the formula is nonspecific (general).",
+      "neighboringAlternative": "general",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "limitation": "Active-led candidate; no lengths care cluster."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "rationale": "Provisional empty default.",
+      "neighboringAlternative": [
+        "clarifying"
+      ]
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "low",
+      "rationale": "Provisional: treatment needs dandruffSupport supported (yes) plus a qualifying E2 dandruff claim (unblind).",
+      "neighboringAlternative": "regular"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "rationale": "CSA formula half fails: no prominent E4 comfort or humectant/refatting route (Glycerin 22, Avena Sativa Kernel Extract 23 after Parfum 11; Aloe juice unlisted). Positioning would not rescue it.",
+      "neighboringAlternative": "targeted",
+      "csaFormulaHalf": "fail",
+      "prominentComfortRoute": false,
+      "prominentHumectantRefattingRoute": false
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains Piroctone Olamine (9).",
+      "neighboringAlternative": "none"
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic"
+    },
+    {
+      "ingredient": "Sodium Xylenesulfonate",
+      "position": 3,
+      "role": "hydrotrope"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Cocamide MEA",
+      "position": 7,
+      "role": "foam booster"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 8,
+      "role": "pearlizer"
+    },
+    {
+      "ingredient": "Piroctone Olamine",
+      "position": 9,
+      "role": "recognized anti-dandruff active"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 11,
+      "role": "E3 point"
+    },
+    {
+      "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+      "position": 12,
+      "role": "cationic_polymer, non-prominent"
+    },
+    {
+      "ingredient": "Sodium Salicylate",
+      "position": 14,
+      "role": "preservative"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 22,
+      "role": "humectant, late"
+    },
+    {
+      "ingredient": "Avena Sativa Kernel Extract",
+      "position": 23,
+      "role": "comfort route, non-prominent"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

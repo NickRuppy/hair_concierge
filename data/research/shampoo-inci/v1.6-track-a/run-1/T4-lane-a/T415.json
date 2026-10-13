@@ -1,0 +1,493 @@
+{
+  "blindId": "T415",
+  "inciFingerprintSha256": "ad0a21d7dce660496131f9d83955fa89e099faca051e206bf1fb5766c6231d8b",
+  "identity": {
+    "brand": "Guhl",
+    "productName": "Guhl Kraft & Fülle Shampoo (kräftigendes Shampoo)",
+    "market": "DE",
+    "packSize": "250 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": [
+      "Normalized positions = packet positions.",
+      "E3 cut: Parfum at 25; prominent = 2-24."
+    ]
+  },
+  "sourcesUsed": {
+    "formula": "formula/T415.json (fingerprint ad0a21d7dce660496131f9d83955fa89e099faca051e206bf1fb5766c6231d8b, source tier 2, completeness complete)",
+    "positioning": [
+      "reveal/T415.json#positioningSources[0] (manufacturer_de, packet grade moderate)",
+      "reveal/T415.json#positioningSources[1] (retailer, packet grade low)"
+    ]
+  },
+  "claimGrading": {
+    "productName": "high",
+    "manufacturer_de": "moderate",
+    "dm.de": "low"
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "general (provisional)",
+      "final": "volume",
+      "evidence": "name 'Kraft & Fülle'",
+      "reason": "F5 + next in-scope job"
+    },
+    {
+      "property": "cleansingStrength/conditioningLevel/weightPotential/dandruffSupport",
+      "blind": "see formula-pass",
+      "final": "unchanged",
+      "evidence": "formula-only properties; no material formula conflict exposed by the reveal"
+    }
+  ],
+  "cleansingStrength": {
+    "value": "moderate",
+    "confidence": "high",
+    "rationale": "C1: defining anionic Sodium Laureth Sulfate (2) (ether/sulfonate type) with prominent buffer(s) Cocamidopropyl Betaine (3), Coco-Glucoside (4) and no prominent reinforcing strong anionic -> moderate. Unchanged after unblinding: claims never set cleansing strength (Section 4, 3.2).",
+    "formulaFacts": [
+      {
+        "ingredient": "Sodium Laureth Sulfate",
+        "position": 2,
+        "role": "defining anionic"
+      },
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 3,
+        "role": "buffer"
+      },
+      {
+        "ingredient": "Coco-Glucoside",
+        "position": 4,
+        "role": "buffer"
+      }
+    ],
+    "counterSignal": [
+      "none material"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "formula/T415.json (fingerprint ad0a21d7dce660496131f9d83955fa89e099faca051e206bf1fb5766c6231d8b, source tier 2, completeness complete)"
+    ]
+  },
+  "conditioningLevel": {
+    "value": "moderate",
+    "confidence": "moderate",
+    "rationale": "One meaningful system plus light routes: prominent HP guar (6), weak refatters Glyceryl Oleate (7) and Lecithin (17), humectants Panthenol (9), Glycerin (13). No silicone, payload lipid or pearlizer -> C2 not met; moderate. Unchanged after unblinding: claims never raise or lower conditioning (3.2, C7).",
+    "formulaFacts": [
+      {
+        "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+        "position": 6,
+        "role": "cationic polymer"
+      },
+      {
+        "ingredient": "Glyceryl Oleate",
+        "position": 7,
+        "role": "weak refatter, E4"
+      },
+      {
+        "ingredient": "Panthenol",
+        "position": 9,
+        "role": "humectant/comfort"
+      },
+      {
+        "ingredient": "Glycerin",
+        "position": 13,
+        "role": "humectant"
+      },
+      {
+        "ingredient": "Lecithin",
+        "position": 17,
+        "role": "weak refatter"
+      }
+    ],
+    "counterSignal": [
+      "refatters are weak; no substantive system beyond the guar"
+    ],
+    "neighboringAlternative": "low",
+    "sources": [
+      "formula/T415.json (fingerprint ad0a21d7dce660496131f9d83955fa89e099faca051e206bf1fb5766c6231d8b, source tier 2, completeness complete)"
+    ]
+  },
+  "weightPotential": {
+    "value": "low",
+    "confidence": "moderate",
+    "rationale": "low: one guar plus weak refatters facing a moderate C1 reset. Unchanged after unblinding (claims cannot decide the band, 6.5).",
+    "neighboringAlternative": "moderate",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "light",
+        "rationale": "HP guar (6) plus weak refatters Glyceryl Oleate (7), Lecithin (17), tocopheryl acetate (21)."
+      },
+      "persistence": {
+        "value": "low",
+        "rationale": "Weak refatters and a single guar are weakly retained."
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C1 SLES with betaine and glucoside buffers."
+      }
+    },
+    "extractedEvidenceByFamily": {
+      "cationic_polymer": [
+        [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          6
+        ]
+      ],
+      "weak_refatter": [
+        [
+          "Glyceryl Oleate",
+          7
+        ],
+        [
+          "Lecithin",
+          17
+        ],
+        [
+          "Tocopheryl Acetate",
+          21
+        ]
+      ],
+      "silicone": [],
+      "payload_lipid": [],
+      "protein_film": [],
+      "film_former": [],
+      "anionic_surfactant": [
+        [
+          "Sodium Laureth Sulfate",
+          2
+        ]
+      ],
+      "amphoteric_surfactant": [
+        [
+          "Cocamidopropyl Betaine",
+          3
+        ]
+      ],
+      "nonionic_surfactant": [
+        [
+          "Coco-Glucoside",
+          4
+        ]
+      ],
+      "humectant_context": [
+        [
+          "Panthenol",
+          9
+        ],
+        [
+          "Glycerin",
+          13
+        ]
+      ]
+    },
+    "excludedIngredients": [
+      [
+        "Sorbitan Caprylate",
+        8,
+        "emulsifier/booster"
+      ],
+      [
+        "Tetrasodium Glutamate Diacetate",
+        10,
+        "chelator"
+      ],
+      [
+        "Caffeine",
+        12,
+        "hair-loss positioned ingredient, not deposition"
+      ],
+      [
+        "Menthol",
+        11,
+        "cooling"
+      ],
+      [
+        "Rosmarinus Officinalis Leaf Extract",
+        14,
+        "extract"
+      ],
+      [
+        "Biotin",
+        22,
+        "vitamin"
+      ]
+    ],
+    "whyThisBand": "low: one guar plus weak refatters facing a moderate C1 reset.",
+    "whyNotNeighborBand": "W2 (two families): kept low because the second family is only weak_refatter (light, non-persistent), no silicone/payload lipid/protein; one guar with moderate reset.",
+    "counterEvidence": [
+      "guar prominent (6)"
+    ],
+    "confidenceLimitingFactor": "Guar level unknown.",
+    "formulaFacts": [
+      {
+        "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+        "position": 6,
+        "family": "cationic_polymer"
+      },
+      {
+        "ingredient": "Glyceryl Oleate",
+        "position": 7,
+        "family": "weak_refatter"
+      },
+      {
+        "ingredient": "Lecithin",
+        "position": 17,
+        "family": "weak_refatter"
+      },
+      {
+        "ingredient": "Tocopheryl Acetate",
+        "position": 21,
+        "family": "weak_refatter"
+      },
+      {
+        "ingredient": "Sodium Laureth Sulfate",
+        "position": 2,
+        "family": "anionic_surfactant"
+      },
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 3,
+        "family": "amphoteric_surfactant"
+      },
+      {
+        "ingredient": "Coco-Glucoside",
+        "position": 4,
+        "family": "nonionic_surfactant"
+      },
+      {
+        "ingredient": "Panthenol",
+        "position": 9,
+        "family": "humectant_context"
+      },
+      {
+        "ingredient": "Glycerin",
+        "position": 13,
+        "family": "humectant_context"
+      }
+    ],
+    "counterSignal": [
+      "guar prominent (6)"
+    ],
+    "canonicalFormula": {
+      "fingerprint": "ad0a21d7dce660496131f9d83955fa89e099faca051e206bf1fb5766c6231d8b",
+      "sourceTier": 2,
+      "completeness": "complete",
+      "identityConfidence": "high",
+      "captureDate": "not stated in packet",
+      "normalization": "Normalized positions = packet positions."
+    },
+    "unresolvedFacts": [],
+    "sources": [
+      "formula/T415.json (fingerprint ad0a21d7dce660496131f9d83955fa89e099faca051e206bf1fb5766c6231d8b, source tier 2, completeness complete)"
+    ]
+  },
+  "focusPrimary": {
+    "value": "volume",
+    "confidence": "moderate",
+    "rationale": "The dominant claims are hair loss / hair growth / thinning ('zu Haarausfall neigendes Haar', 'Haarwachstum', 'Durchblutung der Kopfhaut'), ignored for focus (F5). The remaining in-scope job is fullness/strength from the name 'Kraft & Fülle' (high) with a compatible light formula (W low).",
+    "formulaFacts": [
+      {
+        "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+        "position": 6
+      }
+    ],
+    "counterSignal": [
+      "'Fülle' is tied to thinning-hair positioning (density claim, F5)"
+    ],
+    "neighboringAlternative": "general",
+    "sources": [
+      "reveal positioning sources",
+      "formula packet"
+    ]
+  },
+  "focusSecondary": {
+    "value": [],
+    "confidence": "high",
+    "rationale": "No other in-scope distinct positioning.",
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources"
+    ]
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "not_applicable"
+    },
+    "claimRole": "candidate",
+    "counterSignal": [
+      "'Fülle' is tied to thinning-hair positioning (density claim, F5)"
+    ],
+    "neighboringAlternative": "general",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "hair loss (ignored, F5) -> fullness (name)",
+        "formulaCompatible": true,
+        "compatibleRoute": "light low-deposition formula",
+        "decisionReason": "F5 then next in-scope compatible job"
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [],
+        "independentRoutes": [],
+        "whyDistinctFromPrimary": "none",
+        "exceptionCode": null
+      },
+      "usageRole": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "No trigger; caffeine/hair-loss positioning never fires treatment (U3/F5); '2 Minuten einmassieren' is not frequency."
+      }
+    }
+  },
+  "usageRole": {
+    "value": "regular",
+    "confidence": "high",
+    "rationale": "No trigger; caffeine/hair-loss positioning never fires treatment (U3/F5); '2 Minuten einmassieren' is not frequency.",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": [],
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources"
+    ]
+  },
+  "scalpComfortTarget": {
+    "value": "not_targeted",
+    "confidence": "high",
+    "rationale": "Scalp wording is hair-growth/circulation (S-HAIRLOSS), not E2 sensitive/dry.",
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources",
+      "formula packet"
+    ]
+  },
+  "dandruffSupport": {
+    "value": "not_supported",
+    "confidence": "high",
+    "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11) -> not_supported.",
+    "neighboringAlternative": "none",
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "sources": [
+      "formula/T415.json (fingerprint ad0a21d7dce660496131f9d83955fa89e099faca051e206bf1fb5766c6231d8b, source tier 2, completeness complete)"
+    ]
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal. T2: thickness/texture claims do not change fit. T4: weightPotential neighbor moderate -> acceptable (lower tier) -> review_thickness_boundary."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal. T2: thickness/texture claims do not change fit."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W low, C moderate -> acceptable. T2: thickness/texture claims do not change fit."
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential low -> 1:1 projection; confidence = weightPotential confidence."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "moderate",
+        "rationale": "S-ORDINARY ways 1 (no qualifying E2 unit; manufacturer source -> high) and 2 (only scalp-adjacent positioning is hair loss/growth -> moderate); lowest = moderate."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate -> regular. I3: neighbor none (high confidence, no boundary check)"
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "rationale": "D1: no D1 stem (tiefenrein / deep clean / clarifying shampoo / detox-reinigung) in name or manufacturer/pack claims, no occasional-use directions."
+    },
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine (weightPotential neighbor moderate -> acceptable)"
+    ],
+    "informationalNotes": [
+      "hair_loss_claim_not_evaluated ('Für dünner-werdendes, zu Haarausfall neigendes Haar', 'unterstütze das natürliche Haarwachstum')"
+    ],
+    "researchCombinationTargets": []
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsAndPriorLabelsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": "Guar level unknown.",
+    "comparisonWithEarlierValuesOnlyOutsideLane": true,
+    "formulaPropertiesChangedAfterUnblinding": false
+  },
+  "uncertainties": [
+    {
+      "reading": "'Kraft & Fülle' read as cosmetic volume",
+      "alternative": "density claim (F5) -> general"
+    }
+  ]
+}

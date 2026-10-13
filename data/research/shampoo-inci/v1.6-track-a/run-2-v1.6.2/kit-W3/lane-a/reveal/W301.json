@@ -1,0 +1,35 @@
+{
+  "blindId": "W301",
+  "productName": "Swiss-O-Par Teebaumöl Shampoo (Kurshampoo)",
+  "brand": "Swiss-O-Par",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer DE product page (Rufin Cosmetic); WordPress dateModified 2026-08-27T12:16:09Z; no GTIN or pack size on page",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Teebaumöl Shampoo | Gegen Kopfhautreizungen, Schuppen und fettiges Haar. | Die wertvollen Wirkstoffe reinen Teebaumöles fördern die Durchblutung der Kopfhaut. Die Tätigkeit der Talgdrüsen wird reguliert und die Fettabsonderung und Schuppenbildung spürbar gemindert. | Das Teebaumöl pflegt Haar und Kopfhaut mit natürlichen Pflanzenextrakten und schützt sie gleichzeitig vor schädlichen Umwelteinflüssen. | OHNE SILIKONE | Natürliche Pflege für Haar & Kopfhaut | Effektiv gegen Schuppen, Reizungen und Fett – ohne Silikone. (meta description: Teebaumöl-Pflege: Fördert die Durchblutung der Kopfhaut, reguliert Talgdrüsen und mindert Schuppenbildung. Schützt Haar und Kopfhaut.)",
+      "directionsVerbatim": "Das Haar mit dem Kurshampoo einschäumen, durchwaschen und ausspülen. Bei der Nachwäsche das Kurshampoo 3 Minuten auf dem Haar einwirken lassen, um die Wirkung der Pflegestoffe zu verstärken. Ausreichend für 25 bis 30 Haarwäschen."
+    },
+    {
+      "sourceType": "dm.de PDP (browser tab, Inhaltsstoffe accordion expanded); Anschrift: Rufin Cosmetic, Wedemark",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Das Swiss-O-Par Teebaum Shampoo bekämpft Kopfhautreizungen, Schuppen und beugt fettigem Haar vor. Der Gehalt von Australischem Teebaumöl beruhigt und fördert die Durchblutung der Kopfhaut. Die natürlichen Pflanzenextrakte schützen das Haar außerdem vor schädlichen Umwelteinflüssen. | Vegan. | Wirkung: Anti-Schuppen | Produkteigenschaften: vegan",
+      "directionsVerbatim": "Das Haar mit dem Teebaumöl Shampoo einschäumen, durchwaschen und ausspülen. Bei der Nachwäsche das Shampoo 3 Minuten auf dem Haar einwirken lassen, um die Wirkung der Pflegestoffe zu verstärken. Ausreichend für 25 bis 30 Haarwäschen."
+    },
+    {
+      "sourceType": "Rossmann PDP (browser tab); JSON-LD sku 4104260076501; Rossmann Artikelnummer 037443; 250 ml; 2,49 EUR; title 'Teebaumöl Kurshampoo'",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Gegen Kopfreizungen, Schuppen und fettiges Haar. Die wertvollen Wirkstoffe reinen Teebaumöles fördern die Durchblutung der Kopfhaut. Die Tätigkeit der Talgdrüsen wird reguliert und die Fettabsonderung und Schuppenbildung spürbar gemindert. Das Teebaumöl pflegt Haar und Kopfhaut mit natürlichen Pflanzenextrakten und schützt sie gleichzeitig vor schädlichen Umwelteinflüssen.",
+      "directionsVerbatim": "not read (no Anwendung section located in the page extract)"
+    },
+    {
+      "sourceType": "Müller PDP (browser tab); found by GTIN search q=4104260076501 (1 hit); Hersteller Rufin Cosmetic GmbH; 250 ml; 2,45 EUR",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Die wertvollen Bestandteile des reinen Teebaumöls unterstützen die Pflege der Kopfhaut. Das Kur-Shampoo trägt dazu bei, die Kopfhaut zu beruhigen und verleiht dem Haar ein frisches Gefühl. Gleichzeitig werden Haar und Kopfhaut mit natürlichen Pflanzenextrakten gepflegt. | Reguliert die Tätigkeit der Talgdrüsen | Vermindert die Fettabsonderung spürbar | Haartyp: fettiges Haar|schuppiges Haar",
+      "directionsVerbatim": "Das Haar mit dem Kurshampoo einschäumen, durchwaschen und ausspülen. Bei der Nachwäsche das Kurshampoo 3 Minuten auf dem Haar einwirken lassen, um die Wirkung der Pflegestoffe zu verstärken."
+    }
+  ]
+}

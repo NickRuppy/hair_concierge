@@ -1,0 +1,141 @@
+{
+  "slot": "A51",
+  "productId": "51a0b647-2794-49a3-96e1-e7695432561e",
+  "name": "Sebamed Urea 5%",
+  "brand": "Sebamed",
+  "packSize": "200 ml",
+  "gtins": [
+    "4103040048448"
+  ],
+  "sources": [
+    {
+      "url": "https://sebamed.de/de/p/anti-juckreiz-akut-shampoo-urea-5/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "EAN 4103040048448, PZN 19856666, 200 ml, \"Sofort lieferbar\", 5,95 EUR",
+      "inciVerbatim": "Aqua, Urea, Disodium Laureth Sulfosuccinate, Sodium Lauryl Sulfoacetate, Laureth-9, Lauryl Glucoside, Sodium Laureth Sulfate, Parfum, PEG-120 Methyl Glucose Dioleate, Phenoxyethanol, Citric Acid, Laureth-2, PEG/PPG-120/10 Trimethylolpropane Trioleate, Sodium Benzoate, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Sodium Citrate, Tetramethyl Acetyloctahydronaphthalenes, Sodium Chloride, Lactic Acid, Tocopherol, Helianthus annuus seed oil",
+      "claimsVerbatim": "Anti-Juckreiz Akut Shampoo Urea 5% 200 ml | Nach 2 Wochen bis zu 63% weniger Trockenheit | Das sebamed Anti‑Juckreiz Shampoo bietet eine gezielte Akutpflege für juckende Kopfhaut und trockenes Haar. Die seifenfreie Formel ist besonders schonend und enthält feuchtigkeitsspendenden Harnstoff (Urea), der dazu beiträgt, die Kopfhaut zu glätten und Symptome sehr trockener Haut zu verbessern. Zusätzlich wirkt Polidocanol juckreizlindernd und unterstützt eine nachhaltige Beruhigung der Kopfhaut. Bereits nach zwei Wochen Anwendung kann die Trockenheit der Kopfhaut um bis zu 63 % reduziert werden.* Zusätzlich wird das Hautmikrobiom stabilisiert. (*Studie Dr. med. M. Podda, Hautklinik Darmstadt, Klinikum Darmstadt 2010) | Urea 5%: Urea ist ein hautverwandter natürlicher Feuchthaltefaktor, der Spannungsgefühl, Rauheit und Juckreiz trockene Haut lindert | Haartyp: trockene/sehr trockene Kopfhaut, trockenes/strapaziertes Haar | Nur zur äußerlichen Anwendung geeignet | Allgemeiner Hinweis: Die aufgeführten Inhaltsstoffe entsprechenden dem aktuellen Stand der Produktion ... Daher sind immer die Informationen auf dem Produkt ausschlaggebend.",
+      "directionsVerbatim": "Shampoo in der Handinnenfläche aufschäumen und unter leichtem Massieren auf die Kopfhaut auftragen. Ausspülen."
+    },
+    {
+      "url": "https://www.dm.de/p/d/1277186/sebamed-shampoo-anti-juckreiz-akut",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "4103040048448 (page text + JSON-LD; dm-Artikelnummer 1277186; \"Shampoo Anti-Juckreiz, Akut, 200 ml\"; status Nicht lieferbar / OutOfStock; Paketversand nicht möglich)",
+      "inciVerbatim": "Ingredients: Aqua, Urea, Disodium Laureth Sulfosuccinate, Sodium Lauryl Sulfoacetate, Laureth-9, Lauryl Glucoside, Sodium Laureth Sulfate, Parfum, PEG-120 Methyl Glucose Dioleate, Phenoxyethanol, Citric Acid, Laureth-2, PEG/PPG-120/10 Trimethylolpropane Trioleate, Sodium Benzoate, Hydroxypropyl Oxidized Starch PG-Trimonium Chloride, Sodium Citrate, Tetramethyl Acetyloctahydronaphthalenes, Lactic Acid, Sodium Lactate, Sodium Chloride, Tocopherol, Helianthus annuus seed oil.",
+      "claimsVerbatim": "Shampoo mit Urea für sehr trockene Kopfhaut | Hilft bei Juckreiz & spendet Feuchtigkeit | Seifenfreie Formel mit Polidocanol zur Beruhigung der Haut | Unterstützt die Glättung & Pflege von trockenem Haar | Das Shampoo Urea von sebamed wurde speziell für die Bedürfnisse von sehr trockener und juckender Kopfhaut entwickelt. Der feuchtigkeitsspendende Harnstoff kann dazu beitragen, die Haut zu glätten und Trockenheit spürbar zu reduzieren. Die seifenfreie Formel mit Polidocanol kann zudem bei Juckreiz helfen und sorgt für ein angenehmes Hautgefühl. Ideal als Akutpflege für empfindliche Kopfhaut und trockenes Haar. | Haartyp: trockenes Haar",
+      "directionsVerbatim": "sebamed TROCKENE HAUT Shampoo Urea Akut 5% auf dem nassen Haar verteilen, sanft einmassieren und mit lauwarmem Wasser (32 bis 35 Grad) gründlich ausspülen. Anschließend das Haar trocken tupfen und bei Verwendung von Föhn oder Trockenhaube möglichst niedrige Temperaturen einstellen."
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-sebamed-anti-juckreiz-akut-shampoo/p/4103040048448",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "gtinShown": "4103040048448 (PDP URL id + JSON-LD sku); 200 ml; 5,99 EUR; InStock",
+      "inciVerbatim": "(Inhaltsstoffe section empty on the Rossmann PDP at retrieval)",
+      "claimsVerbatim": "Die ausgesuchten Inhaltsstoffe von sebamed TROCKENE HAUT SHAMPOO UREA AKUT 5% lindern spürbar Juckreiz bei sehr trockener Kopfhaut und helfen, die natürliche Feuchtigkeitsbalance von Haut und Haar wieder herzustellen. Hochkonzentrierter Harnstoff (Urea) spendet intensiv Feuchtigkeit und glättet sehr trockene Kopfhaut. Hochkonzentriertes Polidocanol hilft, Juckreiz nachhaltig zu lindern. Die milde Tensidkombination (Zuckertenside) reinigt schonend, sorgt für eine gesunde Haarstruktur und hilft, Austrocknung beim Haare waschen zu vermeiden. Ein Stärkederivat trägt zu einer verbesserten Kämmbarkeit des Haares bei. Die sehr gute Eignung von sebamed TROCKENE HAUT Shampoo Urea Akut 5% für trockenes Haar und trockene, juckende Kopfhaut ist dermatologisch bestätigt.",
+      "directionsVerbatim": "(none on Rossmann PDP)"
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "inci_difference",
+      "severity": "minor_but_real",
+      "detail": "dm.de has 'Lactic Acid, Sodium Lactate, Sodium Chloride' at items 18-20 (22 items total); the manufacturer page has 'Sodium Chloride, Lactic Acid' (21 items, no Sodium Lactate). Everything else is identical and in the same order. Both are 'Tetramethyl Acetyloctahydronaphthalenes' then the tail. Lists not merged.",
+      "manufacturerList": [
+        "Aqua",
+        "Urea",
+        "Disodium Laureth Sulfosuccinate",
+        "Sodium Lauryl Sulfoacetate",
+        "Laureth-9",
+        "Lauryl Glucoside",
+        "Sodium Laureth Sulfate",
+        "Parfum",
+        "PEG-120 Methyl Glucose Dioleate",
+        "Phenoxyethanol",
+        "Citric Acid",
+        "Laureth-2",
+        "PEG/PPG-120/10 Trimethylolpropane Trioleate",
+        "Sodium Benzoate",
+        "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+        "Sodium Citrate",
+        "Tetramethyl Acetyloctahydronaphthalenes",
+        "Sodium Chloride",
+        "Lactic Acid",
+        "Tocopherol",
+        "Helianthus annuus seed oil"
+      ],
+      "dmList": [
+        "Aqua",
+        "Urea",
+        "Disodium Laureth Sulfosuccinate",
+        "Sodium Lauryl Sulfoacetate",
+        "Laureth-9",
+        "Lauryl Glucoside",
+        "Sodium Laureth Sulfate",
+        "Parfum",
+        "PEG-120 Methyl Glucose Dioleate",
+        "Phenoxyethanol",
+        "Citric Acid",
+        "Laureth-2",
+        "PEG/PPG-120/10 Trimethylolpropane Trioleate",
+        "Sodium Benzoate",
+        "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+        "Sodium Citrate",
+        "Tetramethyl Acetyloctahydronaphthalenes",
+        "Lactic Acid",
+        "Sodium Lactate",
+        "Sodium Chloride",
+        "Tocopherol",
+        "Helianthus annuus seed oil"
+      ]
+    },
+    {
+      "type": "naming",
+      "detail": "Catalog name 'Sebamed Urea 5%' / dm affiliate slug 'trockene-haut-5-prozent-urea-akut-p4103040019349' (old pack naming 'sebamed TROCKENE HAUT Shampoo Urea Akut 5%', GTIN 4103040019349 in the old URL) vs current 'Anti-Juckreiz Akut Shampoo Urea 5%' with GTIN 4103040048448 on manufacturer, dm and Rossmann. Treated as the same product renamed/relaunched; the old GTIN 4103040019349 was not verified."
+    },
+    {
+      "type": "claim_inci_check",
+      "detail": "Claims name 'Polidocanol' (manufacturer and dm: 'Zusätzlich wirkt Polidocanol juckreizlindernd'; dm: 'Seifenfreie Formel mit Polidocanol'). Polidocanol is NOT in any INCI list (manufacturer or dm). Material claim/INCI conflict. Also 'Zuckertenside' (Rossmann) = Lauryl Glucoside only; 'Stärkederivat' = Hydroxypropyl Oxidized Starch PG-Trimonium Chloride present."
+    }
+  ],
+  "canonicalInci": [
+    "Aqua",
+    "Urea",
+    "Disodium Laureth Sulfosuccinate",
+    "Sodium Lauryl Sulfoacetate",
+    "Laureth-9",
+    "Lauryl Glucoside",
+    "Sodium Laureth Sulfate",
+    "Parfum",
+    "PEG-120 Methyl Glucose Dioleate",
+    "Phenoxyethanol",
+    "Citric Acid",
+    "Laureth-2",
+    "PEG/PPG-120/10 Trimethylolpropane Trioleate",
+    "Sodium Benzoate",
+    "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride",
+    "Sodium Citrate",
+    "Tetramethyl Acetyloctahydronaphthalenes",
+    "Sodium Chloride",
+    "Lactic Acid",
+    "Tocopherol",
+    "Helianthus annuus seed oil"
+  ],
+  "canonicalReason": "Manufacturer DE page for the exact EAN is canonical (current production per its own note, EAN + PZN shown). dm.de (same GTIN) differs by one extra ingredient (Sodium Lactate) and one position swap; dm is out of stock and likely older. Rossmann has no INCI. The v1.3 capture also had this same manufacturer-vs-dm difference. Only the manufacturer list used; frozen_with_conflict because the lists differ and no pack back was read to arbitrate. Notably, 'Polidocanol' is claimed by both manufacturer and dm but absent from every INCI.",
+  "inciFingerprintSha256": "cb12321175c1cf9a3f9455fab2e6c51d09b6cb0f3700439be148e708e310ec21",
+  "normalization": "Canonical list = the ordered INCI items, each lower-cased, trimmed, internal whitespace collapsed; items joined with '|' and sha256 over the UTF-8 string. Split synonym entries (e.g. 'Aqua (Water, Eau)') are merged into one item before hashing; trailing full stops removed.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen_with_conflict",
+  "blockReason": null,
+  "notes": [
+    "NEEDS NICK: dm.de shows this SKU 'Nicht lieferbar' (OutOfStock, Paketversand nicht möglich) while manufacturer shop and Rossmann show it available. Catalog affiliate link points at the old dm slug/GTIN 4103040019349, which redirects to the same dm article 1277186.",
+    "Polidocanol claim vs INCI: Polidocanol is the headline anti-itch active in the marketing but is not declared (could be an incomplete INCI, a labeling omission or marketing wording). Pack back would settle it.",
+    "Medically adjacent claims ('Akutpflege', 'Juckreiz', Urea 5%) kept verbatim; not classified.",
+    "Prior v1.3 fingerprint 9230bafd... used the old scheme."
+  ]
+}

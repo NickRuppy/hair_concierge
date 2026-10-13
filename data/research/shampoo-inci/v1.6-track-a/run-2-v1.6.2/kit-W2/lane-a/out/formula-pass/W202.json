@@ -1,0 +1,141 @@
+{
+  "blindId": "W202",
+  "inciFingerprintSha256": "fea3b6324477fc773b9a0c2ea2b465a6b458949dd3505a7937c284574670e015",
+  "phase": "formula-pass (blind, stage A only; no claims seen)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "ID-2: no split synonym entries; packet positions equal normalized one-based positions.",
+    "e3ProminenceCutoff": "Parfum @21; positions 1-20 prominent"
+  },
+  "normalizedInci": ["1 Aqua", "2 Sodium Laureth Sulfate", "3 Cocamidopropyl Betaine", "4 Coco-Glucoside", "5 Lactic Acid", "6 Glyceryl Oleate", "7 Sorbitan Caprylate", "8 Hydroxypropyl Guar Hydroxypropyltrimonium Chloride", "9 Sodium Chloride", "10 Zinc PCA", "11 Panthenol", "12 Tetrasodium Glutamate Diacetate", "13 Piroctone Olamine", "14 Ascorbyl Palmitate", "15 Glycerin", "16 Citrus Limon Fruit Extract", "17 Citric Acid", "18 Melissa Officinalis Leaf Extract", "19 Sodium Benzoate", "20 Potassium Sorbate", "21 Parfum", "22 Citrus Aurantium Peel Oil", "23 Geranyl Acetate", "24 Limonene", "25 Tetramethyl Acetyloctahydronaphthalenes", "26 CI 47005", "27 CI 61570"],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate @2 (ether type) with two prominent buffers directly after it (Cocamidopropyl Betaine @3, Coco-Glucoside @4) and no reinforcing strong anionic. Textbook C1 case.",
+      "ruleIds": ["C3", "C4", "C1"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: one meaningful conditioning system (Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @8, before the salt) plus light routes (Glyceryl Oleate @6, Ascorbyl Palmitate @14, Panthenol @11, Glycerin @15). C2 not met: no silicone, no payload lipid (Glyceryl Oleate is weak_refatter and cannot take the silicone's place), no pearlizing/fatty route. Low is the realistic neighbor if the guar dose is small.",
+      "ruleIds": ["5", "C2"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @8"],
+        "payload_lipid": [],
+        "weak_refatter": ["Glyceryl Oleate @6", "Ascorbyl Palmitate @14"],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @3", "Coco-Glucoside @4"],
+        "humectantContext": ["Panthenol @11", "Glycerin @15", "Zinc PCA @10 (scalp active, not deposition)"],
+        "excluded": ["Sorbitan Caprylate @7 (sorbitan ester preservative booster/solubilizer, no deposition role)", "Citrus Aurantium Peel Oil @22 (essential oil, fragrance, 6.4)", "Parfum @21 and fragrance materials @23-25"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 11,
+        "inci": "Panthenol",
+        "candidateClasses": ["sub1_active"],
+        "cap": "e3Point @21 (Parfum)",
+        "alphabeticalRun": "none",
+        "skipped": [],
+        "codes": [],
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light: one cationic guar polymer and two weak refatters; no silicone, oil, film or protein.",
+      "persistence": "low: guar deposition is the only persistent route and is light without silicone/lipid partners.",
+      "resetCapacity": "moderate: C1 SLES chassis buffered by betaine and glucoside.",
+      "counterevidence": "The guar @8 is listed before Sodium Chloride @9, so its dose may be meaningful; two deposition families present (cationic_polymer, weak_refatter).",
+      "whyThisBand": "Low: a single cationic guar with weak refatters only, facing an effective SLES reset, does not support noticeable loss of movement.",
+      "whyNotNeighborBand": "Not moderate (W2): the second family is only weak_refatter (Glyceryl Oleate @6, Ascorbyl Palmitate @14), there is no silicone, payload lipid, film former or protein to converge with the guar, and the SLES/betaine/glucoside reset faces only this light route.",
+      "confidenceLimitingFactor": "Unknown guar dose; an early, high-charge guar could leave noticeable residue (moderate).",
+      "rationale": "Low: one cationic polymer @8 plus weak refatters against a moderate C1 reset; no payload lipid (W-line @11 irrelevant).",
+      "ruleIds": ["6.3", "6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": ["Panthenol @11", "Glycerin @15"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @8", "Glyceryl Oleate @6"],
+        "limitation": "Light conditioning only; formula reads as a scalp-active chassis (Piroctone Olamine @13, Zinc PCA @10) rather than a lengths-care product."
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "Recognized anti-dandruff active present, which makes a scalp_active role plausible once claims are seen.",
+      "decisionTrace": "Claim direction null (blind); formula compatible with scalp_active (Piroctone Olamine @13) if dandruff positioning is revealed; provisional general.",
+      "rationale": "Provisional (claim-dependent): Piroctone Olamine @13 makes scalp_active the leading candidate, but focus needs exact-product positioning (7.2, R17.3).",
+      "ruleIds": ["3.1", "7.2", "R17.3"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["clarifying"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional (claim-dependent).",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "treatment",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional: default regular; treatment fires if a moderate/high-graded dandruff claim is revealed (dandruffSupport supported, U3).",
+      "ruleIds": ["9", "U3"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: no SC1 positioning visible blind. CSA formula half met via listed prominent routes: Panthenol @11 (comfort and humectant), Glycerin @15, Glyceryl Oleate @6 (humectant/refatting). MB excluded: Sodium Laureth Sulfate @2 is a prominent strong anionic. Counter-signals: Parfum @21; citrus peel oil only after the E3 point.",
+      "csaRoute": "listed route (Panthenol @11, Glycerin @15, Glyceryl Oleate @6); MB excluded by Sodium Laureth Sulfate @2",
+      "ruleIds": ["10", "CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Complete INCI contains Piroctone Olamine @13 (recognized active).",
+      "ruleIds": ["11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactantClasses": {
+      "strongAnionicEtherSulfonate": ["Sodium Laureth Sulfate @2 (defining)"],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": [],
+      "amphoteric": ["Cocamidopropyl Betaine @3 (buffer)"],
+      "nonionicCleansing": ["Coco-Glucoside @4 (buffer)"],
+      "notRouteNotBuffer": ["Sorbitan Caprylate @7 (sorbitan ester, booster)"]
+    },
+    "conditioningRoutes": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @8", "Glyceryl Oleate @6", "Ascorbyl Palmitate @14"],
+    "humectants": ["Panthenol @11", "Glycerin @15"],
+    "actives": ["Piroctone Olamine @13 (anti-dandruff)", "Zinc PCA @10 (scalp/sebum active, not a recognized dandruff active)", "Panthenol @11"],
+    "recognizedDandruffActives": ["Piroctone Olamine @13"],
+    "exposureFlags": ["Parfum @21", "Citrus Aurantium Peel Oil @22 (essential oil, after E3)", "Limonene @24", "colourants @26-27", "no cooling agent"],
+    "chelatorsPhAdjusters": ["Lactic Acid @5", "Tetrasodium Glutamate Diacetate @12", "Citric Acid @17"],
+    "preservatives": ["Sodium Benzoate @19", "Potassium Sorbate @20"]
+  },
+  "unresolvedMaterialIngredients": []
+}

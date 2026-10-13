@@ -1,0 +1,74 @@
+{
+  "slot": "A01",
+  "productId": "b000d235-1fc6-434c-9ba1-f1207d36cded",
+  "name": "Balea 2 in 1 Urea 5%",
+  "brand": "Balea",
+  "packSize": "300 ml",
+  "gtins": [
+    "4066447965414"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/1376376/balea-med-duschgel-5-prozent-urea-2in1-dusche-shampoo",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4066447965414 (page text + JSON-LD; dm-Artikelnummer 1376376; \"Duschgel & Shampoo 5% Urea 2in1, 300 ml\"; brand shown as \"Balea med\"; company address dm-drogerie markt GmbH + Co. KG; Hergestellt in Deutschland)",
+      "inciVerbatim": "Ingredients: Aqua, Sodium Laureth Sulfate, Urea, Cocamidopropyl Betaine, Glycerin, Sodium Chloride, Sodium Lactate, Panthenol, Allantoin, Tocopherol, Ascorbyl Palmitate, Parfum, Glyceryl Oleate, Coco-Glucoside, Glycol Distearate, Laureth-4, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Hydrogenated Palm Glycerides Citrate, Lecithin, Phenoxyethanol, Benzyl Alcohol, Piroctone Olamine, Benzoic Acid, Citric Acid, Sodium Hydroxide",
+      "claimsVerbatim": "Duschgel & Shampoo für empfindliche Haut | Mit 5% Urea Allantoin & Provitamin B5 | Für Haut & Haar geeignet | Schützt vor dem Austrocknen | Für die schonende Reinigung von Haut und Haar sorgt das Balea med Duschgel & Shampoo 5% Urea 2in1. Seine seifenfreie Rezeptur ist speziell für trockene sowie empfindliche Haut und Kopfhaut entwickelt worden. Angereichert mit Urea, Allantoin und Provitamin B5, kann die natürliche Feuchtigkeitsbalance der Haut bewahrt werden. Das Duschgel & Shampoo schützt zudem vor Juckreiz, der durch Trockenheit entstehen kann. Es pflegt sanft und kann dem Austrocknen von Haut und Haar entgegenwirken, für ein geschmeidiges Gefühl nach jeder Anwendung. | Produkteigenschaften: vegan, ohne Parabene, ohne Farbstoffe, Ohne Paraffine / Mineralöle, ph-hautneutral",
+      "directionsVerbatim": "Dusche + Shampoo"
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "gtin_differs_from_prior_capture",
+      "detail": "Current dm.de page (same dm article 1376376) shows GTIN 4066447965414. v1.3 capture (2026-08-10) recorded GTIN 4066447591644 for the same dm article; the catalog affiliate link encodes 4058172738272 (old dm URL slug). Three different EANs for one dm article number; likely EAN/pack relaunch. INCI identical to the v1.3 capture (25 items), so formula impact is nil. The prior GTINs were not independently confirmed."
+    },
+    {
+      "type": "claim_inci_check",
+      "detail": "Claims name 'Urea', 'Allantoin', 'Provitamin B5': Urea, Allantoin, Panthenol all present in INCI. No conflict."
+    }
+  ],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Urea",
+    "Cocamidopropyl Betaine",
+    "Glycerin",
+    "Sodium Chloride",
+    "Sodium Lactate",
+    "Panthenol",
+    "Allantoin",
+    "Tocopherol",
+    "Ascorbyl Palmitate",
+    "Parfum",
+    "Glyceryl Oleate",
+    "Coco-Glucoside",
+    "Glycol Distearate",
+    "Laureth-4",
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+    "Hydrogenated Palm Glycerides Citrate",
+    "Lecithin",
+    "Phenoxyethanol",
+    "Benzyl Alcohol",
+    "Piroctone Olamine",
+    "Benzoic Acid",
+    "Citric Acid",
+    "Sodium Hydroxide"
+  ],
+  "canonicalReason": "Single current source: dm.de exact product page (dm is the brand owner of Balea; manufacturer address on page is dm-drogerie markt GmbH). Full 25-item list, identical to the v1.3 capture of 2026-08-10. No second GTIN-anchored retailer or pack photo read, so tier 2 (brand-owner page) with moderate identity confidence because the GTIN differs from earlier captures.",
+  "inciFingerprintSha256": "4d7a4c5bc241cc8ccd2f4b30cd7da69a5f905824816b8f87574bb3f0beb515ad",
+  "normalization": "Canonical list = the ordered INCI items, each lower-cased, trimmed, internal whitespace collapsed; items joined with '|' and sha256 over the UTF-8 string. Split synonym entries (e.g. 'Aqua (Water, Eau)') are merged into one item before hashing; trailing full stops removed.",
+  "identityConfidence": "moderate",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Balea is dm's own brand, so dm.de is treated as the manufacturer/brand-owner DE page (sourceKind manufacturer_de); a stricter reading would call it a single retailer (tier 4 -> tier 3 needs a second retailer).",
+    "Product is a 2-in-1 Duschgel & Shampoo (listed by dm under Körperreinigung > Duschgel, also shown under 'Balea med' brand); catalog name 'Balea 2 in 1 Urea 5%' is brand 'Balea' vs dm brand 'Balea med'. Category fit (body wash vs shampoo) is for Nick, not classified here.",
+    "Directions are only 'Dusche + Shampoo'; no usage frequency given.",
+    "Reviews on dm page mention a possible formula change ('hoffe ihr ändert die Zusammensetzung nicht', 'aktuell nicht lieferbar') - anecdotal, not evidence; page showed Lieferbar 2026-10-09.",
+    "Prior v1.3 fingerprint 2c4bbaf7... used a different hash scheme."
+  ]
+}

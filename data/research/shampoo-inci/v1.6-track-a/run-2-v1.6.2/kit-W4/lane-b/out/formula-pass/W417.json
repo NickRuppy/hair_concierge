@@ -1,0 +1,163 @@
+{
+  "blindId": "W417",
+  "inciFingerprintSha256": "571fec0717ab082a937b7fcadf0e886dc73b356c7d45f4c33fb1fbcde5b83742",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, stage A only)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "packSize": "300 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "Packet list already one entry per ingredient; positions are normalized one-based positions (ID-2).",
+    "e3ProminenceCutoff": "Parfum @21; prominent = positions 1-20"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionicEtherSulfonate": ["Sodium Laureth Sulfate @2 (defining anionic)"],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": [],
+      "amphoteric": ["Cocamidopropyl Betaine @3 (prominent buffer)"],
+      "nonionicCleansing": ["Coco-Glucoside @5 (prominent buffer)"],
+      "notCleansingNotBuffer": ["Sodium Chloride @18", "Salicylic Acid @7", "Citric Acid @17"],
+      "reinforcingRoutes": [],
+      "c1c5c6Reading": "C1: ether-sulfate defining anionic, two prominent buffers, no reinforcing route"
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10 (prominent)"],
+      "cationic_conditioner": ["Quaternium-80 @12 (prominent; 6.4 cationic hair-conditioning signal)"],
+      "payload_lipid": [],
+      "weak_refatter": ["Glyceryl Oleate @8", "Hydrogenated Palm Glycerides Citrate @11", "Lecithin @15", "Ascorbyl Palmitate @16", "Tocopherol @14 (antioxidant)"],
+      "silicone": [],
+      "pearlizing_fatty_route": [],
+      "humectants": ["Glycerin @4", "Panthenol @6", "Sodium Hyaluronate @9"],
+      "notHumectantRoute": ["Propylene Glycol @13"]
+    },
+    "wLine": {
+      "wLine": "Panthenol @6",
+      "wLineClasses": ["sub1_active"],
+      "cap": "e3Point @21 (Parfum)",
+      "alphabeticalRun": "none",
+      "candidatesTested": ["Panthenol @6: (i) SLES @2, betaine @3, Coco-Glucoside @5 before it ok; (ii) no cleansing surfactant, alkanolamide or pearlizing wax between @7 and the cap -> plausible"],
+      "skipped": [],
+      "codes": [],
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": []
+    },
+    "actives": {
+      "dandruffActives": [],
+      "otherActives": ["Salicylic Acid @7 (not a recognized dandruff active)"],
+      "comfortRoutesE4Prominent": ["Panthenol @6"],
+      "humectantRefattingRoutesE4Prominent": ["Glycerin @4", "Panthenol @6", "Glyceryl Oleate @8", "Sodium Hyaluronate @9"],
+      "coolingAgents": [],
+      "essentialOils": [],
+      "fragranceMaterials": ["Parfum @21", "Hexyl Cinnamal @22", "Linalool @23"]
+    },
+    "scalpGateFormulaFacts": {
+      "CSA": "met via prominent E4 comfort route Panthenol @6 and humectant/refatting routes (Glycerin @4, Glyceryl Oleate @8, Sodium Hyaluronate @9)",
+      "MB": "not met: Sodium Laureth Sulfate @2 prominent strong anionic",
+      "S-SENSITIVE formula half": "comfort route Panthenol @6 -> would pass if targeted",
+      "S-DRY formula half": "humectant routes -> would pass if targeted",
+      "S-OILY formula clause": "cleansing moderate, weight moderate, conditioning moderate -> clause passes"
+    }
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate @2 defining anionic buffered by prominent Cocamidopropyl Betaine @3 and Coco-Glucoside @5, no reinforcing strong anionic; Salicylic Acid @7 is not a surfactant.",
+      "ruleIds": ["C3", "C4", "C1"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "rationale": "Moderate: a cationic pair (Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10, Quaternium-80 @12) plus light refatters (Glyceryl Oleate @8, Hydrogenated Palm Glycerides Citrate @11, Lecithin @15) and a humectant cluster (Glycerin @4, Panthenol @6, Sodium Hyaluronate @9). C2 not met (no silicone or prominent payload lipid, no pearlizer); no W-RICH. Counter-signal: two distinct cationic families plus refatters could be read as multiple complementary systems (high).",
+      "ruleIds": ["Section 5 anchors", "C2", "W-RICH"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "evidence": {
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10"],
+        "payload_lipid": [],
+        "weak_refatter": ["Glyceryl Oleate @8", "Hydrogenated Palm Glycerides Citrate @11", "Lecithin @15", "Ascorbyl Palmitate @16", "Tocopherol @14"],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": ["Quaternium-80 @12"],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @3", "Coco-Glucoside @5"],
+        "humectantContext": ["Glycerin @4", "Panthenol @6", "Sodium Hyaluronate @9", "Propylene Glycol @13"],
+        "excluded": ["Salicylic Acid @7, Citric Acid @17 (acids)", "Parfum @21, Hexyl Cinnamal @22, Linalool @23", "Sodium Chloride @18, Sodium Benzoate @19, Potassium Sorbate @20"],
+        "unresolved": []
+      },
+      "wLineRecord": "wLine Panthenol @6 (sub1_active); cap e3Point @21; no alphabetical run; no skipped candidates; no codes; no payload_lipid present.",
+      "depositionLoad": "moderate: two cationic routes of different families (guar, Quaternium-80) plus a cluster of four weak refatters.",
+      "persistence": "moderate-to-low: Quaternium-80 and guar can be retained; the refatters are light.",
+      "resetCapacity": "moderate: C1 SLES/betaine/glucoside chassis.",
+      "counterevidence": "Toward low: no silicone, lipid or film former; every route is light and mid-list. Toward high: three deposition families (cationic_polymer, cationic_conditioner, weak_refatter).",
+      "whyThisBand": "Interacting light/moderate routes from three families plausibly leave noticeable but bounded residue.",
+      "whyNotNeighborBand": "Not low (W2): three distinct families are present, including two cationic routes (guar and Quaternium-80), so 'only weak_refatter plus humectants' or 'one light polymer' does not hold. Not high: no W-RICH (no payload lipid), no silicone, and the routes are light enough that the moderate C1 reset offsets a coating result.",
+      "confidenceLimitingFactor": "Doses of guar and Quaternium-80 unknown; low is the more realistic neighbor because all routes are light.",
+      "rationale": "Moderate: guar + Quaternium-80 + refatter cluster against moderate C1 reset.",
+      "ruleIds": ["6.3", "6.4", "6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": ["Glycerin @4", "Panthenol @6", "Sodium Hyaluronate @9", "Glyceryl Oleate @8"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @10", "Quaternium-80 @12", "Hydrogenated Palm Glycerides Citrate @11", "Lecithin @15"],
+        "limitation": "Rinse-off humectant cluster; no protein or damage-care cluster."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Blind pass. Salicylic Acid @7 and Panthenol suggest a possible scalp role.",
+      "decisionTrace": "Blind: claim direction null; formula moisture_supported (provisional); scalp_active possible with SC1 positioning (CSA met); provisional general.",
+      "rationale": "Provisional general (claim-dependent; formula-only).",
+      "ruleIds": ["3.1", "7.2", "7.3", "F1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["moisture"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty (claim-dependent).",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional regular (default); moderate formula cannot be alternating; no dandruff active.",
+      "ruleIds": ["Section 9"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional not_targeted (claims hidden). Formula half: CSA met via listed prominent comfort route Panthenol @6 and humectant/refatting routes; MB not met (SLES @2).",
+      "ruleIds": ["Section 10", "CSA", "MB", "E4", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no Piroctone Olamine, Climbazole or Selenium Sulfide/Disulfide; Salicylic Acid @7 alone does not count.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "notes": ["Claim-dependent properties are provisional."]
+}

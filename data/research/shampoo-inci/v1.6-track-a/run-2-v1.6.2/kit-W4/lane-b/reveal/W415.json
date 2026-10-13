@@ -1,0 +1,28 @@
+{
+  "blindId": "W415",
+  "productName": "Sebamed Anti-Schuppen Shampoo",
+  "brand": "Sebamed",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Nach 4 Wochen bis zu 95% weniger Schuppen* | Das sebamed Anti‑Schuppen Shampoo ist eine seifenfreie Pflege zur täglichen Reinigung, die speziell auf die Bedürfnisse empfindlicher Kopfhaut abgestimmt ist. Mit dem Wirkstoff Piroctone Olamine hilft es, Schuppen nachhaltig zu bekämpfen und das natürliche Gleichgewicht der Kopfhaut zu unterstützen. Bereits nach vier Wochen Anwendung kann die Schuppenbildung um bis zu 95 % reduziert werden.* Zusätzlich wird das Hautmikrobiom stabilisiert. | pH-Wert 5,5 | Haartyp: schuppiges Haar, fettiges Haar, normal/jeder Haartyp | * Studie “Antischuppen-Wirkung” Institut Dr. Schrader 2006 | Anti-Schuppen Shampoo für normales Haar und Anti-Schuppen Shampoo PLUS für fettendes Haar",
+      "directionsVerbatim": "Shampoo in der Handinnenfläche aufschäumen und unter leichtem Massieren auf die Kopfhaut auftragen. Ausspülen. Täglich oder 2-3x pro Woche anwenden."
+    },
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Für empfindliche Kopfhaut | Reinigt sanft | Geeignet für die tägliche Anwendung | Ohne Mikroplastik & Silikone | Das Shampoo Anti Schuppen von sebamed wurde speziell für die Bedürfnisse empfindlicher und schuppender Kopfhaut entwickelt. Mit Piroctone Olamine hilft es, Schuppen effektiv zu reduzieren. Die milde Formel reinigt sanft und ist für die tägliche Anwendung geeignet. Ein zuverlässiger Begleiter für gepflegtes Haar und ein angenehmes Gefühl der Kopfhaut.",
+      "directionsVerbatim": "Das Haar anfeuchten, Shampoo in der Handinnenfläche verreiben, aufschäumen und unter leichtem Massieren auf die Kopfhaut auftragen. Gründlich ausspülen."
+    },
+    {
+      "sourceType": "retailer_mueller_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Das Sebamed Anti-Schuppen Shampoo reinigt das Haar und ist speziell für die Anwendung bei empfindlicher und zu Schuppen neigender Kopfhaut konzipiert. | Formel mit dem Wirkstoff Pirocton Olamin zur Reinigung bei Schuppen | Der pH-Wert 5,5 unterstützt den natürlichen Schutzmantel der Kopfhaut | Eignet sich für die tägliche Haarwäsche bei normalem Haar | Zusammensetzung ohne Silikone und Mikroplastik | Die seifenfreie Waschformel reinigt mild und verleiht dem Haar ein gepflegtes Aussehen. | Produkteigenschaft: feuchtigkeitsspendend | Haartyp: schuppiges Haar",
+      "directionsVerbatim": "Das Haar anfeuchten, Shampoo in der Handinnenfläche verreiben, aufschäumen und unter leichtem Massieren auf die Kopfhaut auftragen. Gründlich ausspülen."
+    }
+  ]
+}

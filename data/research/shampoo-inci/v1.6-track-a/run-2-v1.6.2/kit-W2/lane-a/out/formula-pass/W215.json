@@ -1,0 +1,142 @@
+{
+  "blindId": "W215",
+  "inciFingerprintSha256": "926b4f48400d27a381a3854afd2573d0e1c4e1d435d55a78e60691c1f68f60ba",
+  "phase": "formula-pass (blind, stage A only; no claims seen)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "ID-2: no split synonym entries; packet positions equal normalized one-based positions.",
+    "e3ProminenceCutoff": "Parfum @13; positions 1-12 prominent"
+  },
+  "normalizedInci": ["1 Aqua", "2 Sodium Laureth Sulfate", "3 Cocamidopropyl Hydroxysultaine", "4 Sodium Chloride", "5 Coco-Glucoside", "6 Hydrolyzed Wheat Protein", "7 Biotin", "8 Oryza Sativa Extract", "9 Glycerin", "10 Guar Hydroxypropyltrimonium Chloride", "11 Citric Acid", "12 Laureth-2", "13 Parfum", "14 Tetramethyl Acetyloctahydronaphthalenes", "15 Linalool", "16 Hexyl Cinnamal", "17 Linalyl Acetate", "18 Sodium Benzoate"],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate @2, prominent buffers Cocamidopropyl Hydroxysultaine @3 and Coco-Glucoside @5, no reinforcing strong anionic. Laureth-2 @12 is a thickener.",
+      "ruleIds": ["C3", "C4", "C1"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: one meaningful system (Guar Hydroxypropyltrimonium Chloride @10, prominent) plus light routes (Hydrolyzed Wheat Protein @6, Glycerin @9). C2 not met (no silicone, payload lipid or pearlizing route). Low is the neighbor if the guar dose is small.",
+      "ruleIds": ["5", "C2"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @10"],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": ["Hydrolyzed Wheat Protein @6"],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Hydroxysultaine @3", "Coco-Glucoside @5"],
+        "humectantContext": ["Glycerin @9"],
+        "excluded": ["Biotin @7 (vitamin)", "Oryza Sativa Extract @8 (extract)", "Laureth-2 @12 (thickener)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 7,
+        "inci": "Biotin",
+        "candidateClasses": ["sub1_active"],
+        "cap": "e3Point @13 (Parfum)",
+        "alphabeticalRun": "none",
+        "skipped": [],
+        "codes": [],
+        "plausibility": "(i) cleansing surfactants @2/@3/@5 before it; (ii) no cleansing surfactant, alkanolamide or pearlizing wax after @7 up to the cap (Laureth-2 @12 is not a structurant for (ii)).",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light: one cationic guar after a wheat protein; both after Biotin @7 or close to it.",
+      "persistence": "low: guar alone with a protein film; no silicone or lipid.",
+      "resetCapacity": "moderate: C1 SLES/sultaine/glucoside chassis.",
+      "counterevidence": "Two families present (cationic_polymer, protein_film).",
+      "whyThisBand": "Low: a single guar and a single protein face an effective reset.",
+      "whyNotNeighborBand": "Not moderate (W2): the guar @10 sits after the sub-1 % marker Biotin @7 (trace zone), the protein @6 is a light film route, there is no silicone, lipid or film former, and the SLES chassis faces only these light routes.",
+      "confidenceLimitingFactor": "Unknown guar dose.",
+      "rationale": "Low: light guar @10 plus wheat protein @6; no payload lipid (W-line @7 irrelevant).",
+      "ruleIds": ["6.3", "6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "repair",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": ["Glycerin @9"],
+        "repairRoutes": ["Hydrolyzed Wheat Protein @6 (single token)"],
+        "sharedConditioningRoutes": ["Guar Hydroxypropyltrimonium Chloride @10"],
+        "limitation": "One protein token is not repair_supported; one humectant with light conditioning is not a coherent moisture cluster."
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "Light formula; biotin is not a focus route.",
+      "decisionTrace": "Claim direction null (blind); nonspecific light formula compatible with volume or general; provisional general.",
+      "rationale": "Provisional (claim-dependent).",
+      "ruleIds": ["3.1", "7.2", "7.3"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["volume"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional (claim-dependent).",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional: default regular; frequent possible with frequency wording.",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: no SC1 positioning visible blind. CSA formula half met via a listed prominent humectant route: Glycerin @9. No comfort-list route. MB excluded: Sodium Laureth Sulfate @2 is a prominent strong anionic. Counter-signal: Parfum @13.",
+      "csaRoute": "listed route (Glycerin @9); MB excluded by Sodium Laureth Sulfate @2",
+      "ruleIds": ["10", "CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active in the complete INCI.",
+      "ruleIds": ["11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactantClasses": {
+      "strongAnionicEtherSulfonate": ["Sodium Laureth Sulfate @2 (defining)"],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": [],
+      "amphoteric": ["Cocamidopropyl Hydroxysultaine @3 (buffer)"],
+      "nonionicCleansing": ["Coco-Glucoside @5 (buffer)"],
+      "notRouteNotBuffer": ["Laureth-2 @12"]
+    },
+    "conditioningRoutes": ["Hydrolyzed Wheat Protein @6", "Guar Hydroxypropyltrimonium Chloride @10"],
+    "humectants": ["Glycerin @9"],
+    "actives": ["Biotin @7", "Oryza Sativa Extract @8"],
+    "recognizedDandruffActives": [],
+    "exposureFlags": ["Parfum @13", "allergens @15-16", "no cooling agent", "no essential oil"],
+    "chelatorsPhAdjusters": ["Citric Acid @11"],
+    "preservatives": ["Sodium Benzoate @18"]
+  },
+  "unresolvedMaterialIngredients": []
+}

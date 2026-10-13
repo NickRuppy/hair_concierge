@@ -1,0 +1,86 @@
+{
+  "slot": "A10",
+  "productId": "cd7461cc-7fde-40dd-8d39-fca1aa8f30bf",
+  "name": "Guhl Frische und Leichtigkeit",
+  "brand": "Guhl",
+  "packSize": "250 ml",
+  "gtins": [
+    "4072600282274"
+  ],
+  "sources": [
+    {
+      "url": "https://www.guhl.com/produkt/frische-leichtigkeit/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "EAN string 4072600282274 present in page markup (retailer-link widget), not in visible text; page states 250 ml",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Lactic Acid, Glyceryl Oleate, Sorbitan Caprylate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Chloride, Zinc PCA, Panthenol, Tetrasodium Glutamate Diacetate, Piroctone Olamine, Ascorbyl Palmitate, Glycerin, Citrus Limon Fruit Extract, Citric Acid, Melissa Officinalis Leaf Extract, Sodium Benzoate, Potassium Sorbate, Parfum, Citrus Aurantium Peel Oil, Geranyl Acetate, Limonene, Tetramethyl Acetyloctahydronaphthalenes, CI 47005, CI 61570",
+      "claimsVerbatim": "Frische & Leichtigkeit | Anti-Fett Shampoo | MIT ZITRONENMELISSE | ohne Silikone | Für normales bis schnell fettendes Haar | Guhl Frische & Leichtigkeit ist ein Anti-Fett Shampoo (250 ml) für normales bis schnell fettendes Haar, mit Zitronenmelisse und Vitamin C. Verzögert das Nachfetten, ohne auszutrocknen. Ohne Silikone, vegan, hergestellt in Deutschland. | Inhaltsstoffe zu 95% natürlichen Ursprungs* und zu 99% biologisch abbaubar** | ohne Silikone | keine Parabene | keine Mikroplastik | In der Liste der Inhaltsstoffe sind sie als Melissa Officinalis Leaf Extract und Ascorbyl Palmitate ausgewiesen.",
+      "directionsVerbatim": "(not shown on guhl.com product page)"
+    },
+    {
+      "url": "https://www.dm.de/p/d/1446883/guhl-shampoo-frische-und-leichtigkeit-anti-fett",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "GTIN: 4072600282274 (dm-Artikelnummer 1446883; 'Shampoo Frische & Leichtigkeit Anti Fett, 250 ml')",
+      "inciVerbatim": "INGREDIENTS: Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Lactic Acid, Glyceryl Oleate, Sorbitan Caprylate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Chloride, Zinc PCA, Panthenol, Tetrasodium Glutamate Diacetate, Piroctone Olamine, Ascorbyl Palmitate, Glycerin, Citrus Limon Fruit Extract, Citric Acid, Melissa Officinalis Leaf Extract, Sodium Benzoate, Potassium Sorbate, Parfum, Citrus Aurantium Peel Oil, Geranyl Acetate, Limonene, Tetramethyl Acetyloctahydronaphthalenes, CI 47005, CI 61570",
+      "claimsVerbatim": "Inhaltsstoffe zu 92 % natürlichen Ursprungs - Flaschenkörper zu 99 % recycelt | Langanhaltendes Frischegefühl | Effektiv reinigend | Mit belebender Zitronenmelisse | Dermatologisch bestätigt | Bei schnell fettendem Haaransatz und geschädigten Spitzen ist das Shampoo Frische & Leichtigkeit Anti Fett von Guhl die perfekte Wahl. Denn das Shampoo reinigt effektiv Haar und Kopfhaut und befreit diese von überschüssigem Fett, ohne dabei den Ansatz und die Spitzen auszutrocknen. Zugleich hilft es schnelles Nachfetten zu verzögern und spendet intensiv Feuchtigkeit. Dank der durchdachten, veganen Formel mit Zitronenmelisse und Vitamin C verleiht das Shampoo ein anhaltendes Frischegefühl voller Leichtigkeit. Das Haarshampoo ist bestens für normales bis schnell fettendes Haar geeignet. | Wirkung: Feuchtigkeit | Produkteigenschaften: vegan, Ohne Alkohol, ohne Silikone, ohne Ammoniak | Haartyp: normales Haar, fettiges Haar",
+      "directionsVerbatim": "Anwendung: Eine kleine Menge sanft ins nasse Haar einmassieren. Gut ausspülen."
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-guhl-frische-und-leichtigkeit-anti-fett-shampoo/p/4072600282274",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "gtinShown": "GTIN in URL path /p/4072600282274 (Rossmann Artikelnummer 121612; '250 ml')",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Coco-Glucoside, Lactic Acid, Glyceryl Oleate, Sorbitan Caprylate, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Sodium Chloride, Zinc PCA, Panthenol, Tetrasodium Glutamate Diacetate, Piroctone Olamine, Ascorbyl Palmitate, Glycerin, Citrus Limon Fruit Extract, Citric Acid, Melissa Officinalis Leaf Extract, Sodium Benzoate, Potassium Sorbate, Parfum, Citrus Aurantium Peel Oil, Geranyl Acetate, Limonene, Tetramethyl Acetyloctahydronaphthalenes, CI 47005, CI 61570",
+      "claimsVerbatim": "(no marketing claims text rendered on the Rossmann page; title 'Guhl Frische & Leichtigkeit Anti-Fett Shampoo')",
+      "directionsVerbatim": "Eine kleine Menge sanft ins nasse Haar einmassieren. Gut ausspülen."
+    }
+  ],
+  "conflicts": [],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Betaine",
+    "Coco-Glucoside",
+    "Lactic Acid",
+    "Glyceryl Oleate",
+    "Sorbitan Caprylate",
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+    "Sodium Chloride",
+    "Zinc PCA",
+    "Panthenol",
+    "Tetrasodium Glutamate Diacetate",
+    "Piroctone Olamine",
+    "Ascorbyl Palmitate",
+    "Glycerin",
+    "Citrus Limon Fruit Extract",
+    "Citric Acid",
+    "Melissa Officinalis Leaf Extract",
+    "Sodium Benzoate",
+    "Potassium Sorbate",
+    "Parfum",
+    "Citrus Aurantium Peel Oil",
+    "Geranyl Acetate",
+    "Limonene",
+    "Tetramethyl Acetyloctahydronaphthalenes",
+    "CI 47005",
+    "CI 61570"
+  ],
+  "canonicalReason": "Manufacturer DE page (guhl.com, product page for the 250 ml Anti-Fett shampoo) and dm.de + Rossmann.de (both GTIN 4072600282274) agree verbatim on all 27 entries; identical to the 2026-08-10 v1.3 capture.",
+  "inciFingerprintSha256": "fea3b6324477fc773b9a0c2ea2b465a6b458949dd3505a7937c284574670e015",
+  "normalization": "Canonical list = one entry per ingredient exactly as published on the winning source (case and punctuation kept in canonicalInci; trailing period stripped; bullet/asterisk/comma separators dropped; split synonym entries such as 'Aqua (Water, Eau)' kept as one item). Fingerprint: per ingredient lower-case, trim, collapse internal whitespace; join with '|'; sha256 of the UTF-8 string. Earlier v1.3/v1.4 fingerprints were computed over comma-joined lists and are not comparable.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Current dm title: 'GUHL Shampoo Frische & Leichtigkeit Anti Fett, 250 ml'; Rossmann: 'Frische & Leichtigkeit Anti-Fett Shampoo'. Same SKU as the catalog row.",
+    "Minor claim variance, not an INCI conflict: guhl.com says 95% natural origin (ISO 16128), dm.de says 92%.",
+    "Claims 'Zitronenmelisse' / 'Vitamin C' map to Melissa Officinalis Leaf Extract / Ascorbyl Palmitate in the list (manufacturer says so explicitly) - no claim/INCI conflict.",
+    "Prior v1.3/v1.4 fingerprint (comma-joined) a07490657bafff8e9a7d634fcae1ad869ac17fd93097e6fce7b7245f0c603240 - list unchanged. Guhl page cookie banner declined."
+  ]
+}

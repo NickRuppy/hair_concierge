@@ -1,0 +1,310 @@
+{
+ "blindId": "W109",
+ "lane": "lane-b",
+ "policyId": "shampoo-classification-v1.6.2",
+ "formulaPassRecord": "out/formula-pass/W109.json (hash-pinned; not edited)",
+ "identity": {
+  "brand": "Herbal Essences",
+  "productName": "Herbal Essences Tiefenreinigung & Glanz Shampoo Limettenduft",
+  "packSize": "350 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "20cb4c26791b1441afb3fa4d89877d1d0247cdd726fe68a236ee26b5caf09067",
+  "normalization": "22 entries as frozen; no split synonyms; normalized one-based positions cited (ID-2).",
+  "completeness": "complete",
+  "formulaSourceTier": 3,
+  "identityConfidence": "high",
+  "e3ProminenceCutoff": "Parfum@4 (prominent = positions 1-3)"
+ },
+ "formulaFacts": {
+  "surfactants": {
+   "definingAnionic": "Sodium Laureth Sulfate@2 (strong anionic, ether/sulfonate type)",
+   "reinforcingRoutes": [],
+   "buffers": [],
+   "nonProminentSurfactants": [
+    "Cocamidopropyl Betaine@5 (amphoteric, directly after Parfum@4; recorded, not a buffer under C4)"
+   ],
+   "nonCleansing": [
+    "Sodium Xylenesulfonate@6 (hydrotrope)"
+   ]
+  },
+  "conditioningRoutes": [
+   "none substantive",
+   "Hydroxypropyl Methylcellulose@13 (nonionic cellulose thickener, not conditioning)"
+  ],
+  "humectants": [],
+  "actives": [],
+  "e4ComfortRoutesProminent": [],
+  "e4HumectantRoutesProminent": [],
+  "mildBase": "not met: Sodium Laureth Sulfate@2 prominent strong anionic; cleansingStrength strong",
+  "exposureFlags": [
+   "Parfum@4 (very early, high fragrance load)",
+   "Limonene@10",
+   "Citrus Aurantium Peel Oil@11 (essential oil)",
+   "Hexamethylindanopyran@14",
+   "Linalool@15",
+   "Dimethyl Phenethyl Acetate@16",
+   "Hexyl Cinnamal@19",
+   "Geranyl Acetate@20"
+  ],
+  "otherIngredients": [
+   "Citric Acid@7, Sodium Citrate@9 (pH)",
+   "Sodium Benzoate@8, Sodium Salicylate@12 (preservatives)",
+   "Tetrasodium EDTA@18 (chelator)",
+   "Histidine@21",
+   "Glyoxal@22 (HPMC dispersion aid)"
+  ]
+ },
+ "claimUnits": [
+  "name (high): 'Tiefenreinigung & Glanz' - D1 stem 'tiefenrein' and a shine word",
+  "retailers (low): 'Tiefenreinigendes Shampoo'; 'reinigt das Haar gründlich und entfernt Ablagerungen'; 'Verleiht dem Haar Glanz'; 'KLÄREN & GLÄNZEN'",
+  "no manufacturer or pack source in the packet; no occasional-use directions ('Großzügig auftragen, aufschäumen und danach ausspülen')"
+ ],
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "strong",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "Strong: C1 - defining anionic Sodium Laureth Sulfate@2 with no prominent buffer (Parfum@4 is the E3 point; Cocamidopropyl Betaine@5 is after it and does not count, C4). Counter-signal: the betaine sits directly after an unusually early Parfum, so a real buffering effect is plausible; confidence moderate, neighbor moderate.",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "E3"
+   ],
+   "counterSignal": "see rationale (counter-signals recorded there; convention value unchanged by claims, 3.2)",
+   "sourceIds": [
+    "formula/W109.json (stage A, fingerprint 20cb4c26791b...)"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "low",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Low: cleansing-led architecture with no cationic polymer, silicone, lipid, refatter, protein or humectant; Hydroxypropyl Methylcellulose@13 is a thickener.",
+   "ruleIds": [
+    "5"
+   ],
+   "counterSignal": "see rationale",
+   "sourceIds": [
+    "formula/W109.json (stage A, fingerprint 20cb4c26791b...)"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "evidence": {
+    "cationic_polymer": [],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Sodium Laureth Sulfate@2",
+     "Cocamidopropyl Betaine@5 (non-prominent)"
+    ],
+    "humectantContext": [],
+    "excluded": [
+     "Hydroxypropyl Methylcellulose@13 (nonionic cellulose thickener, no cationic charge, no film role in rinse-off)",
+     "Glyoxal@22 (processing aid)",
+     "Citrus Aurantium Peel Oil@11 (fragrance oil, 6.4)",
+     "Sodium Xylenesulfonate@6 (hydrotrope)",
+     "fragrance materials"
+    ],
+    "unresolved": []
+   },
+   "wLine": {
+    "position": 4,
+    "inci": "Parfum",
+    "classes": [
+     "fragrance"
+    ],
+    "e3Point": 4,
+    "alphabeticalRun": "none",
+    "skipped": [],
+    "codes": [],
+    "plausibility": "(i) Sodium Laureth Sulfate@2 before it; (ii) nothing between 4 and cap 4",
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "light - no deposition family",
+   "persistence": "low",
+   "resetCapacity": "strong - unbuffered (by C4) ether-sulfate chassis",
+   "counterevidence": "none",
+   "whyThisBand": "No depositing system; strong reset.",
+   "whyNotNeighborBand": "Not moderate: no cationic, silicone, lipid, refatter, protein or film former is present.",
+   "confidenceLimitingFactor": "none material",
+   "rationale": "Low: deposition absent (6.6).",
+   "ruleIds": [
+    "6.3",
+    "6.6"
+   ],
+   "counterSignal": "see counterevidence / whyNotNeighborBand",
+   "sourceIds": [
+    "formula/W109.json (stage A, fingerprint 20cb4c26791b...)"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No recognized anti-dandruff active (Section 11); Sodium Salicylate@12 is a preservative, not an active.",
+   "ruleIds": [
+    "11"
+   ],
+   "counterSignal": "none (mechanical presence test, Section 11)",
+   "sourceIds": [
+    "formula/W109.json (stage A, fingerprint 20cb4c26791b...)"
+   ]
+  },
+  "focusPrimary": {
+   "value": "clarifying",
+   "confidence": "moderate",
+   "neighboringAlternative": "shine",
+   "claimRole": "candidate",
+   "counterSignal": "The name also carries 'Glanz'; shine is the competing job.",
+   "decisionTrace": "Claim direction: deep cleansing (name 'Tiefenreinigung', high). F6 compatible: cleansingStrength strong, conditioningLevel low, weightPotential low. Route: unbuffered SLES chassis (C1 strong). Decision: clarifying.",
+   "rationale": "Clarifying: explicit deep-cleansing name with a compatible strong, light formula (7.2, F6).",
+   "ruleIds": [
+    "7.2",
+    "F6",
+    "CL-SRC"
+   ],
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": "chosen focus is not a repair/moisture decision; blind formula verdict was not_applicable."
+   }
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "shine"
+   ],
+   "decisionTrace": "Empty default considered. 'Glanz' is distinct name positioning, but the only possible shine route is the acid (Citric Acid@7, Sodium Citrate@9), which cannot create a secondary shine (F4); no smoothing/film ingredient exists.",
+   "rationale": "Empty: no independent shine route (F4).",
+   "ruleIds": [
+    "8",
+    "F3",
+    "F4"
+   ]
+  },
+  "usageRole": {
+   "value": "occasional_reset",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "explicit_deep_cleansing",
+   "triggerEvidence": [
+    "product name (high): 'Tiefenreinigung' -> D1 true"
+   ],
+   "losingTriggers": [
+    "strong_plus_reset_intent (alternating): fires via D1 term in the name (U4) but loses to occasional_reset (U1)"
+   ],
+   "rationale": "occasional_reset: D1 true from the product name (U1 precedence).",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U4",
+    "D1"
+   ],
+   "decisionTrace": "Default regular considered; trigger explicit_deep_cleansing; losing: strong_plus_reset_intent (alternating): fires via D1 term in the name (U4) but loses to occasional_reset (U1)."
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not targeted: no scalp claim unit; CSA not met.",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "SC1",
+    "E2a"
+   ]
+  }
+ },
+ "reconciliation": [
+  "focusPrimary general (low) -> clarifying (moderate): D1 name + F6-compatible formula.",
+  "usageRole regular (low) -> occasional_reset (high): D1 true.",
+  "explicitResetPositioning true; D2 met -> deepCleanserListing flagged, deepCleanserRecord needs_record.",
+  "No formula property changed (cleansing strong from C1, not from the claim)."
+ ],
+ "projection": {
+  "status": "proposal",
+  "thicknessFit": {
+   "fine": "ideal",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "high",
+   "normal": "high",
+   "coarse": "high"
+  },
+  "thicknessRationale": "T1 with weightPotential low (high, neighbor none) and conditioningLevel low (high, neighbor none): fine ideal, normal ideal, coarse acceptable. Target ordinary: T6 not applied. T4: no neighbor yields a lower final tier. T2: thickness/volume claims ignored for fit.",
+  "weight": "light",
+  "weightConfidence": "high",
+  "weightRationale": "W-LIVE: weightPotential low -> weight light, 1:1; confidence = weightPotential confidence (high). Claims ('ohne zu beschweren', 'leicht') never lower it (6.5).",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "confidence": "moderate",
+    "rationale": "S-ORDINARY way 1; packet holds retailer copy only (plus the name) -> moderate (13.8)."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "cleansingIntensity": "clarifying",
+  "cleansingIntensityConfidence": "moderate",
+  "cleansingIntensityRationale": "I1: cleansingStrength strong (moderate), D1 true -> clarifying. I3: neighbor moderate raises no flag (normal expects regular).",
+  "explicitResetPositioning": true,
+  "explicitResetRationale": "D1 true: product name contains 'Tiefenreinigung' (stem tiefenrein; name graded high). No daily-use directions.",
+  "deepCleanserListing": "flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D2 met: strong formula, focusPrimary clarifying, usageRole occasional_reset, D1 true -> flagged; keeps its regular-shampoo rows (I1 clarifying).",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "clarifying",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "clarifying",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "clarifying",
+    "weight": "light",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [],
+  "informationalNotes": [
+   "deep_cleanser_listing (deepCleanserRecord: needs_record)"
+  ],
+  "catalogDependent": "deepCleanserRecord: needs_record (resolved by orchestrator after freeze); review_live_value_differs not evaluated in-lane (live rows unseen; orchestrator after freeze).",
+  "deepCleanserRecord": "needs_record"
+ },
+ "selfCheck": "6.11: fingerprint matches the stage-A packet; claims and labels were hidden during the formula pass (phase 1 frozen before reveal); no ingredient, family count or position window assigned the weight band; W-line derived per W-LINE with skipped candidates recorded; depositionLoad/persistence/resetCapacity present; whyNotNeighborBand specific; confidence names its limiting factor; no comparison with earlier values in-lane. Formula properties (cleansing, conditioning, weight, dandruff) unchanged after unblind (3.2: claims cannot move them). N-ALT checked: every high confidence has neighbor none, every moderate/low names one neighbor. Projection derived mechanically from final properties (T1/T6/T4/W-LIVE/I1/I3/D2/13.7/13.8).",
+ "uncertainties": [
+  "cleansingStrength strong at moderate confidence (betaine just after an early Parfum); neighbor moderate would make D2 fail and I1 regular - recorded via confidences, no I3 flag because current clarifying already differs from the normal bucket's expected regular.",
+  "Primary clarifying vs shine (both name words); alternative shine."
+ ]
+}

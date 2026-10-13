@@ -1,0 +1,432 @@
+{
+  "blindId": "T102",
+  "productName": "Syoss Intense Volume Shampoo (syoss.de: Intense Volume Leichtes Shampoo)",
+  "inciFingerprintSha256": "4c38ef0d7ffbc91af71108552246f97aaa83f57cf580e03e067bce3dc2a2de89",
+  "normalization": "Packet canonicalInci is the normalized list (ID-2); all positions are normalized one-based positions on it. Parfum (Fragrance) at 8: positions 1-7 prominent",
+  "status": "classified",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: SLES (2) defining, one prominent buffer (Cocamidopropyl Betaine 4), no reinforcing anionic -> moderate. Coco-Glucoside (9) is after Parfum and not counted (C4).",
+      "counterSignal": "Only one prominent buffer; refatters are late.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic (C1)"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "role": "buffer"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Cleansing-led architecture: the only prominent conditioning-adjacent routes are two hydrolyzed proteins (Keratin 5, Collagen 6), which give little slip; the only cationic polymer (HP Guar HPTC 19), the refatters (10, 12), the pearlizer (13) and the hydrogenated castor oil (16) all sit after Parfum (8). No silicone. C2 not met.",
+      "counterSignal": "Several light routes together (late guar, two proteins, refatters, pearlizer) could give noticeable bounded care -> moderate.",
+      "neighboringAlternative": "moderate",
+      "formulaFacts": [
+        {
+          "ingredient": "Hydrolyzed Keratin",
+          "position": 5,
+          "role": "protein_film"
+        },
+        {
+          "ingredient": "Hydrolyzed Collagen",
+          "position": 6,
+          "role": "protein_film"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 19,
+          "role": "cationic_polymer, after Parfum"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Deposition is light and low-persistence: hydrolyzed proteins (5, 6) plus trace-level guar, refatters and hydrogenated castor oil after the fragrance; C1 reset is effective -> low.",
+      "counterSignal": "Four deposition families are present (protein, cationic polymer, weak refatter, payload lipid).",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Only the hydrolyzed proteins are prominent; guar 19, castor oil 16 and refatters 10/12 are after Parfum (trace)."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "Hydrolyzed proteins are weakly retained; no silicone or prominent lipid."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES + betaine chassis."
+        }
+      },
+      "whyThisBand": "Light, low-persistence deposition against ordinary reset.",
+      "whyNotNeighborBand": "W2: several families are present, but every family except the hydrolyzed proteins is listed after Parfum (trace: guar 19, hydrogenated castor oil 16, refatters 10/12), and hydrolyzed proteins are low-persistence film routes; combined residue stays below noticeable.",
+      "limitingFactor": "Exact amounts of the two prominent proteins and of the late guar.",
+      "canonicalFormula": {
+        "inciFingerprintSha256": "4c38ef0d7ffbc91af71108552246f97aaa83f57cf580e03e067bce3dc2a2de89",
+        "formulaSourceTier": 3,
+        "formulaCompleteness": "complete",
+        "captureDate": "not in packet",
+        "identityConfidence": "high"
+      },
+      "evidenceByFamily": {
+        "protein_film": [
+          {
+            "ingredient": "Hydrolyzed Keratin",
+            "position": 5,
+            "role": "prominent"
+          },
+          {
+            "ingredient": "Hydrolyzed Collagen",
+            "position": 6,
+            "role": "prominent"
+          }
+        ],
+        "cationic_polymer": [
+          {
+            "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+            "position": 19,
+            "role": "after Parfum"
+          }
+        ],
+        "weak_refatter": [
+          {
+            "ingredient": "Glyceryl Oleate",
+            "position": 10,
+            "role": "after Parfum"
+          },
+          {
+            "ingredient": "PEG-7 Glyceryl Cocoate",
+            "position": 12,
+            "role": "after Parfum"
+          }
+        ],
+        "payload_lipid": [
+          {
+            "ingredient": "Hydrogenated Castor Oil",
+            "position": 16,
+            "role": "after Parfum"
+          }
+        ],
+        "excluded": [
+          {
+            "ingredient": "Glycol Distearate",
+            "position": 13,
+            "role": "pearlizer (6.4)"
+          },
+          {
+            "ingredient": "PEG-120 Methyl Glucose Dioleate",
+            "position": 15,
+            "role": "PEG thickener (6.4)"
+          },
+          {
+            "ingredient": "Laureth-4",
+            "position": 14,
+            "role": "thickener"
+          }
+        ],
+        "reset": [
+          {
+            "ingredient": "Sodium Laureth Sulfate",
+            "position": 2,
+            "role": "anionic"
+          },
+          {
+            "ingredient": "Cocamidopropyl Betaine",
+            "position": 4,
+            "role": "amphoteric"
+          }
+        ]
+      },
+      "formulaCounterevidence": "Four deposition families are present (protein, cationic polymer, weak refatter, payload lipid).",
+      "unresolved": [],
+      "proposedWeightPotential": "low",
+      "confidenceLimitingFactor": "Exact amounts of the two prominent proteins and of the late guar.",
+      "postUnblindNote": "'Leichtes Shampoo' / 'ohne zu beschweren' (moderate) corroborate but never lower the band."
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "confidence": "moderate",
+      "neighboringAlternative": "repair",
+      "rationale": "Volume: 'Intense Volume' is the exact product name (high) and the manufacturer positions it for fine, flat hair with up to 48 h volume (moderate); the low-weight, low-conditioning formula is compatible.",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [],
+        "limitation": ""
+      },
+      "claimRole": "candidate",
+      "formulaFacts": [
+        {
+          "ingredient": "Hydrolyzed Collagen",
+          "position": 6,
+          "role": "film/body"
+        },
+        {
+          "ingredient": "Hydrolyzed Keratin",
+          "position": 5,
+          "role": "film/body"
+        }
+      ],
+      "counterSignal": "The 'Kollagen-Lift-Komplex ... stärkt das Haar von innen' claim and two prominent proteins point to a repair-like route.",
+      "decisionTrace": {
+        "claimDirection": "volume",
+        "formulaCompatible": true,
+        "compatibleRoute": "Light architecture: weightPotential low, conditioningLevel low; Hydrolyzed Collagen 6 / Keratin 5 as body-giving film",
+        "decisionReason": "One dominant name claim with compatible formula (7.2)."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "repair"
+      ],
+      "rationale": "Empty: 'stärkt das Haar von innen' is generic strengthening, not damage/breakage positioning, and the only route (the two proteins) is the one the volume route cites (F3).",
+      "counterSignal": "Collagen strengthening claim (moderate).",
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [
+          "stärkt das Haar von innen (manufacturer)"
+        ],
+        "independentRoutes": [],
+        "whyDistinctFromPrimary": "Would reuse the protein route.",
+        "exceptionCode": null
+      }
+    },
+    "usageRole": {
+      "value": "frequent",
+      "confidence": "moderate",
+      "neighboringAlternative": "regular",
+      "rationale": "frequent: explicit frequency wording 'Milde Formel für die tägliche Haarwäsche' from the manufacturer (moderate, U2) and cleansingStrength moderate (not strong).",
+      "counterSignal": "The frequency wording is a suitability statement; retailer copies repeat it (low).",
+      "decisionTrace": {
+        "default": "regular",
+        "triggerCode": "explicit_frequent_non_strong",
+        "triggerEvidence": [
+          "manufacturer_de: 'Milde Formel für die tägliche Haarwäsche ohne zu beschweren'"
+        ],
+        "losingTriggers": [],
+        "rationale": "frequent: explicit frequency wording 'Milde Formel für die tägliche Haarwäsche' from the manufacturer (moderate, U2) and cleansingStrength moderate (not strong)."
+      }
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No E2 scalp claim; 'mild' is mildness wording. Complete ordinary formula.",
+      "counterSignal": "None.",
+      "formulaFacts": []
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole in the complete INCI.",
+      "neighboringAlternative": "none",
+      "counterSignal": "None in formula; claims never upgrade this property.",
+      "formulaFacts": []
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic, ether type"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "buffer, amphoteric, prominent"
+    },
+    {
+      "ingredient": "Hydrolyzed Keratin",
+      "position": 5,
+      "role": "protein_film, prominent"
+    },
+    {
+      "ingredient": "Hydrolyzed Collagen",
+      "position": 6,
+      "role": "protein_film, prominent"
+    },
+    {
+      "ingredient": "Parfum (Fragrance)",
+      "position": 8,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 9,
+      "role": "glucoside after E3 point: recorded, not a buffer"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 10,
+      "role": "weak_refatter, late"
+    },
+    {
+      "ingredient": "PEG-7 Glyceryl Cocoate",
+      "position": 12,
+      "role": "weak_refatter, late"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 13,
+      "role": "pearlizer, excluded from weight"
+    },
+    {
+      "ingredient": "Laureth-4",
+      "position": 14,
+      "role": "thickener, not a route"
+    },
+    {
+      "ingredient": "PEG-120 Methyl Glucose Dioleate",
+      "position": 15,
+      "role": "PEG thickener, excluded"
+    },
+    {
+      "ingredient": "Hydrogenated Castor Oil",
+      "position": 16,
+      "role": "payload_lipid (hydrogenated), late"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 19,
+      "role": "cationic_polymer, late (19)"
+    }
+  ],
+  "blindToFinalChanges": [
+    {
+      "property": "provisional properties",
+      "blind": "general/[]/regular/not_targeted (low, provisional)",
+      "final": "see records",
+      "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+      "reason": "post-unblind reconciliation (3.2)"
+    }
+  ],
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal; T2: thickness/texture claims do not change the fit. T4: neighbor weightPotential=moderate -> acceptable would lower the final tier -> review_thickness_boundary."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal; T2: thickness/texture claims do not change the fit."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W low, C low -> acceptable; T2: thickness/texture claims do not change the fit."
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential low -> light (1:1)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1: no qualifying E2 claim unit; packet has a manufacturer source -> high."
+      },
+      "secondary": null,
+      "secondaryRationale": "No qualifying claim unit."
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate -> regular. I2: written unchanged to every row."
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "rationale": "'Tiefenpflegende Formel' is a care term, not D1 (13.6 Not D1)."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "deepCleanserRecord": null,
+      "confidence": "high",
+      "rationale": "D2 not met (no D1) -> not_flagged."
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "intensityMatchesBucket": true
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "intensityMatchesBucket": true
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable",
+        "intensityMatchesBucket": true
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine"
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "researchCombinationRationale": "Not a dandruff-primary product: E2b layer 2 does not apply.",
+    "liveComparison": "review_live_value_differs is resolved by the orchestrator after freeze (lanes see no live rows)."
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientOrCountOrPositionAssignedWeightBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "comparisonWithEarlierValuesMadeInLane": false,
+    "nAltConsistent": true
+  },
+  "uncertainties": [
+    {
+      "reading": "conditioningLevel low (only late guar; hydrolyzed proteins give little slip)",
+      "alternative": "moderate (several light routes)"
+    },
+    {
+      "reading": "'tägliche Haarwäsche' counts as U2 frequency wording",
+      "alternative": "regular if only the exact U2 phrases count"
+    },
+    {
+      "reading": "focusSecondary []",
+      "alternative": "['repair'] on the collagen strengthening claim"
+    }
+  ]
+}

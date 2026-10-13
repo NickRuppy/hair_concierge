@@ -1,0 +1,472 @@
+{
+  "blindId": "T112",
+  "productName": "OGX Biotin & Collagen Shampoo (Thick & Full)",
+  "inciFingerprintSha256": "80709619cc5b860ba314a06f5d5cb7ec58d65b853e39abdb0e5ab3414ad68db7",
+  "normalization": "Packet canonicalInci is the normalized list (ID-2); all positions are normalized one-based positions on it. Parfum/Fragrance at 28 (last): positions 1-27 prominent",
+  "status": "classified",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "C6: no strong anionic; the earliest prominent surfactant is a mild anionic taurate (2) with prominent glucoside (3, 11) and amphoteric (4) co-surfactants -> low.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Methyl Cocoyl Taurate",
+          "position": 2,
+          "role": "mild anionic"
+        },
+        {
+          "ingredient": "Decyl Glucoside",
+          "position": 3,
+          "role": "glucoside"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "role": "amphoteric"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Amino-silicone (Amodimethicone 10) with a cationic starch (9), collagen (7) and weak refatters is one meaningful silicone/cationic system plus light routes -> moderate. C2 not met: no pearlizing/fatty route.",
+      "counterSignal": "Silicone + cationic + protein + humectant (Urea 15) is close to the C2 set; could read as multiple complementary systems.",
+      "neighboringAlternative": "high",
+      "formulaFacts": [
+        {
+          "ingredient": "Amodimethicone",
+          "position": 10,
+          "role": "amino-silicone"
+        },
+        {
+          "ingredient": "Starch Hydroxypropyltrimonium Chloride",
+          "position": 9,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Hydrolyzed Collagen",
+          "position": 7,
+          "role": "protein"
+        },
+        {
+          "ingredient": "Urea",
+          "position": 15,
+          "role": "humectant"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "A prominent amino-silicone with a cationic starch, collagen and a film-type starch under a mild C6 chassis (weak reset) plausibly leaves noticeable but bounded residue -> moderate.",
+      "counterSignal": "Weak reset plus several families (silicone, cationic polymer, protein, possible film former).",
+      "neighboringAlternative": "high",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "Amodimethicone 10, Starch HPTC 9, collagen 7, potato-starch derivative 8, refatters 12/16/19."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Amodimethicone is substantive; cationic starch is light; no payload lipid."
+        },
+        "resetCapacity": {
+          "value": "weak",
+          "rationale": "C6 mild taurate/glucoside/betaine system."
+        }
+      },
+      "whyThisBand": "One meaningfully persistent amino-silicone system with light converging routes, weak reset.",
+      "whyNotNeighborBand": "Not high: no W-RICH (no prominent payload lipid), the cationic is a light starch, and amodimethicone at 10 in a rinse-off is bounded. Not low: a prominent amino-silicone plus a cationic polymer under weak reset is a real deposition system (W2).",
+      "limitingFactor": "Amodimethicone level; role of the potato-starch dodecenylsuccinate.",
+      "canonicalFormula": {
+        "inciFingerprintSha256": "80709619cc5b860ba314a06f5d5cb7ec58d65b853e39abdb0e5ab3414ad68db7",
+        "formulaSourceTier": 3,
+        "formulaCompleteness": "complete",
+        "captureDate": "not in packet",
+        "identityConfidence": "high"
+      },
+      "evidenceByFamily": {
+        "silicone": [
+          {
+            "ingredient": "Amodimethicone",
+            "position": 10,
+            "role": "prominent"
+          }
+        ],
+        "cationic_polymer": [
+          {
+            "ingredient": "Starch Hydroxypropyltrimonium Chloride",
+            "position": 9,
+            "role": ""
+          }
+        ],
+        "protein_film": [
+          {
+            "ingredient": "Hydrolyzed Collagen",
+            "position": 7,
+            "role": ""
+          }
+        ],
+        "possible_film_former": [
+          {
+            "ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+            "position": 8,
+            "role": "recognition gap"
+          }
+        ],
+        "weak_refatter": [
+          {
+            "ingredient": "Glyceryl Oleate",
+            "position": 12,
+            "role": ""
+          },
+          {
+            "ingredient": "Hydrogenated Palm Glycerides Citrate",
+            "position": 16,
+            "role": ""
+          },
+          {
+            "ingredient": "Lecithin",
+            "position": 19,
+            "role": ""
+          }
+        ],
+        "excluded": [
+          {
+            "ingredient": "PEG-150 Distearate",
+            "position": 20,
+            "role": "PEG thickener"
+          }
+        ],
+        "reset": [
+          {
+            "ingredient": "Sodium Methyl Cocoyl Taurate",
+            "position": 2,
+            "role": "mild anionic"
+          },
+          {
+            "ingredient": "Decyl Glucoside",
+            "position": 3,
+            "role": "nonionic"
+          },
+          {
+            "ingredient": "Cocamidopropyl Betaine",
+            "position": 4,
+            "role": "amphoteric"
+          },
+          {
+            "ingredient": "Coco-Glucoside",
+            "position": 11,
+            "role": "nonionic"
+          }
+        ]
+      },
+      "formulaCounterevidence": "Weak reset plus several families (silicone, cationic polymer, protein, possible film former).",
+      "unresolved": [
+        {
+          "ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+          "position": 8,
+          "note": "Modified anionic starch (film-forming/emulsion-stabilizing). Recorded as a possible film route; not judged material because it most plausibly stabilizes the amodimethicone emulsion. If it is a persistent film former the band could move toward high."
+        }
+      ],
+      "proposedWeightPotential": "moderate",
+      "confidenceLimitingFactor": "Amodimethicone level; role of the potato-starch dodecenylsuccinate.",
+      "postUnblindNote": "Retailer claims 'Weizenprotein'/'hydrolysiertem Weizenprotein' have no INCI match; a light hydrolyzed protein would not move the band (moderate), so the conflict is a note (ID-3). 'Ohne Silikone' (Rossmann, low) conflicts with Amodimethicone 10: the frozen INCI wins; recorded."
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "neighboringAlternative": "volume",
+      "rationale": "General: all positioning is retailer copy or a US manufacturer page (low). Volume/fullness ('Thick & Full', 'mehr Volumen') is the dominant claim but a low claim may act only with an independently supporting formula verdict, and a moderate-weight amino-silicone/cationic formula does not independently support volume. The repair_supported verdict has no matching German positioning.",
+      "careDirection": {
+        "verdict": "repair_supported",
+        "moistureRoutes": [],
+        "repairRoutes": [
+          "Amodimethicone 10",
+          "Hydrolyzed Collagen 7",
+          "Starch HPTC 9"
+        ],
+        "sharedConditioningRoutes": [],
+        "limitation": "Positioning low-graded only."
+      },
+      "claimRole": "not_applicable",
+      "formulaFacts": [
+        {
+          "ingredient": "Amodimethicone",
+          "position": 10,
+          "role": "deposition"
+        },
+        {
+          "ingredient": "Hydrolyzed Collagen",
+          "position": 7,
+          "role": "protein"
+        }
+      ],
+      "counterSignal": "Volume is the clearly dominant (low-graded) claim; formula has a repair-type route.",
+      "decisionTrace": {
+        "claimDirection": "volume (low-graded)",
+        "formulaCompatible": false,
+        "compatibleRoute": "none independently supporting volume",
+        "decisionReason": "Low-graded claim without independent formula support -> general (CL-SRC, 7.2)."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Empty: no moderate/high positioning.",
+      "counterSignal": "None.",
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [],
+        "independentRoutes": [],
+        "whyDistinctFromPrimary": "",
+        "exceptionCode": null
+      }
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Default regular: 'für die tägliche Haarwäsche' is Müller copy (low) and cannot fire frequent.",
+      "counterSignal": "Daily wording (low).",
+      "decisionTrace": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "Default regular: 'für die tägliche Haarwäsche' is Müller copy (low) and cannot fire frequent."
+      }
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No scalp claim.",
+      "counterSignal": "CSA formula half would pass (Urea 15).",
+      "formulaFacts": []
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none",
+      "counterSignal": "None in formula; claims never upgrade this property.",
+      "formulaFacts": []
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Methyl Cocoyl Taurate",
+      "position": 2,
+      "role": "mild anionic (taurate), earliest surfactant"
+    },
+    {
+      "ingredient": "Decyl Glucoside",
+      "position": 3,
+      "role": "nonionic glucoside co-surfactant"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "amphoteric co-surfactant"
+    },
+    {
+      "ingredient": "Biotin",
+      "position": 6,
+      "role": "vitamin, no route"
+    },
+    {
+      "ingredient": "Hydrolyzed Collagen",
+      "position": 7,
+      "role": "protein_film"
+    },
+    {
+      "ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+      "position": 8,
+      "role": "modified starch; film/emulsion stabilizer (recognition gap, see unresolved)"
+    },
+    {
+      "ingredient": "Starch Hydroxypropyltrimonium Chloride",
+      "position": 9,
+      "role": "cationic_polymer (6.4)"
+    },
+    {
+      "ingredient": "Amodimethicone",
+      "position": 10,
+      "role": "amino-silicone, prominent"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 11,
+      "role": "glucoside co-surfactant"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 12,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Sodium Lactate",
+      "position": 13,
+      "role": "pH buffer (F4); E4 humectant list"
+    },
+    {
+      "ingredient": "Urea",
+      "position": 15,
+      "role": "humectant (C2/E4) + E4 comfort route"
+    },
+    {
+      "ingredient": "Hydrogenated Palm Glycerides Citrate",
+      "position": 16,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Lecithin",
+      "position": 19,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "PEG-150 Distearate",
+      "position": 20,
+      "role": "PEG thickener, excluded"
+    },
+    {
+      "ingredient": "Hexylene Glycol",
+      "position": 21,
+      "role": "solvent, not a humectant route"
+    }
+  ],
+  "blindToFinalChanges": [
+    {
+      "property": "provisional properties",
+      "blind": "general/[]/regular/not_targeted (low, provisional)",
+      "final": "see records",
+      "evidence": "focusPrimary/focusSecondary/usageRole/scalpComfortTarget were provisional placeholders in the blind pass; finalized from graded claims below.",
+      "reason": "post-unblind reconciliation (3.2)"
+    }
+  ],
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate -> acceptable; T2: thickness/texture claims do not change the fit. T4: neighbor weightPotential=high -> not_suited would lower the final tier -> review_thickness_boundary."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate -> ideal; T2: thickness/texture claims do not change the fit. T4: neighbor weightPotential=high -> acceptable would lower the final tier -> review_thickness_boundary."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W moderate, C moderate -> acceptable; T2: thickness/texture claims do not change the fit."
+      }
+    ],
+    "weight": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential moderate -> moderate (1:1)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "moderate",
+        "rationale": "S-ORDINARY way 1: no qualifying E2 claim; the only manufacturer source is a foreign (US) page graded like retailer copy (E1), so retailer-only -> moderate."
+      },
+      "secondary": null,
+      "secondaryRationale": "No qualifying claim unit."
+    },
+    "observedCleansingIntensity": {
+      "value": "gentle",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength low -> gentle. I2: written unchanged to every row."
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "rationale": "No D1 wording."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "deepCleanserRecord": null,
+      "confidence": "high",
+      "rationale": "D2 not met (no D1) -> not_flagged."
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "moderate",
+        "tier": "acceptable",
+        "intensityMatchesBucket": false
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "moderate",
+        "tier": "ideal",
+        "intensityMatchesBucket": false
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "moderate",
+        "tier": "acceptable",
+        "intensityMatchesBucket": false
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine",
+      "review_thickness_boundary:normal"
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "researchCombinationRationale": "Not a dandruff-primary product: E2b layer 2 does not apply.",
+    "liveComparison": "review_live_value_differs is resolved by the orchestrator after freeze (lanes see no live rows)."
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientOrCountOrPositionAssignedWeightBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "comparisonWithEarlierValuesMadeInLane": false,
+    "nAltConsistent": true
+  },
+  "uncertainties": [
+    {
+      "reading": "ordinary confidence moderate (US manufacturer page treated as retailer-equivalent)",
+      "alternative": "high (a manufacturer source exists)"
+    },
+    {
+      "reading": "focusPrimary general",
+      "alternative": "volume (low claim) or repair (formula route)"
+    },
+    {
+      "reading": "conditioningLevel moderate / weightPotential moderate",
+      "alternative": "high / high (amodimethicone + cationic under weak reset)"
+    },
+    {
+      "reading": "Weizenprotein and 'ohne Silikone' retailer conflicts are notes, not material",
+      "alternative": "material conflict -> low confidence"
+    }
+  ]
+}
