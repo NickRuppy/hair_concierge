@@ -662,7 +662,13 @@ test("flag on: the Anwendung derives tool blocks from the member's current facts
   )
   assert.deepEqual(
     toolOrder.map(([, label]) => label),
-    ["Grobzinkiger Kamm", "Mikrofaser-Handtuch", "Föhn", "Glätteisen", "Glatter Kissenbezug"],
+    [
+      "Grobzinkiger Kamm",
+      "Mikrofaser-Handtuch",
+      "Föhn",
+      "Glätteisen",
+      "Glatter Kissenbezug (z.\u00A0B. Seide, Satin)",
+    ],
   )
   assert.equal(wash.shelf.filter((slot) => slot.kind === "tool").length, 5)
   assert.deepEqual(reads, { enabled: 1, facts: 1, refined: 1 })

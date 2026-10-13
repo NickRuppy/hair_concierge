@@ -77,8 +77,15 @@ export type ToolBlockViewModel = {
 }
 
 export const TOOL_BLOCK_TITLE = "Deine Tools"
+/** Stage-1 basis lead while at least one Tool still waits for the Feinschliff check. */
 export const TOOL_BLOCK_BASIS_LEAD =
   "Diese Tools gehören zu deiner Routine. Wir prüfen im Feinschliff, was du schon hast."
+/**
+ * Stage-1 basis lead once ownership is known: no card is „Bestand im Feinschliff prüfen" any
+ * more, so promising a Feinschliff check would contradict the „Nutze deins" cards below it.
+ */
+export const TOOL_BLOCK_BASIS_LEAD_KNOWN =
+  "Diese Tools gehören zu deiner Routine. Was du schon hast, ist markiert."
 export const TOOL_BLOCK_OPTIONAL_LEAD = "Diese Tools können deine Ziele zusätzlich unterstützen."
 
 /**
@@ -170,14 +177,24 @@ export function buildStage1ToolBlocks(
 
   return {
     basis:
-      basis.length > 0
-        ? { title: TOOL_BLOCK_TITLE, lead: TOOL_BLOCK_BASIS_LEAD, cards: basis }
-        : null,
+      basis.length > 0 ? { title: TOOL_BLOCK_TITLE, lead: basisLead(basis), cards: basis } : null,
     optional:
       optional.length > 0
         ? { title: TOOL_BLOCK_TITLE, lead: TOOL_BLOCK_OPTIONAL_LEAD, cards: optional }
         : null,
   }
+}
+
+/**
+ * The basis lead follows the cards it introduces. It promises a Feinschliff check only while a
+ * card still shows „Bestand im Feinschliff prüfen" — the state an unanswered Tool page leaves
+ * behind (`D4`). Once every card's ownership is known (the member answered the Tools module, or
+ * the cards rest on known care facts), the lead points at the „Nutze deins" marks instead.
+ */
+function basisLead(cards: readonly ToolCardViewModel[]): string {
+  return cards.some((card) => card.state === "check_in_refinement")
+    ? TOOL_BLOCK_BASIS_LEAD
+    : TOOL_BLOCK_BASIS_LEAD_KNOWN
 }
 
 /**

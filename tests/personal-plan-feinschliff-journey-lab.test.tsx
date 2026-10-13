@@ -4,11 +4,12 @@ import React from "react"
 
 import { FeinschliffJourneyClient } from "../src/app/labs/feinschliff-journey/journey-client"
 import { refinementStatus } from "../src/app/labs/feinschliff-journey/fixtures"
-import { STAGE1_STAGE2_LAB_ENVELOPE } from "../src/app/labs/personal-plan-stage-1-2/fixture"
-import { toolsLabCareFacts } from "../src/app/labs/personal-plan-tools/fixture"
+import {
+  journeyNeedSnapshot,
+  journeyRoutineToolSection,
+  type JourneyToolSessionInput,
+} from "../src/app/labs/feinschliff-journey/routine-tools"
 import { adaptInitialNeedSnapshotToPlanStartViewModel } from "../src/components/personal-plan-start"
-import { computeNeedPlan } from "../src/lib/personal-plan/compute-stage1"
-import { buildToolView } from "../src/lib/personal-plan/tools/read-view"
 
 /**
  * Hair Tools port, Task 10: `/labs/feinschliff-journey` shows the tools-ON journey. No
@@ -33,26 +34,17 @@ test("the journey's status fixture counts five steps with tools on, four with to
 })
 
 function journeyProps() {
-  const computed = computeNeedPlan({
-    rawEnvelope: STAGE1_STAGE2_LAB_ENVELOPE,
-    artifactId: "11111111-1111-4111-8111-111111111111",
-    projection: "initial_quiz",
-    computationVersion: "stage1-v1",
-    createdAt: "2026-10-10T12:00:00.000Z",
-  })
-  if (computed.status !== "ready") throw new Error("fixture plan unavailable")
-  const plan = adaptInitialNeedSnapshotToPlanStartViewModel(computed.snapshot, {
-    toolsEnabled: true,
-  })
+  const snapshot = journeyNeedSnapshot()
+  if (!snapshot) throw new Error("fixture plan unavailable")
+  const plan = adaptInitialNeedSnapshotToPlanStartViewModel(snapshot, { toolsEnabled: true })
   if (!plan) throw new Error("fixture plan unavailable")
-  const tools = buildToolView({
-    ...toolsLabCareFacts(),
-    needSnapshot: computed.snapshot,
-    routine: null,
-    hasOptionalPage: false,
-    toolsEnabled: true,
-  })
-  return { plan, routineToolSection: tools?.routineSection ?? null }
+  // In-process stand-in for the page's labs-only server action; records every call.
+  const calls: JourneyToolSessionInput[] = []
+  const resolveRoutineToolSection = async (input: JourneyToolSessionInput) => {
+    calls.push(input)
+    return journeyRoutineToolSection(input, snapshot)
+  }
+  return { plan, resolveRoutineToolSection, calls }
 }
 
 async function withMountedDom<T>(
@@ -148,13 +140,12 @@ async function walkToolsModule(container: HTMLElement): Promise<string[]> {
 }
 
 test("journey lab: the tools module returns to the Tool-Checkpoint, whose CTA opens the Routine at 4 von 5", async () => {
-  const { plan, routineToolSection } = journeyProps()
-  assert.ok(routineToolSection, "the fixture facts yield a Routine tool section")
+  const { plan, resolveRoutineToolSection } = journeyProps()
   await withMountedDom(
     <FeinschliffJourneyClient
       plan={plan}
       stage3EntryContext={null}
-      routineToolSection={routineToolSection}
+      resolveRoutineToolSection={resolveRoutineToolSection}
       initialStep="module-tools"
     />,
     async (container) => {
@@ -178,12 +169,12 @@ test("journey lab: the tools module returns to the Tool-Checkpoint, whose CTA op
 })
 
 test("journey lab: „Tools ergänzen“ on the checkpoint goes back into the tools module", async () => {
-  const { plan, routineToolSection } = journeyProps()
+  const { plan, resolveRoutineToolSection } = journeyProps()
   await withMountedDom(
     <FeinschliffJourneyClient
       plan={plan}
       stage3EntryContext={null}
-      routineToolSection={routineToolSection}
+      resolveRoutineToolSection={resolveRoutineToolSection}
       initialStep="module-tools"
     />,
     async (container) => {
@@ -192,6 +183,79 @@ test("journey lab: „Tools ergänzen“ on the checkpoint goes back into the to
       await pause(30)
       assert.equal(container.querySelector("[data-tool-checkpoint]"), null)
       assert.ok(container.querySelector('[data-stage2-preview-scenario="module-tools"]'))
+    },
+  )
+})
+
+/** On the overview, also tick „Waschen & Auftragen“ — a pick neither the fixture nor the pre-fill makes. */
+async function tickWashSectionOnOverview(container: HTMLElement): Promise<void> {
+  const started = Date.now()
+  let card = container.querySelector('[data-tool-option="waschen_auftragen"]')
+  while (!card) {
+    if (Date.now() - started > 4000) throw new Error("the tools overview never rendered")
+    await pause()
+    card = container.querySelector('[data-tool-option="waschen_auftragen"]')
+  }
+  if (card.getAttribute("aria-pressed") !== "true") click(card)
+  await pause()
+}
+
+test("journey lab: the Routine's Deine Tools follow the answers just given, not a fixture", async () => {
+  const { plan, resolveRoutineToolSection, calls } = journeyProps()
+  await withMountedDom(
+    <FeinschliffJourneyClient
+      plan={plan}
+      stage3EntryContext={null}
+      resolveRoutineToolSection={resolveRoutineToolSection}
+      initialStep="module-tools"
+    />,
+    async (container) => {
+      await walkToolsModule(container)
+      await pause(30)
+      assert.equal(calls.length, 1, "the section is derived once the tools module is done")
+      // The walk answered every page itself („Nichts davon" unless pre-filled).
+      assert.ok(calls[0].answers.toolForms, "the session's own tool answers are handed over")
+      assert.ok(calls[0].completedQuestionIds.includes("tools_overview"))
+
+      click(container.querySelector("[data-tool-checkpoint-continue]")!)
+      await pause(30)
+      const document = container.ownerDocument
+      const rows = [...document.querySelectorAll("[data-routine-tool-row]")].map((row) =>
+        row.getAttribute("data-routine-tool-row"),
+      )
+      assert.ok(rows.length > 0, "the Routine shows Deine Tools")
+      const expected = journeyRoutineToolSection(calls[0], journeyNeedSnapshot())
+      assert.deepEqual(
+        rows,
+        expected?.assets.map((asset) => asset.assetKey),
+      )
+      // The fixed lab fixture (Lena) owns a Glätteisen; the walk named none.
+      assert.equal(rows.includes("asset:heated_styling:flat_iron"), false)
+    },
+  )
+})
+
+test("journey lab: „Tools ergänzen“ re-enters the tools module on the saved picks", async () => {
+  const { plan, resolveRoutineToolSection } = journeyProps()
+  await withMountedDom(
+    <FeinschliffJourneyClient
+      plan={plan}
+      stage3EntryContext={null}
+      resolveRoutineToolSection={resolveRoutineToolSection}
+      initialStep="module-tools"
+    />,
+    async (container) => {
+      await tickWashSectionOnOverview(container)
+      await walkToolsModule(container)
+      click(container.querySelector("[data-tool-checkpoint-add-tools]")!)
+      await pause(30)
+      const wash = container.querySelector('[data-tool-option="waschen_auftragen"]')
+      assert.ok(wash, "re-entry opens on the overview")
+      assert.equal(
+        wash.getAttribute("aria-pressed"),
+        "true",
+        "the earlier pick survives the re-entry instead of the fixture's starting value",
+      )
     },
   )
 })

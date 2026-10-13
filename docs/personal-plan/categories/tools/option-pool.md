@@ -182,10 +182,10 @@ Primary purpose: Haare über Nacht reibungsärmer halten, abdecken oder eine For
 
 Products underneath:
 
-- glatter Kissenbezug;
+- Glatter Kissenbezug (z. B. Seide, Satin) — Seide/Satin only as examples, no material-quality claim (`N03`);
 - Bonnet;
-- Längen-/Spitzenschutz;
-- weiches Nacht-Haargummi/Scrunchie.
+- Spitzen-Schoner (Längen-/Spitzenschutz);
+- Scrunchie / weiches Haargummi.
 
 Best mapped jobs:
 

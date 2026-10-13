@@ -17,6 +17,11 @@ import { cn } from "@/lib/utils"
 export type ToolVisualOption = {
   value: string
   label: string
+  /**
+   * Line-break-ready card text (soft hyphens at compound boundaries). When present it renders
+   * with `hyphens: manual`; `label` stays the plain name for every other use.
+   */
+  cardLabel?: string
   hint?: string
   imageUrl: string
   imageAlt: string
@@ -173,13 +178,19 @@ function ToolOptionCard({
             shrink — the unbreakable word still overflows and runs under the
             selection circle. `hyphens-auto` (with the document's `lang="de"`)
             breaks it at a real syllable, and `break-words` is the fallback for
-            anything the hyphenation dictionary does not know.
+            anything the hyphenation dictionary does not know. A `cardLabel` carries its own
+            break points (soft hyphens at the compound boundary, `TOOL_CARD_LABELS`) and turns
+            automatic hyphenation off, so „Applikator-flasche" never splits as „Applikatorfla-sche".
           */}
           <span
             lang="de"
-            className="block hyphens-auto break-words text-[15px] font-semibold leading-snug text-[var(--brand-plum-darkest)]"
+            className={cn(
+              "block break-words text-[15px] font-semibold leading-snug text-[var(--brand-plum-darkest)]",
+              option.cardLabel ? "hyphens-manual" : "hyphens-auto",
+            )}
+            data-tool-option-label
           >
-            {option.label}
+            {option.cardLabel ?? option.label}
           </span>
           {option.hint ? (
             <span className="mt-1 block text-sm leading-5 text-[var(--text-sub)]">

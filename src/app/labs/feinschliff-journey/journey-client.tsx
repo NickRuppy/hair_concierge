@@ -27,6 +27,8 @@ import {
 } from "@/lib/personal-plan/tools/checkpoint"
 import type { ToolRoutineSection } from "@/lib/personal-plan/tools/read-view"
 
+import type { JourneyToolSessionInput } from "./routine-tools"
+
 import {
   DEMO_PERSONAL_PLAN_ID,
   DEMO_REFINED_VERSION_ID,
@@ -109,13 +111,17 @@ const INITIALLY_UNVISITED: readonly PersonalPlanNavSurface[] = ["chat", "applica
 export function FeinschliffJourneyClient({
   plan,
   stage3EntryContext,
-  routineToolSection,
+  resolveRoutineToolSection,
   initialStep = "idealplan",
 }: {
   plan: PlanStartReadyViewModel
   stage3EntryContext: Stage3EntryContext | null
-  /** The read-time `Deine Tools` the Routine shows once the tools module is done (fixture). */
-  routineToolSection: ToolRoutineSection | null
+  /**
+   * The read-time `Deine Tools` the Routine shows once the tools module is done, derived from
+   * the session's own answers (the page passes the labs-only server action; tests compute it
+   * in-process).
+   */
+  resolveRoutineToolSection: (input: JourneyToolSessionInput) => Promise<ToolRoutineSection | null>
   /** `?step=module-tools` jumps straight to the tools module (review shortcut, jsdom test). */
   initialStep?: FeinschliffJourneyEntryStep
 }) {
@@ -124,10 +130,19 @@ export function FeinschliffJourneyClient({
   )
   const [bannerDismissed, setBannerDismissed] =
     useState<Record<RoutinePhase, boolean>>(NO_BANNER_DISMISSED)
-  // The draft the tools module completed with seeds the Gewohnheiten module, so its questions
-  // follow the tools the reviewer just named (rollout on: no thing-questions, Diffusor only with
-  // a Diffusor).
-  const [toolsDoneSession, setToolsDoneSession] = useState<Stage2RefinementSession | null>(null)
+  // The latest draft a module completed with (tools, then Gewohnheiten). It seeds the next
+  // module and every re-entry into the tools module, so the Gewohnheiten questions follow the
+  // tools the reviewer just named (rollout on: no thing-questions, Diffusor only with a
+  // Diffusor) and „Tools ergänzen" / „Angaben ändern" open on the saved picks, as production
+  // does. It also drives the Routine's `Deine Tools`.
+  const [latestSession, setLatestSession] = useState<Stage2RefinementSession | null>(null)
+  const [resolvedTools, setResolvedTools] = useState<{
+    session: Stage2RefinementSession
+    section: ToolRoutineSection | null
+  } | null>(null)
+  // Only the section derived from THIS session counts; a restart or a newer session hides it.
+  const routineToolSection =
+    latestSession && resolvedTools?.session === latestSession ? resolvedTools.section : null
   const [toastVisible, setToastVisible] = useState(false)
   const [visitedSurfaces, setVisitedSurfaces] = useState<readonly PersonalPlanNavSurface[]>([])
   const [navNote, setNavNote] = useState<string | null>(null)
@@ -172,6 +187,25 @@ export function FeinschliffJourneyClient({
   }, [])
 
   useEffect(() => {
+    if (!latestSession) return
+    let cancelled = false
+    void resolveRoutineToolSection({
+      triggerContext: latestSession.triggerContext,
+      answers: latestSession.answers,
+      completedQuestionIds: [...latestSession.completedQuestionIds],
+    })
+      .then((section) => {
+        if (!cancelled) setResolvedTools({ session: latestSession, section })
+      })
+      .catch(() => {
+        if (!cancelled) setResolvedTools({ session: latestSession, section: null })
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [latestSession, resolveRoutineToolSection])
+
+  useEffect(() => {
     if (!navNote) return
     const timer = window.setTimeout(() => setNavNote(null), 2500)
     return () => window.clearTimeout(timer)
@@ -184,7 +218,7 @@ export function FeinschliffJourneyClient({
 
   const restart = useCallback(() => {
     setBannerDismissed(NO_BANNER_DISMISSED)
-    setToolsDoneSession(null)
+    setLatestSession(null)
     setToastVisible(false)
     setVisitedSurfaces([])
     setNavNote(null)
@@ -318,13 +352,14 @@ export function FeinschliffJourneyClient({
 
   if (step.name === "module-tools") {
     const openCheckpoint = (session: Stage2RefinementSession) => {
-      setToolsDoneSession(session)
+      setLatestSession(session)
       setStep({ name: "checkpoint", session })
     }
     return (
       <DemoShell onRestart={restart}>
         <Stage2PreviewClient
           scenario="module-tools"
+          seedSession={latestSession ?? undefined}
           autoHandoff
           moduleProgress={{ completedSteps: 3, totalSteps: JOURNEY_TOTAL_STEPS }}
           onHandoff={(payload) => openCheckpoint(payload.session)}
@@ -353,11 +388,17 @@ export function FeinschliffJourneyClient({
       <DemoShell onRestart={restart}>
         <Stage2PreviewClient
           scenario="module-habits"
-          seedSession={toolsDoneSession ?? undefined}
+          seedSession={latestSession ?? undefined}
           autoHandoff
           moduleProgress={{ completedSteps: 4, totalSteps: JOURNEY_TOTAL_STEPS }}
-          onHandoff={() => openRoutine("after-habits", true)}
-          onModuleComplete={() => openRoutine("after-habits", true)}
+          onHandoff={(payload) => {
+            setLatestSession(payload.session)
+            openRoutine("after-habits", true)
+          }}
+          onModuleComplete={(payload) => {
+            setLatestSession(payload.session)
+            openRoutine("after-habits", true)
+          }}
         />
       </DemoShell>
     )

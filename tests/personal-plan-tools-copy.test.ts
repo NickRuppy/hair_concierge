@@ -1,12 +1,15 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { TOOL_FAMILIES } from "../src/lib/personal-plan/tools/contracts"
+import { TOOL_FAMILIES, type ToolReportedForm } from "../src/lib/personal-plan/tools/contracts"
 import {
+  TOOL_CARD_LABELS,
   TOOL_FAMILY_LABELS,
   TOOL_FAMILY_PAGE_TITLES,
   TOOL_FAMILY_SHORT_LABELS,
   TOOL_FORM_PAGES,
+  TOOL_PRODUCT_TYPE_LABELS,
+  toolReportedFormLabel,
 } from "../src/lib/personal-plan/tools/labels"
 import { buildProfileToolsBlock } from "../src/lib/personal-plan/tools/profile-block"
 import { toolFormPagePresentation } from "../src/lib/personal-plan/tools/stage2"
@@ -84,4 +87,50 @@ test("the Profil tool tiles and the checkpoint read the same short names", () =>
     block?.groups.map((group) => group.label),
     ["Waschen & Auftragen", "Handtücher", "Heatless-Styling", "Fixieren & Clips"],
   )
+})
+
+test("the night page names its forms the way people know them (polish 2026-10-12)", () => {
+  assert.deepEqual(
+    toolFormPagePresentation("night_protection:1")?.options.map((option) => option.label),
+    [
+      "Glatter Kissenbezug (z.\u00A0B. Seide, Satin)",
+      "Bonnet",
+      "Spitzen-Schoner",
+      "Scrunchie / weiches Haargummi",
+    ],
+  )
+  // `N03`: the materials are examples of a smooth surface, never the claim itself.
+  // „z. B." never splits across lines: the label carries a no-break space.
+  assert.match(TOOL_PRODUCT_TYPE_LABELS.pillowcase, /z\.\u00A0B\. Seide, Satin/)
+})
+
+/** A card form with its break hints removed: soft hyphen and no-break hyphen. */
+function plain(cardLabel: string): string {
+  return cardLabel.replace(/\u00AD/g, "").replace(/\u2011/g, "-")
+}
+
+test("every line-break-ready card label reads exactly as its plain label", () => {
+  for (const [form, cardLabel] of Object.entries(TOOL_CARD_LABELS)) {
+    assert.equal(plain(cardLabel!), toolReportedFormLabel(form as ToolReportedForm), form)
+  }
+})
+
+test("long compounds break at the compound boundary, never mid-stem", () => {
+  assert.equal(TOOL_CARD_LABELS.applicator_bottle, "Applikator\u00ADflasche")
+  assert.equal(TOOL_CARD_LABELS.applicator_comb, "Applikator\u00ADkamm")
+  const washPage = toolFormPagePresentation("wash_application:1")
+  const bottle = washPage?.options.find((option) => option.value === "applicator_bottle")
+  // The answer keeps the plain name; only the card text carries the soft hyphen.
+  assert.equal(bottle?.label, "Applikatorflasche")
+  assert.equal(bottle?.cardLabel, "Applikator\u00ADflasche")
+  // Every card label without a break-ready form is short enough or hyphen-free on purpose.
+  for (const page of TOOL_FORM_PAGES) {
+    for (const option of toolFormPagePresentation(page.pageKey)?.options ?? []) {
+      const words = option.label.split(/[\s/-]+/)
+      const longWord = words.find((word) => word.length > 13)
+      if (longWord && !option.label.includes("-/")) {
+        assert.ok(option.cardLabel, `${option.value}: „${longWord}" needs a break-ready card label`)
+      }
+    }
+  }
 })

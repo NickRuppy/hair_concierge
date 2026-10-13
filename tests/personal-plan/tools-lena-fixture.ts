@@ -8,7 +8,7 @@ import { COMPLETE_V3_PLAN_ENVELOPE } from "./fixtures"
 
 /**
  * Lena (plan §6): Föhn, Warmluftbürste, Glätteisen, Rundbürste, Grobzinkiger Kamm,
- * Mikrofaser-Handtuch, Glatter Kissenbezug — every page answered by her (`user` provenance).
+ * Mikrofaser-Handtuch, Glatter Kissenbezug (z. B. Seide, Satin) — every page answered by her (`user` provenance).
  * These are the read-time inputs `buildToolView` gets on the Routine and Anwendung surfaces.
  */
 export function lenaNeedSnapshot(): InitialNeedPlanSnapshot {
