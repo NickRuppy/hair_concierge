@@ -2,6 +2,7 @@ import type { MaskFunction } from "@langfuse/otel"
 
 const EMAIL_REGEX = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi
 const PHONE_REGEX = /(?:\+?\d{1,3}[\s./-]?)?(?:\(?\d{2,4}\)?[\s./-]?)?\d{3,4}[\s./-]?\d{3,4}\b/g
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 const REDACTED = "[redacted]"
 const REDACTED_TEXT = "[redacted_sensitive_text]"
@@ -12,11 +13,20 @@ const REDACTED_REASONING = "[redacted_reasoning]"
 const IDENTIFIER_KEYS = new Set([
   "email",
   "full_name",
-  "name",
   "first_name",
   "last_name",
   "phone",
   "telephone",
+])
+
+const SAFE_OBSERVABILITY_NAMES = new Set([
+  "load_advisor_guidance",
+  "select_products",
+  "build_or_fix_routine",
+  "set_current_care_context",
+  "submit_final_answer",
+  "production-chat-turn",
+  "agent-v2-responses-step",
 ])
 
 const SENSITIVE_TEXT_KEYS = new Set([
@@ -45,6 +55,7 @@ const AGENT_V2_HIDDEN_CONTEXT_PREFIXES = [
 ]
 
 function maskString(value: string): string {
+  if (UUID_REGEX.test(value)) return value.replace(EMAIL_REGEX, REDACTED)
   return value.replace(EMAIL_REGEX, REDACTED).replace(PHONE_REGEX, REDACTED)
 }
 
@@ -58,6 +69,14 @@ function parseJsonString(value: string): unknown {
 
 function isAgentV2HiddenContextMessage(value: string): boolean {
   return AGENT_V2_HIDDEN_CONTEXT_PREFIXES.some((prefix) => value.startsWith(prefix))
+}
+
+function isSafeObservabilityName(value: string): boolean {
+  return (
+    SAFE_OBSERVABILITY_NAMES.has(value) ||
+    value.startsWith("agent-v2-tool:") ||
+    value.startsWith("chaarlie-")
+  )
 }
 
 function maskOpenAIMessage(value: Record<string, unknown>): Record<string, unknown> {
@@ -87,6 +106,7 @@ function maskResponsesOutputItem(value: Record<string, unknown>): Record<string,
 
 function maskValue(value: unknown, key?: string): unknown {
   if (typeof value === "string") {
+    if (key === "name") return isSafeObservabilityName(value) ? maskString(value) : REDACTED
     if (key && IDENTIFIER_KEYS.has(key)) return REDACTED
     if (key && SENSITIVE_TEXT_KEYS.has(key)) return REDACTED_TEXT
     return maskString(value)
