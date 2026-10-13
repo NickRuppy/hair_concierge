@@ -1,0 +1,42 @@
+{
+  "version": "catalog-completeness-protocol-cadence-amendment-v1",
+  "status": "apply",
+  "mode": "create_only",
+  "product_id": "2c809d0d-fbce-435a-bbde-aa4270aaf48d",
+  "protocol_id": "9683f6e4-f621-41a0-b992-b891919ceaf3",
+  "ruling": "B2 (Nick, 2026-10-09): OGX uses the UK manufacturer page's \"1-2 times a week\".",
+  "research_profile": {
+    "rewritten": false,
+    "profile_sha256": "b5c7e4fce85b4b2bceea64f4ecf7497627540ca8514be340cffab90c442f00b5",
+    "cadence_source_id": "C03-P06-1",
+    "cadence_value": {
+      "status": "source_stated",
+      "initial": null,
+      "branches": [],
+      "maintenance": {
+        "kind": "times_per_week",
+        "minimum": 1,
+        "maximum": 2
+      }
+    },
+    "note": "The frozen v0.5 profile already records the UK cadence (source C03-P06-1); the 2026-10-06 amendment kept it out of the DE runtime. B2 admits it to the runtime protocol only. The profile, its digest and the protocol's source binding (DE Boozt directions) stay unchanged."
+  },
+  "before": {
+    "cadence": null
+  },
+  "after": {
+    "cadence": {
+      "kind": "label_schedule",
+      "copy_de": "Ein- bis zweimal pro Woche anwenden."
+    }
+  },
+  "source": {
+    "label": "OGX Hersteller-Produktseite (UK), Ruling B2",
+    "url": "https://www.ogxbeauty.co.uk/products/bond-protein-repair-sealing-serum",
+    "type": "manufacturer",
+    "market": "UK",
+    "verbatim": "For best results, use 1-2 times a week.",
+    "read": "R2 research lane 2026-10-09 (T2, ogxbeauty.co.uk / .com); same frequency recorded in profile source C03-P06-1 checked 2026-10-03 (\"Suggested use is 1-2 times weekly.\")",
+    "checked_at": "2026-10-09"
+  }
+}
