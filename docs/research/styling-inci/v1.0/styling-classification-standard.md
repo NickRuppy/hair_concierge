@@ -713,7 +713,8 @@ Confidence: `high` for a number on a known scale or an unambiguous word; `modera
 | Alcina Hold-Faktor x/10 | 1–2 | 3–5 | 6–7 | 8–10 | Flex-Faktor recorded separately (§6.9) |
 | **Taft gels** (scale 4–14, no legend) | — | — | — | — | **number not comparable ⇒ words only** („maximal" ⇒ 4); no word ⇒ `null` |
 | Elnett word ladder | — | Normal | Stark | Extra stark | „Sehr stark" unranked ⇒ `review` |
-| Brands with no stated maximum — Wella EIMI Haltegrad, American Crew Haltfaktor | — | — | — | — | **words decide**; the number is recorded |
+| **Wella Professionals EIMI** „Haltegrad"/„Haltestufe" x/4 (+ „4+") `[R3-H5]` | 1–2 | — | 3 | 4 / 4+ | by Wella's own words („Mistify Me Light" = 2, „leichtem Halt" with 2; „Strong" = 3; „extrastarker Halt mit Haltegrad 4"); level 2 (mittel) is not used |
+| Brands with no stated maximum — American Crew Haltfaktor | — | — | — | — | **words decide**; the number is recorded |
 
 New brand scales are added only with a published legend and maximum; until then the brand is words-only.
 
