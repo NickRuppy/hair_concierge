@@ -81,8 +81,8 @@ None. Production applies remain separate per-batch approvals.
 4. iOS: only the „Auch nutzbar als" line + per-use view, no save sheet — OK for now, to be fixed later (iOS product saving = own project).
 5. Pantene 7in1: affected plans re-pick the next-best leave-in. ✔
 6. Dry shampoo tint → A: keep the decision-doc rule (universal product, no tint bonus).
-7. Hair-loss scalp care (Neqi rosemary vs L'Oréal Anti-Haarverlust): Nick asked whether L'Oréal's evidence is actually stronger → cited research running; ruling pending.
+7. Hair-loss scalp care (Neqi rosemary vs L'Oréal Anti-Haarverlust) → **A (Nick 2026-10-13, "1a")**: the standard selection rule decides (Neqi first by price); no L'Oréal evidence override.
 8. Pantene HEAT&GLOW in 7 plans → be coherent with 5: affected plans re-pick the next-best alternative (reusable re-pick lane built in S3, reused by S5).
 9. Neqi Diamond Glass spray not actively recommended. ✔
 10. Heat-activated only for users who blow-dry ✔ — existing properties suffice (product `heat_activation_route` + profile heat events).
-11. Does plain blow-drying activate heat-activated products? → cited research running; ruling pending (currently built: only blow-drying with styling counts).
+11. → **B (Nick 2026-10-13, "2b")**: Pantene HEAT&GLOW is not heat-activated (no heat-reactive ingredient; label allows use without heat). It stays a normal leave-in; the 7 plans keep it, no re-pick (supersedes 8 for HEAT&GLOW). Neqi Diamond Glass is the only activated product; activation still requires blow-drying with styling. Record: S3 `slice3/amendments/q11-b-heat-glow-superseded.md`.
