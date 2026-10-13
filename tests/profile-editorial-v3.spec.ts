@@ -128,13 +128,15 @@ test.describe.serial("@ci profile editorial v3", () => {
     )
     await expect(page.getByRole("heading", { name: "Dein Abo" })).toHaveCount(0)
 
-    // 5. All five core sections are present and open
-    for (const name of ["Haar-Check", "Produkte", "Styling", "Alltag", "Ziele"]) {
+    // 5. The four core sections are present and open. The goals are the closing row of the
+    // Haar-Check (Hair Tools Rev. 5), so there is no separate Ziele card any more.
+    for (const name of ["Haar-Check", "Produkte", "Styling", "Alltag"]) {
       await expect(page.getByRole("heading", { name, level: 2 })).toBeVisible()
     }
+    await expect(page.getByRole("heading", { name: "Ziele", level: 2 })).toHaveCount(0)
 
     // 5b. Core sections render before the Einstellungen group in DOM order
-    const coreLocator = page.getByRole("heading", { name: "Ziele", level: 2 })
+    const coreLocator = page.getByRole("heading", { name: "Alltag", level: 2 })
     const einstellungenLocator = page.getByRole("heading", { name: "Einstellungen" })
     const [coreY, settingsY] = await Promise.all([
       coreLocator.boundingBox().then((b) => b?.y ?? 0),

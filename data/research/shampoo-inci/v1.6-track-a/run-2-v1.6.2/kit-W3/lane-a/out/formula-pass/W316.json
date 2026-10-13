@@ -1,0 +1,131 @@
+{
+  "blindId": "W316",
+  "inciFingerprintSha256": "16c77de728f31b7b93d8ad80de3dc2f3aaa00a98ab18ee526da621da6e5228d0",
+  "phase": "formula-pass (blind, stage A only)",
+  "policy": "shampoo-classification-v1.6.2",
+  "lane": "lane-a",
+  "identity": {
+    "packSize": "440 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "Packet splits 'Aqua (Water' and 'Eau)' into raw entries 1 and 2; merged into one entry 'Aqua (Water, Eau)' before numbering (ID-2). All positions below are NORMALIZED (raw position minus 1 from raw entry 3 onward). 32 normalized entries.",
+    "e3ProminenceCutoff": "Parfum (Fragrance) @10 (normalized). Prominent = positions 1-9."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis. Defining anionic Sodium Laureth Sulfate @2 buffered by prominent Cocamidopropyl Betaine @3; no reinforcing strong anionic. Laureth-4 @17, Laureth-23 @20, Trideceth-10 @22 are ethoxylate thickeners/solubilizers (not cleansing).",
+      "ruleIds": ["C1", "C3", "C4", "ID-2"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High: C2 met. Early (prominent) silicone Dimethicone @8; cationic polymer Guar Hydroxypropyltrimonium Chloride @13; pearlizing route Glycol Distearate @16; listed humectant Panthenol @7 (prominent); plus Amodimethicone @12, Hydrolyzed Keratin @6, PEG-7 Glyceryl Cocoate @5. Counter-signal: guar and pearlizer are after Parfum; bounded care (moderate) remains realistic.",
+      "ruleIds": ["C2", "R11", "Section 5 anchors"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @13"],
+        "payload_lipid": ["Hydrogenated Castor Oil @15 (non-material)", "Prunus Armeniaca Kernel Oil @21 (non-material)"],
+        "weak_refatter": ["PEG-7 Glyceryl Cocoate @5"],
+        "silicone": ["Dimethicone @8", "Amodimethicone @12"],
+        "protein_film": ["Hydrolyzed Keratin @6"],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @3"],
+        "humectantContext": ["Panthenol @7"],
+        "excluded": ["PEG-40 Hydrogenated Castor Oil @14 (solubilizer, 6.4)", "Glycol Distearate @16 (pearlizing wax)", "PEG-120 Methyl Glucose Dioleate @18 (PEG thickener)", "Laureth-4 @17, Laureth-23 @20, Trideceth-10 @22 (ethoxylates)", "Propylene Glycol @26 (solvent)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "wLine": "@7 Panthenol",
+        "classes": ["sub1_active"],
+        "cap": "e3Point @10 (Parfum (Fragrance))",
+        "alphabeticalRun": "none",
+        "skipped": [],
+        "codes": [],
+        "plausibility": "(i) SLES @2, CAPB @3 before it; (ii) only Dimethicone @8 and Sodium Benzoate @9 between it and the cap - no cleansing surfactant, alkanolamide or pearlizing wax.",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": ["Hydrogenated Castor Oil @15", "Prunus Armeniaca Kernel Oil @21"]
+      },
+      "w1Check": "W1 does not apply: (a) and (b) hold (C1 moderate chassis with prominent CAPB; Dimethicone @8 + guar @13 + late Amodimethicone @12), but (c) fails because a prominent protein film (Hydrolyzed Keratin @6) converges with the set. Full 6.6 method decides; W1 not cited as support.",
+      "depositionLoad": "moderate",
+      "persistence": "moderate",
+      "resetCapacity": "moderate",
+      "counterevidence": "Four deposition families (silicone x2, cationic_polymer, protein_film, weak_refatter) converge; two further lipids exist after the W-line.",
+      "whyThisBand": "Prominent dimethicone with amodimethicone, guar and keratin plausibly leave noticeable but bounded residue against an ordinary C1 reset.",
+      "whyNotNeighborBand": "Not high: no rich architecture - Hydrogenated Castor Oil @15 and Prunus Armeniaca Kernel Oil @21 are after the W-line (@7) and cannot establish W-RICH or count toward convergence; guar and amodimethicone sit after Parfum and the keratin is a small hydrolysate; reset is ordinary. Not low: prominent silicone + cationic system is a plausible noticeable deposit.",
+      "confidenceLimitingFactor": "Near the high boundary; the post-line lipids are what keep W-RICH closed (W-LINE item 6 cap: confidence at most moderate, neighbor high).",
+      "rationale": "Moderate: silicone/guar/amodimethicone set plus protein vs ordinary reset; post-line lipids recorded as counter-signal.",
+      "ruleIds": ["6.6", "W1", "W-LINE", "W-RICH", "W2", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "repair",
+      "provisional": "Claim-dependent; formula-only provisional value.",
+      "careDirection": {
+        "verdict": "repair_supported",
+        "moistureRoutes": ["Panthenol @7"],
+        "repairRoutes": ["Hydrolyzed Keratin @6", "Dimethicone @8", "Amodimethicone @12"],
+        "sharedConditioningRoutes": ["Guar Hydroxypropyltrimonium Chloride @13", "Glycol Distearate @16", "PEG-7 Glyceryl Cocoate @5"],
+        "limitation": "Protein is a small hydrolysate; deposition routes are generic."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Moisture route thin (panthenol only).",
+      "decisionTrace": "Blind: no claim; repair_supported formula; provisional general.",
+      "rationale": "Provisional general; repair if claimed.",
+      "ruleIds": ["7.3", "F1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["shine"],
+      "provisional": "Claim-dependent.",
+      "rationale": "Empty default blind.",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "frequent",
+      "triggerCode": "none",
+      "provisional": "Claim-dependent.",
+      "rationale": "Default regular blind.",
+      "ruleIds": ["Section 9"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": "SC1 positioning claim-dependent.",
+      "csa": "CSA met via listed prominent comfort route Panthenol @7 and humectant/refatting routes PEG-7 Glyceryl Cocoate @5, Panthenol @7. MB not met: Sodium Laureth Sulfate @2 prominent strong anionic. S-SENSITIVE and S-DRY formula halves pass.",
+      "counterSignals": "None prominent.",
+      "rationale": "Provisional not_targeted pending SC1.",
+      "ruleIds": ["Section 10 CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": ["Sodium Laureth Sulfate @2 (defining)", "Cocamidopropyl Betaine @3 (buffer)"],
+    "conditioningRoutes": ["PEG-7 Glyceryl Cocoate @5", "Hydrolyzed Keratin @6", "Dimethicone @8", "Amodimethicone @12", "Guar Hydroxypropyltrimonium Chloride @13", "Hydrogenated Castor Oil @15", "Glycol Distearate @16", "Prunus Armeniaca Kernel Oil @21"],
+    "humectants": ["Panthenol @7"],
+    "actives": [],
+    "exposure": ["Parfum (Fragrance) @10", "Hexyl Cinnamal @19", "Citronellol @24", "Tetramethyl Acetyloctahydronaphthalenes @25", "Limonene @27", "Linalyl Acetate @28", "Linalool @30"],
+    "preservatives": ["Sodium Benzoate @9", "Phenoxyethanol @29", "Sodium Salicylate @31", "Potassium Sorbate @32"]
+  },
+  "unresolvedMaterialIngredients": []
+}

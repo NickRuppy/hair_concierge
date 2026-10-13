@@ -1,0 +1,100 @@
+{
+ "slot": "P05",
+ "productId": null,
+ "name": "NaturalTech Purifying Shampoo",
+ "brand": "Davines",
+ "packSize": "250 ml",
+ "gtins": [
+  "8004608236580",
+  "8004608236597",
+  "8004608230618",
+  "8004608236603",
+  "8004608230625",
+  "8004608268949",
+  "8004608201113",
+  "8004608201120"
+ ],
+ "sources": [
+  {
+   "url": "https://world.davines.com/products/purifying-shampoo",
+   "retrievedAt": "2026-10-09",
+   "sourceType": "manufacturer_davines_international",
+   "sourceKind": "manufacturer_foreign",
+   "gtinShown": "8004608236580",
+   "inciVerbatim": "AQUA / WATER / EAU, COCAMIDOPROPYL BETAINE, PROPYLENE GLYCOL, SODIUM LAURYL GLUCOSE CARBOXYLATE, GLYCERIN, LAURYL GLUCOSIDE, SODIUM LAUROYL METHYL ISETHIONATE, ACRYLATES/C10-30 ALKYL ACRYLATE CROSSPOLYMER, SELENIUM SULFIDE, GLYCERYL OLEATE, TARAXACUM OFFICINALE ROOT EXTRACT / TARAXACUM OFFICINALE (DANDELION) ROOT EXTRACT, COCO-GLUCOSIDE, POLYSORBATE 20, SODIUM BENZOATE, CITRIC ACID, SODIUM CHLORIDE, TRISODIUM ETHYLENEDIAMINE DISUCCINATE, POTASSIUM SORBATE, 2-BROMO-2 -NITROPROPANE-1,3-DIOL, LINALOOL, PARFUM / FRAGRANCE",
+   "claimsVerbatim": "Clarifying and detoxifying shampoo to fight microbial attacks and dandruff to establish a healthy environment for hair growth. Hair and scalp are healthy, flake-free and deep cleansed without causing irritation.\n\nBenefits: Shine Purifying Anti dandruff Cosmetic intensive treatment against dandruff. Quick resolution of flaking problems. Antioxidant action. Natural derived active ingredients.",
+   "directionsVerbatim": "Apply 20 gr. of product to the scalp with damp hair and massage in, especially on those areas most affected. Leave on for a few minutes. Rinse off thoroughly. Intensive treatment: twice a week for maximum 3 weeks. Maintenance treatment: once a week for 6 weeks. The maintenance treatment can be interrupted earlier than 6 weeks if the problem has been resolved."
+  },
+  {
+   "url": "https://luxuriouslook.co.uk/davines-naturaltech-purifying-shampoo-250ml",
+   "retrievedAt": "2026-10-09",
+   "sourceType": "retailer_luxuriouslook_uk",
+   "sourceKind": "retailer",
+   "gtinShown": "8004608236580",
+   "inciVerbatim": "AQUA / WATER / EAU, COCAMIDOPROPYL BETAINE, PROPYLENE GLYCOL, SODIUM LAURYL GLUCOSE CARBOXYLATE, GLYCERIN, LAURYL GLUCOSIDE, SODIUM LAUROYL METHYL ISETHIONATE, ACRYLATES/C10-30 ALKYL ACRYLATE CROSSPOLYMER, SELENIUM SULFIDE, GLYCERYL OLEATE, TARAXACUM OFFICINALE ROOT EXTRACT / TARAXACUM OFFICINALE (DANDELION) ROOT EXTRACT, COCO-GLUCOSIDE, POLYSORBATE 20, SODIUM BENZOATE, CITRIC ACID, SODIUM CHLORIDE, TRISODIUM ETHYLENEDIAMINE DISUCCINATE, POTASSIUM SORBATE, 2-BROMO-2-NITROPROPANE-1,3-DIOL, LINALOOL, PARFUM / FRAGRANCE.",
+   "claimsVerbatim": null,
+   "directionsVerbatim": null
+  },
+  {
+   "url": "https://www.cultbeauty.co.uk/p/davines-naturaltech-purifying-shampoo-250ml/11452177/",
+   "retrievedAt": "2026-10-09",
+   "sourceType": "retailer_cultbeauty_uk",
+   "sourceKind": "retailer",
+   "gtinShown": "8004608236580",
+   "inciVerbatim": "Aqua / Water / Eau, Cocamidopropyl Betaine, Propylene Glycol, Sodium Lauryl Glucose Carboxylate, Glycerin, Lauryl Glucoside, Sodium Lauroyl Methyl Isethionate, Acrylates/C10-30 Alkyl Acrylate Crosspolymer, Selenium Sulfide, Glyceryl Oleate, Taraxacum Officinale Root Extract / Taraxacum Officinale (Dandelion) Root Extract, Coco-Glucoside, Polysorbate 20, Sodium Benzoate, Citric Acid, Sodium Chloride, Trisodium Ethylenediamine Disuccinate, Potassium Sorbate, 2-Bromo-2-Nitropropane-1,3-Diol, Linalool, Parfum / Fragrance.",
+   "claimsVerbatim": null,
+   "directionsVerbatim": null
+  },
+  {
+   "url": "https://world.davines.com/cdn/shop/files/rwt8mti1bykwt4lwzylm.jpg?v=1719414793",
+   "retrievedAt": "2026-10-11",
+   "sourceType": "pack_front_photo",
+   "sourceKind": "pack_front",
+   "gtinShown": "8004608236580",
+   "inciVerbatim": "",
+   "claimsVerbatim": "NATURALTECH™ / PURIFYING SHAMPOO / SHAMPOO FOR SCALP WITH OILY OR DRY DANDRUFF / SHAMPOO PER CUTE CON FORFORA GRASSA O SECCA / SHAMPOOING POUR CUIR CHEVELU AVEC PELLICULES GRASSES OU SÈCHES / WITH DANDELION PHYTOCEUTICALS / CON FITOCEUTICI DA TARASSACO / AUX PHYTOCEUTIQUES DE TARAXACUM / 250 ml e 8.45 fl.oz. U.S. / davines",
+   "directionsVerbatim": ""
+  }
+ ],
+ "conflicts": [
+  {
+   "type": "typographic_difference",
+   "source": "world.davines.com (manufacturer page) vs luxuriouslook.co.uk and Cult Beauty UK",
+   "url": "https://world.davines.com/products/purifying-shampoo",
+   "list": "AQUA / WATER / EAU, COCAMIDOPROPYL BETAINE, PROPYLENE GLYCOL, SODIUM LAURYL GLUCOSE CARBOXYLATE, GLYCERIN, LAURYL GLUCOSIDE, SODIUM LAUROYL METHYL ISETHIONATE, ACRYLATES/C10-30 ALKYL ACRYLATE CROSSPOLYMER, SELENIUM SULFIDE, GLYCERYL OLEATE, TARAXACUM OFFICINALE ROOT EXTRACT / TARAXACUM OFFICINALE (DANDELION) ROOT EXTRACT, COCO-GLUCOSIDE, POLYSORBATE 20, SODIUM BENZOATE, CITRIC ACID, SODIUM CHLORIDE, TRISODIUM ETHYLENEDIAMINE DISUCCINATE, POTASSIUM SORBATE, 2-BROMO-2 -NITROPROPANE-1,3-DIOL, LINALOOL, PARFUM / FRAGRANCE",
+   "note": "Manufacturer page prints \"2-BROMO-2 -NITROPROPANE-1,3-DIOL\" with a stray space; both UK retailers print \"2-Bromo-2-Nitropropane-1,3-Diol\" without it. Same ingredient set and order in all three sources. canonicalInci uses the no-space form (typo removed, nothing else changed)."
+  }
+ ],
+ "canonicalInci": [
+  "AQUA / WATER / EAU",
+  "COCAMIDOPROPYL BETAINE",
+  "PROPYLENE GLYCOL",
+  "SODIUM LAURYL GLUCOSE CARBOXYLATE",
+  "GLYCERIN",
+  "LAURYL GLUCOSIDE",
+  "SODIUM LAUROYL METHYL ISETHIONATE",
+  "ACRYLATES/C10-30 ALKYL ACRYLATE CROSSPOLYMER",
+  "SELENIUM SULFIDE",
+  "GLYCERYL OLEATE",
+  "TARAXACUM OFFICINALE ROOT EXTRACT / TARAXACUM OFFICINALE (DANDELION) ROOT EXTRACT",
+  "COCO-GLUCOSIDE",
+  "POLYSORBATE 20",
+  "SODIUM BENZOATE",
+  "CITRIC ACID",
+  "SODIUM CHLORIDE",
+  "TRISODIUM ETHYLENEDIAMINE DISUCCINATE",
+  "POTASSIUM SORBATE",
+  "2-BROMO-2-NITROPROPANE-1,3-DIOL",
+  "LINALOOL",
+  "PARFUM / FRAGRANCE"
+ ],
+ "canonicalReason": "Davines international manufacturer page (world.davines.com; the de-de path redirects there; the SKU 71212 / 250 ml variant carries gtin13 8004608236580) gives the full 21-item list; luxuriouslook.co.uk (GTIN 8004608236580) and Cult Beauty UK (GTIN 8004608236580) are identical in set and order. The US Davines page shows the same list but is a US pack and was not used as a source. No German-language retailer page could be read (Notino.de returned a bot wall twice; hagel-shop URL guess 404).",
+ "inciFingerprintSha256": "d3dffe2380e8a781137164c899be8d8862b773c9122a91c8fac8668bc4d25462",
+ "normalization": "lower-case, trim, collapse whitespace, join with |; split synonym entries merged into one item",
+ "identityConfidence": "high",
+ "formulaCompleteness": "complete",
+ "formulaSourceTier": 2,
+ "status": "frozen",
+ "blockReason": null,
+ "notes": "GTIN aliases: 8004608236580 = 250 ml (brand variant SKU 71212, JSON-LD gtin13, Notino DE JSON-LD per phase 1, luxuriouslook, Cult Beauty); 8004608236597 = 100 ml (SKU 71211); 8004608230618 = second 100 ml code (hagel-shop per phase 1, not re-verified); 8004608236603 = 1000 ml (DB only); 8004608230625 = US-market 250 ml pack (us.davines.com SKU 71161, listed there with the same INCI) - not the German pack; 8004608268949, 8004608201113, 8004608201120 = barcode-DB-only / older-pack codes, low confidence, unverified. Formula frozen for the 250 ml EU pack only. Brand page footer: product information might be subject to change. Not listed at dm, Rossmann, Mueller, Douglas, Flaconi (phase 1). Claims are cosmetic dandruff-treatment claims containing the anti-dandruff active Selenium Sulfide (medically adjacent). The page identifies the product as NATURALTECH Purifying Shampoo; German retailers also call it \"Naturaltech Purifying Reinigungsshampoo gegen Schuppen\". | 2026-10-11 evidence-only amendment (orchestrator, Nick ruling A): added pack-front claims from pack-front-pass-2026-10-11.json (image confidence high); fingerprint unchanged."
+}

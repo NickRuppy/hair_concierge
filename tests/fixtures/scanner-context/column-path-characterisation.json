@@ -253,7 +253,7 @@
       "snapshotSource": "initial",
       "rejectedPaidSources": 0
     },
-    "editable": "4d1597bf3b71d3e4802304b1154f723908e2015171b28e24329d958a01e794d3"
+    "editable": "25c23acaebbb30fcabcd80f483b52b73339544447f852a28295eb452832e3b77"
   },
   "V9_goals_manageability/mainEra": {
     "prepared": {
@@ -336,7 +336,7 @@
   },
   "V11_four_plus_low_shine/derivedNoDocument": {
     "prepared": {
-      "sourceHash": "ced93d74bf05032ce4b098b3e0a1bb74c3769376945778b9e7ae7316a9ca7595",
+      "sourceHash": "c94d536ac7d7fe54127b1e2f8c290b1aa48f8e447c7899d82c156ef5b23f28c9",
       "goals": [
         "moisture",
         "shine"
@@ -345,12 +345,13 @@
         "breakage",
         "dry_lengths",
         "frizz_flyaways",
+        "low_shine",
         "tangling"
       ],
       "snapshotSource": "initial",
       "rejectedPaidSources": 0
     },
-    "editable": "c0383a33752d60932a4258d876529ffe71e22dae15762ca2fa56b1d3c403504c"
+    "editable": "09981c4a5f94d819e9a72e5642bb2535fc13061c5d20e25207f67d16df5d2fd2"
   },
   "V12_neutral_volume_only/mainEra": {
     "prepared": {
@@ -368,8 +369,19 @@
     "editable": "2a06e17e86ba648225f83cd1e0e5c0f217e44929e24ec27d5ddb09fd7228b367"
   },
   "V12_neutral_volume_only/derivedNoDocument": {
-    "prepared": null,
-    "editable": "760fb12aab0c3ccae554136f88b42a40e0092cc2417e04247cdd2ce11e3e965f"
+    "prepared": {
+      "sourceHash": "afdf7327fa319b1dceca4adf3d1d305fa841c96cb1689af3612bdeec03f3e663",
+      "goals": [
+        "volume_balance"
+      ],
+      "currentConcerns": [
+        "hair_damage",
+        "dry_lengths"
+      ],
+      "snapshotSource": "initial",
+      "rejectedPaidSources": 0
+    },
+    "editable": "b2aaa694b97a64b011074b1ad666d8fd0d03a549cf0ec23d13c3a1f6ec0e8c81"
   },
   "V13_volume_plus_moisture_split/mainEra": {
     "prepared": {
@@ -388,9 +400,10 @@
   },
   "V13_volume_plus_moisture_split/derivedNoDocument": {
     "prepared": {
-      "sourceHash": "7df677f8b3fff72d4f374f6cc2563e3c636e6b8b58800ed2a4e4bedaf27c485a",
+      "sourceHash": "69eea224ae847ff0a68d120cb097b4a1fd698aa944cb2278f1a14900dd834cac",
       "goals": [
-        "moisture"
+        "moisture",
+        "volume_balance"
       ],
       "currentConcerns": [
         "split_ends"
@@ -398,7 +411,7 @@
       "snapshotSource": "initial",
       "rejectedPaidSources": 0
     },
-    "editable": "06291e2cdd3375228c25a3fd285b237679e074480dcf5ab158e3a76958705c02"
+    "editable": "3da25efe987402ad9a117b1e3ca859842c9536e63241e495ebff3947be0e2324"
   },
   "V14_multi_scalp_concerns/mainEra": {
     "prepared": {

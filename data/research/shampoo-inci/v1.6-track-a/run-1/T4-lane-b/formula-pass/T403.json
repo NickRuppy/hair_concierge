@@ -1,0 +1,248 @@
+{
+  "blindId": "T403",
+  "inciFingerprintSha256": "0a9ce49c3c9a71eeb4cd8e8ebc4dc4b2431235b5e08cbd0e096985e48ddbbda3",
+  "phase": "blind_formula_pass",
+  "identity": {
+    "packSize": "200 ml",
+    "formulaSourceTier": 1,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high"
+  },
+  "normalization": "ID-2 applied; normalized one-based positions; no split entries; raw positions = normalized positions",
+  "normalizedInciCount": 19,
+  "e3ProminenceMarker": "Parfum/Fragrance at 7",
+  "prominentThroughPosition": 6,
+  "surfactantArchitecture": "SLES (2) defining; CAPB (3) buffer; C1 -> moderate.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: C1 ether/sulfonate chassis - defining anionic Sodium Laureth Sulfate (2) buffered by prominent Cocamidopropyl Betaine (3); no prominent reinforcing strong anionic (C3, C4, C1).",
+      "counterSignal": "Laureth-4 is a thickener, Maris Sal is salt (not routes). Lauryl Lactate (4) refatter is a counter-signal only.",
+      "neighboringAlternative": "none",
+      "rulesApplied": [
+        "C3",
+        "C4",
+        "C1"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: one meaningful system - prominent cationic Guar Hydroxypropyltrimonium Chloride (5) - with a pearlizing Glycol Distearate (6), a light refatting ester Lauryl Lactate (4) and late Glycerin (17). No silicone and no prominent nonvolatile oil/butter/fatty alcohol, so C2 is not met.",
+      "counterSignal": "If Lauryl Lactate is read as a payload_lipid emollient ester it would replace the early silicone and C2 would be met (high).",
+      "neighboringAlternative": "high",
+      "rulesApplied": [
+        "C2 not met",
+        "R11"
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: the only deposition is one guar plus a light, low-persistence refatting ester; no silicone, oil/butter, protein or film former; effective C1 reset.",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "One cationic guar (5) plus a light refatting ester (Lauryl Lactate 4)."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "Low-molecular emollient ester and guar are weakly retained through rinsing."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES/betaine chassis."
+        }
+      },
+      "evidenceByFamily": {
+        "silicone": [],
+        "cationic_polymer": [
+          [
+            "Guar Hydroxypropyltrimonium Chloride",
+            5
+          ]
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [
+          [
+            "Lauryl Lactate",
+            4
+          ]
+        ],
+        "protein_film": [],
+        "film_former": [],
+        "humectant_context": [
+          [
+            "Glycerin",
+            17
+          ]
+        ],
+        "reset": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ],
+          [
+            "Cocamidopropyl Betaine",
+            3
+          ]
+        ]
+      },
+      "excludedEvidence": [
+        [
+          "Glycol Distearate",
+          6,
+          "pearlizer, excluded (6.4)"
+        ],
+        [
+          "Laureth-4",
+          9,
+          "thickener"
+        ],
+        [
+          "Menthol",
+          8,
+          "cooling agent"
+        ],
+        [
+          "Maris Sal",
+          10,
+          "salt"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "Prominent guar and a prominent emollient ester.",
+      "whyThisBand": "Low: the only deposition is one guar plus a light, low-persistence refatting ester; no silicone, oil/butter, protein or film former; effective C1 reset.",
+      "whyNotNeighborBand": "W2 (two families): combined residue stays below noticeable because the second family is a light refatting ester (weak_refatter-type), the guar is the single polymer, and nothing persistent (silicone, waxy lipid, film) converges, while a C1 reset removes it.",
+      "confidenceLimitingFactor": "Family assignment of Lauryl Lactate (weak_refatter vs payload_lipid) and guar level.",
+      "neighboringAlternative": "moderate",
+      "rulesApplied": [
+        "6.5",
+        "6.6"
+      ]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional only: focus needs exact-product claims (7.2); blind default is the honest fallback `general`. Menthol + sea salt + allantoin/bisabolol suggest a refreshing or scalp-care role; comfort routes are not prominent.",
+      "neighboringAlternative": "moisture"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: secondary requires distinct exact-product positioning (Section 8); none visible blind."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional default `regular` (Section 9); triggers need graded claims.  `alternating` impossible: cleansingStrength is not strong."
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: positioning half (SC1) hidden until unblind. CSA formula half is NOT met (no prominent E4 comfort or humectant/refatting route).",
+      "csaFormulaHalf": false
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11).",
+      "neighboringAlternative": "none"
+    }
+  },
+  "scalpGateFormulaFacts": {
+    "e4ComfortRoutes": [
+      {
+        "ingredient": "Allantoin",
+        "position": 11,
+        "prominent": false
+      },
+      {
+        "ingredient": "Bisabolol",
+        "position": 12,
+        "prominent": false
+      }
+    ],
+    "e4HumectantRefattingRoutes": [
+      {
+        "ingredient": "Glycerin",
+        "position": 17,
+        "prominent": false
+      }
+    ],
+    "coolingAgents": [
+      {
+        "ingredient": "Menthol",
+        "position": 8,
+        "prominent": false
+      }
+    ],
+    "promComfortRoute": false,
+    "promHumectantRoute": false,
+    "csaFormulaHalf": false
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 3,
+      "role": "amphoteric buffer"
+    },
+    {
+      "ingredient": "Lauryl Lactate",
+      "position": 4,
+      "role": "light emollient/refatting ester (assigned weak_refatter)"
+    },
+    {
+      "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+      "position": 5,
+      "role": "cationic polymer, prominent"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 6,
+      "role": "pearlizing route"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 7,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Menthol",
+      "position": 8,
+      "role": "cooling agent, not prominent"
+    },
+    {
+      "ingredient": "Allantoin",
+      "position": 11,
+      "role": "E4 comfort, not prominent"
+    },
+    {
+      "ingredient": "Bisabolol",
+      "position": 12,
+      "role": "E4 comfort, not prominent"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 17,
+      "role": "humectant, not prominent"
+    }
+  ],
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    {
+      "reading": "Lauryl Lactate (4) assigned weak_refatter (light refatting ester, like Glyceryl Oleate)",
+      "alternative": "payload_lipid as an 'emollient ester' (6.3) -> C2 met -> conditioningLevel high; W-RICH -> weightPotential moderate with neighbor high"
+    }
+  ]
+}

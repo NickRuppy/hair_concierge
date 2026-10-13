@@ -42,14 +42,24 @@ const SOURCES = [
   "src/lib/personal-plan/decision-presentation.ts",
   "src/lib/personal-plan/routine/labels.ts",
   "src/lib/personal-plan/products/authority/categories/conditioner.ts",
+  "src/lib/personal-plan/products/authority/categories/dry-shampoo.ts",
+  "src/lib/personal-plan/products/authority/fit-criteria.ts",
   "src/components/scan/scan-verdict-sections.tsx",
   "src/lib/scan/verdict-labels.ts",
   "src/lib/scan/result-presentation.ts",
 ].map((file) => readFileSync(path.join(process.cwd(), file), "utf8"))
 
 test("known shared strings map to their neutral variant", () => {
-  assert.equal(cockpitVoice("Passt nicht zu deinem Haar"), "Passt nicht zum Haarprofil")
-  assert.equal(cockpitVoice("Passt zu deinem Haar"), "Passt zum Haarprofil")
+  assert.equal(
+    cockpitVoice("Die Sensitivitätspositionierung passt nur eingeschränkt zu deiner Kopfhaut."),
+    "Die Sensitivitätspositionierung passt nur eingeschränkt zur Kopfhaut.",
+  )
+  assert.equal(
+    cockpitVoice("Die Tönung passt nur eingeschränkt zu deiner Haarfarbe."),
+    "Die Tönung passt nur eingeschränkt zur Haarfarbe.",
+  )
+  assert.equal(cockpitVoice("Für dein Haar eher schwer"), "Für das Haar eher schwer")
+  assert.equal(cockpitVoice("Entspricht deinem Bedarf."), "Entspricht dem Bedarf.")
   assert.equal(
     cockpitVoice(
       "Deine Kopfhaut ist eher trocken. Deshalb eine milde Reinigung, die ihr nicht zusätzlich Fett entzieht.",
@@ -60,15 +70,16 @@ test("known shared strings map to their neutral variant", () => {
   assert.equal(cockpitVoice("Das übernimmt bei dir:"), "Das übernimmt bereits:")
 })
 
-test("scan verdict titles come from the scan's own copy object", () => {
-  assert.equal(cockpitVoice(SCAN_VERDICT_COPY.mismatch.title), "Passt nicht zum Haarprofil")
-  assert.equal(
-    cockpitVoice(SCAN_VERDICT_COPY.supportive.title),
-    "Passt mit Einschränkung zum Haarprofil",
-  )
-  // Labels without a second person are not in the map and stay exactly as they are.
-  assert.equal(cockpitVoice(SCAN_VERDICT_COPY.mismatch.label), "Passt nicht")
-  assert.equal(cockpitVoice(SCAN_VERDICT_COPY.unknown.title), SCAN_VERDICT_COPY.unknown.title)
+test("the four neutral scan verdict labels and titles pass through unchanged", () => {
+  for (const [verdict, label] of [
+    ["ideal", "Passt"],
+    ["supportive", "Passt bedingt"],
+    ["mismatch", "Passt nicht"],
+    ["unknown", "Nicht geprüft"],
+  ] as const) {
+    assert.equal(cockpitVoice(SCAN_VERDICT_COPY[verdict].title), label)
+    assert.equal(cockpitVoice(SCAN_VERDICT_COPY[verdict].label), label)
+  }
 })
 
 test("every not_needed reason the scan knows has a neutral variant", () => {
@@ -161,7 +172,7 @@ test("unknown strings pass through untouched — no blind pronoun rewriting", ()
 })
 
 test("the participant's copy objects are not mutated by building the map", () => {
-  assert.equal(SCAN_VERDICT_COPY.mismatch.title, "Passt nicht zu deinem Haar")
+  assert.equal(SCAN_VERDICT_COPY.mismatch.title, "Passt nicht")
   assert.equal(
     SCAN_NOT_NEEDED_REASON_COPY["heat_protectant.inclusion.no_heat_event"],
     "Du stylst aktuell ohne Hitze.",

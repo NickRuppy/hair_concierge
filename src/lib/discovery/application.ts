@@ -284,12 +284,17 @@ function printDay(
   day: ApplicationDayView,
   usageOf: DiscoveryUsageLookup,
 ): DiscoveryApplicationPrintDay {
+  // The sheet's view is built without Tools, so no Tool section is ever present; the guard only
+  // narrows the step union.
+  const steps = day.steps.filter(
+    (step): step is Exclude<typeof step, { kind: "tool_use" }> => step.kind !== "tool_use",
+  )
   return {
     dayType: day.dayType,
     label: day.labelDe,
     summary: day.summaryDe,
     cadence: day.cadenceDe ? sentenceCase(day.cadenceDe) : null,
-    steps: day.steps.map((step): DiscoveryApplicationPrintStep => {
+    steps: steps.map((step): DiscoveryApplicationPrintStep => {
       if (step.kind === "product") {
         const usage = usageOf(day.dayType, step.productId, step.applicationInstanceKey)
         const headings = step.actions.flatMap((action, index) =>

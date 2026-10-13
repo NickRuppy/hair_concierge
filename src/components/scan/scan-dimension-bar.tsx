@@ -1,7 +1,7 @@
 "use client"
 
 import { scanDimensionSegments, scanDimensionSummary } from "@/lib/scan/result-presentation"
-import type { ScanDimension } from "@/lib/scan/types"
+import type { ScanWebDimension } from "@/lib/scan/types"
 import { cn } from "@/lib/utils"
 
 /**
@@ -9,16 +9,18 @@ import { cn } from "@/lib/utils"
  * target stops tinted, the scanned product's position as a dot. Set-valued axes carry a
  * dot on every covered stop — the first at full weight, the rest reduced.
  */
-export function ScanDimensionBar({ dimension }: { dimension: ScanDimension }) {
+export function ScanDimensionBar({ dimension }: { dimension: ScanWebDimension }) {
   const segments = scanDimensionSegments(dimension)
   const summary = scanDimensionSummary(dimension)
 
   const dotColor =
     dimension.state === "in_target"
       ? "bg-[var(--status-ok-text)]"
-      : dimension.state === "outside_target"
-        ? "bg-[var(--status-danger-text)]"
-        : "bg-muted-foreground"
+      : dimension.state === "supportive"
+        ? "bg-[var(--status-pending-text)]"
+        : dimension.state === "outside_target"
+          ? "bg-[var(--status-danger-text)]"
+          : "bg-muted-foreground"
 
   return (
     <div className="py-2">
@@ -29,9 +31,11 @@ export function ScanDimensionBar({ dimension }: { dimension: ScanDimension }) {
             "shrink-0 text-[12px] font-medium",
             summary.state === "in_target"
               ? "text-[var(--status-ok-text)]"
-              : summary.state === "outside_target"
-                ? "text-[var(--status-danger-text)]"
-                : "text-muted-foreground",
+              : summary.state === "supportive"
+                ? "text-[var(--status-pending-text)]"
+                : summary.state === "outside_target"
+                  ? "text-[var(--status-danger-text)]"
+                  : "text-muted-foreground",
           )}
         >
           {summary.marker ? `${summary.marker} ` : ""}

@@ -150,6 +150,7 @@ type PersonalPlanCustomerIoInput = {
   email: string
   leadId: string
   marketingConsent: boolean
+  allowIdentityTraits?: boolean
   quizAnswers: PersonalPlanCustomerIoEnvelope
   funnelSessionId?: string | null
   funnelPackageKey?: string | null
@@ -179,17 +180,21 @@ export function buildPersonalPlanCustomerIoTraits(
 ): CustomerIoServerProperties {
   const answers = input.quizAnswers.answers
   return {
-    email: input.email,
+    ...(input.allowIdentityTraits !== false ? { email: input.email } : {}),
     lead_id: input.leadId,
     quiz_kind: "personal_plan",
-    marketing_consent: input.marketingConsent,
-    consent_timestamp: input.marketingConsent ? input.createdAt : undefined,
+    ...(input.allowIdentityTraits !== false
+      ? {
+          marketing_consent: input.marketingConsent,
+          consent_timestamp: input.marketingConsent ? input.createdAt : undefined,
+          commercial_automation_eligible: !isNonCommercialFunnelTestKind(input.testKind),
+        }
+      : {}),
     personal_plan_completed_at: input.createdAt,
     personal_plan_profile_version: input.quizAnswers.version,
     funnel_session_id: input.funnelSessionId,
     funnel_package_key: input.funnelPackageKey,
     test_kind: input.testKind,
-    commercial_automation_eligible: !isNonCommercialFunnelTestKind(input.testKind),
     profile_line: buildProfileLine(answers),
 
     // These fields have the same primitive type and vocabulary as the legacy quiz.

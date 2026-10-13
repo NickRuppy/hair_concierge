@@ -1,5 +1,8 @@
 import { CATEGORY_COPY } from "@/components/personal-plan-products/stage3-product-copy"
-import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
+import type {
+  PersonalPlanCategory,
+  Stage3CriterionResult,
+} from "@/lib/personal-plan/products/contracts"
 import type { PlanPortfolioCoverageFact } from "@/lib/personal-plan/types"
 
 import type { ScanStatusToken, ScanVerdict } from "./types"
@@ -10,14 +13,14 @@ export const SCAN_VERDICT_COPY: Record<
   ScanVerdict,
   { label: string; title: string; status: ScanStatusToken }
 > = {
-  ideal: { label: "Passt", title: "Passt zu deinem Haar", status: "ok" },
+  ideal: { label: "Passt", title: "Passt", status: "ok" },
   supportive: {
-    label: "Passt mit Einschränkung",
-    title: "Passt mit Einschränkung zu deinem Haar",
+    label: "Passt bedingt",
+    title: "Passt bedingt",
     status: "pending",
   },
-  mismatch: { label: "Passt nicht", title: "Passt nicht zu deinem Haar", status: "danger" },
-  unknown: { label: "Unklar", title: "Da sind wir noch nicht sicher", status: "neutral" },
+  mismatch: { label: "Passt nicht", title: "Passt nicht", status: "danger" },
+  unknown: { label: "Nicht geprüft", title: "Nicht geprüft", status: "neutral" },
 }
 
 export const SCAN_NOT_NEEDED_STATUS: Extract<ScanStatusToken, "neutral"> = "neutral"
@@ -166,4 +169,19 @@ export const SCAN_NOT_NEEDED_REASON_COPY: Record<string, string> = {
     "Deine Kopfhaut zeigt aktuell nichts, was eine eigene Pflege nötig macht.",
   "scalp_care.inclusion.buildup_deferred":
     "Deine Kopfhaut-Angaben sind noch nicht vollständig – das klären wir später.",
+}
+
+/** Concrete evaluator reasons, never inferred from display positions. */
+export function fitReasonLines(
+  verdict: ScanVerdict,
+  criteria: readonly Stage3CriterionResult[],
+): string[] {
+  if (verdict !== "supportive" && verdict !== "mismatch") return []
+  return [
+    ...new Set(
+      criteria
+        .filter((item) => item.result === "caution" || item.result === "fail")
+        .map((item) => item.explanation),
+    ),
+  ]
 }

@@ -17,7 +17,7 @@ const read = (path: string) => readFile(new URL(path, ROOT), "utf8")
 const migration = (name: string) => read(`supabase/migrations/${name}`)
 const AVEDA = "04a83f16-e610-4883-b44d-038d3a343787"
 const PROTOCOL = "f8d9cf57-9266-465a-8f09-d603e5065701"
-const S4 = "20261011170000_bondbuilder_aveda_damage_cadence.sql"
+const S4 = "20261013170000_bondbuilder_aveda_damage_cadence.sql"
 const PROMOTION = "20261006170000_bondbuilder_reviewed_promotion_p04_p05_p07.sql"
 const BATCH = "S4-catalog-completeness-aveda-damage-cadence"
 

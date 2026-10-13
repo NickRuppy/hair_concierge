@@ -137,6 +137,7 @@ const targetSchema = z.discriminatedUnion("category", [
             role: z.enum(["pre_wash_fibre_treatment", "leave_on_fibre_conditioning", "dry_finish"]),
             tier: includedTier,
             weight: careWeight.nullable(),
+            acceptedTargets: z.array(careWeight).min(1).optional(),
             functionalBenefits: z.array(benefitSchema),
           })
           .strict(),

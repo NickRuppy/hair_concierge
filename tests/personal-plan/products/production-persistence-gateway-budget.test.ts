@@ -1288,6 +1288,9 @@ function bondbuilder(
       productFormat: "cream_treatment",
       usageProtocol: "olaplex_3plus",
       relationship: "standalone" as const,
+      // fit-verdict spec §6, ruled 2026-10-12: reviewed technology fixture.
+      technologyFamily: "sulfur_targeting_dimaleate",
+      trustBasis: "owner_anchor",
       claimTrustLevel: options.trust,
     },
   }
@@ -1374,6 +1377,7 @@ test("B-INT-TRUST: Bis 5 € strict preselects nothing, trust order with cheaper
   assert.equal(review.fitComparison.budgetNotice, "strict_none_affordable")
 })
 
+// S4 owner ruling: uncapped and flag-off retain the K18 default within equal trust/timing.
 test("B-INT-TRUST: uncapped and flag off both recommend K18 and rank by trust", async () => {
   for (const review of [await bondbuilderReview(UNCAPPED), await bondbuilderReview(null, false)]) {
     assert.equal(review.authorityEvaluation.status, "known")

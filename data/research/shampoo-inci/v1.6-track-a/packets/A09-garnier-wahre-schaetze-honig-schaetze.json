@@ -1,0 +1,118 @@
+{
+  "slot": "A09",
+  "productId": "0017381a-84ba-46dd-9b6e-7ef457e8b5b4",
+  "name": "Garnier Wahre Schätze Shampoo Honig Schätze (Reparierendes Shampoo Honig Schätze)",
+  "brand": "Garnier Wahre Schätze",
+  "packSize": "400 ml (dm GTIN-bound, catalog price row); garnier.de lists 250/300/400/1000 ml under one INCI",
+  "gtins": [
+    "3600542461030",
+    "3600542462228",
+    "3600542461511",
+    "3600542499231"
+  ],
+  "sources": [
+    {
+      "url": "https://www.garnier.de/haarpflege/haarpflege-marken/wahre-schaetze/honig-schaetze/shampoo",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "size selector 250/300/400/1000 ml; page source embeds EANs 3600542461511, 3600542462228, 3600542461030, 3600542499231, 3600542461481 (one INCI for the whole page)",
+      "inciVerbatim": "AQUA / WATER ● SODIUM LAURYL SULFATE ● COCAMIDOPROPYL BETAINE ● SODIUM CHLORIDE ● MEL / HONEY ● MEL EXTRACT / HONEY EXTRACT ● CARBOMER ● GLYCERIN ● GLYCERYL OLEATE ● GLYCOL DISTEARATE ● TRIETHYL CITRATE ● LECITHIN ● SODIUM HYDROXIDE ● COCO-BETAINE ● COCO-GLUCOSIDE ● HYDROGENATED PALM GLYCERIDES CITRATE ● HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE ● CITRIC ACID ● LAUROYL/MYRISTOYL METHYL GLUCAMIDE ● TOCOPHEROL ● ASCORBYL PALMITATE ● POTASSIUM SORBATE ● SORBIC ACID ● SODIUM BENZOATE ● CARAMEL ● COUMARIN ● LIMONENE ● BENZYL ALCOHOL ● BENZYL SALICYLATE ● PARFUM / FRAGRANCE",
+      "claimsVerbatim": "Speziell für die Bedürfnisse von strapaziertem und brüchigem Haar entwickelt, repariert und kräftigt das Garnier Wahre Schätze Reparierendes Shampoo Honig Schätze das Haar bis in die Spitzen. Die stärkenden und pflegenden Eigenschaften von Akazien-, Manuka- und Lavendelhonig im Honig Shampoo wirken Haarschäden wie Spliss, Haarbruch und Haarriss entgegen. Der reparierende Akazienhonig pflegt das Haar nachhaltig und macht es spürbar geschmeidig und leichter kämmbar.",
+      "directionsVerbatim": "So wendest Du das Honig Shampoo für strapaziertes und brüchiges Haar an: 1. Die Haare nass machen und waschen.  2. Das Honig Shampoo ins feuchte Haar einmassieren und im gesamten Haar verteilen.  3. Zum Schluss gründlich ausspülen."
+    },
+    {
+      "url": "https://www.dm.de/p/d/1670316/wahre-schaetze-shampoo-honig-schaetze",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "3600542461030 (page text 'GTIN'; dm-Artikelnummer 1670316; 'Shampoo Honig Schätze, 400 ml'; size selector 250/400/1000 ml)",
+      "inciVerbatim": "AQUA / WATER • SODIUM LAURYL SULFATE • COCAMIDOPROPYL BETAINE • SODIUM CHLORIDE • MEL / HONEY • MEL EXTRACT / HONEY EXTRACT • CARBOMER • GLYCERIN • GLYCERYL OLEATE • GLYCOL DISTEARATE • TRIETHYL CITRATE • LECITHIN • SODIUM HYDROXIDE • COCO-BETAINE • COCO-GLUCOSIDE • HYDROGENATED PALM GLYCERIDES CITRATE • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • CITRIC ACID • LAUROYL/MYRISTOYL METHYL GLUCAMIDE • TOCOPHEROL • ASCORBYL PALMITATE • POTASSIUM SORBATE • SORBIC ACID • SODIUM BENZOATE • CARAMEL • COUMARIN • LIMONENE • BENZYL ALCOHOL • BENZYL SALICYLATE • PARFUM / FRAGRANCE",
+      "claimsVerbatim": "Intensive Pflege für strapaziertes & brüchiges Haar | Mit reparierendem Akazienhonig | Bienenwachs hat schützende Eigenschaften | Nachhaltig bezogener Akazienhonig & Bienenwachs | Garnier Wahre Schätze Reparierendes Shampoo Honig Schätze vereint die Kraft von Schätzen aus dem Bienenstock, um das geschädigte Haar zu reparieren und wieder aufzubauen. Sowohl der reparierende Akazienhonig als auch das schützende Bienenwachs sind nachhaltig bezogen. Repariert und gekräftigt bis in die Spitzen wird das Haar spürbar geschmeidig und leicht zu kämmen. Bonus: der wunderbare Honigduft.",
+      "directionsVerbatim": "Für gesund aussehendes, strahlend schönes Haar das Garnier Wahre Schätze Shampoo Honig Schätze sanft ins feuchte Haar einmassieren und im gesamten Haar verteilen. Zum Schluss gründlich ausspülen."
+    },
+    {
+      "url": "https://www.mueller.de/p/garnier-wahre-schaetze-shampoo-honig-schaetze-2494476/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_mueller_de",
+      "sourceKind": "retailer",
+      "gtinShown": "3600542462228 (structured data gtin; Inhalt 300 ml)",
+      "inciVerbatim": "INGREDIENTS: AQUA / WATER • SODIUM LAURYL SULFATE • COCAMIDOPROPYL BETAINE • SODIUM CHLORIDE • MEL / HONEY • MEL EXTRACT / HONEY EXTRACT • CARBOMER • GLYCERIN • GLYCERYL OLEATE • GLYCOL DISTEARATE • TRIETHYL CITRATE • LECITHIN • SODIUM HYDROXIDE • COCO-BETAINE • COCO-GLUCOSIDE • HYDROGENATED PALM GLYCERIDES CITRATE • HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • CITRIC ACID • LAUROYL/MYRISTOYL METHYL GLUCAMIDE • TOCOPHEROL • ASCORBYL PALMITATE • POTASSIUM SORBATE • SORBIC ACID • SODIUM BENZOATE • CARAMEL • COUMARIN • LIMONENE • BENZYL ALCOHOL • BENZYL SALICYLATE • PARFUM / FRAGRANCE",
+      "claimsVerbatim": "Das GARNIER Wahre Schätze Shampoo Honig Schätze bietet eine aufbauende Pflege für strapaziertes und brüchiges Haar. Es reinigt sanft und verleiht dem Haar ein geschmeidiges Gefühl. | Formel mit Akazienhonig und Bienenwachs für eine aufbauende Pflege | Speziell für die Bedürfnisse von strapaziertem und brüchigem Haar | Verleiht dem Haar ein spürbar geschmeidiges Gefühl und erleichtert die Kämmbarkeit | Flaschenkörper besteht zu 100 % aus recyceltem Kunststoff und ist recycelbar | Die Rezeptur, angereichert mit wertvollen Extrakten aus dem Bienenstock, unterstützt das Haar dabei, gekräftigt auszusehen.",
+      "directionsVerbatim": "Für gesund aussehendes; strahlend schönes Haar das Garnier Wahre Schätze Shampoo Honig Schätze sanft ins feuchte Haar einmassieren und im gesamten Haar verteilen. Zum Schluss gründlich ausspülen."
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-reparierendes-shampoo-honig-schaetze/p/3600542461511/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "gtinShown": "3600542461511 (product URL id; 250 ml)",
+      "inciVerbatim": "AQUA / WATER • SODIUM LAURETH SULFATE • GLYCOL DISTEARATE • COCAMIDOPROPYL BETAINE • DIMETHICONE • SODIUM CHLORIDE • MEL / HONEY • COCAMIDE MEA • STEARETH-6 • FUMARIC ACID • CERA ALBA / BEESWAX • TRIDECETH-10 • TRIDECETH-3 • AMODIMETHICONE • PEG-100 STEARATE • SODIUM HYDROXIDE • COCO-BETAINE • GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • CITRIC ACID • ACETIC ACID • ACRYLATES/C10-30 ALKYL ACRYLATE CROSSPOLYMER • HEXYLENE GLYCOL • SODIUM BENZOATE • SALICYLIC ACID • PHENOXYETHANOL • CI 15985 / YELLOW 6 • CI 19140 / YELLOW 5 • COUMARIN • LIMONENE • BENZYL ALCOHOL • BENZYL SALICYLATE • PARFUM / FRAGRANCE (F.I.L. Z292364/1)",
+      "claimsVerbatim": "Strapaziertes, brüchiges Haar adé – Garnier Wahre Schätze Reparierendes Shampoo Honig Schätze vereint die Kraft von Schätzen aus dem Bienenstock, um das geschädigte Haar zu reparieren und wieder aufzubauen. Sowohl der reparierende Akazienhonig als auch das schützende Bienenwachs sind nachhaltig bezogen. | das Shampoo bietet intensive Pflege für strapaziertes; brüchiges Haar | aufbauende Rezeptur mit reparierendem Akazienhonig | Bienenwachs hat schützende Eigenschaften | nachhaltig bezogener Akazienhonig und Bienenwachs | Flaschenkörper aus 100% recyceltem Plastik & recycelbar. Nachfüllbar",
+      "directionsVerbatim": "Für gesund aussehendes, strahlend schönes Haar das Garnier Wahre Schätze Shampoo Honig Schätze sanft ins feuchte Haar einmassieren und im gesamten Haar verteilen. Zum Schluss gründlich ausspülen."
+    },
+    {
+      "url": "https://www.dm.de/p/d/1909870/wahre-schaetze-shampoo-honigschaetze",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "3600542499231 (page text 'GTIN'; dm-Artikelnummer 1909870; 'Shampoo Honigschätze, 1.000 ml')",
+      "inciVerbatim": "INGREDIENTS: AQUA / WATER • SODIUM LAURETH SULFATE • GLYCOL DISTEARATE • COCAMIDOPROPYL BETAINE • DIMETHICONE • SODIUM CHLORIDE • MEL / HONEY • COCAMIDE MEA • STEARETH-6 • FUMARIC ACID • CERA ALBA / BEESWAX • TRIDECETH-10 • TRIDECETH-3 • AMODIMETHICONE • PEG- 100 STEARATE • SODIUM HYDROXIDE • COCO-BETAINE • GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • CITRIC ACID • ACETIC ACID • ACRYLATES/C10- 30 ALKYL ACRYLATE CROSSPOLYMER • HEXYLENE GLYCOL • SODIUM BENZOATE • SALICYLIC ACID • PHENOXYETHANOL • CI 15985 / YELLOW 6 • CI 19140 / YELLOW 5 • COUMARIN • LIMONENE • BENZYL ALCOHOL • BENZYL SALICYLATE • PARFUM / FRAGRANCE",
+      "claimsVerbatim": "Aufbauendes Shampoo mit Honigduft | Mit Akazienhonig und Bienenwachs | Pflegende Formel | Kräftigt das Haar bis in die Spitzen | Mit der Kraft von Schätzen aus dem Bienenstock pflegt das GARNIER Wahre Schätze Reparierendes Shampoo Honig Schätze strapaziertes und brüchiges Haar intensiv. Die aufbauende Rezeptur vereint nachhaltig bezogenen, reparierenden Akazienhonig mit schützendem Bienenwachs.",
+      "directionsVerbatim": "Für gesund aussehendes; strahlend schönes Haar das Garnier Wahre Schätze Shampoo Honig Schätze sanft ins feuchte Haar einmassieren und im gesamten Haar verteilen. Zum Schluss gründlich ausspülen."
+    }
+  ],
+  "conflicts": [
+    "TWO FORMULA GENERATIONS ON THE MARKET UNDER THE SAME PRODUCT: (A) 'new' 30-item list (Sodium LAURYL Sulfate lead surfactant, no silicone, no beeswax, no colorants, ends '...Caramel, Coumarin, Limonene, Benzyl Alcohol, Benzyl Salicylate, Parfum') appears on garnier.de (manufacturer), dm.de 400 ml (GTIN 3600542461030) and Müller 300 ml (GTIN 3600542462228). (B) 'old' 32-item list (Sodium LAURETH Sulfate lead surfactant, Dimethicone #5, Amodimethicone, Cera Alba/Beeswax, Cocamide MEA, Steareth-6, Fumaric Acid, Trideceth-10/-3, PEG-100 Stearate, Acrylates/C10-30 Alkyl Acrylate Crosspolymer, Hexylene Glycol, Salicylic Acid, Phenoxyethanol, CI 15985, CI 19140) appears on Rossmann 250 ml (GTIN 3600542461511) and dm.de 1000 ml (GTIN 3600542499231). The two lists differ materially for the classification: surfactant type (SLS vs SLES), silicone present vs absent.",
+    "Which generation is on the shelf for the catalog row cannot be decided without a pack photo: the manufacturer page lists the same single INCI for all four sizes (250/300/400/1000 ml) and embeds all four EANs, so the old-formula retailer pages (Rossmann 250 ml, dm 1000 ml) are either stale listings or old stock still in the channel. The scan DB expansion record of 2026-09-04 already noted that EAN 3600542461511 'spans an older silicone formula and the current formula'.",
+    "Claim vs INCI: dm.de, Müller and Rossmann copy claims 'Bienenwachs' / 'Formel mit Akazienhonig und Bienenwachs' ('Bienenwachs hat schützende Eigenschaften'), but the NEW (A) INCI contains no Cera Alba/Beeswax - only 'Mel/Honey' and 'Mel Extract/Honey Extract'. (The OLD (B) INCI does contain Cera Alba.) The retailer copy therefore describes the old formula or was not updated.",
+    "Claim vs INCI: garnier.de claims 'Akazien-, Manuka- und Lavendelhonig'; the INCI lists only generic 'Mel/Honey' and 'Mel Extract/Honey Extract', so the honey types cannot be verified from the INCI.",
+    "Third-party/search-engine note (not opened): a web-search summary reported a Netto 250 ml 6-pack listing with Sodium Lauryl Sulfate plus beeswax, i.e. possibly a third mixed variant; not verified and not recorded as a source."
+  ],
+  "canonicalInci": [
+    "Aqua/Water",
+    "Sodium Lauryl Sulfate",
+    "Cocamidopropyl Betaine",
+    "Sodium Chloride",
+    "Mel/Honey",
+    "Mel Extract/Honey Extract",
+    "Carbomer",
+    "Glycerin",
+    "Glyceryl Oleate",
+    "Glycol Distearate",
+    "Triethyl Citrate",
+    "Lecithin",
+    "Sodium Hydroxide",
+    "Coco-Betaine",
+    "Coco-Glucoside",
+    "Hydrogenated Palm Glycerides Citrate",
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+    "Citric Acid",
+    "Lauroyl/Myristoyl Methyl Glucamide",
+    "Tocopherol",
+    "Ascorbyl Palmitate",
+    "Potassium Sorbate",
+    "Sorbic Acid",
+    "Sodium Benzoate",
+    "Caramel",
+    "Coumarin",
+    "Limonene",
+    "Benzyl Alcohol",
+    "Benzyl Salicylate",
+    "Parfum/Fragrance"
+  ],
+  "canonicalReason": "Manufacturer DE page (garnier.de, one INCI for all sizes) agrees item-for-item and in order with dm.de 400 ml (GTIN 3600542461030, the catalog row's pack) and Müller 300 ml (GTIN 3600542462228). The older silicone/beeswax list on Rossmann 250 ml and dm.de 1000 ml is preserved as a conflict. Frozen_with_conflict because the old generation is still live at two German retailers and no pack photo exists to prove which formula the physical 400 ml bottle carries today.",
+  "inciFingerprintSha256": "6aadaef99413633a8a0903229d33fda87aac541b8f86ad7a1d4123f0e19c921a",
+  "normalization": "Split the canonical raw INCI on ',' (not on commas inside locants such as '1,2-'), merged split synonym entries such as 'Aqua (Water)' / 'Aqua/Water/Eau' into one item each; per ingredient: lower-case, trim, collapse internal whitespace, remove whitespace around '/'; drop a trailing period and any leading label such as 'Inhaltsstoffe:'; keep parentheses, asterisks and hyphens as published; join the normalized ingredients with '|' and sha256 the UTF-8 string.",
+  "identityConfidence": "moderate",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen_with_conflict",
+  "blockReason": null,
+  "notes": [
+    "identityConfidence is moderate rather than high because the catalog row 'Shampoo Honig Schätze' is not size-bound and the same product name spans four GTINs carrying two different formulas; the 400 ml GTIN 3600542461030 matches the prior 2026-09-04 bound record (shampoo-manifest-scannable-14).",
+    "Prior v1.4 (production-light) used the NEW generation; the canonical list here is the same generation, so no change to the v1.4 formula basis. If Nick wants the old silicone formula covered, it needs its own catalog entry or an explicit ruling - scanning 3600542461511 or 3600542499231 would currently resolve to the new-formula record.",
+    "Manufacturer list uses '●' separators and uppercase; canonical items are Title Case of the same tokens (case is irrelevant to the fingerprint). 'AQUA / WATER', 'MEL / HONEY', 'MEL EXTRACT / HONEY EXTRACT' and 'PARFUM / FRAGRANCE' are single items; spaces around '/' are removed before hashing.",
+    "Garnier page source also embeds EAN 3600542461481 (not further identified; probably another pack such as a 2-pack or refill) - not bound."
+  ]
+}

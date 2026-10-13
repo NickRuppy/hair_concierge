@@ -271,7 +271,7 @@ test("old writer (lead): main's legacy link incl. the main problem and the proje
 // Fixtures of the brief
 // ---------------------------------------------------------------------------
 
-test("untouched paid row: the quiz's native values win; only the adapter-inferred goals disappear", () => {
+test("untouched paid row: native values win without hand edits; widened concerns and primary are listed", () => {
   const planned = plan({ artifact: ARTIFACT, columns: PAID_COLUMNS })
   const write = diagnosticsWrite(planned)
   const document = documentOf(planned)
@@ -289,13 +289,21 @@ test("untouched paid row: the quiz's native values win; only the adapter-inferre
   assert.deepEqual(document.concernRecurrence, { concernId: "dry_lengths", frequency: "often" })
   assert.deepEqual(document.scalpConcerns, ["oily_dandruff", "irritated"])
   assert.deepEqual(document.source.raw, V3_ENVELOPE, "source.raw stays the verbatim envelope")
+  // concern vocabulary widening, ruled 2026-10-11: column deltas are not hand edits.
   assert.deepEqual(planned.report.visibleChanges, [
+    {
+      domain: "diagnostics",
+      column: "concerns",
+      before: "dryness,tangling",
+      after: "dryness,low_shine,tangling",
+    },
     {
       domain: "diagnostics",
       column: "goals",
       before: "less_frizz,moisture,healthy_scalp,shine",
       after: "moisture,shine",
     },
+    { domain: "diagnostics", column: "primary_concern", before: "NULL", after: "low_shine" },
   ])
 })
 
@@ -329,7 +337,16 @@ test("paid row with edited goals: the edited goals win as user facts with edited
     candidates: { after_quiz: "2026-08-01T09:00:00.001Z" },
   })
   assert.deepEqual(document.currentConcerns, ["dry_lengths", "low_shine", "tangling"])
-  assert.deepEqual(planned.report.visibleChanges, [], "the user sees exactly what she saw")
+  // concern vocabulary widening, ruled 2026-10-11: edited goals stay; quiz concerns now reach columns.
+  assert.deepEqual(planned.report.visibleChanges, [
+    {
+      domain: "diagnostics",
+      column: "concerns",
+      before: "dryness,tangling",
+      after: "dryness,low_shine,tangling",
+    },
+    { domain: "diagnostics", column: "primary_concern", before: "NULL", after: "low_shine" },
+  ])
 })
 
 test("edited hair length only: that one field is the user's, every other field stays the lead's", () => {
@@ -363,11 +380,17 @@ test("edited concerns with a quiz-only concern in the source: the edit wins, low
   assert.equal(document.concernRecurrence, undefined, "dry_lengths is no longer selected")
   assert.deepEqual(planned.report.notes, ["kept quiz-only concerns beside the edit: low_shine"])
   assert.deepEqual(write.provenance.fields, { currentConcerns: "user" })
-  assert.deepEqual(
-    planned.report.visibleChanges.map((change) => change.column),
-    ["goals"],
-    "the concerns the user sees are unchanged; only the paid row's inferred goals go",
-  )
+  // concern vocabulary widening, ruled 2026-10-11: the genuine edit and retained quiz-only concern both survive.
+  assert.deepEqual(planned.report.visibleChanges, [
+    { domain: "diagnostics", column: "concerns", before: "frizz", after: "frizz,low_shine" },
+    {
+      domain: "diagnostics",
+      column: "goals",
+      before: "less_frizz,moisture,healthy_scalp,shine",
+      after: "moisture,shine",
+    },
+    { domain: "diagnostics", column: "primary_concern", before: "NULL", after: "low_shine" },
+  ])
 })
 
 /** `scanner_profile_edits.profile_snapshot` as the iOS edit left it: the whole row. */
@@ -814,8 +837,16 @@ test("tolerated goals_never_written (I1): an untouched paid row from the readine
   assert.equal(write.provenance.editedAt, undefined)
   assert.equal(write.provenance.fields, undefined)
   assert.deepEqual(documentOf(planned).goals, ["moisture", "shine"], "the goals she picked")
+  // concern vocabulary widening, ruled 2026-10-11: tolerated missing goals and concerns remain non-edits.
   assert.deepEqual(planned.report.visibleChanges, [
+    {
+      domain: "diagnostics",
+      column: "concerns",
+      before: "dryness,tangling",
+      after: "dryness,low_shine,tangling",
+    },
     { domain: "diagnostics", column: "goals", before: "[]", after: "moisture,shine" },
+    { domain: "diagnostics", column: "primary_concern", before: "NULL", after: "low_shine" },
   ])
 
   // The same for a legacy lead linked by the readiness path, and when the old writer cannot be
@@ -1813,9 +1844,12 @@ test("the real runUserFactsBackfill loop on PGlite under the lock: dry-run repor
       dryLines.findIndex((line, index) => index > patternsAt && line === ""),
     )
     .map((line) => line.trim().replace(/\s+(\d+)$/, " | $1"))
+  // concern vocabulary widening, ruled 2026-10-11: report the new column values; still exactly two real edits.
   assert.deepEqual(patternRows, [
+    "diagnostics.concerns: dryness,tangling -> dryness,low_shine,tangling | 1",
     "diagnostics.goals: healthy_scalp,less_frizz,moisture,shine -> moisture,shine | 1",
     "diagnostics.primary_concern: NULL -> her only concern (the door names it the main problem) | 1",
+    "diagnostics.primary_concern: NULL -> low_shine | 1",
   ])
   assert.ok(
     dryLines.includes(

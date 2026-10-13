@@ -10,7 +10,7 @@ import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
 
 /**
  * Equal-fit options (Nomi consult finish T1): a tied Bondbuilder shortlist resolves to the
- * house default (K18), and the cockpit must be able to offer the other equally ideal
+ * cheapest trusted option, and the cockpit must be able to offer the other equally ideal
  * products — from the same candidates, through the same authority, nothing invented.
  */
 
@@ -73,6 +73,10 @@ function candidate(
       productFormat: "treatment",
       usageProtocol: "course",
       relationship: "standalone",
+      // fit-verdict spec §6, ruled 2026-10-12: reviewed technology fixture.
+      technologyFamily: "sulfur_targeting_dimaleate",
+      claimTrustLevel: "high",
+      trustBasis: "owner_anchor",
     },
     ...extra,
   } as Stage3BondbuilderFacts

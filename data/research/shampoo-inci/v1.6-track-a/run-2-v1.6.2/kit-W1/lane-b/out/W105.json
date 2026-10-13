@@ -1,0 +1,332 @@
+{
+ "blindId": "W105",
+ "lane": "lane-b",
+ "policyId": "shampoo-classification-v1.6.2",
+ "formulaPassRecord": "out/formula-pass/W105.json (hash-pinned; not edited)",
+ "identity": {
+  "brand": "Balea",
+  "productName": "Balea (med) Ultra Sensitive Shampoo",
+  "packSize": "250 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "ad4168be859a6e0b1b7a76ae82e1e72040e87afa86dcf97031a6745545d783f4",
+  "normalization": "18 entries as frozen; no split synonyms; normalized one-based positions cited (ID-2).",
+  "completeness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high",
+  "e3ProminenceCutoff": "no fragrance declared; preservative fallback Sodium Benzoate@15 (prominent = positions 1-14)"
+ },
+ "formulaFacts": {
+  "surfactants": {
+   "definingAnionic": "Sodium Coco-Sulfate@4 (strong anionic, alkyl sulfate type)",
+   "reinforcingRoutes": [],
+   "buffers": [
+    "Coco-Glucoside@2 (nonionic glucoside, listed first)",
+    "Sodium Cocoamphoacetate@5 (amphoteric)"
+   ],
+   "nonCleansing": []
+  },
+  "conditioningRoutes": [
+   "Glycerin@3 (humectant)",
+   "Panthenol@7",
+   "Tocopherol@9, Ascorbyl Palmitate@10 (weak_refatter, lipid-like antioxidants)",
+   "Glyceryl Oleate@11 (weak_refatter)",
+   "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@12 (cationic_polymer, prominent)",
+   "Hydrogenated Palm Glycerides Citrate@13, Lecithin@14 (weak_refatter)"
+  ],
+  "humectants": [
+   "Glycerin@3",
+   "Panthenol@7"
+  ],
+  "actives": [
+   "Niacinamide@8"
+  ],
+  "e4ComfortRoutesProminent": [
+   "Panthenol@7",
+   "Niacinamide@8"
+  ],
+  "e4HumectantRoutesProminent": [
+   "Glycerin@3",
+   "Panthenol@7",
+   "Glyceryl Oleate@11"
+  ],
+  "mildBase": "not met: Sodium Coco-Sulfate@4 is a prominent strong anionic (alkyl sulfate type)",
+  "exposureFlags": [
+   "no fragrance, no allergens, no essential oils, no cooling agent declared"
+  ],
+  "preservatives": [
+   "Sodium Benzoate@15",
+   "Potassium Sorbate@16"
+  ]
+ },
+ "claimUnits": [
+  "name (high): 'Ultra Sensitive' - name word that does not name the scalp; counts only with a scalp-naming manufacturer unit (SC1)",
+  "manufacturer_de (moderate): 'Mildes Shampoo für empfindliche Kopfhaut' - qualifying E2 sensitive unit ('für ... empfindliche Kopfhaut')",
+  "manufacturer_de (moderate): 'besonders sanfte Reinigung für Haar und empfindliche Kopfhaut'",
+  "manufacturer_de (moderate): 'milde Pflegeformel mit 5 % Glycerin, Panthenol und Niacinamid spendet Feuchtigkeit und pflegt das Haar geschmeidig glänzend' - lengths moisture",
+  "manufacturer_de (moderate): 'ohne die Kopfhaut zu reizen' (protective, E2a); 'ideal für die tägliche Haarwäsche bei sensibler Haut' (U2 frequency wording)"
+ ],
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "Moderate: C5 - defining anionic Sodium Coco-Sulfate@4 (alkyl sulfate) with two prominent buffers (Coco-Glucoside@2, Sodium Cocoamphoacetate@5) and no reinforcing route. Counter-signal: the glucoside is the first-listed surfactant and the sulfate sits after glycerin, which argues for a milder net system; recorded as the counter-signal, neighbor low. The convention value is not moved.",
+   "ruleIds": [
+    "C5",
+    "C3",
+    "C4"
+   ],
+   "counterSignal": "see rationale (counter-signals recorded there; convention value unchanged by claims, 3.2)",
+   "sourceIds": [
+    "formula/W105.json (stage A, fingerprint ad4168be859a...)"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "Moderate: one meaningful system (prominent cationic Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@12) plus light routes (Glycerin@3, Panthenol@7, weak refatters @9-11, @13-14). No silicone, payload lipid or pearlizing route, so C2 is not met; high not supported. Low is the neighbor because the cationic is a single light guar.",
+   "ruleIds": [
+    "C2",
+    "5"
+   ],
+   "counterSignal": "see rationale",
+   "sourceIds": [
+    "formula/W105.json (stage A, fingerprint ad4168be859a...)"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "cationic_polymer": [
+     "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@12"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [
+     "Tocopherol@9",
+     "Ascorbyl Palmitate@10",
+     "Glyceryl Oleate@11",
+     "Hydrogenated Palm Glycerides Citrate@13",
+     "Lecithin@14"
+    ],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Coco-Glucoside@2",
+     "Sodium Coco-Sulfate@4",
+     "Sodium Cocoamphoacetate@5"
+    ],
+    "humectantContext": [
+     "Glycerin@3",
+     "Panthenol@7",
+     "Niacinamide@8 (active)"
+    ],
+    "excluded": [],
+    "unresolved": []
+   },
+   "wLine": {
+    "position": 7,
+    "inci": "Panthenol",
+    "classes": [
+     "sub1_active"
+    ],
+    "e3Point": 15,
+    "alphabeticalRun": "none",
+    "skipped": [],
+    "codes": [],
+    "plausibility": "(i) Coco-Glucoside@2 and Sodium Coco-Sulfate@4 before it; (ii) no cleansing surfactant, alkanolamide or pearlizing wax at 8-14",
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "light - one guar plus weak refatters",
+   "persistence": "low - weak refatters and a single guar",
+   "resetCapacity": "moderate - C5 moderate chassis (sulfate buffered by glucoside and amphoacetate)",
+   "counterevidence": "Two families (cationic_polymer, weak_refatter); guar is prominent; reset is softened by the glucoside lead.",
+   "whyThisBand": "Deposition limited to one light cationic and weak refatters; no persistent system.",
+   "whyNotNeighborBand": "Not moderate (W2): the only second family is weak_refatter (plus humectants); no silicone, payload lipid, protein or second cationic; a single guar after the actives and antioxidants against an effective sulfate chassis keeps residue below noticeable.",
+   "confidenceLimitingFactor": "Guar dose unknown; somewhat softened reset.",
+   "rationale": "Low: single light guar + weak refatters (6.6, W2).",
+   "ruleIds": [
+    "6.3",
+    "6.6",
+    "W2",
+    "W-LINE",
+    "N-ALT"
+   ],
+   "counterSignal": "see counterevidence / whyNotNeighborBand",
+   "sourceIds": [
+    "formula/W105.json (stage A, fingerprint ad4168be859a...)"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No recognized anti-dandruff active (Section 11).",
+   "ruleIds": [
+    "11"
+   ],
+   "counterSignal": "none (mechanical presence test, Section 11)",
+   "sourceIds": [
+    "formula/W105.json (stage A, fingerprint ad4168be859a...)"
+   ]
+  },
+  "focusPrimary": {
+   "value": "scalp_active",
+   "confidence": "moderate",
+   "neighboringAlternative": "moisture",
+   "claimRole": "candidate",
+   "counterSignal": "Moderate cleansing (sodium coco-sulfate chassis); lengths moisture claim competes.",
+   "decisionTrace": "Claim direction: sensitive scalp (manufacturer, moderate) and lengths moisture. F7: name 'Ultra Sensitive' names no scalp role, so neither role is in the name -> scalp_active primary, formula-compatible (scalpComfortTarget targeted). Route: comfort routes Panthenol@7, Niacinamide@8; fragrance-free.",
+   "rationale": "scalp_active: explicit sensitive-scalp positioning with targeted comfort (7.2, F7).",
+   "ruleIds": [
+    "7.2",
+    "F7",
+    "SC1"
+   ],
+   "careDirection": {
+    "verdict": "moisture_supported",
+    "moistureRoutes": [
+     "Glycerin@3",
+     "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@12",
+     "Glyceryl Oleate@11"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Hydrogenated Palm Glycerides Citrate@13",
+     "Lecithin@14"
+    ],
+    "limitation": "verdict applies to the secondary moisture role; primary is scalp_active"
+   }
+  },
+  "focusSecondary": {
+   "value": [
+    "moisture"
+   ],
+   "confidence": "moderate",
+   "neighboringAlternative": [],
+   "decisionTrace": "Empty default considered. Distinct lengths positioning: '5 % Glycerin ... spendet Feuchtigkeit und pflegt das Haar geschmeidig' (manufacturer, moderate). Independent route: Glycerin@3 + guar@12 + Glyceryl Oleate@11 (the primary cites Panthenol@7, Niacinamide@8 and the fragrance-free mild formula). Distinct from scalp comfort.",
+   "rationale": "Moisture secondary: separate lengths-moisture positioning with an independent humectant + cationic route (Section 8, F3).",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3"
+   ]
+  },
+  "usageRole": {
+   "value": "frequent",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "explicit_frequent_non_strong",
+   "triggerEvidence": [
+    "manufacturer_de (moderate): 'ideal für die tägliche Haarwäsche bei sensibler Haut'",
+    "cleansingStrength moderate"
+   ],
+   "losingTriggers": [],
+   "rationale": "Frequent: explicit 'tägliche Haarwäsche' from a moderate source, non-strong formula.",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2"
+   ],
+   "decisionTrace": "Default regular considered; trigger explicit_frequent_non_strong; no losing trigger."
+  },
+  "scalpComfortTarget": {
+   "value": "targeted",
+   "confidence": "moderate",
+   "neighboringAlternative": "not_targeted",
+   "rationale": "Targeted: SC1 met by 'Mildes Shampoo für empfindliche Kopfhaut' (manufacturer, moderate); CSA met by prominent E4 comfort routes Panthenol@7 and Niacinamide@8 and humectant routes Glycerin@3, Glyceryl Oleate@11; fragrance-free supportive. MB not met (Sodium Coco-Sulfate@4). Confidence moderate (positioning moderate).",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "SC1",
+    "E2a"
+   ]
+  }
+ },
+ "reconciliation": [
+  "focusPrimary general (low) -> scalp_active (moderate): manufacturer sensitive-scalp positioning + CSA.",
+  "focusSecondary [] -> ['moisture'] (moderate): separate lengths-moisture claim with independent glycerin/guar route.",
+  "usageRole regular (low) -> frequent (high).",
+  "scalpComfortTarget not_targeted (provisional) -> targeted (moderate): SC1 + CSA.",
+  "No formula property changed."
+ ],
+ "projection": {
+  "status": "proposal_blocked_pending_review",
+  "thicknessFit": {
+   "fine": "ideal",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 with weightPotential low (moderate, neighbor moderate) and conditioningLevel moderate (moderate, neighbor low): fine ideal, normal ideal, coarse acceptable. T6 scalp-concern floor (sensitive): no not_suited fit to lift. T4: review_thickness_boundary:fine (weightPotential neighbor moderate -> acceptable). T2: thickness/volume claims ignored for fit.",
+  "weight": "light",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential low -> weight light, 1:1; confidence = weightPotential confidence (moderate). Claims ('ohne zu beschweren', 'leicht') never lower it (6.5).",
+  "scalpTargets": {
+   "primary": {
+    "target": "sensitive",
+    "confidence": "moderate",
+    "rationale": "S-SENSITIVE: E2 sensitive unit 'für empfindliche Kopfhaut' (moderate); formula gate scalpComfortTarget targeted + prominent comfort route Panthenol@7/Niacinamide@8. cleansingStrength moderate -> no strong-cleansing flag. Confidence = min(positioning moderate, targeted moderate)."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "moderate",
+  "cleansingIntensityRationale": "I1: cleansingStrength moderate (moderate), D1 false -> regular. I3: neighbor low raises no flag (irritationen expects gentle).",
+  "explicitResetPositioning": false,
+  "explicitResetRationale": "No D1 stem (tiefenrein, deep clean, clarifying shampoo, detox-reinigung) in the name or a manufacturer/pack claim, and no occasional-use directions.",
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D2 not met (cleansingStrength moderate, focusPrimary scalp_active, usageRole frequent, D1 false) -> not_flagged.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "irritationen",
+    "scalp_route": "irritated",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "irritationen",
+    "scalp_route": "irritated",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "irritationen",
+    "scalp_route": "irritated",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   "review_thickness_boundary:fine (weightPotential neighbor moderate -> acceptable)"
+  ],
+  "informationalNotes": [],
+  "catalogDependent": "review_live_value_differs not evaluated in-lane (live rows unseen; orchestrator after freeze)."
+ },
+ "selfCheck": "6.11: fingerprint matches the stage-A packet; claims and labels were hidden during the formula pass (phase 1 frozen before reveal); no ingredient, family count or position window assigned the weight band; W-line derived per W-LINE with skipped candidates recorded; depositionLoad/persistence/resetCapacity present; whyNotNeighborBand specific; confidence names its limiting factor; no comparison with earlier values in-lane. Formula properties (cleansing, conditioning, weight, dandruff) unchanged after unblind (3.2: claims cannot move them). N-ALT checked: every high confidence has neighbor none, every moderate/low names one neighbor. Projection derived mechanically from final properties (T1/T6/T4/W-LIVE/I1/I3/D2/13.7/13.8).",
+ "uncertainties": [
+  "cleansingStrength moderate (C5) with neighbor low: current regular vs bucket irritationen expectation gentle -> amber; I3 raises no flag because the current intensity already differs.",
+  "Secondary moisture could be read as an outcome of the same mild care formula; alternative [].",
+  "'Mildes Shampoo für empfindliche Kopfhaut' read as for-the-state positioning, not sparing wording; alternative: protective -> not_targeted, ordinary."
+ ]
+}

@@ -1,0 +1,340 @@
+{
+ "blindId": "W401",
+ "lane": "lane-a",
+ "phase": "2-final",
+ "policyId": "shampoo-classification-v1.6.2",
+ "formulaPassSha256": "0551061063c95bdab4db30021a438d4886e1271fd85187b3400a7c02fba85c09",
+ "identity": {
+  "brand": "Nivea (Beiersdorf)",
+  "productName": "NIVEA 2in1 Express Shampoo & Spülung, 400 ml",
+  "packSize": "400 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "da8236c75707925b9697352fca702d873b6d0f1b1b186fdc2381434cc9dbb5a9",
+  "normalization": "Packet list already normalized (synonym variants are single entries); positions cited are normalized one-based positions (ID-2), identical to the packet order.",
+  "completeness": "complete (formula source tier 2, identity confidence high)",
+  "e3ProminenceCutoff": "Parfum@18 (fragrance marker); prominent = positions 1-17",
+  "identityNotes": []
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`moderate` by C1: defining anionic Sodium Laureth Sulfate@2 (ether/sulfonate type), three prominent buffers (Cocamidopropyl Betaine@3 amphoteric, Decyl Glucoside@4 and Coco-Glucoside@5 nonionic glucosides), no reinforcing strong anionic. Counter-signals (refatting Glyceryl Oleate@11, Dicaprylyl Ether@10) argue lower but never move a C1 value; the triple buffer makes the convention unambiguous.",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "E3"
+   ],
+   "counterSignal": "Refatting Glyceryl Oleate@11 and lipids Dicaprylyl Ether@10/HCO@14 argue milder; they never move a C1 value (C1).",
+   "formulaFacts": [
+    "Sodium Laureth Sulfate@2 strong anionic ether type (defining)",
+    "Cocamidopropyl Betaine@3 amphoteric (buffer)",
+    "Decyl Glucoside@4 nonionic glucoside (buffer)",
+    "Coco-Glucoside@5 nonionic glucoside (buffer)"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "high",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "`high` by C2: prominent payload_lipid Dicaprylyl Ether@10 and Hydrogenated Castor Oil@14 take the place of the early silicone; cationic polymer Guar Hydroxypropyltrimonium Chloride@9; pearlizing/fatty route Glycol Distearate@13; deliberate humectant Glycerin@12 (R11 list). Also W-RICH for conditioning (E3-prominent payload lipid with a cationic system). Confidence moderate: every route sits in the second half of the list (after Citric Acid@7 and Aloe@8), the lipids are a light emollient ether and a small waxy thickener-type lipid, so realistic dose unknowns could leave one bounded system (`moderate`).",
+   "ruleIds": [
+    "C2",
+    "R11",
+    "W-RICH",
+    "5",
+    "N-ALT"
+   ],
+   "counterSignal": "All C2 elements sit in the second half of the list; lipids are a light ether and a small waxy lipid. '2in1' claim ignored (C7).",
+   "formulaFacts": [
+    "cationic: Guar Hydroxypropyltrimonium Chloride@9",
+    "payload lipid: Dicaprylyl Ether@10, Hydrogenated Castor Oil@14",
+    "weak refatter: Glyceryl Oleate@11",
+    "pearlizing: Glycol Distearate@13",
+    "humectant: Glycerin@12"
+   ]
+  },
+  "weightPotential": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "high",
+   "evidence": {
+    "cationic_polymer": [
+     "Guar Hydroxypropyltrimonium Chloride@9"
+    ],
+    "payload_lipid": [
+     "MATERIAL: Dicaprylyl Ether@10 (emollient ether)",
+     "MATERIAL: Hydrogenated Castor Oil@14 (waxy lipid; at W-line-1, boundary position)"
+    ],
+    "weak_refatter": [
+     "Glyceryl Oleate@11"
+    ],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "anionic: Sodium Laureth Sulfate@2",
+     "amphoteric: Cocamidopropyl Betaine@3",
+     "nonionic: Decyl Glucoside@4, Coco-Glucoside@5"
+    ],
+    "humectantContext": [
+     "Glycerin@12",
+     "Aloe Barbadensis Leaf Juice Powder@8 (plant juice, context only)"
+    ],
+    "excluded": [
+     "Glycol Distearate@13 (pearlizing wax, 6.4)",
+     "Tetramethyl Acetyloctahydronaphthalenes@17 (fragrance material)",
+     "Sodium Chloride@6, Citric Acid@7 (salt/acid)"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": "15 Sodium Benzoate",
+    "candidateClasses": [
+     "preservative_or_capped_active"
+    ],
+    "cap": "e3Point 18 (Parfum)",
+    "alphabeticalRun": "none",
+    "skipped": [],
+    "testedCandidate": "Sodium Benzoate@15: (i) Sodium Laureth Sulfate@2 before it; (ii) entries 16-17 (Benzoic Acid, Tetramethyl Acetyloctahydronaphthalenes) contain no cleansing surfactant, alkanolamide or pearlizing wax -> plausible",
+    "codes": [],
+    "payloadLipidMaterial": [
+     "Dicaprylyl Ether@10",
+     "Hydrogenated Castor Oil@14"
+    ],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "moderate — one cationic guar plus two material lipids (light emollient ether, small waxy lipid) and a glyceride refatter; no silicone.",
+   "persistence": "moderate — guar can deposit via coacervate; Dicaprylyl Ether is light and spreading, HCO is waxy but at the W-line boundary; no persistent silicone system.",
+   "resetCapacity": "moderate — C1 ether-sulfate chassis with three buffers (effective ordinary reset, not limited).",
+   "counterevidence": "W-RICH is established for weight (material Dicaprylyl Ether@10/HCO@14 converging with guar@9), which argues for `high`; but W-RICH needs limited reset and reset is moderate.",
+   "whyThisBand": "Interacting light/moderate routes (guar + material lipids + refatter) plausibly leave noticeable but bounded residue; an ordinary buffered sulfate reset argues against a coating result.",
+   "whyNotNeighborBand": "Not `high`: W-RICH holds but resetCapacity is moderate (not limited), and the remaining convergence (one guar + a light ether and a boundary-position waxy lipid, no silicone) is not plausibly persistent enough to outrun an ordinary C1 reset. Not `low`: two deposition families with material lipids (W2) make 'lightweight' an understatement.",
+   "confidenceLimitingFactor": "W-RICH counter-signal with HCO at W-line-1; dose of guar and lipids unknown (INCI order only).",
+   "rationale": "`moderate`: W-RICH present but reset not limited (W-RICH limited-reset clause), convergence not strong enough for the high anchor; W2 rules out low. Neighbor `high` (W-RICH recorded as counter-signal).",
+   "ruleIds": [
+    "6.6",
+    "W-RICH",
+    "W-LINE",
+    "W2",
+    "W3",
+    "N-ALT"
+   ],
+   "counterSignal": "W-RICH is established for weight (material Dicaprylyl Ether@10/HCO@14 converging with guar@9), which argues for `high`; but W-RICH needs limited reset and reset is moderate."
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "shine",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "Glycerin@12"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Guar Hydroxypropyltrimonium Chloride@9",
+     "Dicaprylyl Ether@10",
+     "Glyceryl Oleate@11",
+     "Hydrogenated Castor Oil@14"
+    ],
+    "limitation": "no protein, amino-silicone or bond route; a single late humectant"
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Manufacturer claims (moderate) name repair-type benefits ('Stärkt die Haarstruktur', 'schützt vor Haarbruch', 'regenerierende') and shine ('Glanz-Serum', 'natürlicher Glanz').",
+   "decisionTrace": "Claim direction: mixed generic care (express 2in1 care, combability, strengthening/breakage, shine). Repair candidate fails F1 (formula verdict nonspecific, not repair_supported). Shine is one of several bullets, not the dominant job named by the name or headline; its only plausible route (light emollient film, Dicaprylyl Ether) is generic conditioning. Decision: 7.2 'unsupported, contradictory or generic claims' -> general.",
+   "rationale": "`general`: claims are generic multi-benefit care; the repair claim lies over a nonspecific formula (F1) and shine is not dominant.",
+   "ruleIds": [
+    "7.2",
+    "7.3",
+    "F1",
+    "CL-SRC",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "shine"
+   ],
+   "decisionTrace": "Empty default considered. Shine positioning exists (manufacturer, moderate) but its only formula route (Dicaprylyl Ether/guar smoothing) is the same generic conditioning route; with a general primary it would have to carry a role alone, which 7.2 already rejected.",
+   "rationale": "`[]`: no secondary with distinct positioning and an independent route.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3",
+    "F4",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Default `regular`: no U2 frequency wording, no D1, no reset intent, no active. Directions are plain apply/rinse.",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "U5",
+    "CL-SRC",
+    "F-TRACE"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "csaRoute": "MET (Glyceryl Oleate@11, Glycerin@12, Hydrogenated Castor Oil@14); MB excluded (Sodium Laureth Sulfate@2)",
+   "rationale": "`not_targeted`: no SC1 positioning — 'Reinigt sanft die Kopfhaut' and 'Hautverträglichkeit dermatologisch bestätigt' are mildness/protective wording (E2a); CSA alone never makes `targeted`.",
+   "counterSignal": "CSA formula half is met, so a real sensitive claim would have changed the value; none exists.",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "MB",
+    "SC1",
+    "E2a",
+    "E3",
+    "E4"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`not_supported`: the complete INCI contains none of Piroctone Olamine, Climbazole, Selenium Sulfide or Selenium Disulfide (Section 11, DS1).",
+   "ruleIds": [
+    "11",
+    "DS1",
+    "ID-1"
+   ],
+   "counterSignal": "none — mechanical recognition of the closed active list",
+   "formulaFacts": [
+    "no recognized anti-dandruff active"
+   ]
+  }
+ },
+ "formulaFacts": {
+  "surfactants": [
+   "Sodium Laureth Sulfate@2 strong anionic ether type (defining)",
+   "Cocamidopropyl Betaine@3 amphoteric (buffer)",
+   "Decyl Glucoside@4 nonionic glucoside (buffer)",
+   "Coco-Glucoside@5 nonionic glucoside (buffer)"
+  ],
+  "conditioningRoutes": [
+   "cationic: Guar Hydroxypropyltrimonium Chloride@9",
+   "payload lipid: Dicaprylyl Ether@10, Hydrogenated Castor Oil@14",
+   "weak refatter: Glyceryl Oleate@11",
+   "pearlizing: Glycol Distearate@13",
+   "humectant: Glycerin@12"
+  ],
+  "comfortRoutes": "E4 comfort list: none; E4 humectant/refatting: Glyceryl Oleate@11, Glycerin@12, Hydrogenated Castor Oil@14 (all prominent)",
+  "actives": [
+   "no recognized anti-dandruff active"
+  ],
+  "exposureFlags": [
+   "Parfum@18",
+   "Tetramethyl Acetyloctahydronaphthalenes@17 (fragrance material)",
+   "no cooling agent, no essential oil"
+  ],
+  "preservatives": [
+   "Sodium Benzoate@15",
+   "Benzoic Acid@16"
+  ]
+ },
+ "projection": {
+  "status": "proposal_blocked_by_review_flags",
+  "thicknessFit": {
+   "fine": "acceptable",
+   "normal": "ideal",
+   "coarse": "ideal"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 from weightPotential `moderate` and conditioningLevel `high` (coarse reads C); ordinary target: T1 unchanged (no T6); T4 checked against the N-ALT neighbors of W (all thicknesses) and C (coarse), after T6. T2: claims about hair type/texture ('Alle Haartypen; 'ohne zu beschweren'') never change fit.",
+  "weight": "moderate",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential `moderate` -> `moderate` 1:1; confidence = weightPotential confidence.",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "confidence": "high",
+    "rationale": "S-ORDINARY way 1: no qualifying E2 claim unit after E2a (only mildness wording 'reinigt sanft die Kopfhaut'); manufacturer source present -> confidence high (13.8)."
+   },
+   "secondary": null,
+   "secondaryRationale": "No secondary target: no second qualifying distinct E2 claim unit with a passing gate (S-SECONDARY)."
+  },
+  "researchCombinationTargets": [],
+  "researchCombinationRationale": "Not a dandruff-primary product: research-only combination does not apply (E2b).",
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1: cleansingStrength `moderate` -> `regular` (formula plus D1 only; focus and usage role are not inputs). I3 checked with the N-ALT neighbor `none`.",
+  "explicitResetPositioning": false,
+  "explicitResetRationale": "D1 false: no D1 stem (tiefenrein, deep clean, clarifying shampoo, detox-reinigung) in the name or any manufacturer/pack claim, and no occasional-use direction.",
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserRecord": null,
+  "deepCleanserListingConfidence": "high",
+  "deepCleanserRationale": "D2 not satisfied (requires cleansingStrength strong, focus clarifying, usageRole occasional_reset and D1 true) -> not_flagged.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "acceptable"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "moderate",
+    "tier": "ideal"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   "review_thickness_boundary:fine",
+   "review_thickness_boundary:normal",
+   "review_thickness_boundary:coarse"
+  ],
+  "informationalNotes": [],
+  "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; this lane sees no catalog values."
+ },
+ "reconciliation": [
+  "focusPrimary: blind provisional `general` (low) -> final `general` (moderate); claims are generic multi-benefit (manufacturer, moderate), repair claim rejected by F1.",
+  "focusSecondary: `[]` (low) -> `[]` (moderate).",
+  "usageRole: `regular` (low) -> `regular` (high); no trigger in any moderate/high source.",
+  "scalpComfortTarget: provisional `not_targeted` (low) -> `not_targeted` (high); no SC1 unit.",
+  "cleansingStrength, conditioningLevel, weightPotential, dandruffSupport unchanged (formula-only, 3.2). '2in1' (C7) and 'ohne zu beschweren' (6.5 step 5) ignored."
+ ],
+ "selfCheck": "6.11: fingerprint equals the frozen formula packet and the hash-pinned formula pass; claims were hidden during the formula judgment (formula pass written before reveal, not edited); no ingredient, count or position window assigned the weight band; the W-line was derived exactly per W-LINE with skipped candidates recorded; all three subjudgments present; whyNotNeighborBand specific (W2 where two families); confidence names its limiting factor. Cleansing, conditioning, weight and dandruff values are unchanged from the blind pass (claims cannot move them, 3.2). Projection fields computed mechanically from final properties (T1/T6/T4, W-LIVE, I1/I3, 13.7).",
+ "uncertainties": [
+  "Focus: `general` chosen; alternative `shine` (Glanz-Serum claim, moderate) if shine were read as the dominant job — no projection effect.",
+  "Conditioning `high` rests on C2 with the payload lipid (Dicaprylyl Ether@10/HCO@14) replacing the silicone; alternative `moderate` (neighbor) — would not change T1 except coarse ideal->acceptable (already flagged by T4).",
+  "Weight `moderate` vs `high` (W-RICH with ordinary reset); neighbor `high` recorded, T4 flags fine/normal/coarse."
+ ]
+}

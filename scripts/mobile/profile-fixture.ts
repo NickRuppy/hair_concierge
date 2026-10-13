@@ -145,7 +145,10 @@ export async function seedMobileProfileFixtures(
     createdAt: "2026-09-12T00:00:00.000Z",
   })
   if (computed.status !== "ready") throw new Error("mobile_fixture_initial_failed")
-  const triggerContext = deriveStage2TriggerContext(computed.snapshot)
+  const triggerContext = deriveStage2TriggerContext(computed.snapshot, {
+    // Tools-off: the mobile fixtures stay product-only.
+    toolsEnabled: false,
+  })
   const resolved = resolveAssumedAnswers({
     triggerContext,
     answers: {

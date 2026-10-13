@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { readFile } from "node:fs/promises"
 
 import {
   applyUserFactsLock,
@@ -120,7 +121,7 @@ test("inserts the profile row, stores the domain verbatim and derives every diag
   assert.equal(row.scalp_type, "oily")
   assert.equal(row.scalp_condition, "irritated")
   assert.deepEqual(row.chemical_treatment, ["bleached"])
-  assert.deepEqual(row.concerns, ["dryness"])
+  assert.deepEqual(row.concerns, ["dryness", "low_shine"])
   assert.deepEqual(row.goals, ["volume"])
   assert.equal(row.desired_volume, "more")
 
@@ -159,7 +160,7 @@ test("a patch replaces only the fields it names, and the revision counts writes 
   assert.deepEqual(merged.diagnostics, { ...FULL_DIAGNOSTICS, texture: "curly" })
   assert.equal(merged.hair_texture, "curly")
   assert.equal(merged.thickness, "fine")
-  assert.deepEqual(merged.concerns, ["dryness"])
+  assert.deepEqual(merged.concerns, ["dryness", "low_shine"])
 
   const third = await saveUserFacts(pg, {
     userId: USER,
@@ -1398,4 +1399,82 @@ test("the plan facts cursor starts empty and the draft origin defaults to 'user'
     ]),
     /personal_plan_refinement_drafts_origin_check/,
   )
+})
+
+test("NR2/NR3: facts RPC persists new concern/main-problem values and a neutral goal", async (t) => {
+  const pg = await freshDatabase(t)
+  for (const primaryConcern of ["low_shine", "lost_shape", "low_volume_or_weighed_down"]) {
+    const patch = {
+      ...FULL_DIAGNOSTICS,
+      texture: "straight",
+      thickness: "normal",
+      goals: ["volume_balance"],
+      currentConcerns: [primaryConcern, "dry_lengths"],
+      primaryConcern,
+    }
+    const result = await saveUserFacts(pg, {
+      userId: USER,
+      domain: "diagnostics",
+      patch,
+      provenance: DIAGNOSTICS_PROVENANCE,
+    })
+    assert.equal(result.status, "ok")
+    const row = await readHairProfile(pg, USER)
+    assert.ok(row)
+    assert.deepEqual(row.concerns, [primaryConcern, "dryness"])
+    assert.equal(row.primary_concern, primaryConcern)
+    assert.deepEqual(row.goals, ["volume_balance"])
+    assert.equal(row.desired_volume, null)
+    assert.deepEqual(row.diagnostics, patch)
+  }
+  await assert.rejects(
+    pg.exec(`BEGIN; SELECT set_config('app.user_facts_writer', '${USER}', true);
+      UPDATE public.hair_profiles SET concerns = ARRAY['unknown_concern'], primary_concern = 'unknown_concern' WHERE user_id = '${USER}';`),
+    /hair_profiles_primary_concern_check/,
+  )
+  await pg.exec("ROLLBACK;")
+})
+
+test("NR2/NR3 backfill draft preserves facts, rehearses rollback, is idempotent and refuses unrelated drift", async (t) => {
+  const pg = await freshDatabase(t)
+  const patch = {
+    ...FULL_DIAGNOSTICS,
+    texture: "straight",
+    thickness: "normal",
+    currentConcerns: ["low_shine", "dry_lengths"],
+    primaryConcern: "low_shine",
+  }
+  await saveUserFacts(pg, {
+    userId: USER,
+    domain: "diagnostics",
+    patch,
+    provenance: DIAGNOSTICS_PROVENANCE,
+  })
+  // Seed the exact pre-migration columns of an otherwise unchanged facts row.
+  await pg.exec(`BEGIN; SELECT set_config('app.user_facts_writer', '${USER}', true);
+    UPDATE public.hair_profiles SET concerns = ARRAY['dryness'], primary_concern = NULL, goals = ARRAY[]::text[], desired_volume = NULL WHERE user_id = '${USER}'; COMMIT;`)
+  const before = await readHairProfile(pg, USER)
+  const draft = await readFile(
+    new URL("../scripts/user-facts/backfill-concern-vocabulary.sql", import.meta.url),
+    "utf8",
+  )
+  await pg.exec(draft)
+  assert.deepEqual(await readHairProfile(pg, USER), before, "rehearsal rolls back")
+  const inMemoryApply = draft.replace(/ROLLBACK;\s*$/, "COMMIT;")
+  await pg.exec(inMemoryApply)
+  const after = await readHairProfile(pg, USER)
+  assert.ok(before && after)
+  assert.deepEqual(after.diagnostics, before.diagnostics)
+  assert.deepEqual(after.facts_provenance, before.facts_provenance)
+  assert.equal(after.facts_revision, before.facts_revision + 1)
+  assert.deepEqual(after.concerns, ["low_shine", "dryness"])
+  assert.equal(after.primary_concern, "low_shine")
+  assert.deepEqual(after.goals, ["volume_balance"])
+  assert.equal(after.desired_volume, null)
+  await pg.exec(inMemoryApply)
+  assert.deepEqual(await readHairProfile(pg, USER), after, "second run is a no-op")
+  await pg.exec(`BEGIN; SELECT set_config('app.user_facts_writer', '${USER}', true);
+    UPDATE public.hair_profiles SET hair_length = 'short', concerns = ARRAY['dryness'] WHERE user_id = '${USER}'; COMMIT;`)
+  await assert.rejects(pg.exec(inMemoryApply), /unrelated diagnostics-column drift/)
+  await pg.exec("ROLLBACK;")
 })

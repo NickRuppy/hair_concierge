@@ -1,0 +1,46 @@
+{
+  "blindId": "T103",
+  "inciFingerprintSha256": "667bb736dc96760b8b9c2f7bb53340747ed7be081bd20ecc5c877feeb11c2408",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {"normalization": "Packet list used as normalized; normalized one-based positions.", "completeness": "complete (ID-1)", "sourceTier": 4, "identityConfidence": "moderate", "e3ProminenceCutoff": "Parfum at 11 -> positions 1-10 prominent"},
+  "directProperties": {
+    "cleansingStrength": {"value": "strong", "confidence": "high", "neighboringAlternative": "none",
+      "rationale": "C1: defining anionic Sodium Laureth Sulfate (2) with a prominent reinforcing strong anionic Sodium Lauryl Sulfate (3) -> strong (buffer Cocamidopropyl Betaine 6 does not offset a reinforcing route).",
+      "counterSignals": "Silicones (10, 13), guar (15) and betaine buffer; TEA-Dodecylbenzenesulfonate (16) is after Parfum and not counted."},
+    "conditioningLevel": {"value": "high", "confidence": "moderate", "neighboringAlternative": "moderate",
+      "rationale": "C2 met: early (prominent) silicone Dimethiconol (10), cationic polymer Guar Hydroxypropyltrimonium Chloride (15), pearlizing route Glycol Distearate (7) and a deliberate humectant entry Panthenol (24); second silicone Dimethicone (13). Strong cleansing does not lower conditioning (C2).",
+      "counterSignals": "Guar and Panthenol sit late (after Parfum); Dimethiconol is the last prominent entry; the cleansing chassis is strong."},
+    "weightPotential": {"value": "moderate", "confidence": "moderate", "neighboringAlternative": "high",
+      "rationale": "Two silicones plus cationic guar form a plausible silicone/guar deposition system; strong reset and absence of any payload lipid keep it bounded.",
+      "subjudgments": {
+        "depositionLoad": {"value": "moderate", "rationale": "Dimethiconol (10) + Dimethicone (13) + Guar HPTC (15): a coacervate-type silicone deposition system."},
+        "persistence": {"value": "moderate", "rationale": "Silicones are persistent and guar aids their deposition; no lipid/film former reinforces."},
+        "resetCapacity": {"value": "strong", "rationale": "SLES reinforced by SLS (C1 strong)."}},
+      "evidenceByFamily": {"silicone": ["Dimethiconol (10)", "Dimethicone (13)"], "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride (15)"], "anionic_surfactant": ["Sodium Laureth Sulfate (2)", "Sodium Lauryl Sulfate (3)", "TEA-Dodecylbenzenesulfonate (16, non-prominent)"], "amphoteric_surfactant": ["Cocamidopropyl Betaine (6)"], "humectant_context": ["Panthenol (24)", "Panthenyl Ethyl Ether (25)", "Niacinamide (30)"]},
+      "excluded": ["Glycol Distearate (7): pearlizer (6.4)", "Sodium Xylenesulfonate (5): hydrotrope", "Trideceth-10 (20): emulsifier for the silicone", "Propylene Glycol (27), Triethylene Glycol (31): solvents", "Camellia Sinensis Leaf Extract (29): extract"],
+      "unresolved": [],
+      "whyThisBand": "At least one persistent depositing system (silicone + guar) is plausible enough that calling it lightweight would understate residue.",
+      "whyNotNeighborBand": "Not high: no W-RICH (no prominent payload lipid), no second cationic or film former, and a strong reset faces the system. Not low: two silicones plus a deposition polymer are two converging families (W2). W1 does not apply (no amodimethicone), so it is not cited.",
+      "confidenceLimitingFactor": "Silicone levels unknown; two silicones could plausibly read heavier (neighbor high, heavier value on an equally realistic tie)."},
+    "focusPrimary": {"value": "provisional:pending_claims", "confidence": "low", "neighboringAlternative": "general",
+      "rationale": "Formula-only candidate: scalp_active (Piroctone Olamine 12; needs an E2 dandruff claim). Conditioning is generic silicone/guar (nonspecific for repair/moisture).",
+      "careDirectionVerdictProvisional": "nonspecific"},
+    "focusSecondary": {"value": [], "confidence": "low", "neighboringAlternative": ["shine"], "rationale": "Empty default pending claims."},
+    "usageRole": {"value": "regular", "confidence": "low", "neighboringAlternative": "treatment", "rationale": "Default; treatment possible if a qualifying dandruff claim is revealed; alternating possible only with reset intent (cleansing strong)."},
+    "scalpComfortTarget": {"value": "provisional:not_targeted", "confidence": "low", "neighboringAlternative": "targeted", "rationale": "CSA not met: no E4 comfort or humectant route in positions 1-10 (Panthenol 24, Niacinamide 30 are late). Counter-signal: strong cleansing."},
+    "dandruffSupport": {"value": "supported", "confidence": "high", "neighboringAlternative": "none", "rationale": "Complete INCI contains Piroctone Olamine (12)."}
+  },
+  "formulaFacts": [
+    {"ingredient": "Sodium Laureth Sulfate", "position": 2, "role": "defining anionic (ether type)"},
+    {"ingredient": "Sodium Lauryl Sulfate", "position": 3, "role": "reinforcing route (alkyl sulfate)"},
+    {"ingredient": "Cocamidopropyl Betaine", "position": 6, "role": "buffer (amphoteric)"},
+    {"ingredient": "Glycol Distearate", "position": 7, "role": "pearlizing route (C2)"},
+    {"ingredient": "Dimethiconol", "position": 10, "role": "silicone, prominent (early, C2)"},
+    {"ingredient": "Parfum", "position": 11, "role": "E3 fragrance marker"},
+    {"ingredient": "Piroctone Olamine", "position": 12, "role": "recognized anti-dandruff active"},
+    {"ingredient": "Dimethicone", "position": 13, "role": "silicone"},
+    {"ingredient": "Guar Hydroxypropyltrimonium Chloride", "position": 15, "role": "cationic_polymer"},
+    {"ingredient": "Panthenol", "position": 24, "role": "humectant (C2 element), non-prominent"}
+  ],
+  "unresolvedMaterialIngredients": []
+}

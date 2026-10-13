@@ -1,0 +1,288 @@
+{
+  "blindId": "W318",
+  "policy": "shampoo-classification-v1.6.2",
+  "lane": "lane-a",
+  "phase": "final (post-unblind reconciliation)",
+  "formulaPassRecord": "out/formula-pass/W318.json (hash-pinned, unedited)",
+  "identity": {
+    "brand": "Being",
+    "productName": "Being Big Hair Shampoo (Volumen Shampoo)",
+    "packSize": "354 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "7def5e2af9726079ed0af2f394b941672e8bd3f031cb15361f5cad35cf9c8a5c",
+    "normalization": "'AQUA/WATER/EAU' and 'PARFUM (FRAGRANCE)' single entries; packet positions = normalized positions (ID-2). 24 entries.",
+    "completeness": "complete; formula source tier 3; identity confidence moderate",
+    "e3ProminenceCutoff": "PARFUM (FRAGRANCE) @12. Prominent = positions 1-11.",
+    "positioningSources": [
+      "retailer Rossmann (low)",
+      "retailer Hagel-Shop (low)",
+      "manufacturer_foreign US page (low)"
+    ]
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis. Defining anionic Sodium C14-16 Olefin Sulfonate @3 (alpha-olefin sulfonate, ether/sulfonate type) with three prominent buffers (Cocamidopropyl Betaine @2, Coco-Glucoside @5, mild anionic Sodium Cocoyl Isethionate @7) and no reinforcing strong anionic. Disodium Laureth Sulfosuccinate @15 is after Parfum (recorded, not counted).",
+      "ruleIds": [
+        "C1",
+        "C3",
+        "C4"
+      ],
+      "counterSignal": "None material."
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High: rich architecture (Section 5 reading of W-RICH, E3 prominence): prominent payload lipids Macadamia Integrifolia Seed Oil @8 and Persea Gratissima Oil @9 converge with the cationic polymers Polyquaternium-10 @17 and Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @18; humectants Glycerin @6, Panthenol @16. C2 itself is not met (no pearlizing wax or fatty-alcohol route). Counter-signal: both cationics are after Parfum and there is no pearlizer/silicone, so bounded care (moderate) is realistic.",
+      "ruleIds": [
+        "W-RICH",
+        "C2",
+        "R11",
+        "Section 5 anchors"
+      ],
+      "counterSignal": "Both cationics after Parfum; no pearlizer/silicone; bounded care (moderate) realistic."
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "cationic_polymer": [
+          "Polyquaternium-10 @17",
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @18"
+        ],
+        "payload_lipid": [
+          "Macadamia Integrifolia Seed Oil @8 (material)",
+          "Persea Gratissima Oil @9 (material, at W-line - 1)"
+        ],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": [
+          "Cocamidopropyl Betaine @2",
+          "Sodium C14-16 Olefin Sulfonate @3",
+          "Coco-Glucoside @5",
+          "Sodium Cocoyl Isethionate @7",
+          "Disodium Laureth Sulfosuccinate @15 (post-E3)"
+        ],
+        "humectantContext": [
+          "Glycerin @6",
+          "Panthenol @16",
+          "Propylene Glycol @11 (solvent)"
+        ],
+        "excluded": [
+          "Acrylates Copolymer @14 (anionic acrylate thickener, 6.4)",
+          "Cyclodextrin @20, Sodium Starch Octenylsuccinate @21, Hydroxypropyl Starch Phosphate @24 (non-cationic starch/encapsulant thickeners)",
+          "Disodium EDTA @19 (chelator)"
+        ],
+        "unresolved": []
+      },
+      "wLine": {
+        "wLine": "@10 Phenoxyethanol",
+        "classes": [
+          "preservative_or_capped_active"
+        ],
+        "cap": "e3Point @12 (PARFUM (FRAGRANCE))",
+        "alphabeticalRun": "none (longest ascending runs 4 entries)",
+        "skipped": [],
+        "codes": [],
+        "plausibility": "(i) CAPB @2, AOS @3 etc. before it; (ii) only Propylene Glycol @11 between it and the cap - no cleansing surfactant, alkanolamide or pearlizing wax.",
+        "payloadLipidMaterial": [
+          "Macadamia Integrifolia Seed Oil @8",
+          "Persea Gratissima Oil @9"
+        ],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "moderate",
+      "persistence": "moderate",
+      "resetCapacity": "moderate",
+      "counterevidence": "W-RICH holds for weight (material oils @8/@9 + two present cationic polymers); payload_lipid and cationic_polymer converge.",
+      "whyThisBand": "Two plant oils just before the preservative plus two late cationic polymers plausibly leave noticeable but bounded residue.",
+      "whyNotNeighborBand": "Not high: reset is not limited (C1 sulfonate chassis with three buffers, resetCapacity moderate), so W-RICH does not reach the high anchor; both cationics are after Parfum and the oils sit at the W-line boundary (@8, @9 vs line @10); no silicone, protein or cationic conditioner. Not low: material oils + cationics are two families (W2).",
+      "confidenceLimitingFactor": "Oil doses unknown (avocado oil at W-line - 1); W-RICH near the high boundary.",
+      "rationale": "Moderate: W-RICH recorded as counter-signal; ordinary reset.",
+      "ruleIds": [
+        "6.6",
+        "W-RICH",
+        "W-LINE",
+        "W2",
+        "N-ALT"
+      ],
+      "counterSignal": "W-RICH holds for weight (material oils @8/@9 + two present cationic polymers); payload_lipid and cationic_polymer converge."
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "neighboringAlternative": "volume",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [],
+        "limitation": "Candidate job is volume, not repair/moisture."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Volume positioning ('Volumen Shampoo', 'leicht und voluminös'), retailer/foreign only.",
+      "decisionTrace": "Claim direction: volume (retailer and foreign manufacturer, all low). A low-graded claim may be a candidate only when the formula independently supports that focus; the formula (conditioning high via W-RICH, weight moderate, two oils, two cationics) does not independently support volume. Decision: general.",
+      "rationale": "General: low-graded volume claim without independent formula support.",
+      "ruleIds": [
+        "7.2",
+        "CL-SRC"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "clarifying"
+      ],
+      "decisionTrace": "Empty default considered; only low-graded claims.",
+      "rationale": "Empty.",
+      "ruleIds": [
+        "Section 8"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "'Invigorating daily shampoo' and 'Klärend' are low-graded (foreign/retailer) and fire no trigger.",
+      "ruleIds": [
+        "Section 9",
+        "CL-SRC"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no scalp positioning.",
+      "ruleIds": [
+        "Section 10"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active.",
+      "ruleIds": [
+        "Section 11"
+      ],
+      "counterSignal": "None: recognition is a closed-list lookup on the complete INCI."
+    }
+  },
+  "formulaFacts": {
+    "surfactants": [
+      "Cocamidopropyl Betaine @2 (buffer)",
+      "Sodium C14-16 Olefin Sulfonate @3 (strong ether/sulfonate type, defining)",
+      "Coco-Glucoside @5 (buffer)",
+      "Sodium Cocoyl Isethionate @7 (mild anionic, buffer)",
+      "Disodium Laureth Sulfosuccinate @15 (mild anionic, post-E3)"
+    ],
+    "conditioningRoutes": [
+      "Macadamia Integrifolia Seed Oil @8",
+      "Persea Gratissima Oil @9",
+      "Polyquaternium-10 @17",
+      "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @18"
+    ],
+    "humectants": [
+      "Glycerin @6",
+      "Panthenol @16"
+    ],
+    "actives": [],
+    "exposure": [
+      "PARFUM (FRAGRANCE) @12"
+    ],
+    "preservatives": [
+      "Phenoxyethanol @10",
+      "Sodium Benzoate @13"
+    ]
+  },
+  "unresolvedMaterialIngredients": [],
+  "reconciliation": [
+    "focusPrimary: blind provisional general (low, neighbor moisture) -> final general (moderate, neighbor volume).",
+    "Thickness claims ('für feines Haar', 'type 1A-1C') ignored (T2). 'doesn't weigh hair down' does not lower weight (6.5).",
+    "Formula properties unchanged."
+  ],
+  "projection": {
+    "status": "proposal_blocked_pending_review",
+    "thicknessFit": {
+      "fine": "acceptable",
+      "normal": "ideal",
+      "coarse": "ideal"
+    },
+    "thicknessFitConfidence": {
+      "fine": "moderate",
+      "normal": "moderate",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": "T1 (ordinary target): W=moderate, C=high -> fine acceptable, normal ideal, coarse ideal. T4 with N-ALT neighbors (W neighbor high at moderate confidence; C neighbor moderate at moderate confidence): flag fine,normal,coarse. T2: thickness/texture claims ignored.",
+    "weight": "moderate",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: weightPotential moderate -> weight moderate; confidence = weightPotential confidence (moderate). Claims never adjust it.",
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "moderate",
+        "rationale": "S-ORDINARY way 1: no E2 scalp claim; retailer/foreign copy only -> moderate (13.8)."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength moderate, D1 false -> regular. I2: written unchanged to every row (bucket expectation normal expects regular). I3: cleansingStrength confidence high (neighbor none) -> no review_intensity_boundary.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserListingConfidence": "high",
+    "deepCleanserRationale": "D1 false: 'clarifying wash'/'Klärend' are low-graded and not D1 stems. not_flagged.",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine,normal,coarse"
+    ],
+    "informationalNotes": [],
+    "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; lanes never see catalog ids."
+  },
+  "selfCheck": "6.11: fingerprint 7def5e2af972 matches the frozen stage-A packet; claims were hidden during the formula pass (formula-pass record hash-pinned before release, not edited); no ingredient, family count or position window assigned the weight band, the W-line only gated payload_lipid legs; the W-line was derived from the frozen normalized list and every skipped candidate is recorded; depositionLoad/persistence/resetCapacity present with rationales; whyNotNeighborBand is specific (W2 where it applies); confidence names its limiting factor; no comparison with earlier values was made inside the lane. N-ALT neighbors follow confidence on every property; projection derived mechanically from final properties (T1/T6/T4, W-LIVE, I1-I3, S-gates, 13.7 row assembly, 13.8 confidence).",
+  "uncertainties": [
+    "No German manufacturer or pack source; identity moderate and formula source tier 3 (packet).",
+    "Weight moderate near high (W-RICH with material oils at W-line - 1/-2, moderate reset)."
+  ]
+}

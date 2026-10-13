@@ -1,3 +1,4 @@
+import { carryOverStage2NightAnswer } from "@/lib/personal-plan/refinement/night-wear-carry-over"
 import { normalizeLateAddedQuestions } from "@/lib/personal-plan/refinement/assumed-defaults"
 import { deriveStage2TriggerContext } from "@/lib/personal-plan/refinement/stage1-adapter"
 import type {
@@ -125,6 +126,7 @@ async function loadCurrentDraft(
 export async function loadRefinementStatusSource(
   client: RefinementStatusReadClient,
   userId: string,
+  options: { toolsEnabled: boolean },
 ): Promise<RefinementStatusSource> {
   const plan = await loadPlan(client, userId)
   if (!plan) return { status: "no_personal_plan" }
@@ -136,13 +138,14 @@ export async function loadRefinementStatusSource(
 
   const triggerContext = deriveStage2TriggerContext(
     await loadInitialNeedSnapshot(client, userId, plan.current_initial_need_version_id),
+    { toolsEnabled: options.toolsEnabled },
   )
   const draft = await loadCurrentDraft(client, plan.id, plan.current_initial_need_version_id)
 
   // Same read-time normalization as `mapDraft` (S4): a module finished before a late-added
   // question existed stays finished in the status, banner and Modul-1 resume.
-  const normalized = normalizeLateAddedQuestions({
-    status: draft?.status ?? "in_progress",
+  const raw = {
+    status: draft?.status ?? ("in_progress" as const),
     triggerContext,
     answers: (draft?.answers ?? {}) as PersonalPlanRefinementAnswersV1,
     completedQuestionIds: (Array.isArray(draft?.completed_question_ids)
@@ -150,7 +153,8 @@ export async function loadRefinementStatusSource(
       : []) as Stage2QuestionId[],
     answerProvenance: (draft?.answer_provenance ?? {}) as Stage2AnswerProvenance,
     moduleProjections: mapModuleProjections(draft?.module_projections),
-  })
+  }
+  const normalized = normalizeLateAddedQuestions(carryOverStage2NightAnswer(triggerContext, raw))
   return {
     status: "ok",
     triggerContext,

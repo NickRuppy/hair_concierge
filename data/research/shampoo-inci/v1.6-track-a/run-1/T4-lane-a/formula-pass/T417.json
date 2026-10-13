@@ -1,0 +1,282 @@
+{
+  "blindId": "T417",
+  "inciFingerprintSha256": "2a4f486823aac7756eaf4825fed441c60bb4b95178d1478510fdc8420ad57138",
+  "phase": "blind_formula_pass",
+  "identity": {
+    "packSize": "200 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high"
+  },
+  "formulaNotes": [
+    "Aqua/Water and Butyrospermum Parkii Butter/Shea Butter are single entries; normalized positions = packet positions.",
+    "E3 cut: Parfum at 8; prominent = 2-7."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic Sodium C14-16 Olefin Sulfonate (2) (ether/sulfonate type) with prominent buffer(s) Cocamidopropyl Betaine (5), Sodium Lauroyl Sarcosinate (7) and no prominent reinforcing strong anionic -> moderate. Cocamide MEA (3) foam booster.",
+      "neighboringAlternative": "none"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Several light routes: Shea Butter (10, just after Parfum 8), pearlizing Glycol Distearate (6), humectants Glycerin (4) and Sodium Hyaluronate (14), late cationic HP guar (19) and Polyquaternium-7 (21). C2 not met (no early silicone; shea not prominent) -> moderate.",
+      "neighboringAlternative": "low",
+      "counterSignals": [
+        "cationic polymers trace (after preservative region)",
+        "shea after Parfum"
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "low: deposition routes are all after Parfum (shea at 10, polymers at 19/21), facing an efficient AOS C1 reset.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Shea butter (10) after Parfum, two trace cationic polymers (19, 21), trace arginine (16)."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "Small butter amount and trace polymers; AOS reset removes them readily."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 AOS chassis buffered by betaine and sarcosinate."
+        }
+      },
+      "extractedEvidenceByFamily": {
+        "payload_lipid": [
+          [
+            "Butyrospermum Parkii Butter",
+            10
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+            19
+          ],
+          [
+            "Polyquaternium-7",
+            21
+          ]
+        ],
+        "protein_film": [
+          [
+            "Arginine",
+            16
+          ]
+        ],
+        "silicone": [],
+        "weak_refatter": [],
+        "film_former": [],
+        "anionic_surfactant": [
+          [
+            "Sodium C14-16 Olefin Sulfonate",
+            2
+          ],
+          [
+            "Sodium Lauroyl Sarcosinate",
+            7
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            5
+          ],
+          [
+            "Coco-Betaine",
+            17
+          ]
+        ],
+        "humectant_context": [
+          [
+            "Glycerin",
+            4
+          ],
+          [
+            "Hexylene Glycol",
+            9
+          ],
+          [
+            "Sodium Hyaluronate",
+            14
+          ],
+          [
+            "Propylene Glycol",
+            18
+          ]
+        ]
+      },
+      "excludedIngredients": [
+        [
+          "Glycol Distearate",
+          6,
+          "pearlizer"
+        ],
+        [
+          "Carbomer",
+          11,
+          "anionic acrylate thickener (6.4)"
+        ],
+        [
+          "PEG-55 Propylene Glycol Oleate",
+          12,
+          "PEG thickener"
+        ],
+        [
+          "Cocamide MEA",
+          3,
+          "thickener"
+        ],
+        [
+          "Salicylic Acid",
+          23,
+          "acid"
+        ]
+      ],
+      "whyThisBand": "low: deposition routes are all after Parfum (shea at 10, polymers at 19/21), facing an efficient AOS C1 reset.",
+      "whyNotNeighborBand": "W2 (two+ families): kept low because every family is after the E3 point and the polymers sit in the preservative region (trace); no silicone; shea is not prominent, so no W-RICH; moderate AOS reset faces only light routes.",
+      "counterEvidence": [
+        "shea butter is a substantive lipid"
+      ],
+      "confidenceLimitingFactor": "Shea level unknown; could move to moderate."
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Blind pass: claims hidden, so no positioned job can be confirmed; humectant cluster with emollient support; moisture if positioned.",
+      "formulaCompatibleCandidates": [
+        "moisture",
+        "general"
+      ],
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": [
+          "Glycerin 4",
+          "Sodium Hyaluronate 14",
+          "Shea Butter 10"
+        ],
+        "sharedRoutes": [
+          "HP Guar 19",
+          "Polyquaternium-7 21"
+        ],
+        "limitation": "shea/polymers small; rinse-off",
+        "alternative": "nonspecific"
+      },
+      "neighboringAlternative": "moisture"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Empty default; a secondary needs distinct exact-product positioning (Section 8), not visible blind.",
+      "neighboringAlternative": [
+        "moisture"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Default regular (Section 9); every non-default trigger needs a claim graded moderate/high, hidden in the blind pass. ",
+      "possibleClaimTriggeredValues": [
+        "frequent"
+      ],
+      "neighboringAlternative": "frequent"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Blind: no positioning visible (SC1). Formula half CSA PASSES (prominent E4 routes: Glycerin (4) humectant). If an E2 sensitive/dry unit graded moderate/high appears after unblinding, targeted is reachable.",
+      "csaFormulaHalf": "pass",
+      "prominentE4Routes": [
+        "Glycerin (4) humectant"
+      ],
+      "counterSignals": [],
+      "neighboringAlternative": "targeted"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11) -> not_supported. Salicylic Acid (23) alone does not count.",
+      "neighboringAlternative": "none"
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium C14-16 Olefin Sulfonate",
+      "position": 2,
+      "role": "defining anionic (sulfonate)"
+    },
+    {
+      "ingredient": "Cocamide MEA",
+      "position": 3,
+      "role": "foam booster"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 4,
+      "role": "humectant, E4"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 5,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 6,
+      "role": "pearlizer"
+    },
+    {
+      "ingredient": "Sodium Lauroyl Sarcosinate",
+      "position": 7,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Parfum / Fragrance",
+      "position": 8,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Butyrospermum Parkii Butter",
+      "position": 10,
+      "role": "payload lipid (not prominent)"
+    },
+    {
+      "ingredient": "Carbomer",
+      "position": 11,
+      "role": "anionic thickener"
+    },
+    {
+      "ingredient": "Sodium Hyaluronate",
+      "position": 14,
+      "role": "humectant"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 19,
+      "role": "cationic polymer (trace)"
+    },
+    {
+      "ingredient": "Polyquaternium-7",
+      "position": 21,
+      "role": "cationic polymer (trace)"
+    }
+  ],
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    {
+      "reading": "Arginine classed protein_film (amino acid), trace",
+      "alternative": "pH adjuster (excluded); no band effect"
+    }
+  ]
+}

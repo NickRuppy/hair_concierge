@@ -161,6 +161,7 @@ test("eligible fully-assumed complete parent opens with a skipped seed and no le
 
   const result = await openOptionalRefinement({
     userId: "user-1",
+    toolsEnabled: false,
     module: "products",
     client: client as never,
   })
@@ -206,6 +207,7 @@ test("openOptionalRefinement reuses an existing in-progress draft even without a
   const existing = draft({ id: "draft-open", status: "in_progress", refinedVersionId: null })
   const result = await openOptionalRefinement({
     userId: "user-1",
+    toolsEnabled: false,
     module: "habits",
     deps: {
       loadContext: async () => context({ currentDraft: existing, latestCompleteDraft: null }),
@@ -240,6 +242,7 @@ for (const provenance of ["assumed", "user"] as const) {
     const opened = draft({ id: "draft-cloned", status: "in_progress", refinedVersionId: null })
     const result = await openOptionalRefinement({
       userId: "user-1",
+      toolsEnabled: false,
       module: "products",
       deps: {
         loadContext: async () => context({ latestCompleteDraft: parent }),
@@ -267,6 +270,7 @@ test("openOptionalRefinement rejects missing parent state without opening a draf
   await assert.rejects(
     openOptionalRefinement({
       userId: "user-1",
+      toolsEnabled: false,
       module: "products",
       deps: {
         loadContext: async () => context({ latestCompleteDraft: null }),
@@ -279,6 +283,49 @@ test("openOptionalRefinement rejects missing parent state without opening a draf
   )
 })
 
+for (const [label, ctx] of [
+  ["a complete parent", () => context()],
+  [
+    "an existing in-progress draft",
+    () =>
+      context({
+        currentDraft: draft({ id: "draft-open", status: "in_progress", refinedVersionId: null }),
+        latestCompleteDraft: null,
+      }),
+  ],
+] as const) {
+  test(`openOptionalRefinement rejects a not_applicable module (tools) for ${label} without opening a draft`, async () => {
+    await assert.rejects(
+      openOptionalRefinement({
+        userId: "user-1",
+        toolsEnabled: false,
+        module: "tools",
+        deps: {
+          loadContext: async () => ctx(),
+          openPreparedDraft: async () => {
+            assert.fail("must not open a draft for a module without questions")
+          },
+        },
+      }),
+      /invalid_module/,
+    )
+  })
+}
+
+test("openOptionalRefinement still rejects an unknown module as invalid_module", async () => {
+  await assert.rejects(
+    openOptionalRefinement({
+      userId: "user-1",
+      toolsEnabled: false,
+      module: "nope" as never,
+      deps: {
+        loadContext: async () => context(),
+        openPreparedDraft: async () => assert.fail("must not open"),
+      },
+    }),
+    /invalid_module/,
+  )
+})
 test("S4-01: the optional successor of a complete pre-S4 draft keeps the assumed Bondbuilder timing", async () => {
   const bondbuilderContext: Stage2TriggerContext = {
     ...triggerContext,
@@ -305,6 +352,7 @@ test("S4-01: the optional successor of a complete pre-S4 draft keeps the assumed
   const result = await openOptionalRefinement({
     userId: "user-1",
     module: "habits",
+    toolsEnabled: false,
     deps: {
       loadContext: async () => context({ latestCompleteDraft: parent }),
       openPreparedDraft: async () => clone,
@@ -328,6 +376,7 @@ test("S4-01: the optional successor of a complete pre-S4 draft keeps the assumed
   const reopened = await openOptionalRefinement({
     userId: "user-1",
     module: "habits",
+    toolsEnabled: false,
     deps: {
       loadContext: async () => context({ currentDraft: clone, latestCompleteDraft: parent }),
       openPreparedDraft: async () => clone,

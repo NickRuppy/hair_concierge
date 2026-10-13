@@ -170,12 +170,12 @@ Then define the category-specific layered fit model:
 3. need and functional coverage;
 4. aggregate verdict and precedence.
 
-Use the shared user-facing verdicts consistently:
+Use the shared user-facing verdicts from the [canonical fit-verdict model](../fit-verdict-model.md) (§1, ruled 2026-10-12) consistently:
 
-- `ideal` → `passt sehr gut`;
-- `supportive` → `passt mit Einschränkung`;
-- `mismatch` → `wechseln empfohlen`;
-- `unknown` → `noch in Prüfung`.
+- `ideal` → `Passt`;
+- `supportive` → `Passt bedingt`;
+- `mismatch` → `Passt nicht`;
+- `unknown` → `Nicht geprüft`.
 
 Specify how missing product metadata differs from a verified mismatch. Evaluate every owned product independently. Prefer an ideal exact recommendation; allow a supportive new recommendation only when no ideal candidate exists and its limitation is explicit. Never recommend a mismatch or unknown product confidently.
 

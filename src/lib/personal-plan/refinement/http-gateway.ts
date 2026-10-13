@@ -1,6 +1,8 @@
 import {
   Stage2RefinementError,
+  type Stage2CompleteModuleInput,
   type Stage2CompleteResult,
+  type Stage2ModuleCompletionResult,
   type Stage2RefinementErrorCode,
   type Stage2RefinementGateway,
   type Stage2SaveAndCompleteModuleResult,
@@ -71,6 +73,19 @@ export function createHttpStage2RefinementGateway({
         "/api/personal-plan/stage-2/complete",
         jsonRequest("POST", input),
         "stage2_complete_retry",
+      )
+    },
+    /**
+     * The retry of a failed (or lost) completing PATCH: the answer is already durable, so only
+     * the completion is asked for again. The route runs the same lane as the PATCH block and the
+     * service replays an already-committed completion instead of reporting a conflict.
+     */
+    async completeModule(input: Stage2CompleteModuleInput) {
+      return request<Stage2ModuleCompletionResult>(
+        fetcher,
+        "/api/personal-plan/stage-2/complete",
+        jsonRequest("POST", input),
+        "stage2_module_complete_retry",
       )
     },
   }

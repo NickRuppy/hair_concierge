@@ -2,7 +2,7 @@
   "version": "catalog-completeness-slice4-manifest-v1",
   "status": "prepared, rehearsed, NOT applied — prod apply needs Nick's approval of this exact batch",
   "batch_id": "S4-catalog-completeness-aveda-damage-cadence",
-  "migration": "supabase/migrations/20261011170000_bondbuilder_aveda_damage_cadence.sql",
+  "migration": "supabase/migrations/20261013170000_bondbuilder_aveda_damage_cadence.sql",
   "content_fingerprint": "92dcb1acf4b736765167ad1f1bdd98cc30307d106d0c07991532f60272fda4f0",
   "inputs": {
     "profile": {
@@ -138,7 +138,7 @@
     "reviewed_by": "nick"
   },
   "artifacts_sha256": {
-    "supabase/migrations/20261011170000_bondbuilder_aveda_damage_cadence.sql": "3d86fe4f051a99e692bc1603130ced4add4234c84c6b815615793ddce419d91d",
+    "supabase/migrations/20261013170000_bondbuilder_aveda_damage_cadence.sql": "3d86fe4f051a99e692bc1603130ced4add4234c84c6b815615793ddce419d91d",
     "plans/catalog-completeness-fill/slice4/rollback.sql": "9048fb15f838fc39bb4a0fe12335928a0836700284a94b4de31313d7c9d2d899",
     "plans/catalog-completeness-fill/slice4/verify.sql": "9752a408779d506a31814adb9b54409dcc9776499ecd646a0304a63a54b9c969"
   }

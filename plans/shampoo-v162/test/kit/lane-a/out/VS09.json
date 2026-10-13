@@ -1,0 +1,472 @@
+{
+  "blindId": "VS09",
+  "identity": {
+    "brand": "Balea PROFESSIONAL (dm-Eigenmarke)",
+    "productName": "Balea PROFESSIONAL Shampoo Kopfhaut Sensitive",
+    "packSize": "250 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "4871d6edeb1c4a74bb8123dc09d22d76a8888bf42f570a16fd8b5f91ac931e73",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "Canonical list one entry per ingredient; no split synonyms; no markers. Normalized one-based positions (ID-2) = packet positions.",
+    "completeness": "complete",
+    "e3ProminenceCutoff": "Parfum @18 is the E3 marker. Prominent = positions 1-17."
+  },
+  "standard": "shampoo-classification-v1.6.2 (candidate)",
+  "formulaPassRef": "out/formula-pass/VS09.json (hash-pinned, not edited; fingerprint 4871d6edeb1c4a74bb8123dc09d22d76a8888bf42f570a16fd8b5f91ac931e73)",
+  "normalizedInci": [
+    "1 Aqua",
+    "2 Hydrogenated Starch Hydrolysate",
+    "3 Sodium Laureth Sulfate",
+    "4 Cocamidopropyl Hydroxysultaine",
+    "5 Glycerin",
+    "6 Sodium Chloride",
+    "7 Coco-Glucoside",
+    "8 Allantoin",
+    "9 Bisabolol",
+    "10 Zinc PCA",
+    "11 Panthenol",
+    "12 Hydrolyzed Keratin",
+    "13 Camellia Sinensis Leaf Extract",
+    "14 Guar Hydroxypropyltrimonium Chloride",
+    "15 Citric Acid",
+    "16 Glycol Distearate",
+    "17 Cocamidopropyl Betaine",
+    "18 Parfum",
+    "19 Sodium Benzoate"
+  ],
+  "formulaFacts": {
+    "surfactants": [
+      {
+        "inci": "Sodium Laureth Sulfate",
+        "position": 3,
+        "c3Class": "strong anionic, ether/sulfonate type",
+        "role": "defining anionic (C4)"
+      },
+      {
+        "inci": "Cocamidopropyl Hydroxysultaine",
+        "position": 4,
+        "c3Class": "amphoteric (hydroxysultaine)",
+        "role": "buffer (prominent)"
+      },
+      {
+        "inci": "Coco-Glucoside",
+        "position": 7,
+        "c3Class": "nonionic cleansing",
+        "role": "buffer (prominent)"
+      },
+      {
+        "inci": "Cocamidopropyl Betaine",
+        "position": 17,
+        "c3Class": "amphoteric",
+        "role": "buffer (prominent, just before Parfum)"
+      }
+    ],
+    "reinforcingRoutes": [],
+    "conditioningRoutes": {
+      "cationic_polymer": [
+        "Guar Hydroxypropyltrimonium Chloride@14 (prominent)"
+      ],
+      "silicone": [],
+      "payload_lipid": [],
+      "pearlizingFattyRoute": [
+        "Glycol Distearate@16 (prominent)"
+      ],
+      "weak_refatter": [],
+      "protein_film": [
+        "Hydrolyzed Keratin@12"
+      ],
+      "film_former": [],
+      "humectants": [
+        "Glycerin@5 (C2 list)",
+        "Panthenol@11 (C2 list)",
+        "Hydrogenated Starch Hydrolysate@2 (polyol; not on the closed C2/E4 lists)"
+      ]
+    },
+    "actives": [
+      "Allantoin@8",
+      "Bisabolol@9",
+      "Zinc PCA@10 (not a listed route)",
+      "Panthenol@11",
+      "Camellia Sinensis Leaf Extract@13"
+    ],
+    "recognizedDandruffActives": [],
+    "exposure": {
+      "fragrance": "Parfum@18 (E3 marker)",
+      "fragranceAllergens": "none declared",
+      "coolingAgents": "none",
+      "essentialOils": "none"
+    },
+    "phBuffers": [
+      "Citric Acid@15"
+    ],
+    "e4ProminentRoutes": {
+      "comfort": [
+        "Allantoin@8",
+        "Bisabolol@9",
+        "Panthenol@11"
+      ],
+      "humectantRefatting": [
+        "Glycerin@5",
+        "Panthenol@11"
+      ]
+    },
+    "mildBase": "Not met: prominent strong anionic Sodium Laureth Sulfate@3 excludes MB.",
+    "csa": "Met via listed prominent routes (comfort: Allantoin@8, Bisabolol@9, Panthenol@11; humectant: Glycerin@5, Panthenol@11). MB not used (excluded). Parfum@18 declared; no cooling or essential-oil counter-signal.",
+    "wLine": {
+      "wLine": {
+        "position": 18,
+        "inci": "Parfum",
+        "classes": [
+          "fragrance"
+        ]
+      },
+      "cap": {
+        "e3Point": 18,
+        "inci": "Parfum"
+      },
+      "alphabeticalRun": "none",
+      "skippedCandidates": [
+        "w_line_skipped:Panthenol@11 - clause (ii) failed: pearlizing wax Glycol Distearate@16 and cleansing surfactant Cocamidopropyl Betaine@17 are listed after it and before the cap"
+      ],
+      "plausibility": "First candidate Panthenol@11 (class c) is implausible under (ii) and skipped. No further candidate at 12-17. E3 marker Parfum@18 (class a): (i) SLES@3 etc. listed before; (ii) nothing between it and the cap. Plausible; W-line = cap, no fallback code.",
+      "codes": [],
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": [],
+      "note": "No payload_lipid; the W-line gates nothing here."
+    }
+  },
+  "claimEvidence": [
+    {
+      "unit": "Product name 'Shampoo Kopfhaut Sensitive'",
+      "source": "name",
+      "grade": "high",
+      "reading": "E2 sensitive ('Kopfhaut Sensitive') in the exact name"
+    },
+    {
+      "unit": "Beruhigendes Shampoo für empfindliche Kopfhaut",
+      "source": "manufacturer_de (dm own brand)",
+      "grade": "moderate",
+      "reading": "E2 sensitive"
+    },
+    {
+      "unit": "Kann Juckreiz und Spannungsgefühle mildern",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "reading": "E2 sensitive (Juckreiz)"
+    },
+    {
+      "unit": "Das Shampoo Kopfhaut Sensitive … wurde speziell für die Bedürfnisse von sensibler und trockener Kopfhaut entwickelt.",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "reading": "E2 sensitive + E2 dry claim unit (counts for both, E2a)"
+    },
+    {
+      "unit": "Mit Panthenol und Weißer-Tee-Extrakt",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "reading": "Panthenol@11, Camellia Sinensis Leaf Extract@13 present"
+    },
+    {
+      "unit": "Das Haar wird sanft gepflegt und erhält einen seidigen Glanz. | Haartyp: glanzloses Haar",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "reading": "shine outcome / listing attribute; no independent positioned route"
+    }
+  ],
+  "reconciliation": [
+    "focusPrimary: general (provisional) -> scalp_active: 'Kopfhaut Sensitive' in the name + targeted.",
+    "scalpComfortTarget: not_targeted (provisional) -> targeted: SC1 (name high) + CSA via listed prominent routes (blind).",
+    "usageRole: regular unchanged (no trigger wording).",
+    "Formula properties unchanged."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate@3 with three prominent buffers (Cocamidopropyl Hydroxysultaine@4, Coco-Glucoside@7, Cocamidopropyl Betaine@17) and no reinforcing strong anionic.",
+      "ruleIds": [
+        "C1",
+        "C3",
+        "C4"
+      ],
+      "counterSignal": "none material (three prominent buffers).",
+      "blindToFinal": "unchanged from the hash-pinned formula pass; claims cannot set or move this property (3.2)"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: one meaningful system (prominent cationic guar@14) plus light routes: pearlizing Glycol Distearate@16, Hydrolyzed Keratin@12, humectants Glycerin@5, Panthenol@11 (and Hydrogenated Starch Hydrolysate@2). C2 not met: three elements present (cationic polymer, pearlizing route, humectant) but no early silicone and no prominent payload_lipid. Neighbor low: guar and pearlizer sit late in the prominent zone (14, 16); high would need the missing silicone/lipid leg.",
+      "ruleIds": [
+        "C2",
+        "Section 5 anchors",
+        "N-ALT"
+      ],
+      "counterSignal": "Guar@14 and pearlizer@16 late in the prominent zone; no silicone/lipid.",
+      "blindToFinal": "unchanged from the hash-pinned formula pass; claims cannot set or move this property (3.2)"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": [
+          "Guar Hydroxypropyltrimonium Chloride@14"
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [
+          "Hydrolyzed Keratin@12"
+        ],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": [
+          "Sodium Laureth Sulfate@3",
+          "Cocamidopropyl Hydroxysultaine@4",
+          "Coco-Glucoside@7",
+          "Cocamidopropyl Betaine@17"
+        ],
+        "humectantContext": [
+          "Hydrogenated Starch Hydrolysate@2",
+          "Glycerin@5",
+          "Panthenol@11",
+          "Zinc PCA@10"
+        ],
+        "excluded": [
+          "Glycol Distearate@16 (pearlizing wax, 6.4)",
+          "Sodium Chloride@6 (salt)",
+          "Citric Acid@15 (pH)",
+          "Allantoin@8, Bisabolol@9 (comfort actives)",
+          "Camellia Sinensis Leaf Extract@13 (botanical extract)"
+        ],
+        "unresolved": []
+      },
+      "wLine": "Parfum@18 (fragrance; = cap) after skipping Panthenol@11; no payload_lipid to split.",
+      "depositionLoad": "light - one guar late in the prominent zone and one hydrolysed keratin; no silicone, lipid or film former.",
+      "persistence": "low - hydrolysed protein and a single guar are light, rinse-off routes.",
+      "resetCapacity": "moderate - C1 SLES chassis with three buffers.",
+      "counterevidence": "Two deposition families (cationic_polymer + protein_film, W2); a pearlizer is present (excluded for weight).",
+      "whyThisBand": "Low anchor: light, low-persistence deposition against a moderate reset.",
+      "whyNotNeighborBand": "Not moderate (W2): the families are one guar@14 and one small hydrolysed keratin@12, both in the last third of the prominent zone after a large humectant/comfort block; no silicone, payload lipid, film former or second cationic route; the buffered SLES reset faces only these light routes.",
+      "confidenceLimitingFactor": "Guar dose/charge density unknown (one band).",
+      "rationale": "Low (moderate confidence): guar + keratin, both light and late, against moderate C1 reset; W2 reasoning given.",
+      "ruleIds": [
+        "6.3",
+        "6.4",
+        "6.6",
+        "W2",
+        "W-LINE",
+        "N-ALT"
+      ],
+      "counterSignal": "Two families (guar + keratin, W2).",
+      "blindToFinal": "unchanged from the hash-pinned formula pass; claims cannot set or move this property (3.2)",
+      "wLineRecord": {
+        "wLine": {
+          "position": 18,
+          "inci": "Parfum",
+          "classes": [
+            "fragrance"
+          ]
+        },
+        "cap": {
+          "e3Point": 18,
+          "inci": "Parfum"
+        },
+        "alphabeticalRun": "none",
+        "skippedCandidates": [
+          "w_line_skipped:Panthenol@11 - clause (ii) failed: pearlizing wax Glycol Distearate@16 and cleansing surfactant Cocamidopropyl Betaine@17 are listed after it and before the cap"
+        ],
+        "plausibility": "First candidate Panthenol@11 (class c) is implausible under (ii) and skipped. No further candidate at 12-17. E3 marker Parfum@18 (class a): (i) SLES@3 etc. listed before; (ii) nothing between it and the cap. Plausible; W-line = cap, no fallback code.",
+        "codes": [],
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": [],
+        "note": "No payload_lipid; the W-line gates nothing here."
+      }
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [
+          "Hydrogenated Starch Hydrolysate@2",
+          "Glycerin@5",
+          "Panthenol@11"
+        ],
+        "repairRoutes": [
+          "Hydrolyzed Keratin@12"
+        ],
+        "sharedConditioningRoutes": [
+          "Guar Hydroxypropyltrimonium Chloride@14"
+        ],
+        "limitation": "Chosen focus is not a repair/moisture decision; blind verdict moisture_supported recorded."
+      },
+      "claimRole": "candidate",
+      "counterSignal": "A shine/care outcome for the lengths ('seidigen Glanz') competes weakly.",
+      "decisionTrace": "Primary: claim direction sensitive (and dry) scalp; 'Kopfhaut Sensitive' is in the exact product name (high). F7 step 1: role named in the name -> scalp_active, formula-compatible (scalpComfortTarget targeted). Route: listed prominent comfort routes Allantoin@8, Bisabolol@9, Panthenol@11.",
+      "rationale": "scalp_active (high): scalp role in the name, targeted via listed prominent comfort routes.",
+      "ruleIds": [
+        "F7",
+        "7.2",
+        "SC1",
+        "CSA"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "shine"
+      ],
+      "decisionTrace": "Empty default considered and kept. Shine: 'erhält einen seidigen Glanz' is a care outcome and 'Haartyp: glanzloses Haar' a listing attribute; the only route would be the shared guar conditioning (F2), and pH adjusters cannot create shine (F4).",
+      "rationale": "[] (moderate).",
+      "ruleIds": [
+        "Section 8",
+        "F2",
+        "F4",
+        "N-ALT"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "regular (high): no U2, reset or dandruff trigger.",
+      "ruleIds": [
+        "Section 9",
+        "F-TRACE"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "targeted (high). SC1: name 'Kopfhaut Sensitive' (high) plus manufacturer units 'Beruhigendes Shampoo für empfindliche Kopfhaut', 'Kann Juckreiz … mildern' (moderate). CSA route used: listed prominent E4 routes (comfort Allantoin@8, Bisabolol@9, Panthenol@11; humectant Glycerin@5, Panthenol@11). MB not met (SLES@3). No cooling, essential-oil or strong-cleansing counter-signal.",
+      "ruleIds": [
+        "Section 10",
+        "SC1",
+        "CSA",
+        "MB",
+        "E4"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no Piroctone Olamine, Climbazole or selenium sulfide; Zinc PCA is not a recognized active.",
+      "ruleIds": [
+        "Section 11"
+      ],
+      "counterSignal": "none",
+      "blindToFinal": "unchanged from the hash-pinned formula pass; claims cannot set or move this property (3.2)"
+    }
+  },
+  "projection": {
+    "status": "proposal_blocked_by_review_flags",
+    "thicknessFit": {
+      "fine": "ideal",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFitConfidence": {
+      "fine": "moderate",
+      "normal": "moderate",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": "T1 with W=low (moderate, neighbor moderate) and C=moderate (moderate, neighbor low): fine ideal, normal ideal, coarse acceptable. T6 applied (scalp-concern targets): no thickness was not_suited, so nothing lifted. T4 boundary flags: ['fine']. T2: thickness claims ignored.",
+    "weight": "light",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: weightPotential low -> light, confidence moderate; written unchanged to every row.",
+    "scalpTargets": {
+      "primary": {
+        "target": "sensitive",
+        "confidence": "high",
+        "rationale": "S-SENSITIVE passes: E2 sensitive claim in the exact name (high) + targeted + prominent comfort route Allantoin@8/Bisabolol@9/Panthenol@11. S-PRIMARY: sensitive is named in the product name. cleansingStrength moderate -> no review. Confidence = min(positioning high, scalpComfortTarget high)."
+      },
+      "secondary": {
+        "target": "dry",
+        "confidence": "moderate",
+        "rationale": "S-DRY passes: E2 dry claim unit 'speziell für die Bedürfnisse von sensibler und trockener Kopfhaut entwickelt' (manufacturer_de, moderate) + targeted + prominent humectant route Glycerin@5/Panthenol@11. Not a dandruff product; sensitive+dry permitted (S-SECONDARY). Confidence = min(positioning moderate, scalpComfortTarget high)."
+      }
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength moderate -> regular (D1 false). I2: written unchanged to every row; expected per bucket: irritationen=gentle, trocken=gentle. I3 neighbor: none.",
+    "explicitResetPositioning": false,
+    "explicitResetRationale": "D1 false: no tiefenrein/deep clean/clarifying shampoo/detox-reinigung stem in name or manufacturer/pack claims; no occasional-use directions.",
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserListingConfidence": "high",
+    "deepCleanserRationale": "D2 not met: D1 false (cleansingStrength moderate, focusPrimary scalp_active, usageRole regular). No deepCleanserRecord needed.",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "trocken",
+        "scalp_route": "dry",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "trocken",
+        "scalp_route": "dry",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "trocken",
+        "scalp_route": "dry",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine (T4: neighbor of weightPotential/conditioningLevel would lower the final fine fit from ideal)"
+    ],
+    "informationalNotes": [],
+    "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; lane never sees catalog ids."
+  },
+  "selfCheck": " Generic (6.11): fingerprint matches the frozen packet; formula properties were judged blind and are unchanged after the reveal; no ingredient, family count or position window assigned the weight band (W-line used only as a payload_lipid gate, none present/material here unless stated); W-line derived as W-LINE states with skipped candidates recorded; all three weight subjudgments present; whyNotNeighborBand specific (W2 where two families); confidences name their limiting factor; N-ALT neighbors follow confidence; projection derived mechanically from final properties (T1/T6/T4, W-LIVE, I1/I3, 13.7 rows); no comparison with earlier values made in-lane.",
+  "uncertainties": [
+    "Secondary dry rests on one unit that also names the sensitive state (E2a counts it for both). Alternative: treat as part of the primary positioning -> no secondary (more conservative)."
+  ]
+}

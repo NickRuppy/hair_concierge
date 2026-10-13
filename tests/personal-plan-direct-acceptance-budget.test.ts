@@ -68,7 +68,7 @@ function labTriggerContext() {
   })
   assert.equal(initial.status, "ready")
   if (initial.status !== "ready") throw new Error("unreachable")
-  return deriveStage2TriggerContext(initial.snapshot)
+  return deriveStage2TriggerContext(initial.snapshot, { toolsEnabled: false })
 }
 
 /** A fresh, untouched Stage-2 draft, as `loadOrCreate` returns it on a first accept. */
@@ -235,6 +235,7 @@ test("J5-GATE: flag on without a wired loader is a wiring error, never an accept
 test("J5-ROUTE: the accept route answers budget_required as 409", async () => {
   const route = createAcceptIdealPlanRouteHandler({
     enabled: () => true,
+    toolsEnabled: async () => false,
     getUserId: async () => USER_ID,
     loadJourneyAccess: async () =>
       ({

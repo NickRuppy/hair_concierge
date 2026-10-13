@@ -1,0 +1,21 @@
+{
+  "blindId": "VT02",
+  "productName": "HeadRemedy Anti-Dandruff Shampoo",
+  "brand": "KMS",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_kms_de-DE (Art. No. 108003)",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Bekämpft Schuppen und lindert juckende Kopfhaut. Bietet wohltuende Linderung für juckende Kopfhaut und Schuppenbildung. ANTI-SCHUPPEN-KONTROLLE: Kontrolliert Schuppen und hilft, ihnen vorzubeugen. Reduziert schuppenbedingte Ablagerungen. Bringt den natürlichen pH-Wert der Kopfhaut ins Gleichgewicht. BERUHIGEND: Reinigt und beruhigt juckende, trockene, gereizte und schuppige Kopfhaut. Hilft, den Feuchtigkeitshaushalt der Kopfhaut auszugleichen. Hilft, Schädigungen vorzubeugen. PFLEGEND: Reinigt sanft und effektiv, ohne das Haar zu beschweren. Sanft zur Kopfhaut – ideal für die tägliche Anwendung. Hinterlässt das Haar sauber, gepflegt und gesund aussehend. Haartyp: Für alle Haarstrukturen. Ideal für trockene & unausgeglichene Kopfhaut. Upgecycelte Esche – Reich an Nährstoffen, bekannt für ihre intensiv feuchtigkeitsspendenden Eigenschaften. Formuliert ohne SLS/SLES-Sulfate¹, Mineralöle, Silikone, Farbstoffe und PEGs. Die Formulierung enthält bis zu 87 % Inhaltsstoffe natürlichen Ursprungs² und ist bis zu 96 % biologisch abbaubar³.",
+      "directionsVerbatim": "Aufschäumen, ausspülen und bei Bedarf wiederholen. Für optimale Ergebnisse mindestens zweimal pro Woche anwenden."
+    },
+    {
+      "sourceType": "retailer_hagel_shop_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "KMS HeadRemedy Anti-Dandruff Shampoo - Anti-Schuppen-Pflege, die Juckreiz lindert und Schuppen wirksam reduziert. Sie hilft, die Schuppenbildung zu kontrollieren und vorzubeugen, während sie den natürlichen pH-Wert der Kopfhaut ausgleicht. Für eine beruhigte Kopfhaut und sichtbar gepflegtes Haar. Reinigt und lindert Juckreiz, Trockenheit, Reizungen und Schuppenbildung der Kopfhaut. Hilft, den Feuchtigkeitshaushalt der Kopfhaut auszugleichen. Reinigt sanft und effektiv, ohne das Haar zu beschweren. Sanft zur Kopfhaut, für den täglichen Gebrauch geeignet. Macht das Haar sauber, versorgt es mit Feuchtigkeit und lässt es gesund aussehen.",
+      "directionsVerbatim": ""
+    }
+  ]
+}

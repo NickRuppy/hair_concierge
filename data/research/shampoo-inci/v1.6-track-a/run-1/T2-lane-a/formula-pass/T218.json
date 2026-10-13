@@ -1,0 +1,295 @@
+{
+  "blindId": "T218",
+  "inciFingerprintSha256": "0c25d74bac27b0957b5743836d796c5845d98cc364ff615187b93a715246f880",
+  "fingerprintRecomputedMatches": true,
+  "formulaSource": {
+    "tier": 3,
+    "completeness": "complete",
+    "identityConfidence": "moderate"
+  },
+  "normalization": "No split synonym entries; packet positions equal normalized positions.",
+  "prominenceCutoff": "Parfum at 9 -> positions 1-8 prominent (E3).",
+  "surfactantArchitecture": "Cocamidopropyl Betaine (3, amphoteric, earliest cleansing surfactant); Sodium Cocoyl Isethionate (4) mild anionic; Sodium Isethionate (18), Coco-Glucoside (19) late; Coconut Acid (15) fatty acid. No strong anionic.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "C6: no prominent strong anionic; earliest prominent cleansing surfactant is an amphoteric (CAPB 3), with mild anionic isethionate (4) -> low.",
+      "counterSignal": "None material.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3
+        },
+        {
+          "ingredient": "Sodium Cocoyl Isethionate",
+          "position": 4
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Several light routes: Glycerin (10), Glyceryl Oleate (11), PCA (12), Coconut Acid (15), Glycol Distearate (16), Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (17), Sodium PCA (20), Glyceryl Stearate (21), amino acids. C2 not met (no silicone/prominent lipid).",
+      "counterSignal": "Guar is late (17); all care routes post-fragrance; low realistic.",
+      "neighboringAlternative": "low",
+      "formulaFacts": [
+        {
+          "ingredient": "Glycerin",
+          "position": 10
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 11
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 16
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 17
+        },
+        {
+          "ingredient": "Sodium PCA",
+          "position": 20
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: a late cationic guar plus weak refatters and humectants; no silicone, lipid or film former.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Guar (17), Glyceryl Oleate (11), Coconut Acid (15), Glyceryl Stearate (21)."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "No persistent system."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "Mild amphoteric/isethionate chassis (weak-to-moderate), sufficient against these light routes."
+        }
+      },
+      "evidenceByFamily": {
+        "cationic_polymer": [
+          [
+            "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+            17
+          ]
+        ],
+        "weak_refatter": [
+          [
+            "Glyceryl Oleate",
+            11
+          ],
+          [
+            "Coconut Acid",
+            15
+          ],
+          [
+            "Glyceryl Stearate",
+            21
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            3
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Cocoyl Isethionate",
+            4
+          ],
+          [
+            "Sodium Isethionate",
+            18
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Coco-Glucoside",
+            19
+          ]
+        ],
+        "humectant_context": [
+          [
+            "Aloe Barbadensis Leaf Juice",
+            2
+          ],
+          [
+            "Glycerin",
+            10
+          ],
+          [
+            "PCA",
+            12
+          ],
+          [
+            "Sodium PCA",
+            20
+          ],
+          [
+            "Arginine",
+            6
+          ],
+          [
+            "Serine",
+            7
+          ],
+          [
+            "Glycine",
+            13
+          ]
+        ]
+      },
+      "excluded": [
+        [
+          "Glycol Distearate",
+          16,
+          "pearlizer"
+        ],
+        [
+          "Linum Usitatissimum Seed Extract",
+          8,
+          "extract"
+        ]
+      ],
+      "unresolved": [],
+      "counterSignal": "Mild chassis gives less reset; two families.",
+      "whyThisBand": "Only a late guar and weak refatters.",
+      "whyNotNeighborBand": "Not moderate (W2): the families are one post-fragrance guar (17) and weak refatters plus humectants; no silicone, lipid or film former, so even a mild reset faces only light routes.",
+      "confidenceLimitingFactor": "Mild reset; moderate realistic.",
+      "ruleNotes": [
+        "W2"
+      ]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Mild humectant-rich formula; moisture compatible.",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "basis": "Humectant cluster Glycerin (10), PCA (12), Sodium PCA (20), free amino acids (6, 7, 13, 22-28), aloe juice (2) plus conditioning/emollient support Glyceryl Oleate (11), guar (17), Glyceryl Stearate (21)."
+      },
+      "formulaCompatibleRoutes": [
+        "moisture: Glycerin 10, Sodium PCA 20, PCA 12, amino acids, Glyceryl Oleate 11, guar 17"
+      ],
+      "counterSignal": "Low cleansing; light conditioning.",
+      "neighboringAlternative": "moisture"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Empty default; a secondary needs distinct positioning (Section 8), not visible yet.",
+      "counterSignal": "Positioning unknown.",
+      "neighboringAlternative": [
+        "shine"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). Default regular (Section 9); triggers need graded claims. frequent possible with explicit frequency wording (cleansing low).",
+      "counterSignal": "No claims.",
+      "neighboringAlternative": "frequent"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "PROVISIONAL (blind): claims, name and usage directions hidden (3.1); final value set after unblinding (3.2). SC1 positioning not visible. CSA formula half: fails: no prominent listed E4 route (Glycerin 10 after Parfum 9). unlisted_route_candidate:Aloe Barbadensis Leaf Juice (2), Arginine (6), Serine (7).",
+      "counterSignal": "Fragrance declared.",
+      "neighboringAlternative": "targeted",
+      "csaPasses": false
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11).",
+      "counterSignal": "None; formula complete (ID-1).",
+      "neighboringAlternative": "none"
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Aloe Barbadensis Leaf Juice",
+      "position": 2,
+      "role": "plant juice (not C2/E4)"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 3,
+      "role": "amphoteric, earliest surfactant"
+    },
+    {
+      "ingredient": "Sodium Cocoyl Isethionate",
+      "position": 4,
+      "role": "mild anionic"
+    },
+    {
+      "ingredient": "Arginine",
+      "position": 6,
+      "role": "amino acid"
+    },
+    {
+      "ingredient": "Serine",
+      "position": 7,
+      "role": "amino acid"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 9,
+      "role": "E3 cutoff"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 10,
+      "role": "humectant (not prominent)"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 11,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 16,
+      "role": "pearlizer"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 17,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Sodium PCA",
+      "position": 20,
+      "role": "humectant"
+    },
+    {
+      "ingredient": "Glyceryl Stearate",
+      "position": 21,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Sodium Lactate",
+      "position": 33,
+      "role": "pH buffer"
+    }
+  ],
+  "unresolvedMaterialIngredients": [],
+  "blindUncertainties": [
+    "Free amino acids recorded as humectant context, not protein_film (no hydrolyzed protein)."
+  ]
+}

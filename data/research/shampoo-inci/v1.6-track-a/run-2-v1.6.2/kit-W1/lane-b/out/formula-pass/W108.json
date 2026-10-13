@@ -1,0 +1,141 @@
+{
+  "blindId": "W108",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, Section 3.1)",
+  "policyId": "shampoo-classification-v1.6.2",
+  "inciFingerprintSha256": "665d3815e74298d11968ebf3d989b3157a858499dcb4e7d5708e8756c36a803e",
+  "formulaPacket": {
+    "packSize": "400 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "22 entries as frozen; no split synonyms; normalized one-based positions cited (ID-2)."
+  },
+  "e3Point": "Parfum@16 (prominent = positions 1-15)",
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "Sodium Laureth Sulfate@2 (strong anionic, ether/sulfonate type)",
+      "reinforcingRoutes": ["Sodium Laureth-8 Sulfate@9 (strong ether type, C3b high-EO counter-signal)", "Magnesium Laureth Sulfate@11 (strong ether type)", "Magnesium Laureth-8-Sulfate@12 (strong ether type, C3b)", "Sodium Oleth Sulfate@14 (alkyl ether sulfate, strong ether type by chemistry)", "Magnesium Oleth Sulfate@15 (alkyl ether sulfate, strong ether type by chemistry)"],
+      "buffers": ["Cocamidopropyl Betaine@5 (amphoteric)", "Sodium Cocoyl Glutamate@6 (mild anionic)", "Disodium Cocoamphodiacetate@7 (amphoteric)"],
+      "nonCleansing": ["Laureth-4@13 (low-ethoxylate thickener)"],
+      "c3bCheck": "Reading both laureth-8 sulfates as buffers would still leave Magnesium Laureth Sulfate@11, Sodium Oleth Sulfate@14 and Magnesium Oleth Sulfate@15 as reinforcing routes, so the C3b confidence cap does not decide the value."
+    },
+    "conditioningRoutes": ["Urea@3 (humectant)", "Panthenol@8 (humectant/comfort)", "Glycol Distearate@10 (pearlizing route)", "Glycerin@20 (humectant, post-E3)"],
+    "humectants": ["Urea@3", "Panthenol@8", "Glycerin@20", "Propylene Glycol@22 (solvent, not deliberate)"],
+    "actives": [],
+    "e4ComfortRoutesProminent": ["Urea@3", "Panthenol@8"],
+    "e4HumectantRoutesProminent": ["Urea@3", "Panthenol@8"],
+    "mildBase": "not met: prominent strong anionics (Sodium Laureth Sulfate@2 and reinforcing ether sulfates); cleansingStrength strong",
+    "exposureFlags": ["Parfum@16", "no allergens declared separately", "no cooling agent"],
+    "preservatives": ["Sodium Benzoate@18", "Potassium Sorbate@19", "Formic Acid@21"]
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Strong: C1 - defining anionic Sodium Laureth Sulfate@2 with prominent reinforcing ether sulfates (Magnesium Laureth Sulfate@11, Sodium Oleth Sulfate@14, Magnesium Oleth Sulfate@15, plus the laureth-8 sulfates @9, @12). Counter-signal: three early buffers (Cocamidopropyl Betaine@5, Sodium Cocoyl Glutamate@6, Disodium Cocoamphodiacetate@7) precede every reinforcing route, which sit late in a mixed-salt blend; confidence lowered to moderate, neighbor moderate. The convention value is not moved.",
+      "ruleIds": ["C1", "C3", "C3b", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low: cleansing-led architecture with no cationic polymer, no silicone and no lipid; care is humectant-only (Urea@3, Panthenol@8, Glycerin@20) plus a pearlizer (Glycol Distearate@10), which give little substantive slip. Counter-signal: a prominent urea/panthenol humectant pair and a pearlizer could read as several light routes (moderate).",
+      "ruleIds": ["5", "C2"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "evidence": {
+        "cationic_polymer": [],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate@2", "Cocamidopropyl Betaine@5", "Sodium Cocoyl Glutamate@6", "Disodium Cocoamphodiacetate@7", "Sodium Laureth-8 Sulfate@9", "Magnesium Laureth Sulfate@11", "Magnesium Laureth-8-Sulfate@12", "Sodium Oleth Sulfate@14", "Magnesium Oleth Sulfate@15"],
+        "humectantContext": ["Urea@3", "Panthenol@8", "Glycerin@20"],
+        "excluded": ["Glycol Distearate@10 (pearlizing wax, 6.4)", "Laureth-4@13 (thickener)", "Propylene Glycol@22 (solvent)", "Parfum@16"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 16,
+        "inci": "Parfum",
+        "classes": ["fragrance"],
+        "e3Point": 16,
+        "alphabeticalRun": "none",
+        "skipped": ["w_line_skipped:Panthenol@8 - clause (ii) failed: cleansing surfactants Sodium Laureth-8 Sulfate@9, Magnesium Laureth Sulfate@11, Magnesium Laureth-8-Sulfate@12, Sodium Oleth Sulfate@14, Magnesium Oleth Sulfate@15 and pearlizing wax Glycol Distearate@10 listed after it before the cap"],
+        "codes": [],
+        "plausibility": "Parfum@16: (i) Sodium Laureth Sulfate@2 before it; (ii) nothing between 16 and cap 16",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light - no deposition family at all; humectants only",
+      "persistence": "low - nothing substantive",
+      "resetCapacity": "strong - reinforced ether-sulfate chassis",
+      "counterevidence": "None material; the pearlizer is excluded from weight evidence.",
+      "whyThisBand": "Deposition is absent; humectants are context only.",
+      "whyNotNeighborBand": "Not moderate: there is no cationic, silicone, lipid, protein or film former; no depositing system exists that could leave noticeable residue.",
+      "confidenceLimitingFactor": "none material",
+      "rationale": "Low: no deposition family against a strong reset (6.6).",
+      "ruleIds": ["6.3", "6.6", "W-LINE"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": ["Urea@3", "Panthenol@8", "Glycerin@20"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Glycol Distearate@10"],
+        "limitation": "humectant cluster without conditioning/emollient or deposition support, so moisture_supported is not met"
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "Prominent urea + panthenol comfort routes could carry a dry/sensitive-scalp role if positioned.",
+      "decisionTrace": "Formula-only: claim direction null; nonspecific for lengths; compatible with a scalp-comfort role (CSA met); provisional general.",
+      "rationale": "Provisional general pending claims.",
+      "ruleIds": ["7.2", "7.3"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["moisture"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty.",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "alternating",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional regular. Strong formula: frequent excluded; alternating only with a moderate/high reset-intent claim (U4).",
+      "ruleIds": ["9", "U2", "U4"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: positioning unknown. CSA met via prominent E4 comfort and humectant routes Urea@3 and Panthenol@8; MB not met (strong anionics). Counter-signal: cleansingStrength strong caps a future targeted at moderate.",
+      "ruleIds": ["CSA", "MB", "E4", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active (Section 11).",
+      "ruleIds": ["11"]
+    }
+  },
+  "unresolvedMaterialIngredients": []
+}

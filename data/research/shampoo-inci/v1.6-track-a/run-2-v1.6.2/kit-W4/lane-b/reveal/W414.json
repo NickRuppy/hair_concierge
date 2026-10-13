@@ -1,0 +1,14 @@
+{
+  "blindId": "W414",
+  "productName": "Head & Shoulders DERMAXPRO Haarshampoo Sensitive Pflege (dm: 'Shampoo Derma x Pro Sensitive Pflege')",
+  "brand": "Head & Shoulders",
+  "positioningSources": [
+    {
+      "sourceType": "dm.de PDP (browser tab, Inhaltsstoffe accordion expanded); Anschrift: Procter & Gamble, Schwalbach",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Anti-Schuppen Shampoo | Mit Manuka-Honig und Ceramide-Komplex | Für trockene und schuppige Kopfhaut | Regeneriert und hilft | Feuchtigkeitsspendend | Das Shampoo DermaxPro Sensitive Pflege von head&shoulders eignet sich für trockene und schuppige Kopfhaut. Das Shampoo reinigt und bekämpft gleichzeitig die Ursache von Schuppen und versorgt die Haut während der Anwendung mit Feuchtigkeit. Zudem enthält die Haarpflege Manuka-Honig und Ceramide-Komplex. | Wirkung: Anti-Schuppen, Pflege, Feuchtigkeit",
+      "directionsVerbatim": "Shampoo im Haar verteilen. Aufschäumen, dann ausspülen."
+    }
+  ]
+}

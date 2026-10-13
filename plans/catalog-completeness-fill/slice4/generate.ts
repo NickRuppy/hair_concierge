@@ -6,6 +6,7 @@
  * prestate (`prestate.json`). No database access. Writes the guarded one-shot migration, the
  * prepared rollback, the read-only verify query and the manifest. Run:
  *   npx tsx plans/catalog-completeness-fill/slice4/generate.ts
+ * Add `--check` to verify the checked-in outputs without writing.
  * `buildSlice4Artifacts()` is pure; the rehearsal test asserts the files on disk equal it.
  */
 import { createHash } from "node:crypto"
@@ -26,7 +27,7 @@ const PROFILE_PATH =
 const BINDING_PATH =
   "data/research/bondbuilder-inci/v1.0/s4-aveda-cadence-binding/aveda-damage-binding.json"
 export const SLICE4_MIGRATION =
-  "supabase/migrations/20261011170000_bondbuilder_aveda_damage_cadence.sql"
+  "supabase/migrations/20261013170000_bondbuilder_aveda_damage_cadence.sql"
 export const SLICE4_BATCH_ID = "S4-catalog-completeness-aveda-damage-cadence"
 export const SLICE4_PRODUCT_KEY = "P07"
 
@@ -373,6 +374,16 @@ WHERE (SELECT count(*) FROM public.product_application_protocols p
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const { files, fingerprint } = buildSlice4Artifacts()
-  for (const [path, text] of Object.entries(files)) writeFileSync(resolve(ROOT, path), text)
-  console.log(`slice4 generated, content fingerprint ${fingerprint}`)
+  const check = process.argv.includes("--check")
+  for (const [path, text] of Object.entries(files)) {
+    if (check) {
+      assert(
+        readFileSync(resolve(ROOT, path), "utf8") === text,
+        `generated artifact drift: ${path}`,
+      )
+    } else {
+      writeFileSync(resolve(ROOT, path), text)
+    }
+  }
+  console.log(`slice4 ${check ? "checked" : "generated"}, content fingerprint ${fingerprint}`)
 }

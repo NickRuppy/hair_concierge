@@ -1,0 +1,799 @@
+{
+  "blindId": "T314",
+  "inciFingerprintSha256": "4871d6edeb1c4a74bb8123dc09d22d76a8888bf42f570a16fd8b5f91ac931e73",
+  "identity": {
+    "productName": "Balea PROFESSIONAL Shampoo Kopfhaut Sensitive",
+    "brand": "Balea PROFESSIONAL (dm-Eigenmarke)",
+    "market": "DE",
+    "formulaBlock": {
+      "normalization": "No split synonym entries. E3: Parfum at 18; prominent = 1-17.",
+      "formulaCompleteness": "complete",
+      "formulaSourceTier": 2,
+      "identityConfidence": "high",
+      "rawInciCount": 19
+    }
+  },
+  "claimSources": [
+    {
+      "id": "S1",
+      "sourceKind": "manufacturer_de",
+      "grade": "moderate"
+    },
+    {
+      "id": "S2",
+      "sourceKind": "retailer",
+      "grade": "low"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: SLES (3) defining, buffered by Cocamidopropyl Hydroxysultaine (4), Coco-Glucoside (7), Cocamidopropyl Betaine (17) -> moderate.",
+      "neighboringAlternative": "none",
+      "counterSignal": "None material.",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T314"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Hydrogenated Starch Hydrolysate",
+          "position": 2,
+          "role": "polyol humectant; not on the closed humectant list"
+        },
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 3,
+          "role": "defining anionic, ether type"
+        },
+        {
+          "ingredient": "Cocamidopropyl Hydroxysultaine",
+          "position": 4,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 5,
+          "role": "humectant; E4"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 7,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Allantoin",
+          "position": 8,
+          "role": "E4 comfort route"
+        },
+        {
+          "ingredient": "Bisabolol",
+          "position": 9,
+          "role": "E4 comfort route"
+        },
+        {
+          "ingredient": "Zinc PCA",
+          "position": 10,
+          "role": "sebum-regulating salt; not on E4"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 11,
+          "role": "E4 comfort route"
+        },
+        {
+          "ingredient": "Hydrolyzed Keratin",
+          "position": 12,
+          "role": "protein_film"
+        },
+        {
+          "ingredient": "Camellia Sinensis Leaf Extract",
+          "position": 13,
+          "role": "extract"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 14,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 16,
+          "role": "pearlizer"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 17,
+          "role": "buffer"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "One meaningful system (guar 14) plus light routes (Hydrolyzed Keratin 12, pearlizer Glycol Distearate 16, humectants Glycerin 5/Panthenol 11); C2 not met (no early silicone or payload lipid).",
+      "neighboringAlternative": "low",
+      "counterSignal": "Guar and keratin are late (after extracts), so slip could be little (low).",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T314"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Hydrogenated Starch Hydrolysate",
+          "position": 2,
+          "role": "polyol humectant; not on the closed humectant list"
+        },
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 3,
+          "role": "defining anionic, ether type"
+        },
+        {
+          "ingredient": "Cocamidopropyl Hydroxysultaine",
+          "position": 4,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 5,
+          "role": "humectant; E4"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 7,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Allantoin",
+          "position": 8,
+          "role": "E4 comfort route"
+        },
+        {
+          "ingredient": "Bisabolol",
+          "position": 9,
+          "role": "E4 comfort route"
+        },
+        {
+          "ingredient": "Zinc PCA",
+          "position": 10,
+          "role": "sebum-regulating salt; not on E4"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 11,
+          "role": "E4 comfort route"
+        },
+        {
+          "ingredient": "Hydrolyzed Keratin",
+          "position": 12,
+          "role": "protein_film"
+        },
+        {
+          "ingredient": "Camellia Sinensis Leaf Extract",
+          "position": 13,
+          "role": "extract"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 14,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 16,
+          "role": "pearlizer"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 17,
+          "role": "buffer"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Late keratin (12) and late guar (14) face an effective C1 reset; no silicone or lipid.",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "Two deposition families (protein_film, cationic_polymer) (W2).",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "late protein + late guar"
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "light protein/polymer routes"
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 with three buffers"
+        }
+      },
+      "whyThisBand": "Light, late routes only.",
+      "whyNotNeighborBand": "W2: both families (Hydrolyzed Keratin 12, guar 14) sit late after comfort actives and extracts, face a moderate reset, and nothing persistent (silicone/lipid) reinforces them.",
+      "evidenceByFamily": {
+        "protein_film": [
+          [
+            "Hydrolyzed Keratin",
+            12
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Guar Hydroxypropyltrimonium Chloride",
+            14
+          ]
+        ],
+        "context_humectant": [
+          [
+            "Hydrogenated Starch Hydrolysate",
+            2
+          ],
+          [
+            "Glycerin",
+            5
+          ],
+          [
+            "Panthenol",
+            11
+          ]
+        ],
+        "excluded": [
+          [
+            "Glycol Distearate",
+            16,
+            "pearlizer"
+          ],
+          [
+            "Zinc PCA",
+            10,
+            "salt"
+          ],
+          [
+            "Allantoin",
+            8,
+            "comfort active"
+          ],
+          [
+            "Bisabolol",
+            9,
+            "comfort active"
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Laureth Sulfate",
+            3
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Hydroxysultaine",
+            4
+          ],
+          [
+            "Cocamidopropyl Betaine",
+            17
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Coco-Glucoside",
+            7
+          ]
+        ],
+        "unresolved": []
+      },
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T314"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Hydrogenated Starch Hydrolysate",
+          "position": 2,
+          "role": "polyol humectant; not on the closed humectant list"
+        },
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 3,
+          "role": "defining anionic, ether type"
+        },
+        {
+          "ingredient": "Cocamidopropyl Hydroxysultaine",
+          "position": 4,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 5,
+          "role": "humectant; E4"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 7,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Allantoin",
+          "position": 8,
+          "role": "E4 comfort route"
+        },
+        {
+          "ingredient": "Bisabolol",
+          "position": 9,
+          "role": "E4 comfort route"
+        },
+        {
+          "ingredient": "Zinc PCA",
+          "position": 10,
+          "role": "sebum-regulating salt; not on E4"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 11,
+          "role": "E4 comfort route"
+        },
+        {
+          "ingredient": "Hydrolyzed Keratin",
+          "position": 12,
+          "role": "protein_film"
+        },
+        {
+          "ingredient": "Camellia Sinensis Leaf Extract",
+          "position": 13,
+          "role": "extract"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 14,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 16,
+          "role": "pearlizer"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 17,
+          "role": "buffer"
+        }
+      ],
+      "formulaIdentifiers": {
+        "inciFingerprintSha256": "4871d6edeb1c4a74bb8123dc09d22d76a8888bf42f570a16fd8b5f91ac931e73",
+        "sourceTier": 2,
+        "captureDate": "per frozen packet (not shown to lane)"
+      },
+      "confidenceLimitingFactor": "INCI-only: concentrations, charge density and deposition unknown"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "rationale": "Name 'Kopfhaut Sensitive' (high) + S1 'Beruhigendes Shampoo fuer empfindliche Kopfhaut', targeted.",
+      "counterSignal": "Shine wording ('seidigen Glanz') is a minor outcome claim.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Allantoin",
+          "position": 8
+        },
+        {
+          "ingredient": "Bisabolol",
+          "position": 9
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 11
+        }
+      ],
+      "claimRole": "candidate",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedRoutes": [],
+        "limitation": "Scalp role."
+      },
+      "decisionTrace": {
+        "claimDirection": "sensitive + dry scalp",
+        "formulaCompatible": "yes",
+        "compatibleRoute": "Allantoin 8, Bisabolol 9, Panthenol 11",
+        "decisionReason": "Scalp role named in product name (F7 step 1)."
+      },
+      "sourceIds": [
+        "name (high); S1 dm own-brand manufacturer page (moderate); S2 Open Beauty Facts (low, empty)"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Shine ('Das Haar ... erhaelt einen seidigen Glanz', 'glanzloses Haar') is an outcome sentence without an independent shine route (guar/pearlizer are generic; acids cannot create shine, F4).",
+      "counterSignal": "Shine is positioned at moderate grade.",
+      "neighboringAlternative": [
+        "shine"
+      ],
+      "formulaFacts": [],
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "claims": [
+          "shine outcome sentence"
+        ],
+        "routes": [],
+        "exception": null
+      },
+      "sourceIds": [
+        "name (high); S1 dm own-brand manufacturer page (moderate); S2 Open Beauty Facts (low, empty)"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Default.",
+      "counterSignal": "None.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "decisionTrace": {
+        "default": "regular",
+        "trigger": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "No trigger."
+      },
+      "sourceIds": [
+        "name (high); S1 dm own-brand manufacturer page (moderate); S2 Open Beauty Facts (low, empty)"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "high",
+      "rationale": "SC1: name + S1 sensitive units. CSA: Allantoin 8, Bisabolol 9, Panthenol 11 (comfort); Glycerin 5.",
+      "counterSignal": "None material.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Allantoin",
+          "position": 8
+        },
+        {
+          "ingredient": "Bisabolol",
+          "position": 9
+        }
+      ],
+      "sourceIds": [
+        "name (high); S1 dm own-brand manufacturer page (moderate); S2 Open Beauty Facts (low, empty)"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T314"
+      ]
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "not_applicable",
+      "moistureRoutes": [],
+      "repairRoutes": [],
+      "sharedRoutes": [],
+      "limitation": "Scalp role."
+    },
+    "claimRole": "candidate",
+    "counterSignal": "Shine wording ('seidigen Glanz') is a minor outcome claim.",
+    "neighboringAlternative": "none",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "sensitive + dry scalp",
+        "formulaCompatible": "yes",
+        "compatibleRoute": "Allantoin 8, Bisabolol 9, Panthenol 11",
+        "decisionReason": "Scalp role named in product name (F7 step 1)."
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "claims": [
+          "shine outcome sentence"
+        ],
+        "routes": [],
+        "exception": null
+      },
+      "usageRole": {
+        "default": "regular",
+        "trigger": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "No trigger."
+      }
+    }
+  },
+  "weightRecord": {
+    "value": "low",
+    "confidence": "moderate",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "light",
+        "rationale": "late protein + late guar"
+      },
+      "persistence": {
+        "value": "low",
+        "rationale": "light protein/polymer routes"
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C1 with three buffers"
+      }
+    },
+    "evidenceByFamily": {
+      "protein_film": [
+        [
+          "Hydrolyzed Keratin",
+          12
+        ]
+      ],
+      "cationic_polymer": [
+        [
+          "Guar Hydroxypropyltrimonium Chloride",
+          14
+        ]
+      ],
+      "context_humectant": [
+        [
+          "Hydrogenated Starch Hydrolysate",
+          2
+        ],
+        [
+          "Glycerin",
+          5
+        ],
+        [
+          "Panthenol",
+          11
+        ]
+      ],
+      "excluded": [
+        [
+          "Glycol Distearate",
+          16,
+          "pearlizer"
+        ],
+        [
+          "Zinc PCA",
+          10,
+          "salt"
+        ],
+        [
+          "Allantoin",
+          8,
+          "comfort active"
+        ],
+        [
+          "Bisabolol",
+          9,
+          "comfort active"
+        ]
+      ],
+      "anionic_surfactant": [
+        [
+          "Sodium Laureth Sulfate",
+          3
+        ]
+      ],
+      "amphoteric_surfactant": [
+        [
+          "Cocamidopropyl Hydroxysultaine",
+          4
+        ],
+        [
+          "Cocamidopropyl Betaine",
+          17
+        ]
+      ],
+      "nonionic_surfactant": [
+        [
+          "Coco-Glucoside",
+          7
+        ]
+      ],
+      "unresolved": []
+    },
+    "whyThisBand": "Light, late routes only.",
+    "whyNotNeighborBand": "W2: both families (Hydrolyzed Keratin 12, guar 14) sit late after comfort actives and extracts, face a moderate reset, and nothing persistent (silicone/lipid) reinforces them.",
+    "counterSignal": "Two deposition families (protein_film, cationic_polymer) (W2).",
+    "neighboringAlternative": "moderate",
+    "formulaIdentifiers": {
+      "inciFingerprintSha256": "4871d6edeb1c4a74bb8123dc09d22d76a8888bf42f570a16fd8b5f91ac931e73",
+      "sourceTier": 2,
+      "captureDate": "per frozen packet (not shown to lane)"
+    },
+    "confidenceLimitingFactor": "INCI-only: concentrations, charge density and deposition unknown"
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1 (fine, W low) = ideal; T6 not needed; T4: neighbor would lower the tier -> review_thickness_boundary"
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1 (normal, W low) = ideal; T6 not needed"
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1 (coarse, W low, C moderate) = acceptable; T6 not needed"
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential low -> light."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "sensitive",
+        "bucket": "irritationen",
+        "route": "irritated",
+        "confidence": "high",
+        "rationale": "S-SENSITIVE: name 'Kopfhaut Sensitive' (high); targeted + comfort routes Allantoin 8, Bisabolol 9, Panthenol 11. Primary by name."
+      },
+      "secondary": {
+        "target": "dry",
+        "bucket": "trocken",
+        "route": "dry",
+        "confidence": "moderate",
+        "rationale": "S-DRY: S1 'speziell fuer die Beduerfnisse von sensibler und trockener Kopfhaut entwickelt', 'Spannungsgefuehle mildern' (moderate); targeted + prominent humectant Glycerin 5, Panthenol 11."
+      }
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate, D1 False -> regular."
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "evidence": "No D1 wording."
+    },
+    "explicitResetPositioning": false,
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "high",
+      "rationale": "D2 not met: D1 false"
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "display": "amber"
+      },
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "trocken",
+        "scalp_route": "dry",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "display": "amber"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "display": "amber"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "trocken",
+        "scalp_route": "dry",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "display": "amber"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "irritationen",
+        "scalp_route": "irritated",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable",
+        "display": "amber"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "trocken",
+        "scalp_route": "dry",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable",
+        "display": "amber"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_thickness_boundary",
+        "detail": "fine"
+      }
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "catalogDependent": "review_live_value_differs not computed in lane (live rows unseen)."
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "scalp_active (provisional, low)",
+      "final": "scalp_active",
+      "evidence": "Name 'Kopfhaut Sensitive' (high) + S1 'Beruhigendes Shampoo fuer empfindliche Kopfhaut', targeted."
+    },
+    {
+      "property": "focusSecondary",
+      "blind": "[] (provisional)",
+      "final": [],
+      "evidence": "Shine ('Das Haar ... erhaelt einen seidigen Glanz', 'glanzloses Haar') is an outcome sentence without an independent shine route (guar/pearlizer are generic; acids cannot create shine, F4)."
+    },
+    {
+      "property": "usageRole",
+      "blind": "regular (provisional)",
+      "final": "regular",
+      "evidence": "Default."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blind": "unknown (positioning hidden)",
+      "final": "targeted",
+      "evidence": "SC1: name + S1 sensitive units. CSA: Allantoin 8, Bisabolol 9, Panthenol 11 (comfort); Glycerin 5."
+    },
+    {
+      "property": "cleansingStrength/conditioningLevel/weightPotential/dandruffSupport",
+      "blind": "frozen",
+      "final": "unchanged",
+      "evidence": "Claims cannot assign these (3.2); no revealed formula conflict."
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "noComparisonWithEarlierValues": true
+  },
+  "uncertainties": [
+    {
+      "reading": "secondary dry",
+      "chosen": "dry",
+      "alternative": "none"
+    },
+    {
+      "reading": "secondary focus shine",
+      "chosen": "[]",
+      "alternative": "['shine']"
+    }
+  ]
+}

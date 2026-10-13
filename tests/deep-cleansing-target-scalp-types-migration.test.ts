@@ -8,7 +8,7 @@ import { PGlite } from "@electric-sql/pglite"
  * `target_scalp_types` column and its CHECK, replayed on PGlite over the spec table's own DDL.
  */
 
-const MIGRATION = "supabase/migrations/20261011150000_deep_cleansing_target_scalp_types.sql"
+const MIGRATION = "supabase/migrations/20261013140000_deep_cleansing_target_scalp_types.sql"
 
 const predecessorSchema = `
 CREATE TABLE public.products (id uuid PRIMARY KEY DEFAULT gen_random_uuid());

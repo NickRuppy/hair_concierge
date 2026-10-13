@@ -1,0 +1,129 @@
+{
+  "blindId": "W308",
+  "inciFingerprintSha256": "67f890bcc445fdb931de50ce96290cf6c902dfc338f8ebebd46019bf413d661f",
+  "phase": "formula-pass (blind, stage A only)",
+  "policy": "shampoo-classification-v1.6.2",
+  "lane": "lane-a",
+  "identity": {
+    "packSize": "300 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 1,
+    "identityConfidence": "high",
+    "normalization": "No split synonym entries; packet positions = normalized positions (ID-2). 26 entries.",
+    "e3ProminenceCutoff": "Parfum @6. Prominent = positions 1-5."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis. Defining anionic Sodium Laureth Sulfate @2 buffered by prominent Cocamidopropyl Betaine @3; no reinforcing strong anionic. Coco-Glucoside @8 is after Parfum (recorded, not a buffer).",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low: every conditioning route is after Parfum @6: Glyceryl Oleate @7, PEG-3 Distearate @9 (pearlizer), Hydrolyzed Wheat Protein @10, Panthenol @12, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @15 (after the preservatives), Glycerin @18. C2 not met (no early silicone or payload lipid). Counter-signal: several light routes together could give noticeable bounded care (moderate).",
+      "ruleIds": ["C2", "Section 5 anchors", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @15"],
+        "payload_lipid": [],
+        "weak_refatter": ["Glyceryl Oleate @7", "Tocopherol @23", "Hydrogenated Palm Glycerides Citrate @25"],
+        "silicone": [],
+        "protein_film": ["Hydrolyzed Wheat Protein @10"],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @3", "Coco-Glucoside @8 (post-E3)"],
+        "humectantContext": ["Panthenol @12", "Niacinamide @13", "Glycerin @18", "Pantolactone @20"],
+        "excluded": ["PEG-3 Distearate @9 (pearlizing wax, 6.4)", "Propylene Glycol @19 (solvent)", "Terpineol @17 (fragrance material)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "wLine": "@6 Parfum",
+        "classes": ["fragrance"],
+        "cap": "e3Point @6 (Parfum)",
+        "alphabeticalRun": "none",
+        "skipped": [],
+        "codes": [],
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light",
+      "persistence": "low",
+      "resetCapacity": "moderate",
+      "counterevidence": "Three deposition families are present (cationic_polymer, protein_film, weak_refatter).",
+      "whyThisBand": "All deposition is light and late: refatter and protein after Parfum, the only cationic polymer after the preservatives; ordinary C1 reset.",
+      "whyNotNeighborBand": "Not moderate (W2): each family is late/trace in the list - Glyceryl Oleate @7 and Hydrolyzed Wheat Protein @10 follow Parfum @6, and the HP guar @15 follows Sodium Benzoate @11 and Potassium Sorbate @14; no silicone or payload lipid; a moderate reset faces only light routes.",
+      "confidenceLimitingFactor": "Three light families converge; combined residue could be noticeable.",
+      "rationale": "Low: three light, late families against an ordinary C1 reset.",
+      "ruleIds": ["6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "repair",
+      "provisional": "Claim-dependent; formula-only provisional value.",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": ["Panthenol @12", "Glycerin @18"],
+        "repairRoutes": ["Hydrolyzed Wheat Protein @10"],
+        "sharedConditioningRoutes": ["Glyceryl Oleate @7", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @15"],
+        "limitation": "All routes post-fragrance; one protein token is not a repair cluster."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Light post-fragrance care routes only.",
+      "decisionTrace": "Blind: no claim; nonspecific formula; provisional general.",
+      "rationale": "Provisional general.",
+      "ruleIds": ["7.3", "F1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["volume"],
+      "provisional": "Claim-dependent.",
+      "rationale": "Empty default blind.",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "frequent",
+      "triggerCode": "none",
+      "provisional": "Claim-dependent.",
+      "rationale": "Default regular blind.",
+      "ruleIds": ["Section 9"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "provisional": "Formula half decides: positioning cannot make it targeted.",
+      "csa": "CSA NOT met: no E4 comfort or humectant/refatting route is prominent (Panthenol @12, Niacinamide @13, Glyceryl Oleate @7, Glycerin @18 all after Parfum @6); MB not met (Sodium Laureth Sulfate @2 prominent strong anionic). Any S-SENSITIVE/S-DRY gate would fail (S-FAIL).",
+      "counterSignals": "n/a",
+      "rationale": "not_targeted: no credible supportive architecture.",
+      "ruleIds": ["Section 10 CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": ["Sodium Laureth Sulfate @2 (defining)", "Cocamidopropyl Betaine @3 (buffer)", "Coco-Glucoside @8 (post-E3)"],
+    "conditioningRoutes": ["Glyceryl Oleate @7", "PEG-3 Distearate @9", "Hydrolyzed Wheat Protein @10", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @15", "Hydrogenated Palm Glycerides Citrate @25"],
+    "humectants": ["Panthenol @12", "Glycerin @18", "Pantolactone @20"],
+    "actives": ["Niacinamide @13", "Tocopherol @23"],
+    "exposure": ["Parfum @6", "Terpineol @17"],
+    "preservatives": ["Sodium Benzoate @11", "Potassium Sorbate @14", "Benzoic Acid @16", "Phenoxyethanol @22"]
+  },
+  "unresolvedMaterialIngredients": []
+}

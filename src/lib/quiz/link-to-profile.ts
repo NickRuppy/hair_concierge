@@ -1,4 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/admin"
+import { loadFreeRegistrationBindEvidence } from "@/lib/auth/free-registration-bind-evidence"
+import { resolveFreeRegistrationBind } from "@/lib/auth/free-registration"
 import { writeAccountLinkFacts } from "@/lib/user-facts/account-link"
 import type { QuizAnswers } from "./types"
 
@@ -29,7 +31,8 @@ export type LinkQuizToProfileOptions = {
  *
  * Strategy:
  *  1. Try direct lead ID lookup (if leadId passed from quiz CTA)
- *  2. Fall back to email lookup (most recent unlinked lead)
+ *  2. Fall back to email lookup (most recent unlinked lead), only for accounts
+ *     without an established hair profile or Personal Plan
  *  3. Project the lead's quiz answers into native diagnostics (+ quiz_context
  *     for a personal-plan lead) and write them via `writeAccountLinkFacts`:
  *     replaced when this own quiz is newer than the profile's last facts
@@ -95,6 +98,20 @@ export async function linkQuizToProfile(
       throw new Error(`Lead lookup by email failed: ${error.message}`)
     }
     lead = data?.quiz_kind === "legacy" ? data : null
+
+    // PUB-1, security audit 2026-10-09: anyone can plant an anonymous lead
+    // under this email. Apply the free-registration containment to EVERY
+    // email fallback, before either facts or ownership can change. Explicit
+    // matching lead IDs (the quiz handoff) and same-user retries stay intact.
+    // Evidence errors propagate, so callers cannot mistake an unreadable
+    // established account for a new one and overwrite it.
+    if (lead) {
+      const evidence = await loadFreeRegistrationBindEvidence({ userId, leadId: lead.id, admin })
+      if (resolveFreeRegistrationBind(evidence) === "skip") {
+        console.log("[linkQuizToProfile] established account; skipping email-only lead")
+        return
+      }
+    }
   }
 
   // No matching lead — user didn't come from quiz
@@ -104,8 +121,9 @@ export async function linkQuizToProfile(
   }
 
   // --- Write the lead's quiz into the native fact domains (decision wave 1,
-  // "latest own quiz wins"): the lead was matched to this account above, so it
-  // is the user's own quiz, and `writeAccountLinkFacts` replaces the facts only
+  // "latest own quiz wins"): an explicit matching lead ID / same-user retry
+  // establishes the quiz handoff; email alone is allowed only for a new account.
+  // `writeAccountLinkFacts` replaces the facts only
   // when it is newer than the profile's last facts change. `hair_profiles` and
   // its legacy columns are derived inside `user_facts_save_v1` itself — this
   // function never touches that table directly.

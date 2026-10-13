@@ -1,3 +1,4 @@
+// fit-verdict spec §1/§7b, ruled 2026-10-12: web labels and actions.
 import assert from "node:assert/strict"
 import test from "node:test"
 import React, { type ReactElement, type ReactNode } from "react"
@@ -425,7 +426,7 @@ test("keeps an unknown review open when no authority action is truthful", () => 
     />,
   )
 
-  assert.match(html, /Noch nicht eindeutig beurteilbar/)
+  assert.match(html, /Nicht geprüft/)
   assert.doesNotMatch(html, /Keine passende Alternative verfügbar\./)
 })
 
@@ -450,7 +451,7 @@ test("offers keep, exact replacement, and go-without for a partly fitting owned 
     />,
   )
 
-  assert.match(html, /Passt mit Einschränkung/)
+  assert.match(html, /Passt bedingt/)
   assert.match(html, /Mein Produkt behalten/)
   assert.doesNotMatch(html, /Mein Produkt trotzdem behalten/)
   assert.match(html, /Diese Alternative wählen/)
@@ -515,9 +516,9 @@ test("labels a supportive replacement as only partly fitting", () => {
     />,
   )
 
-  assert.match(html, /Alternative · passt mit Einschränkung/)
+  assert.match(html, /Alternative · passt bedingt/)
   assert.doesNotMatch(html, /Passende Alternative/)
-  assert.equal((html.match(/aria-label="Passt mit Einschränkung"/g) ?? []).length, 1)
+  assert.equal((html.match(/aria-label="Passt bedingt"/g) ?? []).length, 1)
 })
 
 test("fails closed when unexpected targetless evidence reaches an otherwise known comparison", () => {
@@ -581,9 +582,9 @@ test("fails closed when unexpected targetless evidence reaches an otherwise know
 
   // Der Zähler steht in einem eigenen nowrap-Span; für den Textvergleich Markup entfernen.
   assert.match(html.replace(/<[^>]*>/g, ""), /Shampoo · Produkt 2 von 3/)
-  assert.match(html, /Noch nicht eindeutig beurteilbar/)
+  assert.match(html, /Nicht geprüft/)
   assert.match(html, /keine Zielmarken und kein Fit-Urteil/)
-  assert.doesNotMatch(html, /Dein Shampoo passt mit Einschränkung/)
+  assert.doesNotMatch(html, /Passt bedingt/)
   assert.doesNotMatch(html, /Eigenschaft für Eigenschaft/)
   assert.doesNotMatch(html, /Mein Produkt behalten/)
   assert.doesNotMatch(html, /Mein Produkt trotzdem behalten/)
@@ -628,7 +629,7 @@ test("targetless evidence outranks pending review and suppresses every committin
     />,
   )
 
-  assert.match(html, /Noch nicht eindeutig beurteilbar/)
+  assert.match(html, /Nicht geprüft/)
   assert.doesNotMatch(html, /Analyse läuft/)
   assert.doesNotMatch(html, /Prüfung vormerken/)
   assert.doesNotMatch(html, /Vorerst ohne Produkt fortfahren/)
@@ -727,7 +728,10 @@ test("explains a mismatch verdict when no visible row is outside the target", ()
   )
 
   assert.match(html, /Warum passt dein Produkt nicht\?/)
-  assert.match(html, /Keine Produktvariante deckt deine Haardicke und Pflegerichtung gemeinsam ab\./)
+  assert.match(
+    html,
+    /Keine Produktvariante deckt deine Haardicke und Pflegerichtung gemeinsam ab\./,
+  )
 })
 
 test("omits the mismatch explanation when a visible row already shows outside target", () => {
@@ -937,7 +941,7 @@ test("compares strict recommendations without judging an absent owned product", 
 
   assert.match(html, /Wähle dein Shampoo/)
   assert.match(html, /Beste Passung/)
-  assert.match(html, /Alternative 1 · passt teilweise/)
+  assert.match(html, /Alternative · passt bedingt/)
   assert.match(html, /Alternative 1:[\s\S]*stark/)
   assert.match(html, /Außerhalb des Ziels/)
   assert.doesNotMatch(html, /Dein Produkt/)
@@ -1070,53 +1074,56 @@ test("does not expose product search for zero-candidate uncovered decisions", ()
   assert.equal(retryCalls, 1)
 })
 
-test("labels an all-supportive uncovered recommendation as the best available option", () => {
-  const supportiveComparison: Stage3FitComparison = {
-    ...comparison,
-    subjectKey: "subject:uncovered-supportive-leave-in",
-    sourceIdentity: null,
-    products: comparison.products.filter((product) => product.source === "alternative"),
-    alternatives: comparison.alternatives.map((candidate) => ({
-      ...candidate,
+for (const defaultProductId of [undefined, "alternative-one", "alternative-two"] as const) {
+  test(`labels the supportive recommendation Passt bedingt (${defaultProductId ?? "fit order"}) and keeps the prefix only on its alternative`, () => {
+    const supportiveComparison: Stage3FitComparison = {
+      ...comparison,
+      subjectKey: "subject:uncovered-supportive-leave-in",
+      sourceIdentity: null,
+      products: comparison.products.filter((product) => product.source === "alternative"),
+      alternatives: comparison.alternatives.map((candidate) => ({
+        ...candidate,
+        category: "leave_in",
+        role: "post_wash_leave_in",
+        verdict: "supportive" as const,
+        criteria: [
+          {
+            criterionId: "moisture",
+            label: "Pflege",
+            result: "caution" as const,
+            explanation: "Unterstützt den Bedarf, bleibt aber nicht die strengste Passung.",
+          },
+        ],
+      })),
+      evidenceRows: [],
+      ...(defaultProductId === undefined ? {} : { defaultProductId }),
+    }
+    const supportiveEvaluation: Stage3AuthorityEvaluation = {
+      ...evaluation,
       category: "leave_in",
-      role: "post_wash_leave_in",
-      verdict: "supportive" as const,
-      criteria: [
-        {
-          criterionId: "moisture",
-          label: "Pflege",
-          result: "caution" as const,
-          explanation: "Unterstützt den Bedarf, bleibt aber nicht die strengste Passung.",
-        },
-      ],
-    })),
-    evidenceRows: [],
-  }
-  const supportiveEvaluation: Stage3AuthorityEvaluation = {
-    ...evaluation,
-    category: "leave_in",
-    subjectKey: supportiveComparison.subjectKey,
-    verdict: "unknown",
-    allowedActions: ["leave_uncovered"],
-  }
-  const html = renderToStaticMarkup(
-    <ProductFitComparison
-      categoryLabel="Leave-in"
-      roleLabel="Pflege im feuchten Haar"
-      comparison={supportiveComparison}
-      evaluation={supportiveEvaluation}
-      displayedAlternativeIndex={1}
-      onDisplayedAlternativeChange={() => {}}
-      onAction={() => {}}
-      onBack={() => {}}
-    />,
-  )
+      subjectKey: supportiveComparison.subjectKey,
+      verdict: "unknown",
+      allowedActions: ["leave_uncovered"],
+    }
+    const html = renderToStaticMarkup(
+      <ProductFitComparison
+        categoryLabel="Leave-in"
+        roleLabel="Pflege im feuchten Haar"
+        comparison={supportiveComparison}
+        evaluation={supportiveEvaluation}
+        displayedAlternativeIndex={1}
+        onDisplayedAlternativeChange={() => {}}
+        onAction={() => {}}
+        onBack={() => {}}
+      />,
+    )
 
-  assert.match(html, /Beste verfügbare Option/)
-  assert.match(html, /Alternative 1 · passt teilweise/)
-  assert.match(html, /Unterstützt den Bedarf/)
-  assert.doesNotMatch(html, /Beste Passung/)
-})
+    assert.match(html, />Passt bedingt<\/p><p[^>]*>Unterstützt den Bedarf/)
+    assert.equal((html.match(/Alternative · passt bedingt<\/p>/g) ?? []).length, 1)
+    assert.match(html, /Unterstützt den Bedarf/)
+    assert.doesNotMatch(html, /Beste Passung/)
+  })
+}
 
 test("renders one uncovered candidate without an empty second slot or carousel", () => {
   const singleCandidateComparison: Stage3FitComparison = {
@@ -1179,7 +1186,7 @@ test("keeps a partial verdict explicit when no verified alternative exists", () 
     />,
   )
 
-  assert.match(html, /Dein Shampoo passt mit Einschränkung/)
+  assert.match(html, /Passt bedingt/)
   assert.match(html, /Außerhalb des Ziels/)
   assert.match(html, /Mein Produkt behalten/)
   assert.match(html, /Vorerst ohne Produkt fortfahren/)
@@ -1211,7 +1218,7 @@ test("keeps a mismatch explicit when no verified alternative exists", () => {
     />,
   )
 
-  assert.match(html, /Dein Shampoo passt nicht/)
+  assert.match(html, /Passt nicht/)
   assert.match(html, /außerhalb deines Ziels/)
   assert.doesNotMatch(html, /passt grundsätzlich/)
 })
@@ -1500,5 +1507,40 @@ function treeFor(authorityEvaluation: Stage3AuthorityEvaluation) {
     onDisplayedAlternativeChange: () => {},
     onAction: () => {},
     onBack: () => {},
+  })
+}
+
+for (const verdict of ["supportive", "mismatch"] as const) {
+  test(`evaluator reasons appear below the ${verdict} verdict and its supportive alternative (fit-verdict spec §1/§7b, ruled 2026-10-12)`, () => {
+    const reason = "Für dein Haar eher schwer"
+    const reasonEvaluation: Stage3AuthorityEvaluation = {
+      ...evaluation,
+      verdict,
+      criteria: [
+        {
+          criterionId: "shampoo.cleansing_intensity",
+          label: "Reinigungsintensität",
+          result: verdict === "supportive" ? "caution" : "fail",
+          explanation: reason,
+        },
+      ],
+    }
+    const html = renderToStaticMarkup(
+      <ProductFitComparison
+        categoryLabel="Shampoo"
+        roleLabel="Shampoo"
+        comparison={comparison}
+        evaluation={reasonEvaluation}
+        displayedAlternativeIndex={1}
+        onDisplayedAlternativeChange={() => {}}
+        onAction={() => {}}
+        onBack={() => {}}
+      />,
+    )
+    assert.match(
+      html,
+      /<strong[^>]*>Passt(?: bedingt| nicht)<\/strong>[\s\S]*?<p[^>]*>Für dein Haar eher schwer<\/p>/,
+    )
+    assert.match(html, /Alternative · passt bedingt<\/p><p[^>]*>Mit Einschränkung\.<\/p>/)
   })
 }

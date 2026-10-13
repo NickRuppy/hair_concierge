@@ -1,0 +1,156 @@
+{
+  "blindId": "T102",
+  "inciFingerprintSha256": "4c38ef0d7ffbc91af71108552246f97aaa83f57cf580e03e067bce3dc2a2de89",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "Packet canonicalInci used as normalized list (ID-2); positions are one-based on that list.",
+    "inciCount": 27,
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 3,
+    "identityConfidence": "high",
+    "e3ProminencePoint": "Parfum (Fragrance) at 8: positions 1-7 prominent"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: SLES (2) defining, one prominent buffer (Cocamidopropyl Betaine 4), no reinforcing anionic -> moderate. Coco-Glucoside (9) is after Parfum and not counted (C4).",
+      "counterSignal": "Only one prominent buffer; refatters are late.",
+      "neighboringAlternative": "none"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Cleansing-led architecture: the only prominent conditioning-adjacent routes are two hydrolyzed proteins (Keratin 5, Collagen 6), which give little slip; the only cationic polymer (HP Guar HPTC 19), the refatters (10, 12), the pearlizer (13) and the hydrogenated castor oil (16) all sit after Parfum (8). No silicone. C2 not met.",
+      "counterSignal": "Several light routes together (late guar, two proteins, refatters, pearlizer) could give noticeable bounded care -> moderate.",
+      "neighboringAlternative": "moderate"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Deposition is light and low-persistence: hydrolyzed proteins (5, 6) plus trace-level guar, refatters and hydrogenated castor oil after the fragrance; C1 reset is effective -> low.",
+      "counterSignal": "Four deposition families are present (protein, cationic polymer, weak refatter, payload lipid).",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Only the hydrolyzed proteins are prominent; guar 19, castor oil 16 and refatters 10/12 are after Parfum (trace)."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "Hydrolyzed proteins are weakly retained; no silicone or prominent lipid."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES + betaine chassis."
+        }
+      },
+      "whyThisBand": "Light, low-persistence deposition against ordinary reset.",
+      "whyNotNeighborBand": "W2: several families are present, but every family except the hydrolyzed proteins is listed after Parfum (trace: guar 19, hydrogenated castor oil 16, refatters 10/12), and hydrolyzed proteins are low-persistence film routes; combined residue stays below noticeable.",
+      "limitingFactor": "Exact amounts of the two prominent proteins and of the late guar."
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole in the complete INCI.",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Formula care-direction verdict recorded for reconciliation.",
+      "careDirection": {
+        "verdict": "repair_supported",
+        "note": "Two prominent hydrolyzed proteins (Keratin 5, Collagen 6) form a protein cluster; deposition support is weak (late guar). Weak verdict; could be nonspecific."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2)."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Default regular; triggers (U2-U5, D1, U3) need graded claims."
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). SC1 positioning unknown. CSA formula half fails: no prominent E4 comfort route and no prominent humectant/refatting route (Glyceryl Oleate 10 and PEG-7 Glyceryl Cocoate 12 are after Parfum)."
+    }
+  },
+  "scalpGateFormulaHalves": "S-SENSITIVE / S-DRY formula gates fail (no CSA). S-OILY clause passes (moderate cleansing, weight low, conditioning low).",
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic, ether type"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "buffer, amphoteric, prominent"
+    },
+    {
+      "ingredient": "Hydrolyzed Keratin",
+      "position": 5,
+      "role": "protein_film, prominent"
+    },
+    {
+      "ingredient": "Hydrolyzed Collagen",
+      "position": 6,
+      "role": "protein_film, prominent"
+    },
+    {
+      "ingredient": "Parfum (Fragrance)",
+      "position": 8,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 9,
+      "role": "glucoside after E3 point: recorded, not a buffer"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 10,
+      "role": "weak_refatter, late"
+    },
+    {
+      "ingredient": "PEG-7 Glyceryl Cocoate",
+      "position": 12,
+      "role": "weak_refatter, late"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 13,
+      "role": "pearlizer, excluded from weight"
+    },
+    {
+      "ingredient": "Laureth-4",
+      "position": 14,
+      "role": "thickener, not a route"
+    },
+    {
+      "ingredient": "PEG-120 Methyl Glucose Dioleate",
+      "position": 15,
+      "role": "PEG thickener, excluded"
+    },
+    {
+      "ingredient": "Hydrogenated Castor Oil",
+      "position": 16,
+      "role": "payload_lipid (hydrogenated), late"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 19,
+      "role": "cationic_polymer, late (19)"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

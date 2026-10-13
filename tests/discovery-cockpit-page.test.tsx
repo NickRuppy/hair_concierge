@@ -160,8 +160,8 @@ const items = [
 const payload: ScanPresentedVerdictPayload = {
   kind: "in_catalog",
   verdict: "supportive",
-  verdictLabel: "Passt mit Einschränkung",
-  verdictTitle: "Passt mit Einschränkung zu deinem Haar",
+  verdictLabel: "Passt bedingt",
+  verdictTitle: "Passt bedingt",
   status: "pending",
   subtitle: "2 von 3 Zielbereichen getroffen",
   evaluatedRole: "shampoo_everyday",
@@ -281,8 +281,8 @@ test("the cockpit reads as the call: routine, verdict, one decision per step", a
   // The participant's product, with the engine's verdict in the cockpit's voice (T4).
   assert.ok(markup.includes("Bisheriges Produkt"))
   assert.ok(markup.includes("Elvital Hyaluron Pure Shampoo"))
-  assert.ok(markup.includes("Passt mit Einschränkung zum Haarprofil"))
-  assert.ok(!markup.includes("Passt mit Einschränkung zu deinem Haar"))
+  assert.ok(markup.includes("Passt bedingt"))
+  assert.ok(!markup.includes("Passt mit Einschränkung"))
   assert.ok(markup.includes("Sitzt richtig bei einem Ansatz, der schnell nachfettet."))
 
   // One decision per step: keep plus the displayed alternative.

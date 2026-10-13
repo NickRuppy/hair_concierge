@@ -1,0 +1,75 @@
+{
+  "slot": "A35",
+  "productId": "2ecd3c9d-90f6-45a3-a72c-daefed50be10",
+  "name": "OGX Renewing + Argan Oil of Morocco Shampoo",
+  "brand": "OGX",
+  "packSize": "385 ml",
+  "gtins": [
+    "3574661799438",
+    "022796976116"
+  ],
+  "sources": [
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-ogx-renewing-argan-oil-of-morocco-shampoo/p/3574661799438",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "gtinShown": "GTIN in URL path /p/3574661799438; Artikelnummer 167657; '385 ml (1 L = 20,75 EUR)'; Kontakt Johnson & Johnson Santé Beauté France",
+      "inciVerbatim": "Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Argania Spinosa Kernel Oil, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Coco-Glucoside, Amodimethicone, Guar Hydroxypropyltrimonium Chloride, Hydrogenated Castor Oil, Coconut Acid, Disodium Tetrapropenyl Succinate, Glycol Distearate, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Hydroxide, Sodium Benzoate, Benzoic Acid, Parfum/Fragrance",
+      "claimsVerbatim": "Das regenerierende OGX Renewing Argan Oil of Morocco Shampoo mit wertvollem & marokkanischem Arganöl kräftigt und nährt das Haar. Darüber hinaus versorgt das Haarpflege Shampoo das Haar mit intensiver Feuchtigkeit. Zudem schützt das Shampoo mit UV Schutz für trockenes und strapaziertes Haar wirksam vor Schädigungen durch Hitze-Styling (Haarfön, Glätteisen, etc.) und UV-Strahlen. Das Arganöl Shampoo ohne sulfathaltige Tenside sorgt für kräftiges, geschmeidiges & glänzendes Haar. | regenerierende Formel – ... kräftigt und nährt das Haar ... intensive Feuchtigkeit | schützt wirksam vor UV-Strahlen – ... schützt wirksam vor Schädigungen durch Hitze-Styling (Haarfön, Glätteisen, etc.) und UV-Strahlen | Haarpflege Shampoo mit ausgewogenem pH-Wert – Das Arganöl Shampoo ohne sulfathaltige Tenside sorgt für kräftiges, geschmeidiges & glänzendes Haar",
+      "directionsVerbatim": "Shampoo großzügig im nassen Haar verteilen und bis in die Haarspitzen aufschäumen, danach gründlich ausspülen."
+    },
+    {
+      "url": "https://www.dm.de/p/d/1442074/ogx-shampoo-renewing-argan-oil-of-marocco",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "GTIN: 3574661799438 (dm-Artikelnummer 1442074; 'Shampoo renewing, Argan Oil of marocco, 385 ml'); Lieferbar",
+      "inciVerbatim": "Ingredients: Aqua/Water/Eau, Sodium Methyl Cocoyl Taurate, Decyl Glucoside, Cocamidopropyl Betaine, Sodium Chloride, Argania Spinosa Kernel Oil, Sodium Hydrolyzed Potato Starch Dodecenylsuccinate, Coco-Glucoside, Amodimethicone, Guar Hydroxypropyltrimonium Chloride, Hydrogenated Castor Oil, Coconut Acid, Disodium Tetrapropenyl Succinate, Glycol Distearate, PEG-150 Distearate, Hexylene Glycol, Citric Acid, Sodium Hydroxide, Sodium Benzoate, Benzoic Acid, Parfum/Fragrance",
+      "claimsVerbatim": "Haarshampoo | Mit marrokanischem Arganöl | Nährt und belebt das Haar | Feuchtigkeitsspendend | Mit LipiPro Shield Technologie | Das OGX Argan Oil of Morocco Shampoo repariert trockenes & geschädigtes Haar. Dank der effektiven Pflegeformel können Haarschäden sichtbar bereits nach der ersten Anwendung reduziert werden. Die Formel mit patentierter LipiPro Shield Technologie schützt die Lipid- und Proteinbarriere und hinterlässt strahlendes Haar. Das Shampoo verleiht dem Haar zudem ein gepflegtes und verführerisches Ergebnis. | Textur: Lotion | Wirkung: Feuchtigkeit | Produkteigenschaften: Ohne Alkohol",
+      "directionsVerbatim": "Shampoo großzügig im nassen Haar verteilen und bis in die Haarspitzen aufschäumen, danach gründlich ausspülen. Anschließend Conditioner verwenden."
+    }
+  ],
+  "conflicts": [
+    "Claim vs INCI (Rossmann): 'schützt wirksam vor UV-Strahlen' / UV-Schutz - no UV filter is listed (contrast: Neqi). Marketing claim only; not an INCI discrepancy.",
+    "Claim vs INCI (dm): 'LipiPro Shield Technologie' - not an INCI name; no corresponding ingredient is identifiable.",
+    "Regional variants (not used): Irish/Austrian/Dutch retailers list a Sodium C14-16 Olefin Sulfonate / Cocamidopropyl Hydroxysultaine formula for the 385 ml bottle; NZ/US list the taurate formula. German GTIN 3574661799438 sources (dm, Rossmann) all show the taurate formula."
+  ],
+  "canonicalInci": [
+    "Aqua/Water/Eau",
+    "Sodium Methyl Cocoyl Taurate",
+    "Decyl Glucoside",
+    "Cocamidopropyl Betaine",
+    "Sodium Chloride",
+    "Argania Spinosa Kernel Oil",
+    "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+    "Coco-Glucoside",
+    "Amodimethicone",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Hydrogenated Castor Oil",
+    "Coconut Acid",
+    "Disodium Tetrapropenyl Succinate",
+    "Glycol Distearate",
+    "PEG-150 Distearate",
+    "Hexylene Glycol",
+    "Citric Acid",
+    "Sodium Hydroxide",
+    "Sodium Benzoate",
+    "Benzoic Acid",
+    "Parfum/Fragrance"
+  ],
+  "canonicalReason": "No German/EU manufacturer page found (ogxbeauty.com is US-oriented; contact entity is Johnson & Johnson Santé Beauté France / Kenvue). Two independent GTIN-anchored German retailers (Rossmann, dm) agree verbatim on all 21 entries and match the 2026-08-10 (Rossmann) and 2026-08-24 (dm) v1.3 captures. Tier 3.",
+  "inciFingerprintSha256": "96713abf4bfbfaf9b4a2843332d8ac3a1436ddf36324a11c21c4b55acd358fc7",
+  "normalization": "Canonical list = one entry per ingredient exactly as published on the winning source (case and punctuation kept in canonicalInci; trailing period stripped; bullet/asterisk/comma separators dropped; split synonym entries such as 'Aqua (Water, Eau)' kept as one item). Fingerprint: per ingredient lower-case, trim, collapse internal whitespace; join with '|'; sha256 of the UTF-8 string. Earlier v1.3/v1.4 fingerprints were computed over comma-joined lists and are not comparable.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 3,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "GTIN 022796976116 is a non-DE barcode (Greek pharmacy retailer_url) also stored on the catalog row; not used as evidence.",
+    "Prior v1.3/v1.4 fingerprint (comma-joined) 37cd2e983601113699aefcffd42f6f6327edd2cdb1d04ffae04909e97a099592 - list unchanged.",
+    "dm's 'Ohne Alkohol' vs Rossmann 'ohne sulfathaltige Tenside': INCI contains no sulfate-ester surfactant (taurate/glucoside/betaine base) and no ethanol - consistent.",
+    "dm usage adds 'Anschließend Conditioner verwenden'; Rossmann omits it. Not an INCI matter."
+  ]
+}

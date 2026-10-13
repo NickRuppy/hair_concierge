@@ -1,6 +1,6 @@
 import type { InitialNeedPlanSnapshot, PlanRoutineContext } from "@/lib/personal-plan/types"
 
-import { projectStage2HeatEvents } from "./heat-events"
+import { projectStage2HeatEvents, stage2HeatRuleOptions } from "./heat-events"
 import {
   getEffectiveDryShampooBridgePreference,
   resolveStage2RefinementContract,
@@ -24,6 +24,7 @@ type CompletedRefinementInput = {
 
 export function deriveStage2TriggerContext(
   snapshot: InitialNeedPlanSnapshot,
+  options: { toolsEnabled: boolean },
 ): Stage2TriggerContext {
   const dryShampoo = snapshot.decisions.find((decision) => decision.category === "dry_shampoo")
 
@@ -35,6 +36,15 @@ export function deriveStage2TriggerContext(
       dryShampoo.deferredFacts.includes("dry_shampoo_bridge_preference")
         ? "eligible"
         : "ineligible",
+    // Absent means off, so tools-off contexts (and the refined input hash derived from them) stay
+    // byte-identical to the pre-rollout shape.
+    // `hairLength` gates the Rev. 6 night question; also set only while the rollout is on.
+    ...(options.toolsEnabled
+      ? {
+          toolsEnabled: true,
+          ...(snapshot.profile?.hair?.length ? { hairLength: snapshot.profile.hair.length } : {}),
+        }
+      : {}),
   }
 }
 
@@ -56,6 +66,7 @@ export function buildPlanRoutineContextFromCompletedRefinement(
   const dryShampooBridgePreference = getEffectiveDryShampooBridgePreference(contract.answers)
   const mechanicalExposureSignals =
     contract.answers.towel?.technique === "rough_rubbing" ? [TOWEL_ROUGH_RUBBING_SIGNAL] : []
+  const heatRule = stage2HeatRuleOptions(input.triggerContext)
   const ownedHeatProtectionIsUnresolved =
     input.habitsModuleUserComplete === false &&
     contract.answers.currentProductCategories?.includes("heat_protectant")
@@ -73,12 +84,12 @@ export function buildPlanRoutineContextFromCompletedRefinement(
       ? { state: "unknown", reason: "heat_tool_use" }
       : {
           state: "known",
-          value: projectStage2HeatEvents(contract.answers).map((event) => ({
+          value: projectStage2HeatEvents(contract.answers, heatRule).map((event) => ({
             id: event.id,
             tool: event.tool,
             route: event.route,
             frequency: event.frequency,
-            sourceRuleIds: [...STAGE2_HEAT_SOURCE_RULE_IDS],
+            sourceRuleIds: [...STAGE2_HEAT_SOURCE_RULE_IDS, ...event.ruleIds],
           })),
         },
     mechanicalExposureSignals,

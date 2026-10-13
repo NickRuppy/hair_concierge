@@ -1,0 +1,91 @@
+{
+  "slot": "A22",
+  "productId": "94829f16-b21d-4061-9dcc-cbd43dcb4274",
+  "name": "ISANA MED Shampoo pH 5,5 hautneutral",
+  "brand": "ISANA",
+  "packSize": "400 ml",
+  "gtins": [
+    "4068134039743"
+  ],
+  "sources": [
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-isana-med-shampoo-ph-55-hautneutral/p/4068134039743",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "Rossmann PDP (browser tab; Rossmann Dirk Rossmann GmbH is brand owner/Kontaktdaten of the ISANA private label); JSON-LD sku 4068134039743; Inhaltsstoffe accordion expanded",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4068134039743 (URL path and JSON-LD sku; Rossmann Artikelnummer 164591; 400 ml; 1,79 EUR)",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Urea, Sodium Chloride, Cocamidopropyl Betaine, Sodium Cocoyl Glutamate, Disodium Cocoamphodiacetate, Panthenol, Sodium Laureth-8 Sulfate, Glycol Distearate, Magnesium Laureth Sulfate, Magnesium Laureth-8-Sulfate, Laureth-4, Sodium Oleth Sulfate, Magnesium Oleth Sulfate, Parfum, Citric Acid, Sodium Benzoate, Potassium Sorbate, Glycerin, Formic Acid, Propylene Glycol",
+      "claimsVerbatim": "Die pH-hautneutrale Formel hilft den Säureschutzmantel der Haut zu stabilisieren und die natürliche Schutzfunktion aufrecht zu erhalten. Das ISANA MED SHAMPOO ist eine Spezialentwicklung für sensible Kopfhaut. | Feuchtigkeits-Komplex | schützt Kopfhaut & Haar vor Austrocknung | für jeden Tag | 3% Urea | ohne Silikone | für normales Haar | Hautverträglichkeit dermatologisch bestätigt",
+      "directionsVerbatim": "No usage directions published. Only: 'unter 25 Grad Celsius lagern' (Aufbewahrungs- und Verwendungsbedingungen)."
+    },
+    {
+      "url": "https://www.codecheck.info/p/kosmetik/haarpflege/shampoo/2842467575.html",
+      "retrievedAt": "2026-10-10",
+      "sourceType": "codecheck record (support only; EAN search hit for 4068134039743)",
+      "sourceKind": "retailer",
+      "gtinShown": "search hit for 4068134039743 (EAN not printed in page text)",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Urea, Sodium Chloride, Cocamidopropyl Betaine, Sodium Cocoyl Glutamate, Disodium Cocoamphodiacetate, Panthenol, Sodium Laureth-8 Sulfate, Glycol Distearate, Magnesium Laureth Sulfate, Magnesium Laureth-8 Sulfate, Laureth-4, Sodium Oleth Sulfate, Magnesium Oleth Sulfate, Parfum, Citric Acid, Sodium Benzoate, Potassium Sorbate, Glycerin, Propylene Glycol, Formic Acid.",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    },
+    {
+      "url": "https://www.rossmann.de/media-neu/145/MAM_14522428/MAM_14522428_SHOP_IMAGE_2.0.png",
+      "retrievedAt": "2026-10-06 (prior research, not re-read)",
+      "sourceType": "Rossmann pack-front image (prior track-b research isana-med-ph55.json)",
+      "sourceKind": "pack_front",
+      "gtinShown": "none on front",
+      "inciVerbatim": "n/a (pack front has no INCI)",
+      "claimsVerbatim": "ISANA MED · pH 5,5 HAUTNEUTRAL · SHAMPOO · 3% Urea · ohne Silikone · normales Haar · Klinisch getestet · dermatologisch bestätigt · ROSSMANN",
+      "directionsVerbatim": null
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "minor_order_and_hyphen",
+      "summary": "Codecheck lists 'Propylene Glycol, Formic Acid' (reverse of Rossmann) and 'Magnesium Laureth-8 Sulfate' (Rossmann: 'Magnesium Laureth-8-Sulfate'). Trace tail / punctuation only; Rossmann order kept."
+    },
+    {
+      "type": "non_de_naming",
+      "summary": "Prior research: Rossmann Türkei names this EAN 'Isana Med Şampuan Ultra Hassas 400 ml' (non-DE naming; not re-verified). DE name and pack unambiguous. Never merge with ISANA MED Shampoo Jeden Tag (Ultra Sensitiv), EAN 4305615629223."
+    }
+  ],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Urea",
+    "Sodium Chloride",
+    "Cocamidopropyl Betaine",
+    "Sodium Cocoyl Glutamate",
+    "Disodium Cocoamphodiacetate",
+    "Panthenol",
+    "Sodium Laureth-8 Sulfate",
+    "Glycol Distearate",
+    "Magnesium Laureth Sulfate",
+    "Magnesium Laureth-8-Sulfate",
+    "Laureth-4",
+    "Sodium Oleth Sulfate",
+    "Magnesium Oleth Sulfate",
+    "Parfum",
+    "Citric Acid",
+    "Sodium Benzoate",
+    "Potassium Sorbate",
+    "Glycerin",
+    "Formic Acid",
+    "Propylene Glycol"
+  ],
+  "canonicalReason": "Rossmann DE PDP (brand owner's own page) for the exact GTIN/400 ml publishes a complete 22-item list including Parfum; character-identical to the prior Rossmann read of 2026-10-06 and 2026-09-02 and to codecheck apart from a trace-tail order swap. No claim-INCI contradiction: '3% Urea' = Urea at position 3, 'ohne Silikone' consistent, Panthenol in list.",
+  "inciFingerprintSha256": "665d3815e74298d11968ebf3d989b3157a858499dcb4e7d5708e8756c36a803e",
+  "normalization": "Canonical list split on ',' at parenthesis depth 0 (so synonym groups such as 'Aqua (Water, Eau)' stay one item), trailing full stop removed; per item: lower-case, trim, collapse internal whitespace; asterisks, parentheses and slashes kept as published; items joined with '|'; sha256 over the UTF-8 string.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Tier 3 follows the prior track-b convention (exact German retailer page for the exact GTIN, retailer = brand owner) and could be argued as tier 2. Pack back not available online; no pack photo read in this pass.",
+    "Prior fingerprint in track-b file (', '-joined, case preserved) 6cc9991c01ffceb8956288e32ac7b6f1327a99c132f93121c25950fa92668e6d; this packet uses the '|' lower-case method.",
+    "The ops intake package (gitignored) contains no INCI of its own (status needs_more_info); it only carries the Rossmann PDP as evidence.",
+    "Rossmann lists it as deliverable (13.-14.10.) on 2026-10-10; price 1,79 EUR.",
+    "orchestrator 2026-10-10: own-brand retailer page normalized to manufacturer_de (calibration convention); tier set to 2 unless pack-based."
+  ]
+}

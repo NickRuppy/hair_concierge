@@ -1,0 +1,84 @@
+{
+  "slot": "A46",
+  "productId": "e859d6e0-e991-4081-84b5-b81862c82475",
+  "name": "Schwarzkopf GLISS Sealing Miracle Versiegelndes Shampoo",
+  "brand": "Schwarzkopf GLISS",
+  "packSize": "200 ml",
+  "gtins": [
+    "4015100895025"
+  ],
+  "sources": [
+    {
+      "url": "https://dm.henkel-dam.com/is/image/henkel/4015100895025_C7N1_S01_V01_GLISS_SHP_Sealing_Miracle_200ml_GPRS0_3127421_back-DE?hei=3004&fmt=png-alpha&qlt=100",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_pack_back_image_de",
+      "sourceKind": "pack_back",
+      "gtinShown": "barcode printed on the back label (reads 4 015100 895025); \"200 ml\"; DE/NL/FR text; Henkel AG & Co. KGaA, 40191 Düsseldorf",
+      "inciVerbatim": "INGREDIENTS: Aqua (Water, Eau), Sodium Laureth Sulfate, Sodium Chloride, Cocamidopropyl Betaine, Pisum Sativum (Pea) Peptide, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Parfum (Fragrance), Sodium Benzoate, Coco-Glucoside, Glyceryl Oleate, Citric Acid, PEG-7 Glyceryl Cocoate, Glycol Distearate, Laureth-4, Hydrogenated Castor Oil, PEG-120 Methyl Glucose Dioleate, Sodium Hydroxide, Benzyl Alcohol, Propylene Glycol, Leuconostoc/Radish Root Ferment Filtrate (read visually from the pack-back packshot, items separated by '·')",
+      "claimsVerbatim": "Wirkt wie ein Reißverschluss für das Haar • Schützt das Haar • Für splissgeschädigtes Haar",
+      "directionsVerbatim": "Anwendung: Sanft im feuchten Haar verteilen. Gut ausspülen! Regelmäßig anwenden."
+    },
+    {
+      "url": "https://www.schwarzkopf.de/marken/haarpflege/gliss/sealing-miracle/versiegelndes-shampoo.html",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "no GTIN in page text; page uses the same packshot asset set (4015100895025_..._front-DE / _back-DE); 200 ml",
+      "inciVerbatim": "(Inhaltsstoffe tab did not render text; the page serves the pack-back image above)",
+      "claimsVerbatim": "Versiegelndes Shampoo für ein gesünderes und kräftigeres Haargefühl mit Zip & Seal-Technologie | Für geschädigtes und splissanfälliges Haar | Bis zu 94 % weniger Spliss* | Reinigt, ohne das Haar zu beschweren | Vegane und silikonfreie Formel** | Für alle Haartypen | * Im Vergleich zu unbehandeltem Haar bei Anwendung in Kombination mit dem GLISS Sealing Miracle Spray. ** Frei von Inhaltsstoffen tierischen Ursprungs.",
+      "directionsVerbatim": "(Anwendung tab text not rendered; pack back says: Sanft im feuchten Haar verteilen. Gut ausspülen! Regelmäßig anwenden.)"
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-gliss-sealing-shampoo-sealing-miracle/p/4015100895025",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "gtinShown": "4015100895025 (PDP URL id + JSON-LD sku); 200 ml; 5,99 EUR; InStock; name \"Sealing Shampoo Sealing Miracle\"; Inhaltsstoffe section empty",
+      "inciVerbatim": "(Inhaltsstoffe section empty on the Rossmann PDP at retrieval)",
+      "claimsVerbatim": "GLISS Sealing Miracle Shampoo – Reinigung und Pflege für splissgeschädigtes Haar. Tägliches Styling, Hitze und Umwelteinflüsse können die Haarstruktur angreifen und zu Spliss führen. Das GLISS Sealing Miracle Shampoo wurde speziell entwickelt, um geschädigtes Haar gezielt zu pflegen und zu schützen. Dank der innovativen Zip & Seal Technologie wirkt die Formel des Shampoos wie ein Reißverschluss für die Haarfaser und kann langfristig sichtbar Spliss entfernen*. Das Pflegeshampoo reinigt und pflegt das Haar gründlich, ohne es zu beschweren. Die Formel besteht zu 92 % aus Inhaltsstoffen natürlichen Ursprungs (inkl. Wasser) und ist silikonfrei sowie vegan**. | Anti-Spliss Effekt | Zip & Seal Technologie – ... reduziert Spliss um bis zu 94 % (entgegen unbehandeltem Haar, kombiniert mit dem Sealing Miracle Spray) | Vegane Formel | Einfache Anwendung – ... einfach sanft im feuchten Haar verteilen und anschließend gut ausspülen. Regelmäßig anwenden",
+      "directionsVerbatim": "einfach sanft im feuchten Haar verteilen und anschließend gut ausspülen. Regelmäßig anwenden"
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "claim_inci_check",
+      "detail": "'Pisum Sativum (Pea) Peptide' and 'Leuconostoc/Radish Root Ferment Filtrate' (Zip & Seal) present. 'silikonfrei' consistent: no silicone in INCI. 'Reinigt ... ohne zu beschweren' alongside Hydrogenated Castor Oil/PEG esters (wording only)."
+    }
+  ],
+  "canonicalInci": [
+    "Aqua (Water, Eau)",
+    "Sodium Laureth Sulfate",
+    "Sodium Chloride",
+    "Cocamidopropyl Betaine",
+    "Pisum Sativum (Pea) Peptide",
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+    "Parfum (Fragrance)",
+    "Sodium Benzoate",
+    "Coco-Glucoside",
+    "Glyceryl Oleate",
+    "Citric Acid",
+    "PEG-7 Glyceryl Cocoate",
+    "Glycol Distearate",
+    "Laureth-4",
+    "Hydrogenated Castor Oil",
+    "PEG-120 Methyl Glucose Dioleate",
+    "Sodium Hydroxide",
+    "Benzyl Alcohol",
+    "Propylene Glycol",
+    "Leuconostoc/Radish Root Ferment Filtrate"
+  ],
+  "canonicalReason": "Current German pack back (Henkel-hosted packshot, EAN barcode 4015100895025 visible, 200 ml) read visually: 20 items, identical to the v1.4 packet (2026-09-03) that also had the same back-pack asset and a same-GTIN Kruidvat NL corroboration. 'Aqua (Water, Eau)' kept as one item.",
+  "inciFingerprintSha256": "a9e06d6f02da0f35a9bbe7479a378b19dd687cdcbe8cdba3d26e1d7fdadb6b21",
+  "normalization": "Canonical list = the ordered INCI items, each lower-cased, trimmed, internal whitespace collapsed; items joined with '|' and sha256 over the UTF-8 string. Split synonym entries (e.g. 'Aqua (Water, Eau)') are merged into one item before hashing; trailing full stops removed.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 1,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Tier 1 rests on the manufacturer-hosted back packshot used by schwarzkopf.de; not a physical bottle. The Schwarzkopf page's own Inhaltsstoffe tab did not expose text (likely rendered from the image).",
+    "Rossmann PDP carries no INCI; Kruidvat NL corroboration from the v1.4 packet was not re-fetched.",
+    "Rossmann name 'Sealing Shampoo Sealing Miracle' = same GTIN; GLISS Anti-Spliss 250 ml variant not merged.",
+    "Prior v1.4 fingerprint (v1.4 packet 'sha256_normali...') used the old scheme; list unchanged."
+  ]
+}

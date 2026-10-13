@@ -300,8 +300,8 @@ test("the cockpit shows her product as a comparison table instead of bars and te
       initialFinalizedAt={null}
     />,
   )
-  // Verdict title and badge stay (the title in the cockpit's voice, T4).
-  assert.match(markup, /Passt zum Haarprofil/)
+  // Verdict title and badge: fit-verdict spec §1, ruled 2026-10-12.
+  assert.match(markup, />Passt</)
   // No slider bars, no batch-4 text rows.
   assert.doesNotMatch(
     markup,
@@ -346,12 +346,9 @@ test("the cockpit shows her product as a comparison table instead of bars and te
   // in target: product and target both named.
   assert.match(full, /aria-label="Kopfhaut, passt, Produkt: fettig, Ziel: fettig"/)
   // out of target: the miss is named against the target.
-  assert.match(full, /aria-label="Pflegegewicht, mit Einschränkung, Produkt: mittel, Ziel: leicht"/)
+  assert.match(full, /aria-label="Pflegegewicht, passt bedingt, Produkt: mittel, Ziel: leicht"/)
   // no target: the target cell is a dash.
-  assert.match(
-    full,
-    /aria-label="Reinigung, nicht einschätzbar, Produkt: mild, Ziel: nicht verfügbar"/,
-  )
+  assert.match(full, /aria-label="Reinigung, nicht geprüft, Produkt: mild, Ziel: nicht verfügbar"/)
   assert.match(full, /text-\[var\(--brand-plum\)\][^>]*>–</)
   // The long property names may break at their word joint, like iOS („Pflege-/gewicht").
   assert.ok(full.includes("Pflege­gewicht"))

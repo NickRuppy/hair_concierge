@@ -1,0 +1,397 @@
+{
+  "blindId": "W407",
+  "lane": "lane-b",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "brand": "Syoss (Henkel)",
+    "productName": "Syoss Intense Fullness Kräftigendes Shampoo, 440 ml",
+    "packSize": "440 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "0af2b2c6498075d6eaf4d9c65ebe305e1ad716f5f112407ee38d98517575d981",
+    "normalization": "Aqua (Water, Eau) and Parfum (Fragrance) are single entries; positions are normalized one-based positions (ID-2).",
+    "completeness": "complete (packet; source tier 2, identity confidence moderate)",
+    "e3ProminenceCutoff": "Parfum (Fragrance) @10; prominent = positions 1-9"
+  },
+  "formulaPassReference": "out/formula-pass/W407.json (hash-pinned; not edited)",
+  "claimEvidence": [
+    "Name words 'Intense Fullness', 'Kräftigendes' (high).",
+    "manufacturer_de (moderate): 'Kräftigendes Shampoo | Intense Fullness | Tiefenpflegende Formel mit 3% Niacinamide-Volumen-Komplex, stärkt das Haar von innen'.",
+    "retailer Rossmann (low): 'für feines, kraftloses Haar', Fülle, Volumen."
+  ],
+  "reconciliation": [
+    "focusPrimary provisional general -> volume (fullness named; weight moderate, conditioning moderate: compatible).",
+    "'Tiefenpflegende' is not D1 (care prefix, 13.6).",
+    "Claim '3% Niacinamide-Volumen-Komplex' names Niacinamide (@7, present). It does not prove a concentration (3.2); the W-line candidate @7 stays as derived (the complex is not Niacinamide alone). No material effect: both payload lipids (@15, @21) are after the E3 cap anyway.",
+    "cleansingStrength, conditioningLevel, weightPotential and dandruffSupport unchanged from the hash-pinned blind pass (formula-only; claims cannot move them, 3.2)."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate @2 defining anionic buffered by prominent Cocamidopropyl Betaine @3, no reinforcing strong anionic; the laureth/trideceth ethoxylates and PEG esters are thickeners/solubilizers, not cleansing routes (C3).",
+      "ruleIds": [
+        "C3",
+        "C4",
+        "C1"
+      ],
+      "counterSignal": "none material.",
+      "formulaFacts": {
+        "strongAnionicEtherSulfonate": [
+          "Sodium Laureth Sulfate @2 (defining anionic)"
+        ],
+        "strongAnionicAlkylSulfate": [],
+        "mildAnionic": [],
+        "amphoteric": [
+          "Cocamidopropyl Betaine @3 (prominent buffer)"
+        ],
+        "nonionicCleansing": [],
+        "notCleansingNotBuffer": [
+          "Sodium Chloride @4",
+          "Laureth-4 @17 (low-ethoxylate thickener)",
+          "PEG-120 Methyl Glucose Dioleate @18 (PEG thickener)",
+          "Laureth-23 @20 (PEG ether solubilizer; no C3 cleansing class)",
+          "Trideceth-10 @22 (ethoxylate solubilizer)",
+          "PEG-40 Hydrogenated Castor Oil @14 (solubilizer)"
+        ],
+        "reinforcingRoutes": [],
+        "c1c5c6Reading": "C1: ether-sulfate defining anionic, one prominent buffer, no reinforcing route"
+      },
+      "blindToFinal": "unchanged: formula-only property; claims may not set or move it (3.2)"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "rationale": "Moderate: one meaningful silicone/cationic system (early Dimethicone @8, late Amodimethicone @12, Guar Hydroxypropyltrimonium Chloride @13) plus light routes (PEG-7 Glyceryl Cocoate @5, Hydrolyzed Keratin @6, Glycol Distearate @16). C2 is not met: early silicone, cationic polymer and pearlizer are present, but there is no deliberate humectant route from the closed R11 list (no Glycerin, Panthenol, Sodium Hyaluronate, Sodium PCA, Urea, Sorbitol or Betaine); no prominent payload lipid, so no W-RICH. Counter-signal: the missing humectant is the only missing C2 element, so high is the neighbor (C2).",
+      "ruleIds": [
+        "C2",
+        "R11",
+        "Section 5 anchors",
+        "W-RICH"
+      ],
+      "counterSignal": "Missing C2 humectant element only; high is the neighbor.",
+      "formulaFacts": {
+        "cationic_polymer": [
+          "Guar Hydroxypropyltrimonium Chloride @13"
+        ],
+        "payload_lipid": [
+          "Hydrogenated Castor Oil @15 (not prominent; non-material)",
+          "Prunus Armeniaca (Apricot) Kernel Oil @21 (not prominent; non-material)"
+        ],
+        "weak_refatter": [
+          "PEG-7 Glyceryl Cocoate @5 (prominent)"
+        ],
+        "silicone": [
+          "Dimethicone @8 (prominent, early)",
+          "Amodimethicone @12 (late)"
+        ],
+        "protein_film": [
+          "Hydrolyzed Keratin @6 (prominent)"
+        ],
+        "pearlizing_fatty_route": [
+          "Glycol Distearate @16"
+        ],
+        "humectants": [],
+        "notHumectantRoute": [
+          "Propylene Glycol @26"
+        ]
+      },
+      "blindToFinal": "unchanged: formula-only property; claims may not set or move it (3.2)"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "cationic_polymer": [
+          "Guar Hydroxypropyltrimonium Chloride @13"
+        ],
+        "payload_lipid": [
+          "Hydrogenated Castor Oil @15 (non-material)",
+          "Prunus Armeniaca (Apricot) Kernel Oil @21 (non-material)"
+        ],
+        "weak_refatter": [
+          "PEG-7 Glyceryl Cocoate @5"
+        ],
+        "silicone": [
+          "Dimethicone @8",
+          "Amodimethicone @12"
+        ],
+        "protein_film": [
+          "Hydrolyzed Keratin @6"
+        ],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": [
+          "Sodium Laureth Sulfate @2",
+          "Cocamidopropyl Betaine @3"
+        ],
+        "humectantContext": [
+          "Niacinamide @7 (active)",
+          "Propylene Glycol @26"
+        ],
+        "excluded": [
+          "PEG-40 Hydrogenated Castor Oil @14 (solubilizer, 6.4)",
+          "Glycol Distearate @16 (pearlizing wax, 6.4)",
+          "PEG-120 Methyl Glucose Dioleate @18 (PEG thickener, 6.4)",
+          "Laureth-4 @17, Laureth-23 @20, Trideceth-10 @22 (ethoxylate thickeners/solubilizers)",
+          "Parfum @10 and fragrance allergens"
+        ],
+        "unresolved": []
+      },
+      "wLineRecord": "wLine Niacinamide @7 (sub1_active); cap e3Point @10; no alphabetical run; no skipped candidates; no codes; material payload_lipid: none; non-material: Hydrogenated Castor Oil @15, Apricot Kernel Oil @21.",
+      "depositionLoad": "moderate: silicone system (Dimethicone @8 + Amodimethicone @12) with a cationic guar, plus a light protein and refatter.",
+      "persistence": "moderate: dimethicone and amodimethicone are persistent and can build up; keratin hydrolysate and PEG-7 glyceryl cocoate are light; lipids are post-line.",
+      "resetCapacity": "moderate: C1 SLES/betaine chassis.",
+      "counterevidence": "Several deposition families (silicone, cationic_polymer, protein_film, weak_refatter) are present; a prominent Hydrolyzed Keratin @6 could be read as a protein film reinforcing the silicone/guar/amodimethicone set.",
+      "whyThisBand": "The silicone/guar/amodimethicone coacervate set in an effective sulfate/betaine chassis leaves noticeable but bounded residue; this is the band the W1 precedent gives for that set.",
+      "whyNotNeighborBand": "Not high: no W-RICH (the only payload lipids, Hydrogenated Castor Oil @15 and Apricot Kernel Oil @21, are at/after the W-line @7 and cannot open the lipid leg), reset is moderate, and the added keratin hydrolysate and PEG-7 glyceryl cocoate are light, low-persistence routes. Not low: an early silicone plus amino-silicone plus guar is clearly a plausible depositing system (W2).",
+      "confidenceLimitingFactor": "W1 condition (c) is uncertain (prominent protein film), so the full method decides; and per W-LINE item 6 post-line lipids named in whyNotNeighborBand cap confidence at moderate with neighbor high.",
+      "rationale": "Moderate: full method 6.6 (W1 treated as not applicable because a prominent protein_film may reinforce the set; the outcome equals the W1 band). Silicone + guar against moderate reset, lipids non-material under W-LINE.",
+      "ruleIds": [
+        "6.3",
+        "6.4",
+        "6.6",
+        "W1",
+        "W-LINE",
+        "W-RICH",
+        "W2",
+        "N-ALT"
+      ],
+      "counterSignal": "Several deposition families (silicone, cationic_polymer, protein_film, weak_refatter) are present; a prominent Hydrolyzed Keratin @6 could be read as a protein film reinforcing the silicone/guar/amodimethicone set.",
+      "formulaFacts": {
+        "wLine": "Niacinamide @7",
+        "wLineClasses": [
+          "sub1_active"
+        ],
+        "cap": "e3Point @10 (Parfum (Fragrance))",
+        "alphabeticalRun": "none",
+        "candidatesTested": [
+          "Niacinamide @7: (i) SLES @2, betaine @3 before it ok; (ii) positions 8-9 (Dimethicone, Sodium Benzoate) contain no cleansing surfactant, alkanolamide or pearlizer -> plausible"
+        ],
+        "skipped": [],
+        "codes": [],
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": [
+          "Hydrogenated Castor Oil @15",
+          "Prunus Armeniaca (Apricot) Kernel Oil @21"
+        ]
+      },
+      "identifiers": {
+        "formulaFingerprintSha256": "0af2b2c6498075d6eaf4d9c65ebe305e1ad716f5f112407ee38d98517575d981",
+        "sourceTier": 2,
+        "captureDate": "not stated in the frozen packet"
+      },
+      "blindToFinal": "unchanged: weight is formula-only; claims cannot decide the band (6.5 step 5)"
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "confidence": "moderate",
+      "neighboringAlternative": "repair",
+      "careDirection": {
+        "verdict": "repair_supported",
+        "moistureRoutes": [],
+        "repairRoutes": [
+          "Hydrolyzed Keratin @6",
+          "Dimethicone @8",
+          "Amodimethicone @12",
+          "Guar Hydroxypropyltrimonium Chloride @13"
+        ],
+        "sharedConditioningRoutes": [
+          "PEG-7 Glyceryl Cocoate @5",
+          "Glycol Distearate @16"
+        ],
+        "limitation": "Strengthening ('stärkt das Haar von innen') is aimed at fine, limp hair, not at damage; repair route is not the positioned job."
+      },
+      "claimRole": "candidate",
+      "counterSignal": "Silicone/amino-silicone/protein deposition (weight moderate) is a trade-off for a fullness role.",
+      "decisionTrace": "Claim direction volume/fullness (name 'Intense Fullness', high; manufacturer moderate). Formula compatible: weightPotential moderate (not high); route: protein + niacinamide complex with moderate deposition. Decision volume; repair route recorded as trade-off (7.2 'strong formula route without matching positioning').",
+      "rationale": "Volume: fullness is the dominant named job; formula compatible with a moderate-weight trade-off (7.2).",
+      "formulaFacts": null,
+      "ruleIds": [
+        "7.1",
+        "7.2",
+        "CL-SRC"
+      ],
+      "blindToFinal": "provisional general -> volume (fullness named in product name)"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "repair"
+      ],
+      "decisionTrace": "Empty default considered; 'kräftigend/stärkt das Haar' is strengthening for fine hair, not distinct damage positioning, and shares the primary's route.",
+      "rationale": "Empty: no distinct secondary positioning with an independent compatible route (Section 8, F2, F3).",
+      "counterSignal": "none",
+      "formulaFacts": [],
+      "ruleIds": [
+        "Section 8",
+        "F2",
+        "F3"
+      ],
+      "blindToFinal": "provisional [] -> []"
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Regular: no non-default trigger fires (no U2 frequency wording graded moderate/high, no D1, no dandruff claim plus active, no strong formula).",
+      "counterSignal": "none beyond losing triggers",
+      "formulaFacts": "cleansingStrength moderate (high); dandruffSupport not_supported",
+      "ruleIds": [
+        "Section 9",
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "CL-SRC"
+      ],
+      "decisionTrace": "Default regular; no frequency/reset wording.",
+      "blindToFinal": "provisional regular -> regular"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no E2 sensitive or dry scalp claim unit graded moderate/high exists (SC1), so the product is not explicitly positioned; CSA met via prominent Niacinamide @7 and PEG-7 Glyceryl Cocoate @5; MB not met.",
+      "counterSignal": "none; mildness/protective wording is not targeting (E2a)",
+      "formulaFacts": {
+        "CSA": "met via prominent E4 comfort route Niacinamide @7 and refatting route PEG-7 Glyceryl Cocoate @5",
+        "MB": "not met: Sodium Laureth Sulfate @2 prominent strong anionic",
+        "S-SENSITIVE formula half": "comfort route Niacinamide @7 -> would pass if targeted",
+        "S-DRY formula half": "refatting route PEG-7 Glyceryl Cocoate @5 -> would pass if targeted",
+        "S-OILY formula clause": "cleansing moderate, weight moderate, conditioning moderate -> clause passes"
+      },
+      "csaRoute": "CSA met via prominent Niacinamide @7 and PEG-7 Glyceryl Cocoate @5; MB not met.",
+      "ruleIds": [
+        "Section 10",
+        "SC1",
+        "E2a",
+        "CSA",
+        "MB"
+      ],
+      "blindToFinal": "unchanged; claims show no SC1 positioning"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active in the complete INCI.",
+      "ruleIds": [
+        "Section 11"
+      ],
+      "counterSignal": "none (mechanical table, Section 11)",
+      "formulaFacts": [],
+      "blindToFinal": "unchanged (formula-only)"
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "repair_supported",
+      "moistureRoutes": [],
+      "repairRoutes": [
+        "Hydrolyzed Keratin @6",
+        "Dimethicone @8",
+        "Amodimethicone @12",
+        "Guar Hydroxypropyltrimonium Chloride @13"
+      ],
+      "sharedConditioningRoutes": [
+        "PEG-7 Glyceryl Cocoate @5",
+        "Glycol Distearate @16"
+      ],
+      "limitation": "Strengthening ('stärkt das Haar von innen') is aimed at fine, limp hair, not at damage; repair route is not the positioned job."
+    },
+    "claimRole": "candidate",
+    "decisionTrace": {
+      "primary": "Claim direction volume/fullness (name 'Intense Fullness', high; manufacturer moderate). Formula compatible: weightPotential moderate (not high); route: protein + niacinamide complex with moderate deposition. Decision volume; repair route recorded as trade-off (7.2 'strong formula route without matching positioning').",
+      "secondary": "Empty default considered; 'kräftigend/stärkt das Haar' is strengthening for fine hair, not distinct damage positioning, and shares the primary's route.",
+      "usageRole": "Default regular; no frequency/reset wording."
+    }
+  },
+  "weightRecord": "see directProperties.weightPotential (6.8 fields: evidence by family, wLineRecord/formulaFacts, subjudgments, counterevidence, whyThisBand, whyNotNeighborBand, confidence and limiting factor, neighbor)",
+  "projection": {
+    "status": "proposal_blocked_by_review_flags",
+    "thicknessFitT1": {
+      "fine": "acceptable",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFit": {
+      "fine": "acceptable",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFitConfidence": {
+      "fine": "moderate",
+      "normal": "moderate",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": " T1 with W=moderate (moderate, neighbor high) and C=moderate (moderate, neighbor high): fine acceptable, normal ideal, coarse acceptable; target ordinary -> T6 not applicable (ordinary). T4 computed from N-ALT neighbors after T6; T2: thickness/texture claims never change fit.",
+    "weight": "moderate",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: weightPotential moderate projects 1:1 to moderate; confidence = weightPotential confidence.",
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1: no qualifying E2 scalp claim unit after E2a; packet has a manufacturer/pack source -> high (13.8)."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength moderate, D1 false -> regular. I3: neighbor none (high confidence, no I3 review).",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserListingConfidence": "moderate",
+    "deepCleanserRationale": "D2 not met: D1 false (no D1 lexicon term in name, manufacturer/pack claims or directions); not_flagged.",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine",
+      "review_thickness_boundary:normal"
+    ],
+    "informationalNotes": [],
+    "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; lanes never see catalog ids."
+  },
+  "unresolvedMaterialIngredients": [],
+  "selfCheck": "6.11: fingerprint 0af2b2c64980... matches the frozen packet; claims were hidden during the formula pass (formula-pass file hash-pinned before release); no ingredient, family count or position window assigned the weight band; W-line derived per W-LINE with every skipped candidate recorded; three subjudgments present; whyNotNeighborBand specific (W2 where it applies); confidence names its limiting factor; no comparison with earlier values inside the lane. N-ALT: every high confidence has neighbor none, every moderate/low names one neighbor. Projection derived mechanically from final properties; P0 applied where readings were uncertain.",
+  "uncertainties": [
+    "Concentration claim '3% Niacinamide-Volumen-Komplex' vs W-line sub-1% candidate Niacinamide @7: claims cannot prove concentration; no material effect because both lipids are after the cap.",
+    "W1 condition (c) with prominent Hydrolyzed Keratin: treated as not applying (full method gives the same moderate band).",
+    "Identity confidence moderate (packet)."
+  ]
+}

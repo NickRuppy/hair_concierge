@@ -62,9 +62,10 @@ const completeInput = (): MaskResearchEnvelope => ({
     repairSupportLevel: evidence("medium"),
     focus: evidence({ primary: "repair", secondary: ["smoothing"] }),
     bondRoute: evidence("none"),
-    hairThicknessFit: evidence(["normal", "coarse"]),
+    // §9.6/§9.8 echoes — audit NR-2, ruled 2026-10-11.
+    hairThicknessFit: evidence(["fine", "normal", "coarse"]),
     damageFit: evidence(["moderately_damaged", "highly_damaged"]),
-    textureFit: evidence(["wavy", "curly", "coily"]),
+    textureFit: evidence(["straight", "wavy", "curly"]),
     uncertainFields: [],
     assumptionNotes: ["No finished-product deposition test was available."],
   },
@@ -80,7 +81,7 @@ test("projects the complete v1.0 comparison profile into exact current Mask fiel
   if (outcome.status !== "projection_ready") return
 
   const projection = outcome.productionProjection
-  assert.deepEqual(projection.suitable_thicknesses, ["normal", "coarse"])
+  assert.deepEqual(projection.suitable_thicknesses, ["fine", "normal", "coarse"])
   assert.deepEqual(projection.category_specs.product_mask_specs, {
     weight: "medium",
     concentration: "high",
@@ -142,20 +143,43 @@ test("D6: maps every research care direction 1:1 onto balance_direction, never n
   }
 })
 
-test("maps every research weight potential onto the production weight", () => {
+test("maps weight and derives its thickness echo (audit NR-2, ruled 2026-10-11)", () => {
   const cases = [
-    ["low", "light"],
-    ["moderate", "medium"],
-    ["high", "rich"],
+    ["low", "light", ["fine", "normal"]],
+    ["moderate", "medium", ["fine", "normal", "coarse"]],
+    ["high", "rich", ["normal", "coarse"]],
   ] as const
-  for (const [potential, expected] of cases) {
+  for (const [potential, expected, thicknesses] of cases) {
     const input = completeInput()
     input.profile.weightPotential = evidence(potential)
+    input.profile.textureFit = evidence(
+      potential === "low" ? ["straight", "wavy"] : ["straight", "wavy", "curly"],
+    )
     const outcome = projectMaskForProduction(input)
     assert.equal(outcome.status, "projection_ready")
     if (outcome.status !== "projection_ready") continue
     assert.equal(outcome.productionProjection.category_specs.product_mask_specs.weight, expected)
+    assert.deepEqual(outcome.productionProjection.suitable_thicknesses, thicknesses)
+    assert.equal(
+      outcome.warnings.some((warning) => /contradicted/.test(warning)),
+      potential !== "moderate",
+    )
   }
+})
+
+test("the high texture row needs a positive recorded high-slip route (audit NR-2, ruled 2026-10-11)", () => {
+  const input = completeInput()
+  input.profile.weightPotential = evidence("high")
+  input.profile.textureFit = evidence(["wavy", "curly", "coily"])
+  assert.equal(projectMaskForProduction(input).status, "needs_research")
+  input.profile.conditioningLevel.evidenceSignals.push(
+    "Behentrimonium Chloride + Polyquaternium-37 — coherent high-slip R1/R3 route",
+  )
+  assert.equal(projectMaskForProduction(input).status, "projection_ready")
+  input.profile.conditioningLevel.evidenceSignals = [
+    "no coherent high-slip R1/R3 route on the record",
+  ]
+  assert.equal(projectMaskForProduction(input).status, "needs_research")
 })
 
 test("D1: maps every conditioning level onto the concentration twin", () => {
@@ -167,6 +191,13 @@ test("D1: maps every conditioning level onto the concentration twin", () => {
   for (const [level, expected] of cases) {
     const input = completeInput()
     input.profile.conditioningLevel = evidence(level)
+    input.profile.damageFit = evidence(
+      level === "low"
+        ? ["healthy"]
+        : level === "high"
+          ? ["moderately_damaged", "highly_damaged"]
+          : ["healthy", "moderately_damaged"],
+    )
     const outcome = projectMaskForProduction(input)
     assert.equal(outcome.status, "projection_ready", level)
     if (outcome.status !== "projection_ready") continue
@@ -177,10 +208,16 @@ test("D1: maps every conditioning level onto the concentration twin", () => {
   }
 })
 
-test("repair_support_level projects unchanged", () => {
+test("repair_support_level projects unchanged when the §9.4 route gate is met (audit NR-2, ruled 2026-10-11)", () => {
   for (const level of ["low", "medium", "high"] as const) {
     const input = completeInput()
     input.profile.repairSupportLevel = evidence(level)
+    input.profile.bondRoute = evidence(level === "high" ? "gluconamide" : "none")
+    input.profile.damageFit = evidence(
+      level === "low"
+        ? ["healthy", "moderately_damaged"]
+        : ["moderately_damaged", "highly_damaged"],
+    )
     const outcome = projectMaskForProduction(input)
     assert.equal(outcome.status, "projection_ready")
     if (outcome.status !== "projection_ready") continue
@@ -215,6 +252,7 @@ test("D2: smoothing, detangling and shine focus project into functional_benefits
 test("ruled 2026-10-07: a moderate/high conditioning level adds detangling_slip but is not the min-1 guarantor", () => {
   const plainLow = completeInput()
   plainLow.profile.conditioningLevel = evidence("low")
+  plainLow.profile.damageFit = evidence(["healthy"])
   plainLow.profile.careDirection = evidence("balanced" as const)
   plainLow.profile.focus = evidence({ primary: "repair", secondary: [] })
   const fallback = projectMaskForProduction(plainLow)
@@ -228,6 +266,7 @@ test("ruled 2026-10-07: a moderate/high conditioning level adds detangling_slip 
 
   const lowShine = completeInput()
   lowShine.profile.conditioningLevel = evidence("low")
+  lowShine.profile.damageFit = evidence(["healthy"])
   lowShine.profile.careDirection = evidence("balanced" as const)
   lowShine.profile.focus = evidence({ primary: "shine", secondary: [] })
   const outcome = projectMaskForProduction(lowShine)
@@ -252,6 +291,7 @@ test("moisture_softness: moisture care direction or general/moisture focus; repa
   for (const [primary, direction, expectChip] of cases) {
     const input = completeInput()
     input.profile.conditioningLevel = evidence("moderate")
+    input.profile.damageFit = evidence(["healthy", "moderately_damaged"])
     input.profile.careDirection = evidence(direction)
     input.profile.focus = evidence({ primary, secondary: [] })
     const outcome = projectMaskForProduction(input)
@@ -267,8 +307,9 @@ test("moisture_softness: moisture care direction or general/moisture focus; repa
   }
 })
 
-test("ingredient flags: dipropylene glycol is a solvent, not a humectant; hydrolyzed silk and sericin are proteins", () => {
-  assert.deepEqual(deriveMaskIngredientFlags(["dipropylene glycol"]), [])
+test("ingredient flags: family-7 glycol presence is distinct from E15 care credit; silk and sericin are proteins (audit NR-2, ruled 2026-10-11)", () => {
+  assert.deepEqual(deriveMaskIngredientFlags(["dipropylene glycol"]), ["humectants"])
+  assert.deepEqual(deriveMaskIngredientFlags(["pentylene glycol"]), ["humectants"])
   assert.deepEqual(deriveMaskIngredientFlags(["hydrolyzed silk"]), ["proteins"])
   assert.deepEqual(deriveMaskIngredientFlags(["sericin"]), ["proteins"])
   assert.deepEqual(deriveMaskIngredientFlags(["glycerin"]), ["humectants"])
@@ -312,13 +353,13 @@ test("refuses when the thickness echo leaves no suitable thickness", () => {
   assert.match(outcome.reasons.join(" "), /hairThicknessFit/)
 })
 
-test("emits suitable thicknesses in the DB vocabulary order", () => {
+test("refuses unordered fit arrays (audit NR-2, ruled 2026-10-11)", () => {
   const input = completeInput()
   input.profile.hairThicknessFit = evidence(["coarse", "fine", "normal"])
   const outcome = projectMaskForProduction(input)
-  assert.equal(outcome.status, "projection_ready")
-  if (outcome.status !== "projection_ready") return
-  assert.deepEqual(outcome.productionProjection.suitable_thicknesses, ["fine", "normal", "coarse"])
+  assert.equal(outcome.status, "needs_research")
+  if (outcome.status !== "needs_research") return
+  assert.match(outcome.reasons.join(" "), /canonical vocabulary order/)
 })
 
 test("rejects an unknown focus value and a secondary that repeats the primary", () => {

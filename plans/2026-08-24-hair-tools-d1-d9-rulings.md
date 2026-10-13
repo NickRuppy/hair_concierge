@@ -1,0 +1,619 @@
+# Hair Tools — D1–D9 rulings (2026-08-24)
+
+Nick ruled on every gate decision from
+`plans/2026-08-22-personal-plan-hair-tools-spec-hardening-handoff.md` in the
+plan-hardening session of 2026-08-24. This ledger is the record of record until
+the amendments land in `decision.md` and `conditional-guidance-matrix.md`; on
+conflict, this file wins over both until those amendments are merged.
+
+## D1 — Volume direction: option (b), ratified as-is
+
+- `volume_balance` stays merged; direction is **inferred** in-plan. The shipped
+  `src/lib/personal-plan/volume-direction.ts` predicate is the app-wide single
+  source of truth, ratified exactly as implemented (curly/coily/coarse/
+  definition-wavy → control; everything else → volume_up; no abstain state).
+- `H08` is **amended** (recorded as a formal reversal of a confirmed decision):
+  direction IS inferred from texture and thickness via this predicate and from
+  nothing else. Every inferred route carries
+  `tools.styling.volume_direction_inferred` and says so in its reason payload.
+- The concern `low_volume_or_weighed_down` **triggers the volume routes on its
+  own AND overrides the inference**: when present, direction is
+  lighter/volume_up regardless of texture — explicit signal beats inference.
+- Predicates 2 and 3 (`quiz/normalization.ts`, `offer-adapter.ts`) live
+  upstream of the plan, read `density`, and are documented as a separate
+  non-plan concern; aligning them is out of scope for Phase 1.
+- Quiz-boundary split (option c) is queued as a separate later feature.
+
+## D2 — `diffuser_or_airflow_shaping` and `dryingRoutes`
+
+- **D2a (legacy reading): diffuser drying.** Few affected users; ruled
+  explicitly. Consequences to reconcile in the matrix: `A11`'s diffuser tier
+  (heat protection `not_needed`) applies to this source, so
+  `heat-events.ts`'s Stage-2 heat-protection question for
+  `diffuser_airflow_shaping` must align with the diffuser tier (reconcile with
+  D9a; the A06 fix stands regardless — the answer never proves diffuser
+  capability, `capabilityVerified` must NOT be set from it).
+- **D2b (restructure): queued post-Phase-1.** Target design per research lane:
+  option becomes „Mit Diffusor" (Untertitel „Aufsatz für Locken/Wellen");
+  „Gewöhnlich föhnen" gets Untertitel „auch mit Rundbürste"; a follow-up
+  question „Welche Temperaturstufe nutzt du meistens?" (Kalt / Mittel / Heiß)
+  maps to heat-protection tiers not-needed / optional / empfohlen. Rides the D8
+  versioning discipline. Warmluftbürste/Airstyler users remain captured by
+  `additional_heat_tools`.
+- **Mixed sets: every ticked route counts.** Each member triggers its own
+  guidance; heat rules fire if any member carries heat. The "dominant drying
+  method" concept is retired from the spec.
+- **Empty set: remove „Nichts davon" from the drying question**, require ≥1
+  selection (small UI change, goes through the WS4 mockup pass). Legacy stored
+  `[]` is treated as unanswered — no drying-based assumptions.
+- Evidence-honesty rule from the research lane: heat-protectant copy stays at
+  „empfohlen/sinnvoll", never „nötig, sonst Schaden" (measured benefit exists
+  only at flat-iron temperatures).
+
+## D3 — Feinschliff capture semantics
+
+- **D3a: unticked overview card = „hat nichts"** for every family behind it.
+  No unknowns after submit. Made fair by wiring the existing preselect helpers
+  (`defaultToolSectionsFromCare` / `defaultToolFormsFromCare`): everything the
+  user's care answers imply comes pre-ticked. The lead copy is rewritten to
+  say this honestly (current promise „Was du auslässt, bleibt offen — wir
+  behaupten nichts" is replaced; copy goes through the WS4 mockup pass).
+- **D3b: keep the four section cards.** `decision.md`'s eight-name overview
+  description is corrected to match the approved four-card design.
+- **D3c: merge per form, never replace per family.** An answered Tool page
+  adds/confirms forms; care-derived facts survive unless explicitly
+  contradicted. This precedence rule applies to all eight families, not just
+  drying. Synthesized emptiness must never overwrite reported care answers.
+
+## D4 — Ownership vs coverage: option (a) + derived marking
+
+- Two independent facts on `PlanToolRoute`: `reportedOwnership` (written only
+  from an actual user answer, or marked `derived` when projected from a care
+  behaviour) and `coverage` (does the plan still recommend acquiring?).
+- `B04` sets coverage only. „Nutze deins" is gated on reported/derived
+  ownership of the actual form.
+- **Card copy names THEIR tool**: Paddle-Bürste owner with Detangling-Bürste
+  ideal sees „Nutze deine Paddle-Bürste" with guidance adapted to it; the ideal
+  form may appear as an optional note, never as a purchase push while covered.
+- Care-derived facts are kept (no new unknowns) but presentation may phrase
+  them behaviourally („Du föhnst — nutze deinen Föhn"); terry-towel and
+  `loose_tied` reports are stored as what the user actually said.
+
+## D5 — Choice groups: first-class `ToolChoiceGroup`
+
+- One card per need; members listed neutrally („Eine davon reicht: …");
+  fulfilled when ANY member is covered; a reported member always leads (D4).
+  Subsumes the ad-hoc neutral drying-textile group. Groups render with the
+  lead member's ownership state; no partial fulfilment — one covered member
+  fulfils the group.
+
+## D6 — Lead-form authority: route order is binding
+
+- The route's `recommendedProductTypes` order is authoritative; no downstream
+  dedup, merge, or projection may reorder it. `assetFormsFor` preserves route
+  order. Enforced by rendered-output tests per lead-form rule (fixtures 57,
+  59b, 14, 81, 95, 96) plus an order-stability assertion in `buildToolPlan`.
+
+## D7 — Day anchors: adopt `APPLICATION_SEQUENCE_ANCHORS`
+
+- Tool occurrences anchor onto the shared nine-position wash-day graph;
+  `ToolPlacement` is derived from it. Towel lands at `post_rinse_towel_dry`;
+  `B12` detangle timing: conditioned wet/damp phase → `post_cleanse_rinse_off`,
+  after partial drying → `post_rinse_towel_dry`; `A09` uses `dry_pre_heat` →
+  `heat_tool`. `nightly` and `styling_session` are added as explicit members of
+  the shared graph (kept ordered after `dry_finish`).
+
+## D8 — Versioning rule: option (a), standing rule
+
+- Any change to a persisted refinement answer key or to the meaning of the
+  completion predicate requires a path-version bump plus a decoder; completed
+  rows validate against their completion-time contract (WS5 already encoded
+  the load-time half). Enforcement: a schema-snapshot test that fails when a
+  persisted key is added, renamed, or removed without a version bump.
+
+## D9a — Heat-protection coverage
+
+- Source of truth: `heatEvents[…].protectionConsistency`, judged **per heat
+  event**. Only `always` counts as covered; `sometimes` gets a consistency
+  nudge (copy „mach's konsequent", tier „empfohlen"), `no`/`unsure` get the
+  recommendation. The legacy `uses_heat_protection` boolean stays unread.
+  Fixtures 122 and 123 are retired as impossible. `H15` is rewritten against
+  the per-event field.
+
+## D9b — „Nur Finger"
+
+- The Bürsten & Kämme page gets an explicit „Nur Finger" non-product option
+  now, while the feature is unshipped (no migration cost; D8 discipline
+  applies to the answer shape). „Nichts davon" stops doing double duty; the
+  finger exceptions in B01/B03/B04 become expressible. Card goes through the
+  WS4 mockup pass.
+
+## D9c — Manageability
+
+- `manageability_styling` joins the Night-Protection trigger set (treated as
+  frizz-adjacent, consistent with the rest of the app).
+
+## Also to correct (no decision needed, ruled in handoff)
+
+- Delete the `hair.surface` / `hair.elasticity` / `chemicalTreatments` input
+  claims from `decision.md` (no rule reads them).
+- `decision.md` eight-checkbox overview description → four section cards (D3b).
+- `H12` four heatless form groups → five (`foam_roller`).
+- `evidence.md` Carvalho comparator „terry (looped bath towel)" → „cotton
+  towel" (WS7).
+
+## Second-round rulings R1–R4 (2026-08-24, post-amendment)
+
+Ruled by Nick after the amendment pass surfaced them:
+
+- **R1 — Drop the legacy heat question now.** The Stage-2 heat-protection
+  question for the `diffuser_airflow_shaping` source is removed (it contradicts
+  the D2a diffuser tier `not_needed`). `protectionConsistency` becomes forbidden
+  for that source. Per D8: path-version bump + decode rule — stored values for
+  the source are ignored on read; rows completed under the old contract stay
+  complete. Implementation lands with WS4.
+- **R2 — Texture gate for definition paths.** The definition-driven diffuser
+  path (`A03`) and the Definitionsbürste (`B09`) activate only for
+  `wavy | curly | coily`. Straight + `shape_definition` activates no tool route
+  from the definition goal (fixture 4b is the negative assertion).
+- **R3 — Wildschweinborsten-Bürste is included.** `boar_bristle` joins the
+  `brushes_combs` product types and the Feinschliff Bürsten-page. It exists in
+  the legacy onboarding enum (`BRUSH_TYPES` in
+  `src/lib/vocabulary/onboarding-care.ts`) and was silently dropped when the
+  Tools form list was rebuilt — Nick ruled its restoration. Needs card image +
+  copy in WS4; fixture 60 keeps its boar-bristle expectation.
+- **R4 — Strong Nachtschutz tier reachable again.** `tools.night.optional_strong`
+  triggers on `breakage` **or `split_ends`**, restoring reachability for V2
+  profiles (fixture 15 gains the V2 variant).
+
+Also resolved by the orchestrator as entailed (no new decision): fixture 7
+rewritten as the control-direction negative (D1 makes its premise expressible
+again); the residual `less_volume` clauses in `decision.md`/fixture 43 restated
+against a control-resolved direction; fixture 60(b) `capabilityVerified=false`
+confirmed as entailed by D4 + B04's own text; the „Nur Finger" persisted token
+name and the deferred-fact marker on `PlanToolRoute` (fixture 114) are
+implementation choices assigned to WS4 and WS1 respectively.
+
+## WS4 planning gates — cleared 2026-08-25
+
+Evidence review **confirmed** and user-journey sign-off **obtained** (Nick,
+2026-08-25). Mockup evidence: `plans/mockups/ws4-2026-08-25/` (real components,
+mobile viewport, DOM-level mockups on the labs harness).
+
+- **Final overview lead copy (ratified):** „Wähle die Bereiche, aus denen du
+  schon Produkte hast. Nicht gewählt = hast du nicht."
+- Drying question: „Nichts davon" removed, ≥1 selection required
+  (`drying-question-current.png` → `drying-question-proposed.png`).
+- Bürsten-page: „Wildschweinborsten-Bürste" + „Nur Finger" cards added
+  (`brushes-page-new-cards-viewport.png`). Implementation notes: the long
+  label collides with the selection circle in the current card layout — WS4
+  must fix label wrapping; both cards need Bildkarten-pipeline images.
+- Signed-off journey (6 steps): resume-safe entry; 3-option forced-pick drying
+  question; heat question dropped for pure-diffuser users (R1), kept per event
+  otherwise; overview with care-answer preselection + the ratified copy,
+  unticked persisted as „hat nichts"; drilldowns merge-never-delete with the
+  two new brush cards; plan renders per D4–D7.
+
+## WS2 completion + flag dispositions (2026-08-25)
+
+WS2 (rule fidelity) landed: table-driven fixture harness
+(`tests/personal-plan-tools-fixtures.test.ts`) with a 128-row coverage guard;
+2078 + 582 tests green. Orchestrator dispositions of WS2's flags:
+
+- **Fixtures 35/47 (three volume members at once):** owner **WS4** — needs the
+  group-aware one-card Stage-1 projection (part of the signed-off journey);
+  until then air-shaping `basis` suppresses the peers to avoid three basis
+  cards for one need.
+- **Fixture 12:** contradiction resolved in the row (coverage of a set-parent
+  unlocks securing support; ownership never bypasses the mechanism).
+- **Fixture 49:** tier clarified to `basis` + `covered_by_report`.
+- **Fixture 98 (N03 alternative):** rule specified (first functionally
+  different form in route order renders as the „Alternative:" line); owner
+  **WS3**.
+- **Fixture 114 (deferredFacts Stage-1 card):** owner **WS4** (mockup gate).
+- **`fingers` persistence half** (answers schema + question path): owner
+  **WS4**, with the D8 path-version bump.
+- **Securing set-parent reads heatless only** (C01 says heated/heatless):
+  owner **WS3** — add the heated-set parent with its own fixture.
+- API change accepted: `buildToolPlan` no longer takes `inventory`; routes'
+  `reportedOwnership` is the single source of reported forms (fixes the
+  Kissenbezug-lead defect, fixtures 74/102).
+- Merge refinements recorded in `decision.md` D3c: behaviour stand-ins
+  superseded by the user's own family answer; explicit family-wide „Nichts
+  davon" beats projections.
+
+## Adversarial lane verdict on WS1+WS2 (2026-08-25): REFUTED — remediation open
+
+The independent adversarial lane refuted "the rules now match the spec".
+Accepted findings and dispositions:
+
+- **Process defect (orchestrator):** fixture dispositions for rows 12/49/98
+  were committed inside WS2's implementation commit — an oracle edited beside
+  the code it judges. Standing rule from now on: **oracle edits always land in
+  their own docs-only commit, never mixed with implementation.** Row 12's
+  self-contradictory tail is fixed.
+- **Provenance per-source bug (blocker):** named care answers
+  (`additionalHeatTools`, `nightProtection`, `towel.*`) were stamped `derived`.
+  Clarified in `decision.md` D4: provenance follows what the answer is, not the
+  store; only behaviour projections are derived. Remediation: fix
+  `provenanceFor`, assert provenance on fixtures 15/19/42/45/95/96/97/100.
+- **Volume group (blocker):** all three `volume_set` members must be emitted
+  (air-shaping basis no longer deletes peers) — fixtures 35/36/47 at
+  route+group layer are WS2-remediation scope; the one-card group-aware
+  Stage-1 projection is pulled into remediation too (its journey is already
+  signed off). New `fulfilledBy` rule in `decision.md` D5: requires
+  `capabilityVerified` — an unvouched plain Föhn never fulfils the group.
+- **C01 heated-set securing parent (should-fix):** implement heated+heatless;
+  new fixture 127.
+- **W02 scalp brush (should-fix):** must never lead or fulfil targeted
+  application; new fixture 128.
+- **Harness hardening (should-fix):** add the omitted assertions (34/36 group
+  membership + per-member rule IDs, 49 coverage.state, A-x2 representability
+  note, 31 block-exactness); replace the constant-expression coverage guard
+  with one that parses live fixture ids from fixtures.md.
+- **Nits accepted:** per-form reported-use rule IDs (multi-styler = both jobs,
+  single-job forms = one); false `fingers` comment in facts.ts; routes.ts to
+  call `volumeDirectionInputFor` instead of hand-rolling it.
+- **Noted, not remediation:** N01-vs-B05 friction asymmetry (oracle-blessed;
+  revisit in WS7); fixture 75 merge-of-one (WS3, together with restoring the
+  C01 night parent without re-creating the fixture-74 duplicate);
+  `normalizeToolInventory` uncalled (WS4 capture page).
+- Vectors that held: Conditioner parity, contract invariants (40k-profile
+  sample, 0 throws), regression surface, API changes.
+
+## WS2 remediation landed (2026-08-25) + flag dispositions
+
+All adversarial-lane blockers fixed test-first: provenance per-source
+(`projectToolCareProvenance`, one pass for provenance and coverage), all three
+volume_set members emitted with group-aware one-card Stage-1 rendering
+(deprecated neutral-label map deleted), C01 heated+heatless securing parent
+(fixture 127), W02 scalp-brush exclusion (fixture 128), harness parses live
+fixture ids from fixtures.md (mutation-verified). 2082+582 green.
+
+Flag dispositions:
+- **fulfilledBy refined (orchestrator, entailed):** `covered_by_report` fulfils
+  (conditional H10 wording when capability unverified); covered+verified
+  fulfils; derived unverified never fulfils. Fixture 36 satisfiable as
+  written. Recorded in decision.md D5.
+- **Fixture 128 oracle typo fixed** (rule id `tools.wash_application.optional`;
+  `scalpApplicationJob` is a top-level route input).
+- Two pre-existing tests updated because they encoded pre-amendment semantics
+  (peer deletion; any-covered-fulfils) — neither is on the confirmed-sound
+  regression list.
+- `TOOL_CHOICE_GROUP_LABELS.volume_set` copy names only airflow forms while
+  the group can span heated/heatless — WS4 mockup-gate item.
+- `loose_tied`/`pineapple` ruled techniques (derived), keeping fixtures 74/102;
+  named night products remain reported.
+
+## Adversarial re-check on the remediation (2026-08-25): REFUTED → fixed same day
+
+The focused re-check confirmed the four original blockers dead but found the
+new group projection itself defective. All fixed in the follow-up commit, each
+with a rendered-card guard in the harness:
+
+- Group card now always carries the **group tier** (fixture 48: basis needs no
+  longer render as optional, and the neutral card's visuals come from a member
+  at the group's tier).
+- A group fulfilled by a card-less reported-use member shows the strongest
+  remaining member as `H06`'s one optional alternative instead of deleting it
+  (fixture 46 guard).
+- `C01` unlock restricted to actual SET forms: heatless (all forms are sets)
+  or heated `heated_rollers`; a Glätteisen/Lockenstab never unlocks clips
+  (fixtures 42/49 stay securing-free, 127 passes).
+- D4 reason precedence inside resolved states: no eligible reported form ⇒
+  `unknown_ownership`, never `unverified_capability` (fixture 128 guard).
+- Stale test title/comments corrected; harness id-parser accepts decorated
+  cells; row 128's ownership half explicitly deferred to WS3 in the oracle.
+- Recorded, inert: the drying-textile card's DOM id moved from the asset key to
+  `group:drying_textile` (no selector consumers; React key only).
+
+## WS6 landed (2026-08-25) + flag dispositions
+
+Shared 11-position day graph adopted (`TOOL_DAY_ANCHORS` imported from the
+Application contract — one graph, not a copy); `ToolPlacement` derived via the
+D7 table; towel step before Leave-in/heat protection on the rendered Waschtag;
+B12 both branches keyed off the route's binding lead form; A09 linked pair on
+`dry_pre_heat`→`heat_tool` with one shared session key; total German capability
+copy (blank instruction blocks now impossible by type); anchor-based day
+gating. `planToolPlanSchema` v3 (unshipped). Fixtures 37/54/64/78/103
+un-skipped; 2098+582 green. Dispositions:
+
+- **A09 reading accepted:** drying route + air-shaping route as the two linked
+  occurrences, one asset when a multi-styler covers both (fixture 38 shape).
+- **Waschtag duplication risk → WS7:** the product compiler's
+  `state_transition` „Sanft mit einem Handtuch ausdrücken" now sits adjacent to
+  the towel Tool step at the same position — dedupe at the view-adapter level;
+  verify visually in ready-check.
+- **Applicator ordering → walkthrough question:** `wash_application_support`
+  renders after the cleanse product (product-first tie-break); whether the
+  Applikator should precede its scalp product is Nick's UX call at ready-check.
+- `specialized_brush_job` stays at `styling_session` (unruled; WS7 note).
+- **New German strings** (heated/heatless/securing/night instruction copy, list
+  in the WS6 handback) queued for the pre-ship copy-review screenshot pass
+  together with WS4's copy.
+
+## WS3 landed (2026-08-25) + flag dispositions
+
+Seven new route targets (plopping as behaviour-only guidance per T03/T04,
+towel continue-yours, manual air-shaping in the A09 session, Definitionsbürste,
+Pick, dry-styling brush, scalp-brush own route) plus N04 continue-yours, the
+C01 root-volume securing parent, N03's functional alternative (derived at
+presentation level so `D6`'s binding order is never violated), and Rundbürste
+verifying air-shaping capability. 16 fixture rows red→green (stash-verified);
+2114+582 green. Dispositions:
+
+- **Night securing parent: correctly NOT implemented** — C02 resolves it to the
+  soft tie the Night route already owns; D12 forbids the duplicate. No case
+  yields a different product. Closed.
+- **W01 refresh spray: not implementable** — "a selected between-wash refresh
+  step" has no production input. Fixtures 83/84 stay skipped; the missing
+  input joins the D2b-era question backlog.
+- **Stielkamm: skipped** — its parting/sectioning parent has no input and
+  wiring it to `scalpApplicationJob` recreates the fixture-88 duplicate.
+- **Fixture 73 widening → walkthrough:** amended C01 gives every volume_up
+  profile an optional Ansatzvolumen-Clips card; Nick judges it on the live
+  screen at ready-check.
+- **Fixtures 67/73 input cells reconciled** in the oracle (docs-only commit).
+- `boar_bristle` stays out of dry-styling forms (B09 names Paddle/Vent/
+  Pneumatik; also the only form without an image — unreachable until the WS4
+  Bildkarte lands).
+- Judgment calls accepted: `drying_textile_use` suppressed beside the firm
+  rough-rubbing correction; textile family fires only with a towel answer
+  present (missing source fact ⇒ nothing).
+- New German purpose/guidance strings queued for the pre-ship copy pass.
+
+## WS4 landed (2026-08-25) + flag dispositions
+
+All signed-off capture changes implemented and live-verified: ratified overview
+copy verbatim; care-answer preselection as real answer state (C2 closed);
+drying question 3-options/≥1-required with legacy `[]` readable; Bürsten-page
+with „Wildschweinborsten-Bürste" + „Nur Finger" (new line-art SVGs, label
+collision fixed, no 404s); `fingers` persisted as answer-only token; R1
+heat-question dropped for the diffuser source with read-boundary decode;
+`STAGE2_QUESTION_PATH_VERSION = 2` with a documented decoder table; the D8
+schema-snapshot test enforcing key + completion-semantics changes
+(mutation-verified). 2135+582 green. Dispositions:
+
+- **Fixture 114: WS4 correctly refused** — a new visible card outside the
+  signed-off evidence; deferred to a post-Phase-1 decision (oracle row updated).
+- **Six cards per page** (`TOOL_MAX_OPTIONS_PER_PAGE` 4→6, matching the
+  approved mockup exactly) — confirm at ready-check.
+- **Path version is a code constant**, not the DB `schema_version` column; no
+  migration. Sufficient for D8's read-boundary decode on an unshipped feature;
+  a DB-level bump would be a separate decision.
+- `answered`-prop semantics and direct-acceptance preselection defaults →
+  covered by the final whole-branch review.
+- `normalizeToolInventory` now called at both capture boundaries (old WS2
+  observation closed).
+- New strings for the copy pass: the corrected `volume_set` group label and the
+  „Nur Finger" hint „Du entwirrst mit den Händen."
+
+## Ready-check + whole-branch review closed (2026-08-25)
+
+Ready-check rulings by Nick (all implemented, commit `7f9a8bb7`): copy set
+approved as written; towel correction line merges into the towel card;
+Applikator renders before its scalp product; the broad root-volume-clip
+optional card stays. Live walkthrough screenshots in
+`plans/mockups/ready-check-2026-08-25/`.
+
+Whole-branch Codex review (`fixes-required`, five findings) resolved:
+- **F1** branch-era Routine V2 rows decode forward (pre-D7 anchors, missing
+  sessionKey); an undecodable Tool slice degrades the Routine to product-only,
+  never a 503 (`decode-stored.ts` ×2, wired at all read paths + the
+  candidate-compiler copy).
+- **F2** rollout gate fail-closed at the server boundaries: Routine page,
+  Anwendung page, stage-1 API all strip Tool projections when the gate is off;
+  stored facts untouched.
+- **F3** Stage-2 drafts persist `schema_version = STAGE2_QUESTION_PATH_VERSION`
+  (2); v1 rows still load via the unconditional decoders.
+- **F4** the refinement-presentation route composes the decoders.
+- **F5** docs made current (`33c40e74`): WS4 status lines, receipt marked
+  historical with a remediation addendum.
+- Accepted flag: decoding a legacy dev Routine row changes its semantic hash,
+  so source-sync can now stage a successor proposal where it previously threw —
+  strictly better than the 503; dev/labs rows only.
+
+Final state: 28 commits over origin/main (`b540d2ca`), suites 2164 + 582,
+`ci:verify` clean. **Awaiting Nick's explicit push authorization; merge is a
+separate authorization after that.**
+
+## Post-ship review additions (2026-08-25, Nick's review)
+
+- **Photo Bildkarten wired** (`b71aab49`): `toolImageSrc` prefers the PR #460
+  photos (`/images/tools/*.webp`, incl. boar_bristle + fingers) with line-art
+  fallback. Still photo-less (image-pipeline backlog): vent_brush,
+  styling_brush, hair_pick, sectioning_comb, heated_brush, automatic_curler,
+  and the heatless/night/textile/securing/wash families.
+- **QA account is not post-payment**: `qa-test@hairconscierge.test` exists but
+  has no subscription/purchase, no lead, no enrollment, and the tester-grant
+  chain (campaign + funnel session + lead + prepared artifact, all NOT NULL)
+  makes a manual grant non-trivial. Local review path of record is the labs
+  harness (`/labs/personal-plan-stage-2` interactive flow,
+  `/labs/personal-plan-tools` per stage). Provisioning a real post-payment QA
+  account is an open infra follow-up.
+
+## Tool-Checkpoint redesign — Variante D2 (2026-08-25, Nick's review)
+
+Nick's field test of the Stage-3 Tool-Checkpoint showed the page failed its
+comprehension job (it mixed "what your hair needs" with per-card ownership
+status and never stated its own model). Mockup exploration in
+`plans/mockups/stage3-tools-clarity-2026-08-25/` (variants A/B/C, then D, then
+**D2 — signed off**): the Stage-3 Tools section becomes a **pure Idealplan
+analog** — two tier blocks („Von uns klar empfohlen" / „Zusätzlich sinnvoll"
+with counters and OPTIONAL chip), pastel family cards, „Auch ok:"-alternatives,
+kicker „Dein Produkt-Check", lead „Diese Tools gehören zu deiner Routine. Was
+du davon schon hast, siehst du gleich in deiner Routine." — and **no ownership
+status on this page**. Ownership stays where it lives: captured in the
+Feinschliff deep dives, shown on the Routine steps.
+
+Accepted trade-off: the „Im Feinschliff angeben"-nudge for unknown areas moves
+downstream (first surfaces on the Routine step). Rides the open PR;
+presentation-only.
+
+## Workstream unblocking
+
+- WS5 done and committed (`ca81dec0`), verified 1983/1983.
+- All of WS1 (D4–D6), WS2 (D1/D2 + fixtures), WS3, WS4 (D3), WS6 (D7), WS7 are
+  now unblocked, in the dependency order the handoff defines.
+- User-facing gates still apply per workstream: WS4's copy/option changes and
+  any Stage-1 card changes need mockup review + journey sign-off before
+  implementation.
+
+## Counterpart-review reconciliation — findings ledger (2026-08-25)
+
+A counterpart review at content head `bec59a41` raised 37 findings against the
+four spec documents. Each was verified by the orchestrator, dictated as a
+disposition, and applied on 2026-08-25 to `decision.md`,
+`conditional-guidance-matrix.md`, `fixtures.md` and `input-mapping.md`. No code
+was changed. One row per finding:
+
+| # | Disposition |
+| --- | --- |
+| 1 | accepted-fixed — `tools.airflow.optional_goal` carries the `R2` texture gate on its **definition disjunct** (the volume disjunct stays ungated, or fixture 48 would die); decision.md fixture 4 gains the gate and names 4b as the negative |
+| 2 | accepted-fixed — decision.md fixture 66 (Definitionsbürste) gains the `R2` gate |
+| 3 | accepted-fixed — decision.md fixture entries 6, 34, 47, 48, 55, 67, 73 restated as `volume_balance` + resolved direction (`D1` inference, `low_volume_or_weighed_down` trigger/override) |
+| 4 | accepted-fixed — matrix rows `tools.heated.volume_set`, `tools.heatless.volume_set`, `tools.brush.manual_air_shape`, `tools.brush.pick_optional` restated; the Pick trigger is `low_volume_or_weighed_down` + curly/coily only |
+| 5 | accepted-fixed — decision-log `H08` → `confirmed, reversed 2026-08-24`, pointing at the new `H08` text |
+| 6 | accepted-fixed — decision-log `H12` → `confirmed, amended 2026-08-24`, five heatless groups named |
+| 7 | accepted-fixed — decision-log `H15` → `confirmed, reversed 2026-08-24` (`D9a`), per-event `protectionConsistency`, only `always` covers |
+| 8 | accepted-fixed — input-mapping heat-event schema and diffuser rows carry `R1`: `protectionConsistency` forbidden for `diffuser_airflow_shaping`, stored values ignored on read, path-version bump + decode rule, completed rows stay complete |
+| 9 | accepted-fixed — fixture 40 rewritten: `protectionConsistency` only on non-diffuser sources; the diffuser source raises no question and legacy values are ignored |
+| 10 | accepted-fixed — input-mapping `curl_definition` row records the `R2` gate; "must gain the gate or accept straight activation" language removed |
+| 11 | accepted-fixed — fixture 4 premise gains `wavy \| curly \| coily`, 4b is the straight negative, post-ruling delta says RULED |
+| 12 | accepted-fixed — input-mapping brush taxonomy and §S4 record `boar_bristle` as a shipped `brushes_combs` product type (`R3`) |
+| 13 | accepted-fixed — decision.md V1 charter lists Wildschweinborsten-Bürste among the recognizable brush forms |
+| 14 | accepted-fixed — fixtures.md post-ruling delta: `boar_bristle` now has a production form, so fixture 60 variant (c) is executable |
+| 15 | accepted-fixed — input-mapping breakage row, divergence 6 and the status paragraph record `R4` (`optional_strong` extends to `split_ends`); the accept-or-extend status is gone |
+| 16 | accepted-fixed — decision.md `D7` anchor table corrected: the towel/drying-textile occurrence anchors at `post_rinse_towel_dry`; `T05` plopping sits after `damp_leave_on` and before the drying occurrence, matching matrix `T05` and fixture 112 |
+| 17 | **accepted-fixed, flagged** — fixture 4's ownership is no longer a plain `explicit_none`. The literal "derived marking convention" could not be applied: `contracts.ts` forbids a provenance on `unknown`, and the `D4` standing note forbids `explicit_none` for derivation 2. Recorded as `unknown` (`provenance: null`) with the air-dry answer stored as the behaviour it is and the consequence on `coverage`; the standing note was extended to say this explicitly. Needs a confirming look |
+| 18 | accepted-fixed — fixture 32's ownership carries the `(derived)` marking |
+| 19 | accepted-fixed — fixtures 22, 36, 49, 119 are executable as written; the required inputs moved into the Input cells and the Notes no longer instruct the implementer |
+| 20 | accepted-fixed — fixtures 35, 36, 47, 48 carry exact per-member rule-ID sets (a `ToolChoiceGroup` has no rule-ID field, so the exact set is asserted per member route). Derived, not quoted: on fixture 48 the air-shaping member reaches only `optional`, so it carries `tools.airflow.optional_goal` + `tools.styling.volume_direction_inferred` and **not** `tools.styling.volume_basis` |
+| 21 | accepted-fixed — new fixture **124** `tools-onboarding-merge-per-form`; decision.md's `D4` section states that provenance records the stronger `reported` and forms are the union |
+| 22 | accepted-fixed — new fixture **125** (legacy diffuser `protectionConsistency` ignored, row still complete) plus §10 item 6, the `D8` schema-snapshot test that fails the build on an unbumped key change |
+| 23 | accepted-fixed — token fixed as `fingers` in decision.md (`D9b`), input-mapping and fixtures 10, 11, 56, 64; placeholder language removed. Flagged: the ruling fixes the **token**, so the fixtures state the reported set and `forms: []` and do **not** assert a route-level `reportedOwnership.state` for a fingers-only answer — that state was not ruled |
+| 24 | accepted-fixed — new fixture **126** `tools-night-manageability-trigger`: `optional` on `night_protection`, exact set `{tools.night.optional_other}`, `N02` lead `pillowcase` |
+| 25 | accepted-fixed — decision.md `D4` carries the transcribed `reportedOwnership` / `coverage` shapes and the `behavior_only` invariant; fixture notation aligned to those domains (including fixtures 74/102, where `derived` was written as if it were a state) |
+| 26 | accepted-fixed — the first-eligible-reported-form rule is written into `D4`. **Fixture 9 cross-check: consistent, no contradiction.** For a straight profile the foundation order is `detangling_brush, wide_tooth_comb, paddle_brush`; the reported `paddle_brush` is eligible and leads, the reported `round_brush` is not a foundation form and acts through coverage only |
+| 27 | accepted-fixed — decision.md `D5` carries the transcribed `ToolChoiceGroup` contract, its member lists and the one-group-per-route invariant |
+| 28 | accepted-fixed — `D5` lead rule written: `fulfilledBy` leads, `null` renders neutral with no ownership claim, report > derived > selection, ties by member order |
+| 29 | accepted-fixed — `D5`/`D6` precedence written: group-level lead selection never reorders a route; inside a route reported forms lead by filtering, subsequence invariant preserved |
+| 30 | accepted-fixed — `D6` merged-order rule written from `assets.ts`: merge only on identical family **and** lead form, first-emitted route's order is the base, first-occurrence dedup, fixed builder emission order |
+| 31 | accepted-fixed — every `59b` reference now reads "fixture 59 variant (b)" (decision.md ×2, fixtures.md §10, input-mapping §3) |
+| 32 | accepted-fixed — `C02`'s rendered-order fixture is the existing **fixture 75**; no row invented. It is named in the `D6` enforcement list, in input-mapping and in §10 item 3, and its row now demands the rendered `ToolAsset.productTypes[0]` |
+| 33 | accepted-fixed — the graph is named the **extended 11-position graph** consistently (nine anchors + `styling_session` + `nightly`, nightly always last) |
+| 34 | accepted-fixed — the anchor → `ToolPlacement` derivation table is in `D7` |
+| 35 | accepted-fixed — `A09` session contract stated: one shared session key, one cadence, ordering from the graph, WS6 implements the key — and nothing beyond that |
+| 36 | accepted-fixed — the ratified `D3a` copy („Wähle die Bereiche, aus denen du schon Produkte hast. Nicht gewählt = hast du nicht.") replaces the draft in decision.md (§`D3a` and the three status lines) and in input-mapping's mirror row; "pending WS4 review" removed, implementation-pending kept |
+| 37 | accepted-fixed — matrix Current checkpoint records the WS4 mockup pass and journey sign-off as DONE (2026-08-25) with WS4 implementation outstanding |
+
+Document versions after the pass: `decision.md` **v4**, `conditional-guidance-matrix.md`
+**v3**, `fixtures.md` **v3**, `input-mapping.md` **v3**, all `last_updated 2026-08-25`.
+
+## 2026-10-09/10 port rulings (Hair Tools port onto restructured main)
+
+Hair Tools Phase 1 was ported onto main on branch `codex/hair-tools-port` (plan
+`plans/2026-10-09-hair-tools-port.md` Rev. 5; the August build, PR #465, is superseded and was
+never merged). D1–D9 and R1–R4 above stand; the entries below amend how they are carried, or add to
+them. `decision.md` is now **v5** (module placement, storage, derivation, regrouping, read-time).
+On conflict, this section wins over the August wording it names.
+
+### Owner rulings (Nick, 2026-10-09)
+
+| # | Ruling |
+| --- | --- |
+| P1 | Option A: Hair Tools becomes a **third Feinschliff module** with its own migration (one additive SQL migration, `20261009170000_personal_plan_stage2_tools_module.sql`, teaches the three module-aware RPCs the new module; applied before the code deploy). |
+| P2 | The **Tool-Checkpoint** is shown **once, on the tools module's return to `/routine`** — not as a Stage-3 step. |
+| P3 | **Bundle all of `D2b`** into this build ("built in one now", Nick 2026-10-09): the two drying relabels and the temperature question together. **Revised the same day:** the temperature question was dropped on the evidence memo (see the Temperature row); the two drying relabels („Gewöhnlich föhnen / auch mit Rundbürste", „Mit Diffusor / Aufsatz für Locken/Wellen") remain. |
+| P4 | **Ship to all after an admin walkthrough:** flag `PERSONAL_PLAN_TOOLS_ROLLOUT` goes `off` → `admin` → `all`. |
+| Module name | „Deine Tools" — settled by picking option A in P1; not a numbered ruling. |
+| Temperature | The **temperature question of `D2b` is dropped** („if it's only optional, let's drop it"). The Föhn stays „nicht nötig" for Hitzeschutz on every setting; evidence in `plans/2026-10-09-hair-tools-port-evidence-blowdry-heat.md` (low confidence that a plain Föhn needs a protectant; no Föhn setting is „empfohlen"). |
+| Diffusor | **Diffusor = plain blow-drying.** With the flag on, `requiresStage2HeatProtection("diffuser_airflow_shaping")` is false: no Hitzeschutz question for it, heat-protectant tier `not_needed`, stored consistency ignored on read. **Beratung effect (visible):** the consult intake and backfill follow the same predicate unconditionally (Beratung has no flag), so a consult Diffusor event shows tier `not_needed` where it showed `optional`. Hitzeschutz for every other heat source is unchanged. |
+| Profil | Option (b) — behaviors vs things — then the **Rev. 5 structure:** Tools are asked before Gewohnheiten, things are asked once, Gewohnheiten = behaviors only. Profil cards: Haar-Check, Produkte, „Deine Tools", „Gewohnheiten"; Styling, Alltag and Ziele retire when tools apply. |
+| Wash-day order | Overview sections, pages inside a section, Profil rows/chips and the Produkte category list follow waschen → abtrocknen → entwirren → trocknen/stylen → fixieren → Nachtschutz („roughly inspired by the chronological order in which you would apply these products"). |
+| Ziele | The Ziele row moves into **Haar-Check** (it keeps its own editor, `profile-edit-goals`, as a row-level link and never changes the „x/N vollständig" count); the Ziele card is removed in both flag states. |
+
+Amended D-series wording: the overview is **regrouped chronologically** (four sections, table in
+`decision.md`) and the **three thing-questions leave Gewohnheiten** when the flag is on (they are
+derived from the inventory). This amends the question-structure parts of `D3`/`D3b`; `D3a` copy,
+`D3c` merge-per-form and `D5`–`D7` are unchanged. `D8`'s decoder machinery is not ported (the
+August family-keyed shape never reached production). `D2b`'s restructure ships without the
+temperature follow-up.
+
+### Mechanism rulings (design, 2026-10-09)
+
+- **Per-page answers.** The draft carries `toolForms` per page (`Partial<Record<ToolFormPageKey, ToolReportedForm[]>>`); the facts carry one key per page, `toolForms_<family>_<n>`, plus `toolFamiliesWithSomething`. A two-page family never lets one page promote the other's assumed answer.
+- **Derived thing-fields.** `additionalHeatTools`, `towel.material`, `nightProtection` (and `brushesCombs`, H2) are derived from the inventory by `careFactsFromToolInventory` and written with the source pages' provenance; the Gewohnheiten questions for them are skipped when derived. The plan engine, Beratung, backfill and the legacy columns read unchanged facts.
+- **Frottee / Diffusor answer-only forms.** `frottee` (drying_textiles) and `diffuser` (airflow) are captured answers that are never recommended and never lead a route — they exist so the towel material and the drying route „Mit Diffusor" can be derived.
+- **Read-time derivation.** Tool content (Stage-1 cards, Routine tool section, Anwendung tool blocks) is derived from current facts + the active V1 routine; no routine payload V2, no persisted tool artifact, no recompute on tools completion.
+- **Reported ownership (D5).** Only `user` provenance counts; assumed or derived entries never enter the inventory, so they can never read as owned.
+- **Existing members.** Inventory pre-filled from their care facts (provenance `derived`, pre-ticked, not saved until confirmed); Gewohnheiten stays complete; adding a heat tool later reopens only that tool's two questions.
+- **Rollback.** Flag flip; a pre-port code rollback first clears the new care keys through the facts door with `scripts/personal-plan/tools-rollback-clear-facts.ts` (dry run by default; `--include-derived` opt-in; idempotent).
+
+### Implementation rulings from the build (SDD ledger, condensed)
+
+- **Process:** local per-task commits on the branch are allowed (nothing is pushed); execution order 1→2→3→4→5→6→8→9→10→11→12→13 (Task 7, the Routine-V2 decoder, retired).
+- **Migration (Task 2):** the RPC is `personal_plan_rebase_on_facts_v1`; the PGlite harness appends the tools migration last so a rebase file cannot revert the widened module list; optional-entry rejects a `not_applicable` module; tools-section label „Was du schon hast" and telemetry section `tools` accepted; the „Letzter Schritt" banner keys on `totalSteps >= 5`; a grown-path complete draft keeps its existing branches on a bare `/plan-start` and the new question is asked only on explicit module entry.
+- **Flag (Task 3):** `toolsEnabled` is written into the trigger context only when true (key omitted when off) so flag-off input hashes never change; the facts-rebase lane carries the REAL flag for the refined clone while initial-version producers stay tools-off; optional page deps default to off (fail closed).
+- **Answers (Task 4):** `frottee`/`diffuser` added (above); pre-fill lives in `projectToolPrefillFromCareFacts`, not in the route engine's projection, so fixture 21's ruled `unknown` stays; assumptions must never change behavior against flag-off (textiles assumption `["microfiber_towel"]` when care has no towel info); `brushesCombs` is written only when at least one brush page has `user` provenance; ≥1 drying route is enforced for new answers at save time while stored `[]` stays valid; fixture 116 adapted to per-page answers; textile priority Mikrofaser > Baumwolltuch > Wrap > Frottee.
+- **Completion (Task 5):** a non-closing replay still calls the RPC (answers `already_projected`) so the moved-source lineage guard stays, only the duplicate facts write is skipped.
+- **Diffusor (Task 6):** the member plan is gated on `toolsEnabled`, the read side is tolerant always, Beratung unconditional; the route stays `airflow_shaping` (plan §4 is binding) and Hitzeschutz is a tier override in `heat-protectant.ts`, with leave-in/mask/needs/oil/Anwendung pinned to their previous outcomes; per-event rule markers may change refined-snapshot hashes of the four flag-on Diffusor members (accepted); drying labels are rollout-gated while Profil/iOS show „Mit Diffusor"/„Gewöhnlich föhnen" for everyone.
+- **Read views (Task 8/9):** per-field provenance — `user` and `unknown_historical` count as real, only `assumed` marks a derived tool unconfirmed; Stage-1 cards reflect care facts when they exist; `brushesCombs` is a derived-view source (ownership stays pages-only); the Stage-2 session carries a read-only `prefillCare` so legacy brush answers pre-tick; one shared `buildToolViewForRoutine` for Routine and Anwendung; a failing per-day tool projection degrades silently to the product-only day (and leaves a Sentry breadcrumb since Task 12).
+- **Checkpoint / Profil (Task 10/11):** the checkpoint is one card per family in section order, „Nur Finger" omitted, "confirmed" = completed tool questions on the path; Profil tiles follow the same grouping and short names; the card swap waits for the refinement-status read (fail open on error).
+- **Task 12:** per-family page titles and the short group-name map replace the family-label template; „Idealplan" → „Plan" in the tools copy; bounded-count analytics events `personal_plan_tools_inventory_entered` (first tools question shown, once per entry), `personal_plan_tools_inventory_completed` (module completion) and `personal_plan_tools_checkpoint_viewed`; the OLD `toolRouteCount`/`toolGapCount` on the Stage-3 handoff were dropped (nothing in the new architecture populates them); grep guards pin the no-routine-V2 / nothing-persisted / no-„Idealplan" rulings.
+- **More build rulings (condensed from the SDD ledger):**
+  - Task 1 was dispatched before the ledger existed (no brief file, no commit instruction); its receipt is `plans/receipts/2026-10-09-task1-engine-copy.md` and its commit is bookkeeping.
+  - The copied rollout test (`tests/personal-plan-tools.test.ts`) targets the resolver Task 3 creates; where it did not compile in Task 1 it moved to Task 3.
+  - Drying-options filter logic lives in Task 4 (the path); Task 6 only renders labels/subtitles and the Produkte display order (no double ownership).
+  - The stage-4 UI test stays "x von 4" while tools are not applicable (consistent with the `totalSteps` rule).
+  - The Stage-1 route echoes `toolsEnabled: true` in its response when the flag is on (server-decided, grants nothing).
+  - A flag-off-after-flag-on member has two Gewohnheiten questions reopen with their values kept — accepted as rollback-mode behavior; the lossy Pineapple→soft-tie pre-fill is noted for ready-check.
+  - `toolPagePreselection` stays (Task 5 owns and tests it).
+  - `legacy-columns-to-care-habits` and `derive-legacy-columns` are untouched (a stored Diffusor consistency is harmless under the rule).
+  - Brush pre-fill: only the live pre-fill (session `prefillCare`, service, persistence, optional entry, question UI, flow) shipped; the resolver/direct-accept half was DROPPED (no user-visible effect — the derived view already reads legacy `brushesCombs` and the RPC keeps real values), so direct-accept assumed brush pages stay empty as today.
+  - Rollback script: derived fields only with `--include-derived`; default clears the tool keys only. Checkpoint event semantics changed on purpose: `routeCount` = groups shown, `ownedCount` = tools shown, `gapCount` = families answered without a tool shown, `unknownCount` = families not reported.
+  - A status answer arriving after the Profil's 3 s fail-open timeout may still swap the cards (rare; the final state is correct). Analytics wiring is tested via exported helpers (no jsdom mount); completed counts are per family and `sectionCount` is 4.
+- **Open for ready-check (vetoable defaults):** invented copy (banner, checkpoint, card descriptions, „Keine Hitze", „N Tools"), the heat-source map and towel/night vocabulary mapping, the Frottee/Diffusor cards, per-family page titles and short names; a member whose tools are only derived (module complete, nothing user-reported) sees „Offen" in Profil, consistent with D5.
+
+### Counterpart-review findings (Codex, three rounds on the plan, all closed)
+
+Source of the one-liners below: **reconstructed from the Codex session transcripts** of the three review rounds (2026-10-09); the plan keeps only the summary line.
+
+Round 1 (F1–F14):
+
+| # | Finding → disposition |
+| --- | --- |
+| F1 | Completed drafts could not reopen when the path grew → grown paths are tolerated on load and reopen on save. |
+| F2 | The assumption rules did not satisfy the answer contract (sections vs families, empty defaults, wildcard) → explicit section→family conversion, valid empty defaults, explicit `tools:*` rule. |
+| F3 | A whole-family selection leaked another page's assumed answers → page-aware selection and storage. |
+| F4 | Provenance folding did not protect inventory ownership → per-page provenance, overview-derived clearing provenance, oracle that excludes assumed entries. |
+| F5 | Hot ordinary airflow needed downstream contracts → **moot** after the temperature drop. |
+| F6 | Profil read completed-draft snapshots instead of current facts → tools block from the facts via the presentation API. |
+| F7 | Completion recovery could not reach the checkpoint → `POST stage-2/complete {module}` retry path. |
+| F8 | `not_applicable` needed more consumers → response enum, assumptions predicate, row filtering, entry handling. |
+| F9 | The producer inventory missed computation owners → producers named; flag-off hashes unchanged. |
+| F10 | The "green copy" checkpoint of Task 1 was impossible → dependent files moved to their owning tasks, labs deferred. |
+| F11 | Named suites needed migration/boundary wiring → PGlite list and rebase chain extended, owners named. |
+| F12 | Unconditional brush-row removal broke the tools-off variant → **superseded** by the Profil restructure. |
+| F13 | Removing „Nichts davon" did not enforce D2 in the UI → drying-specific completeness (local + server). |
+| F14 | No reader-before-writer / rollback contract → flag + deploy order and the rollback script. Rev. 6 (2026-10-11): the flag defaults on, so the order is migration → deploy (module live for all) → Nick's production walkthrough; `off` (any case) is the emergency switch and `admin` stays an optional stage. |
+
+Round 2 (R2-1…R2-4): **R2-1** generated care keys needed answer reconstruction in `knownCareAnswers` (nested page answers rebuilt before validation, expanded on write); **R2-2** the retry endpoint was not idempotent by sharing PATCH completion (validated closing/non-closing replay before any facts write); **R2-3** rollback of persisted tool payloads was not executable on immutable routine versions → resolved by **read-time derivation** (nothing tool-shaped is persisted, so there is nothing to downgrade); **R2-4** copied labs violated the compile-clean gate (deferred to the tasks that provide their contracts).
+
+Round 3 (R3-1, R3-2, R3-P): **R3-1** `buildToolView` lacked the profile facts and the pre-routine scalp-application source (`needSnapshot` input added); **R3-2** the global "no `schemaVersion: 2`" guard rejected valid existing contracts (narrowed to routine payload schemas/producers and persisted tool fields); **R3-P** (adopted as clarification) replay preserves the persistence RPC's source-lineage check while skipping the duplicate facts write.
+
+### Rev. 6 pre-ship batch (2026-10-11, after Nick's walkthrough)
+
+- **Night behavior question + derivation.** Gewohnheiten gets a last static question `night_wear` „Wie trägst du dein Haar nachts?" (Offen / Locker zusammengebunden / Pineapple „locker oben auf dem Kopf"; answer key `nightWear`), flag-on only and off the path for `very_short` / `short` quiz lengths (the length rides on the trigger context, set only while the rollout is on; unknown length asks). The soft tie no longer implies `loose_tied`: `nightProtection` = night-page things + the question's technique (`open` adds none); until answered, the member's earlier technique stays in the list. New strict key `careHabits.nightWear`; `nightProtection` provenance is `user` only when the night page and `night_wear` both are. Assumptions: `assume:night_wear:derived_from_care` (an earlier `pineapple` / `loose_tied` in the answers — Pineapple wins if both) before `assume:night_wear:open`; the first rule was added beyond the brief because assuming „Offen" would drop a member's own technique that the rollout-off resolver keeps (parity). Pre-fill: the draft's earlier technique, else a confirmed stored one via `prefillCare.nightWear`; „not re-asked" = the question shows pre-filled (consistent with the other pre-fills), never auto-adopted. Existing complete drafts with tie-able hair therefore see Gewohnheiten reopen on this one question (grown path). Profil Gewohnheiten: fifth row „Nachts" (after the heat rows / „Keine Hitze"; absent for short hair).
+- **Flag defaults to on.** `resolvePersonalPlanToolsRollout`: unset / empty / any unknown string → `all`; exact (trimmed) `off` → off; `admin` → admin. **Only the exact value `off` disables the module** (case-sensitive: `OFF`, `false`, `0` or a typo leave it ON) — the emergency switch must be set to `off` verbatim. The CI journey lane now runs tools-on; tests of the off path set it explicitly.
+- **Fix round 1 (2026-10-11).** A stored night technique (`loose_tied` / `pineapple`) no longer pre-ticks the „weiches Haargummi" card or the Nachtschutz overview section: a technique projects no night thing (fixtures 74/102 keep `optional_other` and no securing duplicate, with the profile lead and unknown ownership); a soft tie is pre-ticked only when the member named it on the night page, never from legacy facts. The tools lab scenario has tie-able hair, so `/labs/feinschliff-journey` reaches the night question (ready-check screenshot `63-night-wear.png`).
+- **Consistency fixes.** Square QuizOptionCard checkbox and photo height on the tool cards; „Nichts davon" as the Feinschliff none card („Ich habe hier nichts davon.", `data-refinement-none-option` + `data-tool-nothing-option`); photo-page lead „Wähle alles aus, was du nutzt. Mehrfachauswahl möglich." (+ „Seite n von 2."; the overview lead is unchanged); Profil Deine Tools „Noch offen — tippen zum Ergänzen" / „Keine Tools angegeben" / badge „Keine Tools"; checkpoint empty state „Keine Tools angegeben. Du kannst sie jederzeit ergänzen."
+
+### §2 read-time note
+
+Tool content is never versioned. The Stage-1 route, the Routine page and the Anwendung page read the
+member's current care facts (owner-scoped, request-time) and the active V1 routine, run the pure
+engine, and render. Consequences: a tools answer changes the next view immediately; a routine
+version, proposal or source fingerprint never contains a tool; "no routine payload V2" and "nothing
+persisted under `toolAssets`/`toolOccurrences`/`toolGuidance`" are enforced by
+`tests/personal-plan-tools-guards.test.ts`.

@@ -1,0 +1,164 @@
+{
+  "blindId": "T108",
+  "inciFingerprintSha256": "665d3815e74298d11968ebf3d989b3157a858499dcb4e7d5708e8756c36a803e",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "Packet canonicalInci used as normalized list (ID-2); positions are one-based on that list.",
+    "inciCount": 22,
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "e3ProminencePoint": "Parfum at 16: positions 1-15 prominent"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "moderate",
+      "rationale": "C1 with reinforcing routes: SLES (2) defining plus five further prominent alkyl ether sulfates (9, 11, 12, 14, 15) -> strong by convention.",
+      "counterSignal": "Three prominent buffers (betaine 5, glutamate 6, amphodiacetate 7) and the higher-ethoxylated Mg/oleth sulfates are a known milder blend; urea/panthenol early.",
+      "neighboringAlternative": "moderate"
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Cleansing-led: no cationic polymer, silicone, lipid or protein; only humectants (Urea 3, Panthenol 8, Glycerin 20) and a pearlizer (10), which give little slip.",
+      "neighboringAlternative": "none"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "No deposition family at all (humectants are context; glycol distearate and Laureth-4 excluded) and strong reset -> low.",
+      "neighboringAlternative": "none",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "No silicone, cationic, lipid, protein or film former."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "Nothing persistent to retain."
+        },
+        "resetCapacity": {
+          "value": "strong",
+          "rationale": "Reinforced ether-sulfate system."
+        }
+      },
+      "whyThisBand": "Absent deposition.",
+      "whyNotNeighborBand": "No depositing system exists that could produce noticeable residue.",
+      "limitingFactor": "None material."
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Formula care-direction verdict recorded for reconciliation.",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "note": "Humectant cluster (Urea, Panthenol, Glycerin) but no conditioning/emollient/deposition support, so not moisture_supported."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2)."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). Default regular; triggers (U2-U5, D1, U3) need graded claims."
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "provisional": true,
+      "rationale": "Provisional: claims, name and directions are hidden in the blind pass (3.1); final value set after reconciliation (3.2). SC1 positioning unknown. CSA formula half passes: prominent comfort routes Urea (3), Panthenol (8); humectants Urea, Panthenol. Counter-signal: cleansingStrength strong (caps targeted at moderate)."
+    }
+  },
+  "scalpGateFormulaHalves": "S-SENSITIVE / S-DRY formula routes present but strong cleansing -> review_strong_cleansing_comfort_route if a target is projected. S-OILY clause passes.",
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic, ether type"
+    },
+    {
+      "ingredient": "Urea",
+      "position": 3,
+      "role": "humectant + E4 comfort route"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 5,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Sodium Cocoyl Glutamate",
+      "position": 6,
+      "role": "buffer, mild anionic"
+    },
+    {
+      "ingredient": "Disodium Cocoamphodiacetate",
+      "position": 7,
+      "role": "buffer, amphoteric"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 8,
+      "role": "humectant + E4 comfort route"
+    },
+    {
+      "ingredient": "Sodium Laureth-8 Sulfate",
+      "position": 9,
+      "role": "reinforcing route, ether sulfate"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 10,
+      "role": "pearlizer, excluded from weight"
+    },
+    {
+      "ingredient": "Magnesium Laureth Sulfate",
+      "position": 11,
+      "role": "reinforcing route, ether sulfate"
+    },
+    {
+      "ingredient": "Magnesium Laureth-8-Sulfate",
+      "position": 12,
+      "role": "reinforcing route, ether sulfate"
+    },
+    {
+      "ingredient": "Laureth-4",
+      "position": 13,
+      "role": "thickener, not a route"
+    },
+    {
+      "ingredient": "Sodium Oleth Sulfate",
+      "position": 14,
+      "role": "reinforcing route, ether sulfate"
+    },
+    {
+      "ingredient": "Magnesium Oleth Sulfate",
+      "position": 15,
+      "role": "reinforcing route, ether sulfate"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 16,
+      "role": "E3 marker"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 20,
+      "role": "humectant, late"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

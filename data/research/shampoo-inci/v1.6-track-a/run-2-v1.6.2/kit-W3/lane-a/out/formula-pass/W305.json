@@ -1,0 +1,130 @@
+{
+  "blindId": "W305",
+  "inciFingerprintSha256": "4d21bc975505079b916aa495f148440be891511f6de5cfb207eb9bfeb79bd9a0",
+  "phase": "formula-pass (blind, stage A only)",
+  "policy": "shampoo-classification-v1.6.2",
+  "lane": "lane-a",
+  "identity": {
+    "packSize": "300 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "moderate",
+    "normalization": "'AQUA / WATER' and 'PARFUM / FRAGRANCE' are single entries; packet positions = normalized positions (ID-2). 21 entries.",
+    "e3ProminenceCutoff": "PARFUM / FRAGRANCE @21 (last). Prominent = positions 1-20."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Strong: C5 alkyl-sulfate chassis. Defining anionic Ammonium Lauryl Sulfate @2 with only one prominent buffer (Cocamidopropyl Betaine @4); C5 needs two buffers for moderate. Polyglyceryl-10 Myristate @12 / Stearate @13 are polyglyceryl esters (not cleansing, not buffers); Charcoal Powder @9 is not a cleansing route. Counter-signals recorded: Nigella Sativa Seed Oil @5, guar @8 (they do not move the convention).",
+      "ruleIds": ["C5", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High: rich architecture under the Section 5 reading of W-RICH (E3 prominence): prominent payload lipid Nigella Sativa Seed Oil @5 converging with the cationic polymer Guar Hydroxypropyltrimonium Chloride @8. C2 itself is not met (no pearlizing/fatty-alcohol route, no listed humectant: Polyglycerin-10 @11 is not on the R11 list). Counter-signal: only two systems, strong ALS chassis, Parfum-last list makes everything 'prominent'; bounded care (moderate) is realistic.",
+      "ruleIds": ["W-RICH", "C2", "R11", "Section 5 anchors"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @8"],
+        "payload_lipid": ["Nigella Sativa Seed Oil @5 (material)"],
+        "weak_refatter": ["Polyglyceryl-10 Myristate @12", "Polyglyceryl-10 Stearate @13"],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Ammonium Lauryl Sulfate @2 (strong alkyl sulfate)", "Cocamidopropyl Betaine @4"],
+        "humectantContext": ["Polyglycerin-10 @11"],
+        "excluded": ["Charcoal Powder @9 (adsorbent, no deposition)", "Triethyl Citrate @6 (solvent/plasticizer, no weight role)", "Caramel @17 (colorant)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "wLine": "@10 Citric Acid",
+        "classes": ["alphabetical_tail"],
+        "cap": "e3Point @21 (PARFUM / FRAGRANCE)",
+        "alphabeticalRun": "positions 9-15 (Charcoal Powder, Citric Acid, Polyglycerin-10, Polyglyceryl-10 Myristate, Polyglyceryl-10 Stearate, Sodium Benzoate, Sodium Dehydroacetate); does not contain the earliest cleansing surfactant (ALS @2), so it is a tail; second entry Citric Acid @10 is the candidate.",
+        "skipped": [],
+        "codes": [],
+        "plausibility": "Citric Acid @10: (i) ALS @2 and CAPB @4 before it; (ii) entries of the same run ignored; entries after the run (16-20: Benzoic Acid, Caramel, Linalool, Limonene, Benzyl Alcohol) contain no cleansing surfactant, alkanolamide or pearlizing wax. Plausible; earlier than Sodium Benzoate @14.",
+        "payloadLipidMaterial": ["Nigella Sativa Seed Oil @5"],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "moderate",
+      "persistence": "moderate",
+      "resetCapacity": "strong",
+      "counterevidence": "W-RICH holds for weight (material lipid @5 + cationic guar), and two distinct families converge (payload_lipid + cationic_polymer).",
+      "whyThisBand": "A material seed oil plus a cationic guar plausibly leave noticeable but bounded residue.",
+      "whyNotNeighborBand": "Not high: reset is not limited (C5 strong ALS chassis, resetCapacity strong; charcoal in the base), so W-RICH does not reach the high anchor, and only two families converge, which a strong reset plausibly offsets. Not low: a material plant oil at @5 with a guar is two families, too much to call lightweight (W2).",
+      "confidenceLimitingFactor": "Oil and guar levels unknown; W-RICH sits near the high boundary.",
+      "rationale": "Moderate: W-RICH recorded as counter-signal; strong reset offsets a two-family deposit.",
+      "ruleIds": ["6.6", "W-RICH", "W-LINE", "W2", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "clarifying",
+      "provisional": "Claim-dependent; formula-only provisional value.",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": ["Nigella Sativa Seed Oil @5"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Guar Hydroxypropyltrimonium Chloride @8"],
+        "limitation": "No humectant cluster, no protein route."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Strong ALS chassis with Charcoal Powder points to a clarifying/oily-scalp role; but conditioningLevel high would fail the F6 clause (conditioning not high) unless conditioning settles at its moderate neighbor.",
+      "decisionTrace": "Blind: no claim; formula nonspecific for lengths; provisional general.",
+      "rationale": "Provisional general.",
+      "ruleIds": ["7.2", "F6"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["clarifying"],
+      "provisional": "Claim-dependent.",
+      "rationale": "Empty default blind.",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "alternating",
+      "triggerCode": "none",
+      "provisional": "Claim-dependent: cleansingStrength strong, so reset/oily/detox wording (U4) would fire alternating; D1 wording would fire occasional_reset.",
+      "rationale": "Default regular blind.",
+      "ruleIds": ["Section 9", "U4"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": "SC1 positioning claim-dependent.",
+      "csa": "CSA met via a listed humectant/refatting route: Nigella Sativa Seed Oil @5 (nonvolatile plant oil, E4 humectant/refatting list), prominent. No prominent E4 comfort route. MB not met: cleansingStrength strong and Ammonium Lauryl Sulfate @2 prominent. S-SENSITIVE formula half would fail (no comfort route, no MB); S-DRY formula half passes (oil route) with review_strong_cleansing_comfort_route.",
+      "counterSignals": "cleansingStrength strong (would cap targeted at moderate).",
+      "rationale": "Provisional not_targeted pending SC1.",
+      "ruleIds": ["Section 10 CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": ["Ammonium Lauryl Sulfate @2 (strong alkyl sulfate, defining)", "Cocamidopropyl Betaine @4 (buffer)", "Polyglyceryl-10 Myristate @12, Polyglyceryl-10 Stearate @13 (polyglyceryl esters, not cleansing)"],
+    "conditioningRoutes": ["Nigella Sativa Seed Oil @5", "Guar Hydroxypropyltrimonium Chloride @8"],
+    "humectants": ["Polyglycerin-10 @11 (not on R11/E4 lists)"],
+    "actives": ["Charcoal Powder @9"],
+    "exposure": ["PARFUM / FRAGRANCE @21", "Linalool @18", "Limonene @19", "Benzyl Alcohol @20"],
+    "preservatives": ["Sodium Benzoate @14", "Sodium Dehydroacetate @15", "Benzoic Acid @16", "Benzyl Alcohol @20"]
+  },
+  "unresolvedMaterialIngredients": []
+}

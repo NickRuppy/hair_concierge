@@ -11,15 +11,35 @@ export type RoutineRefinementBannerProps = RoutineRefinementBannerViewModel & {
   onRefine: () => void
 }
 
+/** `totalSteps` is 2 + applicable modules, so 5 means the `tools` module is part of the run. */
+const STEPS_WITH_TOOLS = 5
+
 /**
  * Copy and CTA duration per module (mockup v3, signed off 25.08.2026):
- * `products` is the first ask; `habits` is the second one once `products` is
- * done. The banner never re-derives progress or module state itself — both
- * come straight from the refinement-status API (Task 1.7) via the caller.
+ * `products` is the first ask; `tools` (when its rollout applies) the next;
+ * `habits` the last one — „Letzter Schritt" only when `tools` precedes it, else
+ * today's „Noch ein Schritt". The banner never re-derives progress or module
+ * state itself — both come straight from the refinement-status API (Task 1.7)
+ * via the caller.
  */
-const MODULE_BANNER_COPY: Record<Stage2Module, { title: string; ctaMinutes: number }> = {
-  products: { title: "Mach deinen Plan genauer.", ctaMinutes: 2 },
-  habits: { title: "Noch ein Schritt: deine Gewohnheiten.", ctaMinutes: 3 },
+function bannerCopy(
+  stage2Module: Stage2Module,
+  totalSteps: number,
+): { title: string; ctaMinutes: number } {
+  switch (stage2Module) {
+    case "products":
+      return { title: "Mach deinen Plan genauer.", ctaMinutes: 2 }
+    case "tools":
+      return { title: "Als Nächstes: Deine Tools.", ctaMinutes: 3 }
+    case "habits":
+      return {
+        title:
+          totalSteps >= STEPS_WITH_TOOLS
+            ? "Letzter Schritt: deine Gewohnheiten."
+            : "Noch ein Schritt: deine Gewohnheiten.",
+        ctaMinutes: 3,
+      }
+  }
 }
 
 /**
@@ -36,7 +56,7 @@ export function RoutineRefinementBanner({
   onDismiss,
   onRefine,
 }: RoutineRefinementBannerProps) {
-  const copy = MODULE_BANNER_COPY[module]
+  const copy = bannerCopy(module, totalSteps)
   const progressPercent =
     totalSteps > 0 ? Math.max(0, Math.min(100, (completedSteps / totalSteps) * 100)) : 0
 

@@ -147,7 +147,9 @@ async function assertSeenStateJoin(envelope: PersonalPlanQuizSubmissionEnvelope)
 
 /** The refined need version the synthetic Stage-2 defaults produce. */
 function refinedSnapshot(envelope: PersonalPlanQuizSubmissionEnvelope) {
-  const triggerContext = deriveStage2TriggerContext(initialSnapshot(envelope))
+  const triggerContext = deriveStage2TriggerContext(initialSnapshot(envelope), {
+    toolsEnabled: false,
+  })
   const defaults = buildDirectAcceptanceStage2Defaults(triggerContext)
   const refined = computeNeedPlan({
     rawEnvelope: envelope,
@@ -292,6 +294,8 @@ function bondbuilderTieCandidates(thickness: PlanHairThickness): Stage3Bondbuild
     isActive: true,
     lifecycleStatus: "active",
     recommendable: true,
+    // Real prices differ; the S4 equal-trust default still joins in both lanes.
+    priceEur: productId === "olaplex-no3" ? 34 : productId === "epres" ? 48 : 56.25,
     // Deliberately pinned to the initial snapshot's thickness rather than made
     // universally suitable: a thickness drift between the two snapshots must
     // break this join loudly instead of being papered over.
@@ -308,6 +312,10 @@ function bondbuilderTieCandidates(thickness: PlanHairThickness): Stage3Bondbuild
       productFormat: "treatment",
       usageProtocol: "course",
       relationship: "standalone",
+      // fit-verdict spec §6, ruled 2026-10-12: reviewed technology fixture.
+      technologyFamily: "sulfur_targeting_dimaleate",
+      trustBasis: "owner_anchor",
+      claimTrustLevel: "high",
     },
   })
 
@@ -359,6 +367,7 @@ function acceptChainBondbuilderEvaluation(
   } as never)
 }
 
+// S4 owner ruling: the house default joins identically across preview and acceptance.
 test("the Bondbuilder tie cohort joins on product identity, not only on role keys", async () => {
   const envelope = CALM_SCALP_ENVELOPE
   const initial = initialSnapshot(envelope)

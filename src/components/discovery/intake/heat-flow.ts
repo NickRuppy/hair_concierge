@@ -1,4 +1,5 @@
 import {
+  DISCOVERY_HEAT_RULE,
   discoveryHeatEventSources,
   parseDiscoveryHeatStyling,
   type DiscoveryHeatStylingV1,
@@ -76,7 +77,8 @@ export function discoveryHeatSteps(draft: DiscoveryHeatDraft): DiscoveryHeatStep
   const steps: DiscoveryHeatStep[] = [{ kind: "drying" }, { kind: "tools" }]
   for (const source of heatDraftSources(draft)) {
     steps.push({ kind: "frequency", source })
-    if (requiresStage2HeatProtection(source)) steps.push({ kind: "protection", source })
+    if (requiresStage2HeatProtection(source, DISCOVERY_HEAT_RULE))
+      steps.push({ kind: "protection", source })
   }
   steps.push({ kind: "summary" })
   return steps
@@ -123,7 +125,7 @@ export function toDiscoveryHeatStyling(draft: DiscoveryHeatDraft): DiscoveryHeat
     const id = createStage2HeatEventId(source)
     const event = draft.heatEvents[id]
     if (!event?.frequency) return null
-    if (requiresStage2HeatProtection(source)) {
+    if (requiresStage2HeatProtection(source, DISCOVERY_HEAT_RULE)) {
       if (!event.protectionConsistency) return null
       heatEvents[id] = {
         frequency: event.frequency,

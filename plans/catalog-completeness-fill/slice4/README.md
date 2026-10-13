@@ -4,7 +4,7 @@ Status: **prepared and rehearsed, NOT applied.** Production apply needs Nick's a
 
 | | |
 |---|---|
-| Migration | `supabase/migrations/20261011170000_bondbuilder_aveda_damage_cadence.sql` (generated) |
+| Migration | `supabase/migrations/20261013170000_bondbuilder_aveda_damage_cadence.sql` (generated) |
 | Batch id | `S4-catalog-completeness-aveda-damage-cadence` (receipt key `P07`) |
 | Content fingerprint | `92dcb1acf4b736765167ad1f1bdd98cc30307d106d0c07991532f60272fda4f0` |
 | Prestate capture | `2026-10-11T14:35:10.608466Z`, read-only, prod `pqdkhefxsxkyeqelqegq` (`prestate.json`) |
@@ -12,7 +12,7 @@ Status: **prepared and rehearsed, NOT applied.** Production apply needs Nick's a
 
 Rollback (Codex S4-04): `rollback.sql` restores the full protocol row, `updated_at` included — it refuses unless the row's stamp still equals the receipt's apply stamp (no later revision is undone), then suspends only `set_updated_at_product_application_protocols` inside its transaction (Slice 1 precedent; `SET CONSTRAINTS ALL IMMEDIATE` first, as the trigger can only be altered without pending events). The rehearsal asserts the restored protocol and product rows equal the preimage byte for byte.
 
-Files: `generate.ts` (no DB access; `npx tsx plans/catalog-completeness-fill/slice4/generate.ts`) → migration, `rollback.sql` (prepared, not a migration), `verify.sql` (read-only, zero rows = postimage in place), `manifest.json`. Rehearsal: `tests/bondbuilder-aveda-damage-cadence-postgres.test.ts` (PGlite: real P07 bundle + real 2026-10-06 promotion migration, protocol id aligned to prod → apply, replay no-op, verify, rollback, reapply, tamper refusals, fresh-DB skip, files equal generator output).
+Files: `generate.ts` (no DB access; `npx tsx plans/catalog-completeness-fill/slice4/generate.ts`) → migration, `rollback.sql` (prepared, not a migration), `verify.sql` (read-only, zero rows = postimage in place), `manifest.json`. Offline freshness check: `node --import tsx plans/catalog-completeness-fill/slice4/generate.ts --check` (no writes and no new prestate capture). Rehearsal: `tests/bondbuilder-aveda-damage-cadence-postgres.test.ts` (PGlite: real P07 bundle + real 2026-10-06 promotion migration, protocol id aligned to prod → apply, replay no-op, verify, rollback, reapply, tamper refusals, fresh-DB skip, files equal generator output).
 
 ## Writes
 

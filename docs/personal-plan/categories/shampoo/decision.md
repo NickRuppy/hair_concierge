@@ -135,19 +135,12 @@ Do not add a second editable `anti_dandruff_active` authority. A reviewed export
 
 Evaluate every owned product independently against every required Shampoo role.
 
-| Verdict | Deterministic meaning |
-|---|---|
-| `ideal` / `passt sehr gut` | Identity, lifecycle, required route/role, thickness, exclusions, and critical protocol all pass |
-| `supportive` / `passt mit Einschränkung` | Strict gates pass but one explicit gentleness, compatibility, or secondary coverage limitation remains |
-| `mismatch` / `wechseln empfohlen` | Wrong required role/route, verified thickness exclusion, strong exclusion, safety conflict, or incompatible verified product behavior |
-| `unknown` / `noch in Prüfung` | Identity is pending or a required strict/core/protocol fact is unverified |
-
-Precedence is pending/unresolved identity, safety/red flags, strong exclusions, strict thickness, required role/route, critical protocol gap, supportive limitation, then ideal.
+Fit verdicts and labels follow the [canonical fit-verdict model](../../fit-verdict-model.md) (§1–§5, ruled 2026-10-12): `ideal` = **Passt**, `supportive` = **Passt bedingt**, `mismatch` = **Passt nicht**, and `unknown` = **Nicht geprüft**. Thickness is a degree axis, never a hard gate; sum all axis distances (0 / 1 / ≥2 steps), let hard-gate failures take precedence, and allow a supportive recommendation with its evaluator reason when no ideal candidate exists in either Basis or optional tiers.
 
 Selection order:
 
 1. verified active Shampoo identity and required role/route;
-2. safety, exclusions, and thickness gate;
+2. safety/exclusion gates and thickness distance (canonical model §2–§4);
 3. irritation/dry-scalp compatibility where relevant;
 4. preserve a valid owned product before proposing an unnecessary switch;
 5. among valid new products, use fiber compatibility, budget, availability, and curated priority;

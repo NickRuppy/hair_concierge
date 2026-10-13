@@ -73,7 +73,7 @@ function oracleGoals(
   for (const value of goals) {
     const mapped =
       value === "volume_balance"
-        ? resolveVolumeBalanceGoal(volumeCtx)
+        ? (resolveVolumeBalanceGoal(volumeCtx) ?? "volume_balance")
         : GOAL_TO_PROFILE_GOAL_MAP[value]
     if (mapped && !seen.has(mapped)) {
       seen.add(mapped)
@@ -110,7 +110,8 @@ test("scalp_condition: [] -> null", () => {
 // Diagnostics: concerns (no cap, order kept, dedupe via mapping)
 // ---------------------------------------------------------------------------
 
-test("concerns: 7 incl. all 3 droppable ones -> exactly the 4 mapped, original order, no cap", () => {
+// concern vocabulary widening, ruled 2026-10-11: all seven answers survive.
+test("concerns: 7 incl. all 3 newly retained ones -> all 7 mapped, original order, no cap", () => {
   const input = [
     "low_shine",
     "dry_lengths",
@@ -124,7 +125,15 @@ test("concerns: 7 incl. all 3 droppable ones -> exactly the 4 mapped, original o
     makeDiagnostics({ currentConcerns: [...input] as DiagnosticsV1["currentConcerns"] }),
   )
   assert.deepEqual(result.concerns, oracleConcerns(input))
-  assert.deepEqual(result.concerns, ["dryness", "frizz", "hair_loss", "tangling"])
+  assert.deepEqual(result.concerns, [
+    "low_shine",
+    "dryness",
+    "lost_shape",
+    "frizz",
+    "low_volume_or_weighed_down",
+    "hair_loss",
+    "tangling",
+  ])
 })
 
 test("concerns: single [frizz_flyaways] -> [frizz]", () => {
@@ -142,7 +151,8 @@ test("concerns: absent -> [] (controller ruling 2026-09-15: legacy NOT NULL DEFA
 // Diagnostics: goals incl. volume_balance resolution + desired_volume
 // ---------------------------------------------------------------------------
 
-test("goals: volume_balance with thickness normal + density medium + texture straight -> dropped; desired_volume null", () => {
+// concern vocabulary widening, ruled 2026-10-11: preserve the goal without inventing direction.
+test("goals: volume_balance with thickness normal + density medium + texture straight -> retained; desired_volume null", () => {
   const result = deriveDiagnosticsColumns(
     makeDiagnostics({
       thickness: "normal",
@@ -156,9 +166,9 @@ test("goals: volume_balance with thickness normal + density medium + texture str
     density: "medium",
     structure: "straight",
   })
-  assert.deepEqual(expectedGoals, [])
-  assert.deepEqual(result.goals, [])
-  assert.equal(result.desired_volume, deriveDesiredVolumeFromGoals([], null))
+  assert.deepEqual(expectedGoals, ["volume_balance"])
+  assert.deepEqual(result.goals, ["volume_balance"])
+  assert.equal(result.desired_volume, deriveDesiredVolumeFromGoals(expectedGoals, null))
   assert.equal(result.desired_volume, null)
 })
 
@@ -202,7 +212,8 @@ test("goals: volume_balance with thickness fine AND density high -> 'volume' (fi
   assert.equal(result.desired_volume, "more")
 })
 
-test("goals: 8 goals -> >= 6 mapped outputs, no cap, order kept, dedupe (frizz_surface + manageability_styling -> one less_frizz)", () => {
+// concern vocabulary widening, ruled 2026-10-11: deduplication leaves seven goals, including neutral volume.
+test("goals: 8 goals -> 7 mapped outputs, no cap, order kept, dedupe (frizz_surface + manageability_styling -> one less_frizz)", () => {
   const input = [
     "moisture",
     "frizz_surface",
@@ -231,8 +242,10 @@ test("goals: 8 goals -> >= 6 mapped outputs, no cap, order kept, dedupe (frizz_s
     "curl_definition",
     "anti_breakage",
     "healthy_scalp",
+    "volume_balance",
   ])
-  assert.ok((result.goals as string[]).length >= 6, "no cap: today's projection caps at 5")
+  assert.equal(result.desired_volume, null)
+  assert.ok((result.goals as string[]).length === 7, "no cap: today's projection caps at 5")
 })
 
 test("goals: [] -> goals column [] and desired_volume null", () => {

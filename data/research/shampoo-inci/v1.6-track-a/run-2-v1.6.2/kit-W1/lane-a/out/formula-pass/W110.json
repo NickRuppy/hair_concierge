@@ -1,0 +1,147 @@
+{
+  "blindId": "W110",
+  "inciFingerprintSha256": "4eddf07f65699119e28271f06d3321a7a729de2b283c053a659895ef9dda3433",
+  "phase": "formula-pass (blind; stage-A packet only; no claims seen)",
+  "standard": "shampoo-classification-v1.6.2",
+  "formulaIdentity": {
+    "packSize": "300 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "One entry per ingredient; normalized positions = packet positions (ID-2).",
+    "e3Point": "Parfum @20 (prominent = positions 1-19)"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "Sodium Laureth Sulfate @2 (strong anionic, ether/sulfonate type)",
+      "reinforcingRoutes": [],
+      "buffers": ["Cocamidopropyl Betaine @4 (amphoteric)", "Coco-Glucoside @11 (nonionic glucoside)"],
+      "notCleansing": ["PEG-3 Distearate @17 (PEG ester pearlizer/opacifier)"]
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @13 (prominent)"],
+      "protein_film": ["Hydrolyzed Wheat Protein @7"],
+      "weak_refatter": ["Glyceryl Oleate @12", "Hydrogenated Palm Glycerides Citrate @16"],
+      "payload_lipid": [],
+      "silicone": [],
+      "pearlizingFattyRoute": ["PEG-3 Distearate @17"],
+      "humectants": ["Panthenol @9", "Glycerin @19"]
+    },
+    "actives": ["Niacinamide @8 (comfort-list route)"],
+    "exposure": {
+      "fragrance": "Parfum @20 (not prominent); allergens Benzyl Salicylate @21, Linalool @22",
+      "essentialOils": [],
+      "coolingAgents": [],
+      "otherNotes": "Pantolactone @10; Magnesium Sulfate @14; botanical extracts @5-6"
+    },
+    "wLine": {
+      "cap": "e3Point Parfum @20",
+      "wLine": "Tocopherol @15",
+      "wLineClasses": ["sub1_active"],
+      "skippedCandidates": ["w_line_skipped:Niacinamide@8 - clause (ii) failed: Coco-Glucoside @11 (cleansing surfactant) listed after it before the cap", "w_line_skipped:Panthenol@9 - clause (ii) failed: Coco-Glucoside @11 listed after it before the cap"],
+      "alphabeticalRun": "none (longest ascending run 6-10, 5 entries)",
+      "codes": [],
+      "plausibility": "Tocopherol @15: (i) SLES @2 before; (ii) entries 16-19 contain no cleansing surfactant, no alkanolamide and none of the named pearlizing waxes (Glycol Distearate, Glycol Stearate); PEG-3 Distearate read as outside that named list",
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": []
+    },
+    "csaListedProminentRoutes": ["Niacinamide @8 (comfort)", "Panthenol @9 (comfort + humectant)", "Glyceryl Oleate @12 (humectant/refatting)", "Glycerin @19 (humectant)"],
+    "mildBase": "not met: prominent strong anionic Sodium Laureth Sulfate @2"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate @2 defining with prominent buffers Cocamidopropyl Betaine @4 and Coco-Glucoside @11, no reinforcing strong anionic (C3, C4, C1).",
+      "ruleIds": ["C3", "C4", "C1"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: one meaningful cationic system (Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @13) plus light routes (Hydrolyzed Wheat Protein @7, Panthenol @9, Glyceryl Oleate @12, Hydrogenated Palm Glycerides Citrate @16, PEG-3 Distearate @17, Glycerin @19). C2 not met (no silicone or payload lipid). Guar follows the sub-1 % actives (Niacinamide @8, Panthenol @9), so low is the realistic neighbor.",
+      "ruleIds": ["Section 5", "C2", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @13"],
+        "payload_lipid": [],
+        "weak_refatter": ["Glyceryl Oleate @12", "Hydrogenated Palm Glycerides Citrate @16"],
+        "silicone": [],
+        "protein_film": ["Hydrolyzed Wheat Protein @7"],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @4", "Coco-Glucoside @11"],
+        "humectantContext": ["Niacinamide @8", "Panthenol @9", "Pantolactone @10", "Propylene Glycol @18", "Glycerin @19"],
+        "excluded": ["PEG-3 Distearate @17 (PEG ester pearlizer, 6.4)", "Magnesium Sulfate @14 (salt)", "Tocopherol @15 (antioxidant)", "Botanical extracts @5-6"],
+        "unresolved": []
+      },
+      "depositionLoad": "light - one guar after the sub-1 % actives, a hydrolyzed protein and weak refatters",
+      "persistence": "low - no silicone or payload lipid",
+      "resetCapacity": "moderate - buffered SLES chassis",
+      "counterevidence": "Three light families (cationic, protein, weak refatter) interact (W2).",
+      "whyThisBand": "Light, low-persistence routes against an effective SLES reset.",
+      "whyNotNeighborBand": "Not moderate (W2): the single guar is listed after Niacinamide @8/Panthenol @9 (sub-1 % zone), the protein is hydrolyzed (low persistence), the refatters are weak, and there is no silicone or payload lipid to converge with them.",
+      "confidenceLimitingFactor": "Guar share unknown; three light families present",
+      "rationale": "Low: single late guar plus light routes vs buffered SLES (6.6, W2). Neighbor moderate.",
+      "ruleIds": ["6.3", "6.4", "6.6", "W2", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": ["Panthenol @9", "Pantolactone @10", "Glycerin @19"],
+        "repairRoutes": ["Hydrolyzed Wheat Protein @7"],
+        "sharedConditioningRoutes": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @13", "Glyceryl Oleate @12", "Hydrogenated Palm Glycerides Citrate @16"],
+        "limitation": "Formula-only; single protein token does not make repair_supported"
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Wheat protein could support a repair reading if positioned",
+      "decisionTrace": "PROVISIONAL (formula-only): no claim direction; verdict moisture_supported. Placeholder general until claims.",
+      "rationale": "Provisional general (claim-dependent, 7.2).",
+      "ruleIds": ["3.1", "7.2", "7.3"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["shine"],
+      "decisionTrace": "PROVISIONAL: empty default (Section 8).",
+      "rationale": "Provisional empty (claim-dependent).",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "PROVISIONAL: default regular; frequent possible with explicit frequency wording (U2).",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "rationale": "PROVISIONAL: CSA formula half met via listed prominent Niacinamide @8, Panthenol @9 (comfort) and Glyceryl Oleate @12, Glycerin @19 (humectant/refatting); MB excluded (prominent SLES). targeted needs SC1 positioning.",
+      "ruleIds": ["10", "CSA", "MB", "SC1", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active (Section 11).",
+      "ruleIds": ["11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "W-line: PEG-3 Distearate @17 read as outside W-LINE (ii)'s named pearlizing waxes; if counted, Tocopherol @15 is skipped and the W-line becomes Parfum @20. No payload_lipid exists, so nothing changes."
+  ]
+}

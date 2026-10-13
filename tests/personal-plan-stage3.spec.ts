@@ -113,7 +113,8 @@ async function expectUncoveredChooserToFitViewport(page: Page) {
 }
 
 async function expectCompleteOilMatrix(page: Page, application: string) {
-  await expect(page.getByRole("heading", { name: "Dein Öl passt" })).toBeVisible()
+  // fit-verdict spec §1/§7b, ruled 2026-10-12
+  await expect(page.getByRole("heading", { name: "Passt", exact: true })).toBeVisible()
   await expect(
     page.getByRole("row", { name: new RegExp(`Anwendung.*${application}`) }),
   ).toBeVisible()

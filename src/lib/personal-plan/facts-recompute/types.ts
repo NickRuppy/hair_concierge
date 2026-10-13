@@ -118,6 +118,12 @@ export type FactsRecomputeDeps = {
     initialNeedVersionId: string
   }): Promise<FactsRecomputeSourceDraft | null>
   rebase(params: PersonalPlanRebaseOnFactsParams): Promise<PersonalPlanRebaseOnFactsResult>
+  /**
+   * Server-resolved Hair Tools rollout for this member (`isPersonalPlanToolsEnabledForUser`).
+   * Decides the question path the refined CLONE must satisfy; the new initial version stays
+   * product-only either way. Read only when a source draft is rebased; a failure counts as off.
+   */
+  toolsEnabled(userId: string): Promise<boolean>
   newId(): string
   now(): Date
 }

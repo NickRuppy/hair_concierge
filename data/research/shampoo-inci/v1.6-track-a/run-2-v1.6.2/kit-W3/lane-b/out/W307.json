@@ -1,0 +1,351 @@
+{
+  "blindId": "W307",
+  "identity": {
+    "brand": "Lavera",
+    "productName": "Lavera Pflegeshampoo basis sensitive Hydrate & Care (Basis Sensitiv)",
+    "packSize": "250 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "38d60eb914c0fbbc85d1f4ecb3bb98f4815256077c20874ad004f0bda105591b",
+    "normalization": "Parenthetical synonyms ('Water (Aqua)', 'Sea Salt (Maris Sal)', 'Fragrance (Parfum)') are single entries; marker characters * and ** stripped and kept as provenance (* = organic-type marker on @2, @8, @9; ** = fragrance-component marker on @28-@39). Packet positions = normalized ID-2 positions (39 entries).",
+    "completeness": "complete; source tier 2; identity confidence high",
+    "e3ProminenceCutoff": "Fragrance (Parfum) @28. Prominent = positions 1-27.",
+    "identityNotes": ""
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C5: defining anionic Sodium Coco-Sulfate @3 (alkyl sulfate type) with three prominent buffers Cocamidopropyl Betaine @5, Lauryl Glucoside @6, Coco-Glucoside @24 and no reinforcing strong anionic. Sodium Cetearyl Sulfate @19 is C3a (paired with Cetearyl Alcohol @15): emulsifier-grade, not a route.",
+      "ruleIds": [
+        "C5",
+        "C3",
+        "C3a",
+        "C4"
+      ],
+      "counterSignal": "Refatting/conditioning co-ingredients argue milder; C5 convention unchanged.",
+      "sourceIds": [
+        "formula packet W307"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High by C2: prominent payload lipid Helianthus Annuus Seed Oil @11 in place of a silicone, prominent cationic Guar Hydroxypropyltrimonium Chloride @21, fatty route Cetearyl Alcohol @15 (C3a pairing keeps its fatty role), humectants Glycerin @4, Sodium Hyaluronate @10, Betaine @17. Counter-signal: oil and guar are listed after botanical extracts and sub-1 % actives, guar late at @21; the conditioning load may be bounded, so moderate is the neighbor.",
+      "ruleIds": [
+        "C2",
+        "C3a",
+        "E3",
+        "N-ALT"
+      ],
+      "counterSignal": "See rationale (counter-signal recorded there).",
+      "sourceIds": [
+        "formula packet W307"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "silicone": [],
+        "cationic_polymer": [
+          "Guar Hydroxypropyltrimonium Chloride @21"
+        ],
+        "cationic_conditioner": [],
+        "payload_lipid": [
+          "Helianthus Annuus Seed Oil @11 (material)",
+          "Cetearyl Alcohol @15 (material)"
+        ],
+        "weak_refatter": [
+          "PCA Glyceryl Oleate @16"
+        ],
+        "protein_film": [],
+        "film_former": [],
+        "reset": [
+          "Sodium Coco-Sulfate @3",
+          "Cocamidopropyl Betaine @5",
+          "Lauryl Glucoside @6",
+          "Coco-Glucoside @24"
+        ],
+        "humectantContext": [
+          "Glycerin @4",
+          "Sodium Hyaluronate @10",
+          "Betaine @17",
+          "Aloe Barbadensis Leaf Juice @2"
+        ],
+        "excluded": [
+          "Sodium Cetearyl Sulfate @19 (C3a emulsifier sulfate)",
+          "Tridecane @23, Undecane @25 (volatile alkanes, not nonvolatile payload)",
+          "Citrus/lavender peel oils and fragrance allergens @28-@39 (fragrance, 6.4)",
+          "Tocopherol @12 (antioxidant)",
+          "Arginine @22 (amino acid, no deposition family)"
+        ],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 28,
+        "inci": "Fragrance (Parfum)",
+        "classes": [
+          "fragrance"
+        ],
+        "cap": "e3Point @28 (Fragrance (Parfum))",
+        "alphabeticalRun": null,
+        "skipped": [
+          "w_line_skipped:Sodium Hyaluronate@10 (clause ii failed: cleansing surfactant Coco-Glucoside @24 listed after it before the cap)",
+          "w_line_skipped:Tocopherol@12 (clause ii failed: Coco-Glucoside @24 listed after it before the cap)"
+        ],
+        "codes": [],
+        "note": "Sodium Cetearyl Sulfate @19 is a C3a pairing and not a cleansing surfactant for (ii). The E3 marker @28 is the earliest plausible candidate, so W-line = cap. No 7-entry alphabetical run.",
+        "payloadLipidMaterial": [
+          "Helianthus Annuus Seed Oil @11",
+          "Cetearyl Alcohol @15"
+        ],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "moderate",
+      "persistence": "moderate",
+      "resetCapacity": "moderate",
+      "counterevidence": "W-RICH holds (material sunflower oil @11 and cetearyl alcohol @15 converging with cationic guar @21); three deposition families present.",
+      "whyThisBand": "Material lipid/fatty-alcohol route plus a cationic guar and a weak refatter plausibly leave noticeable but bounded residue.",
+      "whyNotNeighborBand": "Not high: rich route needs limited reset, but resetCapacity is moderate (C5 coco-sulfate with three buffers); the guar is late (@21) and the oil follows extracts and Sodium Hyaluronate @10, so the converging systems are judged offset. Not low: material lipids plus cationic polymer (W2).",
+      "confidenceLimitingFactor": "W-RICH present with moderate reset; lipid dose unknown, high is the realistic neighbor.",
+      "rationale": "Moderate: W-RICH (sunflower oil @11, cetearyl alcohol @15 + guar @21) against moderate C5 reset; neighbor high.",
+      "ruleIds": [
+        "6.6",
+        "W-RICH",
+        "W-LINE",
+        "W2",
+        "C3a",
+        "N-ALT"
+      ],
+      "counterSignal": "See counterevidence field.",
+      "sourceIds": [
+        "formula packet W307"
+      ],
+      "formulaFacts": "see evidence and wLine"
+    },
+    "focusPrimary": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "neighboringAlternative": "general",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": [
+          "Glycerin @4",
+          "Sodium Hyaluronate @10",
+          "Betaine @17",
+          "Aloe Barbadensis Leaf Juice @2",
+          "Helianthus Annuus Seed Oil @11"
+        ],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "Guar Hydroxypropyltrimonium Chloride @21",
+          "Cetearyl Alcohol @15",
+          "PCA Glyceryl Oleate @16"
+        ],
+        "limitation": "Rinse-off context; humectants partly after extracts."
+      },
+      "claimRole": "candidate",
+      "counterSignal": "Mildness/'sanft zur Kopfhaut' positioning is not a focus; 'trockenes Haar' is lengths, not scalp.",
+      "decisionTrace": "Claim direction moisture: name 'Hydrate & Care' (high) and 'Spendet intensive Feuchtigkeit' (manufacturer, moderate). Formula verdict moisture_supported (humectant cluster + lipid/cationic support) -> compatible. 'Basis Sensitiv' is a non-scalp name word (F7 not triggered, no scalp claim unit). Decision moisture.",
+      "rationale": "Moisture: name-level hydration positioning over a moisture_supported formula.",
+      "ruleIds": [
+        "7.2",
+        "7.3",
+        "F1",
+        "F7"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "decisionTrace": "Empty default considered; no second distinct positioning.",
+      "rationale": "Empty.",
+      "ruleIds": [
+        "8",
+        "F2",
+        "F3"
+      ]
+    },
+    "usageRole": {
+      "value": "frequent",
+      "confidence": "moderate",
+      "neighboringAlternative": "regular",
+      "triggerCode": "explicit_frequent_non_strong",
+      "triggerEvidence": [
+        "Manufacturer (moderate): 'Für die extra Portion Feuchtigkeit - Tag für Tag.'"
+      ],
+      "losingTriggers": [],
+      "rationale": "Default regular considered. 'Tag für Tag' read as explicit everyday-use wording (U2 sense of 'für jeden Tag'); cleansing moderate -> frequent.",
+      "ruleIds": [
+        "9",
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "CL-SRC"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No SC1 positioning: 'Sanft zur Kopfhaut', 'Schont empfindliche Kopfhaut' are sparing/tolerance wording (E2a); 'Bio-Aloe Vera ist bekannt dafür, die Kopfhaut zu beruhigen' is an ingredient-reputation sentence; 'Basis Sensitiv' is a non-scalp name word.",
+      "ruleIds": [
+        "10",
+        "SC1",
+        "CSA",
+        "MB",
+        "E2a",
+        "E4"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active.",
+      "ruleIds": [
+        "11"
+      ],
+      "counterSignal": "None; mechanical table lookup.",
+      "sourceIds": [
+        "formula packet W307"
+      ]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionicAlkylSulfate": [
+        "Sodium Coco-Sulfate @3"
+      ],
+      "amphoteric": [
+        "Cocamidopropyl Betaine @5"
+      ],
+      "nonionicGlucoside": [
+        "Lauryl Glucoside @6",
+        "Coco-Glucoside @24"
+      ],
+      "c3aEmulsifier": [
+        "Sodium Cetearyl Sulfate @19 paired with Cetearyl Alcohol @15"
+      ],
+      "notCleansing": [
+        "Sea Salt @13",
+        "Sodium Sulfate @26",
+        "Sodium Chloride @27"
+      ]
+    },
+    "conditioningRoutes": [
+      "Helianthus Annuus Seed Oil @11",
+      "Cetearyl Alcohol @15",
+      "PCA Glyceryl Oleate @16",
+      "Guar Hydroxypropyltrimonium Chloride @21"
+    ],
+    "weightRoutes": [
+      "payload_lipid @11/@15 (material)",
+      "cationic_polymer @21",
+      "weak_refatter @16"
+    ],
+    "humectants": [
+      "Glycerin @4",
+      "Sodium Hyaluronate @10",
+      "Betaine @17"
+    ],
+    "actives": [
+      "Arginine @22",
+      "Melissa/Cucumis extracts @8/@9"
+    ],
+    "exposure": [
+      "Fragrance @28 plus essential oils/allergens @29-@39 (not prominent)"
+    ],
+    "mildBase": "excluded: prominent strong anionic Sodium Coco-Sulfate @3",
+    "preservatives": [
+      "Levulinic Acid @14",
+      "Sodium Levulinate @18",
+      "Sodium Anisate @20 (not E3/W-LINE list members)"
+    ]
+  },
+  "projection": {
+    "status": "proposal_blocked_by_review_flags",
+    "thicknessFit": {
+      "fine": "acceptable",
+      "normal": "ideal",
+      "coarse": "ideal"
+    },
+    "thicknessFitConfidence": {
+      "fine": "moderate",
+      "normal": "moderate",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": "T1 from weightPotential moderate and conditioningLevel high (ordinary target, no T6); T4 checked with neighbors W=high, C=moderate after T6. ",
+    "weight": "moderate",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE 1:1 from weightPotential moderate (confidence moderate).",
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1: no qualifying E2 claim unit after E2a; manufacturer source present."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength moderate, D1 false -> regular. I3: neighbor none (high confidence, no I3 check).",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserListingConfidence": "high",
+    "deepCleanserRationale": "D1 false; not_flagged.",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine",
+      "review_thickness_boundary:normal",
+      "review_thickness_boundary:coarse"
+    ],
+    "informationalNotes": [],
+    "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; not evaluated in lane."
+  },
+  "reconciliation": [
+    "focusPrimary provisional general -> moisture (candidate claim on a moisture_supported verdict).",
+    "usageRole provisional regular -> frequent ('Tag für Tag').",
+    "scalpComfortTarget not_targeted confirmed.",
+    "Direct formula properties unchanged."
+  ],
+  "selfCheck": "Fingerprint matches the frozen packet (38d60eb914c0). Formula judgments (cleansing, conditioning, weight, dandruff) were made blind and are unchanged from the hash-pinned formula pass; claims were used only per 3.2/CL-SRC. No ingredient, family count or position window assigned the weight band; the W-line was derived from the frozen list and only gates payload_lipid legs; every skipped candidate is recorded. Three weight subjudgments present; whyNotNeighborBand names the specific boundary; confidence names its limiting factor. Neighbors follow N-ALT. Projection derived mechanically (T1/T6/T4, W-LIVE, I1/I3, D1-D3, S-gates). No comparison with earlier values made in lane.",
+  "uncertainties": [
+    "'Tag für Tag' is not literally in the U2 list; alternative regular.",
+    "conditioningLevel high via C2 (sunflower oil, cetearyl alcohol, guar @21, humectants); neighbor moderate -> T4 flags on all thicknesses."
+  ]
+}

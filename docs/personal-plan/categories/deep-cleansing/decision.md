@@ -145,12 +145,7 @@ Do not use the legacy `reset_intensity` field in Personal Plan selection. It can
 
 Evaluate one active/selected Deep Cleansing product against the required role:
 
-| Verdict | Deterministic meaning |
-|---|---|
-| `ideal` / `passt sehr gut` | Product identity is verified and it supports the required Reset role |
-| `supportive` / `passt mit Einschränkung` | It supports the required role but has one explicit relevant product-specific limitation |
-| `mismatch` / `wechseln empfohlen` | Wrong category or required role is explicitly unsupported |
-| `unknown` / `noch in Prüfung` | Product is pending or a required hard fact is unverified |
+Fit verdicts follow the [canonical fit-verdict model](../../fit-verdict-model.md) (§1–§5, ruled 2026-10-12): this category has gates only, with **Passt**, **Passt nicht**, or **Nicht geprüft** and no `supportive` verdict. Known hard-gate failures take precedence over missing required facts; owned mismatches retain the shared `acknowledge_override` and `leave_uncovered` actions without becoming verified coverage.
 
 Selection precedence:
 
@@ -161,9 +156,9 @@ Selection precedence:
 5. use verified protocol simplicity and practical shared catalog tie-breakers only between otherwise suitable candidates;
 6. stable catalog order resolves a remaining exact tie.
 
-**Implementation (S2a):** for `residue_reset`, a product whose `targetScalpTypes` contains the user's quiz scalp type gets one extra fulfilled row „Kopfhauttyp"; a non-match or an unassessed product emits no criterion (the row reads „nicht bestätigt", the verdict stays `ideal`). New-product selection is the shared Stage-3 comparator over ideal candidates (more fulfilled rows → fewer cautions → catalogue order → price). With every target `null` the pick is identical to before.
+**Implementation (S2a):** For `residue_reset`, a product whose `targetScalpTypes` contains the user's quiz scalp type gets one extra fulfilled row „Kopfhauttyp". A non-match or an unassessed product emits no criterion, so the row remains unconfirmed and the verdict stays **Passt**. New-product selection uses the shared Stage-3 comparator over suitable candidates (more fulfilled rows → fewer cautions → catalogue order → price). With every target `null`, the pick is identical to before.
 
-Soft positioning never rescues the wrong role or downgrades a valid general owned product. A general verified residue product still `passt sehr gut` for an oily-scalp user; an explicit oily-scalp target merely ranks another valid new candidate higher.
+Soft positioning never rescues the wrong role or downgrades a valid general owned product. A general verified residue product still **Passt** for an oily-scalp user; an explicit oily-scalp target merely ranks another valid new candidate higher.
 
 ## Product allocation and reconciliation
 
@@ -172,7 +167,7 @@ Soft positioning never rescues the wrong role or downgrades a valid general owne
 - A product supporting both required roles may cover both without creating a second purchase.
 - Opening a shopping link never marks a product as acquired.
 - A newly acquired or selected product creates a proposed assignment change; the current plan changes only after confirmation.
-- A pending submitted product remains `noch in Prüfung` and does not become an executable day step.
+- A pending submitted product remains `Nicht geprüft` and does not become an executable day step.
 - A user may non-blockingly retain a mismatch as an informed override while the fitting alternative remains on the shopping list.
 
 ## Stage 3 application

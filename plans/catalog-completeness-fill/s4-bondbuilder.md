@@ -6,6 +6,12 @@
 
 ---
 
+## Integration contract — updated S2 into S4 (2026-10-13)
+
+Coverage is confirmed by Nick's explicit integration request: retain S4 timing, late-question assumptions, Aveda cadence, verdict → trust → timing → budget → K18 ranking, Q1 catalogue → price → id ties, shared budget-role ranking, authority equal options and native ordering. Q1 and Q2 are settled for this integration; the historical questions below are not open approval gates. Incoming S2/main supplies the fit evaluator, technology gates and current refinement/Hair Tools machinery. Its price-first/K18-retirement policy is superseded for this S4 integration by the explicit preservation contract.
+
+Authorized scope: resolve the in-progress merge, adapt tests, renumber the generated Aveda migration to `20261013170000_bondbuilder_aveda_damage_cadence.sql`, regenerate and check from frozen prestate, run offline verification and stage resolved files when permitted. No commit, abort, push, network/DB access or `.env.local` edits. Stop at approximately 60 minutes if incomplete. No unresolved product decisions.
+
 ## 0. Facts this plan rests on (verified 2026-10-09)
 
 **Catalogue (prod, active + recommended Bondbuilders; every `products.sort_order` = 0):**

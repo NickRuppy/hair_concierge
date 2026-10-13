@@ -1,0 +1,42 @@
+{
+  "blindId": "W405",
+  "productName": "Monday Haircare Volume Kraft & Fülle Shampoo",
+  "brand": "Monday Haircare",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "VOLUME is the little something-something you never knew your hair needed. It utilizes a thorough cleansing system and lightly hydrating ingredients to invigorate and add body to thin, fine or oily hair. | WHY YOU’LL LOVE IT: Cruelty free | 0% SLS | PH balanced | Dermatologically tested | Award winning | Gardenia scented | 100% recyclable | HERO INGREDIENTS: Ginger extract to invigorate hair and stimulate scalp | Coconut oil to hydrate and add shine | Vitamin E to support hair and scalp health | Shea butter to nourish and soften (Conditioner only) | Provitamin B5 for hair elasticity and split ends (Conditioner only)",
+      "directionsVerbatim": ""
+    },
+    {
+      "sourceType": "retailer_hagel_shop_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Das MONDAY Haircare Volume Shampoo ist ein Kraft & Fülle Shampoo und ideal für feines und lebloses Haar. Es ist mit Ingwerextrakt angereichert, um dem Haar Stärke und Volumen zu verleihen. | Wirkung: Kräftigend, Auffüllend, Volumen | Besonderheit: Keine Tierversuche, Seifenfrei, Vegan | Haartyp: feines Haar | GPSR Hersteller: ZURU GERMANY GmbH, Düsseldorf",
+      "directionsVerbatim": ""
+    },
+    {
+      "sourceType": "retailer_amazon_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "MONDAY Haircare bietet luxuriöse, preisgekrönte Haarpflege für ALLE – und das in Salonqualität zu erschwinglichen Preisen. Das Credo von MONDAY ist, dass niemand für hochwertige Haarpflege, die zudem PETA-zertifiziert ist und 0% SLS enthält, mehr bezahlen muss.",
+      "directionsVerbatim": "Tragen Sie das Shampoo auf das feuchte Haar auf, massieren Sie es ein, um Schaum zu erzeugen, und spülen Sie es gründlich aus. Um das größte Volumen zu erhalten, stellen Sie sicher, dass Sie das Shampoo in die Kopfhaut einmassieren."
+    },
+    {
+      "sourceType": "retailer_sunside75",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Das Volume Shampoo ist eine feuchtigkeitsspendende Formel, die dünnem und glattem Haar mehr Fülle verleiht und es voluminöser aussehen lässt. | Das leichte Shampoo wirkt von der Kopfhaut bis in die Spitzen, um das Haar von Unreinheiten zu befreien und ihm ein frisches Finish zu verleihen. | Panthenol, das für seine nährenden Eigenschaften bekannt ist, spendet den Strähnen Feuchtigkeit und verbessert das Aussehen von Spliss. | Ingwerwurzelextrakt hilft, die Kopfhaut zu unterstützen, um optimale Bedingungen für ein gesundes Haarwachstum zu schaffen. | Monday Haircare ist von PETA als Marke zertifiziert, die keine Tierversuche durchführt.",
+      "directionsVerbatim": "Eine kleine Menge in das nasse Haar einmassieren, aufschäumen und anschließend ausspülen. Für ein optimales Ergebnis anschließend den Conditioner von Monday Haircare verwenden."
+    },
+    {
+      "sourceType": "retailer_dm_at",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Volumenshampoo | Mit Ingwerextrakt | Für dünnes und feines Haar | PETA-zertifiziert | Sulfatfreie Tenside | Zaubern Sie sich bei jeder Haarwäsche ein fabelhaftes Volumen in die Haare – mit dem Volume Kraft & Fülle Shampoo von MONDAY. Angereichert mit Ingwerextrakt schenkt die Haarpflege dünnem und feinem Haar unwiderstehliches Volumen und die nötige Kraft. Die Rezeptur des Volumenshampoos ist PETA-zertifiziert und enthält sulfatfreie Tenside. Obendrein ist die Formulierung dermatologisch getestet. Der Pumpspender ermöglicht eine einfache Dosierung. Für voluminöses und kraftvolles Haar.",
+      "directionsVerbatim": "Auf das nasse Haar auftragen, sanft aufschäumen und ausspülen"
+    }
+  ]
+}

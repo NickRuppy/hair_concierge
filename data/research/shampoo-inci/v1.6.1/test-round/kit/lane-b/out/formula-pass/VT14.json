@@ -1,0 +1,155 @@
+{
+  "blindId": "VT14",
+  "inciFingerprintSha256": "569a5433f0b64850d0474c409e8dd4f1088f7d63eda57609b0128753e49f505a",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, claims hidden)",
+  "standard": "shampoo-classification-v1.6.1 candidate text (unlocked)",
+  "identity": {
+    "packSize": "350 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "ID-2: packet entries already merged (Aqua/Water/Eau = one entry); positions are normalized one-based positions of the 34-entry list",
+    "e3ProminenceCutoff": "Parfum/Fragrance @31 -> positions 1-30 prominent"
+  },
+  "formulaFacts": {
+    "surfactantSystem": [
+      "Sodium Lauroyl Methyl Isethionate @2 - mild anionic (isethionate), earliest prominent cleansing surfactant",
+      "Cocamidopropyl Betaine @3 - amphoteric, buffer",
+      "Disodium Laureth Sulfosuccinate @4 - mild anionic, buffer",
+      "Sodium Lauryl Sulfoacetate @5 - mild anionic, buffer",
+      "Not cleansing/not buffer (C3): Glycol Distearate @11, Trideceth-5 @18, PEG-150 Pentaerythrityl Tetrastearate @20, PPG-2 Hydroxyethyl Cocamide @22 (alkanolamide-type thickener), Sodium Chloride @17",
+      "No strong anionic"
+    ],
+    "conditioningAndWeightRoutes": {
+      "silicone": ["Amodimethicone/Morpholinomethyl Silsesquioxane Copolymer @16 (amino-silicone)"],
+      "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @13"],
+      "cationic_conditioner": ["Lauryl Methyl Gluceth-10 Hydroxypropyldimonium Chloride @15", "Quaternium-95 @21"],
+      "payload_lipid": ["Argania Spinosa Kernel Oil @7", "Helianthus Annuus (Sunflower) Seed Oil @9"],
+      "weak_refatter": [],
+      "protein_film": ["Hydrolyzed Wheat Protein @8", "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol @12"],
+      "film_former": [],
+      "pearlizing_fatty_route_for_C2": ["Glycol Distearate @11"],
+      "humectantContext": ["Glycerin @6", "Sodium PCA @14", "Propanediol @23 (solvent)"],
+      "excluded": ["Glycol Distearate @11 (pearlizing wax)", "PEG-150 Pentaerythrityl Tetrastearate @20 (PEG thickener)", "PPG-2 Hydroxyethyl Cocamide @22 (alkanolamide thickener)", "Trideceth-5 @18 (emulsifier)", "Phyllostachys Nigra Leaf Extract @10 (extract)", "Pentaerythrityl Tetra-Di-T-Butyl Hydroxyhydrocinnamate @24 (antioxidant)"]
+    },
+    "actives": ["no recognized anti-dandruff active"],
+    "scalpExposureFlags": ["Parfum @31 not prominent", "Alpha-Isomethyl Ionone @25 (allergen, prominent position but allergens are not fragrance markers for E3)", "no cooling agent, no essential oil", "E4 comfort list: no prominent route", "E4 humectant/refatting routes prominent: Glycerin @6, Argan Oil @7, Sunflower Seed Oil @9, Sodium PCA @14"]
+  },
+  "wLine": {
+    "wLine": "Alpha-Isomethyl Ionone @25",
+    "candidateClasses": ["fragrance"],
+    "cap": "e3Point @31 (Parfum/Fragrance)",
+    "alphabeticalRun": "none",
+    "skipped": [
+      "w_line_skipped:Dehydroacetic Acid@19 - clause (ii) failed: alkanolamide-type thickener PPG-2 Hydroxyethyl Cocamide @22 listed after it and before the cap"
+    ],
+    "plausibilityOfWLine": "Alpha-Isomethyl Ionone @25: (i) cleansing surfactants before (@2-@5); (ii) between @25 and the cap @31 only Benzoic Acid, Lactic Acid, Potassium Sorbate, Disodium EDTA, Phenoxyethanol - no cleansing surfactant, alkanolamide or pearlizing wax",
+    "codes": [],
+    "payloadLipidMaterial": ["Argan Oil @7", "Sunflower Seed Oil @9"],
+    "payloadLipidNonMaterial": []
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Low by C6: no strong anionic; earliest prominent cleansing surfactant is the mild anionic Sodium Lauroyl Methyl Isethionate @2 with the prominent amphoteric Cocamidopropyl Betaine @3 directly after it. Further mild anionics @4/@5 stay mild; no C3b member decides the value. Counter-signal noted (three mild anionics) but the betaine-buffered isethionate chassis is the C6 archetype.",
+      "ruleIds": ["C3", "C4", "C6"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "High by C2: prominent amino-silicone (@16) plus cationic polymer (Guar HPTC @13) plus pearlizing route (Glycol Distearate @11) plus closed-list humectants (Glycerin @6, Sodium PCA @14); reinforced by early payload oils (Argan @7, Sunflower @9), a cationic conditioner (@15, Quaternium-95 @21) and two proteins (@8, @12). Multiple complementary systems, all prominent.",
+      "ruleIds": ["C2", "E3"]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "silicone": ["Amodimethicone/Morpholinomethyl Silsesquioxane Copolymer @16"],
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @13"],
+        "cationic_conditioner": ["Lauryl Methyl Gluceth-10 Hydroxypropyldimonium Chloride @15", "Quaternium-95 @21"],
+        "payload_lipid": ["material: Argania Spinosa Kernel Oil @7, Helianthus Annuus Seed Oil @9 (before W-line @25)"],
+        "weak_refatter": [],
+        "protein_film": ["Hydrolyzed Wheat Protein @8", "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol @12"],
+        "film_former": [],
+        "reset": ["mild anionic @2, @4, @5", "amphoteric Cocamidopropyl Betaine @3"],
+        "humectantContext": ["Glycerin @6", "Sodium PCA @14"],
+        "excluded": ["Glycol Distearate @11", "PEG-150 Pentaerythrityl Tetrastearate @20", "PPG-2 Hydroxyethyl Cocamide @22", "Trideceth-5 @18"],
+        "unresolved": ["Quaternium-95 @21 - read as quaternary conditioning agent; not band-moving"]
+      },
+      "depositionLoad": "high - two early material oils converge with cationic guar, an amino-silicone, a quaternized glucoside and proteins",
+      "persistence": "moderate - amino-silicone and guar are plausibly persistent; liquid oils (not waxy) and proteins are less persistent",
+      "resetCapacity": "weak - C6 low isethionate/betaine chassis",
+      "counterevidence": "Oils are liquid (not waxy/hydrogenated); amino-silicone copolymer is mid-list; ordinary rinse-off; actual oil doses unknown.",
+      "whyThisBand": "High: W-RICH holds (material Argan @7 and Sunflower @9 converge with guar @13 and amino-silicone @16) with limited reset (weak), the rich route of the high anchor; convergence route also holds (payload lipid + cationic polymer + silicone + cationic conditioner + protein).",
+      "whyNotNeighborBand": "Not moderate: both high routes hold and the mild chassis does not offset them; the residual doubt is the dose and persistence of liquid oils, which sets confidence, not the band (P0).",
+      "confidenceLimitingFactor": "Liquid oils of unknown dose and only moderate persistence; realistic unknowns could move the band to moderate.",
+      "rationale": "High: material oils (W-line Alpha-Isomethyl Ionone @25) plus guar plus amino-silicone on a weak-reset C6 chassis (W-RICH + limited reset; convergence). W1 not applicable (no sulfate chassis).",
+      "ruleIds": ["6.3", "6.6", "W-RICH", "W-LINE", "W1", "W2", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "repair",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "dual_supported (provisional)",
+        "moistureRoutes": ["Glycerin @6", "Sodium PCA @14", "Argan Oil @7", "Sunflower Seed Oil @9"],
+        "repairRoutes": ["Hydrolyzed Wheat Protein @8", "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol @12", "Amodimethicone/Morpholinomethyl Silsesquioxane Copolymer @16"],
+        "sharedConditioningRoutes": ["Guar Hydroxypropyltrimonium Chloride @13", "Lauryl Methyl Gluceth-10 Hydroxypropyldimonium Chloride @15", "Glycol Distearate @11"],
+        "limitation": "Rinse-off; protein and silicone doses unknown"
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "No claims visible; formula supports both repair and moisture.",
+      "decisionTrace": "Claim direction null (blind); formula dual_supported; provisional general.",
+      "rationale": "Provisional formula-only: general until a claim selects the job; a repair or moisture claim would be compatible.",
+      "ruleIds": ["7.2", "7.3", "F1", "3.1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["moisture"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no positioning visible.",
+      "rationale": "Provisional [].",
+      "ruleIds": ["8", "F3"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": ["alternating impossible (not strong)", "treatment impossible (not_supported)", "frequent needs U2 wording"],
+      "rationale": "Provisional default regular.",
+      "ruleIds": ["9", "U1", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: positioning hidden. CSA formula half met via prominent E4 humectant/refatting routes (Glycerin @6, Argan @7, Sunflower @9, Sodium PCA @14); no prominent E4 comfort route (relevant to an S-SENSITIVE gate later).",
+      "ruleIds": ["10", "CSA", "SC1", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: none of the four recognized actives in the complete INCI.",
+      "ruleIds": ["11", "DS1"]
+    }
+  },
+  "unresolvedMaterialIngredients": [
+    "Quaternium-95 @21: read as cationic_conditioner; not band-moving"
+  ],
+  "uncertainties": [
+    "weightPotential high vs moderate: liquid oils of unknown dose; alternative moderate with high neighbor.",
+    "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol @12 read as protein_film (not silicone)."
+  ]
+}

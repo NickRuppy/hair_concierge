@@ -1,0 +1,288 @@
+{
+  "blindId": "VS08",
+  "identity": {
+    "brand": "ISANA",
+    "productName": "ISANA MED Shampoo Totes Meer, 200 ml",
+    "packSize": "200 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "0a9ce49c3c9a71eeb4cd8e8ebc4dc4b2431235b5e08cbd0e096985e48ddbbda3",
+    "normalization": "No split entries; normalized positions = packet positions 1-19.",
+    "completeness": "complete (tier 1)",
+    "e3ProminenceCutoff": "Parfum@7; prominent 1-6."
+  },
+  "formulaPassReference": {
+    "file": "/Users/nick/AI_work/hair_conscierge/.worktrees/shampoo-v162/plans/shampoo-v162/test/kit/lane-b/out/formula-pass/VS08.json",
+    "note": "hash-pinned blind record, not edited"
+  },
+  "claimGrading": [
+    "pack_back: moderate.",
+    "Rossmann page (packet sourceKind manufacturer_de): moderate.",
+    "Product name 'ISANA MED Shampoo Totes Meer' names no scalp state."
+  ],
+  "reconciliation": [
+    "Sensitive-scalp claims revealed: 'die empfindliche und juckende Kopfhaut beruhigt', 'juckreizlindernder Wirkstoff-Komplex', 'Kopfhaut beruhigend' (moderate). 'Schutz vor Austrocknung für Kopfhaut & Haar' is protective (no dry positioning).",
+    "scalpComfortTarget stays not_targeted (CSA fails), so S-SENSITIVE fails -> S-FAIL: ordinary with review_specialist_gate_failed (unlisted_route_candidate:Lauryl Lactate).",
+    "focusPrimary stays general (low -> moderate): scalp_active incompatible; no lengths-care or oily claim.",
+    "Claim-to-INCI: 'Totes Meer Salz' -> Maris Sal@10; 'juckreizlindernder Wirkstoff-Komplex' unnamed (plausibly Allantoin@11/Bisabolol@12/Menthol@8, none prominent). No conflict.",
+    "Formula-only properties unchanged (conditioning high and weight moderate rest on the Lauryl Lactate payload_lipid reading, unchanged by claims)."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic is the ether-type Sodium Laureth Sulfate@2, buffered by prominent Cocamidopropyl Betaine@3, no reinforcing strong anionic (settled C1 core). Lauryl Lactate@4 is an emollient ester (not a lactylate; no C3 class); Laureth-4@9 is a low-ethoxylate alcohol ethoxylate after Parfum (not cleansing, not buffer). Formula-only.",
+      "ruleIds": [
+        "C1",
+        "C3",
+        "C4"
+      ],
+      "counterSignal": "Single buffer CAPB@3.",
+      "blindToFinal": "unchanged (formula-only property; claims may not move it, 3.2)"
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High by C2 with a payload-lipid substitute: prominent nonvolatile emollient ester Lauryl Lactate@4 (6.3 payload_lipid, 'emollient esters') takes the place of the early silicone; cationic polymer Guar Hydroxypropyltrimonium Chloride@5 (prominent); pearlizing/fatty route Glycol Distearate@6 (prominent); deliberate humectant route Glycerin@17 (own INCI entry). Counter-signals: Lauryl Lactate is a light, short-chain ester (if read as weak_refatter instead, C2 fails and the value is moderate); Glycerin is listed late after the preservatives. Confidence capped at moderate; neighbor moderate.",
+      "ruleIds": [
+        "C2",
+        "6.3",
+        "Section 5 anchors",
+        "N-ALT"
+      ],
+      "counterSignal": "Lauryl Lactate is a light short-chain ester; Glycerin late (neighbor moderate).",
+      "blindToFinal": "unchanged (formula-only property; claims may not move it, 3.2)"
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "cationic_polymer": [
+          "Guar Hydroxypropyltrimonium Chloride@5"
+        ],
+        "payload_lipid": [
+          "Lauryl Lactate@4 (emollient ester; material, before W-line@7)"
+        ],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": [
+          "Sodium Laureth Sulfate@2 (strong anionic, ether type)",
+          "Cocamidopropyl Betaine@3 (amphoteric)"
+        ],
+        "humectantContext": [
+          "Glycerin@17"
+        ],
+        "excluded": [
+          "Glycol Distearate@6 (pearlizing wax, excluded for weight, 6.4)",
+          "Laureth-4@9 (low-ethoxylate ethoxylate, no deposition family)",
+          "Menthol@8 (cooling agent)",
+          "Terpineol@19 (fragrance material)",
+          "Allantoin@11, Bisabolol@12 (actives)",
+          "Maris Sal@10, Sodium Chloride@15 (salts)",
+          "Citric Acid@16, Formic Acid@18 (pH)"
+        ],
+        "unresolved": []
+      },
+      "wLineRecord": {
+        "wLine": "Parfum@7",
+        "wLineClasses": [
+          "fragrance"
+        ],
+        "cap": "e3Point Parfum@7",
+        "alphabeticalRun": "none",
+        "skippedCandidates": [],
+        "codes": [],
+        "plausibility": "No candidate before the cap; the E3 marker Parfum@7 is the earliest candidate: (i) Sodium Laureth Sulfate@2 before it; (ii) nothing between it and the cap. W-line = cap.",
+        "payloadLipidMaterial": [
+          "Lauryl Lactate@4"
+        ],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "moderate",
+      "persistence": "moderate",
+      "resetCapacity": "moderate",
+      "counterevidence": "W-RICH is formally established (material payload_lipid Lauryl Lactate@4 converging with a prominent cationic guar@5), which argues for high.",
+      "whyThisBand": "A prominent cationic guar plus a prominent emollient ester (material under W-LINE) plausibly leave noticeable but bounded residue; calling it lightweight would understate the guar-plus-lipid deposition.",
+      "whyNotNeighborBand": "Not high: W-RICH holds but reset is not limited (resetCapacity moderate from a buffered SLES/betaine chassis, W-RICH limited-reset clause); the convergence route fails because Lauryl Lactate is a light liquid ester that is not plausibly persistent, so only the guar is a persistent system. Glycol Distearate is excluded for weight. High recorded as neighbor per W-RICH.",
+      "confidenceLimitingFactor": "W-RICH counter-signal and the payload_lipid versus weak_refatter reading of Lauryl Lactate (weak_refatter would point toward low/moderate).",
+      "rationale": "Moderate (6.6, W-RICH limited reset): material payload_lipid plus cationic guar converge, but moderate reset and low persistence of the light ester keep it from the high anchor.",
+      "ruleIds": [
+        "6.3",
+        "6.4",
+        "6.6",
+        "W-RICH",
+        "W-LINE",
+        "N-ALT"
+      ],
+      "counterSignal": "W-RICH formally holds (material Lauryl Lactate@4 + guar@5) - neighbor high.",
+      "blindToFinal": "unchanged (formula-only property; claims may not move it, 3.2)",
+      "formulaIdentifiers": {
+        "fingerprint": "0a9ce49c3c9a71eeb4cd8e8ebc4dc4b2431235b5e08cbd0e096985e48ddbbda3",
+        "sourceTier": 1,
+        "completeness": "complete",
+        "captureDate": "not given in the stage-A packet"
+      }
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "neighboringAlternative": "scalp_active",
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": [
+          "Glycerin@17"
+        ],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [
+          "Lauryl Lactate@4",
+          "Guar Hydroxypropyltrimonium Chloride@5",
+          "Glycol Distearate@6"
+        ],
+        "limitation": "No lengths claim."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Sensitive/itch positioning (moderate) whose formula condition fails.",
+      "decisionTrace": "Claim direction: sensitive/itchy scalp (moderate). Formula compatible: no (not targeted). No other in-scope claim. Decision: general.",
+      "rationale": "general: the only specialist claim is not formula-compatible.",
+      "ruleIds": [
+        "7.2",
+        "SC1",
+        "CSA"
+      ],
+      "blindToFinal": "general (low) -> general (moderate)"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "decisionTrace": "Empty default considered and kept: no secondary claim.",
+      "rationale": "No secondary candidate.",
+      "counterSignal": "None.",
+      "ruleIds": [
+        "Section 8"
+      ],
+      "blindToFinal": "unchanged []"
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Default regular considered; trigger code none; evidence: no directions captured, no frequency wording; default regular.",
+      "counterSignal": "None.",
+      "ruleIds": [
+        "Section 9"
+      ],
+      "blindToFinal": "regular (low) -> regular (high)"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "csaRoute": "CSA not met: listed routes Allantoin@11, Bisabolol@12 (comfort), Glycerin@17 (humectant) are not prominent; MB excluded by Sodium Laureth Sulfate@2. Prominent unlisted candidate: Lauryl Lactate@4 (rejected by R18).",
+      "rationale": "not_targeted: SC1 positioning exists (moderate) but CSA fails; missing route: a prominent listed comfort or humectant route.",
+      "counterSignal": "Menthol@8 cooling (not prominent).",
+      "ruleIds": [
+        "Section 10",
+        "CSA",
+        "MB",
+        "E4",
+        "SC1"
+      ],
+      "blindToFinal": "unchanged"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no Piroctone Olamine, Climbazole, Selenium Sulfide or Selenium Disulfide (Section 11).",
+      "ruleIds": [
+        "Section 11"
+      ],
+      "counterSignal": "None.",
+      "blindToFinal": "unchanged (formula-only property; claims may not move it, 3.2)"
+    }
+  },
+  "projection": {
+    "status": "proposal_blocked_by_review_flags",
+    "thicknessFit": {
+      "fine": "acceptable",
+      "normal": "ideal",
+      "coarse": "ideal"
+    },
+    "thicknessFitConfidence": {
+      "fine": "moderate",
+      "normal": "moderate",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": "T1 with W=moderate, C=high; ordinary target: T1 unchanged, no T6; T4 checked with N-ALT neighbors after T6. Claims about hair type never change fit (T2).",
+    "weight": "moderate",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: weightPotential moderate -> moderate, 1:1, written to every row.",
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "moderate",
+        "rationale": "S-ORDINARY way 4: claimed sensitive target failed its formula gate (S-FAIL); nothing else passed. Confidence moderate."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [],
+    "researchCombinationConfidence": null,
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength moderate -> regular; D1 false. I3 recomputed with neighbor 'none'.",
+    "explicitResetPositioning": false,
+    "explicitResetRationale": "D1 false: no 'Tiefenrein', 'Deep Clean', 'Clarifying Shampoo' or 'Detox-Reinigung' stem in the name or manufacturer/pack claims, and no occasional-use direction.",
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserListingConfidence": "high",
+    "deepCleanserRationale": "D2 not met: D1 false and cleansingStrength not strong; no deep-cleanser record applies (deepCleanserRecord not applicable).",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_specialist_gate_failed:sensitive (S-SENSITIVE formula gate: scalpComfortTarget not_targeted because CSA failed - Allantoin@11, Bisabolol@12, Glycerin@17 not prominent (after Parfum@7), MB excluded by Sodium Laureth Sulfate@2; unlisted_route_candidate:Lauryl Lactate)",
+      "review_thickness_boundary:fine,normal,coarse"
+    ],
+    "informationalNotes": [],
+    "catalogDependent": "review_live_value_differs is resolved by the orchestrator after freeze (lanes never see live rows); no deep-cleanser record id needed."
+  },
+  "selfCheck": "Fingerprint matches the frozen packet (asserted by the builder); formula-pass judged with claims hidden and is hash-pinned, not edited; no ingredient, family count or position window assigned a band (the W-line gated only payload_lipid legs); W-line derived exactly per W-LINE with skipped candidates recorded; depositionLoad, persistence and resetCapacity present with rationales; counterevidence and whyNotNeighborBand specific (W2 where it applies); confidence names its limiting uncertainty; neighbors follow N-ALT; projection fields derived mechanically (T1/T6/T4, W-LIVE, I1/I3, 13.7, 13.8); no catalog or live value used.",
+  "uncertainties": [
+    "Lauryl Lactate@4 family (payload_lipid vs weak_refatter) carried from the blind pass; it sets conditioning high (C2) and weight moderate with neighbor high, and through them the fine/normal/coarse T4 flags. Under the weak_refatter reading: conditioning moderate, weight low/moderate, coarse acceptable.",
+    "'juckreizlindernder Wirkstoff-Komplex' names no ingredient; no claim-to-INCI conflict recorded."
+  ]
+}

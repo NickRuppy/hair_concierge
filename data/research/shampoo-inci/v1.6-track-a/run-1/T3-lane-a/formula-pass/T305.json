@@ -1,0 +1,194 @@
+{
+  "blindId": "T305",
+  "inciFingerprintSha256": "4d21bc975505079b916aa495f148440be891511f6de5cfb207eb9bfeb79bd9a0",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "'AQUA / WATER' one entry; 'PARFUM / FRAGRANCE' one entry; positions = packet positions. E3: Parfum at 21; prominent = 1-20.",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "moderate",
+    "rawInciCount": 21
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "high",
+      "rationale": "C5: Ammonium Lauryl Sulfate (2) is an alkyl-sulfate defining anionic with only one prominent buffer (Cocamidopropyl Betaine 4); polyglyceryl esters and charcoal are not buffers -> strong.",
+      "neighboringAlternative": "none",
+      "counterSignal": "Nigella oil and guar add refatting/conditioning; they never move the C5 convention."
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "W-RICH by formula: prominent payload lipid (Nigella Sativa Seed Oil 5) converging with a cationic guar (8); Section 5 counts W-RICH as a rich architecture. C2 itself is not met (no pearlizing/fatty route; Polyglycerin-10 is not a listed humectant).",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "Single liquid oil + single guar in a strong ALS chassis; without C2 the care may be only one meaningful system (moderate). Value rests on the mechanical W-RICH reading."
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-RICH (Nigella oil 5 + guar 8) with a strong reset is not limited reset, so high is unavailable; per W-RICH the band is moderate with W-RICH as counter-signal.",
+      "neighboringAlternative": "high",
+      "counterSignal": "Strong ALS reset and a liquid (non-waxy) oil argue that residue could be light.",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "one plant oil + one guar, both fairly early"
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "liquid oil and light guar, washed by a strong chassis"
+        },
+        "resetCapacity": {
+          "value": "strong",
+          "rationale": "C5 alkyl sulfate with a single buffer"
+        }
+      },
+      "whyThisBand": "W-RICH present; with moderate/strong reset the standard sets moderate unless the high route holds.",
+      "whyNotNeighborBand": "high needs limited (weak) reset or multiple persistent systems not offset; reset here is strong. low is closed off by W-RICH (two converging families), see uncertainty.",
+      "evidenceByFamily": {
+        "payload_lipid": [
+          [
+            "Nigella Sativa Seed Oil",
+            5
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Guar Hydroxypropyltrimonium Chloride",
+            8
+          ]
+        ],
+        "excluded": [
+          [
+            "Charcoal Powder",
+            9,
+            "absorbent, not deposition"
+          ],
+          [
+            "Polyglyceryl-10 Myristate",
+            12,
+            "emulsifier"
+          ],
+          [
+            "Polyglyceryl-10 Stearate",
+            13,
+            "emulsifier"
+          ],
+          [
+            "Triethyl Citrate",
+            6,
+            "solvent/ester"
+          ]
+        ],
+        "context_humectant": [
+          [
+            "Polyglycerin-10",
+            11
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Ammonium Lauryl Sulfate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            4
+          ]
+        ],
+        "unresolved": []
+      }
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "rationale": "Charcoal + strong ALS chassis suggests a purifying/oily role, but F6 clarifying compatibility fails while conditioningLevel is high; needs claims."
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low"
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "rationale": "cleansing strong; alternating needs reset intent (U4)."
+    },
+    "scalpComfortTarget": {
+      "value": "unknown",
+      "confidence": "low",
+      "rationale": "CSA passes only via Nigella Sativa Seed Oil (5, payload lipid on E4 humectant/refatting list); strong cleansing is a counter-signal."
+    }
+  },
+  "careDirection": {
+    "verdict": "nonspecific",
+    "rationale": "Oil + guar conditioning distinguishes no repair/moisture direction."
+  },
+  "formulaGateFacts": {
+    "csa": "pass (Nigella Sativa Seed Oil 5)",
+    "promComfortRoute": false,
+    "promHumectantRoute": true,
+    "sOilyFormulaClause": "fail (conditioning high) - neighbor moderate would pass"
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Ammonium Lauryl Sulfate",
+      "position": 2,
+      "role": "defining anionic, alkyl sulfate type (C5)"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "buffer (only one)"
+    },
+    {
+      "ingredient": "Nigella Sativa Seed Oil",
+      "position": 5,
+      "role": "payload_lipid (nonvolatile plant oil); E4 humectant/refatting route"
+    },
+    {
+      "ingredient": "Triethyl Citrate",
+      "position": 6,
+      "role": "solvent/ester, no deposition role"
+    },
+    {
+      "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+      "position": 8,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Charcoal Powder",
+      "position": 9,
+      "role": "not a cleansing route (C3)"
+    },
+    {
+      "ingredient": "Polyglycerin-10",
+      "position": 11,
+      "role": "polyol; not on the closed humectant list"
+    },
+    {
+      "ingredient": "Polyglyceryl-10 Myristate",
+      "position": 12,
+      "role": "polyglyceryl ester, not a route"
+    },
+    {
+      "ingredient": "Polyglyceryl-10 Stearate",
+      "position": 13,
+      "role": "polyglyceryl ester, not a route"
+    },
+    {
+      "ingredient": "Parfum / Fragrance",
+      "position": 21,
+      "role": "E3 marker"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

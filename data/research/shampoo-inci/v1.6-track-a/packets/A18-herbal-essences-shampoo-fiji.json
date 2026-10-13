@@ -1,0 +1,83 @@
+{
+  "slot": "A18",
+  "productId": "2e887538-3b92-4344-9bbd-1761383ba4a6",
+  "name": "Herbal Essences Shampoo Fiji (Rossmann: Haarshampoo Fiji Schwerelose Feuchtigkeit)",
+  "brand": "Herbal Essences (Procter & Gamble)",
+  "packSize": "350 ml",
+  "gtins": [
+    "8006530290012"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/3130636/herbal-essences-shampoo-fiji",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "8006530290012 (dm-Artikelnummer 3130636; 'Shampoo Fiji, 350 ml'; Anschrift Procter & Gamble, Schwalbach; lieferbar)",
+      "inciVerbatim": "Ingredients: Aqua, Sodium Cocoyl Isethionate, Lauramidopropyl Betaine, Cocamidopropyl Betaine, Sodium Lauroyl Sarcosinate, Citric Acid, Sodium Chloride, Parfum, Sodium Benzoate, Sodium Salicylate, Polyquaternium-10, Sodium Citrate, Tetrasodium EDTA, Hexamethylindanopyran, Linalool, Linalyl Acetate, Citrus Aurantium Peel Oil, Histidine, Sodium Hydroxide, Coumarin, Limonene, Vanillin, Terpineol, Glycerin, Cocos Nucifera Fruit Juice",
+      "claimsVerbatim": "Feuchtigkeitsshampoo für das Haar | Mit exotischem Kokosnussextrakt | Für weiches und geschmeidiges Haar | Vegan | Das Fiji Shampoo von Herbal Essences reinigt das Haar sanft und spendet Feuchtigkeit. Angereichert mit exotischem Kokosnussextrakt, entführt der Duft in ein tropisches Paradies und verwöhnt die Sinne. Die Formel hinterlässt das Haar spürbar weich und geschmeidig, ohne es zu beschweren. Das Shampoo umhüllt das Haar mit einem herrlichen Schaum und sorgt für ein gepflegtes Haargefühl. | Wirkung: Pflege, Feuchtigkeit | Produkteigenschaften: ohne Silikone, ohne Sulfat | Ohne Silikone | Ohne Sulfat",
+      "directionsVerbatim": "Anwendung: Großzügig auf das nasse Haar auftragen, aufschäumen und gründlich ausspülen. Anschließend Pflegespülung anwenden."
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-herbal-essences-haarshampoo-fiji-schwerelose-feuchtigkeit/p/8006530290012",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "gtinShown": "8006530290012 (URL + schema.org sku; Rossmann Artikelnummer 216614; 350 ml; Kontakt Procter & Gamble)",
+      "inciVerbatim": "Aqua, Sodium Cocoyl Isethionate, Lauramidopropyl Betaine, Cocamidopropyl Betaine, Sodium Lauroyl Sarcosinate, Citric Acid, Sodium Chloride, Parfum, Sodium Benzoate, Sodium Salicylate, Polyquaternium-10, Sodium Citrate, Tetrasodium EDTA, Hexamethylindanopyran, Linalool, Linalyl Acetate, Citrus Aurantium Peel Oil, Histidine, Sodium Hydroxide, Coumarin, Limonene, Vanillin, Terpineol, Glycerin, Cocos Nucifera Fruit Juice",
+      "claimsVerbatim": "Erlebe Deinen Fiji Moment und atme den exotischen Kokosnussextrakt ein. Genieße eine sensorische Auszeit mit dem Herbal Essences Fiji Shampoo für schwerelose Feuchtigkeit. Es reinigt sanft und hinterlässt das Haar weich und geschmeidig. Angereichert mit Kokosnussextrakt, enthält dieses sulfatfreie*, vegane*** Shampoo 99 % Inhaltsstoffe natürlichen Ursprungs** und umhüllt deine Sinne mit einem herrlichen Schaum. | mit Kokosnussextrakt | reinigt und hydratisiert sanft das Haar und hinterlässt es weich und geschmeidig | sorgt für schwerelose Feuchtigkeit für weiches Haar | sulfatfreie*, vegane*** und tierversuchsfreie Formel, inspiriert von der Natur | *frei von sulfatierenden Tensiden **siehe Rückseite der Flasche ***keine tierischen Inhaltsstoffe oder Nebenprodukte",
+      "directionsVerbatim": "Großzügig auf das nasse Haar auftragen, aufschäumen und gründlich ausspülen. Anschließend Pflegespülung anwenden."
+    },
+    {
+      "url": "https://www.for-me-online.de/marken/herbal-essences/Herbal-Essences-Fiji-Shampoo",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_brand_portal_de (P&G 'for me'; herbalessences.de/de-de redirects here)",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "none (reviews page; no INCI published)",
+      "inciVerbatim": "(no ingredient list on page)",
+      "claimsVerbatim": "Shampoo für schwerelose Feuchtigkeit. Shampoo frei von sulfatierenden Tensiden. Vegan.",
+      "directionsVerbatim": "(none)"
+    }
+  ],
+  "conflicts": [],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Cocoyl Isethionate",
+    "Lauramidopropyl Betaine",
+    "Cocamidopropyl Betaine",
+    "Sodium Lauroyl Sarcosinate",
+    "Citric Acid",
+    "Sodium Chloride",
+    "Parfum",
+    "Sodium Benzoate",
+    "Sodium Salicylate",
+    "Polyquaternium-10",
+    "Sodium Citrate",
+    "Tetrasodium EDTA",
+    "Hexamethylindanopyran",
+    "Linalool",
+    "Linalyl Acetate",
+    "Citrus Aurantium Peel Oil",
+    "Histidine",
+    "Sodium Hydroxide",
+    "Coumarin",
+    "Limonene",
+    "Vanillin",
+    "Terpineol",
+    "Glycerin",
+    "Cocos Nucifera Fruit Juice"
+  ],
+  "canonicalReason": "dm.de and rossmann.de, both GTIN 8006530290012 / 350 ml, publish the identical 25-item list; identical to the 2026-09-03 pilot packet. The German brand portal (for-me-online.de) carries no INCI, so the formula tier is retailers-only. No pack photo inspected.",
+  "inciFingerprintSha256": "057ef537b8cb1c0e3bfe089504cba2f2348f6018980b584cd9e903664c0292dc",
+  "normalization": "Split the canonical INCI on ',' (or '|' / '•' separators where the source uses them; dm renders a non-breaking hyphen as '|' inside names, e.g. 'COCO|GLUCOSIDE' = 'Coco-Glucoside'); per ingredient: trim, collapse internal whitespace, merge split synonym entries (e.g. 'Aqua (Water, Eau)' stays one item), strip trailing full stop; canonicalInci keeps the published capitalisation/asterisks; for the hash each item is lower-cased; items joined with '|' and sha256 over the UTF-8 string.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 3,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Catalog name 'Herbal Essences Shampoo Fiji' = dm 'Shampoo Fiji, 350 ml' = Rossmann 'Haarshampoo Fiji Schwerelose Feuchtigkeit'.",
+    "Claim-INCI check: 'sulfatfrei' = no sulfate surfactants listed (Sodium Cocoyl Isethionate / Sodium Lauroyl Sarcosinate / betaines); 'ohne Silikone' ok. 'Kokosnussextrakt' corresponds to Cocos Nucifera Fruit Juice, the last list position - marketing prominence far above its INCI position, not a missing ingredient. No conflict.",
+    "Same formula as the 2026-09-03 pilot (sha256 over upper-case ', '-joined list there; this fingerprint uses the v1.6 lower-case '|' normalization)."
+  ]
+}

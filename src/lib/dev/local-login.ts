@@ -6,14 +6,54 @@ export const LOCAL_DEV_LOGIN_FLAG = "LOCAL_DEV_LOGIN_ENABLED"
 
 const DEFAULT_LOCAL_EMAIL = "local-dev@hairconscierge.test"
 const DEFAULT_LOCAL_PASSWORD = "LocalDev!2026"
-const LOCAL_DEV_HOSTNAMES = new Set(["localhost", "127.0.0.1", "::1", "[::1]"])
+type LocalDevRequestSource = {
+  headers: Headers
+  socket?: { remoteAddress?: string }
+}
+
+function isLoopbackAuthority(value: string): boolean {
+  if (value.toLowerCase() === "::1") return true
+  const match = /^(localhost|127\.0\.0\.1|\[::1\])(?::([0-9]{1,5}))?$/i.exec(value)
+  return Boolean(match && (!match[2] || Number(match[2]) <= 65535))
+}
+
+function isLoopbackClient(value: string): boolean {
+  // Node may expose an IPv4 socket as an IPv4-mapped IPv6 address.
+  return value.toLowerCase() === "::ffff:127.0.0.1" || isLoopbackAuthority(value)
+}
 
 export function isLocalDevLoginEnabled(): boolean {
   return process.env.NODE_ENV === "development" && process.env[LOCAL_DEV_LOGIN_FLAG] === "1"
 }
 
-export function isLocalDevLoginHost(hostname: string): boolean {
-  return LOCAL_DEV_HOSTNAMES.has(hostname.toLowerCase())
+export function isLocalDevLoginHost(host: string | null, source?: LocalDevRequestSource): boolean {
+  if (!host || !isLoopbackAuthority(host)) return false
+  if (source?.socket?.remoteAddress && !isLoopbackClient(source.socket.remoteAddress)) return false
+  if (!source) return true
+
+  // Next's App Router Request has no socket. Next supplies x-forwarded-for from
+  // the socket when absent; treat any supplied remote hop as a reason to deny.
+  for (const name of ["x-forwarded-for", "x-real-ip", "x-forwarded-host"]) {
+    const value = source.headers.get(name)
+    if (value !== null && !value.split(",").every((part) => isLoopbackClient(part.trim()))) {
+      return false
+    }
+  }
+  const forwarded = source.headers.get("forwarded")
+  if (forwarded !== null) {
+    for (const hop of forwarded.split(",")) {
+      let hasClient = false
+      for (const parameter of hop.split(";")) {
+        const [key, ...parts] = parameter.trim().split("=")
+        if (!["for", "host"].includes(key.toLowerCase())) continue
+        const value = parts.join("=").replace(/^"([^"\\]*)"$/, "$1")
+        if (!isLoopbackClient(value)) return false
+        hasClient = true
+      }
+      if (!hasClient) return false
+    }
+  }
+  return true
 }
 
 export function resolveLocalDevCredentials() {

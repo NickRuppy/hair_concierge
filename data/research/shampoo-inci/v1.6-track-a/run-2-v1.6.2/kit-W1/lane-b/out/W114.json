@@ -1,0 +1,314 @@
+{
+ "blindId": "W114",
+ "lane": "lane-b",
+ "policyId": "shampoo-classification-v1.6.2",
+ "formulaPassRecord": "out/formula-pass/W114.json (hash-pinned; not edited)",
+ "identity": {
+  "brand": "Sebamed",
+  "productName": "Sebamed Anti Schuppen Plus (Anti-Schuppen Shampoo PLUS)",
+  "packSize": "200 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "63ff429b1232526889e28ca4e04999b7b98cfcef5c7171ac2c375d4077114816",
+  "normalization": "14 entries as frozen; no split synonyms; normalized one-based positions cited (ID-2).",
+  "completeness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high",
+  "e3ProminenceCutoff": "Parfum@9 (prominent = positions 1-8)"
+ },
+ "formulaFacts": {
+  "surfactants": {
+   "definingAnionic": "Sodium Laureth Sulfate@2 (strong anionic, ether/sulfonate type)",
+   "reinforcingRoutes": [],
+   "buffers": [
+    "Lauryl Glucoside@3 (nonionic glucoside)",
+    "Sodium Lauroyl Sarcosinate@4 (mild anionic)"
+   ],
+   "nonCleansing": []
+  },
+  "conditioningRoutes": [
+   "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride@6 (cationic_polymer, prominent)"
+  ],
+  "humectants": [],
+  "actives": [
+   "Piroctone Olamine@7 (recognized anti-dandruff active)",
+   "Menthol@8 (cooling agent, prominent)"
+  ],
+  "e4ComfortRoutesProminent": [],
+  "e4HumectantRoutesProminent": [],
+  "mildBase": "not met: Sodium Laureth Sulfate@2 prominent strong anionic",
+  "exposureFlags": [
+   "Menthol@8 (prominent cooling agent)",
+   "Parfum@9",
+   "colourants CI 42090@13, CI 47005@14"
+  ],
+  "preservatives": [
+   "Phenoxyethanol@11",
+   "Sodium Benzoate@12"
+  ]
+ },
+ "claimUnits": [
+  "name (high): 'Anti Schuppen Plus' - E2 dandruff unit",
+  "manufacturer_de (moderate): 'Nach 4 Wochen bis zu 95% weniger Schuppen, für fettendes Haar' - dandruff unit containing oily wording (E2 'fettendes Haar')",
+  "manufacturer_de (moderate): 'speziell zur nachhaltigen Bekämpfung von Schuppen bei schnell fettendem Haar und Juckreiz entwickelt' - dandruff unit with oily and itch wording (absorbed for projection, E2a)",
+  "manufacturer_de (moderate): 'reinigt die Kopfhaut schonend' (protective); 'Haartyp: schuppiges Haar, fettiges Haar, fettendes Haar' (listing attribute)",
+  "manufacturer directions (moderate): 'Täglich oder 2-3x pro Woche anwenden' (U2 wording)",
+  "retailer dm (low): 'Anti-Schuppen Shampoo für schnell fettendes Haar'; 'Für die tägliche Anwendung geeignet'"
+ ],
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Moderate: C1 - defining anionic Sodium Laureth Sulfate@2 with two prominent buffers (Lauryl Glucoside@3, Sodium Lauroyl Sarcosinate@4) and no reinforcing strong anionic.",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4"
+   ],
+   "counterSignal": "see rationale (counter-signals recorded there; convention value unchanged by claims, 3.2)",
+   "sourceIds": [
+    "formula/W114.json (stage A, fingerprint 63ff429b1232...)"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "Low: cleansing-led architecture; the only conditioning route is a single cationic starch (Hydroxypropyl Oxidized Starch PG-Trimonium Chloride@6); no silicone, lipid, refatter, protein or humectant. Counter-signal: the cationic is prominent and could count as one meaningful system (moderate).",
+   "ruleIds": [
+    "5",
+    "C2"
+   ],
+   "counterSignal": "see rationale",
+   "sourceIds": [
+    "formula/W114.json (stage A, fingerprint 63ff429b1232...)"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "cationic_polymer": [
+     "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride@6"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Sodium Laureth Sulfate@2",
+     "Lauryl Glucoside@3",
+     "Sodium Lauroyl Sarcosinate@4"
+    ],
+    "humectantContext": [],
+    "excluded": [
+     "Menthol@8 (cooling agent)",
+     "Parfum@9",
+     "colourants"
+    ],
+    "unresolved": []
+   },
+   "wLine": {
+    "position": 7,
+    "inci": "Piroctone Olamine",
+    "classes": [
+     "preservative_or_capped_active"
+    ],
+    "e3Point": 9,
+    "alphabeticalRun": "none",
+    "skipped": [],
+    "codes": [],
+    "plausibility": "(i) Sodium Laureth Sulfate@2 before it; (ii) only Menthol@8 between it and the cap (not a surfactant, alkanolamide or pearlizing wax)",
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "light - one cationic starch polymer",
+   "persistence": "low - single light starch-based cationic",
+   "resetCapacity": "moderate - C1 SLES chassis with glucoside and sarcosinate buffers",
+   "counterevidence": "The cationic is prominent (before the active and Parfum).",
+   "whyThisBand": "A single deposition family without a reinforcing route faces a moderate reset (no polymer floor).",
+   "whyNotNeighborBand": "Not moderate: only one deposition family (a light starch cationic) with no silicone, lipid, protein or refatter to converge with it; W2 does not require more because only one family is present.",
+   "confidenceLimitingFactor": "Polymer dose and charge density unknown.",
+   "rationale": "Low: single light cationic vs. moderate reset (6.6, W2).",
+   "ruleIds": [
+    "6.3",
+    "6.6",
+    "W2",
+    "W-LINE",
+    "N-ALT"
+   ],
+   "counterSignal": "see counterevidence / whyNotNeighborBand",
+   "sourceIds": [
+    "formula/W114.json (stage A, fingerprint 63ff429b1232...)"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Supported: Piroctone Olamine@7 in a complete INCI (Section 11).",
+   "ruleIds": [
+    "11"
+   ],
+   "counterSignal": "none (mechanical presence test, Section 11)",
+   "sourceIds": [
+    "formula/W114.json (stage A, fingerprint 63ff429b1232...)"
+   ]
+  },
+  "focusPrimary": {
+   "value": "scalp_active",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "claimRole": "candidate",
+   "counterSignal": "Oily-scalp wording is also present (would be clarifying, F6), but it sits inside the dandruff units.",
+   "decisionTrace": "Claim direction: anti-dandruff (name, high; manufacturer, moderate). Formula compatible: recognized active Piroctone Olamine@7. Route: Piroctone Olamine@7. Decision: scalp_active.",
+   "rationale": "scalp_active: problem-led anti-dandruff product with a recognized active (7.2).",
+   "ruleIds": [
+    "7.2",
+    "11"
+   ],
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": "chosen focus is not a repair/moisture decision; blind formula verdict was not_applicable."
+   }
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "clarifying"
+   ],
+   "decisionTrace": "Empty default considered. Oily wording occurs only inside dandruff claim units (absorbed, E2a), so there is no distinct clarifying positioning; strong-cleansing alone is not a route (it is moderate here anyway).",
+   "rationale": "Empty: no distinct secondary positioning (Section 8).",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3"
+   ]
+  },
+  "usageRole": {
+   "value": "treatment",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "recognized_active_problem_led",
+   "triggerEvidence": [
+    "dandruffSupport supported (Piroctone Olamine@7)",
+    "name 'Anti Schuppen Plus' (high) and manufacturer dandruff units (moderate)"
+   ],
+   "losingTriggers": [
+    "explicit_frequent_non_strong: 'Täglich oder 2-3x pro Woche anwenden' (manufacturer, moderate) with cleansing moderate - fires but loses to treatment (U1)"
+   ],
+   "rationale": "Treatment: recognized active plus a qualifying dandruff claim (U3), precedence over frequent (U1).",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3"
+   ],
+   "decisionTrace": "Default regular considered; trigger recognized_active_problem_led; losing: explicit_frequent_non_strong: 'Täglich oder 2-3x pro Woche anwenden' (manufacturer, moderate) with cleansing moderate - fires but loses to treatment (U1)."
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not targeted: 'Juckreiz' occurs only inside a dandruff unit (dandruff symptom, SC1/E2a); no separate sensitive/dry unit. CSA also not met (no prominent E4 route, no MB; Menthol@8 counter-signal).",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "SC1",
+    "E2a"
+   ]
+  }
+ },
+ "reconciliation": [
+  "focusPrimary general (low) -> scalp_active (high).",
+  "usageRole regular (low) -> treatment (high); frequent recorded as losing trigger.",
+  "scalpComfortTarget not_targeted (moderate) -> not_targeted (high).",
+  "researchCombinationTargets: ['oily'] (E2b layer 2); sensitive not recorded (gate failed).",
+  "No formula property changed."
+ ],
+ "projection": {
+  "status": "proposal_blocked_pending_review",
+  "thicknessFit": {
+   "fine": "ideal",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 with weightPotential low (moderate, neighbor moderate) and conditioningLevel low (moderate, neighbor moderate): fine ideal, normal ideal, coarse acceptable. T6 scalp-concern floor (dandruff): no not_suited fit to lift. T4: review_thickness_boundary:fine (weightPotential neighbor moderate -> acceptable). T2: thickness/volume claims ignored for fit.",
+  "weight": "light",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential low -> weight light, 1:1; confidence = weightPotential confidence (moderate). Claims ('ohne zu beschweren', 'leicht') never lower it (6.5).",
+  "scalpTargets": {
+   "primary": {
+    "target": "dandruff",
+    "confidence": "high",
+    "rationale": "S-DANDRUFF: E2 dandruff claim (name, high) + dandruffSupport supported (high) -> dandruff primary, no secondary target (R17.1, R17.2). Confidence = min(positioning high, dandruffSupport high)."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [
+   "oily"
+  ],
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1: cleansingStrength moderate (high), D1 false -> regular. I3: neighbor none raises no flag (schuppen expects regular).",
+  "explicitResetPositioning": false,
+  "explicitResetRationale": "No D1 stem (tiefenrein, deep clean, clarifying shampoo, detox-reinigung) in the name or a manufacturer/pack claim, and no occasional-use directions.",
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "high",
+  "deepCleanserRationale": "D2 not met (cleansingStrength moderate, focusPrimary scalp_active, usageRole treatment, D1 false) -> not_flagged.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "schuppen",
+    "scalp_route": "dandruff",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "schuppen",
+    "scalp_route": "dandruff",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "schuppen",
+    "scalp_route": "dandruff",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_dandruff"
+  ],
+  "reviewFlags": [
+   "review_thickness_boundary:fine (weightPotential neighbor moderate -> acceptable)"
+  ],
+  "informationalNotes": [
+   "suits_dandruff_with_oily_scalp: oily-scalp wording 'für fettendes Haar' / 'bei schnell fettendem Haar' (manufacturer, moderate) + S-OILY formula clause passed (cleansingStrength moderate, weightPotential low, conditioningLevel low); research-only (E2b layer 2, R17.2); confidence moderate",
+   "dandruff_bundled_comfort_wording: 'Bekämpfung von Schuppen bei schnell fettendem Haar und Juckreiz' (manufacturer, moderate) - S-SENSITIVE formula gate failed: CSA not met (no prominent E4 comfort or humectant route, no MB: Sodium Laureth Sulfate@2 prominent); no unlisted_route_candidate"
+  ],
+  "catalogDependent": "review_live_value_differs not evaluated in-lane (live rows unseen; orchestrator after freeze)."
+ },
+ "selfCheck": "6.11: fingerprint matches the stage-A packet; claims and labels were hidden during the formula pass (phase 1 frozen before reveal); no ingredient, family count or position window assigned the weight band; W-line derived per W-LINE with skipped candidates recorded; depositionLoad/persistence/resetCapacity present; whyNotNeighborBand specific; confidence names its limiting factor; no comparison with earlier values in-lane. Formula properties (cleansing, conditioning, weight, dandruff) unchanged after unblind (3.2: claims cannot move them). N-ALT checked: every high confidence has neighbor none, every moderate/low names one neighbor. Projection derived mechanically from final properties (T1/T6/T4/W-LIVE/I1/I3/D2/13.7/13.8).",
+ "uncertainties": [
+  "Oily wording counted for the research combination from units inside the dandruff claim (R17.2 explicitly allows); alternative: none.",
+  "conditioningLevel low vs moderate (single prominent cationic starch)."
+ ]
+}
