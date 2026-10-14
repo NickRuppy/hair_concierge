@@ -8,6 +8,7 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { execFileSync } = require('child_process');
 const ROOT = path.resolve(__dirname, '..');
 const REPO = path.resolve(ROOT, '../../../..');
 const read = p => JSON.parse(fs.readFileSync(path.join(ROOT, p), 'utf8'));
@@ -89,7 +90,22 @@ const rows = C.records.map(c => {
   return { id: c.sample_id, slug: m.source_slug, name: `${c.identity.brand} ${c.identity.product_name}`, role: c.cohort_role, reason_classes: c.history.round7.reason_classes, rawA, rawB, A: normalize(rawA), B: normalize(rawB), s0, fu, claims };
 }).sort((a, b) => a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0);
 const bySlug = new Map(rows.map(r => [r.slug, r]));
-const doc = p => fs.readFileSync(path.join(REPO, p), 'utf8');
+// R9-P: historical quotations and their provenance stay bound to the scored revision.
+// r7: last commit changing round-7/diff.json before this amendment.
+const RULE_REVISION = '8b3e99c2c12e2d3e3d073d7a80cea0f284cf7a07';
+const revisionFiles = execFileSync('git', ['ls-tree', '-r', '--name-only', RULE_REVISION, 'docs/research/styling-inci/v1.0'], { cwd: REPO, encoding: 'utf8' }).trim().split('\n').filter(p => p.endsWith('.md'));
+const revisionCache = new Map();
+const pinnedBytes = p => {
+  if (!revisionCache.has(p)) revisionCache.set(p, execFileSync('git', ['show', `${RULE_REVISION}:${p}`], { cwd: REPO }));
+  return revisionCache.get(p);
+};
+const doc = p => pinnedBytes(p).toString('utf8');
+// Historical manifests fingerprint the scored docs/ledger and adapted scorers,
+// while frozen data are still read and checked from the working tree.
+const provenanceBytes = p => {
+  const rel = path.relative(REPO, p).split(path.sep).join('/');
+  return revisionFiles.includes(rel) || rel === LEDGER || /^data\/research\/styling-inci\/v1\.0\/round-\d+\/diff\.js$/.test(rel) ? pinnedBytes(rel) : fs.readFileSync(p);
+};
 const PROPERTY = 'docs/research/styling-inci/v1.0/01_property-set-v0.md';
 function ref(p, section, quote) {
   const lines = doc(p).split('\n');
@@ -250,9 +266,8 @@ const criteria = [
 const verdict = criteria.every(c => c.met) ? 'PASS' : 'FAIL';
 const inputPaths = ['blind-lane-A-r7/results.json', 'blind-lane-B-r7/results.json', 'r7/cohort.json', 'r7/FREEZE-NOTES.md', 'round-6/diff.js'].map(p => path.join(ROOT, p));
 for (const kind of ['s0', 'fu', 'claims']) for (const r of rows) inputPaths.push(path.join(ROOT, `r7/packets/${kind}/${r.id}.json`));
-const docsDir = path.join(REPO, 'docs/research/styling-inci/v1.0');
-inputPaths.push(...fs.readdirSync(docsDir).filter(f => f.endsWith('.md')).map(f => path.join(docsDir, f)), path.join(REPO, LEDGER));
-const manifest = inputPaths.sort().map(p => ({ path: path.relative(REPO, p), sha256: crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex') }));
+inputPaths.push(...revisionFiles.map(p => path.join(REPO, p)), path.join(REPO, LEDGER));
+const manifest = inputPaths.sort().map(p => ({ path: path.relative(REPO, p), sha256: crypto.createHash('sha256').update(provenanceBytes(p)).digest('hex') }));
 const output = {
   generated_by: 'data/research/styling-inci/v1.0/round-7/diff.js',
   method: 'TARGETED r7 re-check under R3-L/R4-L and R6-Q1/R6-T; A=Claude Opus, B=Codex. Round-6 join, normalization and agreement method adapted. Raw disagreement counts are never altered by adjudication.',

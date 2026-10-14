@@ -1,4 +1,5 @@
 {
+  "r9_p_annotation": "Per R9-P, the Big Hair Day (13 cells) and Balea MEN Styling Powder (2 cells) lane-error calls were owner questions (d), later settled by R8-Q1/R8-Q2. Round 8 is not a clean PASS under R3-L; the historical scoring values below are preserved.",
   "generated_by": "data/research/styling-inci/v1.0/round-8/diff.js",
   "method": "TARGETED r8 re-check under R3-L/R4-L, LOCK-1-S, R6-Q1/R6-T and R7-F/R7-Q1/R7-Q2/R7-Q3; A=Claude Opus, B=Codex. Round-7 join, normalization and agreement method adapted. Raw disagreement counts are never altered by adjudication.",
   "scope": {

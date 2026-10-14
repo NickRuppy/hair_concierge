@@ -8,6 +8,7 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { execFileSync } = require('child_process');
 const ROOT = path.resolve(__dirname, '..');
 const REPO = path.resolve(ROOT, '../../../..');
 const read = p => JSON.parse(fs.readFileSync(path.join(ROOT, p), 'utf8'));
@@ -104,7 +105,22 @@ const rows = C.records.map(c => {
   return { id: c.sample_id, slug: m.source_slug, name: `${c.identity.brand} ${c.identity.product_name}`, role: c.cohort_role, reason_classes: c.history.round9.reason_classes, scope_evidence: scope, rawA, rawB, A: normalize(rawA), B: normalize(rawB), s0, fu, claims };
 }).sort((a, b) => a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0);
 const bySlug = new Map(rows.map(r => [r.slug, r]));
-const doc = p => fs.readFileSync(path.join(REPO, p), 'utf8');
+// R9-P: historical quotations and their provenance stay bound to the scored revision.
+// r9: commit adding round-9/diff.json.
+const RULE_REVISION = '87e98086a7614a34e1705a1f1bd952535d43e1d0';
+const revisionFiles = execFileSync('git', ['ls-tree', '-r', '--name-only', RULE_REVISION, 'docs/research/styling-inci/v1.0'], { cwd: REPO, encoding: 'utf8' }).trim().split('\n').filter(p => p.endsWith('.md'));
+const revisionCache = new Map();
+const pinnedBytes = p => {
+  if (!revisionCache.has(p)) revisionCache.set(p, execFileSync('git', ['show', `${RULE_REVISION}:${p}`], { cwd: REPO }));
+  return revisionCache.get(p);
+};
+const doc = p => pinnedBytes(p).toString('utf8');
+// Historical manifests fingerprint the scored docs/ledger and adapted scorers,
+// while frozen data are still read and checked from the working tree.
+const provenanceBytes = p => {
+  const rel = path.relative(REPO, p).split(path.sep).join('/');
+  return revisionFiles.includes(rel) || rel === LEDGER || /^data\/research\/styling-inci\/v1\.0\/round-\d+\/diff\.js$/.test(rel) ? pinnedBytes(rel) : fs.readFileSync(p);
+};
 const PROPERTY = 'docs/research/styling-inci/v1.0/01_property-set-v0.md';
 function ref(p, section, quote) {
   const lines = doc(p).split('\n');
@@ -281,12 +297,11 @@ const effectSummary={R8_Q1_both:rulingEffects.filter(x=>x.ruling==='R8-Q1').ever
   all_rulings_landed:rulingEffects.every(x=>x.A_landed&&x.B_landed)};
 const inputs=['blind-lane-A-r9/results.json','blind-lane-B-r9/results.json','r9/cohort.json','r9/FREEZE-NOTES.md','r9/scope-audit.json','r9/artifact-manifest.json','round-8/diff.js','round-9/diff.js'].map(p=>path.join(ROOT,p));
 for(const r of rows)for(const k of ['s0','fu','claims'])inputs.push(path.join(ROOT,`r9/packets/${k}/${r.id}.json`));
-const docsDir=path.join(REPO,'docs/research/styling-inci/v1.0');
-inputs.push(...fs.readdirSync(docsDir).filter(f=>f.endsWith('.md')).map(f=>path.join(docsDir,f)),path.join(REPO,LEDGER));
+inputs.push(...revisionFiles.map(p=>path.join(REPO,p)),path.join(REPO,LEDGER));
 const output={generated_by:'data/research/styling-inci/v1.0/round-9/diff.js',
   method:'MINI r9, A=Claude Opus, B=Codex. Round-8 bijective join, semantic normalization, separate user/log cells and evidence-conditioned scoring adapted. No preset empirical totals or verdict. Ledger governs.',
   scope:{screened_records:SCOPE.screened_records,selected_records:selected.length,actual_records:rows.length,verified_frozen_artifacts:FREEZE.artifacts.length},
-  inputs:inputs.sort().map(p=>({path:path.relative(REPO,p),sha256:digest(p)})),normalisation:NORMALISATION,normalization_audit:normalizationAudit,lock_rules:lockRules,
+  inputs:inputs.sort().map(p=>({path:path.relative(REPO,p),sha256:crypto.createHash('sha256').update(provenanceBytes(p)).digest('hex')})),normalisation:NORMALISATION,normalization_audit:normalizationAudit,lock_rules:lockRules,
   counts:{records:rows.length,user_facing_disagreement_cells:discrepancies.length,user_facing_disagreement_products:new Set(discrepancies.map(x=>x.slug)).size,by_classification:classified,
     all_findings_by_classification:Object.fromEntries(['a','b','c','d'].map(k=>[k,discrepancies.filter(x=>x.classification===k).length+sharedErrors.filter(x=>x.classification===k).length])),
     shared_lane_error_cells:sharedErrors.length,shared_lane_error_assignments:sharedErrors.reduce((n,x)=>n+x.wrong_lanes.length,0),latent_ambiguities:latent.length,calculation_log_disagreement_cells:calculationDifferences.length},

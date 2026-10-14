@@ -1,3 +1,5 @@
+**Retrospective annotation (R9-P):** Per R9-P, the Big Hair Day (13 cells) and Balea MEN Styling Powder (2 cells) lane-error calls were owner questions (d), later settled by R8-Q1/R8-Q2. Round 8 is not a clean PASS under R3-L; the historical scoring values below are preserved.
+
 # Styling v1.0 — TARGETED final re-check, cohort r8
 
 **1116/1140 user-facing field cells agree (97.89%). 68/76 products fully agree (89.47%).** The denominator is 76 products × 15 user-facing fields. Route includes held/committed state and boundary reason; application moment compares primary only.

@@ -8,6 +8,7 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { execFileSync } = require('child_process');
 const ROOT = path.resolve(__dirname, '..');
 const REPO = path.resolve(ROOT, '../../../..');
 const read = p => JSON.parse(fs.readFileSync(path.join(ROOT, p), 'utf8'));
@@ -102,7 +103,22 @@ const rows = C.records.map(c => {
   return { id: c.sample_id, slug: m.source_slug, name: `${c.identity.brand} ${c.identity.product_name}`, role: c.cohort_role, reason_classes: c.history.round8.reason_classes, scope_evidence: scope, rawA, rawB, A: normalize(rawA), B: normalize(rawB), s0, fu, claims };
 }).sort((a, b) => a.slug < b.slug ? -1 : a.slug > b.slug ? 1 : 0);
 const bySlug = new Map(rows.map(r => [r.slug, r]));
-const doc = p => fs.readFileSync(path.join(REPO, p), 'utf8');
+// R9-P: historical quotations and their provenance stay bound to the scored revision.
+// r8: owner-specified round-8 scoring revision.
+const RULE_REVISION = '70440cfd36e0ed20ae90cb240d16204aefd2d335';
+const revisionFiles = execFileSync('git', ['ls-tree', '-r', '--name-only', RULE_REVISION, 'docs/research/styling-inci/v1.0'], { cwd: REPO, encoding: 'utf8' }).trim().split('\n').filter(p => p.endsWith('.md'));
+const revisionCache = new Map();
+const pinnedBytes = p => {
+  if (!revisionCache.has(p)) revisionCache.set(p, execFileSync('git', ['show', `${RULE_REVISION}:${p}`], { cwd: REPO }));
+  return revisionCache.get(p);
+};
+const doc = p => pinnedBytes(p).toString('utf8');
+// Historical manifests fingerprint the scored docs/ledger and adapted scorers,
+// while frozen data are still read and checked from the working tree.
+const provenanceBytes = p => {
+  const rel = path.relative(REPO, p).split(path.sep).join('/');
+  return revisionFiles.includes(rel) || rel === LEDGER || /^data\/research\/styling-inci\/v1\.0\/round-\d+\/diff\.js$/.test(rel) ? pinnedBytes(rel) : fs.readFileSync(p);
+};
 const PROPERTY = 'docs/research/styling-inci/v1.0/01_property-set-v0.md';
 function ref(p, section, quote) {
   const lines = doc(p).split('\n');
@@ -360,10 +376,11 @@ const criteria = [
 const verdict = criteria.every(c => c.met) ? 'PASS' : 'FAIL';
 const inputPaths = ['blind-lane-A-r8/results.json', 'blind-lane-B-r8/results.json', 'r8/cohort.json', 'r8/FREEZE-NOTES.md', 'r8/scope-audit.json', 'r8/artifact-manifest.json', 'round-7/diff.js', 'round-8/diff.js'].map(p => path.join(ROOT, p));
 for (const kind of ['s0', 'fu', 'claims']) for (const r of rows) inputPaths.push(path.join(ROOT, `r8/packets/${kind}/${r.id}.json`));
-const docsDir = path.join(REPO, 'docs/research/styling-inci/v1.0');
-inputPaths.push(...fs.readdirSync(docsDir).filter(f => f.endsWith('.md')).map(f => path.join(docsDir, f)), path.join(REPO, LEDGER));
-const manifest = inputPaths.sort().map(p => ({ path: path.relative(REPO, p), sha256: crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex') }));
+inputPaths.push(...revisionFiles.map(p => path.join(REPO, p)), path.join(REPO, LEDGER));
+const manifest = inputPaths.sort().map(p => ({ path: path.relative(REPO, p), sha256: crypto.createHash('sha256').update(provenanceBytes(p)).digest('hex') }));
+const R9_P_ANNOTATION = 'Per R9-P, the Big Hair Day (13 cells) and Balea MEN Styling Powder (2 cells) lane-error calls were owner questions (d), later settled by R8-Q1/R8-Q2. Round 8 is not a clean PASS under R3-L; the historical scoring values below are preserved.';
 const output = {
+  r9_p_annotation: R9_P_ANNOTATION,
   generated_by: 'data/research/styling-inci/v1.0/round-8/diff.js',
   method: 'TARGETED r8 re-check under R3-L/R4-L, LOCK-1-S, R6-Q1/R6-T and R7-F/R7-Q1/R7-Q2/R7-Q3; A=Claude Opus, B=Codex. Round-7 join, normalization and agreement method adapted. Raw disagreement counts are never altered by adjudication.',
   scope: { requested_records_in_step_1: 69, actual_frozen_r8_records: rows.length, previous_r7_records: read('r7/cohort.json').records.length, denominator_explanation: 'Step 1 names the historical r7 denominator (69); both r8 lanes, cohort and scope audit contain 76 records. All 76 are scored; no arbitrary seven products are dropped.', screened_records: SCOPE.screened_records, selected_records: selected.length, verified_frozen_artifacts: FREEZE.artifacts.length }, inputs: manifest, normalisation: NORMALISATION, lock_rules: lockRules,
@@ -435,7 +452,9 @@ function render(d, sha) {
 const json = JSON.stringify(output, null, 2) + '\n';
 const sha = crypto.createHash('sha256').update(json).digest('hex');
 fs.writeFileSync(path.join(__dirname, 'diff.json'), json);
-fs.writeFileSync(path.join(__dirname, 'report.md'), render(output, sha));
+const { r9_p_annotation, ...historicalOutput } = output;
+const historicalSha = crypto.createHash('sha256').update(JSON.stringify(historicalOutput, null, 2) + '\n').digest('hex');
+fs.writeFileSync(path.join(__dirname, 'report.md'), '**Retrospective annotation (R9-P):** ' + r9_p_annotation + '\n\n' + render(output, historicalSha));
 if (process.argv.includes('--summary')) console.log(JSON.stringify({ counts: output.counts,
   agreement: { agreeing_cells: userAgreement.agreeing_cells, cells: userAgreement.cells, percent: userAgreement.percent_cells, fully_agreeing_products: userAgreement.products_fully_agreeing },
   hold: { all_agree: hold.identical_all_records, emitted: hold.products_where_either_emits_a_level, mismatches: hold.mismatches },
