@@ -1,6 +1,6 @@
 # Styling v1.0 category charter
 
-Status: **lock suspended (LOCK-1-S) — final targeted re-check r10 pending**.
+Status: **lock suspended (LOCK-1-S) — final re-check r11 pending**.
 Version: 1.0 (artifact root; the classification standard is being drafted)
 Market: Germany/EU
 Date: 2026-10-09
@@ -8,6 +8,15 @@ Governing inputs: `plans/styling-concept/02-rulings.md` (owner rulings — **gov
 Inherited method: Leave-In Standard v1.0 (`docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md`, cited as "LI §x"), with the v1.1 overlay where it applies.
 
 **R6-T application/job alignment:** `target_zone` reads the main required application; optional/conditional extra sites do not widen it, and required sequential sites give `all` (Balea Volumenpuder Spray ⇒ `roots`; Redken Root Tease ⇒ `all`). In descriptive sentences `definition` requires an explicit curl/wave define-or-shape promise (R7-Q2 separately admits curl/wave words in the product's own name); „definierter Look“ alone gives no definition job (alverde Beach Waves). Standard §6.10/§6.12 governs.
+
+### Amendment (R10, 2026-10-14)
+
+Source: R10-Q1 and R10-Q2 in the governing ledger. The final re-check `r11/` uses `styling-inci-v0.5-r10amend`; formula families, lexicon membership and `styling-lexicon-v0.5-r7amend` stay unchanged. Frozen rounds remain provenance. Scorers pin the exact standard/ledger git revision and read rule quotes from that revision (R9-P).
+
+| Change | Ruling | Where |
+|---|---|---|
+| Collect every eligible job signal from the confirmed name and all C1/C2 claim types; fill secondary slots with STRONG signals in source order before WEAK signals, excluding the primary and duplicate jobs and retaining the formula gate. A bare hold mention is WEAK; RG3-16 strength/number evidence defines a STRONG hold signal. Primary selection and hold-level mapping stay unchanged. | R10, 2026-10-14 — R10-Q1 | standard §6.10; property set §2.12 |
+| Add „Struktur“ / „strukturiert“ to the texture vocabulary. A structured-look description is a WEAK texture signal; Bali Gents Haarpuder supplies it at C2. | R10, 2026-10-14 — R10-Q2 | standard §6.10; property set §2.12 |
 
 ### Amendment (R9, 2026-10-14)
 
@@ -166,7 +175,7 @@ Any input missing or unreadable, or two C1/C2 sources conflicting ⇒ `provision
 | INCI | dated exact-market capture; any G1 source tier | Complete list required. 64 of the 70 Styling INCIs were captured from retailer product pages, 6 from the manufacturer. |
 | Directions | verbatim, source-stamped, LI §2.4 hierarchy | Mandatory (LI §2.4 G1). Missing directions ⇒ `application_moment: unresolved` and review — never an INCI guess (example: Elnett Stylingspray 3 Tage Glatt was `unresolved` until its manufacturer directions were captured). |
 | Claims (`claims[]`: promise, hold, flexibility, finish, duration, humidity, heat, hair type, free-from) | **C1/C2 only create a claim** | LI §2.4 mandatory claim capture: verbatim, tier, URL/pack id, date. "Not captured" and "does not exist" are different states. Classification lanes consume frozen claims and never re-research them. |
-| Product name on the pack („Haarspray POWER Halt 5") | C1 once confirmed by pack image or manufacturer page | Feeds hold capture and the two name rules (D2, D7) only. |
+| Product name on the pack („Haarspray POWER Halt 5") | C1 once confirmed by pack image or manufacturer page | Feeds hold capture, the permitted name rules (standard §4.2, including D2/D7), and job-signal collection under §6.10 (R10-Q1). Never supplies a formula value. |
 
 ## 8. Research unit and formula identity
 

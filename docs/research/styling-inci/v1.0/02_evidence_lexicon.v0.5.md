@@ -1,8 +1,17 @@
 # Styling evidence lexicon — v0.5
 
-Status: **lock suspended (LOCK-1-S) — final targeted re-check r10 pending**.
-Lexicon version: `styling-lexicon-v0.5-r7amend` (consumed by `styling-classification-standard.md` v0.5, engine `styling-inci-v0.5-r9amend`).
+Status: **lock suspended (LOCK-1-S) — final re-check r11 pending**.
+Lexicon version: `styling-lexicon-v0.5-r7amend` (consumed by `styling-classification-standard.md` v0.5, engine `styling-inci-v0.5-r10amend`).
 Scope: leave-on styling products (12 subtypes), German/EU market, plus the boundary families the S0 gate reads at the edges of Leave-in, Heat Protectant, Oil and Dry Shampoo.
+
+### Amendment (R10, 2026-10-14)
+
+Source: R10-Q1 and R10-Q2 in the governing ledger. The final re-check `r11/` uses `styling-inci-v0.5-r10amend`; formula families, lexicon membership and `styling-lexicon-v0.5-r7amend` stay unchanged. Frozen rounds remain provenance. Scorers pin the exact standard/ledger git revision and read rule quotes from that revision (R9-P).
+
+| Change | Ruling | Where |
+|---|---|---|
+| Collect every eligible job signal from the confirmed name and all C1/C2 claim types; fill secondary slots with STRONG signals in source order before WEAK signals, excluding the primary and duplicate jobs and retaining the formula gate. A bare hold mention is WEAK; RG3-16 strength/number evidence defines a STRONG hold signal. Primary selection and hold-level mapping stay unchanged. | R10, 2026-10-14 — R10-Q1 | standard §6.10; property set §2.12 |
+| Add „Struktur“ / „strukturiert“ to the texture vocabulary. A structured-look description is a WEAK texture signal; Bali Gents Haarpuder supplies it at C2. | R10, 2026-10-14 — R10-Q2 | standard §6.10; property set §2.12 |
 
 ### Amendment (R9, 2026-10-14)
 
@@ -14,14 +23,14 @@ Scope: leave-on styling products (12 subtypes), German/EU market, plus the bound
 
 | Change | Ruling | Where |
 |---|---|---|
-| R8 changes promise/name interpretation and border outcomes only. Formula families, memberships and the lexicon stamp remain unchanged; the consuming engine is `styling-inci-v0.5-r9amend`, targeted r9 pending. | R8, 2026-10-14 — R8-Q1, R8-Q2, R8-H | standard §4.2 / §4.6 / §6.10; header |
+| R8 changes promise/name interpretation and border outcomes only. Formula families, memberships and the lexicon stamp remain unchanged; the current consuming engine is `styling-inci-v0.5-r10amend`; lock suspended (LOCK-1-S) — final re-check r11 pending. | R8, 2026-10-14 — R8-Q1, R8-Q2, R8-H | standard §4.2 / §4.6 / §6.10; header |
 
 ### Amendment (R7 rulings, 2026-10-13)
 
 | Change | Ruling | Where |
 |---|---|---|
 | Enumerate the smoothing-film subset for standard §4.3 (i′): **Polysilicone-29 and Silicone Quaternium-18 only**. Other SI-1 members (including Dimethicone and amodimethicones) are not in this subset. Existing family memberships, fixative and heat-protection readings remain unchanged. | R6-Q1, L5 | §1B SI-1; standard §4.3 (i′) |
-| Status is lock suspended (LOCK-1-S) with final targeted re-check r10 pending. Job-word changes are owned by standard §4.2 / §6.10, not formula membership. | LOCK-1-S, R7-F, R7-Q1…R7-Q3, L2 | header; standard |
+| Status is lock suspended (LOCK-1-S) — final re-check r11 pending. Job-word changes are owned by standard §4.2 / §6.10, not formula membership. | LOCK-1-S, R7-F, R7-Q1…R7-Q3, L2 | header; standard |
 
 **R6 amendment (2026-10-13; no membership change).** SI-1 Polysilicone-29 and Silicone Quaternium-18 remain silicone-coat/care families wherever existing rules read them. The standard's R6-Q1 heat-activated smoothing-film route is a separate, claim-and-position-gated S0 route; it does not make these silicones fixatives or heat-protection polymers. In that S0 test, the lead smoothing film does not itself disqualify the trace-care limb; other care is read at/after the first-preservative cutoff. Existing D6/R2 care readings remain unchanged. R6-T changes application/job reading only, not any family membership.
 
@@ -314,7 +323,7 @@ Column key — **Consumed by**: S0 = routing gate (standard §4); RM = `result_m
 - Finish (standard §6.8, RG2-11): „natürlich aussehendes Finish", „natürlich wirkender Look" ⇒ `natürlich`; „halbmatt", „seidenmatt" ⇒ `matt`.
 - Flexibility (standard §6.9, RG2-12, RG2-6): „verformbar", „wieder stylen" / „neu stylen" (a restyling sequence such as „Stylen, Ausbürsten, wieder Stylen"), „Elastizität" ⇒ `beweglich`; „ausbürstbar" alone stays outside (PH2-11).
 - Strength (standard §7.4, RG2-18): „Kontrolle" with a strength word reads as „Halt" („mittlere Kontrolle" ⇒ 2); „krass" ⇒ 3; „ultra krass" / „krasser Halt" at the top of a got2b display ⇒ 4.
-- Jobs (standard §6.10, RG2-6, RG2-7): „Schwung", „Sprungkraft", „Spannkraft", „Fülle" ⇒ `volume`; taming flyaways, „abstehende Haare/Härchen", „Babyhaare" ⇒ `frizz_control`.
+- Jobs (standard §6.10, RG2-6, RG2-7, R10-Q1/Q2): „Schwung", „Sprungkraft", „Spannkraft", „Fülle" ⇒ `volume`; taming flyaways, „abstehende Haare/Härchen", „Babyhaare" ⇒ `frizz_control`; „Struktur" / „strukturiert" for the hair result ⇒ `texture`. Look descriptions are WEAK signals. The consuming standard collects all C1/C2 claim types, fills STRONG secondary signals before WEAK signals, and retains the formula gate; no formula-family membership changes.
 
 **Carried from blind round 2 (2026-10-12; `round-2/diff.json`):**
 
