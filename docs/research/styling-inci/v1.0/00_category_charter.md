@@ -1,6 +1,6 @@
 # Styling v1.0 category charter
 
-Status: **v0.5 amended (R6/R7/R8) — lock suspended; targeted re-check r9 pending (LOCK-1-S)**.
+Status: **lock suspended (LOCK-1-S) — final targeted re-check r10 pending**.
 Version: 1.0 (artifact root; the classification standard is being drafted)
 Market: Germany/EU
 Date: 2026-10-09
@@ -9,13 +9,20 @@ Inherited method: Leave-In Standard v1.0 (`docs/research/leave-in-inci/v1.0/leav
 
 **R6-T application/job alignment:** `target_zone` reads the main required application; optional/conditional extra sites do not widen it, and required sequential sites give `all` (Balea Volumenpuder Spray ⇒ `roots`; Redken Root Tease ⇒ `all`). In descriptive sentences `definition` requires an explicit curl/wave define-or-shape promise (R7-Q2 separately admits curl/wave words in the product's own name); „definierter Look“ alone gives no definition job (alverde Beach Waves). Standard §6.10/§6.12 governs.
 
+### Amendment (R9, 2026-10-14)
+
+| Change | Ruling | Where |
+|---|---|---|
+| Every C1/C2 claim line may supply a secondary job, regardless of whether it is typed `promise`, `finish` or `other`; pure feel-only lines without a result never do. | R9, 2026-10-14 — R9-Q1 | standard §6.10; property set §2.12 |
+| Where several result adjectives occur together, the adjective matching the named look/subtype leads; otherwise the first leads. `sleek` is the smooth/straight overall look (shape); `shine` is gloss (surface). NEQI Diamond Glass All ⇒ primary `sleek`, secondary `shine`. | R9, 2026-10-14 — R9-Q2 | standard §6.10; property set §2.12 |
+
 ### Amendment (R8, 2026-10-14)
 
 | Change | Ruling | Where |
 |---|---|---|
 | Refresh between washes in the Dry Shampoo sense alongside volume/texture triggers the Dry Shampoo tie even with a volume-first name; L'Oréal Elvital Big Hair Day ⇒ `dry_shampoo`. | R8, 2026-10-14 — R8-Q1 | standard §4.2 / §4.6 |
 | Puder/Powder names `volume`; promised texture/grip is an eligible secondary. Redken Powder Grip is a two-job name and falls to its lead line. | R8, 2026-10-14 — R8-Q2 | standard §4.2 / §6.10; property set §2.12 |
-| Moroccanoil Glättende Creme has no care + curl-definition tie under R7-Q2; the border rules route it to `leave_in`. Lock remains suspended, with targeted r9 pending. | R8, 2026-10-14 — R8-H | standard §4.2 / §4.6; header |
+| Moroccanoil Glättende Creme has no care + curl-definition tie under R7-Q2; the border rules route it to `leave_in`. | R8, 2026-10-14 — R8-H | standard §4.2 / §4.6 |
 
 ### Amendment (R7 rulings, 2026-10-13)
 

@@ -1,12 +1,12 @@
 # Leave-In Research and Classification Standard — Styling-border addendum (DRAFT overlay)
 
-Status: **DRAFT — not in force; queued after Styling v1.0 lock (LOCK-1); every move of an already-ruled Leave-in product needs owner approval.**
+Status: **DRAFT — not in force; Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check; every move of an already-ruled Leave-in product needs owner approval.**
 Proposed document version: `v1.2` · proposed engine version: `leave-in-inci-v1.2` (both open, §6 item O-10)
 Base: **Standard v1.1** = Standard v1.0 (`docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md`, sha256 `7ae5e882d9cba3e3fccdea3623d056efe802ff3bc3adbe554112e471da551ace`, 421855 bytes) + the T20 overlay (`docs/research/leave-in-inci/v1.1/leave-in-classification-overlay.v1.1.md`, sha256 `9c1340357b4c0cf38933340f4592250d10f2cccc1429b0e4d46508d47eee032b`, 21091 bytes). **Both byte-identical, not edited.**
-Mirrors (owner rulings, not new rules): `plans/styling-concept/02-rulings.md`, **LOCK-1, 2026-10-13** (sha256 `398356ae9d38b722b636188a308c42fd8fbe4fe5091e7428b96b8e8090c346b8` at refresh), through R6-Q1/R6-T. Styling-side wording: **LOCKED Styling v1.0**, standard v0.5 amended through R6/R7, `docs/research/styling-inci/v1.0/styling-classification-standard.md` (sha256 `cc7c176c10411bdea078ca77468da7062dfedec4d1b9063f880c3981aaef7892`), lexicon `02_evidence_lexicon.v0.5.md` (sha256 `7851ca150c726e36e430f9ca321953741f6e621f00056d70badb928ed5cb0171`). Where the Styling standard and the ledger differ, **the ledger governs**. Historical D3/R2-Q4 NEQI routes are superseded by R6-Q1; their original artifacts remain frozen.
+Mirrors (owner rulings, not new rules): `plans/styling-concept/02-rulings.md`, through R9 and LOCK-1-S. **Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check**; use the current standard v0.5 and lexicon as amended through R9. Where the Styling standard and the ledger differ, **the ledger governs**. Historical D3/R2-Q4 NEQI routes are superseded by R6-Q1; their original artifacts remain frozen.
 Scope: the Leave-in ↔ Styling border only — G0 (§2.1–§2.3.2), the L5 fixative enumeration (§5), the Polysilicone-9 placement, the WT rich-member list (§5 L3, §7.5), and the dual-use directions clause for care creams (§2.4 rule 2).
 Companion: `DRAFT-styling-border-affected-products.md` (this folder) — every product the addendum would move or newly classify.
-Refreshed: 2026-10-13 after LOCK-1. This Leave-in overlay is not locked or activated; its own calibration and approval remain open. The two NEQI category moves are already owner-approved (R6-Q1).
+Refreshed: 2026-10-14. **Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check.** This Leave-in overlay is not locked or activated; its own calibration and approval remain open. The two NEQI category moves are already owner-approved (R6-Q1).
 
 **Location.** The Leave-in standard has an overlay convention (README, „Versioning note"; the T20 overlay): `v1.0/` is byte-frozen and hash-pinned, and a policy change lands as an overlay in a **sibling version root** (`v1.1/` for T20). This draft therefore sits in `docs/research/leave-in-inci/v1.2/`, not in `v1.0/addenda/`. On approval it is renamed `leave-in-classification-overlay.v1.2.md` and gets its lock receipt and manifest under `data/research/leave-in-inci/v1.2/`.
 
@@ -19,14 +19,14 @@ Standard v1.2 would be **Standard v1.1 plus this file**. Where an amendment spea
 **What the addendum does.** The Styling owner rulings moved the Leave-in ↔ Styling border. PH1-16 kept the locked Leave-in letter unchanged and parked those border rules in the Styling standard's own lists. This addendum writes the same rules into Leave-in wording, so that both engines read **one** border: a product the Styling S0 routes to Styling is excluded at Leave-in G0, and a product Styling routes to Leave-in is still claimed here. It adds no rule the Styling rulings did not decide. Where the Leave-in wording of a Styling rule is not settled by the rulings, the point is listed in §6 instead of being decided.
 
 **Approval protocol (PH1-16).**
-1. **Complete:** Styling v1.0 locked under LOCK-1; this draft is queued after that lock.
+1. **Research status:** Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check; this draft remains queued pending that re-check.
 2. The owner reads the amendments and the §6 open items.
 3. The owner reads every **already-ruled Leave-in product** that would move (companion file, part A). **Two moves are ALREADY APPROVED by the owner under R6-Q1 (2026-10-13): NEQI Diamond Glass Ultimate (historical D3/T15) and NEQI Diamond Glass All (historical R2-Q4). No other already-ruled Leave-in product moves.** The 29-record audit includes 25 Leave-in-positive rulings and 4 already-excluded corpus records; 23 positive rulings and all 4 exclusions stay put.
 4. On approval: rename to `leave-in-classification-overlay.v1.2.md`; write `data/research/leave-in-inci/v1.2/` (lock receipt, manifest; README row); the Styling lexicon cites the Leave-in L5 list instead of holding FX-4 itself (lexicon §7); the held Styling records are released (PH2-2). Approval of this text authorises no catalog, Supabase, matcher or Product Intake change.
 
 **Amendment format.** Each amendment states the Styling ruling it mirrors, the Leave-in section it overlays, the new text (normative register), a worked example from frozen data, and the direction it fails in under LI §1.1.
 
-**Tail markers.** „Above T_LI” means above the Leave-in marker of LI §3.1.1 (clauses 1–6 unchanged outside the named amendments). T_S is the full locked Styling/Mask marker: preservative, perfume, declared allergens/aroma chemicals, boosters in a pair and chelators (Styling §3.2; lexicon §0.2). It serves A3/A4 limb 1 and the R2-Q2 aqueous-serum check; A11 separately reads the first preservative/concentration-capped LI cutoff, never earlier perfume.
+**Tail markers.** „Above T_LI” means above the Leave-in marker of LI §3.1.1 (clauses 1–6 unchanged outside the named amendments). T_S is the current ruled Styling/Mask marker: preservative, perfume, declared allergens/aroma chemicals, boosters in a pair and chelators (Styling §3.2; lexicon §0.2). It serves A3/A4 limb 1 and the R2-Q2 aqueous-serum check; A11 separately reads the first preservative/concentration-capped LI cutoff, never earlier perfume.
 
 **Destination labels.** A product this addendum excludes is not Leave-in-claimable. Which G0 state label it carries is open (§6 O-1). The draft writes **„excluded (Styling)"** and records a `g0_basis` tag; the §2.3.1 emission contract for excluded records applies unchanged (identity block, rationale, formula record; no lean profile).
 
@@ -50,9 +50,9 @@ Standard v1.2 would be **Standard v1.1 plus this file**. Where an amendment spea
 >
 > (d) Where neither a C1/C2 promise line nor a one-job C1/C2 name exists, (b) cannot be established; G0 keeps the v1.1 letter pending the ordinary Leave-in evidence-policy decision (§6 O-3). Owner-named routes still follow A10 without lifting identity, INCI, directions or formula blocks.
 >
-> (e) **Job vocabulary follows the lock.** „Beach Waves”, „Strandwellen”, „beachy” name texture, not curl definition; „Wellen-Spray”/„Wellenauffrischer” name curl/wave revival. „Glaze”, „Topcoat”, „Gloss” name shine (R4-Q2). A product-type noun names the job; shine/strength qualifiers are finish/grade, also in compounds („Gel Wax Glanz” ⇒ one molding/hold job), while a true Texture/Volume/Curl job alongside it makes multiple jobs (R4-Q7). Brand-line names („Frizz Ease”, „Glow & Shine”, „Nutricurls”) never supply name, primary or secondary jobs (R6-Q1).
+> (e) **Job vocabulary follows the rulings.** „Beach Waves”, „Strandwellen”, „beachy” name texture, not curl definition; „Wellen-Spray”/„Wellenauffrischer” name curl/wave revival. A curl/wave word in the product's own name (for example „Killer.Curls”, „Curl Cream”, „Lockencreme”, „Locken & Wellen”) counts as the `definition` job (R7-Q2). „Glaze”, „Topcoat”, „Gloss” name shine (R4-Q2). A product-type noun names the job; shine/strength qualifiers are finish/grade, also in compounds („Gel Wax Glanz” ⇒ one molding/hold job), while a true Texture/Volume/Curl job alongside it makes multiple jobs (R4-Q7). Brand-line or collection names („Frizz Ease”, „Glow & Shine”, „Nutricurls”, „Traumlocken”, „Volume Lift”, „Diamond Sleek”) never supply name, primary or secondary jobs; this general rule applies even when the line name contains a job word (R7-Q3).
 >
-> (f) **Care + curl-definition ties:** only an explicit care verb/noun (pflegt/Pflege/Care, Kur, Balsam, Treatment, Feuchtigkeit, nährt, repariert, verb „stärkt”, entwirrt) is the care half. „Strong hair”, „gepflegte Locken”, feel/ingredient call-outs and „Nutri-” are not (R4-Q3). Curl revival alone is refresh, not definition (R2-Q1); a „definierter Look” result is not definition either — an explicit promise to define or shape curls/waves is required (R6-T). A C1/C2 care + definition tie routes to `provisional_boundary` + review and keeps its current category, **after A3/A4, A11 and A10 overrides**. This mirrors the locked mixed stop; no product-specific registry ruling is reopened.
+> (f) **Care + curl-definition ties:** only an explicit care verb/noun (pflegt/Pflege/Care, Kur, Balsam, Treatment, Feuchtigkeit, nährt, repariert, verb „stärkt”, entwirrt) is the care half. „Strong hair”, „gepflegte Locken”, feel/ingredient call-outs and „Nutri-” are not (R4-Q3). Curl revival alone is refresh, not definition (R2-Q1); a „definierter Look” result is not definition either — an explicit promise to define or shape curls/waves is required (R6-T). A C1/C2 care + definition tie routes to `provisional_boundary` + review and keeps its current category, **after A3/A4, A11 and A10 overrides**. This mirrors the ruled mixed stop; no product-specific registry ruling is reopened.
 
 - **Worked example.** `balea-foehnlotion-volume-effect` (Balea Föhnlotion Volume Effect): Aqua leads, no L5 member, C2 volume promise ⇒ (b) ⇒ excluded (Styling), `blowdry_lotion`. `balea-styling-finishing-stick`: C1 pack directions „Nach dem Frisurenstyling sanft über die abstehenden Härchen streichen" ⇒ flyaway control on dry, finished hair ⇒ (c) ⇒ excluded (Styling), `shine_finish`. Counter-example: `garnier-fructis-leave-in-spray-diamond-sleek-glaettungsspray` („Leave-In Spray … Glättungsspray": smoothing is a Leave-in function ⇒ (a); argan r6 + SAPDMA r7 = care, no fixative ⇒ `in_category`, as PH2-1 named).
 - **Fails toward:** exclusion of a product whose own C1/C2 promise names no Leave-in job. It never creates a Leave-in claim; with no C1/C2 promise it changes nothing (d).
@@ -106,7 +106,7 @@ Standard v1.2 would be **Standard v1.1 plus this file**. Where an amendment spea
 
 ### A5 — L5 gains the four vinyl fixative families
 
-- **Mirrors:** PH1-16 (the four vinyl fixative families missing from LI L5 move into the Leave-in list after lock); locked Styling lexicon v0.5 FX-4.
+- **Mirrors:** PH1-16 (the four vinyl fixative families missing from LI L5 move into the Leave-in list after the targeted re-check); current ruled Styling lexicon v0.5 FX-4.
 - **Overlays:** LI §5 L5 „Evidence" list. Consumers that read L5 change with it: §7.7 HOLD, the §2.3.2 architecture half, A2 limb 1, A3/A4 limb 1.
 - **New text (extends the L5 evidence list):**
 
@@ -157,7 +157,7 @@ Standard v1.2 would be **Standard v1.1 plus this file**. Where an amendment spea
 > **Exception (v1.2, R2-H2).** A **care product** — conditioner, mask, Kur — that can also be left in as a curl cream **stays care in its current category** (R2-H2). Both direction sentences are captured, `dual_use_directions` recorded, review. The first-named use decides the category (RG2-20): rinse-out-first care, such as GUHL 3in1, reads G0 `excluded_other_form`. Signals that identify the care product: the first-named use is rinse-out, the manufacturer shelves it with conditioners/masks, and any hold is stated to come from care. Only a fixative-class polymer above the tail or the A3/A4 middle band would make it Styling. Consequence 2 is otherwise unchanged: a leave-on-first dual-use product stays `in_category` with review.
 
 - **Worked example.** `guhl-locken-pflege-und-styling-3in1` (GUHL Haarkur, Conditioner & Lockencreme Pflege & Styling 3in1): pack back „3in1 ANWENDUNG: 1 - Spülung … 2 - Kur … 3 - Lockencreme"; guhl.com files it under „Spülungen, Kuren & Seren" („Der Halt entsteht dabei durch Pflege, nicht durch Fixierung."); no fixative-class polymer ⇒ stays care (`excluded_other_form`). Under v1.1 consequence 2 it would have read `in_category` + review.
-- **Fails toward:** the product stays where it is; the leave-in use is recorded and reviewed, never dropped. The locked R2-H2 general reading governs; the first-named use and documented care identity identify the GUHL case without creating a rule that all curl creams are rinse-out.
+- **Fails toward:** the product stays where it is; the leave-in use is recorded and reviewed, never dropped. The ruled R2-H2 general reading governs; the first-named use and documented care identity identify the GUHL case without creating a rule that all curl creams are rinse-out.
 
 ### A10 — Owner-named routes at the border (registry)
 
@@ -188,11 +188,11 @@ Standard v1.2 would be **Standard v1.1 plus this file**. Where an amendment spea
 
 ### A11 — Heat-activated smoothing-film blow-out sprays and lotions
 
-- **Mirrors:** R6-Q1 and locked Styling §4.3 3.4 (i′); R6-Q1 replaces D3/R2-Q4 NEQI outcomes. Brand lines never name jobs (A1).
+- **Mirrors:** R6-Q1 and current ruled Styling §4.3 3.4 (i′); R6-Q1 replaces D3/R2-Q4 NEQI outcomes. Brand lines never name jobs (A1).
 - **Overlays:** LI §2.2 blow-dry/heat-primer inclusion, §2.3 G0 and §2.3.2 historical NEQI worked example; inserted before T15/D6 and the mixed stop.
 - **New text (adds §2.3.2-A11):**
 
-> An **aqueous blow-out or smoothing spray/lotion** is **excluded (Styling)**, `g0_basis: heat_activated_smoothing_film`, subtype `smoothing_styler`, when all hold: (1) the main active is a **heat-activated smoothing-film former**, an SI-1 heat-activated silicone film such as Polysilicone-29 or Silicone Quaternium-18; (2) **all other care actives are at or after the first preservative/concentration-capped LI cutoff** (locked lexicon §0.2), so no effective care system precedes it; (3) **no FX-1…FX-4 fixative-class polymer is present**. The lead smoothing-film former does not disqualify limb 2 by counting as care itself; every other care active does. This reads the first preservative cutoff, **not earlier perfume T_S**. Existing D6/R2 and COND readings are unchanged. All limbs must be positively established; an unresolved limb routes to review. Run before LI G0/D6 and before stopping a mixed promise.
+> An **aqueous blow-out or smoothing spray/lotion** is **excluded (Styling)**, `g0_basis: heat_activated_smoothing_film`, subtype `smoothing_styler`, when all hold: (1) the main active is a **heat-activated smoothing-film former**, an SI-1 heat-activated silicone film such as Polysilicone-29 or Silicone Quaternium-18; (2) **all other care actives are at or after the first preservative/concentration-capped LI cutoff** (current lexicon §0.2), so no effective care system precedes it; (3) **no FX-1…FX-4 fixative-class polymer is present**. The lead smoothing-film former does not disqualify limb 2 by counting as care itself; every other care active does. This reads the first preservative cutoff, **not earlier perfume T_S**. Existing D6/R2 and COND readings are unchanged. All limbs must be positively established; an unresolved limb routes to review. Run before LI G0/D6 and before stopping a mixed promise.
 >
 > **Owner-named R6-Q1 routes:** John Frieda „Frizz Ease Unendlich Smooth Salon Blow-Out Spray”, NEQI „Diamond Glass Ultimate Styling Spray” and NEQI „Diamond Glass Styling Spray All” ⇒ `smoothing_styler`, held until addendum approval. Ultimate has FX-1 VP/Methacrylamide/Vinyl Imidazole Copolymer r8 and therefore **does not pass general limb 3**: its A10 registry override rules the destination. Never use it to generalise the exception to fixative-bearing products. Both NEQI moves from already-ruled Leave-in are **ALREADY APPROVED by the owner, R6-Q1, 2026-10-13**.
 
@@ -208,14 +208,14 @@ The v1.1 G0 sequence is unchanged except where the amendments insert a step. For
 1. **G1 and directions** (§2.4) as v1.1; A9 applies inside rule 2.
 2. **Form exclusions** as v1.1 (`excluded_other_form` for rinse-out-only directions; `excluded_anhydrous`). A non-aqueous styling product is excluded either way; which engine receives it is decided on the Styling side (Styling §4.3 3.5; D2 for „Öl"/„Serum").
 3. **A10 registry**: match brand + pack name; record `ruled_route`. Named border outcomes rule their records even when the letter differs (R4-Q5), without lifting evidence blocks.
-4. **A1 promise reading**, including R2-Q2 water-based-serum care exception and the locked job vocabulary. Read the lead only; record a mixed tie but do not stop yet.
+4. **A1 promise reading**, including R2-Q2 water-based-serum care exception and the ruled job vocabulary. Read the lead only; record a mixed tie but do not stop yet.
 5. **A3 curl middle band / A4 straightening limb / A11 heat-activated smoothing film**: any firing exclusion ⇒ Styling; these run before the mixed stop. A4 does not require A3 limb 2.
 6. **Remaining mixed tie (A1(f))** ⇒ `provisional_boundary` + review, current category retained, unless A10 has ruled it.
 7. **A1 function exclusion**: (b)/(c) ⇒ excluded (Styling); stop. R2-Q2 care-serum exceptions skip this exclusion.
 8. **§2.3.2 ordered rule** (T15), with L5 as amended by A5–A7: `excluded_styling_first`, `provisional_boundary` or `in_category`.
 9. **A2 D6 exception** on an `in_category` result: fires ⇒ excluded (Styling); unresolved ⇒ `provisional_boundary` + review; otherwise `in_category`.
 
-This follows locked Styling §4.1–§4.3: registry precedence, 3.4 (i)/(i′) before the mixed stop, (ii), (iii), then D6. **3.4 (ii) and 3.5 routes are never held** (R4-Q6), except that a specifically named §4.1(d) registry row still rules its record (R4-Q5). Ordinary missing-promise handling outside the named rows remains O-3; no general complementary answer is claimed there.
+This follows current ruled Styling §4.1–§4.3: registry precedence, 3.4 (i)/(i′) before the mixed stop, (ii), (iii), then D6. **3.4 (ii) and 3.5 routes are never held** (R4-Q6), except that a specifically named §4.1(d) registry row still rules its record (R4-Q5). Ordinary missing-promise handling outside the named rows remains O-3; no general complementary answer is claimed there.
 
 ---
 
@@ -226,9 +226,9 @@ This follows locked Styling §4.1–§4.3: registry precedence, 3.4 (i)/(i′) b
 - **L5 v1.0 members, the rheology exclusion, the VP/Methacrylamide/Vinyl Imidazole and Polysilicone-29 placements, Polyacrylamide's open gap (§17.19).** Styling's FX-U reading of Polyacrylamide is not mirrored.
 - **HOLD (§7.7).** The 3-state anchors and T7 (a stated hold level is captured, never derived) are unchanged. A product excluded by A3/A4 keeps whatever HOLD the formula reads; the exclusion comes from the sale limb, not from HOLD.
 - **COND, WT anchors other than A8's member list, PERS, R2/`repair_support_level`, HEAT §13, EXPO, `hinweise`, §9 and the T20 overlay.** PH1-15's stricter heat rule (claim **and** L9 pass against T_S) is a Styling-side rule and is not mirrored; Leave-in §13.3 stands.
-- **Claim authority (§2.4.1, T14), formula conflicts (§2.4.2, T18), the tail marker (§3.1.1 clauses 1–6)** — except the R3-H4(e) reading inside A3/A4 limb 1 (R3-H4(e)), and the A11-specific cutoff. The D6 yardstick uses locked lexicon PH-1; no new list is invented.
+- **Claim authority (§2.4.1, T14), formula conflicts (§2.4.2, T18), the tail marker (§3.1.1 clauses 1–6)** — except the R3-H4(e) reading inside A3/A4 limb 1 (R3-H4(e)), and the A11-specific cutoff. The D6 yardstick uses current lexicon PH-1; no new list is invented.
 - **The R2 effective-amount test is never the T15 „thin" test** (PH1-13). COND keeps deciding „thin vs substantive".
-- **Mixed-promise outcomes** follow the lock in A1(f): GUHL 2in1, Garnier Locken Methode, John Frieda Wellenauffrischer, Moroccanoil Smoothing Lotion and Syoss Glaze Primer retain current-category/manual-review outcomes; named Leave-in rows still override the tie.
+- **Mixed-promise outcomes** follow A1(f): GUHL 2in1, Garnier Locken Methode, John Frieda Wellenauffrischer and Syoss Glaze Primer retain current-category/manual-review outcomes; named Leave-in rows still override the tie. Moroccanoil Glättende Creme (Smoothing Lotion) routes to Leave-in under R8-H, because its „Definition” for „krauses Haar” plus „Ideal für lockiges Haar” is not a curl-definition promise.
 - **Heat Protectant / Dry Shampoo borders** remain outside this overlay. R2-Q2 is mirrored for its water-based conditioner-serum exception; extending the Oil name rule to other aqueous serums is outside this draft (§6 O-9).
 - **Alcohol.** Styling's PH1-3 trigger (adds Isopropyl Alcohol) is a Styling note; Leave-in §7.12 and its open gap §17.21 are unchanged.
 
@@ -245,7 +245,7 @@ Recounted with Node on 2026-10-13 from the **143-record r6 cohort and both r6 la
 | Other explicit border statuses | **47**: 45 direct PH2-1 products without a Leave-in ruling + Polysilicone-9 case + GUHL 3in1 | no Styling destination change; the 46 direct 3.4(ii) records include already-excluded Alcina Föhn Lotion, counted in the 29, not twice here |
 | Further border products staying put | **16** | care/Leave-in, mixed review or Heat Protectant destinations retained; listed by name in companion part D |
 
-LOCK-1 resolves the old “confirm in round 4” gates. This recount does not re-run lanes, change research data or apply any release.
+LOCK-1-S leaves the old “confirm in round 4” gates pending the final targeted re-check. This recount does not re-run lanes, change research data or apply any release.
 
 ---
 
@@ -254,17 +254,17 @@ LOCK-1 resolves the old “confirm in round 4” gates. This recount does not re
 - **§1.1 conservative-failure invariant.** Each amendment states its failure direction above. Every unresolved limb (A2 limb 1 on FX-2c or Polysilicone-9; A2 limb 2 without a yardstick) routes to `provisional_boundary` + review; no amendment creates a Leave-in claim or raises a value on an unresolved read. A held Styling profile becomes matchable only after overlay approval and with its evidence gates satisfied. The category destination is an owner product call (D6, D7, R3-Q4/R4-Q4, PH2-1, R6-Q1), not a formula inference; both NEQI category moves are already approved.
 - **G4 evidence ceiling.** Only rank comparisons on one list and closed enumerations; no percentage, ratio or dose. A2 limb 2's yardstick is an ordinal position, as in PH1-13.
 - **Authority clause.** The v1.0 standard admits no science absent from SR/HO. A1–A4, A9–A11 are owner product calls with T15 as precedent (an adjudicated boundary, not a science claim). A5–A7 are enumerations of trade-named film formers with a CosIng basis (Styling lexicon T1/T3/T4 tiers). A8 rests on PH1-2/PS3 and Mask R8, **not on SR** — §6 O-6.
-- **Calibration honesty.** This draft has **not** been run by two sealed Leave-in lanes. The corpus check in §4 is one scripted pass plus a reading of the Styling lanes' own §4.5 re-runs of the v1.1 letter. The Styling side is locked through r6/r7 (LOCK-1); that does not itself calibrate or activate this Leave-in overlay.
+- **Calibration honesty.** This draft has **not** been run by two sealed Leave-in lanes. The corpus check in §4 is one scripted pass plus a reading of the Styling lanes' own §4.5 re-runs of the v1.1 letter. **Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check**; the r6/r7 readings do not themselves calibrate or activate this Leave-in overlay.
 
 ---
 
 ## 6. Open for the owner
 
-Only Leave-in-specific choices not settled by LOCK-1 remain. **Closed and removed:** O-2 (T_S for D7 limb 1 and LI COND for limb 2, R3-H4(e)); O-7 (care stays care; first-named directions decide, R2-H2/RG2-20); O-8 (locked mixed-stop outcomes and registry overrides); O-12 (the locked PH-1 yardstick is cited for A2). No new approval is needed for the two R6-Q1 NEQI category moves.
+Only Leave-in-specific choices not settled by the current ledger remain. **Closed and removed:** O-2 (T_S for D7 limb 1 and LI COND for limb 2, R3-H4(e)); O-7 (care stays care; first-named directions decide, R2-H2/RG2-20); O-8 (ruled mixed-stop outcomes and registry overrides); O-12 (the current PH-1 yardstick is cited for A2). No new approval is needed for the two R6-Q1 NEQI category moves.
 
 - **O-1 What should the exclusion be called in Leave-in records?** Reuse `excluded_styling_first` with a reason tag, or add a state covering promise-only, D6, middle-band and smoothing-film exclusions? The destination and “no matching profile” contract are settled; the label is not.
 - **O-3 What should Leave-in do when there is no reliable primary promise?** Styling requires a C1/C2 promise line or one-job C1/C2 name. Should ordinary Leave-in research adopt that gate too? Named owner routes remain governed by A10; this question does not reopen them.
-- **O-4 How far should the fixative-list update reach inside Leave-in?** At the border, use the locked FX-2c corroboration and FX-U uncertainty rules. Should those also change L5/HOLD consumers outside the border, beyond the four PH1-16 vinyl additions? John Frieda Lockencreme is already routed by its owner row either way.
+- **O-4 How far should the fixative-list update reach inside Leave-in?** At the border, use the current FX-2c corroboration and FX-U uncertainty rules. Should those also change L5/HOLD consumers outside the border, beyond the four PH1-16 vinyl additions? John Frieda Lockencreme is already routed by its owner row either way.
 - **O-5 How should Polysilicone-9 be recorded in non-border Leave-in fields?** Its border hold evidence is unresolved (A6). Decide its Leave-in HOLD value and whether COND/WT/PERS may read it outside that test; Leave-in has no `ambiguous` HOLD value.
 - **O-6 Which rich materials should be added to Leave-in's weight list?** PH2-12 names waxes, paraffin, microcrystalline wax and lanolin. Decide whether to include the Styling list's further rich members too, and resolve the Leave-in SR/HO authority check for that extension.
 - **O-9 Should a later overlay change the wider Oil ↔ aqueous-serum border?** The R2-Q2 conditioner-serum exception is settled and mirrored here. Applying D2's Oil name rule to aqueous serums without that care system is outside this draft; no Leave-in corpus move is found there.
@@ -287,8 +287,8 @@ The v1.0 ledger (`v1.0/rule-changes.md`) and the v1.1 block (T20 overlay §8) ar
 
 ## 8. Source anchors
 
-- Rulings: `plans/styling-concept/02-rulings.md` (D2, D3, D6, D7, PH1-6, PH1-10, PH1-12, PH1-13, PH1-14, PH1-16, PH2-1, PH2-2, PH2-3, PH2-12, R1-Q2, R1-T, R1-H3, R2-Q1, R2-Q2, R2-Q4, R2-H2, R2-H4, R3-Q4, R3-H2, R3-H3, R3-H4, R3-T, R4-Q1…Q7, R4-H, R6-Q1, R6-T, LOCK-1).
-- LOCKED Styling v1.0 (standard v0.5 amended R6/R7): §3.2 (markers), §4.1 (owner-named limits, R2-H2), §4.2 (lead order, `li_function`, R1-Q2), §4.3 (3.1 exception test, 3.4 (i) limbs and (i′)–(iii), D6), §4.5 (double-claim hold), §4.6 (registry), §13.3 items 1 and 6.
-- LOCKED Styling lexicon v0.5: §0.2 (T_LI, T_S), §1A FX-1…FX-4, FX-R, FX-U, RH-1; §1B WL-1…WL-6, SI-1, SI-4; §2 consumer index (S0 rows); §5 items 7–9; §7.
+- Rulings: `plans/styling-concept/02-rulings.md` (D2, D3, D6, D7, PH1-6, PH1-10, PH1-12, PH1-13, PH1-14, PH1-16, PH2-1, PH2-2, PH2-3, PH2-12, R1-Q2, R1-T, R1-H3, R2-Q1, R2-Q2, R2-Q4, R2-H2, R2-H4, R3-Q4, R3-H2, R3-H3, R3-H4, R3-T, R4-Q1…Q7, R4-H, R6-Q1, R6-T, R7-Q2, R7-Q3, R8-H, R9-Q1, R9-Q2, R9-F, R9-P, LOCK-1-S).
+- Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check; standard v0.5 amended through R9: §3.2 (markers), §4.1 (owner-named limits, R2-H2), §4.2 (lead order, `li_function`, R1-Q2), §4.3 (3.1 exception test, 3.4 (i) limbs and (i′)–(iii), D6), §4.5 (double-claim hold), §4.6 (registry), §13.3 items 1 and 6.
+- Styling lexicon v0.5, under the same suspended-lock status: §0.2 (T_LI, T_S), §1A FX-1…FX-4, FX-R, FX-U, RH-1; §1B WL-1…WL-6, SI-1, SI-4; §2 consumer index (S0 rows); §5 items 7–9; §7.
 - Leave-in standard v1.0: §1.1, §2.1, §2.2, §2.3, §2.3.1, §2.3.2, §2.4 rule 2, §3.1.1, §5 L2/L3/L5, §7.5, §7.6, §7.7, §8.5, §13.3, §17.19, §17.21. T20 overlay v1.1 §0, §8 (overlay pattern).
 - Data: `data/research/leave-in-inci/v1.1/lab-fixture.json` (19 records); `data/research/styling-inci/v1.0/r6/cohort.json`; `…/r7/cohort.json`; `…/blind-lane-A-r6/results.json`; `…/blind-lane-B-r6/results.json`; `…/blind-lane-A-r7/results.json`; `…/blind-lane-B-r7/results.json`; `…/round-6/report.md`; `…/round-7/report.md`; `data/research/styling-inci/concept-v0/round2/G0-border-verdicts.json` (concept-phase Leave-in G0 letter reads, research only).

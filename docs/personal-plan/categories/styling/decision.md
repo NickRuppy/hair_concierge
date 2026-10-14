@@ -14,17 +14,17 @@ evidence_file: plans/styling-concept/03-d5-evidence.md
 
 ## Authority and checkpoint status
 
-**DRAFT — for owner review; research engine locked (LOCK-1), integration not started**
+**DRAFT — not in force; for owner review; Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check, integration not started**
 
 This document records the owner-ruled Styling policy for the Personal Plan and the decisions still needed before integration. It follows the structure of the [category design framework](../category-design-framework.md) and the Dry Shampoo, Heat Protectant, and Leave-in decisions. It does not turn the concept's matching sketch into confirmed policy.
 
 Authority order:
 
-1. [Owner rulings ledger](../../../../plans/styling-concept/02-rulings.md), including later amendments and `LOCK-1`;
-2. the locked [Styling classification standard](../../../research/styling-inci/v1.0/styling-classification-standard.md), [evidence lexicon v0.5](../../../research/styling-inci/v1.0/02_evidence_lexicon.v0.5.md), [property set](../../../research/styling-inci/v1.0/01_property-set-v0.md), and [category charter](../../../research/styling-inci/v1.0/00_category_charter.md);
+1. [Owner rulings ledger](../../../../plans/styling-concept/02-rulings.md), including later amendments and `LOCK-1-S`;
+2. the [Styling classification standard](../../../research/styling-inci/v1.0/styling-classification-standard.md), [evidence lexicon v0.5](../../../research/styling-inci/v1.0/02_evidence_lexicon.v0.5.md), [property set](../../../research/styling-inci/v1.0/01_property-set-v0.md), and [category charter](../../../research/styling-inci/v1.0/00_category_charter.md), under the suspended-lock status above;
 3. [Concept Rev. 2](../../../../plans/styling-concept/01-styling-concept.md), where not superseded, with [D5 evidence](../../../../plans/styling-concept/03-d5-evidence.md) as rationale for product composition.
 
-`LOCK-1` establishes the research lock despite earlier status text remaining in the research documents. It does not approve this full Personal Plan checkpoint or release held products. Changes to the locked engine require an explicit owner amendment. No runtime, catalog, Product Intake, Supabase, or production change is made by this draft.
+**Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check.** This does not approve this full Personal Plan checkpoint or release held products. Changes to the research engine require an explicit owner amendment. No runtime, catalog, Product Intake, Supabase, or production change is made by this draft.
 
 ## Intended user decision
 
@@ -72,17 +72,17 @@ Water-based serums that are really leave-in conditioners retain the Leave-in G0 
 The T15 border remains: a conditioning film with a supporting fixative is Leave-in; a fixative with thin conditioning is Styling (`D3`). Apply the later owner amendments:
 
 - **Border scope (`PH2-1`, `R1-Q2`):** volume, hold, texture, shaping/molding, and shine promises route directly to Styling. Dry, finished-hair anti-frizz/flyaway control is `shine_finish` by the main directions. Care, detangling, damp-hair smoothing/anti-frizz, curl support, and blow-dry/heat support retain the full Leave-in border check.
-- **D6 (`PH1-10`, `PH1-13`, `PH2-3`):** a Styling-look promise with neither real care nor real fixative hold routes to Styling in any format. Salt, starch, wax, and particles do not become fixative-class hold for this border. Real care uses the locked effective-amount test; oils count, and humectants alone do not establish care.
+- **D6 (`PH1-10`, `PH1-13`, `PH2-3`):** a Styling-look promise with neither real care nor real fixative hold routes to Styling in any format. Salt, starch, wax, and particles do not become fixative-class hold for this border. Real care uses the ruled effective-amount test; oils count, and humectants alone do not establish care.
 - **D7 (`PH1-12`):** a real fixative above the Styling tail plus substantive conditioning, sold as a curl/styling cream or balm, routes to `curl_cream` before the mixed-promise stop. Curl creams without a real fixative remain Leave-in unless a later owner-named ruling governs the exact product.
 - **Straightening amendments (`R3-Q4`, `R3-H2`, `R4-Q4`):** the straightening/smoothing sale routes to `smoothing_styler`; the fixative-led smoothing-spray extension also covers thin care. Wella EIMI Flowing Form is included in this held route.
-- **Smoothing-film amendment (`R6-Q1`):** the ruled heat-activated smoothing-film blow-out products route to held `smoothing_styler`. This replaces the earlier Leave-in outcomes for NEQI Diamond Glass Ultimate and All. Use the locked standard's general test and explicit owner exceptions; do not broaden it from one product example.
+- **Smoothing-film amendment (`R6-Q1`):** the ruled heat-activated smoothing-film blow-out products route to held `smoothing_styler`. This replaces the earlier Leave-in outcomes for NEQI Diamond Glass Ultimate and All. Use the current ruled standard's general test and explicit owner exceptions; do not broaden it from one product example.
 - **Care plus curl definition (`R1-Q3`, `R2-Q1`, `R4-Q3`):** a genuine combined care/definition promise remains manual review unless a preceding ruled exception or exact owner route resolves it. Feel/result adjectives do not create a care job, and curl revival is refresh rather than definition.
 
 Care coverage and lasting Styling coverage remain distinct. A smoothing/straightening product must not reach curly users as ordinary care (`R3-Q4`, `R6-Q1`). **The plan recommends these products only for a matching sleek/straightening goal**, never merely because curly hair has dryness, frizz, or a care need. A curl-definition goal does not authorize straightening. The provisional-product gate below still applies even when the sleek goal matches.
 
 ### Dry Shampoo and Heat Protectant
 
-Root refresh/oil absorption, including a tie with volume or texture, belongs to Dry Shampoo. Texture/grip without refresh positioning belongs to Styling (locked S0 border). Styling refresh means curl/wave revival, not cleansing or a replacement for wet washing.
+Root refresh/oil absorption, including a tie with volume or texture, belongs to Dry Shampoo. Texture/grip without refresh positioning belongs to Styling (ruled S0 border). Styling refresh means curl/wave revival, not cleansing or a replacement for wet washing.
 
 Protection-first products remain Heat Protectant even when they contain a fixative. A result-first Styling product stays Styling and may additionally fill the heat-protection role only under `PH1-15` and `PH2-4`, as specified below. Heat activation is not heat protection.
 
@@ -92,7 +92,7 @@ Protection-first products remain Heat Protectant even when they contain a fixati
 
 The concept proposes further subtype and preference inputs in §5, but neither its first-match matrix nor its target hold bands become confirmed rules through this draft. Their resolution is listed under Open decisions.
 
-Consume the locked product profile without re-estimating it from the subtype or name:
+Consume the ruled product profile without re-estimating it from the subtype or name:
 
 - route, subtype, provisional status, and any evidence/identity/formula block;
 - primary job and up to two secondary jobs;
@@ -159,11 +159,11 @@ The Chaarlie scale is **0–4**, normalized from brand claims only (`SD5`, `D8`,
 | `3` | Strong |
 | `4` | Very strong |
 | `null` | No qualifying C1/C2 strength statement; „Halt: keine Herstellerangabe“ |
-| `review` | A captured statement cannot yet be normalized under the locked rules; retain review rather than inventing a level |
+| `review` | A captured statement cannot yet be normalized under the ruled rules; retain review rather than inventing a level |
 
-An absent strength statement maps to `null`, never 0. Formula, a similar product, duration, look words, and flexibility words never supply a missing strength. Third-party retailer chips/copy do not assign a level. House-brand claims on their own retailer surface follow the ruled C2 authority (`PH2-7`); the complete claim-authority rules remain in the locked standard.
+An absent strength statement maps to `null`, never 0. Formula, a similar product, duration, look words, and flexibility words never supply a missing strength. Third-party retailer chips/copy do not assign a level. House-brand claims on their own retailer surface follow the ruled C2 authority (`PH2-7`); the complete claim-authority rules remain in the current standard under LOCK-1-S.
 
-Normalization follows the locked standard §7, including these later ledger rulings:
+Normalization follows current standard §7 under LOCK-1-S, including these later ledger rulings:
 
 - **Henkel (`R1-Q1`):** Haltegrad x/5 covers pastes, waxes, balms, and the other Henkel formats except Taft gels. Brand 1–2 maps to Chaarlie 1, 3 to 2, 4 to 3, and 5/5+ to 4. Taft gels keep the words-only rule.
 - **Wella EIMI (`R3-H5`):** Haltegrad/Haltestufe 1–2 maps to Chaarlie 1, 3 to 3, and 4/4+ to 4. Do not use the old unknown-maximum reading or invent a medium step.
@@ -173,11 +173,11 @@ Normalization follows the locked standard §7, including these later ledger ruli
 
 Hold affects ranking only in `gel`, `curl_cream`, `mousse`, `blowdry_lotion`, `hairspray`, and `molding`: a stated, fitting level ranks first; an unstated level stays eligible and ranks after it (`D8`). No product is excluded solely for missing hold. The exact user target bands remain open.
 
-Hold plays no selection role in `salt_spray`, `texture_spray`, `hair_powder`, `shine_finish`, `smoothing_styler`, or `refresher`; finish, weight, and application decide. A captured hold statement may be stored without becoming a ranking input. Do not compare levels across hold families (locked standard §7.7).
+Hold plays no selection role in `salt_spray`, `texture_spray`, `hair_powder`, `shine_finish`, `smoothing_styler`, or `refresher`; finish, weight, and application decide. A captured hold statement may be stored without becoming a ranking input. Do not compare levels across hold families (current standard §7.7 under LOCK-1-S).
 
 ### Neutral fact and internal plausibility review
 
-When hold is unstated, the existing neutral fact is „Enthält Stylingpolymere (z. B. PVP)“ (`D8b`, `PH1-9`). Under locked standard §7.6 it appears beside the missing-hold display only in a hold-relevant subtype with a confirmed fixative-class polymer above `T_S`. Use the first qualifying polymer as the example. Ambiguous polymers, natural films/starch, wax, salt, and particles do not trigger it. It is never a hold rating.
+When hold is unstated, the existing neutral fact is „Enthält Stylingpolymere (z. B. PVP)“ (`D8b`, `PH1-9`). Under current standard §7.6 and LOCK-1-S it appears beside the missing-hold display only in a hold-relevant subtype with a confirmed fixative-class polymer above `T_S`. Use the first qualifying polymer as the example. Ambiguous polymers, natural films/starch, wax, salt, and particles do not trigger it. It is never a hold rating.
 
 The `D8b` plausibility review remains internal: strong-or-higher claims, or any hold claim on shine/smoothing/refresh products, with no qualifying hold mechanism above the tail are reviewed; same-brand identical INCI with different levels is checked against the pack. Neither check changes the level or borrows another product's rating. User hold ratings grouped by hair profile remain a separate later feature idea, with no current matching authority.
 
@@ -200,11 +200,11 @@ Exact application and role allocation must respect verified directions. The ledg
 
 `PH1-16` and `PH2-2` hold every Styling route that the unchanged Leave-in standard could also claim, including the ruled D6/D7 moves, straightening amendments, R6-Q1 smoothing-film routes, and relevant owner-named records.
 
-Held records retain a **complete Styling profile marked provisional**, with their lean subtype. They may count toward research coverage, reported separately, but are **not matchable or recommendable until the Leave-in addendum is approved**. `LOCK-1` says the addendum is drafted and queued for its post-lock refresh; research lock alone does not release these products.
+Held records retain a **complete Styling profile marked provisional**, with their lean subtype. They may count toward research coverage, reported separately, but are **not matchable or recommendable until the Leave-in addendum is approved**. Historically, `LOCK-1` said the addendum was drafted and queued for a post-lock refresh; that claim is suspended by `LOCK-1-S` pending the final targeted re-check. Research status alone does not release these products.
 
 The addendum must carry the later straightening/smoothing extensions and owner-approved moves, including both NEQI Diamond Glass products. Already-ruled Leave-in products that move require the owner handling specified in `PH1-16`; a draft destination is not catalog publication.
 
-Evidence-, identity-, and formula-blocked records remain review cases under the locked standard. A complete held profile is not permission to recommend it, and a named route does not clear unrelated identity/formula/directions blockers.
+Evidence-, identity-, and formula-blocked records remain review cases under the current standard and LOCK-1-S. A complete held profile is not permission to recommend it, and a named route does not clear unrelated identity/formula/directions blockers.
 
 Within eligible products, apply the confirmed job-composition rules and `D8` ranking behavior. This draft does not invent `ideal`/`supportive`/`mismatch` thresholds, a thickness exclusion, exact candidate tie-breakers, or an owned-product rotation model from the concept's sketches. Those Personal Plan rules need the owner decision recorded below.
 
@@ -214,7 +214,7 @@ The ruled composition uses Leave-in → Styling → Finish. In the permitted cur
 
 Day-2 refresh reuses gel and water (`D5`). A dedicated refresher remains an optional extra. Neither instruction creates a universal weekly schedule or a guaranteed refresh result.
 
-Application moments and zones come from the locked research profile, including the main-required-application reading of `R6-T`. Exact recipe cadence, full subtype fallbacks, and recovery for missing application data are still integration decisions; no pumps, spray counts, wait times, heat temperatures, or additional UI instructions are supplied here.
+Application moments and zones come from the ruled research profile, including the main-required-application reading of `R6-T`. Exact recipe cadence, full subtype fallbacks, and recovery for missing application data are still integration decisions; no pumps, spray counts, wait times, heat temperatures, or additional UI instructions are supplied here.
 
 ## Reused notes and evidence boundaries
 
@@ -231,9 +231,9 @@ It fires for Alcohol, Alcohol Denat., SD Alcohol, Ethanol, or Isopropyl Alcohol 
 `PH1-4` and `PH2-5` reuse the Leave-in buildup note literally, including both trigger limbs:
 
 - permanently charged cationics above `T_S`, read internally from the Leave-in persistence enumeration solely to feed the note;
-- `weight = rich`, with the persistent-family basis required by the locked weight rule.
+- `weight = rich`, with the persistent-family basis required by the ruled weight rule.
 
-The ledger identifies the inherited copy as „Bleibt lange im Haar …“. Reuse the full Leave-in note unchanged from locked standard §6.4; this draft does not expand that quotation into new UI copy.
+The ledger identifies the inherited copy as „Bleibt lange im Haar …“. Reuse the full Leave-in note unchanged from current standard §6.4; this draft does not expand that quotation into new UI copy.
 
 This is a note, not a score, wash count, automatic clarifying schedule, or exclusion. Styling gets no independent persistence or hard-to-wash field. It does **not** settle whether Styling contributes to Deep-Cleansing reset load; `PH1-4(3)` remains open.
 
@@ -254,7 +254,7 @@ These cases restate the settled rulings for later integration verification. They
 | Henkel balm 3; Wella EIMI 2 / 3 / 4+ | Chaarlie 2; Chaarlie 1 / 3 / 4 (`R1-Q1`, `R3-H5`) |
 | Word strengths 2 vs 4, or 3 vs 4; three strengths 2, 2, 4 | 3; 4; median 2, preserving claims (`R3-H`, `R3-H4`) |
 | Known-scale number versus inflated strength word | Number wins, without averaging (`R3-H4(a)`) |
-| Missing hold with fixative above tail; only starch/wax/salt/particles | Neutral polymer fact only for the qualifying fixative case and hold-relevant subtype (`PH1-9`, locked §7.6) |
+| Missing hold with fixative above tail; only starch/wax/salt/particles | Neutral polymer fact only for the qualifying fixative case and hold-relevant subtype (`PH1-9`, current §7.6) |
 | Heat claim plus L9 pass; either condition absent | Heat coverage only for the complete pass, using `T_S` (`PH1-15`, `PH2-4`) |
 | Held record with otherwise fitting complete profile | Still not matchable/recommendable before approved Leave-in addendum (`PH2-2`) |
 | Curly user with care or definition need but no sleek goal | No straightening/smoothing-styler care recommendation (`R3-Q4`, `R6-Q1`) |
@@ -263,21 +263,21 @@ These cases restate the settled rulings for later integration verification. They
 
 ## Open decisions
 
-No question below reopens a settled rule or authorizes a change to the locked engine. Until resolved, the existing conservative rule or the stated deferral remains in force.
+No question below reopens a settled rule or authorizes a change to the research engine. Until resolved, the existing conservative rule or the stated deferral remains in force.
 
 1. **Deep-Cleansing Styling load (`PH1-4(3)`).** Should using a rich Styling product at least weekly add one point to the Deep-Cleansing reset load? Styling is not currently an input; no +1 rule is adopted here.
 2. **Exact optional profile suggestions (`D4`).** Should fine hair, air-dried wavy/curly/coily hair, and short hair use the three proposed helpers and notes, or should those profile triggers be adjusted? Profile alone remains optional either way.
 3. **Subtype targets and additional preference inputs (concept §5.2–§5.3; matching policy deferred by charter §14).** Which subtype choices and target hold bands should the plan use for each problem or look, and should it collect the proposed texture/sleek goals, hold, finish, or aerosol preferences? The concept's row order, alternatives, and defaults remain a sketch; the sleek-goal restriction and `D8` rules above are already settled.
-4. **Complete Stage 2 and Stage 3 integration policy (concept §5; locked standard §14).** How should owned products be assessed and retained, uncovered jobs receive an exact product, and the chosen products be assigned to Styling events and application instructions? The ledger fixes composition and hold ranking but does not supply the complete verdict, reconciliation, cadence, fallback, or heat-carrier-priority rules.
+4. **Complete Stage 2 and Stage 3 integration policy (concept §5; current standard §14 under LOCK-1-S).** How should owned products be assessed and retained, uncovered jobs receive an exact product, and the chosen products be assigned to Styling events and application instructions? The ledger fixes composition and hold ranking but does not supply the complete verdict, reconciliation, cadence, fallback, or heat-carrier-priority rules.
 5. **Exact-product heat evidence without L9 (`PH2-4`; property set §9 item 13).** Should a Styling product with a verified heat-protection test but no L9 member ever cover the heat step? The current answer stays false; changing it requires an explicit owner amendment, not an integration fallback.
 6. **Additional research coverage (`PH2-11`).** Should the proposed 80% drugstore-shelf coverage target and an example exercising every pair rule be pursued as follow-up research? They remain tracked open and are not additional lock criteria or an invented launch gate.
 7. **Later user hold ratings (`D8b`).** Should the separate user-rating feature be taken forward later, and what minimum number of ratings would be required before showing results by hair profile? No user ratings enter the current claim-only scale or selection rules.
 
-Product-specific research uncertainties and weak lexicon evidence retain the locked review behavior. They do not become new Personal Plan thresholds or silently reopen the research lock.
+Product-specific research uncertainties and weak lexicon evidence retain the ruled review behavior. They do not become new Personal Plan thresholds or silently reopen the research review.
 
 ## Handoff and stop gates
 
-The research engine is locked under `LOCK-1`; the Personal Plan Styling decision remains a draft for owner review. Integration has not started.
+**Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check**; the Personal Plan Styling decision remains a draft for owner review. Integration has not started.
 
 The queued Leave-in addendum must be refreshed with the later ruled moves and approved before held products become matchable/recommendable. The Heat Protectant companion decision needs the documented `PH1-15` amendment carried through in the later integration work. Neither dependency is cleared by creating this file.
 

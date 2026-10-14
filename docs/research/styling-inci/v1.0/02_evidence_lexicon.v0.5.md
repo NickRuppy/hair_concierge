@@ -1,21 +1,27 @@
 # Styling evidence lexicon — v0.5
 
-Status: **v0.5 amended (R6/R7/R8) — lock suspended; targeted re-check r9 pending (LOCK-1-S)**.
-Lexicon version: `styling-lexicon-v0.5-r7amend` (consumed by `styling-classification-standard.md` v0.5, engine `styling-inci-v0.5-r8amend`).
+Status: **lock suspended (LOCK-1-S) — final targeted re-check r10 pending**.
+Lexicon version: `styling-lexicon-v0.5-r7amend` (consumed by `styling-classification-standard.md` v0.5, engine `styling-inci-v0.5-r9amend`).
 Scope: leave-on styling products (12 subtypes), German/EU market, plus the boundary families the S0 gate reads at the edges of Leave-in, Heat Protectant, Oil and Dry Shampoo.
+
+### Amendment (R9, 2026-10-14)
+
+| Change | Ruling | Where |
+|---|---|---|
+| R9 changes only the consuming claim/job interpretation: any C1/C2 claim line (including `promise`, `finish` and `other`) can supply a secondary; multiple result adjectives follow the named-look/subtype rule. Formula families, memberships and the lexicon stamp remain unchanged. | R9, 2026-10-14 — R9-Q1, R9-Q2 | standard §6.10; property set §2.12 |
 
 ### Amendment (R8, 2026-10-14)
 
 | Change | Ruling | Where |
 |---|---|---|
-| R8 changes promise/name interpretation and border outcomes only. Formula families, memberships and the lexicon stamp remain unchanged; the consuming engine is `styling-inci-v0.5-r8amend`, targeted r9 pending. | R8, 2026-10-14 — R8-Q1, R8-Q2, R8-H | standard §4.2 / §4.6 / §6.10; header |
+| R8 changes promise/name interpretation and border outcomes only. Formula families, memberships and the lexicon stamp remain unchanged; the consuming engine is `styling-inci-v0.5-r9amend`, targeted r9 pending. | R8, 2026-10-14 — R8-Q1, R8-Q2, R8-H | standard §4.2 / §4.6 / §6.10; header |
 
 ### Amendment (R7 rulings, 2026-10-13)
 
 | Change | Ruling | Where |
 |---|---|---|
 | Enumerate the smoothing-film subset for standard §4.3 (i′): **Polysilicone-29 and Silicone Quaternium-18 only**. Other SI-1 members (including Dimethicone and amodimethicones) are not in this subset. Existing family memberships, fixative and heat-protection readings remain unchanged. | R6-Q1, L5 | §1B SI-1; standard §4.3 (i′) |
-| Status is amended R6/R7 with lock suspended pending r8. Job-word changes are owned by standard §4.2 / §6.10, not formula membership. | LOCK-1-S, R7-F, R7-Q1…R7-Q3, L2 | header; standard |
+| Status is lock suspended (LOCK-1-S) with final targeted re-check r10 pending. Job-word changes are owned by standard §4.2 / §6.10, not formula membership. | LOCK-1-S, R7-F, R7-Q1…R7-Q3, L2 | header; standard |
 
 **R6 amendment (2026-10-13; no membership change).** SI-1 Polysilicone-29 and Silicone Quaternium-18 remain silicone-coat/care families wherever existing rules read them. The standard's R6-Q1 heat-activated smoothing-film route is a separate, claim-and-position-gated S0 route; it does not make these silicones fixatives or heat-protection polymers. In that S0 test, the lead smoothing film does not itself disqualify the trace-care limb; other care is read at/after the first-preservative cutoff. Existing D6/R2 care readings remain unchanged. R6-T changes application/job reading only, not any family membership.
 

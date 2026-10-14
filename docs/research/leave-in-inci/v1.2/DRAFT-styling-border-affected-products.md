@@ -1,12 +1,12 @@
 # Styling-border addendum — affected products (DRAFT)
 
-Status: **DRAFT — not in force; queued after Styling v1.0 lock (LOCK-1); every move of an already-ruled Leave-in product needs owner approval.**
+Status: **DRAFT — not in force; Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check; every move of an already-ruled Leave-in product needs owner approval.**
 Companion to `DRAFT-styling-border-addendum.md` (this folder); A1–A11 and the remaining §6 open items refer to that file.
-Refreshed: 2026-10-13 after LOCK-1. No standard, ledger, research data, catalog or database was changed.
+Refreshed: 2026-10-14. **Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check.** No standard, ledger, research data, catalog or database was changed.
 
 ## How this list was built
 
-- **Leave-in:** Node read the 19 products in `data/research/leave-in-inci/v1.1/lab-fixture.json`, checked v1.0 corpus/reference-key and v1.1 overlay records, and reconciled the locked Styling §4.6/ledger owner destinations. Ten distinct owner-only historic Leave-in rulings are added; EVO's owner row overlaps its corpus record and is counted once.
+- **Leave-in:** Node read the 19 products in `data/research/leave-in-inci/v1.1/lab-fixture.json`, checked v1.0 corpus/reference-key and v1.1 overlay records, and reconciled the Styling §4.6/ledger owner destinations. Ten distinct owner-only historic Leave-in rulings are added; EVO's owner row overlaps its corpus record and is counted once.
 - **Styling:** Node mapped each lane's opaque ids through its own `id_map` in `data/research/styling-inci/v1.0/r6/cohort.json` (143) and `r7/cohort.json` (69 targeted records). Read `blind-lane-A-r6/results.json`, `blind-lane-B-r6/results.json`, `blind-lane-A-r7/results.json`, `blind-lane-B-r7/results.json`. For each lane separately, r7 replaces r6 by source slug; non-targeted records retain r6. Do not merge the two lanes or treat r7's 69 as the full cohort.
 - **Hold predicate:** `boundary_reason` or `reason_code` equals `pending_leave_in_addendum`. Both r6 lanes held 18; both r7 lanes held 15 within their targeted population; the final 143-record merged set is **21**, identical by slug and lean subtype between lanes. R6-Q1 adds John Frieda Unendlich Smooth and the two NEQIs; R4-Q4's Balea Glattspray is already held in r6.
 - **Direct scope predicate:** final lane A selects actual committed Styling with `pair_rule: 3.4(ii)`, or (r7's representation without that field) `li_function: no` plus a 3.4(ii) path. Require actual `route: styling` and no hold; a rejected/counterfactual path is not a destination. Both lanes' final subtypes are checked. There are **46**, including already-excluded Alcina Föhn Lotion; part C1 lists the other **45**.
@@ -22,7 +22,7 @@ Refreshed: 2026-10-13 after LOCK-1. No standard, ledger, research data, catalog 
 | Other explicit border statuses | **47**: 45 direct scope + 1 Polysilicone-9 + 1 GUHL 3in1 |
 | Further border products staying put | **16** (part D) |
 
-The two moves are included in the 21 holds; these are **not additive counts**. LOCK-1 resolves the old round-4 confirmation gates.
+The two moves are included in the 21 holds; these are **not additive counts**. The final targeted re-check under LOCK-1-S must close the old round-4 confirmation gates.
 
 ---
 
@@ -60,7 +60,7 @@ No corpus record contains an FX-4 member (A5), Polysilicone-9 (A6) or Polyquater
 
 ### A2. Products ruled Leave-in by owner rulings on the Styling side (10)
 
-Source: LOCKED Styling v1.0 §4.6 registry and the ledger. Nine are in the r6 cohort: final lanes retain eight Leave-in destinations and hold NEQI All as `smoothing_styler`; syoss Curl Control remains excluded from the DE cohort (not sold in Germany).
+Source: Styling v1.0 §4.6 registry and the ledger, under **Styling v1.0 lock suspended (LOCK-1-S) pending the final targeted re-check**. Nine are in the r6 cohort: final lanes retain eight Leave-in destinations and hold NEQI All as `smoothing_styler`; syoss Curl Control remains excluded from the DE cohort (not sold in Germany).
 
 | Product | Slug | Current Leave-in status | Outcome under the addendum | Reason | Owner approval |
 |---|---|---|---|---|---|
@@ -190,11 +190,11 @@ GUHL **LOCKEN PFLEGE & STYLING 3in1 LOCKENCREME, KUR & SPÜLUNG** (old title Haa
 | Balea Styling Locken Lotion | `balea-styling-locken-lotion` | `leave_in` / same | Effective care; no firing A3/A4/A11 exclusion |
 | Kérastase CURL MANIFESTO REFRESH ABSOLU Second day curl refreshing spray | `kerastase-curl-manifesto-refresh-absolu` | `leave_in` / same | R4-Q1: one-job C1 refreshing-spray name supplies promise; care keeps Leave-in |
 | syoss KERATIN Heat HITZESCHUTZ-SPRAY | `syoss-hitzeschutzspray-keratin-heat` | `heat_protectant` / same | Protection-first confirmed name; outside this addendum |
-| GUHL LOCKEN PFLEGE & STYLING 2in1 STYLING-SPRAY | `guhl-styling-spray-locken-pflege-und-styling-2in1` | `provisional_boundary (mixed_promise)` / same | Locked mixed-promise review; current category retained |
-| GARNIER FRUCTIS LOCKEN METHODE SHAPE REFRESH STEP 4 FEUCHTIGKEITS-BOOST SPRAY | `garnier-fructis-locken-methode-feuchtigkeitsboost-pflege-spray` | `provisional_boundary (mixed_promise)` / same | Locked mixed-promise review; current category retained |
-| John Frieda Traumlocken Belebender Wellenauffrischer | `john-frieda-traumlocken-belebender-wellenauffrischer` | `provisional_boundary (mixed_promise)` / same | Locked mixed-promise review; current category retained |
-| Moroccanoil Glättende Creme (Smoothing Lotion) | `moroccanoil-glaettende-creme-smoothing-lotion` | `provisional_boundary (mixed_promise)` / same | Locked mixed-promise review; current category retained |
-| Syoss Glaze Glanz & Schutz Primer | `syoss-glaze-glanz-und-schutz-primer` | `provisional_boundary (mixed_promise)` / same | Locked mixed-promise review; current category retained |
+| GUHL LOCKEN PFLEGE & STYLING 2in1 STYLING-SPRAY | `guhl-styling-spray-locken-pflege-und-styling-2in1` | `provisional_boundary (mixed_promise)` / same | Ruled mixed-promise review; current category retained |
+| GARNIER FRUCTIS LOCKEN METHODE SHAPE REFRESH STEP 4 FEUCHTIGKEITS-BOOST SPRAY | `garnier-fructis-locken-methode-feuchtigkeitsboost-pflege-spray` | `provisional_boundary (mixed_promise)` / same | Ruled mixed-promise review; current category retained |
+| John Frieda Traumlocken Belebender Wellenauffrischer | `john-frieda-traumlocken-belebender-wellenauffrischer` | `provisional_boundary (mixed_promise)` / same | Ruled mixed-promise review; current category retained |
+| Moroccanoil Glättende Creme (Smoothing Lotion) | `moroccanoil-glaettende-creme-smoothing-lotion` | `leave_in` / same | R8-H: „Definition” for „krauses Haar” plus „Ideal für lockiges Haar” is not a curl-definition promise; Leave-in |
+| Syoss Glaze Glanz & Schutz Primer | `syoss-glaze-glanz-und-schutz-primer` | `provisional_boundary (mixed_promise)` / same | Ruled mixed-promise review; current category retained |
 
 Wella EIMI Smooth Thermal Image stays Heat Protectant. Syoss Glaze **Topcoat** stays committed `shine_finish` (3.5, R4-Q2), distinct from the mixed Glaze **Primer** above. Balea Finishing Spray Glow & Care and taft x Gliss Silky Shine stay committed `shine_finish`; Barber Club Pomade (C1) and Redken Wax Spray stay committed Styling (R4-Q6). None is released from a Leave-in-addendum hold.
 
