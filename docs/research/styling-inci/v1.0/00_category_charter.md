@@ -1,6 +1,6 @@
 # Styling v1.0 category charter
 
-Status: **lock suspended (LOCK-1-S) — final re-check r11 pending**.
+Status: **lock suspended (LOCK-1-S) — final re-check r12 pending**.
 Version: 1.0 (artifact root; the classification standard is being drafted)
 Market: Germany/EU
 Date: 2026-10-09
@@ -8,6 +8,15 @@ Governing inputs: `plans/styling-concept/02-rulings.md` (owner rulings — **gov
 Inherited method: Leave-In Standard v1.0 (`docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md`, cited as "LI §x"), with the v1.1 overlay where it applies.
 
 **R6-T application/job alignment:** `target_zone` reads the main required application; optional/conditional extra sites do not widen it, and required sequential sites give `all` (Balea Volumenpuder Spray ⇒ `roots`; Redken Root Tease ⇒ `all`). In descriptive sentences `definition` requires an explicit curl/wave define-or-shape promise (R7-Q2 separately admits curl/wave words in the product's own name); „definierter Look“ alone gives no definition job (alverde Beach Waves). Standard §6.10/§6.12 governs.
+
+### Amendment (R11, 2026-10-14)
+
+Source: R11-Q1 and R11-Q2 in the governing ledger. The final re-check `r12/` uses `styling-inci-v0.5-r11amend`; formula families, lexicon membership and `styling-lexicon-v0.5-r7amend` stay unchanged. LOCK-1-S remains in force; frozen rounds remain provenance. Scorers pin the exact standard/ledger git revision (R9-P).
+
+| Amendment | Ruling / date | Consuming procedure |
+|---|---|---|
+| Volume words are STRONG only when volume itself is promised („für mehr Volumen“, „Fülle am Ansatz“). Curl-quality descriptions („Locken voller Sprungkraft“, bare „Sprungkraft“ on a curl product) are WEAK, even alongside a promise of defined curls. Balea Pro Styling Cream Traumlocken and Taft Styling Balm Locken supply volume only to a free secondary slot after STRONG jobs and the formula gate. | R11, 2026-10-14 — R11-Q1 | standard §6.10; property set §2.12 |
+| A form word (Gel, Cream, Creme, Gelee, Lotion, Spray, Schaum) inside a compound name that already names the job is the form, not a second job. Wella EIMI Nutricurls „Curl Shaper (Defining Gel Cream)“ and „Curl Cream Gel“ each name one job, primary `definition`. Earlier qualifier, tie, authority and formula rules remain in force. | R11, 2026-10-14 — R11-Q2 | standard §4.2 step 1; §6.10 name-signal collection |
 
 ### Amendment (R10, 2026-10-14)
 
