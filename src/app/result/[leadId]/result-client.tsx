@@ -19,8 +19,8 @@ import { RegularQuizFieldTestUnavailable } from "@/components/regular-quiz-field
 import { PartnerAccessUnavailable } from "@/components/partner-access/unavailable"
 import type { PersonalPlanOfferModel } from "@/components/personal-plan-offer/types"
 import { renderOfferVariant } from "@/funnels/offers/registry"
+import type { FunnelOfferFocusTarget } from "@/funnels/types"
 import { QUIZ_RESULT_CTA } from "@/lib/quiz/result-cta"
-import type { GuidedStoryFocusTarget } from "@/lib/quiz/guided-story-flow"
 import { buildQuizResultOnboardingPath } from "@/lib/quiz/result-navigation"
 import { buildQuizResultNarrative } from "@/lib/quiz/result-narrative"
 import type { QuizAnswers } from "@/lib/quiz/types"
@@ -68,7 +68,7 @@ export function ResultPageClient({
   quizKind?: "legacy" | "personal_plan"
   entryContext?: OfferEntryContext
   focusRoutine: boolean
-  focusTarget?: GuidedStoryFocusTarget
+  focusTarget?: FunnelOfferFocusTarget
   hasAccess: boolean
   fieldTest?: boolean
   moderatorTest?: boolean
@@ -221,7 +221,7 @@ function LegacyResultPageClient({
 }: {
   entryContext: OfferEntryContext
   focusRoutine: boolean
-  focusTarget?: GuidedStoryFocusTarget
+  focusTarget?: FunnelOfferFocusTarget
   hasAccess: boolean
   isInternalTest: boolean
   leadId: string

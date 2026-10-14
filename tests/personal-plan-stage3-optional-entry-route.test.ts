@@ -333,6 +333,41 @@ test("the actual optional route JSON passes the HTTP parser and Stage 3 bootstra
   assert.deepEqual(bootstrap.fitComparisons, [])
 })
 
+test("the Stage 3 bootstrap adapter passes the shopping-budget envelope through and omits it when absent", async () => {
+  const handler = createStage3OptionalEntryRouteHandler(deps())
+  const gateway = createHttpStage3ProductsGateway({
+    fetch: (url, init) => handler(new Request(`http://test${String(url)}`, init)),
+  })
+  const response = await gateway.openOptionalInventory!({
+    personalPlanId: "11111111-1111-4111-8111-111111111111",
+    refinedVersionId: "33333333-3333-4333-8333-333333333333",
+  })
+  const ids = {
+    personalPlanId: "11111111-1111-4111-8111-111111111111",
+    refinedVersionId: "33333333-3333-4333-8333-333333333333",
+  }
+
+  assert.equal("budget" in buildStage3Bootstrap(response, ids), false)
+
+  const saved = buildStage3Bootstrap(
+    {
+      ...response,
+      budget: { status: "saved", value: { kind: "capped", limitEur: 5, allowExceptions: false } },
+    },
+    ids,
+  )
+  assert.deepEqual(saved.budget, {
+    status: "saved",
+    value: { kind: "capped", limitEur: 5, allowExceptions: false },
+  })
+
+  const required = buildStage3Bootstrap(
+    { ...response, budget: { status: "budget_required", suggestion: 15 } },
+    ids,
+  )
+  assert.deepEqual(required.budget, { status: "budget_required", suggestion: 15 })
+})
+
 test("optional Stage 3 entry maps and logs stale refined-source conflicts without disclosing drafts", async (context) => {
   const info = context.mock.method(console, "info", () => {})
   const response = await createStage3OptionalEntryRouteHandler(

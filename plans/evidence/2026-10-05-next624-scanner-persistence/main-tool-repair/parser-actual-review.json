@@ -1,0 +1,20 @@
+{
+  "actualAccepted": {
+    "accepted": true,
+    "operator": "doesNotReject",
+    "message": "Got unwanted rejection: attempt-log insert errors must not reject the route deferred drain\nActual message: \"boom\"",
+    "messageMatches": true,
+    "firstFrame": "    async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-resolve-route.test.ts:1095:3)",
+    "stackToken": "tests/scan-resolve-route.test.ts:1095:",
+    "expected": {
+      "startLine": 1095,
+      "text": "assert.doesNotReject(\n    Promise.all(queued.splice(0).map((task) => task())),\n    \"attempt-log insert errors must not reject the route deferred drain\",\n  )",
+      "keeperSha256": "8b5e9843b5226f77e0790cb4c9512976a88e8ce346ae0ecb98e0c2ac92f0c53b",
+      "testFileSha256": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add"
+    }
+  },
+  "wrongAssertionFirstFrameRejected": true,
+  "originalFailedRunNotCutProof": true,
+  "sourceWrites": 0,
+  "children": 0
+}

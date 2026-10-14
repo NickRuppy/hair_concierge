@@ -1,0 +1,165 @@
+TAP version 13
+# Subtest: canonical correction apply guard requires the production project confirmation
+ok 1 - canonical correction apply guard requires the production project confirmation
+  ---
+  duration_ms: 0.512541
+  ...
+# Subtest: canonical correction product patch never writes live product names or legacy fields
+ok 2 - canonical correction product patch never writes live product names or legacy fields
+  ---
+  duration_ms: 0.329958
+  ...
+# Subtest: canonical correction alias upsert rows only include database columns
+ok 3 - canonical correction alias upsert rows only include database columns
+  ---
+  duration_ms: 0.067667
+  ...
+# Subtest: canonical category constants include supported and known unsupported keys
+ok 4 - canonical category constants include supported and known unsupported keys
+  ---
+  duration_ms: 0.806916
+  ...
+# Subtest: normalizeCategoryKey maps production labels, canonical keys, and simple oil aliases
+ok 5 - normalizeCategoryKey maps production labels, canonical keys, and simple oil aliases
+  ---
+  duration_ms: 0.143125
+  ...
+# Subtest: normalizeText folds accents, punctuation, case, and spacing
+ok 6 - normalizeText folds accents, punctuation, case, and spacing
+  ---
+  duration_ms: 0.280208
+  ...
+# Subtest: normalizeIdentityText is stable for case, whitespace, punctuation, and safe diacritics
+ok 7 - normalizeIdentityText is stable for case, whitespace, punctuation, and safe diacritics
+  ---
+  duration_ms: 0.062084
+  ...
+# Subtest: normalizeIdentityText matches L'Oreal variants without broad unsafe rewrites
+ok 8 - normalizeIdentityText matches L'Oreal variants without broad unsafe rewrites
+  ---
+  duration_ms: 0.050083
+  ...
+# Subtest: normalizeIdentifier returns stable snake-case identifiers
+ok 9 - normalizeIdentifier returns stable snake-case identifiers
+  ---
+  duration_ms: 0.325916
+  ...
+# Subtest: tokenizeProductName returns normalized searchable product-name tokens
+ok 10 - tokenizeProductName returns normalized searchable product-name tokens
+  ---
+  duration_ms: 0.139333
+  ...
+# Subtest: cleanProductDisplayName removes exact brand and product line prefixes conservatively
+ok 11 - cleanProductDisplayName removes exact brand and product line prefixes conservatively
+  ---
+  duration_ms: 1.497292
+  ...
+# Subtest: resolveBrandFromText returns an exact brand and product line prefix match
+ok 12 - resolveBrandFromText returns an exact brand and product line prefix match
+  ---
+  duration_ms: 2.178667
+  ...
+# Subtest: resolveBrandFromText returns an exact brand match without over-matching inside words
+ok 13 - resolveBrandFromText returns an exact brand match without over-matching inside words
+  ---
+  duration_ms: 0.322
+  ...
+# Subtest: resolveBrandFromText resolves Phase 0 aliases before canonical brand names
+ok 14 - resolveBrandFromText resolves Phase 0 aliases before canonical brand names
+  ---
+  duration_ms: 0.3505
+  ...
+# Subtest: unknown brand returns unresolved raw text with no confidence
+ok 15 - unknown brand returns unresolved raw text with no confidence
+  ---
+  duration_ms: 0.065083
+  ...
+# Subtest: conflicting aliases are reported and excluded from usable alias resolution
+ok 16 - conflicting aliases are reported and excluded from usable alias resolution
+  ---
+  duration_ms: 0.319542
+  ...
+# Subtest: resolver uses Phase 0 normalized brand and line fields for punctuation variants
+ok 17 - resolver uses Phase 0 normalized brand and line fields for punctuation variants
+  ---
+  duration_ms: 0.106375
+  ...
+# Subtest: alias collisions with canonical brand names are reported and excluded
+ok 18 - alias collisions with canonical brand names are reported and excluded
+  ---
+  duration_ms: 0.120292
+  ...
+# Subtest: line-specific aliases with missing product lines are excluded
+ok 19 - line-specific aliases with missing product lines are excluded
+  ---
+  duration_ms: 0.054959
+  ...
+# Subtest: resolver handles corrected Phase A catalog aliases
+ok 20 - resolver handles corrected Phase A catalog aliases
+  ---
+  duration_ms: 0.724875
+  ...
+# Subtest: product identity migration creates the phase 0 identity tables
+ok 21 - product identity migration creates the phase 0 identity tables
+  ---
+  duration_ms: 0.807209
+  ...
+# Subtest: product identity migration exposes only public-safe identity tables to public clients
+ok 22 - product identity migration exposes only public-safe identity tables to public clients
+  ---
+  duration_ms: 0.600375
+  ...
+# Subtest: product identity migration keeps non-recommended products out of public product reads
+ok 23 - product identity migration keeps non-recommended products out of public product reads
+  ---
+  duration_ms: 0.145209
+  ...
+# Subtest: product identity migration keeps semantic product matching aligned with catalog visibility
+ok 24 - product identity migration keeps semantic product matching aligned with catalog visibility
+  ---
+  duration_ms: 0.123917
+  ...
+# Subtest: product identity migration extends products without contracting legacy fields
+ok 25 - product identity migration extends products without contracting legacy fields
+  ---
+  duration_ms: 0.470625
+  ...
+# Subtest: product identity migration keeps product lines and identifiers compatible
+ok 26 - product identity migration keeps product lines and identifiers compatible
+  ---
+  duration_ms: 0.174917
+  ...
+# Subtest: product identity migration stores script-normalized identity values
+ok 27 - product identity migration stores script-normalized identity values
+  ---
+  duration_ms: 0.178583
+  ...
+# Subtest: product identity migration seeds all phase 0 product categories
+ok 28 - product identity migration seeds all phase 0 product categories
+  ---
+  duration_ms: 0.06
+  ...
+# Subtest: product identity migration stays inside the phase 0 boundary
+ok 29 - product identity migration stays inside the phase 0 boundary
+  ---
+  duration_ms: 0.197125
+  ...
+# Subtest: product identity title composes brand, line and name without visible duplication
+ok 30 - product identity title composes brand, line and name without visible duplication
+  ---
+  duration_ms: 0.423667
+  ...
+# Subtest: product identity title ignores blank identity parts
+ok 31 - product identity title ignores blank identity parts
+  ---
+  duration_ms: 0.057083
+  ...
+1..31
+# tests 31
+# suites 0
+# pass 31
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1077.146833

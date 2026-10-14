@@ -11,6 +11,8 @@ import type {
   PersonalPlanRefinementAnswersV1,
   Stage2QuestionId,
 } from "../src/lib/personal-plan/refinement/types"
+import { DIFFUSER_AS_BLOW_DRY_RULE_ID } from "../src/lib/personal-plan/heat-diffuser-rule"
+import { resolveStage2RefinementContract } from "../src/lib/personal-plan/refinement/question-path"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
 
 const irritatedOilyEnvelope = {
@@ -25,6 +27,7 @@ const irritatedOilyEnvelope = {
 const completedAnswers: PersonalPlanRefinementAnswersV1 = {
   currentProductCategories: ["shampoo"],
   wetWashFrequency: "weekly_2x",
+  bondbuilderTiming: "no_preference",
   scalpIrritationDetail: "mild_sensitive_or_itchy",
   dryShampooBridgePreference: "accept",
   dryShampooVisibleHairColor: "dark",
@@ -47,6 +50,7 @@ const completedAnswers: PersonalPlanRefinementAnswersV1 = {
 const completedQuestionIds: Stage2QuestionId[] = [
   "current_product_categories",
   "wet_wash_frequency",
+  "bondbuilder_timing",
   "scalp_irritation_detail",
   "dry_shampoo_bridge_preference",
   "dry_shampoo_visible_hair_color",
@@ -73,7 +77,7 @@ function initialSnapshot() {
 
 test("a real Stage 1 snapshot drives Stage 2 triggers and a refined Stage 1 recomputation", () => {
   const initial = initialSnapshot()
-  const triggerContext = deriveStage2TriggerContext(initial)
+  const triggerContext = deriveStage2TriggerContext(initial, { toolsEnabled: false })
 
   assert.deepEqual(triggerContext, {
     relevantCategories: initial.renderedOrder,
@@ -144,7 +148,7 @@ test("a real Stage 1 snapshot drives Stage 2 triggers and a refined Stage 1 reco
 })
 
 test("refined towel technique projects only explicit rough rubbing as mechanical exposure", () => {
-  const triggerContext = deriveStage2TriggerContext(initialSnapshot())
+  const triggerContext = deriveStage2TriggerContext(initialSnapshot(), { toolsEnabled: false })
 
   for (const [towel, expected] of [
     [{ material: "frottee", technique: "rough_rubbing" }, ["towel_rough_rubbing"]],
@@ -162,7 +166,7 @@ test("refined towel technique projects only explicit rough rubbing as mechanical
 })
 
 test("completed current-product categories clear current-product-load deferrals", () => {
-  const triggerContext = deriveStage2TriggerContext(initialSnapshot())
+  const triggerContext = deriveStage2TriggerContext(initialSnapshot(), { toolsEnabled: false })
   const routine = buildPlanRoutineContextFromCompletedRefinement({
     triggerContext,
     answers: {
@@ -200,7 +204,7 @@ test("completed current-product categories clear current-product-load deferrals"
 })
 
 test("current product categories stay inventory-routing facts instead of frequency load", () => {
-  const triggerContext = deriveStage2TriggerContext(initialSnapshot())
+  const triggerContext = deriveStage2TriggerContext(initialSnapshot(), { toolsEnabled: false })
   const routine = buildPlanRoutineContextFromCompletedRefinement({
     triggerContext,
     answers: {
@@ -212,6 +216,7 @@ test("current product categories stay inventory-routing facts instead of frequen
     completedQuestionIds: [
       "current_product_categories",
       "wet_wash_frequency",
+      "bondbuilder_timing",
       "scalp_irritation_detail",
       "dry_shampoo_visible_hair_color",
       "oil_purposes",
@@ -257,7 +262,7 @@ test("current product categories stay inventory-routing facts instead of frequen
 })
 
 test("the adapter rejects an incomplete refinement contract", () => {
-  const triggerContext = deriveStage2TriggerContext(initialSnapshot())
+  const triggerContext = deriveStage2TriggerContext(initialSnapshot(), { toolsEnabled: false })
 
   assert.throws(
     () =>
@@ -273,7 +278,7 @@ test("the adapter rejects an incomplete refinement contract", () => {
 test("an untriggered scalp detail stays an explicit unknown", () => {
   const initial = initialSnapshot()
   const triggerContext = {
-    ...deriveStage2TriggerContext(initial),
+    ...deriveStage2TriggerContext(initial, { toolsEnabled: false }),
     hasReportedIrritatedScalp: false,
   }
   const answers = { ...completedAnswers, scalpIrritationDetail: undefined }
@@ -366,4 +371,154 @@ test("an existing Dry Shampoo records an accepted bridge without asking the brid
   })
 
   assert.deepEqual(routine.dryShampooBridgePreference, { state: "known", value: "accept" })
+})
+
+/** A member who owns a Diffusor-Aufsatz and a Glätteisen, tools rollout on. */
+const diffuserToolsAnswers = {
+  currentProductCategories: [],
+  wetWashFrequency: "weekly_2x",
+  bondbuilderTiming: "no_preference",
+  toolFamiliesWithSomething: ["drying_textiles", "airflow", "heated_styling"],
+  toolForms: {
+    "drying_textiles:1": ["microfiber_towel"],
+    "airflow:1": ["hair_dryer", "diffuser"],
+    "heated_styling:1": ["flat_iron"],
+    "heatless_styling:1": [],
+    "securing_sectioning:1": [],
+    "securing_sectioning:2": [],
+    "brushes_combs:1": [],
+    "brushes_combs:2": [],
+    "wash_application:1": [],
+    "night_protection:1": [],
+  },
+  towel: { material: "mikrofaser", technique: "gentle_press" },
+  dryingRoutes: ["diffuser_or_airflow_shaping"],
+  heatEvents: {
+    "heat:diffuser_airflow_shaping": { frequency: "weekly_2x" },
+    "heat:straightener": { frequency: "weekly_1x", protectionConsistency: "always" },
+  },
+  // Rev. 6: Gewohnheiten closes with the night question (the snapshot's hair can be tied).
+  nightWear: "open",
+} as PersonalPlanRefinementAnswersV1
+
+function toolsTrigger() {
+  return {
+    ...deriveStage2TriggerContext(initialSnapshot(), { toolsEnabled: true }),
+    hasReportedIrritatedScalp: false,
+    dryShampooBridgeEligibility: "ineligible" as const,
+  }
+}
+
+function allQuestionIds(
+  triggerContext: ReturnType<typeof toolsTrigger>,
+  answers: PersonalPlanRefinementAnswersV1,
+) {
+  return resolveStage2RefinementContract({ triggerContext, answers, completedQuestionIds: [] }).path
+    .orderedQuestionIds
+}
+
+test("rollout on: the Diffusor keeps its airflow_shaping route and carries the tier marker", () => {
+  const triggerContext = toolsTrigger()
+  const completed = allQuestionIds(triggerContext, diffuserToolsAnswers)
+  assert.ok(completed.includes("heat:diffuser_airflow_shaping"))
+  assert.ok(completed.includes("heat:straightener"))
+  const routine = buildPlanRoutineContextFromCompletedRefinement({
+    triggerContext,
+    answers: diffuserToolsAnswers,
+    completedQuestionIds: completed,
+  })
+  assert.deepEqual(
+    routine.heatToolUse.state === "known"
+      ? routine.heatToolUse.value.map(({ id, tool, route, sourceRuleIds }) => ({
+          id,
+          tool,
+          route,
+          sourceRuleIds,
+        }))
+      : null,
+    [
+      {
+        id: "heat:diffuser_airflow_shaping",
+        tool: "hair_dryer",
+        route: "airflow_shaping",
+        sourceRuleIds: ["post_plan_onboarding:heat_tool_use", DIFFUSER_AS_BLOW_DRY_RULE_ID],
+      },
+      {
+        id: "heat:straightener",
+        tool: "straightener",
+        route: "direct_contact_heat",
+        sourceRuleIds: ["post_plan_onboarding:heat_tool_use"],
+      },
+    ],
+  )
+})
+
+test("rollout off: the Diffusor event carries no marker (today's plan input)", () => {
+  const routine = buildPlanRoutineContextFromCompletedRefinement({
+    triggerContext: deriveStage2TriggerContext(initialSnapshot(), { toolsEnabled: false }),
+    answers: completedAnswers,
+    completedQuestionIds,
+  })
+  assert.ok(routine.heatToolUse.state === "known")
+  for (const event of routine.heatToolUse.value) {
+    assert.deepEqual(event.sourceRuleIds, ["post_plan_onboarding:heat_tool_use"])
+  }
+})
+
+test("rollout on: a stored Diffusor protection answer is ignored, never an error", () => {
+  const triggerContext = toolsTrigger()
+  const answers = {
+    ...diffuserToolsAnswers,
+    heatEvents: {
+      ...diffuserToolsAnswers.heatEvents,
+      "heat:diffuser_airflow_shaping": { frequency: "weekly_2x", protectionConsistency: "no" },
+    },
+  } as PersonalPlanRefinementAnswersV1
+  const routine = buildPlanRoutineContextFromCompletedRefinement({
+    triggerContext,
+    answers,
+    completedQuestionIds: allQuestionIds(triggerContext, answers),
+  })
+  assert.equal(routine.heatToolUse.state, "known")
+})
+test("a stated Bondbuilder timing reaches the refined snapshot; „Ist mir egal“ adds no key", () => {
+  const triggerContext = deriveStage2TriggerContext(initialSnapshot(), { toolsEnabled: false })
+  const refinedRoutine = (bondbuilderTiming: "before_wash" | "after_wash" | "no_preference") => {
+    const routine = buildPlanRoutineContextFromCompletedRefinement({
+      triggerContext,
+      answers: { ...completedAnswers, bondbuilderTiming },
+      completedQuestionIds,
+    })
+    const refined = computeNeedPlan({
+      rawEnvelope: irritatedOilyEnvelope,
+      artifactId: "11111111-1111-4111-8111-111111111111",
+      projection: "refined_post_plan",
+      computationVersion: "stage1-v1",
+      createdAt: "2026-08-07T12:10:00.000Z",
+      routine,
+    })
+    assert.equal(refined.status, "ready")
+    if (refined.status !== "ready") throw new Error("unreachable")
+    return { routine, snapshot: refined.snapshot }
+  }
+
+  for (const value of ["before_wash", "after_wash"] as const) {
+    const { routine, snapshot } = refinedRoutine(value)
+    assert.deepEqual(routine.bondbuilderTiming, { state: "known", value })
+    assert.deepEqual(snapshot.profile.routine.bondbuilderTiming, { state: "known", value })
+  }
+
+  const neutral = refinedRoutine("no_preference")
+  assert.equal("bondbuilderTiming" in neutral.routine, false)
+  assert.equal("bondbuilderTiming" in neutral.snapshot.profile.routine, false)
+  // Without a Bondbuilder need (no question on the path) the snapshot is the same bytes.
+  const withoutNeed = buildPlanRoutineContextFromCompletedRefinement({
+    triggerContext: {
+      ...triggerContext,
+      relevantCategories: triggerContext.relevantCategories.filter((c) => c !== "bondbuilder"),
+    },
+    answers: { ...completedAnswers, bondbuilderTiming: undefined },
+    completedQuestionIds: completedQuestionIds.filter((id) => id !== "bondbuilder_timing"),
+  })
+  assert.equal(JSON.stringify(withoutNeed), JSON.stringify(neutral.routine))
 })

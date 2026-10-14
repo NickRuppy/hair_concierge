@@ -1,0 +1,65 @@
+{
+  "01-hask-argan-oil-sachet": {
+    "g0": "Nach der Haarwäsche einmassieren, bis zu 10 Minuten einwirken lassen, gründlich ausspülen — klare Ausspül-Kur ohne zweiten Anwendungsmodus ⇒ in_category.",
+    "conditioningLevel": "Zwei Kationik-Tenside (Cetrimonium Chloride, Quaternium-18) und Cetearyl Alcohol an Position 2, alles vor der Parfum-Marke ⇒ high; Konfidenz moderat, weil Quaternium-18 direkt vor dem Parfum steht und der Wert an ihm hängt.",
+    "weightPotential": "Lanolin an Position 3 als schweres Lipid vor der Parfum-Marke, dazu Cetearyl Alcohol ganz vorne als dichte Fettbasis ⇒ high; Konfidenz moderat, weil die INCI nur aus einer Ersatzquelle stammt.",
+    "careDirection": "Vor der Parfum-Marke nur Fettalkohol, Lanolin und zwei Kationik-Tenside; alle fünf Proteine stehen dahinter ⇒ keine Proteinroute ⇒ moisture; als Tail-Protein-Cocktail geflaggt und zur Prüfung geroutet.",
+    "repairSupportLevel": "Kein Bond-Wirkstoff in der Liste; Kollagen, Keratin und Sojaprotein stehen alle hinter der Parfum-Marke ⇒ keine Proteinroute ⇒ low.",
+    "primaryFocus": "Reichhaltige Standardbasis ohne Silikon, Polymer, Feuchthaltemittel oder Protein vor der Parfum-Marke — kein Spezialfokus erreicht seine Schwelle ⇒ general.",
+    "secondaryFocus": "Kein Kandidat erreicht die Schwelle; jeder würde nur dieselbe Lanolin-/Kationik-Basis doppelt zählen ⇒ kein Sekundärfokus."
+  },
+  "02-gliss-7sekunden-express-repair": {
+    "g0": "Nach dem Shampoonieren auftragen, 7 Sekunden einwirken lassen, ausspülen — Express-Kuren gehören unabhängig von der Einwirkzeit zur Kategorie ⇒ in_category.",
+    "conditioningLevel": "Myristyl Alcohol an Position 3 und zwei leichte Ester vorne, aber nur ein einziges Kationik-Tensid in der ganzen Formel ⇒ moderate; Konfidenz moderat, weil die Parfum-Position in der wasserarmen Formel nicht lesbar ist.",
+    "weightPotential": "Kein schweres Lipid, kein Silikon, nur leichte Ester; ein sicheres low ist aber nicht belegbar, weil die Parfum-Position in der wasserarmen Formel nicht lesbar ist ⇒ vorsichtig moderate.",
+    "careDirection": "Hydrolyzed Keratin steht als einziges Protein weit hinten (Position 13); vorne Propylene Glycol, Glycerin und leichte Ester ⇒ keine Proteinroute ⇒ moisture. Konfidenz moderat, weil die Parfum-Position nicht lesbar ist.",
+    "repairSupportLevel": "Benanntes Bond-System (Hydroxypropylgluconamide + Hydroxypropylammonium Gluconate, Positionen 11/12); die wasserarme Formel macht das frühe Parfum als Grenze bedeutungslos ⇒ high; Konfidenz moderat, weil die Parfum-Marke unaufgelöst bleibt.",
+    "primaryFocus": "Das benannte Gluconamid-Bond-System (Positionen 11/12) trägt den Reparatur-Fokus allein; in der wasserarmen Formel zählt die frühe Parfum-Position nicht ⇒ repair; Konfidenz moderat, weil die Parfum-Marke unaufgelöst bleibt.",
+    "secondaryFocus": "Kein zweiter Kandidat erreicht die Schwelle — nur zwei Feuchthaltemittel (Propylene Glycol, Glycerin) statt der nötigen drei, kein Silikon oder Polymer."
+  },
+  "03-bali-curls-sos-protein-treatment": {
+    "g0": "Alle Bedingungen stehen wörtlich da: nach der Haarwäsche, in Längen und Spitzen, drei Minuten einwirken lassen, gründlich ausspülen ⇒ in_category.",
+    "conditioningLevel": "Zwei Kationik-Tenside (Cetrimonium Chloride, Behentrimonium Methosulfate), Cetearyl Alcohol an Position 2 und drei Öle/Butter vor dem Parfum ⇒ high; Konfidenz moderat, weil Behentrimonium direkt vor dem Parfum steht.",
+    "weightPotential": "Sheabutter (Position 5) und Kokosöl (Position 7) als schwere Lipide klar vor der Parfum-Marke, dazu Cetearyl Alcohol ganz vorne ⇒ high, ohne Grenzfall.",
+    "careDirection": "Beide Proteine stehen erst hinter dem Parfum (Positionen 15 und 17); vorne nur Öle, Butter, Glycerin und Betaine ⇒ keine Proteinroute ⇒ moisture. Konfidenz moderat: mit späterer Grenze wäre es balanced.",
+    "repairSupportLevel": "Kein Bond-Wirkstoff, und beide Proteine stehen hinter der Parfum-Marke ⇒ keine Proteinroute; „Total Repair“ ist nur Produktname ⇒ low.",
+    "primaryFocus": "Reichhaltige Standardmaske ohne Protein, Silikon oder Polymer vor dem Parfum, nur zwei Feuchthaltemittel; der Locken-Hinweis allein darf keinen Fokus schaffen ⇒ general.",
+    "secondaryFocus": "Kein Kandidat erreicht die Schwelle — nur zwei Feuchthaltemittel vor der Parfum-Marke; alles andere würde dieselbe reichhaltige Basis doppelt zählen."
+  },
+  "04-gliss-liquid-silk-4in1": {
+    "g0": "Vier Modi genannt, nur der Masken-Modus erfüllt alles (nach dem Waschen, 2–3 Minuten einwirken, ausspülen) ⇒ in_category, bewertet nur für diesen Modus.",
+    "conditioningLevel": "Drei verschiedene Kationik-Tenside (Positionen 4, 5, 7), Cetearyl Alcohol an Position 2 und zwei Lipide vor dem Parfum — mehrere unabhängige Reichhaltigkeits-Signale ⇒ high.",
+    "weightPotential": "Starke Kationik-/Fettalkohol-Basis, aber kein schweres Lipid vor dem Parfum: Sheabutter, Aprikosenkernöl und das Silikon stehen alle dahinter ⇒ moderate.",
+    "careDirection": "Hydrolyzed Silk und Sericin stehen vor der Parfum-Marke, daneben nur Glycerin als Feuchthaltemittel ⇒ Protein führt ⇒ protein; Konfidenz moderat, weil Sericin direkt vor dem Parfum steht und der Wert an ihm hängt.",
+    "repairSupportLevel": "Benanntes Gluconamid-Bond-System (Positionen 8/9) klar vor dem Parfum an Position 13 ⇒ high; Konfidenz moderat, weil die INCI nur aus einer Ersatzquelle stammt.",
+    "primaryFocus": "Bond-System (Positionen 8/9) und Seidenprotein-Paar (11/12) vor dem Parfum — zwei unabhängige Reparatur-Belege, ohne Werbeaussagen ⇒ repair.",
+    "secondaryFocus": "Kein zweiter Kandidat erreicht die Schwelle — das einzige Silikon steht hinter dem Parfum, also kein Glanz trotz „Liquid Silk Glanz“; nur Glycerin als Feuchthaltemittel."
+  },
+  "05-isana-mandelmilch-3in1": {
+    "g0": "Drei Modi genannt; nur die Intensivpflege (3–5 Minuten einwirken, ausspülen) erfüllt alles, die anderen bleiben im Haar ⇒ in_category, bewertet nur für diesen Modus.",
+    "conditioningLevel": "Zwei Kationik-Tenside (Behentrimonium Chloride, Stearamidopropyl Dimethylamine), Cetearyl Alcohol an Position 2 und sechs Öle/Ester vor dem Parfum ⇒ high; Konfidenz moderat, weil das Produkt bestätigt ausgelistet ist (nur Kalibrierung).",
+    "weightPotential": "Kokosöl (Position 7) und Kakaobutter (Position 12) als schwere Lipide vor dem Parfum, dazu Cetearyl Alcohol ganz vorne ⇒ high; Konfidenz moderat weil das Produkt bestätigt ausgelistet ist (nur Kalibrierung).",
+    "careDirection": "Milchprotein (Position 6) und kationisiertes Weizenprotein (Position 10) vor dem Parfum, nur Panthenol als Feuchthaltemittel ⇒ Protein führt ⇒ protein; Konfidenz moderat wegen der hohen Proteinlast.",
+    "repairSupportLevel": "Zwei Proteine vor dem Parfum (Milchprotein, kationisiertes Weizenprotein) bilden eine echte Proteinroute, aber es gibt keinen Bond-Wirkstoff ⇒ medium.",
+    "primaryFocus": "Zwei Proteine vor dem Parfum (Milchprotein an Position 6, Weizenprotein an Position 10) tragen den Reparatur-Fokus, ganz ohne Werbeaussagen ⇒ repair.",
+    "secondaryFocus": "Kein zweiter Kandidat erreicht die Schwelle — nur Panthenol als Feuchthaltemittel, kein Glycerin; die Ölbasis würde nur die Grundpflege doppelt zählen."
+  },
+  "06-monday-smooth-anti-frizz": {
+    "g0": "Auf feuchtes Haar in Längen und Spitzen einmassieren, 10 Minuten einwirken lassen, ausspülen — klare Ausspül-Maske mit einem Modus ⇒ in_category.",
+    "conditioningLevel": "Cetearyl Alcohol an Position 3 und vier Öle/Butter vor der Marke (Phenoxyethanol), aber das einzige Kationik-Tensid steht erst dahinter — ohne Kationik-Breite kein high ⇒ moderate.",
+    "weightPotential": "Sheabutter und Kokosöl vor der Marke, Cetearyl Alcohol an Position 3 und ein Dimethicone/Dimethiconol-Paar an Position 4/5 — mehrere unabhängige Schwere-Signale ⇒ high.",
+    "careDirection": "Kein Protein irgendwo in der Liste; vorne Silikone, Öle, Butter und Glycerin ⇒ moisture.",
+    "repairSupportLevel": "Weder Bond-Wirkstoff noch Protein in der ganzen Liste; Silikone und Öle zählen nicht als Reparatur ⇒ low.",
+    "primaryFocus": "Dimethicone und Dimethiconol an Position 4 und 5 — ein eigener Silikon-Glättungsweg über die Standardbasis hinaus ⇒ smoothing (obwohl die Packung „ohne Silikone“ sagt).",
+    "secondaryFocus": "Glanz scheitert an Sheabutter und Kokosöl vor der Marke und würde denselben Silikonfilm doppelt zählen; nur Glycerin als Feuchthaltemittel ⇒ kein Sekundärfokus."
+  },
+  "07-pantene-molecular-bond-repair": {
+    "g0": "Auf nasses Haar, 2 Minuten einwirken lassen, ausspülen — normale Ausspül-Maske mit Bond-Werbung, kein Spezial-Bondbuilder ⇒ in_category.",
+    "conditioningLevel": "Nur ein Kationik-Tensid vor dem Parfum und kein Öl; einzig Stearyl Alcohol an Position 2 liefert ein Signal ⇒ moderate.",
+    "weightPotential": "Kein Öl und keine Butter in der ganzen Liste, nur ein Silikon — aber insgesamt zwei Kationik-Tenside (Position 3 und 11), daher nicht strukturell leicht ⇒ moderate.",
+    "careDirection": "Kein Protein in der Liste (Glutaminsäure ist nur eine Aminosäure) und nur ein einzelnes Silikon, kein Silikon-System ⇒ moisture.",
+    "repairSupportLevel": "Kein Bond-Wirkstoff in der INCI trotz „Molecular Bond Repair“; Bis-Aminopropyl Dimethicone ist ein Amino-Silikon, kein Bond, und Protein fehlt ⇒ low.",
+    "primaryFocus": "Bis-Aminopropyl Dimethicone an Position 5 ist der einzige Wirkstoff jenseits der Grundbasis ⇒ smoothing; Konfidenz moderat, weil general knapp dahinter liegt.",
+    "secondaryFocus": "Kein zweiter Kandidat erreicht die Schwelle — das einzige Silikon ist schon für die Glättung verbraucht, und vor dem Parfum steht kein Feuchthaltemittel."
+  }
+}

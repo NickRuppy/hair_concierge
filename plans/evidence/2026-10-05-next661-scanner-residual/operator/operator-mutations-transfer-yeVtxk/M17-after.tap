@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: scan name-only submission migration: the name-only index never overlaps an identifier-based row for the same user+category
+ok 1 - scan name-only submission migration: the name-only index never overlaps an identifier-based row for the same user+category
+  ---
+  duration_ms: 756.815834
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1097.564167

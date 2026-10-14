@@ -1,0 +1,1 @@
+feb9284cd32e4e2533cc10f19687966114982564 2026-09-25 feat(quiz,scan): ruhige Übergänge im Quiz + Suche, Einladungs-Ende ohne Ladekette (batch 8a) (#614)

@@ -1,0 +1,92 @@
+{
+  "declarations": 106,
+  "expectedRuntimeRegistrations": 135,
+  "runtimeWasExecuted": false,
+  "expandedSites": [
+    {
+      "file": "tests/quiz-primary-concern.test.ts",
+      "line": 101,
+      "table": "STATED_TABLE",
+      "rowCount": 11,
+      "classification": "R"
+    },
+    {
+      "file": "tests/quiz-primary-concern.test.ts",
+      "line": 165,
+      "table": "inline nonLegacy list",
+      "rowCount": 4,
+      "classification": "R"
+    },
+    {
+      "file": "tests/quiz-primary-concern.test.ts",
+      "line": 250,
+      "table": "NON_LEGACY_COPY own entries",
+      "rowCount": 4,
+      "classification": "R"
+    },
+    {
+      "file": "tests/quiz-need-lane.test.ts",
+      "line": 98,
+      "table": "cases",
+      "rowCount": 14,
+      "classification": "R"
+    }
+  ],
+  "perFile": [
+    {
+      "file": "tests/quiz-normalization.test.ts",
+      "declarations": 20,
+      "expectedRegistrations": 20
+    },
+    {
+      "file": "tests/quiz-primary-concern.test.ts",
+      "declarations": 20,
+      "expectedRegistrations": 36
+    },
+    {
+      "file": "tests/quiz-validators.test.ts",
+      "declarations": 14,
+      "expectedRegistrations": 14
+    },
+    {
+      "file": "tests/quiz-draft.test.ts",
+      "declarations": 18,
+      "expectedRegistrations": 18
+    },
+    {
+      "file": "tests/quiz-screen-order.test.ts",
+      "declarations": 12,
+      "expectedRegistrations": 12
+    },
+    {
+      "file": "tests/quiz-preparation.test.ts",
+      "declarations": 9,
+      "expectedRegistrations": 9
+    },
+    {
+      "file": "tests/quiz-need-lane.test.ts",
+      "declarations": 2,
+      "expectedRegistrations": 15
+    },
+    {
+      "file": "tests/quiz-result-routing.test.ts",
+      "declarations": 4,
+      "expectedRegistrations": 4
+    },
+    {
+      "file": "tests/quiz-email-return-selection.test.ts",
+      "declarations": 3,
+      "expectedRegistrations": 3
+    },
+    {
+      "file": "tests/quiz-email-return-choice.test.ts",
+      "declarations": 2,
+      "expectedRegistrations": 2
+    },
+    {
+      "file": "tests/quiz-email-return-edit.test.ts",
+      "declarations": 2,
+      "expectedRegistrations": 2
+    }
+  ]
+}

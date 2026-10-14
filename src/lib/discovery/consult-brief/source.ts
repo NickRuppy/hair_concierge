@@ -11,7 +11,7 @@ import {
 } from "../cockpit"
 import { buildDiscoveryQuizAnswers, type DiscoveryQuizAnswers } from "../quiz-answers"
 import { loadDiscoveryQuizLead } from "../quiz-lead"
-import { consultSourceHash } from "./hash"
+import { consultSourceHash, consultSourceParts } from "./hash"
 import { assembleConsultInput, type ConsultInput } from "./input"
 
 /**
@@ -21,7 +21,12 @@ import { assembleConsultInput, type ConsultInput } from "./input"
  * would hash differently and mark every brief stale.
  */
 
-export type ConsultBriefSource = { input: ConsultInput; sourceHash: string }
+export type ConsultBriefSource = {
+  input: ConsultInput
+  sourceHash: string
+  /** Per-part fingerprints: the stale hint names what changed (consult-brief-d item 3). */
+  sourceParts: Record<string, string>
+}
 
 /**
  * Pure: the page already holds every part (model, view, quiz answers, call sheet), so T4 calls
@@ -39,7 +44,7 @@ export function consultBriefSource(parts: {
     { view: parts.view, model: parts.model, quiz },
     parts.callSheet ? { baselineScore: parts.callSheet.baselineScore } : null,
   )
-  return { input, sourceHash: consultSourceHash(input) }
+  return { input, sourceHash: consultSourceHash(input), sourceParts: consultSourceParts(input) }
 }
 
 export type ConsultBriefSourceDependencies = {

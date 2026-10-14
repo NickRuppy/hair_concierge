@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: the closing completion of a Modul-1-projected draft activates the successor immediately (result_refined_need_version_id branch)
+not ok 1 - the closing completion of a Modul-1-projected draft activates the successor immediately (result_refined_need_version_id branch)
+  ---
+  duration_ms: 666.43375
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-refinement-recompute-activation-migration.test.ts:2:14561'
+  failureType: 'testCodeFailure'
+  error: |-
+    staged AND confirmed within the same transaction — the closing draft still satisfies condition 1 via result_refined_need_version_id
+    + actual - expected
+    
+    + '8e1d9e58-9abe-408e-82e2-04cde28fb0c9'
+    - null
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: ~
+  actual: '8e1d9e58-9abe-408e-82e2-04cde28fb0c9'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-refinement-recompute-activation-migration.test.ts:544:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 935.881875

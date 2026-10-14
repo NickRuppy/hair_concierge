@@ -1,0 +1,226 @@
+{
+  "version": "catalog-completeness-slice4-prestate-v1",
+  "captured_at": "2026-10-11T14:35:10.608466Z",
+  "project": "pqdkhefxsxkyeqelqegq",
+  "capture": "read-only SELECT (execute_sql), latest applied migration 20261011132316",
+  "product": {
+    "id": "04a83f16-e610-4883-b44d-038d3a343787",
+    "name": "Aveda Botanical Repair Bond-Building Pre-Shampoo Treatment",
+    "origin": "curated",
+    "is_active": true,
+    "lifecycle_status": "active",
+    "is_chaarlie_recommended": true,
+    "category": null,
+    "updated_at": "2026-10-07T09:52:51.582864+00:00"
+  },
+  "protocol": {
+    "id": "f8d9cf57-9266-465a-8f09-d603e5065701",
+    "product_id": "04a83f16-e610-4883-b44d-038d3a343787",
+    "category": "bondbuilder",
+    "role": "specialized_bond_treatment",
+    "cadence": null,
+    "source_label": "Reviewed product directions",
+    "source_url": "https://www.aveda.de/product/botanical-repair-bond-building-pre-shampoo-treatment",
+    "source_text": "DE pre-shampoo: gel-cream, root-to-tip application, conditional frequency and manufacturer diameter positioning",
+    "created_at": "2026-10-07T09:52:51.582864+00:00",
+    "updated_at": "2026-10-07T09:52:51.582864+00:00",
+    "guidance_payload": {
+      "schemaVersion": 1,
+      "guidanceKey": "v2-exact-bondbuilder_verified_product-04a83f16-e610-4883-b44d-038d3a343787",
+      "protocolVersion": 2,
+      "locale": "de",
+      "scope": {
+        "kind": "product",
+        "category": "bondbuilder",
+        "productId": "04a83f16-e610-4883-b44d-038d3a343787"
+      },
+      "role": "bond_repair",
+      "applicationFamily": "pre_shampoo_single_treatment",
+      "compatibleDayTypes": [
+        "bond_repair_day"
+      ],
+      "exactGuidanceRequired": true,
+      "sequence": {
+        "anchor": "pre_wash",
+        "before": [],
+        "after": [],
+        "conflictsWith": []
+      },
+      "requirements": {
+        "requiredCatalogFacts": [],
+        "requiredProtocolFacts": [],
+        "requiredProfileFacts": []
+      },
+      "protocolFacts": {
+        "applicationArea": "all_hair",
+        "rinse": "rinse_out",
+        "contactTimeSeconds": null,
+        "contactTime": {
+          "kind": "range_seconds",
+          "minimumSeconds": 300,
+          "maximumSeconds": 600
+        },
+        "applicationState": "dry_hair",
+        "treatmentRinse": "rinse_out",
+        "conditionerSequence": {
+          "before": "not_stated",
+          "after": "recommended",
+          "minimumWaitSeconds": null
+        },
+        "shampooAfterTreatment": "rinse_then_shampoo",
+        "conditionerRelationship": "not_applicable",
+        "reapplication": "none",
+        "amount": null,
+        "workflowId": "bondbuilder_verified_product",
+        "cautions": []
+      },
+      "steps": [
+        {
+          "stepKey": "apply",
+          "action": "apply_product",
+          "copyTemplateDe": "Auf das trockene Haar geben und vom Ansatz bis zu den Spitzen verteilen."
+        },
+        {
+          "stepKey": "distribute",
+          "action": "section",
+          "copyTemplateDe": "Vom Ansatz bis in die Spitzen verteilen."
+        },
+        {
+          "stepKey": "wait",
+          "action": "wait",
+          "copyTemplateDe": "5 Minuten bis 10 Minuten einwirken lassen."
+        },
+        {
+          "stepKey": "rinse-treatment",
+          "action": "rinse",
+          "copyTemplateDe": "Die Behandlung gründlich ausspülen."
+        },
+        {
+          "stepKey": "shampoo-after",
+          "action": "section",
+          "copyTemplateDe": "Anschließend wie gewohnt mit Shampoo waschen und pflegen."
+        },
+        {
+          "stepKey": "conditioner-after",
+          "action": "section",
+          "copyTemplateDe": "Danach mit Conditioner fortfahren und ihn wie gewohnt ausspülen."
+        }
+      ],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.aveda.de/product/botanical-repair-bond-building-pre-shampoo-treatment",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-09-30"
+        },
+        {
+          "sourceUrl": "https://www.aveda.de/product/botanical-repair-bond-building-pre-shampoo-treatment",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-01"
+        },
+        {
+          "sourceUrl": "https://www.aveda.de/product/botanical-repair-bond-building-pre-shampoo-treatment",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-03"
+        }
+      ]
+    },
+    "guidance_payload_v2": {
+      "schemaVersion": 2,
+      "contractKind": "product_pointer",
+      "scope": {
+        "kind": "product",
+        "category": "bondbuilder",
+        "productId": "04a83f16-e610-4883-b44d-038d3a343787"
+      },
+      "sourceRole": "specialized_bond_treatment",
+      "role": "bond_repair",
+      "applicationFamily": "pre_shampoo_single_treatment",
+      "facts": {
+        "applicationState": "dry_hair",
+        "applicationArea": "root_to_tip_hair",
+        "rinse": "rinse_out",
+        "contactTime": {
+          "kind": "range_seconds",
+          "minimumSeconds": 300,
+          "maximumSeconds": 600
+        },
+        "amount": null,
+        "heat": null,
+        "conditionerSequence": {
+          "before": "not_stated",
+          "after": "recommended",
+          "minimumWaitSeconds": null
+        },
+        "shampooAfterTreatment": "rinse_then_shampoo",
+        "conditionerPolicy": "not_applicable"
+      },
+      "workflowId": "bondbuilder_verified_product",
+      "requiredCompanionProductId": null,
+      "runtimeBlockerCode": null,
+      "exactSteps": [
+        {
+          "stepKey": "apply",
+          "action": "apply_product",
+          "copyDe": "Auf das trockene Haar geben und vom Ansatz bis zu den Spitzen verteilen."
+        },
+        {
+          "stepKey": "distribute",
+          "action": "section",
+          "copyDe": "Vom Ansatz bis in die Spitzen verteilen."
+        },
+        {
+          "stepKey": "wait",
+          "action": "wait",
+          "copyDe": "5 Minuten bis 10 Minuten einwirken lassen."
+        },
+        {
+          "stepKey": "rinse-treatment",
+          "action": "rinse",
+          "copyDe": "Die Behandlung gründlich ausspülen."
+        },
+        {
+          "stepKey": "shampoo-after",
+          "action": "section",
+          "copyDe": "Anschließend wie gewohnt mit Shampoo waschen und pflegen."
+        },
+        {
+          "stepKey": "conditioner-after",
+          "action": "section",
+          "copyDe": "Danach mit Conditioner fortfahren und ihn wie gewohnt ausspülen."
+        }
+      ],
+      "cautionCodes": [],
+      "evidence": [
+        {
+          "sourceUrl": "https://www.aveda.de/product/botanical-repair-bond-building-pre-shampoo-treatment",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-09-30"
+        },
+        {
+          "sourceUrl": "https://www.aveda.de/product/botanical-repair-bond-building-pre-shampoo-treatment",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-01"
+        },
+        {
+          "sourceUrl": "https://www.aveda.de/product/botanical-repair-bond-building-pre-shampoo-treatment",
+          "sourceType": "manufacturer",
+          "checkedAt": "2026-10-03"
+        }
+      ]
+    }
+  },
+  "protocol_count": 1,
+  "research_profile": {
+    "review_sha256": "293275baa809e81344ba17652202aec67585f850561a7726b6c9bb0ceabc6ca0",
+    "canonical_sha256": "d2473aa129092e261c5a876db90a2eb3e4dc0ce5f3b2fd918192a8287f938de4"
+  },
+  "curated_facts_ready": true,
+  "cadence_evidence_rows": 0,
+  "s4_receipts": 0,
+  "damage_branched_protocols": 0,
+  "note": "guidance_payload / guidance_payload_v2 equal the frozen P07 promotion artifact (protocolV1/protocolV2) byte for byte; checked by the generator.",
+  "protocol_payload_canonical_sha256": {
+    "guidance_payload": "b6fb9c29421794804d4e11259d85f6ec4a1e21b6590c94db9bfe1d5f79e08288",
+    "guidance_payload_v2": "38062df5950dc70166199df6b593f0eec5c5a73e11181108c1abac27cd6f9e73"
+  }
+}

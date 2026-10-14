@@ -1,0 +1,177 @@
+{
+  "originalControlsSHA256": "1e424075f2af42a5f65e65d63a38d3dcaa662778a82f97d70af33392f978d712",
+  "authorizedBy": "Root messages authorize TMP C3 relocation only; acceptance/execution pending",
+  "amendments": [
+    {
+      "id": "C3-01",
+      "source": "src/components/gated-preview/gated-preview.tsx",
+      "sourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "original": {
+        "find": "      <PremiumSheet\n",
+        "replace": "      <form />\n      <PremiumSheet\n",
+        "mutantSHA256": "06dbdb10b8a3ad5055c1fbc357d7b2ae6a9a0cbe102d997ff5d39a83f21ff44e",
+        "snapshot": "/tmp/test-audit-public-funnel66-c69uzpx6/mutants/C3-01/src/components/gated-preview/gated-preview.tsx"
+      },
+      "amended": {
+        "find": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n",
+        "replace": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n      <form />\n",
+        "mutantSHA256": "0bcba4b7dbdfe19d23a39c099072ada53a7969642813eeb91205586d14ce4737",
+        "snapshot": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C3-01/src/components/gated-preview/gated-preview.tsx"
+      },
+      "reason": "Main-authorized TMP control-only relocation immediately after actual section opening, before frame/child output, to expose prohibited host markup in Node printed prefix. Same test assertions and phase lines; proposal unchanged.",
+      "limits": "No unseen SSR tail claim; this relocation has no native evidence yet."
+    },
+    {
+      "id": "C3-02",
+      "source": "src/components/gated-preview/gated-preview.tsx",
+      "sourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "original": {
+        "find": "      <PremiumSheet\n",
+        "replace": "      <button type=\"submit\" />\n      <PremiumSheet\n",
+        "mutantSHA256": "ba25e679ca8e46ff6dac3c36745a80a0b2d5d73d56932d348f5f50db48b60e5d",
+        "snapshot": "/tmp/test-audit-public-funnel66-c69uzpx6/mutants/C3-02/src/components/gated-preview/gated-preview.tsx"
+      },
+      "amended": {
+        "find": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n",
+        "replace": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n      <button type=\"submit\" />\n",
+        "mutantSHA256": "5605831d38da2e0957673e39cbc3cca35a2dc8ef67842bcc759cebf8fcbe849f",
+        "snapshot": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C3-02/src/components/gated-preview/gated-preview.tsx"
+      },
+      "reason": "Main-authorized TMP control-only relocation immediately after actual section opening, before frame/child output, to expose prohibited host markup in Node printed prefix. Same test assertions and phase lines; proposal unchanged.",
+      "limits": "No unseen SSR tail claim; this relocation has no native evidence yet."
+    },
+    {
+      "id": "C3-03",
+      "source": "src/components/gated-preview/gated-preview.tsx",
+      "sourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "original": {
+        "find": "      <PremiumSheet\n",
+        "replace": "      <button formAction=\"/forbidden\" />\n      <PremiumSheet\n",
+        "mutantSHA256": "592e88ecaaf5af854a4e44936aeca2e214e010cfaee681d073519194b73acdfa",
+        "snapshot": "/tmp/test-audit-public-funnel66-c69uzpx6/mutants/C3-03/src/components/gated-preview/gated-preview.tsx"
+      },
+      "amended": {
+        "find": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n",
+        "replace": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n      <button formAction=\"/forbidden\" />\n",
+        "mutantSHA256": "8b56d3debca9babaefdf85d41f4d160b0ddc8eab737ec60b42748934762ecbd0",
+        "snapshot": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C3-03/src/components/gated-preview/gated-preview.tsx"
+      },
+      "reason": "Main-authorized TMP control-only relocation immediately after actual section opening, before frame/child output, to expose prohibited host markup in Node printed prefix. Same test assertions and phase lines; proposal unchanged.",
+      "limits": "No unseen SSR tail claim; this relocation has no native evidence yet."
+    },
+    {
+      "id": "C3-04",
+      "source": "src/components/gated-preview/gated-preview.tsx",
+      "sourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "original": {
+        "find": "      <PremiumSheet\n",
+        "replace": "      <form />\n      <PremiumSheet\n",
+        "mutantSHA256": "06dbdb10b8a3ad5055c1fbc357d7b2ae6a9a0cbe102d997ff5d39a83f21ff44e",
+        "snapshot": "/tmp/test-audit-public-funnel66-c69uzpx6/mutants/C3-04/src/components/gated-preview/gated-preview.tsx"
+      },
+      "amended": {
+        "find": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n",
+        "replace": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n      <form />\n",
+        "mutantSHA256": "0bcba4b7dbdfe19d23a39c099072ada53a7969642813eeb91205586d14ce4737",
+        "snapshot": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C3-04/src/components/gated-preview/gated-preview.tsx"
+      },
+      "reason": "Main-authorized TMP control-only relocation immediately after actual section opening, before frame/child output, to expose prohibited host markup in Node printed prefix. Same test assertions and phase lines; proposal unchanged.",
+      "limits": "No unseen SSR tail claim; this relocation has no native evidence yet."
+    },
+    {
+      "id": "C3-05",
+      "source": "src/components/gated-preview/gated-preview.tsx",
+      "sourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "original": {
+        "find": "      <PremiumSheet\n",
+        "replace": "      <button type=\"submit\" />\n      <PremiumSheet\n",
+        "mutantSHA256": "ba25e679ca8e46ff6dac3c36745a80a0b2d5d73d56932d348f5f50db48b60e5d",
+        "snapshot": "/tmp/test-audit-public-funnel66-c69uzpx6/mutants/C3-05/src/components/gated-preview/gated-preview.tsx"
+      },
+      "amended": {
+        "find": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n",
+        "replace": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n      <button type=\"submit\" />\n",
+        "mutantSHA256": "5605831d38da2e0957673e39cbc3cca35a2dc8ef67842bcc759cebf8fcbe849f",
+        "snapshot": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C3-05/src/components/gated-preview/gated-preview.tsx"
+      },
+      "reason": "Main-authorized TMP control-only relocation immediately after actual section opening, before frame/child output, to expose prohibited host markup in Node printed prefix. Same test assertions and phase lines; proposal unchanged.",
+      "limits": "No unseen SSR tail claim; this relocation has no native evidence yet."
+    },
+    {
+      "id": "C3-06",
+      "source": "src/components/gated-preview/gated-preview.tsx",
+      "sourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "original": {
+        "find": "      <PremiumSheet\n",
+        "replace": "      <button formAction=\"/forbidden\" />\n      <PremiumSheet\n",
+        "mutantSHA256": "592e88ecaaf5af854a4e44936aeca2e214e010cfaee681d073519194b73acdfa",
+        "snapshot": "/tmp/test-audit-public-funnel66-c69uzpx6/mutants/C3-06/src/components/gated-preview/gated-preview.tsx"
+      },
+      "amended": {
+        "find": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n",
+        "replace": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n      <button formAction=\"/forbidden\" />\n",
+        "mutantSHA256": "8b56d3debca9babaefdf85d41f4d160b0ddc8eab737ec60b42748934762ecbd0",
+        "snapshot": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C3-06/src/components/gated-preview/gated-preview.tsx"
+      },
+      "reason": "Main-authorized TMP control-only relocation immediately after actual section opening, before frame/child output, to expose prohibited host markup in Node printed prefix. Same test assertions and phase lines; proposal unchanged.",
+      "limits": "No unseen SSR tail claim; this relocation has no native evidence yet."
+    },
+    {
+      "id": "C3-07",
+      "source": "src/components/gated-preview/gated-preview.tsx",
+      "sourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "original": {
+        "find": "      <PremiumSheet\n",
+        "replace": "      <form />\n      <PremiumSheet\n",
+        "mutantSHA256": "06dbdb10b8a3ad5055c1fbc357d7b2ae6a9a0cbe102d997ff5d39a83f21ff44e",
+        "snapshot": "/tmp/test-audit-public-funnel66-c69uzpx6/mutants/C3-07/src/components/gated-preview/gated-preview.tsx"
+      },
+      "amended": {
+        "find": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n",
+        "replace": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n      <form />\n",
+        "mutantSHA256": "0bcba4b7dbdfe19d23a39c099072ada53a7969642813eeb91205586d14ce4737",
+        "snapshot": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C3-07/src/components/gated-preview/gated-preview.tsx"
+      },
+      "reason": "Main-authorized TMP control-only relocation immediately after actual section opening, before frame/child output, to expose prohibited host markup in Node printed prefix. Same test assertions and phase lines; proposal unchanged.",
+      "limits": "No unseen SSR tail claim; this relocation has no native evidence yet."
+    },
+    {
+      "id": "C3-08",
+      "source": "src/components/gated-preview/gated-preview.tsx",
+      "sourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "original": {
+        "find": "      <PremiumSheet\n",
+        "replace": "      <button type=\"submit\" />\n      <PremiumSheet\n",
+        "mutantSHA256": "ba25e679ca8e46ff6dac3c36745a80a0b2d5d73d56932d348f5f50db48b60e5d",
+        "snapshot": "/tmp/test-audit-public-funnel66-c69uzpx6/mutants/C3-08/src/components/gated-preview/gated-preview.tsx"
+      },
+      "amended": {
+        "find": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n",
+        "replace": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n      <button type=\"submit\" />\n",
+        "mutantSHA256": "5605831d38da2e0957673e39cbc3cca35a2dc8ef67842bcc759cebf8fcbe849f",
+        "snapshot": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C3-08/src/components/gated-preview/gated-preview.tsx"
+      },
+      "reason": "Main-authorized TMP control-only relocation immediately after actual section opening, before frame/child output, to expose prohibited host markup in Node printed prefix. Same test assertions and phase lines; proposal unchanged.",
+      "limits": "No unseen SSR tail claim; this relocation has no native evidence yet."
+    },
+    {
+      "id": "C3-09",
+      "source": "src/components/gated-preview/gated-preview.tsx",
+      "sourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "original": {
+        "find": "      <PremiumSheet\n",
+        "replace": "      <button formAction=\"/forbidden\" />\n      <PremiumSheet\n",
+        "mutantSHA256": "592e88ecaaf5af854a4e44936aeca2e214e010cfaee681d073519194b73acdfa",
+        "snapshot": "/tmp/test-audit-public-funnel66-c69uzpx6/mutants/C3-09/src/components/gated-preview/gated-preview.tsx"
+      },
+      "amended": {
+        "find": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n",
+        "replace": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n      <button formAction=\"/forbidden\" />\n",
+        "mutantSHA256": "8b56d3debca9babaefdf85d41f4d160b0ddc8eab737ec60b42748934762ecbd0",
+        "snapshot": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C3-09/src/components/gated-preview/gated-preview.tsx"
+      },
+      "reason": "Main-authorized TMP control-only relocation immediately after actual section opening, before frame/child output, to expose prohibited host markup in Node printed prefix. Same test assertions and phase lines; proposal unchanged.",
+      "limits": "No unseen SSR tail claim; this relocation has no native evidence yet."
+    }
+  ]
+}

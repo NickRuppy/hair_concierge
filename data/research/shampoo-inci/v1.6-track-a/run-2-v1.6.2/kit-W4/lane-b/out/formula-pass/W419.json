@@ -1,0 +1,163 @@
+{
+  "blindId": "W419",
+  "inciFingerprintSha256": "424834f10d54e500a9cbe027b1abcf4e97415145af2bac0e7e17abac49e29973",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, stage A only)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "packSize": "473 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "Aqua/Water/Eau and Parfum/Fragrance are single entries; positions are normalized one-based positions (ID-2).",
+    "e3ProminenceCutoff": "Parfum/Fragrance @21; prominent = positions 1-20"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionicEtherSulfonate": ["Sodium C14-16 Olefin Sulfonate @2 (defining anionic)"],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": [],
+      "amphoteric": ["Cocamidopropyl Betaine @5 (prominent buffer)"],
+      "nonionicCleansing": ["Decyl Glucoside @13 (prominent buffer)"],
+      "notCleansingNotBuffer": ["Cocamide MIPA @3 (alkanolamide)", "Sodium Chloride @4", "Trisodium Ethylenediamine Disuccinate @19 (chelator)", "Isopropanolamine @20 (pH adjuster)"],
+      "reinforcingRoutes": [],
+      "c1c5c6Reading": "C1: olefin-sulfonate defining anionic, two prominent buffers, no reinforcing route"
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": ["Polyquaternium-10 @9 (prominent)", "Polyquaternium-7 @10 (prominent)"],
+      "payload_lipid": ["Argania Spinosa (Argan) Kernel Oil @7 (prominent; material)", "Dicaprylyl Ether @12 (prominent; material)"],
+      "weak_refatter": ["Glyceryl Oleate @14"],
+      "silicone": [],
+      "pearlizing_fatty_route": ["Glycol Distearate @11"],
+      "humectants": ["Glycerin @6", "Panthenol @8"]
+    },
+    "wLine": {
+      "wLine": "Sodium Salicylate @17",
+      "wLineClasses": ["preservative_or_capped_active"],
+      "cap": "e3Point @21 (Parfum/Fragrance)",
+      "alphabeticalRun": "none (longest ascending run 7-10, 4 entries)",
+      "candidatesTested": [
+        "Panthenol @8 (sub1_active): (i) ok; (ii) FAILS - pearlizing wax Glycol Distearate @11 and cleansing surfactant Decyl Glucoside @13 listed after it and before the cap",
+        "Sodium Salicylate @17: (i) ok; (ii) positions 18-20 (Sodium Benzoate, Trisodium Ethylenediamine Disuccinate, Isopropanolamine) contain no cleansing surfactant, alkanolamide or pearlizer -> plausible"
+      ],
+      "skipped": ["w_line_skipped:Panthenol@8 (clause ii: Glycol Distearate @11, Decyl Glucoside @13 after it)"],
+      "codes": [],
+      "payloadLipidMaterial": ["Argania Spinosa (Argan) Kernel Oil @7", "Dicaprylyl Ether @12"],
+      "payloadLipidNonMaterial": []
+    },
+    "actives": {
+      "dandruffActives": [],
+      "comfortRoutesE4Prominent": ["Panthenol @8"],
+      "humectantRefattingRoutesE4Prominent": ["Glycerin @6", "Argan Kernel Oil @7", "Panthenol @8", "Glyceryl Oleate @14"],
+      "coolingAgents": [],
+      "essentialOils": ["Citrus Aurantium Peel Oil @24 (late)"],
+      "fragranceMaterials": ["Parfum @21", "Benzyl Benzoate @23", "Limonene @25"]
+    },
+    "scalpGateFormulaFacts": {
+      "CSA": "met via prominent E4 comfort route Panthenol @8 and humectant/refatting routes (Glycerin @6, Argan Oil @7, Glyceryl Oleate @14)",
+      "MB": "not met: Sodium C14-16 Olefin Sulfonate @2 prominent strong anionic",
+      "S-SENSITIVE formula half": "comfort route Panthenol @8 -> would pass if targeted",
+      "S-DRY formula half": "humectant routes -> would pass if targeted",
+      "S-OILY formula clause": "conditioning high -> clause fails"
+    }
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis with Sodium C14-16 Olefin Sulfonate @2 as the defining ether/sulfonate-type anionic, prominent buffers Cocamidopropyl Betaine @5 and Decyl Glucoside @13, no reinforcing strong anionic; the rich lipid/cationic conditioning is a further counter-signal against strong.",
+      "ruleIds": ["C3", "C4", "C1"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "High: C2 met with prominent payload lipids in place of the early silicone (Argan Kernel Oil @7, Dicaprylyl Ether @12), cationic polymers (Polyquaternium-10 @9, Polyquaternium-7 @10), a pearlizing route (Glycol Distearate @11) and deliberate humectants (Glycerin @6, Panthenol @8); W-RICH also holds for conditioning. All routes are prominent and complementary; reasonable unknowns would not drop it to moderate.",
+      "ruleIds": ["C2", "R11", "W-RICH", "Section 5 anchors"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "cationic_polymer": ["Polyquaternium-10 @9", "Polyquaternium-7 @10"],
+        "payload_lipid": ["Argania Spinosa (Argan) Kernel Oil @7 (material, < W-line 17)", "Dicaprylyl Ether @12 (material)"],
+        "weak_refatter": ["Glyceryl Oleate @14"],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium C14-16 Olefin Sulfonate @2", "Cocamidopropyl Betaine @5", "Decyl Glucoside @13"],
+        "humectantContext": ["Glycerin @6", "Panthenol @8"],
+        "excluded": ["Cocamide MIPA @3 (alkanolamide)", "Glycol Distearate @11 (pearlizing wax, 6.4)", "Citrus Aurantium Peel Oil @24 (essential oil, 6.4)", "Parfum @21, Benzyl Benzoate @23, Limonene @25", "Sodium Chloride @4, Citric Acid @15, Sodium Hydroxide @16, Isopropanolamine @20, Trisodium Ethylenediamine Disuccinate @19, Sodium Salicylate @17, Sodium Benzoate @18, Benzoic Acid @22"],
+        "unresolved": []
+      },
+      "wLineRecord": "wLine Sodium Salicylate @17 (preservative_or_capped_active); cap e3Point @21; no alphabetical run; skipped w_line_skipped:Panthenol@8 (clause ii); no codes; material payload_lipid: Argan Kernel Oil @7, Dicaprylyl Ether @12; non-material: none.",
+      "depositionLoad": "moderate-to-high: two cationic polymers (PQ-10, PQ-7) plus two material lipids (argan oil, a light ether) and a refatter.",
+      "persistence": "moderate: Polyquaternium-10 can accumulate; argan is a liquid oil and dicaprylyl ether a light emollient; no silicone or waxy lipid.",
+      "resetCapacity": "moderate: C1 olefin-sulfonate chassis with betaine and glucoside buffers.",
+      "counterevidence": "W-RICH holds (material Argan Oil @7 with cationic polymers) and two families (cationic_polymer, material payload_lipid) converge, arguing for high.",
+      "whyThisBand": "A cationic/oil care system leaves noticeable but bounded residue in an effective ordinary sulfonate chassis.",
+      "whyNotNeighborBand": "Not high: W-RICH is present but resetCapacity is moderate, so the rich route is closed (W-RICH limited reset); the convergence route rests on two cationic polymers and a liquid oil plus a light ether, with no silicone or waxy lipid, which the C1 reset is judged to offset short of a coating result. Not low: material lipids plus two cationic polymers (W2).",
+      "confidenceLimitingFactor": "W-RICH with moderate reset: oil and polymer doses unknown; high is realistic.",
+      "rationale": "Moderate: W-RICH with moderate reset; W-RICH recorded as counter-signal, high as neighbor.",
+      "ruleIds": ["6.3", "6.6", "W-LINE", "W-RICH", "W2", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": ["Glycerin @6", "Panthenol @8", "Argan Kernel Oil @7", "Dicaprylyl Ether @12", "Glyceryl Oleate @14"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Polyquaternium-10 @9", "Polyquaternium-7 @10", "Glycol Distearate @11"],
+        "limitation": "No protein, amino-silicone or bond-care cluster, so repair is not supported independently."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Blind pass: no claim; humectant plus oil cluster leans moisture.",
+      "decisionTrace": "Blind: claim direction null; formula moisture_supported (provisional); provisional general.",
+      "rationale": "Provisional general (claim-dependent; formula-only).",
+      "ruleIds": ["3.1", "7.2", "7.3", "F1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["shine"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty (claim-dependent).",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional regular (default); moderate formula cannot be alternating; no dandruff active.",
+      "ruleIds": ["Section 9"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional not_targeted (claims hidden). Formula half: CSA met via listed prominent comfort route Panthenol @8 and humectant/refatting routes; MB not met (olefin sulfonate @2).",
+      "ruleIds": ["Section 10", "CSA", "MB", "E4", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active in the complete INCI.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "notes": ["Claim-dependent properties are provisional."]
+}

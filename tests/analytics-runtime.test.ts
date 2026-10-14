@@ -1,7 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import { createBoundedFifo } from "../src/lib/analytics/runtime/bounded-fifo"
 import {
   createCustomerIoBrowserLoader,
   createCustomerIoRuntime,
@@ -18,22 +17,6 @@ import {
   type PostHogRuntimeClient,
 } from "../src/lib/analytics/runtime/posthog"
 import { scheduleAfterFirstPaint } from "../src/lib/analytics/runtime/post-paint"
-
-test("bounded FIFO drops the oldest item and warns when full", () => {
-  const warnings: string[] = []
-  const queue = createBoundedFifo<number>({
-    label: "test",
-    limit: 2,
-    warn: (message) => warnings.push(message),
-  })
-
-  queue.push(1)
-  queue.push(2)
-  queue.push(3)
-
-  assert.deepEqual(queue.drain(), [2, 3])
-  assert.equal(warnings.length, 1)
-})
 
 test("post-paint scheduling releases only after two animation frames", () => {
   const frames: FrameRequestCallback[] = []

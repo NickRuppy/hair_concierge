@@ -1,0 +1,42 @@
+{
+  "blindId": "T118",
+  "inciFingerprintSha256": "303653d5f86a174377761e891fefde597d7e15dc484437056bd83783230aa48f",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {"normalization": "Packet list used as normalized; normalized one-based positions.", "completeness": "complete (ID-1)", "sourceTier": 2, "identityConfidence": "high", "e3ProminenceCutoff": "Parfum at 7 -> positions 1-6 prominent"},
+  "directProperties": {
+    "cleansingStrength": {"value": "low", "confidence": "high", "neighboringAlternative": "none",
+      "rationale": "C6: no strong anionic. Earliest cleansing surfactant Decyl Glucoside (2, nonionic glucoside), with mild anionics Disodium Laureth Sulfosuccinate (3) and Sodium Lauryl Sulfoacetate (4) -> low.",
+      "counterSignals": "None material."},
+    "conditioningLevel": {"value": "low", "confidence": "high", "neighboringAlternative": "none",
+      "rationale": "Cleansing-led: the only conditioning agent is Hydroxypropyl Oxidized Starch PG-Trimonium Chloride (11), after Parfum and both preservatives (trace); no silicone, lipid, refatter, protein.",
+      "counterSignals": "PEG-55 Propylene Glycol Oleate (5) is a thickener, not care."},
+    "weightPotential": {"value": "low", "confidence": "high", "neighboringAlternative": "none",
+      "rationale": "One trace cationic starch; nothing converges.",
+      "subjudgments": {
+        "depositionLoad": {"value": "light", "rationale": "Cationic starch (11) only, after preservatives."},
+        "persistence": {"value": "low", "rationale": "Trace starch polymer."},
+        "resetCapacity": {"value": "moderate", "rationale": "Mild glucoside/sulfosuccinate/sulfoacetate chassis (C6 low) with no deposition to offset."}},
+      "evidenceByFamily": {"cationic_polymer": ["Hydroxypropyl Oxidized Starch PG-Trimonium Chloride (11)"], "nonionic_surfactant": ["Decyl Glucoside (2)"], "anionic_surfactant": ["Disodium Laureth Sulfosuccinate (3, mild)", "Sodium Lauryl Sulfoacetate (4, mild)"], "humectant_context": ["Sodium Lactate (14)"]},
+      "excluded": ["PEG-55 Propylene Glycol Oleate (5): PEG thickener", "Propylene Glycol (6): solvent"],
+      "unresolved": [],
+      "whyThisBand": "Single trace family.",
+      "whyNotNeighborBand": "Only one deposition family, trace, without any reinforcing route (W2 permits low).",
+      "confidenceLimitingFactor": "None material."},
+    "focusPrimary": {"value": "provisional:pending_claims", "confidence": "low", "neighboringAlternative": "general",
+      "rationale": "Formula-only: very mild, minimal-care chassis; no specialist route (mildness is not a focus).",
+      "careDirectionVerdictProvisional": "nonspecific"},
+    "focusSecondary": {"value": [], "confidence": "low", "neighboringAlternative": ["scalp_active"], "rationale": "Empty default pending claims."},
+    "usageRole": {"value": "regular", "confidence": "low", "neighboringAlternative": "frequent", "rationale": "Default; frequent with explicit frequency wording."},
+    "scalpComfortTarget": {"value": "provisional:not_targeted", "confidence": "low", "neighboringAlternative": "targeted", "rationale": "CSA not met: no E4 comfort or humectant route in positions 1-6 (Sodium Lactate 14 late). A mild chassis alone is not sufficient (CSA)."},
+    "dandruffSupport": {"value": "not_supported", "confidence": "high", "neighboringAlternative": "none", "rationale": "Neither Piroctone Olamine nor Climbazole."}
+  },
+  "formulaFacts": [
+    {"ingredient": "Decyl Glucoside", "position": 2, "role": "earliest cleansing surfactant (nonionic glucoside)"},
+    {"ingredient": "Disodium Laureth Sulfosuccinate", "position": 3, "role": "mild anionic"},
+    {"ingredient": "Sodium Lauryl Sulfoacetate", "position": 4, "role": "mild anionic"},
+    {"ingredient": "PEG-55 Propylene Glycol Oleate", "position": 5, "role": "PEG thickener (not a route)"},
+    {"ingredient": "Parfum", "position": 7, "role": "E3 fragrance marker"},
+    {"ingredient": "Hydroxypropyl Oxidized Starch PG-Trimonium Chloride", "position": 11, "role": "cationic_polymer, trace"}
+  ],
+  "unresolvedMaterialIngredients": []
+}

@@ -1,0 +1,72 @@
+TAP version 13
+# Subtest: enabled reminder enqueues cutoff and revalidates just before sending once to verified owner
+not ok 1 - enabled reminder enqueues cutoff and revalidates just before sending once to verified owner
+  ---
+  duration_ms: 16.342375
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/trial-reminders-delivery.test.ts:2:2547'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /Vor Testende kündigen: https:\/\/chaarlie\.de\/kuendigen/. Input:
+    
+    'Dein kostenloser Test endet bald.\n' +
+      '\n' +
+      'Wie versprochen, erinnern wir dich vor deiner ersten Zahlung.\n' +
+      '\n' +
+      'Testende: 21. September 2026 um 12:00 Uhr MESZ\n' +
+      'Erste Zahlung: 69,99 € am 21. September 2026\n' +
+      'Jahresmitgliedschaft: danach 99,99 € jährlich.\n' +
+      '\n' +
+      'Nach dem Test beginnt dein gewählter Tarif automatisch, wenn du nicht vorher kündigst.\n' +
+      '\n' +
+      'Mein Abo ansehen: https://chaarlie.de/profile\n' +
+      '\n' +
+      'Du möchtest nicht weitermachen? Vor Testende kündigen: https://chaarlie.de/profile\n' +
+      'Dann beginnt kein bezahlter Zeitraum.\n' +
+      '\n' +
+      'Falls du inzwischen gekündigt hast, gilt deine Kündigungsbestätigung.\n' +
+      '\n' +
+      'Fragen? Antworte einfach auf diese E-Mail.\n' +
+      '\n' +
+      'Chaarlie · Haarmony LLC\n' +
+      '1111B S Governors Ave # 84075, Dover, DE 19904, USA'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    Dein kostenloser Test endet bald.
+    
+    Wie versprochen, erinnern wir dich vor deiner ersten Zahlung.
+    
+    Testende: 21. September 2026 um 12:00 Uhr MESZ
+    Erste Zahlung: 69,99 € am 21. September 2026
+    Jahresmitgliedschaft: danach 99,99 € jährlich.
+    
+    Nach dem Test beginnt dein gewählter Tarif automatisch, wenn du nicht vorher kündigst.
+    
+    Mein Abo ansehen: https://chaarlie.de/profile
+    
+    Du möchtest nicht weitermachen? Vor Testende kündigen: https://chaarlie.de/profile
+    Dann beginnt kein bezahlter Zeitraum.
+    
+    Falls du inzwischen gekündigt hast, gilt deine Kündigungsbestätigung.
+    
+    Fragen? Antworte einfach auf diese E-Mail.
+    
+    Chaarlie · Haarmony LLC
+    1111B S Governors Ave # 84075, Dover, DE 19904, USA
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/trial-reminders-delivery.test.ts:91:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 262.171667

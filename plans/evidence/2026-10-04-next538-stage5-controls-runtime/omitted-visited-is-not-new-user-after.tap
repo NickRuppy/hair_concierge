@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: Personal Plan navigation always exposes the same five tabs in the signed order, regardless of stage access
+ok 1 - Personal Plan navigation always exposes the same five tabs in the signed order, regardless of stage access
+  ---
+  duration_ms: 0.975083
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 398.588375

@@ -1,0 +1,1352 @@
+[
+  {
+    "original": "/tmp/test-audit-billing-operational125/before/tests/admin-user-billing-summary.test.ts",
+    "archived": "proposal/before/tests/admin-user-billing-summary.test.ts.txt",
+    "sha256": "b62c33d939c9304e4e38a90890e14e96f3008473902df91ebbe8bbbce47e5295",
+    "bytes": 9281
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/before/tests/billing-public-contract-declaration-resolution.test.ts",
+    "archived": "proposal/before/tests/billing-public-contract-declaration-resolution.test.ts.txt",
+    "sha256": "e0f5d7b9c9950b657569de8d429e069fe0c182f6024958a3f5aa91f51711139d",
+    "bytes": 12037
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/before/tests/billing-public-contract-declaration-route.test.ts",
+    "archived": "proposal/before/tests/billing-public-contract-declaration-route.test.ts.txt",
+    "sha256": "6c81989f5649af5a31ea76c177ee4761b65964c19284b727883f27eb7ac9cf05",
+    "bytes": 5231
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/before/tests/billing-public-contract-declaration.test.ts",
+    "archived": "proposal/before/tests/billing-public-contract-declaration.test.ts.txt",
+    "sha256": "270710a69a805ceaf10f4ba479364a6e34b9425300128a384f1467302c70416f",
+    "bytes": 2179
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/before/tests/billing-public-contract-declarations-postgres.test.ts",
+    "archived": "proposal/before/tests/billing-public-contract-declarations-postgres.test.ts.txt",
+    "sha256": "89df96b1e1f56bc87dbbe341b34e49f536f47416751533eebe03dcfb5e7b8137",
+    "bytes": 8645
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/before/tests/billing-reconcile-analytics.test.ts",
+    "archived": "proposal/before/tests/billing-reconcile-analytics.test.ts.txt",
+    "sha256": "8a8e25f2fc0fe25d2785fb163d1278fd1b7793698c78806484a18e1f8a4791dc",
+    "bytes": 22913
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/before/tests/billing-slack-supabase-ownership.test.ts",
+    "archived": "proposal/before/tests/billing-slack-supabase-ownership.test.ts.txt",
+    "sha256": "1feb844fd8ae48a26d55ed046bb62e5e1c29fd26c965e6c74b533976436cc3dc",
+    "bytes": 739
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/before/tests/billing-subscriptions-access-grace.test.ts",
+    "archived": "proposal/before/tests/billing-subscriptions-access-grace.test.ts.txt",
+    "sha256": "280c7d42b8b7bf6ae611b3e0e8df5012b717f8e0f6386ead947606aec110987f",
+    "bytes": 5614
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/before/tests/payment-integrity.test.ts",
+    "archived": "proposal/before/tests/payment-integrity.test.ts.txt",
+    "sha256": "645b5a35fd71846215808798ff1be994c3c4d824e71889ed7a33eeb15e522fe3",
+    "bytes": 13832
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/before/tests/payment-monitor-paypal-test-classification.test.ts",
+    "archived": "proposal/before/tests/payment-monitor-paypal-test-classification.test.ts.txt",
+    "sha256": "15be122a226a9772cdb9a4e9867de32d20acd2b4b1a756b03a9b41d2430292c7",
+    "bytes": 4112
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/before/tests/payment-monitor-route.test.ts",
+    "archived": "proposal/before/tests/payment-monitor-route.test.ts.txt",
+    "sha256": "2acb9f8404c569cf392156a399e31ab6a0a84b500a1240f3b23fd0c79282e5ff",
+    "bytes": 22120
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/before/tests/payment-monitor-trigger.test.ts",
+    "archived": "proposal/before/tests/payment-monitor-trigger.test.ts.txt",
+    "sha256": "70040d3b5e009659f7c1f6655dc9593371e554c59c738018d78c9a6cf9a51677",
+    "bytes": 8012
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/before/tests/public-contract-declaration-receipt-delivery.test.ts",
+    "archived": "proposal/before/tests/public-contract-declaration-receipt-delivery.test.ts.txt",
+    "sha256": "083b4d832c6964496bfcbc00f137f2ff58c434c02dcca774e100f791a6ec130a",
+    "bytes": 12800
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/candidate-bodies.json",
+    "archived": "proposal/candidate-bodies.json",
+    "sha256": "8559ec2d6b11b6161357a8083034f2057ebd8bf8fc3df1eb362b070d501a1eac",
+    "bytes": 16304
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/candidates.json",
+    "archived": "proposal/candidates.json",
+    "sha256": "c6c9739b95107c8fb8f5c451f3e99c9c9a4bff6e050b7ba7d75e5af6fcf41344",
+    "bytes": 24019
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/commands.json",
+    "archived": "proposal/commands.json",
+    "sha256": "150f501a44944e51cbdae17411f9456dfda36dff27723e941a8cd7c86ff053bc",
+    "bytes": 2889
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/complete-ledger.md",
+    "archived": "proposal/complete-ledger.md",
+    "sha256": "c77728a9970ad1121821bfcda21c847852e303d62c74dbbe8d5eb648078e87d4",
+    "bytes": 31662
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/complete.diff",
+    "archived": "proposal/complete.diff",
+    "sha256": "9b0bfc18087c0574d8201b992fdcf19dc02f37bc3eef67733d448e7ba8dd7abe",
+    "bytes": 4403
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/controls.cjs",
+    "archived": "proposal/controls.cjs.txt",
+    "sha256": "d9eb2cd1e50aee60f55a98f76ccdf95dddb22f45d5b962cdff5869aebe06671f",
+    "bytes": 4406
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/controls.json",
+    "archived": "proposal/controls.json",
+    "sha256": "d2855b0b3dccb2cff1fdf6d9f071231d2f03ebc9a06d2c1b8fd7aadef8969029",
+    "bytes": 14338
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/cut/tests/admin-user-billing-summary.test.ts",
+    "archived": "proposal/cut/tests/admin-user-billing-summary.test.ts.txt",
+    "sha256": "c8c7e0b03e300f1aada3ffb9bd3cf4ee7a598ac4d87bce7b02ecfaffccf6d23a",
+    "bytes": 9030
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/cut/tests/billing-public-contract-declaration-resolution.test.ts",
+    "archived": "proposal/cut/tests/billing-public-contract-declaration-resolution.test.ts.txt",
+    "sha256": "e0f5d7b9c9950b657569de8d429e069fe0c182f6024958a3f5aa91f51711139d",
+    "bytes": 12037
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/cut/tests/billing-public-contract-declaration-route.test.ts",
+    "archived": "proposal/cut/tests/billing-public-contract-declaration-route.test.ts.txt",
+    "sha256": "6c81989f5649af5a31ea76c177ee4761b65964c19284b727883f27eb7ac9cf05",
+    "bytes": 5231
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/cut/tests/billing-public-contract-declaration.test.ts",
+    "archived": "proposal/cut/tests/billing-public-contract-declaration.test.ts.txt",
+    "sha256": "270710a69a805ceaf10f4ba479364a6e34b9425300128a384f1467302c70416f",
+    "bytes": 2179
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/cut/tests/billing-public-contract-declarations-postgres.test.ts",
+    "archived": "proposal/cut/tests/billing-public-contract-declarations-postgres.test.ts.txt",
+    "sha256": "89df96b1e1f56bc87dbbe341b34e49f536f47416751533eebe03dcfb5e7b8137",
+    "bytes": 8645
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/cut/tests/billing-reconcile-analytics.test.ts",
+    "archived": "proposal/cut/tests/billing-reconcile-analytics.test.ts.txt",
+    "sha256": "8a8e25f2fc0fe25d2785fb163d1278fd1b7793698c78806484a18e1f8a4791dc",
+    "bytes": 22913
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/cut/tests/billing-slack-supabase-ownership.test.ts",
+    "archived": "proposal/cut/tests/billing-slack-supabase-ownership.test.ts.txt",
+    "sha256": "1feb844fd8ae48a26d55ed046bb62e5e1c29fd26c965e6c74b533976436cc3dc",
+    "bytes": 739
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/cut/tests/billing-subscriptions-access-grace.test.ts",
+    "archived": "proposal/cut/tests/billing-subscriptions-access-grace.test.ts.txt",
+    "sha256": "312b51252842994dca7e9588f58ab03852ab99de537966374a862c5b8184b06d",
+    "bytes": 4155
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/cut/tests/payment-integrity.test.ts",
+    "archived": "proposal/cut/tests/payment-integrity.test.ts.txt",
+    "sha256": "645b5a35fd71846215808798ff1be994c3c4d824e71889ed7a33eeb15e522fe3",
+    "bytes": 13832
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/cut/tests/payment-monitor-paypal-test-classification.test.ts",
+    "archived": "proposal/cut/tests/payment-monitor-paypal-test-classification.test.ts.txt",
+    "sha256": "15be122a226a9772cdb9a4e9867de32d20acd2b4b1a756b03a9b41d2430292c7",
+    "bytes": 4112
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/cut/tests/payment-monitor-route.test.ts",
+    "archived": "proposal/cut/tests/payment-monitor-route.test.ts.txt",
+    "sha256": "28bcd568bf5119c64c2d105f7c872f1bd54e300c43144e0b8f64d40d81d67771",
+    "bytes": 20830
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/cut/tests/payment-monitor-trigger.test.ts",
+    "archived": "proposal/cut/tests/payment-monitor-trigger.test.ts.txt",
+    "sha256": "70040d3b5e009659f7c1f6655dc9593371e554c59c738018d78c9a6cf9a51677",
+    "bytes": 8012
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/cut/tests/public-contract-declaration-receipt-delivery.test.ts",
+    "archived": "proposal/cut/tests/public-contract-declaration-receipt-delivery.test.ts.txt",
+    "sha256": "083b4d832c6964496bfcbc00f137f2ff58c434c02dcca774e100f791a6ec130a",
+    "bytes": 12800
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/finalize.py",
+    "archived": "proposal/finalize.py.txt",
+    "sha256": "0bc3dc9f7f64300b5748db333dc16b96b9012f3cd0c5bfbd777c1d92f1f49e90",
+    "bytes": 10595
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/handoff.json",
+    "archived": "proposal/handoff.json",
+    "sha256": "a85f60016049990c636e0ea62e1cc63605360a7026e5d6807821b422f2c5947f",
+    "bytes": 2137
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/layer-plan.md",
+    "archived": "proposal/layer-plan.md",
+    "sha256": "c2d56565b245bb175c1e1375d761e6ee2a7da2a5a9b20b510c5a6609b5789a4b",
+    "bytes": 15161
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/ledger.json",
+    "archived": "proposal/ledger.json",
+    "sha256": "bc83ea76e6984756a0c6c8c29045afb6b4f193542fce5b8985dd5682e056a55e",
+    "bytes": 80219
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/manifest.json",
+    "archived": "proposal/manifest.json",
+    "sha256": "53fbed371f43e577c3049f263ade5fcc920840fa74ed0b9eb56433a46d588b06",
+    "bytes": 21040
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/phase-files.json",
+    "archived": "proposal/phase-files.json",
+    "sha256": "b6327fadd1ded9e057c8ed3e6ab3628b4cf0b4c788cc97c46228fbd26adbd336",
+    "bytes": 7508
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/prepare.cjs",
+    "archived": "proposal/prepare.cjs.txt",
+    "sha256": "c976cd0457e059735c48473769683706c2e1c1558e3a9c8d4f9eb16bb4723ad1",
+    "bytes": 5626
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/readsets.json",
+    "archived": "proposal/readsets.json",
+    "sha256": "d9e7ad1b5c7b4e60ddf7498cd0896a9380ba5e1d4d97e2990380dd2e4d56b885",
+    "bytes": 11258
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/sites.json",
+    "archived": "proposal/sites.json",
+    "sha256": "e34ce9dc1abad8f2be673a7093839e988c7ae22b113135b7996aa1013d2748a4",
+    "bytes": 197134
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/static-receipt.json",
+    "archived": "proposal/static-receipt.json",
+    "sha256": "bb56a38dda287281acd2e49261541afa8ebcfaa16ef434054e57c920f41b5578",
+    "bytes": 540
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/survivors.json",
+    "archived": "proposal/survivors.json",
+    "sha256": "3d14ef0a342ea2906dcc68ae984cdae1ab53143ba18102a4a83b6d35a9b70f5c",
+    "bytes": 31808
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/transfer/tests/admin-user-billing-summary.test.ts",
+    "archived": "proposal/transfer/tests/admin-user-billing-summary.test.ts.txt",
+    "sha256": "b62c33d939c9304e4e38a90890e14e96f3008473902df91ebbe8bbbce47e5295",
+    "bytes": 9281
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/transfer/tests/billing-public-contract-declaration-resolution.test.ts",
+    "archived": "proposal/transfer/tests/billing-public-contract-declaration-resolution.test.ts.txt",
+    "sha256": "e0f5d7b9c9950b657569de8d429e069fe0c182f6024958a3f5aa91f51711139d",
+    "bytes": 12037
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/transfer/tests/billing-public-contract-declaration-route.test.ts",
+    "archived": "proposal/transfer/tests/billing-public-contract-declaration-route.test.ts.txt",
+    "sha256": "6c81989f5649af5a31ea76c177ee4761b65964c19284b727883f27eb7ac9cf05",
+    "bytes": 5231
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/transfer/tests/billing-public-contract-declaration.test.ts",
+    "archived": "proposal/transfer/tests/billing-public-contract-declaration.test.ts.txt",
+    "sha256": "270710a69a805ceaf10f4ba479364a6e34b9425300128a384f1467302c70416f",
+    "bytes": 2179
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/transfer/tests/billing-public-contract-declarations-postgres.test.ts",
+    "archived": "proposal/transfer/tests/billing-public-contract-declarations-postgres.test.ts.txt",
+    "sha256": "89df96b1e1f56bc87dbbe341b34e49f536f47416751533eebe03dcfb5e7b8137",
+    "bytes": 8645
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/transfer/tests/billing-reconcile-analytics.test.ts",
+    "archived": "proposal/transfer/tests/billing-reconcile-analytics.test.ts.txt",
+    "sha256": "8a8e25f2fc0fe25d2785fb163d1278fd1b7793698c78806484a18e1f8a4791dc",
+    "bytes": 22913
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/transfer/tests/billing-slack-supabase-ownership.test.ts",
+    "archived": "proposal/transfer/tests/billing-slack-supabase-ownership.test.ts.txt",
+    "sha256": "1feb844fd8ae48a26d55ed046bb62e5e1c29fd26c965e6c74b533976436cc3dc",
+    "bytes": 739
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/transfer/tests/billing-subscriptions-access-grace.test.ts",
+    "archived": "proposal/transfer/tests/billing-subscriptions-access-grace.test.ts.txt",
+    "sha256": "280c7d42b8b7bf6ae611b3e0e8df5012b717f8e0f6386ead947606aec110987f",
+    "bytes": 5614
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/transfer/tests/payment-integrity.test.ts",
+    "archived": "proposal/transfer/tests/payment-integrity.test.ts.txt",
+    "sha256": "645b5a35fd71846215808798ff1be994c3c4d824e71889ed7a33eeb15e522fe3",
+    "bytes": 13832
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/transfer/tests/payment-monitor-paypal-test-classification.test.ts",
+    "archived": "proposal/transfer/tests/payment-monitor-paypal-test-classification.test.ts.txt",
+    "sha256": "15be122a226a9772cdb9a4e9867de32d20acd2b4b1a756b03a9b41d2430292c7",
+    "bytes": 4112
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/transfer/tests/payment-monitor-route.test.ts",
+    "archived": "proposal/transfer/tests/payment-monitor-route.test.ts.txt",
+    "sha256": "2acb9f8404c569cf392156a399e31ab6a0a84b500a1240f3b23fd0c79282e5ff",
+    "bytes": 22120
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/transfer/tests/payment-monitor-trigger.test.ts",
+    "archived": "proposal/transfer/tests/payment-monitor-trigger.test.ts.txt",
+    "sha256": "70040d3b5e009659f7c1f6655dc9593371e554c59c738018d78c9a6cf9a51677",
+    "bytes": 8012
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/transfer/tests/public-contract-declaration-receipt-delivery.test.ts",
+    "archived": "proposal/transfer/tests/public-contract-declaration-receipt-delivery.test.ts.txt",
+    "sha256": "083b4d832c6964496bfcbc00f137f2ff58c434c02dcca774e100f791a6ec130a",
+    "bytes": 12800
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/transfer.diff",
+    "archived": "proposal/transfer.diff",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "original": "/tmp/test-audit-billing-operational125/write-ledger.py",
+    "archived": "proposal/write-ledger.py.txt",
+    "sha256": "5ab478afa92c841f089ba3b28fd32ca48c5d938164e8d1a93747db8733a20bcb",
+    "bytes": 22817
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/C3-semantic-addendum.md",
+    "archived": "original-tools/C3-semantic-addendum.md",
+    "sha256": "8638ea1e55ec7d7a91b44e549a9b09ac65738d89ac93613aab537ee1f0ccef5a",
+    "bytes": 1638
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/HANDOFF.json",
+    "archived": "original-tools/HANDOFF.json",
+    "sha256": "656e6c419d1d3facd474ca462f6b5ad65e8c57804c0bee4f88c7cac64cd807f7",
+    "bytes": 2329
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/README.md",
+    "archived": "original-tools/README.md",
+    "sha256": "0bf3bedbc8d9714cc06753171a05ae528bdb5906c79f22063d677f86d5d3d9fe",
+    "bytes": 9383
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/artifact-hashes.json",
+    "archived": "original-tools/artifact-hashes.json",
+    "sha256": "b5396396cd49542d8ca6ee49475d2440d7a8271d186147b4dd1ec585a51d2b82",
+    "bytes": 3201
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/full-final-code.diff",
+    "archived": "original-tools/full-final-code.diff",
+    "sha256": "773ae5f4931fffb929604dbb78dd3d8595abc0964a3fde65988663d165d3849b",
+    "bytes": 36541
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/main-commands.json",
+    "archived": "original-tools/main-commands.json",
+    "sha256": "5bc2a66eadefb3434c4862076c5e05d38b885dd0085910d78db1d887b3542dc7",
+    "bytes": 3930
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/operator-candidates.json",
+    "archived": "original-tools/operator-candidates.json",
+    "sha256": "a04e76d0aa735fe5340ee1e172940c02d4fbd019c88b8719a9110389fc682378",
+    "bytes": 16168
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/operator-controls-normalized.json",
+    "archived": "original-tools/operator-controls-normalized.json",
+    "sha256": "e37d7e96f2dd3055d360fbb985249b412432d0c949166bfcdd027b2f976b730c",
+    "bytes": 11202
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/operator-edit.cjs",
+    "archived": "original-tools/operator-edit.cjs.txt",
+    "sha256": "69638d81b7a3c637209b42cc5db3081a71a2b53815aaf7877956ecd342f9e824",
+    "bytes": 3766
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/operator-evidence.json",
+    "archived": "original-tools/operator-evidence.json",
+    "sha256": "6bbb27984d9289aeea7208315854b03ef1d78c70ee4094471b695312d681e5ae",
+    "bytes": 12016
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/operator-guard.cjs",
+    "archived": "original-tools/operator-guard.cjs.txt",
+    "sha256": "e2de31eeadd198ea09ae1e2dd9a4b2fe92d0c51b45cf3a30387801ab1a6e48bb",
+    "bytes": 14900
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/operator-pins.json",
+    "archived": "original-tools/operator-pins.json",
+    "sha256": "873f158cc84d4346588d02675130a9c33a5da5178536c744e106b1626affd09b",
+    "bytes": 1559772
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/operator-proof.cjs",
+    "archived": "original-tools/operator-proof.cjs.txt",
+    "sha256": "031f5f9a818cd4649e150c5aca2b4b4cfed5b43ba77f5136bb2dc5c9b3265a23",
+    "bytes": 5729
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/operator-readonly-preload.cjs",
+    "archived": "original-tools/operator-readonly-preload.cjs.txt",
+    "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/operator-run-controls.cjs",
+    "archived": "original-tools/operator-run-controls.cjs.txt",
+    "sha256": "ea291c68f2ad3dd04c2d6d3ef73c9b4f4c3edd090bbde105f66da8d4b3f751a9",
+    "bytes": 8093
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/operator-selected-closure.json",
+    "archived": "original-tools/operator-selected-closure.json",
+    "sha256": "fb8c0b1a379c4b167a38be0b25f80cdf95bc076a4c532826c326503e44313ecc",
+    "bytes": 96369
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/preparation-receipt.json",
+    "archived": "original-tools/preparation-receipt.json",
+    "sha256": "daf86d273e9f50684a59d9e3235e76ebfe4dd005b4ed92f11a84bb93c4223659",
+    "bytes": 517
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/prepare-pins.cjs",
+    "archived": "original-tools/prepare-pins.cjs.txt",
+    "sha256": "43a4e2c5ab7ff4f25d06d419f66f5d95005f1fc67c954c3f964d61ae95eab750",
+    "bytes": 14096
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/prepare-tools.py",
+    "archived": "original-tools/prepare-tools.py.txt",
+    "sha256": "9c6415f865320b2ee9228984780b10b9a67b19c42be9bab22873dc75019d1523",
+    "bytes": 5484
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/proof-attestation.cjs",
+    "archived": "original-tools/proof-attestation.cjs.txt",
+    "sha256": "d9e37ce84c3b214a052c9f2640f5256dd95ba7c0b5e5b1b319bb9f3a229b68f6",
+    "bytes": 4028
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/static-controls-receipt.txt",
+    "archived": "original-tools/static-controls-receipt.txt",
+    "sha256": "957c26ba55e181fc5a5a314491c756829472bef55f0f7d47c8005dfa4ce9eb36",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/static-editor-receipt.txt",
+    "archived": "original-tools/static-editor-receipt.txt",
+    "sha256": "c3326f737d67c75dc7338d4d4d88d419f8d170859742a2bc65877ad9a7a3fa3c",
+    "bytes": 526
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/static-integrity-receipt.txt",
+    "archived": "original-tools/static-integrity-receipt.txt",
+    "sha256": "6d7fc762999914c8f904663e791a881c463bb41e72dd0352f8e4016bc8818ef7",
+    "bytes": 1845
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/static-integrity.cjs",
+    "archived": "original-tools/static-integrity.cjs.txt",
+    "sha256": "d5e51a8ec28f74a0df670f509635ff465c7bdb7df07aa9e5bbcc9b160a28114f",
+    "bytes": 2773
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/static-synthetic-receipt.txt",
+    "archived": "original-tools/static-synthetic-receipt.txt",
+    "sha256": "ed7cd37500ee67a4a0ff4305ea047085a1ce5b60717cd2e22de7284c28943294",
+    "bytes": 422
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/template-delta.patch",
+    "archived": "original-tools/template-delta.patch",
+    "sha256": "ff6125711826f68f2253dc521537f45c7dc98516fecf25f01ca10f6290dd1265",
+    "bytes": 36109
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/template-originals/operator-edit.cjs",
+    "archived": "original-tools/template-originals/operator-edit.cjs.txt",
+    "sha256": "a5a57635cbbef3a27fc3ea9d4abb78e8f99db142ff900979f3942e827187c67c",
+    "bytes": 3640
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/template-originals/operator-guard.cjs",
+    "archived": "original-tools/template-originals/operator-guard.cjs.txt",
+    "sha256": "fc5f27d3c7f0c9f6e226b91e542c6db5d3e3e746af454aeacf2415c20e01f168",
+    "bytes": 13904
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/template-originals/operator-proof.cjs",
+    "archived": "original-tools/template-originals/operator-proof.cjs.txt",
+    "sha256": "6aec16c6468794c9d3b87d69b21b4661e3082a3d48ed44caaaf7c4cf7346eecf",
+    "bytes": 5736
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/template-originals/operator-readonly-preload.cjs",
+    "archived": "original-tools/template-originals/operator-readonly-preload.cjs.txt",
+    "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/template-originals/operator-run-controls.cjs",
+    "archived": "original-tools/template-originals/operator-run-controls.cjs.txt",
+    "sha256": "1bc3271bd6a646e60482390708f7571c27b5201d8729d050ef5937a124b2f8fd",
+    "bytes": 8053
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/template-originals/prepare-pins.cjs",
+    "archived": "original-tools/template-originals/prepare-pins.cjs.txt",
+    "sha256": "fa00ebe6d04616d0433f8e9007c2d0ba492ba4dcf780486ec804e7e78be0c019",
+    "bytes": 14689
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/template-originals/proof-attestation.cjs",
+    "archived": "original-tools/template-originals/proof-attestation.cjs.txt",
+    "sha256": "3a689b380987267a37926c527eee829ce6c4a86c105a818cabf06393a72f782b",
+    "bytes": 4029
+  },
+  {
+    "original": "/tmp/test-audit-billing125-tools-svsmm1u3/template-provenance.json",
+    "archived": "original-tools/template-provenance.json",
+    "sha256": "bef74d31a5e9552e1e6609cf1b637184d9695dc7697141e3daa4a2a314f91e7d",
+    "bytes": 1671
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/C3-semantic-addendum.md",
+    "archived": "main-tools/C3-semantic-addendum.md",
+    "sha256": "8638ea1e55ec7d7a91b44e549a9b09ac65738d89ac93613aab537ee1f0ccef5a",
+    "bytes": 1638
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/HANDOFF.json",
+    "archived": "main-tools/HANDOFF.json",
+    "sha256": "57f7c9ad031b06337d30901e8090937ab2b8627243ef3d38156178dcb97ccd96",
+    "bytes": 290
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/README.md",
+    "archived": "main-tools/README.md",
+    "sha256": "0bf3bedbc8d9714cc06753171a05ae528bdb5906c79f22063d677f86d5d3d9fe",
+    "bytes": 9383
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/full-final-code.diff",
+    "archived": "main-tools/full-final-code.diff",
+    "sha256": "773ae5f4931fffb929604dbb78dd3d8595abc0964a3fde65988663d165d3849b",
+    "bytes": 36541
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/main-commands.json",
+    "archived": "main-tools/main-commands.json",
+    "sha256": "5bc2a66eadefb3434c4862076c5e05d38b885dd0085910d78db1d887b3542dc7",
+    "bytes": 3930
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-cut-brnhUk/intent.json",
+    "archived": "main-tools/operator-apply-cut-brnhUk/intent.json",
+    "sha256": "d43812556aa3db03148d357fd74a34e3761d69c76f6f601c4d58c3deb6cc43b7",
+    "bytes": 3765
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-cut-brnhUk/originals/tests/admin-user-billing-summary.test.ts",
+    "archived": "main-tools/operator-apply-cut-brnhUk/originals/tests/admin-user-billing-summary.test.ts.txt",
+    "sha256": "b62c33d939c9304e4e38a90890e14e96f3008473902df91ebbe8bbbce47e5295",
+    "bytes": 9281
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-cut-brnhUk/originals/tests/billing-public-contract-declaration-resolution.test.ts",
+    "archived": "main-tools/operator-apply-cut-brnhUk/originals/tests/billing-public-contract-declaration-resolution.test.ts.txt",
+    "sha256": "e0f5d7b9c9950b657569de8d429e069fe0c182f6024958a3f5aa91f51711139d",
+    "bytes": 12037
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-cut-brnhUk/originals/tests/billing-public-contract-declaration-route.test.ts",
+    "archived": "main-tools/operator-apply-cut-brnhUk/originals/tests/billing-public-contract-declaration-route.test.ts.txt",
+    "sha256": "6c81989f5649af5a31ea76c177ee4761b65964c19284b727883f27eb7ac9cf05",
+    "bytes": 5231
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-cut-brnhUk/originals/tests/billing-public-contract-declaration.test.ts",
+    "archived": "main-tools/operator-apply-cut-brnhUk/originals/tests/billing-public-contract-declaration.test.ts.txt",
+    "sha256": "270710a69a805ceaf10f4ba479364a6e34b9425300128a384f1467302c70416f",
+    "bytes": 2179
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-cut-brnhUk/originals/tests/billing-public-contract-declarations-postgres.test.ts",
+    "archived": "main-tools/operator-apply-cut-brnhUk/originals/tests/billing-public-contract-declarations-postgres.test.ts.txt",
+    "sha256": "89df96b1e1f56bc87dbbe341b34e49f536f47416751533eebe03dcfb5e7b8137",
+    "bytes": 8645
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-cut-brnhUk/originals/tests/billing-reconcile-analytics.test.ts",
+    "archived": "main-tools/operator-apply-cut-brnhUk/originals/tests/billing-reconcile-analytics.test.ts.txt",
+    "sha256": "8a8e25f2fc0fe25d2785fb163d1278fd1b7793698c78806484a18e1f8a4791dc",
+    "bytes": 22913
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-cut-brnhUk/originals/tests/billing-slack-supabase-ownership.test.ts",
+    "archived": "main-tools/operator-apply-cut-brnhUk/originals/tests/billing-slack-supabase-ownership.test.ts.txt",
+    "sha256": "1feb844fd8ae48a26d55ed046bb62e5e1c29fd26c965e6c74b533976436cc3dc",
+    "bytes": 739
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-cut-brnhUk/originals/tests/billing-subscriptions-access-grace.test.ts",
+    "archived": "main-tools/operator-apply-cut-brnhUk/originals/tests/billing-subscriptions-access-grace.test.ts.txt",
+    "sha256": "280c7d42b8b7bf6ae611b3e0e8df5012b717f8e0f6386ead947606aec110987f",
+    "bytes": 5614
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-cut-brnhUk/originals/tests/payment-integrity.test.ts",
+    "archived": "main-tools/operator-apply-cut-brnhUk/originals/tests/payment-integrity.test.ts.txt",
+    "sha256": "645b5a35fd71846215808798ff1be994c3c4d824e71889ed7a33eeb15e522fe3",
+    "bytes": 13832
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-cut-brnhUk/originals/tests/payment-monitor-paypal-test-classification.test.ts",
+    "archived": "main-tools/operator-apply-cut-brnhUk/originals/tests/payment-monitor-paypal-test-classification.test.ts.txt",
+    "sha256": "15be122a226a9772cdb9a4e9867de32d20acd2b4b1a756b03a9b41d2430292c7",
+    "bytes": 4112
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-cut-brnhUk/originals/tests/payment-monitor-route.test.ts",
+    "archived": "main-tools/operator-apply-cut-brnhUk/originals/tests/payment-monitor-route.test.ts.txt",
+    "sha256": "2acb9f8404c569cf392156a399e31ab6a0a84b500a1240f3b23fd0c79282e5ff",
+    "bytes": 22120
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-cut-brnhUk/originals/tests/payment-monitor-trigger.test.ts",
+    "archived": "main-tools/operator-apply-cut-brnhUk/originals/tests/payment-monitor-trigger.test.ts.txt",
+    "sha256": "70040d3b5e009659f7c1f6655dc9593371e554c59c738018d78c9a6cf9a51677",
+    "bytes": 8012
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-cut-brnhUk/originals/tests/public-contract-declaration-receipt-delivery.test.ts",
+    "archived": "main-tools/operator-apply-cut-brnhUk/originals/tests/public-contract-declaration-receipt-delivery.test.ts.txt",
+    "sha256": "083b4d832c6964496bfcbc00f137f2ff58c434c02dcca774e100f791a6ec130a",
+    "bytes": 12800
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-cut-brnhUk/receipt.json",
+    "archived": "main-tools/operator-apply-cut-brnhUk/receipt.json",
+    "sha256": "aadc189b8fa3c4643907fc2a71047764c521b9f645fa91a8dde8d3afc0af1770",
+    "bytes": 2427
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-transfer-j2V1sJ/intent.json",
+    "archived": "main-tools/operator-apply-transfer-j2V1sJ/intent.json",
+    "sha256": "d7da017dac8f04883df6b4781b9fc3dbf51d10e2862a651ed316ab995199f3f1",
+    "bytes": 3518
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-transfer-j2V1sJ/originals/tests/admin-user-billing-summary.test.ts",
+    "archived": "main-tools/operator-apply-transfer-j2V1sJ/originals/tests/admin-user-billing-summary.test.ts.txt",
+    "sha256": "b62c33d939c9304e4e38a90890e14e96f3008473902df91ebbe8bbbce47e5295",
+    "bytes": 9281
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-transfer-j2V1sJ/originals/tests/billing-public-contract-declaration-resolution.test.ts",
+    "archived": "main-tools/operator-apply-transfer-j2V1sJ/originals/tests/billing-public-contract-declaration-resolution.test.ts.txt",
+    "sha256": "e0f5d7b9c9950b657569de8d429e069fe0c182f6024958a3f5aa91f51711139d",
+    "bytes": 12037
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-transfer-j2V1sJ/originals/tests/billing-public-contract-declaration-route.test.ts",
+    "archived": "main-tools/operator-apply-transfer-j2V1sJ/originals/tests/billing-public-contract-declaration-route.test.ts.txt",
+    "sha256": "6c81989f5649af5a31ea76c177ee4761b65964c19284b727883f27eb7ac9cf05",
+    "bytes": 5231
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-transfer-j2V1sJ/originals/tests/billing-public-contract-declaration.test.ts",
+    "archived": "main-tools/operator-apply-transfer-j2V1sJ/originals/tests/billing-public-contract-declaration.test.ts.txt",
+    "sha256": "270710a69a805ceaf10f4ba479364a6e34b9425300128a384f1467302c70416f",
+    "bytes": 2179
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-transfer-j2V1sJ/originals/tests/billing-public-contract-declarations-postgres.test.ts",
+    "archived": "main-tools/operator-apply-transfer-j2V1sJ/originals/tests/billing-public-contract-declarations-postgres.test.ts.txt",
+    "sha256": "89df96b1e1f56bc87dbbe341b34e49f536f47416751533eebe03dcfb5e7b8137",
+    "bytes": 8645
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-transfer-j2V1sJ/originals/tests/billing-reconcile-analytics.test.ts",
+    "archived": "main-tools/operator-apply-transfer-j2V1sJ/originals/tests/billing-reconcile-analytics.test.ts.txt",
+    "sha256": "8a8e25f2fc0fe25d2785fb163d1278fd1b7793698c78806484a18e1f8a4791dc",
+    "bytes": 22913
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-transfer-j2V1sJ/originals/tests/billing-slack-supabase-ownership.test.ts",
+    "archived": "main-tools/operator-apply-transfer-j2V1sJ/originals/tests/billing-slack-supabase-ownership.test.ts.txt",
+    "sha256": "1feb844fd8ae48a26d55ed046bb62e5e1c29fd26c965e6c74b533976436cc3dc",
+    "bytes": 739
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-transfer-j2V1sJ/originals/tests/billing-subscriptions-access-grace.test.ts",
+    "archived": "main-tools/operator-apply-transfer-j2V1sJ/originals/tests/billing-subscriptions-access-grace.test.ts.txt",
+    "sha256": "280c7d42b8b7bf6ae611b3e0e8df5012b717f8e0f6386ead947606aec110987f",
+    "bytes": 5614
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-transfer-j2V1sJ/originals/tests/payment-integrity.test.ts",
+    "archived": "main-tools/operator-apply-transfer-j2V1sJ/originals/tests/payment-integrity.test.ts.txt",
+    "sha256": "645b5a35fd71846215808798ff1be994c3c4d824e71889ed7a33eeb15e522fe3",
+    "bytes": 13832
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-transfer-j2V1sJ/originals/tests/payment-monitor-paypal-test-classification.test.ts",
+    "archived": "main-tools/operator-apply-transfer-j2V1sJ/originals/tests/payment-monitor-paypal-test-classification.test.ts.txt",
+    "sha256": "15be122a226a9772cdb9a4e9867de32d20acd2b4b1a756b03a9b41d2430292c7",
+    "bytes": 4112
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-transfer-j2V1sJ/originals/tests/payment-monitor-route.test.ts",
+    "archived": "main-tools/operator-apply-transfer-j2V1sJ/originals/tests/payment-monitor-route.test.ts.txt",
+    "sha256": "2acb9f8404c569cf392156a399e31ab6a0a84b500a1240f3b23fd0c79282e5ff",
+    "bytes": 22120
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-transfer-j2V1sJ/originals/tests/payment-monitor-trigger.test.ts",
+    "archived": "main-tools/operator-apply-transfer-j2V1sJ/originals/tests/payment-monitor-trigger.test.ts.txt",
+    "sha256": "70040d3b5e009659f7c1f6655dc9593371e554c59c738018d78c9a6cf9a51677",
+    "bytes": 8012
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-transfer-j2V1sJ/originals/tests/public-contract-declaration-receipt-delivery.test.ts",
+    "archived": "main-tools/operator-apply-transfer-j2V1sJ/originals/tests/public-contract-declaration-receipt-delivery.test.ts.txt",
+    "sha256": "083b4d832c6964496bfcbc00f137f2ff58c434c02dcca774e100f791a6ec130a",
+    "bytes": 12800
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-transfer-j2V1sJ/receipt.json",
+    "archived": "main-tools/operator-apply-transfer-j2V1sJ/receipt.json",
+    "sha256": "57fcda572aa0c053c61f60f926d015819ff3524f0a6561929c9427202d32b71d",
+    "bytes": 2041
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-candidates.json",
+    "archived": "main-tools/operator-candidates.json",
+    "sha256": "a04e76d0aa735fe5340ee1e172940c02d4fbd019c88b8719a9110389fc682378",
+    "bytes": 16168
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-controls-normalized.json",
+    "archived": "main-tools/operator-controls-normalized.json",
+    "sha256": "e37d7e96f2dd3055d360fbb985249b412432d0c949166bfcdd027b2f976b730c",
+    "bytes": 11202
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-edit.cjs",
+    "archived": "main-tools/operator-edit.cjs.txt",
+    "sha256": "486dddc1ed7b4a258b84791a31e6fb8924a64a2db436062f78dd0fb95bc75960",
+    "bytes": 3766
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-evidence.json",
+    "archived": "main-tools/operator-evidence.json",
+    "sha256": "6bbb27984d9289aeea7208315854b03ef1d78c70ee4094471b695312d681e5ae",
+    "bytes": 12016
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-guard.cjs",
+    "archived": "main-tools/operator-guard.cjs.txt",
+    "sha256": "7d6c208a735780eb2ee8be9af63f193864b3174c1fca0eb4b796c2b9d9191184",
+    "bytes": 15049
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/all-originals/src/app/api/billing/payment-monitor/route.ts",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/all-originals/src/app/api/billing/payment-monitor/route.ts.txt",
+    "sha256": "3b1163b0be8c29500d706328ad2e7d3ebacd681ac536a0aded16197147c91ce8",
+    "bytes": 24331
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/all-originals/src/lib/billing/subscriptions.ts",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/all-originals/src/lib/billing/subscriptions.ts.txt",
+    "sha256": "a6ba77a92481e13f6f03bc7b1c8d7fee75c02facfeb8ce747493bc64ecca995c",
+    "bytes": 17458
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/all-originals/tests/admin-user-billing-summary.test.ts",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/all-originals/tests/admin-user-billing-summary.test.ts.txt",
+    "sha256": "b62c33d939c9304e4e38a90890e14e96f3008473902df91ebbe8bbbce47e5295",
+    "bytes": 9281
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/all-originals/tests/billing-public-contract-declaration-resolution.test.ts",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/all-originals/tests/billing-public-contract-declaration-resolution.test.ts.txt",
+    "sha256": "e0f5d7b9c9950b657569de8d429e069fe0c182f6024958a3f5aa91f51711139d",
+    "bytes": 12037
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/all-originals/tests/billing-public-contract-declaration-route.test.ts",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/all-originals/tests/billing-public-contract-declaration-route.test.ts.txt",
+    "sha256": "6c81989f5649af5a31ea76c177ee4761b65964c19284b727883f27eb7ac9cf05",
+    "bytes": 5231
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/all-originals/tests/billing-public-contract-declaration.test.ts",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/all-originals/tests/billing-public-contract-declaration.test.ts.txt",
+    "sha256": "270710a69a805ceaf10f4ba479364a6e34b9425300128a384f1467302c70416f",
+    "bytes": 2179
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/all-originals/tests/billing-public-contract-declarations-postgres.test.ts",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/all-originals/tests/billing-public-contract-declarations-postgres.test.ts.txt",
+    "sha256": "89df96b1e1f56bc87dbbe341b34e49f536f47416751533eebe03dcfb5e7b8137",
+    "bytes": 8645
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/all-originals/tests/billing-reconcile-analytics.test.ts",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/all-originals/tests/billing-reconcile-analytics.test.ts.txt",
+    "sha256": "8a8e25f2fc0fe25d2785fb163d1278fd1b7793698c78806484a18e1f8a4791dc",
+    "bytes": 22913
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/all-originals/tests/billing-slack-supabase-ownership.test.ts",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/all-originals/tests/billing-slack-supabase-ownership.test.ts.txt",
+    "sha256": "1feb844fd8ae48a26d55ed046bb62e5e1c29fd26c965e6c74b533976436cc3dc",
+    "bytes": 739
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/all-originals/tests/billing-subscriptions-access-grace.test.ts",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/all-originals/tests/billing-subscriptions-access-grace.test.ts.txt",
+    "sha256": "280c7d42b8b7bf6ae611b3e0e8df5012b717f8e0f6386ead947606aec110987f",
+    "bytes": 5614
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/all-originals/tests/payment-integrity.test.ts",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/all-originals/tests/payment-integrity.test.ts.txt",
+    "sha256": "645b5a35fd71846215808798ff1be994c3c4d824e71889ed7a33eeb15e522fe3",
+    "bytes": 13832
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/all-originals/tests/payment-monitor-paypal-test-classification.test.ts",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/all-originals/tests/payment-monitor-paypal-test-classification.test.ts.txt",
+    "sha256": "15be122a226a9772cdb9a4e9867de32d20acd2b4b1a756b03a9b41d2430292c7",
+    "bytes": 4112
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/all-originals/tests/payment-monitor-route.test.ts",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/all-originals/tests/payment-monitor-route.test.ts.txt",
+    "sha256": "2acb9f8404c569cf392156a399e31ab6a0a84b500a1240f3b23fd0c79282e5ff",
+    "bytes": 22120
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/all-originals/tests/payment-monitor-trigger.test.ts",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/all-originals/tests/payment-monitor-trigger.test.ts.txt",
+    "sha256": "70040d3b5e009659f7c1f6655dc9593371e554c59c738018d78c9a6cf9a51677",
+    "bytes": 8012
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/all-originals/tests/public-contract-declaration-receipt-delivery.test.ts",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/all-originals/tests/public-contract-declaration-receipt-delivery.test.ts.txt",
+    "sha256": "083b4d832c6964496bfcbc00f137f2ff58c434c02dcca774e100f791a6ec130a",
+    "bytes": 12800
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/complete.json",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/complete.json",
+    "sha256": "01cc8dad8d7219b427de91c7733e5fd184ce61c3aa088a7899ec7d2d6cea1c7d",
+    "bytes": 27011
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/expired-access/originals/src/lib/billing/subscriptions.ts",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/expired-access/originals/src/lib/billing/subscriptions.ts.txt",
+    "sha256": "a6ba77a92481e13f6f03bc7b1c8d7fee75c02facfeb8ce747493bc64ecca995c",
+    "bytes": 17458
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/expired-access-after.command.json",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/expired-access-after.command.json",
+    "sha256": "4321f2efd048a455004a767644f61155fa2c5b9f95b7eb29aac0fc537eb0d1f7",
+    "bytes": 448
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/expired-access-after.tap",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/expired-access-after.tap",
+    "sha256": "b8332b37a6761ae9b6614e264a7222c468f6c4905d303fb028cdcad20cebe86b",
+    "bytes": 309
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/expired-access-before.command.json",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/expired-access-before.command.json",
+    "sha256": "4321f2efd048a455004a767644f61155fa2c5b9f95b7eb29aac0fc537eb0d1f7",
+    "bytes": 448
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/expired-access-before.tap",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/expired-access-before.tap",
+    "sha256": "6a5a21310237224a58f670258ebc1430c14130bca983d2d7980a5ae64b4c5c8c",
+    "bytes": 308
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/expired-access-fault.command.json",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/expired-access-fault.command.json",
+    "sha256": "4321f2efd048a455004a767644f61155fa2c5b9f95b7eb29aac0fc537eb0d1f7",
+    "bytes": 448
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/expired-access-fault.tap",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/expired-access-fault.tap",
+    "sha256": "d742bb32af3b39e219e8afeb28ff89f622017697af2f5561b669ba906ec64d08",
+    "bytes": 1098
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/intent.json",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/intent.json",
+    "sha256": "bd0d9779d89f71adc37df72350b96660b984df71d28ccafccac8ba6e92314ee5",
+    "bytes": 2114
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/premature-grace-end/originals/src/lib/billing/subscriptions.ts",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/premature-grace-end/originals/src/lib/billing/subscriptions.ts.txt",
+    "sha256": "a6ba77a92481e13f6f03bc7b1c8d7fee75c02facfeb8ce747493bc64ecca995c",
+    "bytes": 17458
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/premature-grace-end-after.command.json",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/premature-grace-end-after.command.json",
+    "sha256": "6fcce500f10ee413e0c0dfea9c29dec13eb43ee5379b363c753e74b40b8c99cf",
+    "bytes": 448
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/premature-grace-end-after.tap",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/premature-grace-end-after.tap",
+    "sha256": "0bc9ce50e93a5a4445f81121c0da90b03215c4915cebd9320aa7c4c7712055e2",
+    "bytes": 308
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/premature-grace-end-before.command.json",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/premature-grace-end-before.command.json",
+    "sha256": "6fcce500f10ee413e0c0dfea9c29dec13eb43ee5379b363c753e74b40b8c99cf",
+    "bytes": 448
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/premature-grace-end-before.tap",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/premature-grace-end-before.tap",
+    "sha256": "c6219393ec97d02c4cc5ae1ad49bc649e0195678b1c729553edf1513327d1f5b",
+    "bytes": 309
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/premature-grace-end-fault.command.json",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/premature-grace-end-fault.command.json",
+    "sha256": "6fcce500f10ee413e0c0dfea9c29dec13eb43ee5379b363c753e74b40b8c99cf",
+    "bytes": 448
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/premature-grace-end-fault.tap",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/premature-grace-end-fault.tap",
+    "sha256": "06cdcfb0554710f1a3ce9ca795b44cac9e94beaaeb51d48dc6ca71d0709152bd",
+    "bytes": 1098
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/receipt.json",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/receipt.json",
+    "sha256": "bd1b2ad305fc6219316dd967b0550232d3052413b17f563a6abd276b5f643706",
+    "bytes": 211006
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/reject-future-access/originals/src/lib/billing/subscriptions.ts",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/reject-future-access/originals/src/lib/billing/subscriptions.ts.txt",
+    "sha256": "a6ba77a92481e13f6f03bc7b1c8d7fee75c02facfeb8ce747493bc64ecca995c",
+    "bytes": 17458
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/reject-future-access-after.command.json",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/reject-future-access-after.command.json",
+    "sha256": "d1b2048f017610f899d131604a89996d001bcd8924031db49d13d58043ab7045",
+    "bytes": 421
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/reject-future-access-after.tap",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/reject-future-access-after.tap",
+    "sha256": "83b33fd4ddf31acd006695027e003998252525aef09d616b994a5d3737b33930",
+    "bytes": 253
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/reject-future-access-before.command.json",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/reject-future-access-before.command.json",
+    "sha256": "d1b2048f017610f899d131604a89996d001bcd8924031db49d13d58043ab7045",
+    "bytes": 421
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/reject-future-access-before.tap",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/reject-future-access-before.tap",
+    "sha256": "56d40e85c5a61d49ef58d5a93673376f1642f20298bb24cf0bd0ac35c1df0b5c",
+    "bytes": 252
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/reject-future-access-fault.command.json",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/reject-future-access-fault.command.json",
+    "sha256": "d1b2048f017610f899d131604a89996d001bcd8924031db49d13d58043ab7045",
+    "bytes": 421
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/reject-future-access-fault.tap",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/reject-future-access-fault.tap",
+    "sha256": "9155f585caba7ffb6e6b71d1f0dc67efb1f4309280d0615deeb7c1d4cc99cc70",
+    "bytes": 1042
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/reject-legacy-null/originals/src/lib/billing/subscriptions.ts",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/reject-legacy-null/originals/src/lib/billing/subscriptions.ts.txt",
+    "sha256": "a6ba77a92481e13f6f03bc7b1c8d7fee75c02facfeb8ce747493bc64ecca995c",
+    "bytes": 17458
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/reject-legacy-null-after.command.json",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/reject-legacy-null-after.command.json",
+    "sha256": "8b42dbe42908354e3e44024df90cdd94f880c53512fd8c37d7d48e2e8dc0f4a8",
+    "bytes": 441
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/reject-legacy-null-after.tap",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/reject-legacy-null-after.tap",
+    "sha256": "f9bf9ce44e6b0df7c8f2e6cc898d8cd3ed0df4594839ff1e3ca04891eac00874",
+    "bytes": 295
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/reject-legacy-null-before.command.json",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/reject-legacy-null-before.command.json",
+    "sha256": "8b42dbe42908354e3e44024df90cdd94f880c53512fd8c37d7d48e2e8dc0f4a8",
+    "bytes": 441
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/reject-legacy-null-before.tap",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/reject-legacy-null-before.tap",
+    "sha256": "e0892962dfc88809cb0ce8bedc8c4fd6f1c93cf998490b5dbc6d9959f4a1a93f",
+    "bytes": 295
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/reject-legacy-null-fault.command.json",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/reject-legacy-null-fault.command.json",
+    "sha256": "8b42dbe42908354e3e44024df90cdd94f880c53512fd8c37d7d48e2e8dc0f4a8",
+    "bytes": 441
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/reject-legacy-null-fault.tap",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/reject-legacy-null-fault.tap",
+    "sha256": "409b14187b60aeb5537c61835e091af12d9e0212a05b0e2c7a059af42d04b34c",
+    "bytes": 1083
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/skip-incident-flush/originals/src/app/api/billing/payment-monitor/route.ts",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/skip-incident-flush/originals/src/app/api/billing/payment-monitor/route.ts.txt",
+    "sha256": "3b1163b0be8c29500d706328ad2e7d3ebacd681ac536a0aded16197147c91ce8",
+    "bytes": 24331
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/skip-incident-flush-after.command.json",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/skip-incident-flush-after.command.json",
+    "sha256": "eb23418c3dc8445e734a1ffb3aeecaa2ac4ed011ffad3753eda61f63861c5223",
+    "bytes": 454
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/skip-incident-flush-after.tap",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/skip-incident-flush-after.tap",
+    "sha256": "9e8f1182884fb3c50fba61cf4a530c544b7a3cf434e5f151a047c75d2288c7da",
+    "bytes": 331
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/skip-incident-flush-before.command.json",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/skip-incident-flush-before.command.json",
+    "sha256": "eb23418c3dc8445e734a1ffb3aeecaa2ac4ed011ffad3753eda61f63861c5223",
+    "bytes": 454
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/skip-incident-flush-before.tap",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/skip-incident-flush-before.tap",
+    "sha256": "a568bdde82542b741ae04ccd44bc573298dc5458ac0e5b575824f6f3d34e240d",
+    "bytes": 331
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/skip-incident-flush-fault.command.json",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/skip-incident-flush-fault.command.json",
+    "sha256": "eb23418c3dc8445e734a1ffb3aeecaa2ac4ed011ffad3753eda61f63861c5223",
+    "bytes": 454
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-mutations-transfer-Yx9MG0/skip-incident-flush-fault.tap",
+    "archived": "main-tools/operator-mutations-transfer-Yx9MG0/skip-incident-flush-fault.tap",
+    "sha256": "3a19bd5d5c4df4289bbf8af9a606addf2431d19e012f59993bc68fec8b8e0f5e",
+    "bytes": 957
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-pins.json",
+    "archived": "main-tools/operator-pins.json",
+    "sha256": "7482abb73c692ef3ba51f19850ff33da6eef0ea8630fd056590a75315cd1b92c",
+    "bytes": 1564293
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-proof.cjs",
+    "archived": "main-tools/operator-proof.cjs.txt",
+    "sha256": "031f5f9a818cd4649e150c5aca2b4b4cfed5b43ba77f5136bb2dc5c9b3265a23",
+    "bytes": 5729
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-readonly-preload.cjs",
+    "archived": "main-tools/operator-readonly-preload.cjs.txt",
+    "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-run-controls.cjs",
+    "archived": "main-tools/operator-run-controls.cjs.txt",
+    "sha256": "db0734786b606e3fbc4d9bedce8a6b7f8a66994c3654095b0e43b89aeb3f6701",
+    "bytes": 8093
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-selected-closure.json",
+    "archived": "main-tools/operator-selected-closure.json",
+    "sha256": "fb8c0b1a379c4b167a38be0b25f80cdf95bc076a4c532826c326503e44313ecc",
+    "bytes": 96369
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/packed-policy-code.diff",
+    "archived": "main-tools/packed-policy-code.diff",
+    "sha256": "73586a4c4b0e8a63b387f410edaf5dcf60b151090d1d87a45b67af0c9ce3c2b7",
+    "bytes": 2601
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/packed-policy-disposition.json",
+    "archived": "main-tools/packed-policy-disposition.json",
+    "sha256": "855d6c7611b49cc9708515b331ec4329811cc9376ee2edb9c0e3a3b00860e816",
+    "bytes": 508
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/preparation-receipt.json",
+    "archived": "main-tools/preparation-receipt.json",
+    "sha256": "daf86d273e9f50684a59d9e3235e76ebfe4dd005b4ed92f11a84bb93c4223659",
+    "bytes": 517
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/prepare-pins.cjs",
+    "archived": "main-tools/prepare-pins.cjs.txt",
+    "sha256": "43a4e2c5ab7ff4f25d06d419f66f5d95005f1fc67c954c3f964d61ae95eab750",
+    "bytes": 14096
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/prepare-tools.py",
+    "archived": "main-tools/prepare-tools.py.txt",
+    "sha256": "9c6415f865320b2ee9228984780b10b9a67b19c42be9bab22873dc75019d1523",
+    "bytes": 5484
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/proof-attestation.cjs",
+    "archived": "main-tools/proof-attestation.cjs.txt",
+    "sha256": "d9e37ce84c3b214a052c9f2640f5256dd95ba7c0b5e5b1b319bb9f3a229b68f6",
+    "bytes": 4028
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/static-controls-receipt.txt",
+    "archived": "main-tools/static-controls-receipt.txt",
+    "sha256": "957c26ba55e181fc5a5a314491c756829472bef55f0f7d47c8005dfa4ce9eb36",
+    "bytes": 470
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/static-editor-receipt.txt",
+    "archived": "main-tools/static-editor-receipt.txt",
+    "sha256": "c3326f737d67c75dc7338d4d4d88d419f8d170859742a2bc65877ad9a7a3fa3c",
+    "bytes": 526
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/static-integrity-receipt.txt",
+    "archived": "main-tools/static-integrity-receipt.txt",
+    "sha256": "6d7fc762999914c8f904663e791a881c463bb41e72dd0352f8e4016bc8818ef7",
+    "bytes": 1845
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/static-integrity.cjs",
+    "archived": "main-tools/static-integrity.cjs.txt",
+    "sha256": "d5e51a8ec28f74a0df670f509635ff465c7bdb7df07aa9e5bbcc9b160a28114f",
+    "bytes": 2773
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/static-synthetic-receipt.txt",
+    "archived": "main-tools/static-synthetic-receipt.txt",
+    "sha256": "ed7cd37500ee67a4a0ff4305ea047085a1ce5b60717cd2e22de7284c28943294",
+    "bytes": 422
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/template-delta.patch",
+    "archived": "main-tools/template-delta.patch",
+    "sha256": "ff6125711826f68f2253dc521537f45c7dc98516fecf25f01ca10f6290dd1265",
+    "bytes": 36109
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/template-originals/operator-edit.cjs",
+    "archived": "main-tools/template-originals/operator-edit.cjs.txt",
+    "sha256": "a5a57635cbbef3a27fc3ea9d4abb78e8f99db142ff900979f3942e827187c67c",
+    "bytes": 3640
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/template-originals/operator-guard.cjs",
+    "archived": "main-tools/template-originals/operator-guard.cjs.txt",
+    "sha256": "fc5f27d3c7f0c9f6e226b91e542c6db5d3e3e746af454aeacf2415c20e01f168",
+    "bytes": 13904
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/template-originals/operator-proof.cjs",
+    "archived": "main-tools/template-originals/operator-proof.cjs.txt",
+    "sha256": "6aec16c6468794c9d3b87d69b21b4661e3082a3d48ed44caaaf7c4cf7346eecf",
+    "bytes": 5736
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/template-originals/operator-readonly-preload.cjs",
+    "archived": "main-tools/template-originals/operator-readonly-preload.cjs.txt",
+    "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/template-originals/operator-run-controls.cjs",
+    "archived": "main-tools/template-originals/operator-run-controls.cjs.txt",
+    "sha256": "1bc3271bd6a646e60482390708f7571c27b5201d8729d050ef5937a124b2f8fd",
+    "bytes": 8053
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/template-originals/prepare-pins.cjs",
+    "archived": "main-tools/template-originals/prepare-pins.cjs.txt",
+    "sha256": "fa00ebe6d04616d0433f8e9007c2d0ba492ba4dcf780486ec804e7e78be0c019",
+    "bytes": 14689
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/template-originals/proof-attestation.cjs",
+    "archived": "main-tools/template-originals/proof-attestation.cjs.txt",
+    "sha256": "3a689b380987267a37926c527eee829ce6c4a86c105a818cabf06393a72f782b",
+    "bytes": 4029
+  },
+  {
+    "original": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/template-provenance.json",
+    "archived": "main-tools/template-provenance.json",
+    "sha256": "bef74d31a5e9552e1e6609cf1b637184d9695dc7697141e3daa4a2a314f91e7d",
+    "bytes": 1671
+  },
+  {
+    "original": "/tmp/test-audit-packed-refs-relevant-policy-9crva_8q/actual-static-checks.json",
+    "archived": "packed-policy/actual-static-checks.json",
+    "sha256": "b1267bf6eadf8e9861fbe24686d5f287aea16aaa96b30e9419dd41611169ff80",
+    "bytes": 151
+  },
+  {
+    "original": "/tmp/test-audit-packed-refs-relevant-policy-9crva_8q/disposition.json",
+    "archived": "packed-policy/disposition.json",
+    "sha256": "903587ed8a72b5f2955c0355a69770c7a4dceffe6a1c39a2eccd55f235d19103",
+    "bytes": 1050
+  },
+  {
+    "original": "/tmp/test-audit-packed-refs-relevant-policy-9crva_8q/policy.cjs",
+    "archived": "packed-policy/policy.cjs.txt",
+    "sha256": "b1622277836750342cc6efe96c11bdf140d36fc7b76e7356d1c25869ab887bcd",
+    "bytes": 1585
+  },
+  {
+    "original": "/tmp/test-audit-billing125-independent-preservation.md",
+    "archived": "independent/test-audit-billing125-independent-preservation.md",
+    "sha256": "8d14d47240607ae115dade83ca2bf10848a37926f4f59f8db3a10b697408ad2b",
+    "bytes": 17677
+  },
+  {
+    "original": "/tmp/test-audit-billing125-independent-static.cjs",
+    "archived": "independent/test-audit-billing125-independent-static.cjs.txt",
+    "sha256": "140c53ec391bde6e4779b3e83d5d3869fee8512bafb217aeeae5cc0b5e05b1bd",
+    "bytes": 8628
+  },
+  {
+    "original": "/tmp/test-audit-billing125-independent-static.json",
+    "archived": "independent/test-audit-billing125-independent-static.json",
+    "sha256": "5a975a91cd3c1e37a2d5ab89a0392a92a9be5b987128d3ec0e040f3dd877ae61",
+    "bytes": 58882
+  },
+  {
+    "original": "/tmp/test-audit-billing125-independent-receipt.json",
+    "archived": "independent/test-audit-billing125-independent-receipt.json",
+    "sha256": "e9c033431b17a687ef11a77224a706ac5bb0535e144a0720870db5abe3490137",
+    "bytes": 2996
+  },
+  {
+    "original": "/tmp/test-audit-billing125-main-native-command.json",
+    "archived": "native/test-audit-billing125-main-native-command.json",
+    "sha256": "082f992247f99d03989daaa3f7666697b9efea4c5aa4730756224afe394373dc",
+    "bytes": 925
+  },
+  {
+    "original": "/tmp/test-audit-billing125-main-before-native.command.json",
+    "archived": "native/test-audit-billing125-main-before-native.command.json",
+    "sha256": "082f992247f99d03989daaa3f7666697b9efea4c5aa4730756224afe394373dc",
+    "bytes": 925
+  },
+  {
+    "original": "/tmp/test-audit-billing125-main-before-native.tap",
+    "archived": "native/test-audit-billing125-main-before-native.tap",
+    "sha256": "446ce8ffe98f4cdfd3f7e7cd9fa9461a1a4bf741cb52f9e7e179d9931100eb54",
+    "bytes": 27029
+  },
+  {
+    "original": "/tmp/test-audit-billing125-main-before-native.result.json",
+    "archived": "native/test-audit-billing125-main-before-native.result.json",
+    "sha256": "85433cdd8ff6b524e86ddbae6005170e9042bc4aaef6f513c832741ca411efe4",
+    "bytes": 173
+  },
+  {
+    "original": "/tmp/test-audit-billing119-main-cut-native.command.json",
+    "archived": "native/test-audit-billing119-main-cut-native.command.json",
+    "sha256": "082f992247f99d03989daaa3f7666697b9efea4c5aa4730756224afe394373dc",
+    "bytes": 925
+  },
+  {
+    "original": "/tmp/test-audit-billing119-main-cut-native.tap",
+    "archived": "native/test-audit-billing119-main-cut-native.tap",
+    "sha256": "e2437ef329bf8c16a34aa35feee7c71f8e8418cddf5c428665fc612c2f07f3ac",
+    "bytes": 25753
+  },
+  {
+    "original": "/tmp/test-audit-billing119-main-cut-native.result.json",
+    "archived": "native/test-audit-billing119-main-cut-native.result.json",
+    "sha256": "3e75c1d203b8f99fae08de29e706051d0cd6bde8b3f00feb51a89e574d7ee523",
+    "bytes": 173
+  }
+]

@@ -1,5 +1,10 @@
+import { stage3HeatRoutesFromSnapshot } from "@/lib/personal-plan/oil-heat-context"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
+import {
+  buildStage3SelectionProfile,
+  type Stage3VisibleHairColor,
+} from "@/lib/personal-plan/products/authority/selection-profile"
 import { CATEGORY_COPY } from "@/components/personal-plan-products/stage3-product-copy"
 import { ROLE_SENSITIVE_CANDIDATE_CATEGORIES } from "@/lib/personal-plan/product-previews"
 import { CATEGORY_ROLE_POLICIES } from "@/lib/personal-plan/products/authorities"
@@ -33,6 +38,7 @@ import {
 import { buildScanVerdict, isNotNeeded, type ScanRoleFacts } from "@/lib/scan/resolve-verdict"
 import type { ScanVerdictPayload } from "@/lib/scan/types"
 import type { ScanEvaluationContext } from "@/lib/scan/profile-context"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 
 import {
   mobileMismatchSummary,
@@ -61,6 +67,7 @@ type ProductRow = {
   affiliate_link: string | null
   purchase_link_status: string | null
   price_checked_at: string | null
+  market_segment?: string | null
   sort_order?: number | null
   brand_identity?: { canonical_name: string | null } | { canonical_name: string | null }[] | null
   product_line?: { canonical_name: string | null } | { canonical_name: string | null }[] | null
@@ -88,6 +95,10 @@ export type MobileScanResolveInput = {
   identifier?: { type: "ean"; value: string }
   /** Internal request context; not accepted from the native JSON body. */
   retailerImageOrigin?: string
+  /** Saved shopping budget, flag-gated and loaded fail-open by the route; not from the body. */
+  budget?: ShoppingBudget | null
+  /** User-answered visible root colour, loaded fail-open by the route; not from the body. */
+  visibleHairColor?: Stage3VisibleHairColor | null
 }
 
 const defaultDependencies = {
@@ -95,6 +106,9 @@ const defaultDependencies = {
   isQuarantined: isProductSearchQuarantined,
   loadProductById,
   resolveRetailerEnrichment,
+  loadScanProductFacts,
+  loadRecommendationCandidates: loadStage3RecommendationCandidatesByRole,
+  loadQuarantinedProductIdsAmong,
 }
 export type MobileScanResolveDependencies = typeof defaultDependencies
 
@@ -145,7 +159,16 @@ export async function resolveMobileScan(
       code: "profile_target_invalid",
     })
 
-  const loaded = await loadVerdict(client, category, productRow.id, decision, context)
+  const loaded = await loadVerdict(
+    client,
+    deps,
+    category,
+    productRow.id,
+    decision,
+    context,
+    input.budget ?? null,
+    input.visibleHairColor ?? null,
+  )
   const verdict = loaded.verdict
   const revision = context.refinedVersionId
   if (verdict.kind === "not_needed") {
@@ -173,6 +196,8 @@ export async function resolveMobileScan(
     })
   }
   if (verdict.verdict === "unknown") {
+    // fit-verdict spec §7a.5 is pending the native decoder adding ScanVerdict.unknown.
+    // Preserve v1 failure shapes: installed iOS clients cannot decode an unknown assessment.
     const failure = mobileAuthorityFailure(verdict)
     return parse({
       contractVersion: MOBILE_SCAN_CONTRACT_VERSION,
@@ -191,7 +216,7 @@ export async function resolveMobileScan(
   }
   const alternatives = await Promise.all(
     verdict.alternatives.map(async (alternative) => {
-      const alternativeRow = await loadProductById(client, alternative.productId)
+      const alternativeRow = await deps.loadProductById(client, alternative.productId)
       if (!alternativeRow) return null
       const rows = mobileAssessmentRows(
         category,
@@ -201,11 +226,18 @@ export async function resolveMobileScan(
         alternative.criteria ?? [],
         verdict.fitNarrative?.fit ?? null,
       )
+      // Native keeps the allocation order (budget-first) from the verdict; the optional
+      // metadata is carried explicitly because the contract zod strips unknown keys.
       return {
         product: toMobileProduct(alternativeRow),
+        ...(alternative.overBudget !== undefined ? { overBudget: alternative.overBudget } : {}),
+        ...(alternative.marketSegment !== undefined
+          ? { marketSegment: alternative.marketSegment }
+          : {}),
         verdict: alternative.verdict,
         verdictLabel: alternative.verdictLabel,
         verdictTitle: mobileVerdictTitle(alternative.verdict, rows),
+        reasonLines: alternative.reasonLines ?? [],
         mismatchSummary: mobileMismatchSummary(rows),
         rows,
         categoryFit: verdict.fitNarrative?.fit ?? null,
@@ -228,6 +260,7 @@ export async function resolveMobileScan(
     verdict: verdict.verdict,
     verdictLabel: verdict.verdictLabel,
     verdictTitle: mobileVerdictTitle(verdict.verdict, rows),
+    reasonLines: verdict.reasonLines ?? [],
     subtitle: verdict.subtitle,
     mismatchSummary: mobileMismatchSummary(rows),
     rows,
@@ -296,10 +329,16 @@ export async function searchMobileScanCatalog(
 
 async function loadVerdict(
   client: SupabaseClient,
+  deps: Pick<
+    MobileScanResolveDependencies,
+    "loadScanProductFacts" | "loadRecommendationCandidates" | "loadQuarantinedProductIdsAmong"
+  >,
   category: PersonalPlanCategory,
   productId: string,
   decision: PlanCategoryDecision,
   context: ScanEvaluationContext,
+  budget: ShoppingBudget | null,
+  visibleHairColor: Stage3VisibleHairColor | null,
 ): Promise<{ verdict: ScanVerdictPayload; productFactsMissing: boolean }> {
   const primaryRole = decision.roles[0] ?? CATEGORY_ROLE_POLICIES[category].allowedRoles[0]
   const roles = ROLE_SENSITIVE_CANDIDATE_CATEGORIES.has(category)
@@ -321,12 +360,15 @@ async function loadVerdict(
     Promise.all(
       roles.map(
         async (role) =>
-          [role, await loadScanProductFacts(client, category, productId, selection(role))] as const,
+          [
+            role,
+            await deps.loadScanProductFacts(client, category, productId, selection(role)),
+          ] as const,
       ),
     ),
     isNotNeeded(decision)
       ? Promise.resolve(Object.fromEntries(roles.map((role) => [role, []])))
-      : loadStage3RecommendationCandidatesByRole(client, {
+      : deps.loadRecommendationCandidates(client, {
           category,
           hairThickness: context.snapshot.profile.hair.thickness,
           shampooTarget,
@@ -337,7 +379,7 @@ async function loadVerdict(
   const candidateIds = Object.values(candidates).flatMap((entries) =>
     entries.map((entry) => entry.productId),
   )
-  const quarantined = await loadQuarantinedProductIdsAmong(client, candidateIds)
+  const quarantined = await deps.loadQuarantinedProductIdsAmong(client, candidateIds)
   const facts = new Map<PlanProductRole, ScanRoleFacts>(
     factsRows.map(([role, productFacts]) => [
       role,
@@ -360,10 +402,13 @@ async function loadVerdict(
       perRoleFacts: roles.length > 1 ? Object.fromEntries(facts) : undefined,
       coverage: context.snapshot.coverage,
       hairThickness: context.snapshot.profile.hair.thickness,
+      heatRoutes: stage3HeatRoutesFromSnapshot(context.snapshot),
+      selectionProfile: buildStage3SelectionProfile(context.snapshot, visibleHairColor),
       heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
       refinedVersionId: context.refinedVersionId,
       refinedInputHash: context.refinedInputHash,
       alternativeSelection: "native",
+      ...(budget ? { budget } : {}),
     }),
   }
 }
@@ -459,7 +504,7 @@ async function loadProductById(client: SupabaseClient, id: string): Promise<Prod
   const { data, error } = await client
     .from("products")
     .select(
-      "id,name,brand,category_key,image_url,price_eur,currency,affiliate_link,purchase_link_status,price_checked_at,brand_identity:brands(canonical_name),product_line:product_lines(canonical_name)",
+      "id,name,brand,category_key,image_url,price_eur,currency,affiliate_link,purchase_link_status,price_checked_at,market_segment,brand_identity:brands(canonical_name),product_line:product_lines(canonical_name)",
     )
     .eq("id", id)
     .eq("is_active", true)

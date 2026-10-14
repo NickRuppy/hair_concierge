@@ -26,42 +26,7 @@ export function stage5V2ArtifactFingerprint(artifactText: string): string {
   return createHash("sha256").update(artifactText, "utf8").digest("hex")
 }
 
-const SHA256_PATTERN = /^[a-f0-9]{64}$/
-const GIT_SHA_PATTERN = /^[a-f0-9]{40}$/
 const EXPECTED_PROJECT_ID = "pqdkhefxsxkyeqelqegq"
-
-export type Stage5V2ApplicationApplyArgs =
-  | { apply: false }
-  | { apply: true; reviewedHead: string; expectedFingerprint: string }
-
-export function parseStage5V2ApplicationApplyArgs(
-  args: readonly string[],
-): Stage5V2ApplicationApplyArgs {
-  const supported = new Set(["--apply", `--confirm-project=${EXPECTED_PROJECT_ID}`])
-  const valued = ["--reviewed-head=", "--expected-fingerprint="]
-  for (const argument of args) {
-    if (!supported.has(argument) && !valued.some((prefix) => argument.startsWith(prefix))) {
-      throw new Error(`unknown_argument:${argument}`)
-    }
-  }
-  if (!args.includes("--apply")) return { apply: false }
-  if (!args.includes(`--confirm-project=${EXPECTED_PROJECT_ID}`)) {
-    throw new Error(`confirm-project=${EXPECTED_PROJECT_ID} is required`)
-  }
-  const reviewedHead = args
-    .find((argument) => argument.startsWith("--reviewed-head="))
-    ?.slice("--reviewed-head=".length)
-  const expectedFingerprint = args
-    .find((argument) => argument.startsWith("--expected-fingerprint="))
-    ?.slice("--expected-fingerprint=".length)
-  if (!reviewedHead || !GIT_SHA_PATTERN.test(reviewedHead)) {
-    throw new Error("valid_reviewed_head_is_required")
-  }
-  if (!expectedFingerprint || !SHA256_PATTERN.test(expectedFingerprint)) {
-    throw new Error("valid_expected_fingerprint_is_required")
-  }
-  return { apply: true, reviewedHead, expectedFingerprint }
-}
 
 export function isStage5V2ProductionWriteAuthorized(
   environment: Record<string, string | undefined>,
@@ -293,78 +258,6 @@ export async function preflightStage5V2ApplicationArtifact(
       explicitRuntimeBlockers: artifact.items.filter(
         (item) => item.guidance_payload_v2.runtimeBlockerCode !== null,
       ).length,
-    },
-  }
-}
-
-export type Stage5V2ApplicationAppliedRead = {
-  listV2Families(
-    guidanceKeys: string[],
-  ): Promise<
-    Array<{ guidance_key: string; contract_version: number; payload: unknown; status: string }>
-  >
-  listV2Protocols(productIds: string[]): Promise<
-    Array<{
-      product_id: string
-      category: string
-      role: string
-      application_family?: string | null
-      guidance_payload_v2: unknown
-    }>
-  >
-}
-
-export async function verifyStage5V2AppliedArtifact(
-  input: unknown,
-  read: Stage5V2ApplicationAppliedRead,
-) {
-  const artifact = stage5V2ApplicationArtifactSchema.parse(input)
-  const guidanceKeys = artifact.family_templates.map((template) => template.guidanceKey).sort()
-  const productIds = [...new Set(artifact.items.map((item) => item.product_id))].sort()
-  const [families, protocols] = await Promise.all([
-    read.listV2Families(guidanceKeys),
-    read.listV2Protocols(productIds),
-  ])
-  const familyByKey = new Map(families.map((family) => [family.guidance_key, family]))
-  const protocolByKey = new Map<string, (typeof protocols)[number]>(
-    protocols.flatMap((protocol) => {
-      const family = protocolFamily(protocol)
-      return family
-        ? [
-            [
-              `${protocol.product_id}:${protocol.category}:${protocol.role}:${family}`,
-              protocol,
-            ] as const,
-          ]
-        : []
-    }),
-  )
-  const blockers: string[] = []
-  for (const template of artifact.family_templates) {
-    const family = familyByKey.get(template.guidanceKey)
-    if (
-      !family ||
-      family.contract_version !== 2 ||
-      family.status !== "active" ||
-      canonicalJson(family.payload) !== canonicalJson(template)
-    )
-      blockers.push(`v2_family_mismatch:${template.guidanceKey}`)
-  }
-  for (const item of artifact.items) {
-    const pointer = item.guidance_payload_v2
-    const protocol = protocolByKey.get(
-      `${item.product_id}:${pointer.scope.category}:${item.source_role}:${pointer.applicationFamily}`,
-    )
-    if (!protocol || canonicalJson(protocol.guidance_payload_v2) !== canonicalJson(pointer)) {
-      blockers.push(`v2_product_pointer_mismatch:${item.key}`)
-    }
-  }
-  return {
-    ok: blockers.length === 0,
-    blockers,
-    observed: {
-      familyRows: families.length,
-      productRows: protocols.filter((row) => row.guidance_payload_v2 !== null).length,
     },
   }
 }

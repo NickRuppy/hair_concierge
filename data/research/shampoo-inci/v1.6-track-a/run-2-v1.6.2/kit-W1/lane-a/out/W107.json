@@ -1,0 +1,341 @@
+{
+  "blindId": "W107",
+  "phase": "final record (post-unblind reconciliation, runbook step 4)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "brand": "Sante (Logocos)",
+    "productName": "SANTE Glossy Shine Shampoo Birke + 3-fach Protein Komplex",
+    "packSize": "250 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "b4d05d43d9f88be1b079f69a1a0097118da48ed5d30dc75a6859b3a920018869",
+    "normalization": "'Aqua (Water)' one entry; marker characters '*' (Betula Alba Leaf Extract @14, Aloe Barbadensis Leaf Juice Powder @16) and '**' (Parfum (Fragrance) @20, Vanillin @21) stripped and kept as provenance; normalized positions = packet positions (ID-2).",
+    "completeness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "moderate",
+    "e3ProminenceCutoff": "Parfum (Fragrance) @20 (prominent = positions 1-19)"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "definingAnionic": "Ammonium Lauryl Sulfate @2 (strong anionic, alkyl sulfate type)",
+      "reinforcingRoutes": [],
+      "buffers": [
+        "Cocamidopropyl Betaine @3 (amphoteric; the only buffer)"
+      ],
+      "notCleansing": []
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": [
+        "Guar Hydroxypropyltrimonium Chloride @8 (prominent)"
+      ],
+      "protein_film": [
+        "Hydrolyzed Corn Protein @5",
+        "Hydrolyzed Wheat Protein @7",
+        "Hydrolyzed Soy Protein @9"
+      ],
+      "silicone": [],
+      "payload_lipid": [],
+      "weak_refatter": [],
+      "pearlizingFattyRoute": [],
+      "humectants": [
+        "Glycerin @6"
+      ]
+    },
+    "actives": [],
+    "exposure": {
+      "fragrance": "Parfum (Fragrance) @20 (marked '**' in source); Vanillin @21",
+      "essentialOils": [],
+      "coolingAgents": [],
+      "otherNotes": "Alcohol @11; Levulinic Acid @17 / Sodium Levulinate @18 (preservative-type acids, not on the E3 or W-line lists); Arginine @13; Aloe Barbadensis Leaf Juice Powder @16 (rejected E4 candidate)"
+    },
+    "wLine": {
+      "cap": "e3Point Parfum (Fragrance) @20",
+      "wLine": "Benzoic Acid @12",
+      "wLineClasses": [
+        "preservative_or_capped_active"
+      ],
+      "skippedCandidates": [],
+      "alphabeticalRun": "none",
+      "codes": [],
+      "plausibility": "Benzoic Acid @12: (i) ALS @2 before; (ii) no cleansing surfactant, alkanolamide or pearlizing wax at 13-19",
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": []
+    },
+    "csaListedProminentRoutes": [
+      "Glycerin @6 (humectant)"
+    ],
+    "unlistedRouteCandidates": [
+      "Arginine @13 (prominent; rejected by R18)",
+      "Aloe Barbadensis Leaf Juice Powder @16 (prominent; rejected by R18)"
+    ],
+    "mildBase": "not met: prominent strong anionic Ammonium Lauryl Sulfate @2; cleansing strong"
+  },
+  "unresolvedMaterialIngredients": [],
+  "claimEvidence": [
+    "Product name 'Glossy Shine Shampoo Birke + 3-fach Protein Komplex' (high): shine direction; protein complex named.",
+    "manufacturer_de (moderate): 'glättet die Oberflächenstruktur des Haares für mehr Glanz & Geschmeidigkeit', 'Perfekte Lösung für glanzloses und stumpfes Haar', 'Stärkt, pflegt und glättet die Haarstruktur', 'Der 3-fach Protein Komplex stärkt, pflegt & schützt das Haar', 'Der hydratisierende Pflege-Komplex füllt & baut das Haar auf'.",
+    "'Die Verträglichkeit ist dermatologisch getestet' - protective. No scalp claim; no frequency or reset wording.",
+    "ID-3: 'Bio-Birkenblattextrakt' -> Betula Alba Leaf Extract @14; three proteins @5, @7, @9 present."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Strong: C5 alkyl-sulfate chassis (Ammonium Lauryl Sulfate @2) with only one prominent buffer (Cocamidopropyl Betaine @3); C5 needs at least two buffers for moderate (C3, C4, C5). Proteins and glycerin are counter-signals only.",
+      "ruleIds": [
+        "C3",
+        "C4",
+        "C5"
+      ],
+      "counterSignal": "Proteins and glycerin are counter-signals only; ALS with one buffer is strong under C5.",
+      "formulaPassValue": "strong",
+      "formulaPassConfidence": "high"
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: one meaningful cationic system (Guar Hydroxypropyltrimonium Chloride @8, prominent and early) supported by three hydrolyzed proteins (@5, @7, @9) and Glycerin @6. No silicone or payload lipid, no pearlizer, so neither C2 nor W-RICH supports high; the early guar keeps it above low. Strong cleansing does not lower conditioning (C2).",
+      "ruleIds": [
+        "Section 5",
+        "C2"
+      ],
+      "counterSignal": "None material.",
+      "formulaPassValue": "moderate",
+      "formulaPassConfidence": "high"
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": [
+          "Guar Hydroxypropyltrimonium Chloride @8"
+        ],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": [
+          "Hydrolyzed Corn Protein @5",
+          "Hydrolyzed Wheat Protein @7",
+          "Hydrolyzed Soy Protein @9"
+        ],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": [
+          "Ammonium Lauryl Sulfate @2",
+          "Cocamidopropyl Betaine @3"
+        ],
+        "humectantContext": [
+          "Glycerin @6"
+        ],
+        "excluded": [
+          "Alcohol @11 (solvent)",
+          "Arginine @13 (free amino acid, pH/humectant additive; no film route)",
+          "Levulinic Acid @17, Sodium Levulinate @18 (preservative acids)",
+          "Leuconostoc/Radish Root Ferment Filtrate @15 (preservative ferment)",
+          "Botanical extracts @14, @16"
+        ],
+        "unresolved": []
+      },
+      "depositionLoad": "light - one guar plus three hydrolyzed proteins",
+      "persistence": "low - hydrolyzed proteins are low-persistence; no silicone or lipid",
+      "resetCapacity": "strong - ALS with a single betaine buffer",
+      "counterevidence": "Guar is early (@8) and three proteins form a second family (W2).",
+      "whyThisBand": "A strong ALS reset faces only light routes (one guar, hydrolyzed proteins).",
+      "whyNotNeighborBand": "Not moderate (W2): the second family is hydrolyzed protein (water-soluble, low persistence), there is no silicone, payload lipid or film former, and the single guar faces a strong, barely buffered ALS reset - a strong reset against only light routes.",
+      "confidenceLimitingFactor": "Guar is fairly early; guar-anionic coacervate deposition could make residue noticeable",
+      "rationale": "Low: strong reset against one guar and hydrolyzed proteins (6.6, W2). Neighbor moderate.",
+      "ruleIds": [
+        "6.3",
+        "6.6",
+        "W2",
+        "N-ALT"
+      ],
+      "counterSignal": "Guar fairly early (@8) with three proteins; strong reset.",
+      "formulaPassValue": "low",
+      "formulaPassConfidence": "moderate",
+      "wLineRecord": {
+        "cap": "e3Point Parfum (Fragrance) @20",
+        "wLine": "Benzoic Acid @12",
+        "wLineClasses": [
+          "preservative_or_capped_active"
+        ],
+        "skippedCandidates": [],
+        "alphabeticalRun": "none",
+        "codes": [],
+        "plausibility": "Benzoic Acid @12: (i) ALS @2 before; (ii) no cleansing surfactant, alkanolamide or pearlizing wax at 13-19",
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      }
+    },
+    "focusPrimary": {
+      "value": "shine",
+      "confidence": "moderate",
+      "neighboringAlternative": "repair",
+      "careDirection": {
+        "verdict": "repair_supported",
+        "moistureRoutes": [
+          "Glycerin @6"
+        ],
+        "repairRoutes": [
+          "Hydrolyzed Corn Protein @5",
+          "Hydrolyzed Wheat Protein @7",
+          "Hydrolyzed Soy Protein @9"
+        ],
+        "sharedConditioningRoutes": [
+          "Guar Hydroxypropyltrimonium Chloride @8"
+        ],
+        "limitation": "Verdict applies to the repair (secondary) role"
+      },
+      "claimRole": "candidate",
+      "counterSignal": "Strong ALS chassis; the protein cluster also supports repair.",
+      "decisionTrace": "Primary: claim direction shine (name 'Glossy Shine', high; manufacturer 'glättet ... für mehr Glanz'); formula compatible: light smoothing film from Guar Hydroxypropyltrimonium Chloride @8 with acidic support (Citric Acid @10, F4 compatibility only), low weight; decision: dominant name claim (7.2).",
+      "rationale": "Shine: dominant name claim with a plausible light-film/smoothing route (7.1, 7.2).",
+      "ruleIds": [
+        "7.1",
+        "7.2",
+        "F4"
+      ],
+      "formulaPassValue": "general"
+    },
+    "focusSecondary": {
+      "value": [
+        "repair"
+      ],
+      "confidence": "moderate",
+      "neighboringAlternative": [],
+      "decisionTrace": "Empty default considered; selected repair: distinct positioning ('3-fach Protein Komplex' in the name, high; 'stärkt, pflegt & schützt', 'füllt & baut das Haar auf', moderate); independent route Hydrolyzed Corn @5 / Wheat @7 / Soy @9 Protein (not cited by the shine route, F3); verdict repair_supported; distinct from shine (damage care vs gloss).",
+      "rationale": "Repair secondary: own positioning and an independent protein route (8, F3).",
+      "ruleIds": [
+        "8",
+        "F2",
+        "F3"
+      ],
+      "formulaPassValue": []
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Regular: strong cleansing alone is insufficient for alternating (no reset intent, U4); no frequency wording.",
+      "ruleIds": [
+        "9",
+        "U1",
+        "U2",
+        "CL-SRC"
+      ],
+      "formulaPassValue": "regular"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no E2 scalp claim unit; CSA half met via Glycerin @6 only.",
+      "ruleIds": [
+        "10",
+        "SC1",
+        "CSA",
+        "MB",
+        "E2",
+        "E2a",
+        "E4"
+      ],
+      "formulaPassValue": "not_targeted"
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active (Section 11).",
+      "ruleIds": [
+        "11"
+      ],
+      "counterSignal": "None.",
+      "formulaPassValue": "not_supported",
+      "formulaPassConfidence": "high"
+    }
+  },
+  "reconciliation": [
+    "focusPrimary general -> shine (name claim, compatible light film).",
+    "focusSecondary [] -> [repair] (named protein complex, independent protein route).",
+    "usageRole regular confirmed (low -> high); scalpComfortTarget not_targeted confirmed (low -> high).",
+    "Formula properties unchanged."
+  ],
+  "projection": {
+    "status": "proposed_blocked_by_review_flags",
+    "thicknessFit": {
+      "fine": "ideal",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFitConfidence": {
+      "fine": "moderate",
+      "normal": "moderate",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": "T1 with W=low (moderate, neighbor moderate) and C=moderate (high, neighbor none): fine ideal, normal ideal, coarse acceptable; ordinary target, T6 not applicable; T4 checked against N-ALT neighbors after T6 (T2: thickness/texture claims not used).",
+    "weight": "light",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: weightPotential low -> light, written to every row; confidence = weightPotential confidence.",
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "rationale": "S-ORDINARY way 1: no qualifying E2 claim unit; manufacturer source present."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: cleansingStrength strong, D1 False -> regular. I3: neighbor none; normal expects regular; no I3 flag (neighbor none, or current intensity already differs / neighbor matches equally).",
+    "explicitResetPositioning": false,
+    "explicitResetEvidence": "No D1 stem (tiefenrein, deep clean, clarifying shampoo, detox-reinigung) in the name, manufacturer/pack claims or directions; no occasional-use directions.",
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRecord": null,
+    "deepCleanserListingConfidence": "high",
+    "deepCleanserRationale": "D1 false -> not_flagged (D2).",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine"
+    ],
+    "informationalNotes": [],
+    "catalogDependent": "review_live_value_differs and the deep-cleanser record id are resolved by the orchestrator after freeze; the lane sees no catalog values."
+  },
+  "selfCheck": "6.11/selfCheck: fingerprint copied from and equal to the frozen stage-A packet; claims hidden during the formula pass (formula-pass file unchanged, hash-pinned); no ingredient, family count or position window assigned the weight band (W-line used only to gate payload_lipid legs); W-line derived per W-LINE with skipped candidates recorded; depositionLoad/persistence/resetCapacity present; whyNotNeighborBand specific; N-ALT neighbors consistent with confidence; projection computed mechanically from final properties; no comparison with earlier or live values inside the lane.",
+  "uncertainties": [
+    "Weight low vs moderate: early guar (@8) with three proteins could be read as interacting light routes (moderate); low chosen because the reset is strong and every non-cationic family is hydrolyzed protein."
+  ]
+}

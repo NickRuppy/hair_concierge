@@ -6,9 +6,15 @@ import test from "node:test"
 
 import {
   LEAVE_IN_BASE_STANDARD,
-  LEAVE_IN_OVERLAY_PATH,
-  LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD,
+  LEAVE_IN_V1_1_OVERLAY,
+  LEAVE_IN_V1_1_RESEARCH_METHOD,
 } from "../src/lib/leave-in-research/production-adapter"
+
+// Since Standard v1.2 (T21) the adapter pins the v1.2 overlay. The frozen v1.1
+// lock is checked against the v1.1 pins the adapter keeps for exactly that
+// purpose (LEAVE_IN_V1_1_OVERLAY, LEAVE_IN_V1_1_RESEARCH_METHOD).
+const LEAVE_IN_OVERLAY_PATH = LEAVE_IN_V1_1_OVERLAY.path
+const LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD = LEAVE_IN_V1_1_RESEARCH_METHOD
 
 type Pinned = { path: string; bytes: number; sha256: string }
 

@@ -1,0 +1,10 @@
+--- before/tests/billing-trial-required-notices.test.ts
++++ transfer/tests/billing-trial-required-notices.test.ts
+@@ -79,6 +79,7 @@
+ })
+ test("contract confirms actual accepted progression, Berlin deadline, cancellation and full withdrawal instruction", () => {
+   const message = buildTrialRequiredNoticeMessage("contract_confirmation", snapshot)
++  assert.match(message.receipt_text, /Die erste Zahlung ist zu diesem Zeitpunkt vorgesehen/)
+   assert.equal(message.subject, "Dein Chaarlie-Test ist gestartet")
+   assert.match(message.receipt_text, /69,99/)
+   assert.match(message.receipt_text, /99,99/)

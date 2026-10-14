@@ -1,0 +1,143 @@
+{
+  "blindId": "VT03",
+  "inciFingerprintSha256": "551dab3550a91893bd1a4377c3be93ac9a4796534a387457b5d7ef334fb513af",
+  "phase": "formula_pass_blind",
+  "standard": "shampoo-classification-v1.6.1 candidate (lane-a scrubbed copy); not a locked policy id",
+  "formulaBlock": {
+    "packSize": "350 ml",
+    "normalization": "ID-2: 'Aqua/Water/Eau' one entry; colour entries 'CI 16035/Red 40', 'CI 19140/Yellow 5' one entry each; 39 normalized entries; normalized positions",
+    "completeness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "e3Point": "Parfum/Fragrance @37; prominent = positions 1-36"
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "low by C6: no strong anionic; the earliest prominent cleansing surfactant is the amphoteric Cocamidopropyl Betaine @2, followed by mild anionics Sodium Lauroyl Methyl Isethionate @3, Disodium Laureth Sulfosuccinate @4, Sodium Lauryl Sulfoacetate @5. Any order among them still yields C6 low. Counter-signal: three mild anionic routes (breadth).",
+      "ruleIds": ["C3", "C4", "C6"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "high by C2: early (prominent) silicone Amodimethicone/Morpholinomethyl Silsesquioxane Copolymer @18, cationic polymer Guar Hydroxypropyltrimonium Chloride @16, pearlizing route Glycol Distearate @6, deliberate humectant Glycerin @17; plus Sunflower Seed Oil @15 and Quaternium-95 @26. Counter-signal: silicone, guar and oil all sit after Piroctone Olamine @12 and peptides @7/@10 (plausibly sub-1 % each); neighbor moderate.",
+      "ruleIds": ["C2", "E3", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "silicone": ["Amodimethicone/Morpholinomethyl Silsesquioxane Copolymer @18"],
+        "cationic_polymer": ["Guar Hydroxypropyltrimonium Chloride @16"],
+        "cationic_conditioner": ["Quaternium-95 @26 (quaternary by name)"],
+        "payload_lipid": {"material": ["Helianthus Annuus (Sunflower) Seed Oil @15"], "nonMaterial": []},
+        "weak_refatter": [],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["amphoteric Cocamidopropyl Betaine @2", "mild anionic Sodium Lauroyl Methyl Isethionate @3, Disodium Laureth Sulfosuccinate @4, Sodium Lauryl Sulfoacetate @5"],
+        "humectantContext": ["Glycerin @17", "Propanediol @30", "Butylene Glycol @32", "Aloe Barbadensis Leaf Extract @14"],
+        "excluded": ["Glycol Distearate @6 (pearlizing wax, 6.4)", "PEG-150 Pentaerythrityl Tetrastearate @25 (PEG thickener)", "PEG-40 Hydrogenated Castor Oil @28 (solubilizer, 6.4)", "PPG-26-Buteth-26 @27 (solubilizer)", "Trideceth-5 @20 (ethoxylate solubilizer/thickener)", "PPG-2 Hydroxyethyl Cocamide @19 (alkanolamide thickener, not deposition)", "Dextran @23 (polysaccharide, no cationic charge)"],
+        "unresolved": []
+      },
+      "wLineRecord": {
+        "wLine": {"position": 21, "inci": "Benzoic Acid", "classes": ["preservative_or_capped_active"]},
+        "cap": {"e3Point": 37, "inci": "Parfum/Fragrance"},
+        "alphabeticalRun": null,
+        "skipped": [
+          "w_line_skipped:Biotinoyl Tripeptide-1@7 (ii) alkanolamide-type thickener PPG-2 Hydroxyethyl Cocamide@19 listed after it before the cap",
+          "w_line_skipped:Acetyl Tetrapeptide-3@10 (ii) PPG-2 Hydroxyethyl Cocamide@19",
+          "w_line_skipped:Piroctone Olamine@12 (ii) PPG-2 Hydroxyethyl Cocamide@19",
+          "w_line_skipped:Tocopheryl Acetate@13 (ii) PPG-2 Hydroxyethyl Cocamide@19"
+        ],
+        "codes": [],
+        "note": "Benzoic Acid @21: (i) surfactants @2-5 before it; (ii) nothing of the structurant classes between @22 and @36. Sunflower Seed Oil @15 < 21 is therefore material."
+      },
+      "depositionLoad": "moderate",
+      "persistence": "high",
+      "resetCapacity": "weak",
+      "counterevidence": "All deposition (oil @15, guar @16, silicone copolymer @18, Quaternium-95 @26) sits after a capped active (Piroctone Olamine @12) and peptide actives, so each is plausibly sub-1 %; the alkanolamide @19 after those actives shows the list below about 1 % is not in descending order. The oil is material only because the W-line is pushed to @21.",
+      "whyThisBand": "W-RICH holds for weight: material payload_lipid Sunflower Seed Oil @15 (before W-line @21) converging with a persistent amino-silicone copolymer @18 and cationic guar @16; reset is limited (C6 low mild chassis, resetCapacity weak), so the rich route of the high anchor holds; the convergence route (silicone + cationic polymer + cationic conditioner + material lipid) points the same way.",
+      "whyNotNeighborBand": "moderate would need reset to offset the converging deposition, which a mild C6 chassis does not do; the case for moderate rests only on unknown (probably small) amounts.",
+      "confidenceLimitingFactor": "every deposition route is in the probable sub-1 % zone; material lipid status depends on the alkanolamide skip",
+      "rationale": "high: W-RICH with limited reset (6.7 W-RICH, W-LINE) plus converging persistent families (6.6); confidence moderate because amounts are plausibly small (neighbor moderate).",
+      "ruleIds": ["6.3", "6.4", "6.6", "W-RICH", "W-LINE", "W3", "P0", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "nonspecific",
+        "repairRoutes": ["Amodimethicone/Morpholinomethyl Silsesquioxane Copolymer @18"],
+        "moistureRoutes": ["Glycerin @17", "Sunflower Seed Oil @15"],
+        "sharedConditioningRoutes": ["Guar Hydroxypropyltrimonium Chloride @16", "Glycol Distearate @6"],
+        "limitation": "formula-only; no protein or humectant cluster distinguishing repair or moisture"
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Peptide/flavonoid actives (Biotinoyl Tripeptide-1 @7, Oleanolic Acid @8, Apigenin @9, Acetyl Tetrapeptide-3 @10, Trifolium Pratense Flower Extract @11) are a hair-loss-type complex and never a focus route (F5); Piroctone Olamine @12 is a recognized dandruff active.",
+      "decisionTrace": "Blind pass: claim direction null; scalp_active is formula-compatible only with dandruff positioning; provisional general.",
+      "rationale": "provisional general (formula-only).",
+      "ruleIds": ["7.2", "F5", "3.1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["scalp_active"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "provisional [] (Section 8).",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "treatment",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "provisional regular; treatment fires only with a qualifying dandruff claim (U3); hair-loss positioning never fires treatment (F5, U3).",
+      "ruleIds": ["9", "U3", "F5"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "provisional not_targeted (no positioning visible). CSA formula half: no prominent E4 comfort route (no Panthenol/Allantoin/Bisabolol etc.), but prominent humectant/refatting routes Glycerin @17 and Sunflower Seed Oil @15 meet CSA. An S-SENSITIVE gate would fail for lack of a comfort route.",
+      "ruleIds": ["10", "CSA", "SC1", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "supported: Piroctone Olamine @12 in a complete formula (Section 11).",
+      "ruleIds": ["11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactantClasses": {
+      "strongAnionicEther": [],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": ["Sodium Lauroyl Methyl Isethionate @3", "Disodium Laureth Sulfosuccinate @4", "Sodium Lauryl Sulfoacetate @5"],
+      "amphoteric": ["Cocamidopropyl Betaine @2"],
+      "nonionicCleansing": [],
+      "notCleansing": ["Glycol Distearate @6", "PPG-2 Hydroxyethyl Cocamide @19 (alkanolamide-type)", "Trideceth-5 @20", "PEG-150 Pentaerythrityl Tetrastearate @25", "PPG-26-Buteth-26 @27", "PEG-40 Hydrogenated Castor Oil @28", "Sodium Chloride @29"],
+      "c4": "no defining anionic; C6 earliest prominent = Cocamidopropyl Betaine @2"
+    },
+    "conditioningRoutes": ["Guar Hydroxypropyltrimonium Chloride @16", "Amodimethicone/Morpholinomethyl Silsesquioxane Copolymer @18", "Quaternium-95 @26", "Sunflower Seed Oil @15", "Glycol Distearate @6", "Glycerin @17"],
+    "actives": ["Biotinoyl Tripeptide-1 @7", "Oleanolic Acid @8", "Apigenin @9", "Acetyl Tetrapeptide-3 @10", "Trifolium Pratense (Clover) Flower Extract @11", "Piroctone Olamine @12", "Tocopheryl Acetate @13"],
+    "scalpExposure": ["Parfum/Fragrance @37 (no allergens declared)"],
+    "recognizedDandruffActives": ["Piroctone Olamine @12"]
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "weightPotential high vs moderate: the W-RICH rich route is formally met (material oil @15, persistent silicone/cationic, weak reset) but every route is in the probable sub-1 % zone; recorded high at moderate confidence, neighbor moderate (P0 heavier side).",
+    "Quaternium-95 read as cationic_conditioner by name; immaterial to the band."
+  ]
+}

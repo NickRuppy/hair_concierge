@@ -1,0 +1,235 @@
+{
+ "blindId": "W413",
+ "inciFingerprintSha256": "4e2a1a3a11734216beb515e709cb3495d71325daf1d5875446391b6aafa2f077",
+ "lane": "lane-a",
+ "phase": "1-blind-formula-pass",
+ "policyId": "shampoo-classification-v1.6.2",
+ "formulaBlock": {
+  "packSize": "250 ml",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high",
+  "normalization": "Packet list already normalized (synonym variants are single entries); positions cited are normalized one-based positions (ID-2), identical to the packet order.",
+  "normalizedInci": [
+   "1. Aqua",
+   "2. Sodium Laureth Sulfate",
+   "3. Cocamidopropyl Betaine",
+   "4. Sodium Chloride",
+   "5. Sodium Benzoate",
+   "6. Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+   "7. Maris Sal (Dead Sea Salt)",
+   "8. Butylene Glycol",
+   "9. Citric Acid",
+   "10. Potassium Sorbate",
+   "11. Panthenol",
+   "12. Citrus Aurantium Dulcis (Orange) Peel Oil",
+   "13. Limonene",
+   "14. Menthol",
+   "15. Mentha Arvensis Leaf Oil",
+   "16. Glycerin",
+   "17. Cymbopogon Schoenanthus Leaf Extract",
+   "18. Cimicifuga Racemosa Root Extract",
+   "19. Lepidium Meyenii Root Extract",
+   "20. Silybum Marianum Seed Extract",
+   "21. Urtica Dioica (Nettle) Leaf Extract"
+  ],
+  "e3Point": "No Parfum declared (Limonene and peel/mint oils are not the marker); preservative fallback Sodium Benzoate@5; prominent = positions 1-4"
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`moderate` by C1: defining anionic Sodium Laureth Sulfate@2, prominent buffer Cocamidopropyl Betaine@3, no reinforcing strong anionic. Maris Sal@7 is salt (no route).",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "E3"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "`low`: cleansing-led architecture; the only conditioning route is a single cationic Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@6 listed after the preservative Sodium Benzoate@5, with trace Panthenol@11 and Glycerin@16 later still. No silicone, lipid, pearlizer or refatter. Neighbor `moderate`: a guar can still give noticeable slip as one system.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "cationic_polymer": [
+     "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@6"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "anionic: Sodium Laureth Sulfate@2",
+     "amphoteric: Cocamidopropyl Betaine@3"
+    ],
+    "humectantContext": [
+     "Panthenol@11",
+     "Glycerin@16",
+     "Butylene Glycol@8 (solvent)"
+    ],
+    "excluded": [
+     "Citrus Aurantium Dulcis (Orange) Peel Oil@12, Mentha Arvensis Leaf Oil@15 (essential oils, 6.4)",
+     "Menthol@14 (cooling agent)",
+     "botanical extracts Cymbopogon Schoenanthus@17, Cimicifuga Racemosa@18, Lepidium Meyenii@19, Silybum Marianum@20, Urtica Dioica@21 (no deposition role)",
+     "Maris Sal@7, Sodium Chloride@4"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": "5 Sodium Benzoate",
+    "candidateClasses": [
+     "preservative_or_capped_active"
+    ],
+    "cap": "e3Point 5 (Sodium Benzoate, preservative fallback)",
+    "alphabeticalRun": "none",
+    "skipped": [],
+    "testedCandidate": "Sodium Benzoate@5 (the E3 marker itself): (i) Sodium Laureth Sulfate@2 before it; (ii) it is the cap -> plausible; W-line = cap, class preservative_or_capped_active, no fallback code",
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "light — one guar after the preservative.",
+   "persistence": "low — no silicone, lipid, protein or film former.",
+   "resetCapacity": "moderate — C1 ether-sulfate chassis with a betaine buffer.",
+   "counterevidence": "Cationic guar can deposit as a coacervate; dose unknown.",
+   "whyThisBand": "Single light polymer facing an ordinary reset (6.6 low anchor).",
+   "whyNotNeighborBand": "Not `moderate`: single deposition family listed after the preservative; nothing converges (W2 not triggered); essential oils are excluded fragrance materials.",
+   "confidenceLimitingFactor": "guar dose/charge density unknown.",
+   "rationale": "`low`: single late cationic route, ordinary reset. Neighbor `moderate`.",
+   "ruleIds": [
+    "6.6",
+    "6.4",
+    "W-LINE",
+    "N-ALT"
+   ]
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "low",
+   "neighboringAlternative": "clarifying",
+   "provisional": true,
+   "careDirection": {
+    "verdict": "not_applicable (provisional)",
+    "moistureRoutes": [
+     "Panthenol@11",
+     "Glycerin@16"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@6"
+    ],
+    "limitation": "light conditioning; mint/menthol and botanical extracts suggest a scalp/freshness or hair-loss-type role that only claims can show (hair-loss claims are out of scope, F5)"
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Claims are hidden in the blind pass; focus is claim-led (7.2) and cannot be set from the formula alone.",
+   "decisionTrace": "Blind pass: claim direction null (hidden). Placeholder `general` (7.1 honest fallback) until reveal; formula routes recorded for reconciliation (3.2).",
+   "rationale": "Provisional (formula-only): `general` because no claim is visible; the formula care-direction verdict is recorded before claims (7.3) and the neighbor names the most plausible formula-compatible focus.",
+   "ruleIds": [
+    "3.1",
+    "7.2",
+    "7.3",
+    "F1",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "low",
+   "neighboringAlternative": [
+    "clarifying"
+   ],
+   "provisional": true,
+   "decisionTrace": "Blind pass: empty default considered; no distinct positioning visible (claims hidden), so no secondary can be selected (Section 8).",
+   "rationale": "Provisional (formula-only): `[]` — Section 8 requires distinct exact-product positioning, which is hidden in the blind pass.",
+   "ruleIds": [
+    "3.1",
+    "8",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "low",
+   "neighboringAlternative": "frequent",
+   "provisional": true,
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Provisional (formula-only): default `regular` (Section 9); every non-default trigger needs a moderate/high-graded claim or direction, all hidden in the blind pass. cleansingStrength `moderate` fixes which triggers remain possible: `frequent` possible with U2 wording; `alternating` impossible (not strong); `treatment` impossible (no active).",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "CL-SRC"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "csaRoute": "none",
+   "mildBase": "excluded — Sodium Laureth Sulfate@2 is a prominent strong anionic",
+   "rationale": "`not_targeted`, decided by the formula: CSA FAILS — no E4 comfort or humectant/refatting route is prominent (Panthenol@11 and Glycerin@16 are after the Sodium Benzoate@5 E3 point). MB: excluded — Sodium Laureth Sulfate@2 is a prominent strong anionic. Without a listed prominent route and without MB, even an explicitly positioned product is `not_targeted` (Section 10), so positioning cannot change the value; a sensitive/dry claim at reveal would trigger S-FAIL with the missing route named. Counter-signals recorded: Menthol@14, Mentha Arvensis Leaf Oil@15, Orange Peel Oil@12 (non-prominent).",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "MB",
+    "E3",
+    "E4"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`not_supported`: the complete INCI contains none of Piroctone Olamine, Climbazole, Selenium Sulfide or Selenium Disulfide (Section 11, DS1).",
+   "ruleIds": [
+    "11",
+    "DS1",
+    "ID-1"
+   ]
+  }
+ },
+ "formulaFacts": {
+  "surfactants": [
+   "Sodium Laureth Sulfate@2 strong anionic ether type (defining)",
+   "Cocamidopropyl Betaine@3 amphoteric (buffer)"
+  ],
+  "conditioningRoutes": [
+   "cationic: Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@6",
+   "humectant: Panthenol@11, Glycerin@16"
+  ],
+  "comfortRoutes": "E4 comfort list: Panthenol@11 (not prominent); E4 humectant/refatting: Panthenol@11, Glycerin@16 (not prominent)",
+  "actives": [
+   "botanical extracts Cimicifuga Racemosa@18, Lepidium Meyenii@19, Silybum Marianum@20, Urtica Dioica@21",
+   "Maris Sal@7",
+   "no recognized anti-dandruff active"
+  ],
+  "exposureFlags": [
+   "no Parfum; Orange Peel Oil@12, Limonene@13, Menthol@14, Mentha Arvensis Leaf Oil@15 (cooling/essential oils, non-prominent)"
+  ],
+  "preservatives": [
+   "Sodium Benzoate@5",
+   "Potassium Sorbate@10"
+  ]
+ },
+ "unresolvedMaterialIngredients": [],
+ "notes": []
+}

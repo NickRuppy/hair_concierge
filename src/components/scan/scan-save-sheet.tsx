@@ -6,8 +6,7 @@ import { BottomSheet, BottomSheetContent, BottomSheetTitle } from "@/components/
 import { MODAL_LAYER_PRIORITIES } from "@/lib/ui/modal-layer-manager"
 import type { ScanSavedStatePayload } from "@/lib/scan/saved-state"
 import { useLatestRequest } from "@/lib/scan/use-latest-request"
-// The app-wide provider is `providers/toast-provider` (mounted in AppRouteProviders);
-// `components/ui/toast`'s hook talks to a second, unmounted store and would no-op.
+// Use the app-wide toast store mounted in AppRouteProviders.
 import { useToast } from "@/providers/toast-provider"
 import { cn } from "@/lib/utils"
 

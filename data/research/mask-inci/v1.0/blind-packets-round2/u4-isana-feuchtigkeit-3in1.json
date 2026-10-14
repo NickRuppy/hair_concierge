@@ -1,0 +1,13 @@
+{
+  "identity": {
+    "brand": "Isana (Rossmann own brand)",
+    "productName": "3in1 Haarmaske Feuchtigkeit",
+    "packSize": "250 ml",
+    "gtinEan": "4068134187123",
+    "market": "DE (Rossmann)",
+    "formulaSource": "rossmann.de product page, direct accordion extraction, 2026-10-05"
+  },
+  "rawInci": "Aqua, Cetearyl Alcohol, Dicaprylyl Ether, Coco-Caprylate, Behentrimonium Chloride, Parfum, Glycerin, Panthenol, Sodium Benzoate, Butyrospermum Parkii Butter, Propylene Glycol, Stearamidopropyl Dimethylamine, Isopropyl Alcohol, Cocos Nucifera Oil, Citric Acid, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Niacinamide, Coumarin, Cocos Nucifera Liquid Endosperm, Tocopherol, Potassium Sorbate, Tapioca Starch",
+  "directionsText": "für intensive Pflege: in das nasse Haar einmassieren, 3-5 Minuten einwirken lassen und mit warmem Wasser ausspülen; für leichte Kämmbarkeit: in das handtuchtrockene Haar verteilen ohne Ausspülen; zum Bändigen: auf trockenem Haar verteilen ohne Ausspülen",
+  "source": "rossmann.de, direct extraction 2026-10-05/06"
+}

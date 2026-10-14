@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "mask-inci-capture-v1",
+  "productNumber": 3,
+  "role": "primary",
+  "archetypeSlots": ["3 - protein-forward 'protein bomb'"],
+  "identity": {
+    "brand": "Bali Curls (by Hank Ge) / Bali Care",
+    "productName": "Total Repair SOS Protein Treatment",
+    "packSize": "20 ml sachet",
+    "gtinEan": "4262391991114",
+    "eanSourceNote": "Proposal figure, sourced from an INCI-database product-URL number, not a retailer/brand-direct EAN listing. Not independently re-confirmed this pass (brand site product page did not display an EAN).",
+    "market": "DE (specialty curly-hair retail: brand site bali-care.com, Lockenbox, CurlyTools; not sold at dm/Rossmann/Müller - approved below-tier sourcing per Nick's ruling)"
+  },
+  "rawInci": "AQUA, CETEARYL ALCOHOL, GLYCINE SOJA OIL, GLYCERIN, BUTYROSPERMUM PARKII BUTTER, CETRIMONIUM CHLORIDE, COCOS NUCIFERA OIL, BETAINE, BEHENTRIMONIUM METHOSULFATE, PARFUM, PANTHENOL, SODIUM BENZOATE, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, GLYCERYL STEARATE SE, HYDROLYZED VEGETABLE PROTEIN, POTASSIUM SORBATE, HYDROLYZED SWEET ALMOND PROTEIN, LACTIC ACID, LINALOOL, CITRIC ACID, LIMONENE, AMYL SALICYLATE, LINALYL ACETATE, CANANGA ODORATA FLOWER EXTRACT, BENZOIC ACID, METHYL BENZOATE",
+  "inciSource": {
+    "url": "https://www.bali-care.com/de-de/products/total-repair-sos-protein-treatment",
+    "accessDate": "2026-09-04",
+    "tier": "brand-direct (upgraded from hautschutzengel-only; Bali Curls below-tier sourcing approved by Nick)",
+    "notes": "Cross-confirmed verbatim identical against hautschutzengel.de/en/bali-curls-total-repair-sos-protein-treatment-inhaltsstoffe/produkt/354177.html. Two named hydrolyzed proteins present (Hydrolyzed Vegetable Protein, Hydrolyzed Sweet Almond Protein) confirming protein-forward archetype."
+  },
+  "directions": {
+    "text": "Nach der Haarwäsche die Haarmaske in das nasse Haar einarbeiten, besonders in die Längen und Spitzen. Drei Minuten einwirken lassen und anschließend mit warmem Wasser gründlich ausspülen.",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "3 (per the DE-market brand site, fetched verbatim)",
+    "source": "bali-care.com/de-de official German product page (direct fetch, verbatim)",
+    "confidence": "high for the DE-site figure - but see conflict below"
+  },
+  "claims": [
+    "SOS-Protein-Behandlung für strapaziertes, überstrapaziertes Haar",
+    "empfohlen alle 2-4 Wochen oder wenn Locken schlaff/überdehnt/zu nass wirken"
+  ],
+  "conflicts": [
+    {
+      "type": "directions/contact time",
+      "description": "A separate (apparently English-market) bali-care.com product summary found via web search states 'Apply to clean, damp hair, leave on for 10-20 minutes, rinse thoroughly' for this same product - directly conflicting with the DE-site's fetched '3 Minuten' figure. Both are attributed to the same brand (Bali Care) but for different storefront locales. Not merged/averaged.",
+      "resolution": "unresolved - recording the DE-market page's verbatim text (3 minutes) as primary since it is the directly-fetched German-language source matching this cohort's market scope; flagging the EN-market 10-20 minute figure as a discrepancy for orchestrator review"
+    }
+  ],
+  "status": "captured_with_conflict",
+  "statusNotes": "INCI is solid (two independent tier-matched sources agree verbatim). Directions/contact time has a real cross-locale conflict that needs a decision before freezing (P5 contact-time rule)."
+}

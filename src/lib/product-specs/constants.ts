@@ -18,15 +18,6 @@ export const PRODUCT_SCALP_TYPE_FOCUS_LABELS = {
   dry: "Trocken",
 } as const satisfies Record<ProductScalpTypeFocus, string>
 
-export const PRODUCT_BOND_REPAIR_INTENSITIES = ["maintenance", "intensive"] as const
-
-export type ProductBondRepairIntensity = (typeof PRODUCT_BOND_REPAIR_INTENSITIES)[number]
-
-export const PRODUCT_BOND_REPAIR_INTENSITY_LABELS = {
-  maintenance: "Erhaltung",
-  intensive: "Intensiv",
-} as const satisfies Record<ProductBondRepairIntensity, string>
-
 export const PRODUCT_BOND_REPAIR_AXES = ["disulfide_crosslink", "peptide_chain"] as const
 
 export type ProductBondRepairAxis = (typeof PRODUCT_BOND_REPAIR_AXES)[number]
@@ -36,13 +27,18 @@ export const PRODUCT_BOND_REPAIR_AXIS_LABELS = {
   peptide_chain: "Peptid-/Längsstruktur-Lane",
 } as const satisfies Record<ProductBondRepairAxis, string>
 
-export const PRODUCT_BOND_APPLICATION_MODES = ["pre_shampoo", "post_wash_leave_in"] as const
+export const PRODUCT_BOND_APPLICATION_MODES = [
+  "pre_shampoo",
+  "post_wash_leave_in",
+  "bedtime_leave_in",
+] as const
 
 export type ProductBondApplicationMode = (typeof PRODUCT_BOND_APPLICATION_MODES)[number]
 
 export const PRODUCT_BOND_APPLICATION_MODE_LABELS = {
   pre_shampoo: "Vor dem Waschen",
   post_wash_leave_in: "Nach der Wäsche / Leave-in",
+  bedtime_leave_in: "Abends / über Nacht im Haar",
 } as const satisfies Record<ProductBondApplicationMode, string>
 
 export const PRODUCT_BOND_TREATMENT_MODES = ["rinse_out", "leave_in"] as const

@@ -1,5 +1,13 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
+import {
+  CONSULT_LEVER_GAPS,
+  CONSULT_LEVER_KINDS,
+  type ConsultLeverGap,
+  type ConsultLeverKind,
+  type ConsultLeverLevel,
+} from "./consult-brief/lever-scale"
+
 /**
  * The call runsheet's own row (`discovery_call_sheets`, consult-runsheet T1): baseline score,
  * re-scores, touchpoints, consult brief, habit commitments, feedback — one per enrollment.
@@ -28,12 +36,20 @@ export type DiscoveryCallSheetTouchpoint = {
 export type DiscoveryCallSheetHebel = {
   title: string
   note: string
+  /** The model's 0,5–2 guess on briefs stored before v6; always null since (level instead). */
   points: number | null
   /**
    * Maßnahmen-Bucket (R26): „Produkte" vs „Umgang mit dem Haar". `null` on briefs stored
    * before v4 — those render as one flat list, never guessed into a bucket.
    */
   bucket: "produkt" | "umgang" | null
+  /**
+   * Point system v2 (consult-brief-d): the lever kind and her gap the generator chose, and the
+   * level (●–●●●) code derived from them — or Nick set by hand. Absent on older briefs.
+   */
+  kind?: ConsultLeverKind | null
+  gap?: ConsultLeverGap | null
+  level?: ConsultLeverLevel | null
 }
 
 export type DiscoveryCallSheetBriefSections = {
@@ -58,6 +74,8 @@ export type DiscoveryCallSheetBriefRevision = {
   generated_at: string | null
   generated_by: "manual" | "agent"
   source_hash: string | null
+  /** Per-part fingerprints of the input (`consultSourceParts`); absent on older briefs. */
+  source_parts?: Record<string, string> | null
 }
 
 export type DiscoveryCallSheetBrief = DiscoveryCallSheetBriefRevision & {
@@ -305,6 +323,7 @@ function parseRevision(value: unknown): DiscoveryCallSheetBriefRevision | null {
         points:
           typeof entry.points === "number" && Number.isFinite(entry.points) ? entry.points : null,
         bucket: entry.bucket === "produkt" || entry.bucket === "umgang" ? entry.bucket : null,
+        ...leverFieldsOf(entry),
       })),
       swapReasons,
       zielLuecken: stringsOf(sections.zielLuecken),
@@ -314,14 +333,46 @@ function parseRevision(value: unknown): DiscoveryCallSheetBriefRevision | null {
     generated_at: typeof value.generated_at === "string" ? value.generated_at : null,
     generated_by: value.generated_by === "agent" ? "agent" : "manual",
     source_hash: typeof value.source_hash === "string" ? value.source_hash : null,
+    ...(isRecord(value.source_parts)
+      ? {
+          source_parts: Object.fromEntries(
+            Object.entries(value.source_parts).filter(
+              (entry): entry is [string, string] => typeof entry[1] === "string",
+            ),
+          ),
+        }
+      : {}),
   }
+}
+
+/** v2 lever fields only when stored; a legacy Hebel stays exactly as it was. */
+function leverFieldsOf(
+  entry: Record<string, unknown>,
+): Pick<DiscoveryCallSheetHebel, "kind" | "gap" | "level"> {
+  const fields: Pick<DiscoveryCallSheetHebel, "kind" | "gap" | "level"> = {}
+  if ("kind" in entry) {
+    fields.kind = (CONSULT_LEVER_KINDS as readonly unknown[]).includes(entry.kind)
+      ? (entry.kind as ConsultLeverKind)
+      : null
+  }
+  if ("gap" in entry) {
+    fields.gap = (CONSULT_LEVER_GAPS as readonly unknown[]).includes(entry.gap)
+      ? (entry.gap as ConsultLeverGap)
+      : null
+  }
+  if ("level" in entry) {
+    fields.level = entry.level === 1 || entry.level === 2 || entry.level === 3 ? entry.level : null
+  }
+  return fields
 }
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/
 
+/** A score 1–10 in half points („7,5"). PostgREST may hand a numeric column back as text. */
 function scoreOf(value: unknown): number | null {
-  return typeof value === "number" && Number.isInteger(value) && value >= 1 && value <= 10
-    ? value
+  const score = typeof value === "string" && value.trim() !== "" ? Number(value) : value
+  return typeof score === "number" && Number.isInteger(score * 2) && score >= 1 && score <= 10
+    ? score
     : null
 }
 

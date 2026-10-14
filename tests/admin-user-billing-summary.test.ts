@@ -177,14 +177,6 @@ test("canceled subscription past its period end reports expired", () => {
   assert.equal(summary.status, "expired")
 })
 
-test("active entitlement with lapsed period end reports expired", () => {
-  const summary = summarizeAdminUserBilling(
-    subscriptionRow({ current_period_end: "2026-08-05T00:00:00.000Z" }),
-    NOW,
-  )
-  assert.equal(summary.status, "expired")
-})
-
 test("active entitlement within the 24h expiry grace still reports active", () => {
   // 12h past the period end: hasCurrentBillingAccess still grants access.
   const summary = summarizeAdminUserBilling(

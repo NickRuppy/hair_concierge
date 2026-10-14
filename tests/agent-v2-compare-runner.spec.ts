@@ -1,8 +1,6 @@
 import assert from "node:assert/strict"
 import { readFileSync } from "node:fs"
 import test from "node:test"
-
-import { normalizeCompareSystem } from "../src/lib/agent/compare/run-compare"
 import { AgentV2TraceSchema } from "../src/lib/agent-v2/contracts"
 import {
   classifyAgentV2SafetyMode,
@@ -12,10 +10,6 @@ import {
   summarizeAgentV2TraceTiming,
   updateAgentV2RoutineThreadContext,
 } from "../src/lib/agent-v2/compare/run-agent-v2"
-
-test("Compare Lab accepts agent_v2 system", () => {
-  assert.equal(normalizeCompareSystem("agent_v2"), "agent_v2")
-})
 
 test("AgentV2 Compare runner hard short-circuits severe safety wording", () => {
   assert.equal(

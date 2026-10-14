@@ -1,0 +1,41 @@
+{
+  "mode": "transfer",
+  "from": "before",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA": "1ed2961886a7dbc44def2cf72d3592f09d200c2f99266b4c5ee7395e85d460e4",
+  "prerequisite": null,
+  "files": [
+    {
+      "file": "tests/scan-resolve-event-log.test.ts",
+      "before": "321d812b581bedba43c2cd48022b870033300cdf5994a56546c5f4dab945e6cb",
+      "after": "8c6cdd84752d9ba41ca0d0879271796a838b602a23b4927874838df0e8e8aeba"
+    },
+    {
+      "file": "tests/scan-resolve-events-migration.test.ts",
+      "before": "c1bd907dcb9ed28c82f6d0196f6531c4fab7ab02b255061b45c2fd2f59089189",
+      "after": "c1bd907dcb9ed28c82f6d0196f6531c4fab7ab02b255061b45c2fd2f59089189"
+    },
+    {
+      "file": "tests/scan-resolve-auto-save.test.ts",
+      "before": "a1e6007c5d222f0de76fc8d91ccad753d8c9884dd8d156a24945eb72e47ae8cf",
+      "after": "a1e6007c5d222f0de76fc8d91ccad753d8c9884dd8d156a24945eb72e47ae8cf"
+    },
+    {
+      "file": "tests/scan-wishlist-auto-save-postgres.test.ts",
+      "before": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9",
+      "after": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9"
+    },
+    {
+      "file": "tests/scan-wishlist-route.test.ts",
+      "before": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a",
+      "after": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a"
+    },
+    {
+      "file": "tests/scan-resolve-route.test.ts",
+      "before": "6f0ff0518c70ebf8e25d08e888c17742d15761762a06ad66820b59a4da949a88",
+      "after": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add"
+    }
+  ]
+}

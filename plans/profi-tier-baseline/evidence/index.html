@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chaarlie · Budget-Entwurf</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/prototype.js" defer></script>
+  </head>
+  <body>
+    <nav class="review-links" aria-label="Entwurfsansichten">
+      <a href="/">Personal Plan</a>
+      <a href="/beratung">Beratung</a>
+      <a href="/cockpit">Call-Cockpit</a>
+      <a href="/direkt">Direkt übernehmen</a>
+      <a href="/scanner">Scanner</a>
+    </nav>
+    <aside class="review-bar" aria-label="Entwurfssteuerung">
+      <details class="review-tools">
+        <summary>Entwurf · Demo</summary>
+        <div class="review-inner">
+          <label
+            >Szenario
+            <select id="scenario">
+              <option value="journey">Standard · Vorschlag bis 15 €</option>
+              <option value="clear-signal">Eigene Produkte 8 / 10 / 14 € → Vorschlag 15 €</option>
+              <option value="mixed-signal">Eigene Produkte 4 / 4 / 25 € → kein Vorschlag</option>
+              <option value="low-signal">Eigene Produkte 3 / 4 / 5 € → Vorschlag 5 €</option>
+              <option value="no-products">Keine Produkte / kein Budget</option>
+              <option value="saved-reuse">Gespeichert · Antwort wiederverwenden</option>
+              <option value="existing-edit">Bestehende Routine · Budget ergänzen</option>
+              <option value="shortcut">Direkt · Budget schon gespeichert</option>
+              <option value="strict-many">Strikt · 2+ günstige Optionen</option>
+              <option value="strict-one">Strikt · 1 günstige Option</option>
+              <option value="strict-zero">Strikt · keine günstige Option</option>
+              <option value="none">Keine passende Option</option>
+              <option value="flex-fit">Flexibel · begründete Ausnahme</option>
+              <option value="flex-gap">Flexibel · notwendige Lücken</option>
+              <option value="open">Ohne Preisgrenze · Mix</option>
+              <option value="mid-edit">Unfertige Auswahl · Budget ändern</option>
+              <option value="save-conflict">Budget · gleichzeitig geändert</option>
+              <option value="stale-refresh">Vorschlag · nicht mehr aktuell</option>
+            </select>
+          </label>
+          <button id="reset" class="review-button">Neu starten</button>
+          <label class="failure-toggle"
+            ><input type="checkbox" id="fail-next" /> Nächstes Speichern scheitern lassen</label
+          >
+          <p id="review-hint" class="review-hint"></p>
+        </div>
+      </details>
+    </aside>
+    <div id="app"></div>
+    <noscript>Für diesen lokalen Entwurf bitte JavaScript einschalten.</noscript>
+  </body>
+</html>

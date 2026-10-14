@@ -1,0 +1,200 @@
+import json, pathlib, hashlib, difflib
+O=pathlib.Path('/tmp/test-audit-billing-operational125')
+R=pathlib.Path('/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning')
+H=lambda b:hashlib.sha256(b).hexdigest()
+sites=json.loads((O/'sites.json').read_text())
+groups={}
+for s in sites: groups.setdefault(s['file'],[]).append(s)
+notes={
+'admin-user-billing-summary':[
+'Null row returns the entire public none summary with all null fields; a fabricated active/default date fails deepEqual.',
+'Real trial projection maps active trial to trial and original trial deadline; treating authorization as paid or using billing period fails.',
+'Trial cancellation changes badge but retains original deadline; mapping to expired immediately fails.',
+'Converted trial uses paidThroughAt and clears trial end; prioritizing expired trial deadline over paid facts fails.',
+'Paid trial cancellation maps to canceled_at_period_end instead of trial_canceled; distinct paid-phase output.',
+'Valid renewal grace maps to past_due; returning active for all access-holding trials fails.',
+'Canceled unpaid expired trial maps locked phase to expired; treating cancellation as perpetual trial fails.',
+'Nontrial future active row delivers active and exact period date through actual hasCurrentBillingAccess; primary C3 keeper.',
+'Nontrial null-period active row preserves legacy access via actual helper; primary C4 keeper.',
+'Nontrial null-period past_due maps to past_due rather than active; separate status presentation branch.',
+'Canceled row with remaining time maps to canceled_at_period_end and exact end. Admin implements this independently, so it cannot replace canceled helper tests.',
+'Canceled row past end maps expired, using separate canceled branch without active grace. Do not subsume with active expiration.',
+'Same nontrial active false-access mapping as nearer 36-hour keeper; D1. No unique date-format, returned-date or output assertion.',
+'Active row exactly 12 hours overdue stays active through real policy; primary C2 keeper detects removing grace.',
+'Active row 36 hours overdue maps false access to expired; primary C1/D1 keeper catches wrongly granting old open entitlements.',
+'Past_due pairs 12-hour grace and 60-hour expiration; catches unconditional past_due badge and incorrect past_due access membership.',
+'Reserved enrollment is trial_pending even with syntactically valid trial facts; no authorized trial access claim.',
+'Current active row outranks canceled later period in both array orders; catches first-row and period-only selection.',
+'Access-holding canceled row outranks newer lapsed row; catches recency-before-access priority.',
+'Equal lapsed entitlement/period uses updated_at recency and empty list returns null; catches null initialization/tie fallback.'
+],
+'billing-subscriptions-access-grace':[
+'Independent literal 86,400,000ms matches SQL 1-day contract. Imported value is compared to independently defined ONE_DAY_MS; retain exact config guard.',
+'C1: false active-row access is already delivered by nearer expired admin keeper through same canonical helper; relative-time and metadata proof in candidate.',
+'C2: exact 12-hour relative timestamp predicate true is delivered by existing admin keeper; provider/month/identity fields not read.',
+'C3: nontrial active finite future-date true is delivered by existing admin keeper and exact public period output; no distinct provider branch.',
+'Past_due at exactly minus one day grants access; catches >= becoming >. No admin case reaches exact equality.',
+'Past_due one millisecond outside boundary denies; catches rounding/truncation or added slack. No admin case uses millisecond edge.',
+'Canceled helper requires scheduled cancellation and future date. Admin duplicates its own canceled logic rather than calling this helper there, so retain.',
+'Canceled helper denies one millisecond after period, without open-entitlement grace; independent helper branch vs admin canceled presentation.',
+'Canceled without cancel_at_period_end denies despite future date; catches removal of boolean gate, absent from admin current canceled inputs.',
+'C4: null active-row fallback covered through actual helper by existing admin legacy keeper, same absence of trial projection.',
+'Legacy profile 48-hour overdue denial: separate subscription_status adapter branch, not billing-row function; removing profile grace enforcement fails.',
+'Legacy profile 12-hour grace: separate profile branch; premature profile denial fails.',
+'Legacy profile null period fallback: independent profile-null branch; null becoming denial fails.',
+'Legacy canceled profile one millisecond expired denies without grace; separate profile code and no cancel flag.',
+'Legacy canceled future profile grants access without billing cancel flag; catches applying billing-row gate to legacy profile.'
+],
+'billing-reconcile-analytics':[
+'Next route maxDuration literal60 independently constrains platform timeout; handler-only keepers cannot observe route config.',
+'Handler passes500 cleanup bound and forwards mixed cleanup outcomes without making payment health fail; removing cleanup/including cleanup.ok in HTTP health fails.',
+'Actual purge adapter emits two distinct RPC names/p_limit500 and isolates resolved database error. Handler test stubs the entire adapter, so retain protocol owner.',
+'Undefined retry defaults disabled; actual integrity branch gets fixed now,20s daily deadline and ordered in_progress/ok check-ins, no dispatch and exact body.',
+'Enabled fulfillment passes both default provider dispatchers and emits exact provider-partitioned stats; neither fixture creates the orchestration flag/call.',
+'Fulfillment precedes paid-access evaluation, which reports missing receipt and flushes once; exact paidAccess safe output retained.',
+'Awaited asynchronous fulfillment completes before all four branches; sync order test alone cannot detect omitted await. Each branch asserts finished and presence.',
+'Default dispatcher actually loads separate Stripe/PayPal processors and forwards quiz-link function; fake processors only observe passed dependency, do not manufacture forwarding.',
+'Enabled retries call exact five destinations at10 each and preserve distinct per-destination counters. Promise/map omission, misassociation or Slack inclusion fails.',
+'One rejected PostHog destination leaves all other four running, sanitized error shape and HTTP500; catches Promise.all abort/raw-error leakage.',
+'Wrong secret denies before entitlement/integrity/analytics/fulfillment/check-in; true flags make early-denial proof meaningful.',
+'Entitlement throw preserves integrity, five analytics deliveries and fulfillment, reports sanitized classified reason/down0; cross-branch isolation distinct from local catch reporter.',
+'Actual entitlement catch forwards the original Error to Sentry dependency and yields classified body/down0 without raw text; isolation keeper does not observe reporter.',
+'Fulfillment rejection still runs all other branches and emits statuserror; distinct awaited pre-branch catch.',
+'Integrity rejection marks daily check-in error, reports one safe incident, preserves entitlement/analytics counters and safe body; daily composition distinct from local route.',
+'Cleanup success count and rejection classified into analyticsRetry while entitlement remains2; catches raw-error leakage and cleanup poisoning unrelated result.'
+],
+'billing-slack-supabase-ownership':[
+'Explicit Slack destination must return all-zero stats without any database from call. Actual outbox guard, independently of reconcile destination list; removing early guard fails.'
+],
+'payment-integrity':[
+'59-minute succeeded candidate skips before local lookup, increments grace count, no finding. Invalid identity is deliberately reached only after grace; removing grace changes skipped counter.',
+'F: two mismatch findings are real, but healthy ID is seven characters and synthetic digest invalid; normalizeCandidate removes both identities, so healthy never reaches getState/evaluateCandidate. Keep mismatch proof; repair healthy negative control separately.',
+'Two valid representations with one digest yield exactly one invariant/reporter call while candidatesChecked2; catches dedupe key/no-dedupe error.',
+'Local isInternalTest true promotes resulting historical finding; provider false alone must not override local QA classification.',
+'PayPal one-time success checks purchase record rather than active subscription; valid IDs exercise missing purchase and healthy purchase distinct from subscription branch.',
+'Failed subscription with billingSucceeded false retains access without conflict, true billing success conflicts once; catches using entitlement instead of same-commerce money fact.',
+'Provider rejection creates classified provider_error monitor failure and zero findings with no provider error text; actual catch path.',
+'F: real pagination/cap execution exists, but candidates and expected checked count derive from the same production cap. Changing100 to200 keeps test green; retain and pin independent literal bound before claiming hard100 proof.',
+'Injected clock crosses deadline after first valid candidate, stops second and records exactly one deadline failure; catches checking deadline only before provider.',
+'F: concurrency is measured with real unresolved promises, but expected maximum and release threshold reuse production constant. Changing4 to5 remains green. Keep scheduling proof; independent4 oracle needed.',
+'Actual reporter throw is swallowed and healthy second candidate is checked; removal of safeCall containment rejects/aborts.',
+'Actual normalization strips raw provider extras and absent ID; two total findings with retained max1 and valid digest, reporter and returned payload tested independently of raw fixture.'
+],
+'payment-monitor-route':[
+'Next platform maxDuration60 retains response headroom around40s; behavior tests cannot inspect deploy export.',
+'Mixed live/sandbox provider pairings exercise both branches of real resolvePaidAccessFindingLive; OR-combining flags fails. Caller reportPaidAccessFinding live.',
+'Unequal token/secret lengths still pass two32-byte digests into comparison; actual authDigest called, comparator observes independent timing-safe input contract.',
+'Wrong token stops rate limit, payment runner and check-in with exact401; actual auth, unlike mocked receipt.',
+'Authorized rate denial gets first forwarded IP and429 with no runner/check-in; distinct denial boundary.',
+'Actual local branch sets40s deadline, current time, safe aggregate body and ordered paired check-in. Absent must_not_leak sentinel is weak extra assertion, not claimed privacy proof alone.',
+'Required production check-in receipts: valid start/finish+flush succeeds, missing receipts yields classified failure. Local defaultfalse cases cannot own requiredtrue.',
+'Runner throws and check-in throws are both contained; safe incident, HTTP500/error emptycounters, two attempted check-ins and raw-error absence.',
+'Monitor failure with valid receipt retries false flush once before success; exact safe failure projection and flush2 catches removing retry.',
+'Missing incident receipt appends telemetry_delivery_failed, increments monitorFailures andHTTP500 despite successful flush; catches accepting transport success alone.',
+'D2: response200/flush1 subset owned by uncapped-counter keeper; actual confirmTelemetryDelivery never reads findings array and summary omits it.',
+'Incident counter1 requires flush even when materialized findings[] is capped away; existing receipt→flush1 and200 owns D2 plus counters-versus-array regression.',
+'Paid-access branch with existing receipt emits only provider/reason+aggregates, drops purchase/user/lead IDs and flushes1; distinct privacy boundary.',
+'Absent receipt property triggers actual branch-level reporting once, valid new receipt→flush1 and safe paidAccess projection; input fixture does not implement reporting.',
+'Partial defined receipt array is not re-reported, fails closed for missing count and classified failure; distinguishes absent from partial property.',
+'No paid-access reporter/receipt leads500 plus safe finding and incremented monitorFailure; independent paid-access receipt verifier.',
+'Canonical access conflict retains exact provider/reason/family while dropping purchase ID; specific accepted category absent generic localerror tests.',
+'Unexpected runtime provider/reason/family values are omitted, not echoed; literal secret values reach actual summarizer, making negative meaningful.'
+],
+'payment-monitor-trigger':[
+'Independent literal50s timeout contract encloses40s server budget; default trigger duration not observed by injected fast fetch.',
+'F: actual endpoint/method/header/redirect and main privacy assertions have value, but mock itself constructs Keychain argv; assert.deepEqual does not observe readKeychainSecret execFile. Preserve all real assertions and repair/narrow argv claim separately.',
+'HTTP endpoint rejected before Keychain with exact configuration_failure; distinct scheme gate.',
+'Five HTTPS endpoint variants exercise exact host/www/path/query/fragment rejection before Keychain; cannot remove on same error title.',
+'Three failures map Keychain/network/HTTP to safe nonzero logs, without secret; actual exception classification and safe response body read boundary.',
+'HTTP500 JSON failure projection whitelists category tuple and drops raw reference/email; actual parse/sanitizer receives sentinel fields.',
+'Paid-access and integrity failure arrays merge/dedupe stable tuples including canonical conflict; catches one-lane-only parsing or duplicate logs.',
+'No endpoint args yields configuration_failure and unchanged argv; retain missing-required-argument CLI contract, not a claim that real Keychain invocation was observed.'
+],
+'payment-monitor-paypal-test-classification':[
+'Dry-run finds one eligible historical row, emits exact PII-free summary and performs zero updates; active supported operator safety.',
+'Missing internal-test flag, project confirmation or env gate each reject with other tested gates valid; distinct AND guard branches. Does not claim mismatched URL case covered.',
+'Apply passes exactid, metadata merge/time/reason and expectedupdated_at to adapter once; real owner constructs metadata, mock records only. Does not prove PostgREST CAS implementation.',
+'Empty/multiple/provider/status/entitlement/cutover cases independently reject eligible row gate; avoids classifying live customers or ambiguous inventory.'
+],
+'billing-public-contract-declaration-resolution':[
+'Real SQL rejects wrong owner/empty verification, freezes submittedtime/reference, permits same replay, rejects changed reference and authenticated access; actual table grants/trigger.',
+'Late processing preserves original timely timestamp/end, queuesoneoperation idempotently, keeps receipt immutable/in_review and requires providerconfirmed before completion; resolved sameevidence replay only.',
+'Preexisting successful collection yields payment_review_required and no unpaid declaration; refund evidence required beforepaid completion.',
+'Withdrawal/extraordinary kind uses external review path, requires provider evidence/termination and remainsin_review beforehand; not ordinary queue authority.',
+'Positive late ledger payment after accepted cancellation requires refund even if enrollmentfirstpayment remainsnull; independent event-ledger lookup.',
+'Direct review-status updates require match/completion records; null/extra email evidence rejected; genuine SQL guard/unknown semantics, not fake receipt.',
+'Real CLI and resolution adapters validate exactargs beforeRPC, forward trustedowner and complete evidence, emit fixed resolved result onlyaftertrue; no provider dependency exists in command closure.'
+],
+'billing-public-contract-declaration-route':[
+'No-cookie request passes twohashed budgets before submit and emits no-store200 onlywith ownreturnedreceipt, queuedstatus. Does not claim durableDBproof, which is separateSQLkeeper.',
+'Submission throw yields503 classifiederror with no accounttext; receipt cannot be falsely acknowledged.',
+'Both budgets denied/unavailable yield429/503 beforepersistence, retry-afterpositive; sameemail acrosskindsshares key. Distinct limiter and storagefailure branches.',
+'F: crosssite/authority/content-type controls meaningful, but oversized contract20k independently violates500char parserbound; deleting MAX_BYTES stream guard stillreturnsaccepted400, so wholebody-budget claim is falsegreen. Keep othersecurityproof; repair bounded-body fixture separately.',
+'Exact publiclegal/API routes pass actual middleware without auth initialization duringoutage; siblingprivate/cancellation stayprotected. No blanket prefix carveout.'
+],
+'billing-public-contract-declaration':[
+'Parser trims boundary whitespace and lowercasesemail while preservingcontractbody and allfields; routefixturealreadyclean cannotdetect normalizationregression.',
+'Exactkeys reject forgedauthority/end fields; withdrawal disallows timing/reason; ordinaryreason rejected; withdrawal/extraordinary positive variants. SQLallowsdifferentvalidationand cannotreplacefrontendparser.',
+'Malformedemail/headerinjection/controlchar,emptyname/contract/end,501charcontract,invalidUUID reject; route20kbody doesnotcoverthese lexical boundaries.'
+],
+'billing-public-contract-declarations-postgres':[
+'Real submit adapter+SQL atomicallypersist declaration/receipt, timestamp fromDB, replayimmutable andpayloadmismatchreject; independently authoredreceipttext omits falseeffective/refund/sendclaims.',
+'Actual outboxconstraintfailure rollsback declarationinsert and sameinput succeedsafterconstraintremoved; no mock-owned persistence.',
+'Anon/authenticated cannotread/submit; service caninsert butcannotrewrite originalsnapshot/time. TestsACL independently from TS/API authentication.',
+'Distinctwithdrawal/extraordinary text andrequesteddate viaactual submit+renderer. Middle rejection reuses existingrequestId with differentpayload; it does not prove extraordinaryreason isrequired (currentparser/SQLallow null).',
+'Afterreceiptmarked sent reviewremains pending; service listsPII-freekeys andexactdetail, anon/authdenied, no arbitraryresolvedupdate. Delivery isnot cancellationresolution.',
+'Read-onlyCLIsyntax rejects mutation/invalidid/emptyargs beforeRPC androutes list/exactread toseparate functions; genuineoperatorboundary.'
+],
+'public-contract-declaration-receipt-delivery':[
+'ActualSQLqueued→claimed→providerACK stillqueued→wrongconfirmationfalse→matchingconfirmedsent plusretryablefailedtime andanonclaimdenial. Distinctstorage/attempt/confirmationcontract.',
+'Realdispatcherusesdeclaredemail, message, generatedreceipt/notice/contact andnormalizesseconds toISO; providerACKsettlesqueuedonly with exactaggregate counts.',
+'Missingtemplate blocksbeforeclaim/send/settle withexactallzero blockedstats; independentconfigurationinput.',
+'MissingAPIcredential blocksbeforeclaim despitevalidtemplate; separateORinput cannotcollapse into missingtemplate.',
+'Ambiguousproviderclass maps support_required/customerio_delivery_ambiguous, neverblind retry; realerrorclass discriminator.',
+'HTTP503class maps support_required/customerio_http_unconfirmed withoutPII; independentclasscode fromambiguous/network.',
+'Validfirstclaim+malformedsecond prevalidatedaswholearray: noearliersend; detects movingvalidation inside deliveryloop.',
+'AcknowledgedproviderthenDBsettlethrow propagates once, no catch/re-settle; protects duplicate delivery/unknownoutcome.',
+'Independentlimit1andlease>60 protectworkerbudget; injectedclaimcallbackdoesnotobserveactualdefaultRPCargs, so staticconfigguard stillcheapestindependent.',
+'Cronrequiressecret, authorizeddispatchreturns exactaggregates; separate HTTPorchestration fromdispatcher policy.'
+]}
+owners={
+'admin-user-billing-summary':'src/lib/billing/admin-user-summary.ts',
+'billing-subscriptions-access-grace':'src/lib/billing/subscriptions.ts',
+'billing-reconcile-analytics':'src/app/api/billing/reconcile/route.ts',
+'billing-slack-supabase-ownership':'src/lib/billing/analytics-outbox.ts',
+'payment-integrity':'src/lib/billing/payment-integrity.ts',
+'payment-monitor-route':'src/app/api/billing/payment-monitor/route.ts',
+'payment-monitor-trigger':'scripts/billing/trigger-payment-monitor.mjs',
+'payment-monitor-paypal-test-classification':'scripts/billing/classify-payment-monitor-paypal-test.ts',
+'billing-public-contract-declaration-resolution':'supabase/migrations/20260914141918_public_contract_declaration_resolution.sql',
+'billing-public-contract-declaration-route':'src/lib/billing/public-contract-declaration-request.ts',
+'billing-public-contract-declaration':'src/lib/billing/public-contract-declaration.ts',
+'billing-public-contract-declarations-postgres':'supabase/migrations/20260914103100_public_contract_declarations.sql',
+'public-contract-declaration-receipt-delivery':'src/lib/billing/public-contract-declaration-receipt-delivery.ts',
+}
+candidate_bodies=json.loads((O/'candidate-bodies.json').read_text())
+candidate_map={(x['donor']['file'],x['donor']['title']):x for x in candidate_bodies}
+ledger=[]
+for f,rows in groups.items():
+ key=pathlib.Path(f).name.removesuffix('.test.ts')
+ assert len(notes[key])==len(rows),(key,len(notes[key]),len(rows))
+ for s,note in zip(rows,notes[key]):
+  c=candidate_map.get((f,s['title']))
+  mark=c['classification'] if c else 'F' if note.startswith('F:') else 'R'
+  ledger.append({**{k:s[k] for k in ('file','title','line','sha256')},'classification':mark,'owner':owners[key],'evidence':note,'candidate':c['id'] if c else None,'keeper':({'file':c['keeperBefore']['file'],'title':c['keeperBefore']['title']} if c else None),'baseline':'Not executed by worker; retain any existing failure.'})
+counts={m:sum(x['classification']==m for x in ledger) for m in ['R','F','C','D']}
+(O/'ledger.json').write_text(json.dumps(ledger,indent=2)+'\n')
+md=['# Billing operational/public receipts125 — complete per-site ledger','',f'Current exact13files125 AST declarations: {counts}. Full test bodies/helpers/tables read; no runtime/test or repository mutation. Marks are conditional audit judgments; zero removals applied.','']
+for f in groups:
+ md+=['## '+f,'','|Line|Mark|Declaration|Independent contract / actual faulty owner|','|---|---|---|---|']
+ for e in ledger:
+  if e['file']==f: md.append(f"|{e['line']}|{e['classification']}|{e['title']}|{e['evidence']}|")
+ md+=['']
+(O/'complete-ledger.md').write_text('\n'.join(md))
+diff=''
+for f in groups:
+ before=(O/'before'/f).read_text();cut=(O/'cut'/f).read_text()
+ diff+=''.join(difflib.unified_diff(before.splitlines(True),cut.splitlines(True),fromfile='before/'+f,tofile='cut/'+f))
+(O/'complete.diff').write_text(diff)
+(O/'transfer.diff').write_text('')
+print(counts)

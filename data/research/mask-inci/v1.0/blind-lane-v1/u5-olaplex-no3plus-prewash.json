@@ -1,0 +1,49 @@
+{
+  "productId": "u5-olaplex-no3plus-prewash",
+  "lane": "blind-v1-unseen",
+  "standardVersion": "mask-inci-v0.5",
+  "classifiedAt": "2026-10-06",
+  "attestation": {
+    "prohibitedFilesAccessed": false,
+    "inputsRead": [
+      "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1.md",
+      "docs/research/mask-inci/v1.0/02_evidence_lexicon.v0.1.md",
+      "docs/research/mask-inci/v1.0/00_category_charter.md",
+      "docs/research/mask-inci/v1.0/01_property-set-v0.md",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u1-balea-plex-care-2in1.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u2-wahre-schaetze-1-minute-kur.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u3-john-frieda-wunder-kur.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u4-isana-feuchtigkeit-3in1.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u5-olaplex-no3plus-prewash.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2/u6-balea-silberglanz-2in1.json"
+    ]
+  },
+  "g0": {
+    "value": "excluded_pre_shampoo_bondbuilder_protocol",
+    "modeScoped": false,
+    "coveredMode": "none",
+    "identityState": "excluded_product_form",
+    "rationale": "There is one stated mode. It is applied to wet hair, left 3 minutes, rinsed, and then followed by shampoo and conditioner, so it precedes cleansing. It fails the 'after cleansing' conjunct and is the charter's pre-shampoo-only exclusion. It is also an Olaplex-style bondbuilder specialist protocol, which the charter separately excludes. No qualifying Kur mode exists to scope onto, and the directions place it 'from roots to ends', which contradicts P5. No profile is produced.",
+    "evidenceSignals": [
+      "directions: 'apply generously to wet hair from roots to ends. Leave on for 3 minutes. Rinse. Follow with OLAPLEX shampoo and conditioner.'",
+      "product name: 'Hair Repair Pre-Wash Treatment'",
+      "charter exclusions: pre-shampoo-only treatments; bondbuilder-category specialist protocols (Olaplex-style)",
+      "formula fact (E1, recorded only): Bis-Aminopropyl Diglycol Dimaleate @4 (maleate chemistry)"
+    ],
+    "notes": "The 3-minute dwell and the rinse clear two conjuncts, but placement before the shampoo is decisive. Directions come from the global English brand page rather than a DE exact pack, and there is no GTIN. Neither affects the exclusion, which every plausible directions text for a 'Pre-Wash Treatment' would reach."
+  },
+  "tailMarker": {
+    "ingredient": null,
+    "index": null,
+    "status": "absent",
+    "note": "Not computed: excluded at G0 before formula analysis. For the record only, the earliest tail-class species would be Ethylhexylglycerin @23. It is a booster with no conventional preservative declared, so it is not marker-eligible. Caprylyl Glycol @28 is in the same position. The list therefore carries no eligible marker."
+  },
+  "hinweise": {
+    "fired": [
+      { "flag": "tail_marker", "value": "absent (recorded for boundary evidence only)", "note": "Excluded row; no field read the marker." }
+    ]
+  },
+  "reviewTriggers": [
+    { "trigger": "root_scalp_application", "note": "Directions say 'from roots to ends' (boundary evidence; product excluded)." }
+  ]
+}

@@ -1,0 +1,1 @@
+694cb9a63a64c9625e9f3ed0a0b9c0830fae9568 2026-09-29 feat(beratung,scan): Verdict-Schicht — ehrliche Masken-Richtung, Preise & Sortierung, Frequenz-Chips, neutrale Cockpit-Stimme (Slice 3) (#621)

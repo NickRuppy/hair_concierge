@@ -1,0 +1,129 @@
+{
+  "blindId": "P07",
+  "formulaIdentity": {
+    "productName": "Garnier Fructis Locken Methode Feuchtigkeitsauffüllendes Shampoo",
+    "packSize": "200 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "e015b98786a4c655ac657e46be038ed0f6166cc74ab78d151d767b45dbf71ea5",
+    "fingerprintMethod": "sha256 of packet canonicalInci joined with ', '",
+    "sourceTier": "frozen packet canonical INCI; positioning: manufacturer + 2 retailers",
+    "captureDate": "not stated in packet",
+    "completeness": "treated as complete canonical capture (ID-1)",
+    "e3MarkerPosition": "PARFUM / FRAGRANCE at 8; prominent = 1-7",
+    "conflictNotes": "'Hyaluron' maps to Sodium Hyaluronate (14); 'Shea-Fettsäuren' to Butyrospermum Parkii Butter (10). 'Sulfatfrei' is consistent (olefin sulfonate is not a sulfate). No conflict."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic Sodium C14-16 Olefin Sulfonate (2, sulfonate type) with prominent buffers Cocamidopropyl Betaine (5) and Sodium Lauroyl Sarcosinate (7, mild anionic); no reinforcing strong anionic. Cocamide MEA (3) is not a route (C3); Coco-Betaine (17) is post-fragrance (C4). No counter-signal creates a realistic neighbor.",
+      "ruleIds": ["C1", "C3", "C4", "E3"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "rationale": "One meaningful system plus light routes: Glycol Distearate (6) pearlizing route, Glycerin (4), Shea Butter (10, after Parfum), Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (19), Polyquaternium-7 (21), Sodium Hyaluronate (14). C2 not met: no prominent silicone and the payload lipid is not prominent (E3). Counter-signal toward high: two cationic polymers plus shea and pearlizer.",
+      "ruleIds": ["5", "C2", "E3", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "evidenceByFamily": {
+        "silicone": [],
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (19)", "Polyquaternium-7 (21)"],
+        "cationic_conditioner": [],
+        "payload_lipid": ["Butyrospermum Parkii Butter / Shea Butter (10)"],
+        "weak_refatter": [],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["Sodium C14-16 Olefin Sulfonate (2)", "Cocamidopropyl Betaine (5)", "Sodium Lauroyl Sarcosinate (7)", "Coco-Betaine (17, non-prominent)"],
+        "humectantContext": ["Glycerin (4)", "Hexylene Glycol (9)", "Sodium Hyaluronate (14)", "Arginine (16)", "Propylene Glycol (18)"],
+        "excluded": ["Glycol Distearate (6): pearlizing wax (6.4)", "Cocamide MEA (3): alkanolamide thickener", "PEG-55 Propylene Glycol Oleate (12): PEG thickener", "Carbomer (11): rheology", "Salicylic Acid (23), Benzoic Acid (24): preservative/acid"],
+        "unresolved": []
+      },
+      "subjudgments": {
+        "depositionLoad": {"value": "moderate", "rationale": "Three converging deposition routes (waxy shea, guar, PQ-7) but all post-fragrance."},
+        "persistence": {"value": "moderate", "rationale": "Shea is a waxy, more substantive lipid (6.4); PQ-7 is a persistent cationic polymer; levels are low."},
+        "resetCapacity": {"value": "moderate", "rationale": "C1 olefin-sulfonate chassis with two buffers."}
+      },
+      "counterevidence": "Every deposition family sits after Parfum (8), the polymers near the end (19, 21); olefin sulfonate is an effective reset.",
+      "whyThisBand": "Waxy lipid plus two cationic polymers interact into a plausible, bounded residue against ordinary reset.",
+      "whyNotNeighborBand": "Not low (W2): three distinct families including a waxy payload lipid and Polyquaternium-7 converge; calling it lightweight would understate residue risk. Not high: no silicone, lipid not prominent (no W-RICH), reset not limited.",
+      "confidenceLimitingFactor": "All routes post-fragrance; low levels could make it low (adjacent).",
+      "rationale": "Moderate: interacting light/moderate routes (6.6 moderate anchor) with ordinary reset.",
+      "ruleIds": ["6.3", "6.4", "6.5", "6.6", "W2", "W-RICH", "6.9", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "moisture",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "careDirection": {"verdict": "moisture_supported", "moistureRoutes": ["Glycerin (4)", "Sodium Hyaluronate (14)", "Arginine (16)"], "repairRoutes": [], "sharedConditioningRoutes": ["Butyrospermum Parkii Butter (10)", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (19)", "Polyquaternium-7 (21)", "Glycol Distearate (6)"], "limitation": "Rinse-off; emollient/deposition support is post-fragrance."},
+      "claimRole": "candidate",
+      "counterSignal": "Shea and polymers are post-fragrance; '72 Stunden Feuchtigkeit' is a marketing claim not provable from INCI (3.2).",
+      "decisionTrace": "'Feuchtigkeitsauffüllendes' in the exact product name (high); manufacturer repeats moisture/hydration. Formula verdict moisture_supported (humectant cluster + emollient/cationic support). F1 -> moisture. Curl wording is hair_texture, not a focus.",
+      "rationale": "moisture by F1/7.2: name-level hydration claim over a moisture_supported formula.",
+      "ruleIds": ["F1", "7.2", "7.3", "CL-SRC", "E1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "decisionTrace": "Empty default considered; curl definition/'gebändigt' is not a focus value and rides on the same deposition route (F2).",
+      "rationale": "Empty (Section 8, F2).",
+      "ruleIds": ["8", "F2"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "triggerCode": "none",
+      "decisionTrace": "Default regular; no frequency, reset or dandruff trigger.",
+      "rationale": "Regular (Section 9).",
+      "ruleIds": ["9", "F-TRACE"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No E2 sensitive/dry scalp claim; application to the scalp is a direction, not positioning (SC1).",
+      "ruleIds": ["10", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No Piroctone Olamine or Climbazole; Salicylic Acid does not qualify.",
+      "ruleIds": ["11"]
+    }
+  },
+  "projection": {
+    "thicknessFit": {"fine": "acceptable", "normal": "ideal", "coarse": "acceptable"},
+    "thicknessFitConfidence": {"fine": "moderate", "normal": "moderate", "coarse": "moderate"},
+    "thicknessRationale": "T1 W moderate, C moderate: fine acceptable, normal ideal, coarse acceptable. Ordinary, no T6. T4: W neighbor low would raise fine/keep normal ideal; C neighbor high would raise coarse -> no lower tier, no flag. Curl/texture wording ignored (T2).",
+    "weight": "moderate",
+    "weightConfidence": "moderate",
+    "scalpTargets": {"primary": "ordinary", "secondary": null},
+    "scalpTargetConfidence": {"primary": "high"},
+    "scalpTargetRationale": "S-ORDINARY way 1: no qualifying E2 claim unit; packet has a manufacturer source -> high (13.8).",
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1 moderate -> regular; matches normal bucket; I3 neighbor none.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "D1 false; D2 not met.",
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable"},
+      {"thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable"}
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": [],
+    "informationalNotes": []
+  },
+  "uncertainties": [
+    "Weight low vs moderate: W2 lists 'each family late/trace' as a permissible low reason, while waxy shea + PQ-7 argue moderate; resolved toward the heavier band (W3 forbids resolving a balanced boundary lighter at moderate confidence)."
+  ]
+}

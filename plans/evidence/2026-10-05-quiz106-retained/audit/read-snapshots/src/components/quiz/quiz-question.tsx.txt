@@ -1,0 +1,201 @@
+"use client"
+
+import { useState, useCallback } from "react"
+import { MOTION_MS } from "@/lib/motion"
+import { useQuizStore } from "@/lib/quiz/store"
+import type { QuizQuestion as QuizQuestionType } from "@/lib/quiz/types"
+import { QuizOptionCard } from "./quiz-option-card"
+import { QuizProgressBar } from "./quiz-progress-bar"
+import { Button } from "@/components/ui/button"
+import { ArrowLeft, ChevronRight } from "lucide-react"
+import { toggleTreatmentSelection } from "@/lib/quiz/normalization"
+import { QUIZ_TOTAL_QUESTIONS } from "@/lib/quiz/questions"
+import { InfoTip } from "@/components/ui/info-tip"
+import { INFO_TIPS } from "@/lib/help/info-tips"
+import { getLegacyQuizOptionLayout, getLegacyQuizOptionVisual } from "./legacy-quiz-visuals"
+import { QuizMobileBottomAction, QuizMobileBottomClearance } from "./quiz-mobile-bottom-action"
+import { useQuizBrowserBack } from "./quiz-browser-history"
+import {
+  useQuizFunnelPackageKey,
+  useScannerFunnelRefinementEnabled,
+} from "./quiz-funnel-package-provider"
+
+/** The one settle delay after a single-tap answer (batch 8 motion spec). */
+const AUTO_ADVANCE_MS = MOTION_MS.settle
+
+const ANSWER_KEY_MAP: Record<number, keyof import("@/lib/quiz/types").QuizAnswers> = {
+  2: "structure",
+  3: "thickness",
+  13: "density",
+  15: "hair_length",
+  4: "fingertest",
+  5: "pulltest",
+  7: "treatment",
+}
+
+interface QuizQuestionProps {
+  question: QuizQuestionType
+}
+
+export function QuizQuestion({ question }: QuizQuestionProps) {
+  const { answers, setAnswer, goNext } = useQuizStore()
+  const requestBack = useQuizBrowserBack()
+  const funnelPackageKey = useQuizFunnelPackageKey()
+  const scannerFunnelRefinementEnabled = useScannerFunnelRefinementEnabled()
+  const answerKey = ANSWER_KEY_MAP[question.step]
+  const currentValue = answers[answerKey]
+
+  const [localSelection, setLocalSelection] = useState<string | string[]>(
+    question.selectionMode === "multi"
+      ? Array.isArray(currentValue)
+        ? currentValue
+        : []
+      : typeof currentValue === "string"
+        ? currentValue
+        : "",
+  )
+  const [advancing, setAdvancing] = useState(false)
+
+  const handleSingleSelect = useCallback(
+    (value: string) => {
+      if (advancing) return
+      setLocalSelection(value)
+      setAnswer(answerKey, value)
+      setAdvancing(true)
+      setTimeout(() => {
+        goNext()
+      }, AUTO_ADVANCE_MS)
+    },
+    [answerKey, setAnswer, goNext, advancing],
+  )
+
+  const handleMultiSelect = useCallback(
+    (value: string) => {
+      setLocalSelection((prev) => {
+        const arr = Array.isArray(prev) ? prev : []
+        if (answerKey === "treatment") {
+          return toggleTreatmentSelection(arr, value)
+        }
+
+        if (arr.includes(value)) {
+          return arr.filter((v) => v !== value)
+        }
+        return [...arr, value]
+      })
+    },
+    [answerKey],
+  )
+
+  const handleMultiContinue = () => {
+    setAnswer(answerKey, localSelection as string[])
+    goNext()
+  }
+
+  const isSelected = (value: string) => {
+    if (question.selectionMode === "single") return localSelection === value
+    return Array.isArray(localSelection) && localSelection.includes(value)
+  }
+
+  const multiHasSelection = Array.isArray(localSelection) && localSelection.length > 0
+  const infoTip = question.infoTipId ? INFO_TIPS[question.infoTipId] : null
+  const visualLayout = getLegacyQuizOptionLayout(question.step)
+  const hideFirstQuestionBack =
+    scannerFunnelRefinementEnabled &&
+    funnelPackageKey === "scan_v1" &&
+    question.questionNumber === 1
+
+  return (
+    <div className="flex flex-col" key={question.step}>
+      {/* Back button + progress */}
+      <div className="flex items-center gap-3 mb-4">
+        {!hideFirstQuestionBack ? (
+          <button
+            onClick={requestBack}
+            aria-label="Zurück"
+            className="flex min-h-[44px] min-w-[44px] items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </button>
+        ) : null}
+        <div className="flex-1">
+          <QuizProgressBar current={question.questionNumber} total={QUIZ_TOTAL_QUESTIONS} />
+        </div>
+        <span className="text-sm text-[var(--text-caption)] tabular-nums">
+          {question.questionNumber}/{QUIZ_TOTAL_QUESTIONS}
+        </span>
+      </div>
+
+      {/* Title */}
+      <div className="mb-2 flex items-center justify-center gap-2">
+        <h1 className="text-balance text-center font-header text-[1.625rem] font-medium leading-[1.12] text-foreground outline-none focus:outline-none sm:text-[2.4rem]">
+          {question.title}
+        </h1>
+        {infoTip && (
+          <InfoTip
+            title={infoTip.title}
+            body={infoTip.body}
+            label={`Info zu ${question.title}`}
+            buttonClassName="h-7 w-7"
+          />
+        )}
+      </div>
+
+      {/* Instruction */}
+      <p className="mx-auto mb-5 max-w-xl text-center text-[15px] leading-6 text-muted-foreground">
+        {question.instruction}
+      </p>
+
+      {/* Options */}
+      <div
+        className={
+          visualLayout === "grid" ? "grid flex-1 grid-cols-2 gap-3" : "flex flex-1 flex-col gap-3"
+        }
+      >
+        {question.options.map((opt, i) => (
+          <QuizOptionCard
+            key={opt.value}
+            icon={opt.icon}
+            label={opt.label}
+            description={opt.description}
+            active={isSelected(opt.value)}
+            multi={question.selectionMode === "multi"}
+            visual={getLegacyQuizOptionVisual({
+              answers,
+              index: i,
+              step: question.step,
+              value: opt.value,
+            })}
+            visualLayout={visualLayout}
+            onClick={() =>
+              question.selectionMode === "single"
+                ? handleSingleSelect(opt.value)
+                : handleMultiSelect(opt.value)
+            }
+            animationDelay={i * 60}
+          />
+        ))}
+      </div>
+
+      {/* Multi-select continue button */}
+      {question.selectionMode === "multi" && (
+        <QuizMobileBottomAction className="mt-4">
+          <Button
+            onClick={handleMultiContinue}
+            disabled={!multiHasSelection}
+            className="h-12 w-full text-base"
+            variant="cta"
+          >
+            <span className="personal-plan-multi-count" key={localSelection.length}>
+              {localSelection.length > 0
+                ? `${localSelection.length} ausgewählt · Weiter`
+                : "Weiter"}
+            </span>
+            <ChevronRight className="ml-1 h-4 w-4" />
+          </Button>
+        </QuizMobileBottomAction>
+      )}
+
+      {question.selectionMode === "multi" ? <QuizMobileBottomClearance /> : null}
+    </div>
+  )
+}

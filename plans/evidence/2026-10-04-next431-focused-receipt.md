@@ -1,0 +1,11 @@
+# Applied 431 focused checkpoint
+
+Current AST inventory: **11,892 → 11,461**, net **431 removals (3.6243%)**; Node 10,936 and Playwright 525. Target 2,379 remains unfinished: **1,948 remain**. The newest batch removes 18 sites: cockpit 9, lead/resume 6, profile 2, obsolete fork-source inventory 1. No new declaration, input, table row or production edit in this batch.
+
+The same twelve-file native cohort passed **276 before → 276 with full assertion transfers → 258 after cuts**, then all **258 after formatting**; no failures, skips or cancellations. Logs: `/tmp/test-audit-next431-{before,transfer,cut,formatted}.tap`. Guarded editors checked exact test/owner hashes, parsed all staged phases and retained untargeted callbacks. Eight changed files were formatted; `git diff --check` passes.
+
+Main ran and inspected **45 actual-source controls**, each exactly one selected clean case, intended assertion failure, byte-exact restore, then clean case. All source hashes match. The 24 prior old-oracle controls falsely passed under their corresponding faults; adjacent archived receipts establish the stronger transferred oracles. Main inspected actual failure messages and keeper assertion stack lines, including the foreign-completed filter and accepted-outcome/CTA. No parse, setup, timeout or zero-selected failure is credited. The fork inventory itself never executed hook wiring; retained controls establish pure accepted flow and actual SSR CTA only.
+
+[Plan and source-read ledgers](2026-10-03-next431-owner-union-plan.md), [counterpart disposition](2026-10-03-next431-review-disposition.md), [old controls](2026-10-03-next431-old-controls.json), [new controls](2026-10-04-next431-new-controls.json).
+
+**Latest full native/c8/build proof remains the frozen 413 tree.** [413 measurement and limits](2026-10-03-final413-coverage.md) passes actual and conservative original-denominator aggregate tolerance, worst conservative loss 1.4918 pp, with exact 26 baseline failures. That proof is not relabeled as 431 coverage. Integrated typecheck and lint passed (five existing warnings), with logs `/tmp/test-audit-next431-typecheck.log` and `/tmp/test-audit-next431-lint.log`. No commit, push, PR, merge, deployment, database or provider write.

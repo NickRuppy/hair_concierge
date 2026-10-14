@@ -9,6 +9,8 @@ import type { ApplicationDayTypeKey } from "../src/lib/routines/personal-plan/ap
 import { SHARED_APPLICATION_TEMPLATE_BY_KEY_V2 } from "../src/lib/routines/personal-plan/application/shared-templates-v2"
 import { adaptAcceptedActiveRoutineForApplication } from "../src/lib/personal-plan/routine/application-adapter"
 import { CatalogDatabaseReadError } from "../src/lib/catalog-authority/product-spec-relationships"
+import { GATED_ANWENDUNG_EXAMPLE_VIEW } from "../src/lib/gated-preview/fixtures/anwendung-example"
+import { lenaFacts, lenaNeedSnapshot } from "./personal-plan/tools-lena-fixture"
 
 test("direct Anwendung route stays compact and non-exposing without an eligible owner", async () => {
   const view = await resolveAnwendungPage(readyDeps({ getUserId: async () => null }))
@@ -70,13 +72,6 @@ test("retained portfolio presentation data cannot create an Anwendung item", asy
     readFileSync("src/lib/personal-plan/routine/application-adapter.ts", "utf8"),
     /retainedOwnedProducts/,
   )
-})
-
-test("loading does not flash Anwendung navigation before owner eligibility is known", () => {
-  const source = readFileSync("src/app/anwendung/loading.tsx", "utf8")
-
-  assert.doesNotMatch(source, /<Header/)
-  assert.doesNotMatch(source, /PersonalPlanNavigation/)
 })
 
 const DAY_KEYS: ApplicationDayTypeKey[] = [
@@ -240,39 +235,6 @@ test("journey denial happens before any Routine, profile, catalog, or content re
         throw new Error("must not read")
       },
     }),
-  )
-  assert.deepEqual(view, { state: "feature_disabled" })
-  assert.equal(privilegedReads, 0)
-})
-
-test("journey frontier denial happens before any Routine, profile, catalog, or content read", async () => {
-  let privilegedReads = 0
-  const view = await resolveAnwendungPage(
-    readyDeps({
-      loadJourneyAccess: async () => ({
-        kind: "personal_plan",
-        personalPlanId: "plan-1",
-        frontier: "stage4",
-        nextHref: "/routine",
-        allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: false },
-      }),
-      loadRoutineVersion: async () => {
-        privilegedReads += 1
-        throw new Error("must not read")
-      },
-      adaptRoutine: async () => {
-        privilegedReads += 1
-        throw new Error("must not read")
-      },
-      loadProfile: async () => {
-        privilegedReads += 1
-        throw new Error("must not read")
-      },
-      loadContent: () => {
-        privilegedReads += 1
-        throw new Error("must not read")
-      },
-    } as never),
   )
   assert.deepEqual(view, { state: "feature_disabled" })
   assert.equal(privilegedReads, 0)
@@ -654,4 +616,164 @@ test("direct day route validates the canonical key and never renders an arbitrar
   assert.match(source, /applicationDayTypeKeySchema\.safeParse/)
   assert.match(source, /notFound\(\)/)
   assert.doesNotMatch(source, /dangerouslySetInnerHTML/)
+})
+
+// --- Hair Tools: read-time tool blocks in the Anwendung ------------------------------
+
+const toolPayload = { source: { refinedVersionId: "refined-1" }, items: [] } as never
+
+function toolDeps(overrides: Partial<AnwendungResolverDeps> = {}) {
+  const reads = { enabled: 0, facts: 0, refined: 0 }
+  const lena = lenaFacts()
+  const deps = readyDeps({
+    loadRoutineVersion: async () => ({ id: "routine-1", payload: toolPayload }),
+    toolsEnabled: async () => {
+      reads.enabled += 1
+      return true
+    },
+    tools: {
+      loadFacts: async () => {
+        reads.facts += 1
+        return lena
+      },
+      loadRefinedOutputSnapshot: async () => {
+        reads.refined += 1
+        return lenaNeedSnapshot()
+      },
+    },
+    ...overrides,
+  })
+  return { deps, reads }
+}
+
+function toolKinds(view: Awaited<ReturnType<typeof resolveAnwendungPage>>) {
+  if (view.state !== "ready") return []
+  return view.days.flatMap((day) => day.steps.filter((step) => step.kind === "tool_use"))
+}
+
+test("flag on: the Anwendung derives tool blocks from the member's current facts", async () => {
+  const { deps, reads } = toolDeps()
+  const view = await resolveAnwendungPage(deps)
+  assert.equal(view.state, "ready")
+  if (view.state !== "ready") return
+  const wash = view.days.find((day) => day.dayType === "wash_day")!
+  const toolOrder = wash.steps.flatMap((step, index) =>
+    step.kind === "tool_use" ? [[index, step.typeLabelDe] as const] : [],
+  )
+  assert.deepEqual(
+    toolOrder.map(([, label]) => label),
+    [
+      "Grobzinkiger Kamm",
+      "Mikrofaser-Handtuch",
+      "Föhn",
+      "Glätteisen",
+      "Glatter Kissenbezug (z.\u00A0B. Seide, Satin)",
+    ],
+  )
+  assert.equal(wash.shelf.filter((slot) => slot.kind === "tool").length, 5)
+  assert.deepEqual(reads, { enabled: 1, facts: 1, refined: 1 })
+})
+
+test("flag on and off differ only by the tool steps and shelf slots", async () => {
+  const off = await resolveAnwendungPage(
+    readyDeps({ loadRoutineVersion: async () => ({ id: "routine-1", payload: toolPayload }) }),
+  )
+  const on = await resolveAnwendungPage(toolDeps().deps)
+  assert.equal(on.state, "ready")
+  assert.equal(off.state, "ready")
+  if (on.state !== "ready" || off.state !== "ready") return
+  const withoutTools = (day: (typeof on.days)[number]) => ({
+    ...day,
+    steps: day.steps.filter((step) => step.kind !== "tool_use"),
+    shelf: day.shelf.filter((slot) => slot.kind !== "tool"),
+  })
+  assert.deepEqual(on.days.map(withoutTools), off.days)
+})
+
+test("flag off: no flag-dependent read, no facts read, the view is byte-identical", async () => {
+  const baseline = await resolveAnwendungPage(readyDeps())
+  for (const toolsEnabled of [undefined, async () => false]) {
+    const { deps, reads } = toolDeps({
+      toolsEnabled,
+      loadRoutineVersion: readyDeps().loadRoutineVersion,
+    })
+    const view = await resolveAnwendungPage(deps)
+    assert.deepStrictEqual(view, baseline)
+    assert.equal(reads.facts, 0)
+    assert.equal(reads.refined, 0)
+  }
+})
+
+test("keepsake mode derives tools from current facts too", async () => {
+  const { deps, reads } = toolDeps({
+    loadKeepsakeContent: async () => ({
+      personalPlanId: "plan-1",
+      activeRoutineVersionId: "routine-1",
+    }),
+    loadJourneyAccess: async () => {
+      throw new Error("journey access must not be consulted in keepsake mode")
+    },
+  })
+  const view = await resolveAnwendungPage(deps, undefined, { keepsake: true })
+  assert.ok(toolKinds(view).length > 0)
+  assert.equal(reads.facts, 1)
+})
+
+test("a member without Stage 5 access reads no Tool facts (the free tier's example never shows tools)", async () => {
+  const { deps, reads } = toolDeps({
+    loadJourneyAccess: async () => ({
+      kind: "personal_plan" as const,
+      personalPlanId: "plan-1",
+      frontier: "stage4" as const,
+      nextHref: "/routine" as const,
+      allowed: { stage1: true, stage2: true, stage3: true, stage4: true, stage5: false },
+    }),
+  })
+  assert.deepEqual(await resolveAnwendungPage(deps), { state: "feature_disabled" })
+  assert.deepEqual(reads, { enabled: 0, facts: 0, refined: 0 })
+
+  const source = readFileSync("src/app/anwendung/page.tsx", "utf8")
+  assert.match(source, /if \(renderGatedExample\) return <GatedAnwendungExample \/>/)
+  const exampleView = JSON.stringify(GATED_ANWENDUNG_EXAMPLE_VIEW)
+  assert.doesNotMatch(exampleView, /tool_use|"kind":"tool"/)
+})
+
+test("a failing Tool read leaves the Anwendung exactly as it renders without Tools", async () => {
+  const baseline = await resolveAnwendungPage(
+    readyDeps({ loadRoutineVersion: async () => ({ id: "routine-1", payload: toolPayload }) }),
+  )
+  const failures: unknown[] = []
+  for (const overrides of [
+    {
+      tools: {
+        loadFacts: async () => {
+          throw new Error("facts down")
+        },
+        loadRefinedOutputSnapshot: async () => lenaNeedSnapshot(),
+      },
+    },
+    {
+      tools: {
+        loadFacts: async () => lenaFacts(),
+        loadRefinedOutputSnapshot: async () => {
+          throw new Error("snapshot down")
+        },
+      },
+    },
+    {
+      tools: {
+        loadFacts: async () => lenaFacts(),
+        loadRefinedOutputSnapshot: async () => ({ not: "a snapshot" }),
+      },
+    },
+    {
+      toolsEnabled: async () => {
+        throw new Error("flag down")
+      },
+    },
+  ]) {
+    const { deps } = toolDeps({ ...overrides, reportFailure: (d) => failures.push(d) })
+    assert.deepStrictEqual(await resolveAnwendungPage(deps), baseline)
+  }
+  assert.equal(failures.length, 0, "a Tool problem is not an Anwendung failure")
 })

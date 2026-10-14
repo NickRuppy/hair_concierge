@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "mask-research-record-v0.1",
+  "lane": "blind",
+  "productId": "13-olaplex-no3-hair-perfector",
+  "g0": {
+    "value": "excluded_product_form",
+    "modeScoped": false,
+    "multiUse": true,
+    "rationale": "Excluded on three independent charter grounds, any one of which is sufficient. (1) Pre-shampoo-only treatment: the directions apply the product to UNWASHED towel-dry hair and instruct shampooing afterwards ('im ungewaschenen, handtuchtrockenen Haar auftragen ... Anschliessend auswaschen, danach wie gewohnt shampoonieren und Conditioner/Kur auftragen'), so the product is never applied after cleansing and cannot meet the section 2.1 eligibility test. (2) Leave-on/overnight option: 'fuer einen intensiveren Effekt: ueber Nacht' is an overnight treatment, an excluded form in its own right. (3) Bondbuilder category with a specialist protocol: the charter excludes 'products in the bondbuilder catalog category with specialist protocols (Olaplex-style)' by name, and the directions themselves describe the specialist protocol - pre-wash, comb through, minimum 10 minutes, wash out, then shampoo and condition as usual.\n\nSection 2.2 walk-through as performed. Step 1: directions located (olaplex.de standard text, replicated identically across German retailers). Step 2: two stated modes, (a) pre-wash 10-minute-minimum treatment then rinse, then shampoo; (b) the same applied overnight. Neither is applied after cleansing, so neither qualifies as a mask mode. Step 3 is not reached. Step 4 applies directly: no mode qualifies -> excluded_product_form, reason recorded as pre-shampoo-only plus leave-on overnight, compounded by the bondbuilder-category exclusion. This is the set's refuse test and the rules refuse it cleanly and redundantly.",
+    "evidenceSignals": [
+      "Boundary evidence - directions: 'im ungewaschenen, handtuchtrockenen Haar auftragen und durchkaemmen' - applied to unwashed hair, i.e. before cleansing",
+      "Boundary evidence - directions: 'Mindestens 10 Minuten einwirken lassen (fuer einen intensiveren Effekt: ueber Nacht)' - a minimum dwell with an overnight leave-on option",
+      "Boundary evidence - directions: 'Anschliessend auswaschen, danach wie gewohnt shampoonieren und Conditioner/Kur auftragen' - the shampoo and the conditioner/Kur both come AFTER this product, which also confirms it does not take the conditioner slot and therefore cannot carry the TPL-MASK replaces_conditioner protocol",
+      "Boundary evidence - charter exclusion: bondbuilder catalog category with specialist protocols (Olaplex-style), named explicitly",
+      "Boundary evidence - formula: Bis-Aminopropyl Diglycol Dimaleate at rank 2, i.e. a named maleate bonding species in the head band, above the tail marker at rank 7. Recorded as an E1 formula fact only. Had this product been eligible it would have produced bond_route: maleate; it is not eligible, so no bond_route value, no repair_support_level, and no profile is produced. This is exactly the case section 2.1 means by 'excluded rows stay visible as boundary evidence and stress cases; they are never forced through the mask ontology'",
+      "Boundary evidence - identity gap: the packet records that no single SKU/pack size was pinned and gtinEan is null, so section 2.3's pack-size and identifier gates would independently have blocked classification pending an identity-research record. G0 stops the analysis before that matters",
+      "Stress-case value: this row is the set's refuse test. A product whose formula carries the strongest bond chemistry in the whole cohort is excluded on protocol grounds alone - which is the charter's point that eligibility is read from directions, never from the INCI"
+    ]
+  },
+  "tailMarker": {
+    "ingredient": "Phenoxyethanol",
+    "rank": 7,
+    "anomalyNote": "Recorded as an E1 formula fact and boundary evidence only - not as a profile input, since no profile is produced for an excluded form. The marker is a preservative at rank 7, ahead of Fragrance at 15; section 3.1 takes the earliest tail-class member. The observation worth keeping for the calibration record is that Bis-Aminopropyl Diglycol Dimaleate sits at rank 2, comfortably above the marker - the only unambiguous above-tail maleate token in the thirteen packets. Nothing follows from it here."
+  },
+  "bondRoute": {
+    "value": "none",
+    "token": "Bis-Aminopropyl Diglycol Dimaleate (rank 2, above the tail marker at rank 7) - recorded as an E1 boundary observation on an excluded product form, NOT as a bond_route value. No bond_route is assigned, because assigning one would begin forcing an excluded form through the mask ontology.",
+    "rank": null
+  },
+  "uncertainFields": [],
+  "assumptionNotes": [
+    "No profile was produced. Section 2.1 and section 9.9 both require that only G0 boundary exclusions omit the profile entirely, and this is one.",
+    "The bondRoute object is populated with a null value and an explanatory token string rather than being silently set to 'maleate'. Setting it to maleate would attach a mask-engine deterministic field to a product the charter refuses, and would risk that value being read downstream as a classification. The formula fact is preserved instead.",
+    "The exclusion is over-determined - pre-shampoo placement, overnight option, and the bondbuilder-category rule each independently suffice - so no judgment call was required at G0.",
+    "Directions provenance: olaplex.de standard text, aggregated rather than a single verbatim fetch, but uniform across every German source found in the packet. The exclusion does not turn on any contested detail.",
+    "Review triggers I would fire: product-form ambiguity is NOT fired - there is no ambiguity here. proprietary bond/repair claim (inherited Conditioner trigger) is fired for the record, since the product carries bond positioning and a real named bond chemistry, and a reviewer should see that the exclusion is a protocol decision and not a judgment about the chemistry.",
+    "No claims summary supplied; none was needed, since G0 stops the analysis before formula classification.",
+    "One further note for the charter's own maintenance: this product is excluded on protocol grounds while carrying the category's clearest bond token. If the catalog ever needs Olaplex-style bondbuilders characterised, that is a separate engine or a separate charter decision - not a loosening of this one."
+  ]
+}

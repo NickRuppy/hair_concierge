@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test"
 
 /**
- * T12 pre-boundary fix wave, finding F1: `shouldRenderGatedExample`
+ * T12 pre-boundary fix wave, finding F1: `resolveGatedPageMode`
  * (`src/lib/gated-preview/gate.ts`) decides whether `/chat`, `/routine` and `/anwendung`
  * render the framed „Beispiel" example or today's real page. Every other lane covering it
  * is indirect — the node suite greps route source text
@@ -32,9 +32,9 @@ import { expect, test } from "@playwright/test"
  *     npx playwright test tests/gated-preview-real-route-tiers.spec.ts --project=chromium
  *
  * Both runs must be green; the assertions below hold for a premium session under either
- * flag state (`shouldRenderGatedExample` fails closed to `"premium"` in both cases — see
- * `tests/gated-example-pages.test.tsx`'s "only the free tier renders the example" and "with
- * the freemium flag off..." unit tests for the branch logic itself).
+ * flag state (`resolveGatedPageMode` fails closed to `"premium"` in both cases — see
+ * the page-mode matrix in `tests/freemium-lapsed-user-matrix.test.ts` and the
+ * flag-off loader test in `tests/gated-example-pages.test.tsx` for branch logic).
  */
 
 test.beforeEach(async ({ page }) => {

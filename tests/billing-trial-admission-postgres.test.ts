@@ -382,38 +382,6 @@ test("trial admission adapter fails closed before provider calls and on unknown 
   )
 })
 
-test("trial enrollment adapter rejects a successful upsert whose readback has different accepted terms", async () => {
-  const existing = { id: IDS.first, user_id: null, provider: "stripe", accepted_offer: OFFER }
-  const mismatchedReadback = {
-    from(table: string) {
-      assert.equal(table, "trial_enrollments")
-      return {
-        async upsert() {
-          return { error: null }
-        },
-        select(columns: string) {
-          assert.equal(columns, "id,user_id,provider,accepted_offer")
-          return { eq: () => ({ single: async () => ({ data: existing, error: null }) }) }
-        },
-      }
-    },
-  } as never
-  await assert.rejects(
-    () =>
-      createTrialEnrollment(mismatchedReadback, {
-        id: IDS.first,
-        userId: null,
-        provider: "stripe",
-        offer: createTrialOfferSnapshot("year", {
-          monthPriceId: "price_trial_month",
-          yearPriceId: "price_trial_year",
-          annualCouponId: "coupon_trial_year",
-        }),
-      }),
-    /does not match accepted terms/,
-  )
-})
-
 test("trial admission reserves, activates atomically, and replays only the exact provider receipt", async (t) => {
   const pg = await database(t)
   await enrollment(pg, IDS.first, IDS.profile)

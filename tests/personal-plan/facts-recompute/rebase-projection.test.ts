@@ -22,7 +22,11 @@ import {
   createPersistedStage2RefinementGateway,
   createRefinedNeedSnapshot,
 } from "@/lib/personal-plan/refinement/production-persistence-gateway"
-import { resolveStage2RefinementContract } from "@/lib/personal-plan/refinement/question-path"
+import {
+  getStage2ModulePathStates,
+  resolveStage2RefinementContract,
+} from "@/lib/personal-plan/refinement/question-path"
+import { stage2ModuleStates } from "@/lib/personal-plan/refinement/module-status"
 import { deriveStage2TriggerContext } from "@/lib/personal-plan/refinement/stage1-adapter"
 import type {
   PersonalPlanRefinementAnswersV1,
@@ -74,7 +78,7 @@ function parentFrom(envelope: unknown, id = NEW_INITIAL_ID): Parent {
     id,
     inputSnapshot: computed.snapshot.sourceQuiz as unknown as JsonValue,
     outputSnapshot: computed.snapshot,
-    triggerContext: deriveStage2TriggerContext(computed.snapshot),
+    triggerContext: deriveStage2TriggerContext(computed.snapshot, { toolsEnabled: false }),
   }
 }
 
@@ -94,8 +98,13 @@ test("fixture sanity: the two parents differ exactly in the irritated-scalp trig
 const PRODUCTS_ANSWERS: PersonalPlanRefinementAnswersV1 = {
   currentProductCategories: [],
   wetWashFrequency: "daily_1x",
+  bondbuilderTiming: "before_wash",
 }
-const PRODUCTS_IDS: Stage2QuestionId[] = ["current_product_categories", "wet_wash_frequency"]
+const PRODUCTS_IDS: Stage2QuestionId[] = [
+  "current_product_categories",
+  "wet_wash_frequency",
+  "bondbuilder_timing",
+]
 const HABITS_ANSWERS: PersonalPlanRefinementAnswersV1 = {
   towel: { material: "frottee", technique: "rough_rubbing" },
   dryingRoutes: ["air_dry"],
@@ -130,7 +139,7 @@ function source(input: {
 function project(
   sourceDraft: RebaseSourceDraft,
   parent: Parent,
-  options: { hasRefinedHead?: boolean } = {},
+  options: { hasRefinedHead?: boolean; toolsEnabled?: boolean } = {},
 ) {
   return buildRebaseProjection({
     sourceDraft,
@@ -142,6 +151,7 @@ function project(
     sourceId: ARTIFACT_ID,
     hasRefinedHead: options.hasRefinedHead ?? true,
     now: NOW,
+    toolsEnabled: options.toolsEnabled ?? false,
   })
 }
 
@@ -658,4 +668,181 @@ test("the refined hash names the new parent: same answers on another parent id h
   const onOther = project(draft, { ...PLAIN, id: OTHER_INITIAL_ID })
   assert.notEqual(onNew.refined!.inputHash, onOther.refined!.inputHash)
   assert.deepEqual(onNew.refined!.inputSnapshot, onOther.refined!.inputSnapshot)
+})
+
+/* ── Hair Tools rollout on: a rebase keeps a confirmed tools module ────────── */
+
+/** The plain parent as a flagged-on member sees it. */
+const PLAIN_TOOLS_ON: Parent = {
+  ...PLAIN,
+  triggerContext: deriveStage2TriggerContext(PLAIN.outputSnapshot, { toolsEnabled: true }),
+}
+
+const TOOLS_ANSWERS: PersonalPlanRefinementAnswersV1 = {
+  toolFamiliesWithSomething: ["drying_textiles", "brushes_combs", "night_protection"],
+  toolForms: {
+    "wash_application:1": [],
+    "drying_textiles:1": ["microfiber_towel"],
+    "brushes_combs:1": ["wide_tooth_comb"],
+    "brushes_combs:2": [],
+    "airflow:1": [],
+    "heated_styling:1": [],
+    "heatless_styling:1": [],
+    "securing_sectioning:1": [],
+    "securing_sectioning:2": [],
+    "night_protection:1": ["bonnet"],
+  },
+}
+const TOOLS_IDS: Stage2QuestionId[] = [
+  "tools_overview",
+  "tools:drying_textiles:1",
+  "tools:brushes_combs:1",
+  "tools:brushes_combs:2",
+  "tools:night_protection:1",
+]
+
+function toolsOnModuleStates(clone: {
+  answers: PersonalPlanRefinementAnswersV1
+  completedQuestionIds: Stage2QuestionId[]
+}) {
+  const contract = resolveStage2RefinementContract({
+    triggerContext: PLAIN_TOOLS_ON.triggerContext,
+    answers: clone.answers,
+    completedQuestionIds: clone.completedQuestionIds,
+  })
+  return getStage2ModulePathStates(
+    contract.path.orderedQuestionIds,
+    contract.path.completedQuestionIds,
+  )
+}
+
+test("rollout on: a complete source keeps its tools module complete, answers and ids in the clone", async () => {
+  const ids: Stage2QuestionId[] = [
+    ...PRODUCTS_IDS,
+    ...TOOLS_IDS,
+    "towel_handling",
+    "drying_routes",
+    "night_wear",
+  ]
+  const draft = source({
+    status: "complete",
+    answers: {
+      ...PRODUCTS_ANSWERS,
+      ...TOOLS_ANSWERS,
+      towel: { material: "mikrofaser", technique: "gentle_press" },
+      dryingRoutes: ["air_dry"],
+      additionalHeatTools: [],
+      // Rev. 6: the bonnet (night page) + the Pineapple (night question), merged.
+      nightProtection: ["silk_satin_bonnet", "pineapple"],
+      nightWear: "pineapple",
+    },
+    completedQuestionIds: ids,
+    answerProvenance: provenance(ids),
+  })
+  const projection = project(draft, PLAIN_TOOLS_ON, { toolsEnabled: true })
+
+  for (const id of TOOLS_IDS) {
+    assert.ok(projection.clone.completedQuestionIds.includes(id), `${id} stays completed`)
+    assert.equal(projection.clone.answerProvenance[id], "user", `${id} stays the user's`)
+  }
+  assert.deepEqual(projection.clone.answers.toolForms, TOOLS_ANSWERS.toolForms)
+  assert.deepEqual(
+    projection.clone.answers.toolFamiliesWithSomething,
+    TOOLS_ANSWERS.toolFamiliesWithSomething,
+  )
+  const modules = toolsOnModuleStates(projection.clone)
+  assert.equal(modules.tools.status, "complete")
+  assert.equal(modules.habits.status, "complete")
+
+  // Hash equality with the real terminal lane on the flagged-on parent, facts included.
+  const real = await realTerminalCompletion(PLAIN_TOOLS_ON, draft)
+  assertSameRefined(projection.refined, real.completion)
+  assert.deepEqual(projection.careHabits!.patch, real.facts[0]!.patch)
+  assert.deepEqual(projection.careHabits!.provenance, real.facts[0]!.provenance)
+  assert.deepEqual(projection.careHabits!.patch.toolForms_night_protection_1, ["bonnet"])
+  assert.deepEqual(projection.careHabits!.patch.brushesCombs, ["wide_tooth_comb"])
+  assert.equal(projection.careHabits!.patch.nightWear, "pineapple")
+  assert.deepEqual(projection.careHabits!.patch.nightProtection, ["silk_satin_bonnet", "pineapple"])
+  assert.equal(projection.careHabits!.provenance.fields?.nightWear, "user")
+})
+
+test("rollout on: an in-progress source with tools done keeps the tools module complete", () => {
+  const ids: Stage2QuestionId[] = [...PRODUCTS_IDS, ...TOOLS_IDS]
+  const draft = source({
+    status: "in_progress",
+    answers: { ...PRODUCTS_ANSWERS, ...TOOLS_ANSWERS },
+    completedQuestionIds: ids,
+    answerProvenance: provenance(ids),
+  })
+  const projection = project(draft, PLAIN_TOOLS_ON, { toolsEnabled: true })
+  assert.deepEqual(projection.clone.answers, draft.answers)
+  assert.deepEqual(projection.clone.completedQuestionIds, ids)
+  const modules = toolsOnModuleStates(projection.clone)
+  assert.equal(modules.tools.status, "complete")
+  assert.equal(modules.habits.status, "open")
+  assert.ok(projection.refined, "the module lane still projects")
+})
+/* ── S4: the Bondbuilder need appears or disappears through a facts edit ───── */
+
+/** Smooth, untreated, elastic hair: no Bondbuilder need, so no timing question. */
+const NO_BONDBUILDER_NEED = parentFrom({
+  ...COMPLETE_V3_PLAN_ENVELOPE,
+  answers: {
+    ...COMPLETE_V3_PLAN_ENVELOPE.answers,
+    hairSurface: "smooth",
+    chemicalTreatments: ["natural"],
+    elasticResponse: "stretches_bounces",
+  },
+})
+
+test("S4: a Bondbuilder need that appears via a facts edit is assumed „Ist mir egal“, the module stays finished", async () => {
+  assert.equal(NO_BONDBUILDER_NEED.triggerContext.relevantCategories.includes("bondbuilder"), false)
+  assert.ok(PLAIN.triggerContext.relevantCategories.includes("bondbuilder"))
+  const productsAnswers = { currentProductCategories: [], wetWashFrequency: "daily_1x" as const }
+  const ids: Stage2QuestionId[] = [
+    "current_product_categories",
+    "wet_wash_frequency",
+    ...HABITS_IDS,
+  ]
+  const draft = source({
+    status: "complete",
+    answers: { ...productsAnswers, ...HABITS_ANSWERS },
+    completedQuestionIds: ids,
+    answerProvenance: provenance(ids),
+  })
+  const projection = project(draft, PLAIN)
+
+  assert.equal(projection.clone.answers.bondbuilderTiming, "no_preference")
+  assert.equal(projection.clone.answerProvenance.bondbuilder_timing, "assumed")
+  const states = stage2ModuleStates({ triggerContext: PLAIN.triggerContext, ...projection.clone })
+  assert.equal(states.products.status, "complete")
+  assert.equal(states.habits.status, "complete")
+  assert.ok(projection.refined)
+  assert.equal("bondbuilderTiming" in projection.refined.outputSnapshot.profile.routine, false)
+  assert.equal(projection.careHabits?.provenance.fields?.bondbuilderTiming, "assumed")
+})
+
+test("S4: a Bondbuilder need that disappears via a facts edit prunes her timing from clone and snapshot", async () => {
+  const ids: Stage2QuestionId[] = [...PRODUCTS_IDS, ...HABITS_IDS]
+  const draft = source({
+    status: "complete",
+    answers: { ...PRODUCTS_ANSWERS, ...HABITS_ANSWERS },
+    completedQuestionIds: ids,
+    answerProvenance: provenance(ids),
+  })
+  const kept = project(draft, PLAIN)
+  assert.deepEqual(kept.refined?.outputSnapshot.profile.routine.bondbuilderTiming, {
+    state: "known",
+    value: "before_wash",
+  })
+
+  const projection = project(draft, NO_BONDBUILDER_NEED)
+  const real = await realTerminalCompletion(NO_BONDBUILDER_NEED, draft)
+  assertSameRefined(projection.refined, real.completion)
+  assert.equal("bondbuilderTiming" in projection.clone.answers, false)
+  assert.equal(projection.clone.completedQuestionIds.includes("bondbuilder_timing"), false)
+  assert.equal(
+    "bondbuilderTiming" in (projection.refined?.outputSnapshot.profile.routine ?? {}),
+    false,
+  )
 })

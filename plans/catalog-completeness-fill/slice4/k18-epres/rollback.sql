@@ -1,0 +1,112 @@
+-- Slice 4 K18/Epres re-seal rollback (prepared, NOT a migration). Reverses exactly batch
+-- S4-catalog-completeness-k18-epres-bundle-reseal (fingerprint 4d6c85f4dcbd6df83c95c3720d6aa3f1705e099f44dc24de806a989a4b9d8dd5); refuses unless its postimage is in place.
+-- Restores the original field values AND their updated_at stamps (the sealed bundle contains
+-- them), with only the updated_at trigger of the touched table disabled inside this transaction
+-- (brief ACCESS EXCLUSIVE lock), and reinstates the archived 2026-10-04 seal rows verbatim.
+-- Constraints run IMMEDIATE so no deferred trigger event is pending when a trigger is re-enabled.
+BEGIN;
+SET CONSTRAINTS ALL IMMEDIATE;
+DO $s4_reseal_rollback$
+#variable_conflict use_variable
+DECLARE
+  v_batch constant text := 'S4-catalog-completeness-k18-epres-bundle-reseal';
+  v_items constant jsonb := $json$[{"key":"K18","product_id":"38dace91-0fba-49ee-a93f-ac36e488fe4b","profile_sha256":"26005fee342e0141fb0f29e33101a617ca5ba2b06f06b54de71aa99c7c01bb57","profile_canonical_sha256":"f0f9c4d588f0384a855938f1f13cafe938b3424239da2bc0ff3bd6f6573182eb","seal":{"batch_id":"bondbuilder-research-v1:3bc94c6f-669b-49f4-80f5-1a1e6ab495d3","batch_fingerprint":"edaa9ef45cf4b8949100033cee71a6e603ecb9f787d5e34c371416153bbc7963","content_fingerprint":"26005fee342e0141fb0f29e33101a617ca5ba2b06f06b54de71aa99c7c01bb57","reviewed_by":"nick","bundle":{"fact_key":"bondbuilder_research_preserved_bundle","source_label":"Reviewed existing product preimage","source_url":"https://k18-hair.de/k18-hair/k18-oil/Leave-In-Molecular-Repair-Hair-Mask-50ml.aspx","source_text":"Research-only enrichment preserves this exact previously verified bundle.","source_type":"internal_verified","checked_at":"2026-10-03"},"profile":{"fact_key":"bondbuilder_research_profile","source_label":"Reviewed Bondbuilder research","source_url":"https://k18-hair.de/k18-hair/k18-oil/Leave-In-Molecular-Repair-Hair-Mask-50ml.aspx","source_text":"Exact sh-Oligopeptide-78 spacing variant plus named targeted leave-in identity establishes the designed-peptide family; generic Citric Acid is not a separate demonstrated acid role.","source_type":"internal_verified","checked_at":"2026-10-03"},"saved_bundle_sha256":"c1c64cdb53ec29ec95f5ef5dcb9cc6d5a4dd41e99a3ec1765d8fff9d6e9826e7"},"change":"protocol_cadence","protocol":{"id":"ef3f1639-cab4-4a1b-bbcc-54b8e436af39","category":"bondbuilder","role":"specialized_bond_treatment","source_label":"Herstelleranleitung","source_url":"https://www.k18hair.com/products/jumbo-leave-in-molecular-repair-hair-mask-100ml/","source_text":"Exact source evidence for K18 Leave-In Molecular Repair Hair Mask: specialized bond treatment protocol; lengths-and-ends application; leave-in use without rinsing with a 4-minute contact time.","guidance_payload_sha256":"eca3c0801760680f185385fe88ee21bdedacda8ff52badbc9b083300c6219611","guidance_payload_v2_sha256":"4866eca40f49e6ddbd66f4beae4a3358eab374cd141b10a64404706f4c5b3e23"},"before":{"kind":"label_course","copy_de":"Nach einer Salonbehandlung vier bis sechs Haarwäschen hintereinander, danach nach Bedarf."},"after":{"kind":"label_course","copy_de":"Die ersten vier Haarwäschen hintereinander anwenden, danach bei jeder vierten Haarwäsche."},"after_path":["protocols","0","cadence"],"changed_paths":[["protocols","0","cadence"],["protocols","0","updated_at"]],"evidence":{"fact_key":"bondbuilder.protocol.cadence","fact_value":{"protocol_id":"ef3f1639-cab4-4a1b-bbcc-54b8e436af39","before":{"kind":"label_course","copy_de":"Nach einer Salonbehandlung vier bis sechs Haarwäschen hintereinander, danach nach Bedarf."},"after":{"kind":"label_course","copy_de":"Die ersten vier Haarwäschen hintereinander anwenden, danach bei jeder vierten Haarwäsche."},"profile_sha256":"26005fee342e0141fb0f29e33101a617ca5ba2b06f06b54de71aa99c7c01bb57","profile_source_id":"C03-P02-1","amendment":"data/research/bondbuilder-inci/v1.0/s4-k18-epres-reseal/amendment.json","ruling":"B3 (Nick, 2026-10-09): K18 schedule copy from the German official manufacturer page."},"source_label":"K18 Leave-In Mask – deutsche Marken-Seite (Kevin Murphy GmbH), Ruling B3","source_url":"https://k18-hair.de/k18-hair/k18-oil/Leave-In-Molecular-Repair-Hair-Mask-50ml.aspx","source_text":"\"Für bestmögliche Ergebnisse empfiehlt es sich, die Maske zunächst an vier aufeinanderfolgenden Haarwäschen zu verwenden. Danach genügt es, sie alle vier Wäschen zu wiederholen, um den reparierenden Langzeiteffekt zu erhalten und das Haar dauerhaft zu stärken.\" (read 2026-10-09; profile source C03-P02-1, checked 2026-10-03)","source_type":"manufacturer","checked_at":"2026-10-09"},"fingerprint":"5e4285ad2212c07509e387a59825da730661dda6bca0b34736a043acdf8dc404"},{"key":"Epres","product_id":"f8a63590-9d80-454a-8008-e2a56321e64c","profile_sha256":"883f3758c57520162140e307eceb1c6feecbd1e2830d2c3c3a8f8e64446d62c8","profile_canonical_sha256":"06d636135215d16bc57e92eea798a9a8f3e0a74185ffb85eec84b7589c2f0f60","seal":{"batch_id":"bondbuilder-research-v1:e777a56b-c8bf-45b7-ae39-3b0de0d49d63","batch_fingerprint":"23b178b96b0302d9bb9aaa44316be86cf0ec88cfabb932dc10b19a3084b69753","content_fingerprint":"883f3758c57520162140e307eceb1c6feecbd1e2830d2c3c3a8f8e64446d62c8","reviewed_by":"nick","bundle":{"fact_key":"bondbuilder_research_preserved_bundle","source_label":"Reviewed existing product preimage","source_url":"https://epres.com/products/bond-repair-treatment","source_text":"Research-only enrichment preserves this exact previously verified bundle.","source_type":"internal_verified","checked_at":"2026-10-03"},"profile":{"fact_key":"bondbuilder_research_profile","source_label":"Reviewed Bondbuilder research","source_url":"https://epres.com/products/bond-repair-treatment","source_text":"Diethylhexyl Maleate plus targeted at-home bottle treatment establishes the maleate-ester family; it is not the dimaleate family.","source_type":"internal_verified","checked_at":"2026-10-03"},"saved_bundle_sha256":"a0c576cf9c66b72cb42816c737f10625d9e49b257d3c9e8e4f8faf656951629b"},"change":"net_content","before":{"net_content_value":null,"net_content_unit":null},"after":{"net_content_value":30,"net_content_unit":"ml"},"after_path":["product"],"changed_paths":[["product","net_content_value"],["product","net_content_unit"],["product","updated_at"]],"evidence":{"fact_key":"product.net_content","fact_value":{"before":{"net_content_value":null,"net_content_unit":null},"after":{"net_content_value":30,"net_content_unit":"ml"},"profile_sha256":"883f3758c57520162140e307eceb1c6feecbd1e2830d2c3c3a8f8e64446d62c8","profile_source_ids":["C03-P03-3","R13"],"amendment":"data/research/bondbuilder-inci/v1.0/s4-k18-epres-reseal/amendment.json","ruling":"Catalog completeness Slice 1 Group E (Nick, 2026-10-09): Epres net content 30 ml."},"source_label":"Kevin Murphy Germany (epres-Distributor DE), Group E","source_url":"https://kevinmurphy-germany.de/epres-die-revolution-der-haarpflege/","source_text":"Kit and refill each hold two 15 ml concentrate ampoules (profile sources C03-P03-3, R13): 2 x 15 ml = 30 ml concentrate.","source_type":"retailer","checked_at":"2026-10-03"},"fingerprint":"953876a7a6c198938cf94d47821cf6f7534634c98dba1906481a58295de5af89"}]$json$::jsonb;
+  item jsonb;
+  v_product uuid;
+  v_archive jsonb;
+  v_old jsonb;
+  v_rows integer;
+BEGIN
+  PERFORM pg_advisory_xact_lock(hashtextextended('catalog-enrichment:product-apply', 0));
+  LOCK TABLE public.products, public.product_bondbuilder_specs, public.product_application_protocols,
+    public.personal_plan_catalog_fact_evidence, public.catalog_enrichment_applied_items
+    IN SHARE ROW EXCLUSIVE MODE;
+  FOR item IN SELECT value FROM jsonb_array_elements(v_items) LOOP
+    v_product := (item->>'product_id')::uuid;
+    PERFORM 1 FROM public.products WHERE id = v_product FOR UPDATE;
+    PERFORM 1 FROM public.product_application_protocols WHERE product_id = v_product FOR UPDATE;
+    IF NOT (EXISTS (SELECT 1 FROM public.catalog_enrichment_applied_items r
+        WHERE r.batch_id = v_batch AND r.product_key = v_product::text AND r.product_id = v_product
+          AND r.reviewed_by = 'nick' AND r.batch_fingerprint = item->>'fingerprint'
+          AND r.content_fingerprint = item->>'profile_sha256')
+      AND (SELECT count(*) FROM public.personal_plan_catalog_fact_evidence e
+        WHERE e.product_id = v_product AND e.batch_id = v_batch AND e.batch_fingerprint = item->>'fingerprint'
+          AND e.content_fingerprint = item->>'profile_sha256'
+          AND e.fact_key IN ('bondbuilder_research_profile', 'bondbuilder_research_preserved_bundle', 'bondbuilder_research_preserved_bundle_superseded', item#>>'{evidence,fact_key}')) = 4
+      AND (SELECT count(*) FROM public.personal_plan_catalog_fact_evidence e WHERE e.product_id = v_product AND e.batch_id = v_batch) = 4
+      AND EXISTS (SELECT 1 FROM public.personal_plan_catalog_fact_evidence e
+        WHERE e.product_id = v_product AND e.batch_id = v_batch AND e.fact_key = item#>>'{evidence,fact_key}'
+          AND e.fact_value = item#>'{evidence,fact_value}' AND e.source_label = item#>>'{evidence,source_label}'
+          AND e.source_url = item#>>'{evidence,source_url}' AND e.source_text = item#>>'{evidence,source_text}'
+          AND e.source_type = item#>>'{evidence,source_type}' AND e.checked_at = (item#>>'{evidence,checked_at}')::date)
+      AND EXISTS (SELECT 1 FROM public.personal_plan_catalog_fact_evidence e, public.product_bondbuilder_specs s
+        WHERE e.product_id = v_product AND s.product_id = v_product AND e.batch_id = v_batch
+          AND e.fact_key = 'bondbuilder_research_profile' AND e.fact_value = s.research_profile)
+      AND EXISTS (SELECT 1 FROM public.personal_plan_catalog_fact_evidence e
+        WHERE e.product_id = v_product AND e.batch_id = v_batch AND e.fact_key = 'bondbuilder_research_preserved_bundle'
+          AND (e.fact_value #- '{specs,bond_repair_intensity}') = (public.bondbuilder_research_protected_v1(public.bondbuilder_research_preimage_v1(v_product)) #- '{specs,bond_repair_intensity}'))
+      AND NOT EXISTS (SELECT 1 FROM public.personal_plan_catalog_fact_evidence e
+        WHERE e.product_id = v_product AND e.batch_id = item#>>'{seal,batch_id}')
+      AND CASE item->>'change'
+        WHEN 'protocol_cadence' THEN (SELECT a.cadence = item->'after' AND a.product_id = v_product
+          FROM public.product_application_protocols a WHERE a.id = (item#>>'{protocol,id}')::uuid)
+        ELSE (SELECT p.net_content_value = (item#>>'{after,net_content_value}')::numeric
+          AND p.net_content_unit = item#>>'{after,net_content_unit}'
+          FROM public.products p WHERE p.id = v_product) END
+      AND public.bondbuilder_curated_facts_ready_v1(v_product)) THEN
+      RAISE EXCEPTION 'S4 K18/Epres rollback: postimage not in place for %', item->>'key';
+    END IF;
+    SELECT fact_value INTO v_archive FROM public.personal_plan_catalog_fact_evidence
+      WHERE product_id = v_product AND batch_id = v_batch AND fact_key = 'bondbuilder_research_preserved_bundle_superseded';
+    v_old := v_archive#>'{bundle_evidence,fact_value}';
+
+    -- Reinstate the archived seal first, so the immediate publication check on the
+    -- reverted row below compares against the original bundle.
+    DELETE FROM public.personal_plan_catalog_fact_evidence WHERE product_id = v_product AND batch_id = v_batch;
+    INSERT INTO public.personal_plan_catalog_fact_evidence
+      SELECT * FROM jsonb_populate_record(NULL::public.personal_plan_catalog_fact_evidence, v_archive->'bundle_evidence');
+    INSERT INTO public.personal_plan_catalog_fact_evidence
+      SELECT * FROM jsonb_populate_record(NULL::public.personal_plan_catalog_fact_evidence,
+        (v_archive->'profile_evidence') || jsonb_build_object('fact_value',
+          (SELECT s.research_profile FROM public.product_bondbuilder_specs s WHERE s.product_id = v_product)));
+    DELETE FROM public.catalog_enrichment_applied_items WHERE batch_id = v_batch AND product_key = v_product::text;
+
+    IF item->>'change' = 'protocol_cadence' THEN
+      ALTER TABLE public.product_application_protocols DISABLE TRIGGER set_updated_at_product_application_protocols;
+      UPDATE public.product_application_protocols
+        SET cadence = item->'before', updated_at = (v_old#>>'{protocols,0,updated_at}')::timestamptz
+        WHERE id = (item#>>'{protocol,id}')::uuid AND cadence = item->'after';
+      GET DIAGNOSTICS v_rows = ROW_COUNT;
+      ALTER TABLE public.product_application_protocols ENABLE TRIGGER set_updated_at_product_application_protocols;
+    ELSE
+      ALTER TABLE public.products DISABLE TRIGGER set_updated_at_products;
+      UPDATE public.products
+        SET net_content_value = NULL, net_content_unit = NULL,
+            updated_at = (v_old#>>'{product,updated_at}')::timestamptz
+        WHERE id = v_product AND net_content_value = (item#>>'{after,net_content_value}')::numeric
+          AND net_content_unit = item#>>'{after,net_content_unit}';
+      GET DIAGNOSTICS v_rows = ROW_COUNT;
+      ALTER TABLE public.products ENABLE TRIGGER set_updated_at_products;
+    END IF;
+    IF v_rows <> 1 THEN RAISE EXCEPTION 'S4 K18/Epres rollback write count % for %', v_rows, item->>'key'; END IF;
+
+    IF (public.bondbuilder_research_protected_v1(public.bondbuilder_research_preimage_v1(v_product)) #- '{specs,bond_repair_intensity}') IS DISTINCT FROM (v_old #- '{specs,bond_repair_intensity}')
+      OR NOT public.bondbuilder_curated_facts_ready_v1(v_product) THEN
+      RAISE EXCEPTION 'S4 K18/Epres rollback: original seal not authoritative again for %', item->>'key';
+    END IF;
+  END LOOP;
+END;
+$s4_reseal_rollback$;
+SET CONSTRAINTS ALL IMMEDIATE;
+DO $s4_reseal_rollback_postflight$
+DECLARE v_product uuid;
+BEGIN
+  FOR v_product IN SELECT id FROM public.products WHERE id = ANY (ARRAY['38dace91-0fba-49ee-a93f-ac36e488fe4b', 'f8a63590-9d80-454a-8008-e2a56321e64c']::uuid[]) LOOP
+    IF NOT public.bondbuilder_curated_facts_ready_v1(v_product) THEN
+      RAISE EXCEPTION 'S4 K18/Epres re-seal: curated Bondbuilder facts not ready for %', v_product;
+    END IF;
+    PERFORM public.assert_personal_plan_curated_publication(v_product);
+  END LOOP;
+END;
+$s4_reseal_rollback_postflight$;
+COMMIT;

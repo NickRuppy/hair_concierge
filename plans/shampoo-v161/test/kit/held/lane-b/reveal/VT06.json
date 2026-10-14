@@ -1,0 +1,35 @@
+{
+  "blindId": "VT06",
+  "productName": "Purify Shampoo P1",
+  "brand": "System Professional",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_en_gb",
+      "sourceKind": "manufacturer_foreign",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Meticulously balanced, gentle cleansing to alleviate dandruff and excess oil. (English text from the manufacturer page)",
+      "directionsVerbatim": ""
+    },
+    {
+      "sourceType": "retailer_hagel_shop_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Die System Professional P1 Purify Anti-Schuppen Shampoo für Kopfhaut mit intensiver, hartnäckiger Schuppenbildung, häufig in Kombination mit fettender, gereizter Kopfhaut. Präzise ausgewogene sanfte Reinigung zur Reduzierung von Schuppen und überschüssigem Fett. Das Shampoo reinigt und entfernt gleichzeitig die Mikroorganismen, die Schuppen verursachen und reduziert Entzündungen. Rezepturhighlights: Von Dermatologen entwickelt und getestet; Aktive Inhaltsstoffe reduzieren Talg; Mild und pH-neutral",
+      "directionsVerbatim": "1. Eine münzgroße Menge Shampoo auf das feuchte Haar auftragen 2. Mit den Fingerspitzen in die Kopfhaut einmassieren 3. In den Haarlängen verteilen und ausspülen"
+    },
+    {
+      "sourceType": "retailer_parfumdreams_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Für eine Kopfhaut, die zu Schuppen neigt und schnell nachfettet, wurde das System Professional Lipid Code Purify Shampoo P1 entwickelt. Die sanfte, pH-neutrale Formel reinigt das Haar und die Kopfhaut gründlich. Die Zusammensetzung enthält Wirkstoffe wie Pirocton-Olamin und Climbazol sowie Extrakte aus Rosmarin, Brennnessel und Birke.",
+      "directionsVerbatim": "Tragen Sie das Anti-Schuppen-Shampoo auf das feuchte Haar und die Kopfhaut auf. Massieren Sie es gründlich in die gesamte Kopfhaut ein. Damit die Wirkstoffe die Kopfhaut sicher erreichen, sollte das Shampoo etwa eine Minute einwirken. Nach der Einwirkzeit waschen Sie das Shampoo mit klarem, lauwarmem Wasser gründlich aus den Haaren. (generic retailer text; \"Für beste Ergebnisse wenden Sie das Shampoo alle 2 Tage an.\")"
+    },
+    {
+      "sourceType": "pack_front_photo",
+      "sourceKind": "pack_front",
+      "sourceGrade": "high",
+      "claimsVerbatim": "SYSTEM PROFESSIONAL / PURIFY SHAMPOO / Dandruff Cleansing & Protection / Bain anti-pelliculaire / Reinigung und Schutz gegen Schuppen / Protezione e rimozione della forfora / P1 / Cont. Net./Contenido: 250 ml/МЛ e 8.4 fl oz",
+      "directionsVerbatim": ""
+    }
+  ]
+}

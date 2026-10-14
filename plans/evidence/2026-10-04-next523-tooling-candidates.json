@@ -1,0 +1,240 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "stage": "/tmp/test-audit-tooling-static-staged-5kXn0v",
+  "specs": [
+    {
+      "id": "C1",
+      "file": "tests/worktree-new.test.ts",
+      "donorLine": 72,
+      "keeperLine": 136,
+      "union": "Existing keeper status0+rootHEAD=freshSha; append actual created task HEAD=freshSha using its existing origin-only slug. No new fixture/runNew invocation.",
+      "readset": "preparePrimaryRoot fetches only origin, checks main/status/origin ref and merges --ff-only. main uses requested slug and origin/main base; no reading/enumerating other remotes. The extra unavailable remote in keeper is unused by all invoked git commands except as registry metadata that is never read. Same base/fresh commits and clean state; slug affects path only.",
+      "history": "fbc0c69c #276 introduced both tests to prove fresh-root creation and origin-only fetch.",
+      "risk": "Keep unsupported origin/no origin, dirty/main/divergence guards. Transfer actual task HEAD before deleting ordinary positive callback.",
+      "transfer": "  assert.equal(\n    git(join(fixture.primary, \".worktrees\", \"origin-only\"), [\"rev-parse\", \"HEAD\"]).stdout.trim(),\n    fixture.freshSha,\n  )\n",
+      "donor": {
+        "title": "fetches and fast-forwards clean root main before creating from fresh origin/main",
+        "line": 72,
+        "bodySha256": "bbbb2804152854aa0974297e16001633071122c2d2e6e43d78b26b0b2a97f913",
+        "call": "test(\"fetches and fast-forwards clean root main before creating from fresh origin/main\", (t) => {\n  const fixture = createFixture(t)\n  const result = runNew(fixture.primary, \"fresh-task\")\n  const taskWorktree = join(fixture.primary, \".worktrees\", \"fresh-task\")\n\n  assert.equal(result.status, 0, result.stderr)\n  assert.equal(git(fixture.primary, [\"rev-parse\", \"HEAD\"]).stdout.trim(), fixture.freshSha)\n  assert.equal(git(taskWorktree, [\"rev-parse\", \"HEAD\"]).stdout.trim(), fixture.freshSha)\n})"
+      },
+      "keeper": {
+        "title": "ignores unavailable remotes unrelated to origin",
+        "line": 136,
+        "bodySha256": "6c03c46d98e0953b868a7914f23276a336d5f619853c04c3bb5c13cc83646b01",
+        "call": "test(\"ignores unavailable remotes unrelated to origin\", (t) => {\n  const fixture = createFixture(t)\n  git(fixture.primary, [\"remote\", \"add\", \"unavailable\", join(fixture.primary, \"..\", \"missing.git\")])\n\n  const result = runNew(fixture.primary, \"origin-only\")\n\n  assert.equal(result.status, 0, result.stderr)\n  assert.equal(git(fixture.primary, [\"rev-parse\", \"HEAD\"]).stdout.trim(), fixture.freshSha)\n})"
+      },
+      "originalSha256": "ec0cbb422bbaa8af634dd4d3517e57682c9bb47fd8eeb6f6bac4ac0751d89f77",
+      "sourceCleanup": "None; existing fixtures and actual source remain required.",
+      "focusCommand": "node --import ./tests/server-only-register.cjs --import tsx --test tests/worktree-new.test.ts"
+    },
+    {
+      "id": "C2",
+      "file": "tests/worktree-finish.test.ts",
+      "donorLine": 213,
+      "keeperLine": 403,
+      "union": "Existing keeper status0+localRef null+remoteRef null+detached retained. Append FINISHED receipt, primary HEAD=fixture.mergeSha and exact taskWorktree absent.",
+      "readset": "Owner checks PR/state/head/merge ancestry and filters listWorktrees by entry.branch===branch. Detached same-head checkout is deliberately ignored, all selected task/root state same. Donor fixture3 commits versus keeper2: owner never reads commit count or individual files; it verifies merge SHA ancestor, exact task tip and root fast-forward. Both are multi-commit squash fixtures; retained dry-run still uses3. No fixture cardinality edits.",
+      "history": "99632b11 #231 explicitly preserves unrelated detached checkout; not an obsolete feature. Primary root sync and cleanup remain unchanged.",
+      "risk": "Actual root sync assertion is essential: detached keeper currently omits it. Preserve detached check plus every local/remote/postcondition and dry-run no-mutation proof.",
+      "transfer": "  assert.match(result.stdout, /FINISHED/)\n  assert.equal(git(fixture.primary, [\"rev-parse\", \"HEAD\"]).stdout.trim(), fixture.mergeSha)\n  assert.equal(\n    git(fixture.primary, [\"worktree\", \"list\", \"--porcelain\"]).stdout.includes(fixture.taskWorktree),\n    false,\n  )\n",
+      "donor": {
+        "title": "apply fast-forwards root and removes exact task artifacts",
+        "line": 213,
+        "bodySha256": "91776837b8b2926d0d0fb7e7ca7bd127179300a29b53dce8cd5974cde2927c80",
+        "call": "test(\"apply fast-forwards root and removes exact task artifacts\", (t) => {\n  const fixture = createFixture(t, 3)\n  const result = runFinish(fixture, { apply: true })\n\n  assert.equal(result.status, 0, result.stderr)\n  assert.match(result.stdout, /FINISHED/)\n  assert.equal(localRef(fixture), null)\n  assert.equal(remoteRef(fixture), null)\n  assert.equal(git(fixture.primary, [\"rev-parse\", \"HEAD\"]).stdout.trim(), fixture.mergeSha)\n  assert.equal(\n    git(fixture.primary, [\"worktree\", \"list\", \"--porcelain\"]).stdout.includes(fixture.taskWorktree),\n    false,\n  )\n})"
+      },
+      "keeper": {
+        "title": "an unrelated detached worktree is preserved without blocking exact cleanup",
+        "line": 403,
+        "bodySha256": "aa3cdd52319d514e523360794f4ea1e15d07f780a29f20e105a827e6a65c4f39",
+        "call": "test(\"an unrelated detached worktree is preserved without blocking exact cleanup\", (t) => {\n  const fixture = createFixture(t)\n  const detached = join(fixture.root, \"detached\")\n  git(fixture.primary, [\"worktree\", \"add\", \"--detach\", detached, fixture.headSha])\n\n  const result = runFinish(fixture, { apply: true })\n\n  assert.equal(result.status, 0, result.stderr)\n  assert.equal(localRef(fixture), null)\n  assert.equal(remoteRef(fixture), null)\n  assert.equal(\n    git(fixture.primary, [\"worktree\", \"list\", \"--porcelain\"]).stdout.includes(detached),\n    true,\n  )\n})"
+      },
+      "originalSha256": "d71bdb4466702051e3d6535e3a4911318936423624bd9c66851c21751aa83d60",
+      "sourceCleanup": "None; existing fixtures and actual source remain required.",
+      "focusCommand": "node --import ./tests/server-only-register.cjs --import tsx --test tests/worktree-finish.test.ts"
+    },
+    {
+      "id": "C3",
+      "file": "tests/ci-path-rules.test.ts",
+      "donorLine": 83,
+      "keeperLine": 116,
+      "union": "Both callbacks already classify exactly [supabase/migrations/20260810000000_example.sql] with default context. Keeper migration.personal_plan_journey===true remains; append Object.hasOwn(migration, personal_plan_db)===false. All other keeper inputs untouched.",
+      "readset": "classifyCiScope reads filename prefixes/exact keys and absent prContext defaults. Identical literal and defaults yield the same full result; no new input/read/call required.",
+      "history": "19b1ec22 #381 deliberately removed local database output and updated both declarations. Preserve its absence contract, not delete it as historical trivia.",
+      "risk": "Extra own property even undefined is forbidden; use Object.hasOwn, not equality-to-undefined.",
+      "transfer": "  assert.equal(Object.hasOwn(migration, \"personal_plan_db\"), false)\n",
+      "donor": {
+        "title": "CI scope no longer exposes a local database gate",
+        "line": 83,
+        "bodySha256": "285db7fa51641d320d253d01519112f5291a0a577058bf646e01c17f4e24a57a",
+        "call": "test(\"CI scope no longer exposes a local database gate\", () => {\n  const scope = classifyCiScope([\"supabase/migrations/20260810000000_example.sql\"])\n  assert.equal(Object.hasOwn(scope, \"personal_plan_db\"), false)\n  assert.equal(scope.personal_plan_journey, true)\n})"
+      },
+      "keeper": {
+        "title": "Personal Plan journey scope remains targeted to runtime and presentation changes",
+        "line": 116,
+        "bodySha256": "8a1c4e5f095b1c0a6fd805d5f5cfba35f6cc0b058b46347b87fb0bcd18164e79",
+        "call": "test(\"Personal Plan journey scope remains targeted to runtime and presentation changes\", () => {\n  const migration = classifyCiScope([\"supabase/migrations/20260810000000_example.sql\"])\n  assert.equal(migration.personal_plan_journey, true)\n\n  const persistence = classifyCiScope([\"src/lib/personal-plan/persistence/plan-repository.ts\"])\n  assert.equal(persistence.personal_plan_journey, true)\n\n  const presentation = classifyCiScope([\"src/app/anwendung/page.tsx\"])\n  assert.equal(presentation.personal_plan_journey, true)\n\n  const docs = classifyCiScope([\"docs/readme.md\"])\n  assert.equal(docs.personal_plan_journey, false)\n})"
+      },
+      "originalSha256": "6bf3845de55b7e72f1b94b35b20fb5e6f08474ac7ffd7c361236809e3c0af0d3",
+      "sourceCleanup": "None; existing fixtures and actual source remain required.",
+      "focusCommand": "node --import ./tests/server-only-register.cjs --import tsx --test tests/ci-path-rules.test.ts"
+    },
+    {
+      "id": "D1",
+      "file": "tests/stripe-webhook-config-check.test.ts",
+      "donorLine": 147,
+      "keeperLine": 10,
+      "union": "Donor only captureCalls===0. Keeper captured.length===0 plus exact successful endpoint result already owns it. No transfer.",
+      "readset": "Identical normalized URL, enabled status, no wildcard, and every REQUIRED event yields missingEvents=[]. Extra checkout.session.completed in keeper changes returned enabledEvents but not any current admission or capture predicate; loop tests only required membership. The mocked list provides input and sink observes actual calls; it does not implement decision.",
+      "history": "1550ae7c #461 billing truth introduced checker and both healthy callbacks; actual dynamic caller remains reconcile route defaultVerifyStripeWebhookConfigCheck.",
+      "risk": "Do not cut wildcard, URL normalization, disabled, missing-event, missing-endpoint or rejection callbacks; all are distinct branches. Billing owner read is bounded to checker and actual adapter.",
+      "transfer": "",
+      "donor": {
+        "title": "verifyStripeWebhookConfig does not capture an issue for the ok result",
+        "line": 147,
+        "bodySha256": "2043196f81a2ba7e22ab01f15e212dd48d8aae72b2a765a7445f4206cf29659d",
+        "call": "test(\"verifyStripeWebhookConfig does not capture an issue for the ok result\", async () => {\n  let captureCalls = 0\n  await verifyStripeWebhookConfig({\n    webhookUrl: \"https://app.example.com/api/stripe/webhook\",\n    listWebhookEndpoints: async () => [\n      {\n        id: \"we_1\",\n        url: \"https://app.example.com/api/stripe/webhook\",\n        status: \"enabled\",\n        enabled_events: [...REQUIRED_STRIPE_WEBHOOK_EVENTS],\n      },\n    ],\n    captureIssue: () => {\n      captureCalls += 1\n    },\n  })\n\n  assert.equal(captureCalls, 0)\n})"
+      },
+      "keeper": {
+        "title": "verifyStripeWebhookConfig reports ok when the matching endpoint covers every required event",
+        "line": 10,
+        "bodySha256": "0c3ef3247dea8fab590727dbbc86034093fa2a6586069ae78ecdda4ea04e1c89",
+        "call": "test(\"verifyStripeWebhookConfig reports ok when the matching endpoint covers every required event\", async () => {\n  const captured: StripeWebhookConfigIssue[] = []\n  const result = await verifyStripeWebhookConfig({\n    webhookUrl: \"https://app.example.com/api/stripe/webhook\",\n    listWebhookEndpoints: async () => [\n      {\n        id: \"we_1\",\n        url: \"https://app.example.com/api/stripe/webhook\",\n        status: \"enabled\",\n        enabled_events: [...REQUIRED_STRIPE_WEBHOOK_EVENTS, \"checkout.session.completed\"],\n      },\n    ],\n    captureIssue: (issue) => captured.push(issue),\n  })\n\n  assert.deepEqual(result, {\n    status: \"ok\",\n    endpointId: \"we_1\",\n    enabledEvents: [...REQUIRED_STRIPE_WEBHOOK_EVENTS, \"checkout.session.completed\"],\n  })\n  assert.equal(captured.length, 0)\n})"
+      },
+      "originalSha256": "c6b4e06edb467b0c004d924e9066021fd6cc838da93c41c83f8613bf3d7cb9a4",
+      "sourceCleanup": "None; existing fixtures and actual source remain required.",
+      "focusCommand": "node --import ./tests/server-only-register.cjs --import tsx --test tests/stripe-webhook-config-check.test.ts"
+    }
+  ],
+  "phases": {
+    "tests/worktree-new.test.ts": {
+      "before": {
+        "path": "/tmp/test-audit-tooling-static-staged-5kXn0v/before/tests/worktree-new.test.ts",
+        "sha256": "ec0cbb422bbaa8af634dd4d3517e57682c9bb47fd8eeb6f6bac4ac0751d89f77"
+      },
+      "transfer": {
+        "path": "/tmp/test-audit-tooling-static-staged-5kXn0v/transfer/tests/worktree-new.test.ts",
+        "sha256": "e17f2359ddfaf2493355c467a8389f80e666c1bf07bdd7d706a1dc5a163a78c8"
+      },
+      "cut": {
+        "path": "/tmp/test-audit-tooling-static-staged-5kXn0v/cut/tests/worktree-new.test.ts",
+        "sha256": "9bc0f6f2f55c4e73728ee9699db9c66030c77cff21f347fa9921a5a13421f9f5"
+      }
+    },
+    "tests/worktree-finish.test.ts": {
+      "before": {
+        "path": "/tmp/test-audit-tooling-static-staged-5kXn0v/before/tests/worktree-finish.test.ts",
+        "sha256": "d71bdb4466702051e3d6535e3a4911318936423624bd9c66851c21751aa83d60"
+      },
+      "transfer": {
+        "path": "/tmp/test-audit-tooling-static-staged-5kXn0v/transfer/tests/worktree-finish.test.ts",
+        "sha256": "9b680b30c584dfc7d4411ab97466a294f8a1dcff6790cc0e8edc0c7193435089"
+      },
+      "cut": {
+        "path": "/tmp/test-audit-tooling-static-staged-5kXn0v/cut/tests/worktree-finish.test.ts",
+        "sha256": "d418c8f25e66207656aea10ff020e7d30f18f84af52b54a66da8947bb532d4c7"
+      }
+    },
+    "tests/ci-path-rules.test.ts": {
+      "before": {
+        "path": "/tmp/test-audit-tooling-static-staged-5kXn0v/before/tests/ci-path-rules.test.ts",
+        "sha256": "6bf3845de55b7e72f1b94b35b20fb5e6f08474ac7ffd7c361236809e3c0af0d3"
+      },
+      "transfer": {
+        "path": "/tmp/test-audit-tooling-static-staged-5kXn0v/transfer/tests/ci-path-rules.test.ts",
+        "sha256": "2dd06f89d925e1a15d07577b24cdfdc7464cdc05a9cf16d79081a7b018f291ce"
+      },
+      "cut": {
+        "path": "/tmp/test-audit-tooling-static-staged-5kXn0v/cut/tests/ci-path-rules.test.ts",
+        "sha256": "fdd8b32fea6e2ce753479651175b40abf1a473804187686c5743a0c9d89471f2"
+      }
+    },
+    "tests/stripe-webhook-config-check.test.ts": {
+      "before": {
+        "path": "/tmp/test-audit-tooling-static-staged-5kXn0v/before/tests/stripe-webhook-config-check.test.ts",
+        "sha256": "c6b4e06edb467b0c004d924e9066021fd6cc838da93c41c83f8613bf3d7cb9a4"
+      },
+      "transfer": {
+        "path": "/tmp/test-audit-tooling-static-staged-5kXn0v/transfer/tests/stripe-webhook-config-check.test.ts",
+        "sha256": "c6b4e06edb467b0c004d924e9066021fd6cc838da93c41c83f8613bf3d7cb9a4"
+      },
+      "cut": {
+        "path": "/tmp/test-audit-tooling-static-staged-5kXn0v/cut/tests/stripe-webhook-config-check.test.ts",
+        "sha256": "12fc1550fad4c603f865055afde21eff3ad26e5094f3799f7c7dae5491661087"
+      }
+    }
+  },
+  "counts": {
+    "whole": 74,
+    "transfer": 74,
+    "cut": 70
+  },
+  "controls": [
+    {
+      "id": "C1-task-fresh-head",
+      "file": "scripts/worktree-new.mjs",
+      "find": "const baseRef = options.baseRef || \"origin/main\";",
+      "replace": "const baseRef = options.baseRef || \"HEAD~1\";",
+      "candidate": "C1",
+      "expected": "New task HEAD assertion fails; existing keeper root HEAD still fresh and script status0.",
+      "sourceSha256": "69013c6eec27d52a3c7307c8cf842aa0b699ff8fda54e7aebe3e615084fba476",
+      "mutantSha256": "810f37b010fe64a9d2968317c960c37646282a7f4d5686ddfb66e7b51c8f3634",
+      "keeperFile": "tests/worktree-new.test.ts",
+      "keeperTitle": "ignores unavailable remotes unrelated to origin",
+      "executed": false
+    },
+    {
+      "id": "C2-root-sync",
+      "file": "scripts/worktree-finish.mjs",
+      "find": "function applyRootSync(repoRoot, rootSync) {\n  if (rootSync.action !== \"fast-forward\") return",
+      "replace": "function applyRootSync(repoRoot, rootSync) {\n  return\n  if (rootSync.action !== \"fast-forward\") return",
+      "candidate": "C2",
+      "expected": "Transferred root HEAD=mergeSha assertion fails while task refs cleanup and detached survival still succeed.",
+      "sourceSha256": "0afa221d109dd08b3557c8050e2e5ca16a01092b867a0fb97fbbe267503f383e",
+      "mutantSha256": "df8e76f2c346404fe2e83e07cb324e6706ad7c29ecf45fd38a86d672c8444aec",
+      "keeperFile": "tests/worktree-finish.test.ts",
+      "keeperTitle": "an unrelated detached worktree is preserved without blocking exact cleanup",
+      "executed": false
+    },
+    {
+      "id": "C2-finished-receipt",
+      "file": "scripts/worktree-finish.mjs",
+      "find": "console.log(`FINISHED — PR #${options.pr} merged-task artifacts are clean`)",
+      "replace": "console.log(`CLEANED — PR #${options.pr} merged-task artifacts are clean`)",
+      "candidate": "C2",
+      "expected": "Transferred FINISHED stdout assertion fails; actual local cleanup still succeeds.",
+      "sourceSha256": "0afa221d109dd08b3557c8050e2e5ca16a01092b867a0fb97fbbe267503f383e",
+      "mutantSha256": "b7e2c5beccff57588a34fcb752fb6984ed6352770aa80e2c5631c9e983f4104a",
+      "keeperFile": "tests/worktree-finish.test.ts",
+      "keeperTitle": "an unrelated detached worktree is preserved without blocking exact cleanup",
+      "executed": false
+    },
+    {
+      "id": "C3-output-absence",
+      "file": "scripts/ci/path-rules.mjs",
+      "find": "  return {\n    chat_eval: fullCi",
+      "replace": "  return {\n    personal_plan_db: false,\n    chat_eval: fullCi",
+      "candidate": "C3",
+      "expected": "Existing targeted journey keeper fails transferred Object.hasOwn false on same migration result.",
+      "sourceSha256": "e74b1ea820f04881ede4b5140251af7b456d327c57137ae72f2a48ad94d4d7f5",
+      "mutantSha256": "11e2cba26229fbb2d4e58456c94ddac4e0226a07e60201da86241212057241ec",
+      "keeperFile": "tests/ci-path-rules.test.ts",
+      "keeperTitle": "Personal Plan journey scope remains targeted to runtime and presentation changes",
+      "executed": false
+    },
+    {
+      "id": "D1-unwanted-success-issue",
+      "file": "src/lib/stripe/webhook-config-check.ts",
+      "find": "\n  return { status: \"ok\", endpointId: endpoint.id, enabledEvents }\n}",
+      "replace": "\n  captureIssue({ status: \"error\", reason: \"unexpected success telemetry\" })\n  return { status: \"ok\", endpointId: endpoint.id, enabledEvents }\n}",
+      "candidate": "D1",
+      "expected": "First actual healthy keeper captured.length0 fails, preserving deleted callback sole invariant.",
+      "sourceSha256": "f81b72111ab1e2592a60515cc008cbfad254149f207b0b6dc70e5a9772cef58b",
+      "mutantSha256": "ce5ae9d4af5bf802d2a372e7f2b0c4f641ab9178125f9abe3c4b93af19fd32dd",
+      "keeperFile": "tests/stripe-webhook-config-check.test.ts",
+      "keeperTitle": "verifyStripeWebhookConfig reports ok when the matching endpoint covers every required event",
+      "executed": false
+    }
+  ]
+}

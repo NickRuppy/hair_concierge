@@ -669,6 +669,12 @@ test("the direct-accept provenance write is atomic with activation", async (t) =
 
   const after = await readPlan(pg, initial.personalPlanId)
   assert.equal(after.unrefined_direct_accept, true)
+  assert.ok(after.active_routine_version_id, "the provenance write leaves an active Routine")
+  assert.equal(
+    after.active_routine_version_id,
+    result.routineVersionId,
+    "the provenance write accompanies the activated Routine",
+  )
   assert.equal(
     after.revision,
     result.revision,

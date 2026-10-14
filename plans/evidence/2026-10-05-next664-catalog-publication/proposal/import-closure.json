@@ -1,0 +1,1248 @@
+{
+  "semanticReadClaim": false,
+  "edges": [
+    {
+      "from": "tests/expansion-apply-batch.test.ts",
+      "to": "src/lib/product-intake/expansion-apply.ts",
+      "specifier": "@/lib/product-intake/expansion-apply",
+      "typeOnly": false
+    },
+    {
+      "from": "tests/expansion-apply-batch.test.ts",
+      "to": "scripts/product-intake/expansion/apply.ts",
+      "specifier": "../scripts/product-intake/expansion/apply",
+      "typeOnly": false
+    },
+    {
+      "from": "tests/expansion-apply-templates.test.ts",
+      "to": "src/lib/product-intake/expansion-manifest.ts",
+      "specifier": "../src/lib/product-intake/expansion-manifest",
+      "typeOnly": false
+    },
+    {
+      "from": "tests/expansion-apply-templates.test.ts",
+      "to": "src/lib/product-intake/expansion-apply-templates.ts",
+      "specifier": "../src/lib/product-intake/expansion-apply-templates",
+      "typeOnly": false
+    },
+    {
+      "from": "tests/expansion-apply-templates.test.ts",
+      "to": "src/lib/routines/personal-plan/application/contracts.ts",
+      "specifier": "../src/lib/routines/personal-plan/application/contracts",
+      "typeOnly": false
+    },
+    {
+      "from": "tests/expansion-apply-templates.test.ts",
+      "to": "src/lib/product-intake/catalog-enrichment/stage5-v2-builder.ts",
+      "specifier": "../src/lib/product-intake/catalog-enrichment/stage5-v2-builder",
+      "typeOnly": false
+    },
+    {
+      "from": "tests/admin-product-category-write-policy.test.ts",
+      "to": "src/lib/admin/product-category-write-policy.ts",
+      "specifier": "../src/lib/admin/product-category-write-policy",
+      "typeOnly": false
+    },
+    {
+      "from": "tests/admin-product-support-specs.test.ts",
+      "to": "src/lib/validators/index.ts",
+      "specifier": "../src/lib/validators",
+      "typeOnly": false
+    },
+    {
+      "from": "tests/catalog-authority-legacy-sync-retirement-migration.test.ts",
+      "to": "src/lib/catalog-authority/contracts.ts",
+      "specifier": "../src/lib/catalog-authority/contracts",
+      "typeOnly": false
+    },
+    {
+      "from": "tests/catalog-authority-product-spec-relationship-verification.test.ts",
+      "to": "scripts/catalog-authority/verify-product-spec-relationships.ts",
+      "specifier": "../scripts/catalog-authority/verify-product-spec-relationships",
+      "typeOnly": false
+    },
+    {
+      "from": "tests/catalog-authority-repair.test.ts",
+      "to": "src/lib/catalog-authority/repair.ts",
+      "specifier": "../src/lib/catalog-authority/repair",
+      "typeOnly": false
+    },
+    {
+      "from": "tests/audit-product-metadata-script.test.ts",
+      "to": "src/lib/product-metadata/buyability.ts",
+      "specifier": "../src/lib/product-metadata/buyability",
+      "typeOnly": false
+    },
+    {
+      "from": "tests/audit-product-metadata-script.test.ts",
+      "to": "src/lib/product-metadata/health.ts",
+      "specifier": "../src/lib/product-metadata/health",
+      "typeOnly": true
+    },
+    {
+      "from": "tests/product-metadata-health.test.ts",
+      "to": "src/lib/product-metadata/health.ts",
+      "specifier": "../src/lib/product-metadata/health",
+      "typeOnly": false
+    },
+    {
+      "from": "tests/product-metadata-ingest-identity.test.ts",
+      "to": "src/lib/product-metadata/ingest-identity.ts",
+      "specifier": "../src/lib/product-metadata/ingest-identity",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/expansion-apply.ts",
+      "to": "src/lib/product-intake/catalog-enrichment/index.ts",
+      "specifier": "@/lib/product-intake/catalog-enrichment",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/expansion-apply.ts",
+      "to": "src/lib/product-intake/category-validators.ts",
+      "specifier": "@/lib/product-intake/category-validators",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/expansion-apply.ts",
+      "to": "src/lib/product-intake/expansion-manifest.ts",
+      "specifier": "@/lib/product-intake/expansion-manifest",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/expansion-apply.ts",
+      "to": "src/lib/product-intake/expansion-apply-templates.ts",
+      "specifier": "@/lib/product-intake/expansion-apply-templates",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/expansion-apply-templates.ts",
+      "to": "src/lib/product-intake/expansion-manifest.ts",
+      "specifier": "@/lib/product-intake/expansion-manifest",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/expansion-manifest.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "specifier": "@/lib/vocabulary",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/expansion-manifest.ts",
+      "to": "src/lib/product-specs/concern-taxonomy.ts",
+      "specifier": "@/lib/product-specs/concern-taxonomy",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/expansion-manifest.ts",
+      "to": "src/lib/scan/identifier-lookup.ts",
+      "specifier": "@/lib/scan/identifier-lookup",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/expansion-manifest.ts",
+      "to": "src/lib/product-intake/shampoo-protocol-roles.ts",
+      "specifier": "@/lib/product-intake/shampoo-protocol-roles",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/expansion-manifest.ts",
+      "to": "src/lib/product-intake/category-validators.ts",
+      "specifier": "@/lib/product-intake/category-validators",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/category-validators.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "specifier": "@/lib/product-specs/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/category-validators.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "specifier": "@/lib/product-specs/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/category-validators.ts",
+      "to": "src/lib/deep-cleansing-shampoo/constants.ts",
+      "specifier": "@/lib/deep-cleansing-shampoo/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/category-validators.ts",
+      "to": "src/lib/conditioner/constants.ts",
+      "specifier": "@/lib/conditioner/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/category-validators.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "specifier": "@/lib/leave-in/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/category-validators.ts",
+      "to": "src/lib/mask/constants.ts",
+      "specifier": "@/lib/mask/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/category-validators.ts",
+      "to": "src/lib/oil/constants.ts",
+      "specifier": "@/lib/oil/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/category-validators.ts",
+      "to": "src/lib/shampoo/constants.ts",
+      "specifier": "@/lib/shampoo/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/category-validators.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "specifier": "@/lib/vocabulary",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/category-validators.ts",
+      "to": "src/lib/product-identity/index.ts",
+      "specifier": "@/lib/product-identity",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/category-validators.ts",
+      "to": "src/lib/product-intake/catalog-enrichment/stage5-v2-builder.ts",
+      "specifier": "@/lib/product-intake/catalog-enrichment/stage5-v2-builder",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/category-validators.ts",
+      "to": "src/lib/product-intake/shampoo-protocol-roles.ts",
+      "specifier": "@/lib/product-intake/shampoo-protocol-roles",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/category-validators.ts",
+      "to": "src/lib/routines/personal-plan/application/contracts.ts",
+      "specifier": "@/lib/routines/personal-plan/application/contracts",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/shampoo-protocol-roles.ts",
+      "to": "src/lib/shampoo/constants.ts",
+      "specifier": "@/lib/shampoo/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/catalog-enrichment/stage5-v2-builder.ts",
+      "to": "src/lib/routines/personal-plan/application/contracts.ts",
+      "specifier": "@/lib/routines/personal-plan/application/contracts",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/catalog-enrichment/stage5-v2-builder.ts",
+      "to": "src/lib/routines/personal-plan/application/contracts.ts",
+      "specifier": "@/lib/routines/personal-plan/application/contracts",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/product-intake/catalog-enrichment/stage5-v2-builder.ts",
+      "to": "src/lib/routines/personal-plan/application/contracts-v2.ts",
+      "specifier": "@/lib/routines/personal-plan/application/contracts-v2",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/routines/personal-plan/application/contracts-v2.ts",
+      "to": "src/lib/routines/personal-plan/application/contracts.ts",
+      "specifier": "./contracts",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/routines/personal-plan/application/contracts-v2.ts",
+      "to": "src/lib/routines/personal-plan/application/contracts.ts",
+      "specifier": "./contracts",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/validators/index.ts",
+      "to": "src/lib/bondbuilder/constants.ts",
+      "specifier": "@/lib/bondbuilder/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/validators/index.ts",
+      "to": "src/lib/conditioner/constants.ts",
+      "specifier": "@/lib/conditioner/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/validators/index.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "specifier": "@/lib/vocabulary",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/validators/index.ts",
+      "to": "src/lib/product-specs/concern-taxonomy.ts",
+      "specifier": "@/lib/product-specs/concern-taxonomy",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/validators/index.ts",
+      "to": "src/lib/conditioner/constants.ts",
+      "specifier": "@/lib/conditioner/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/validators/index.ts",
+      "to": "src/lib/deep-cleansing-shampoo/constants.ts",
+      "specifier": "@/lib/deep-cleansing-shampoo/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/validators/index.ts",
+      "to": "src/lib/dry-shampoo/constants.ts",
+      "specifier": "@/lib/dry-shampoo/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/validators/index.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "specifier": "@/lib/leave-in/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/validators/index.ts",
+      "to": "src/lib/mask/constants.ts",
+      "specifier": "@/lib/mask/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/validators/index.ts",
+      "to": "src/lib/oil/constants.ts",
+      "specifier": "@/lib/oil/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/validators/index.ts",
+      "to": "src/lib/peeling/constants.ts",
+      "specifier": "@/lib/peeling/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/validators/index.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "specifier": "@/lib/product-specs/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/validators/index.ts",
+      "to": "src/lib/recommendation-engine/contracts.ts",
+      "specifier": "@/lib/recommendation-engine/contracts",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/validators/index.ts",
+      "to": "src/lib/product-identity/index.ts",
+      "specifier": "@/lib/product-identity",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/catalog-authority/repair.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "specifier": "@/lib/personal-plan/products/contracts",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/catalog-authority/repair.ts",
+      "to": "src/lib/catalog-authority/contracts.ts",
+      "specifier": "./contracts",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/catalog-authority/contracts.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "specifier": "@/lib/personal-plan/products/contracts",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/admin/product-category-write-policy.ts",
+      "to": "src/lib/product-identity/index.ts",
+      "specifier": "@/lib/product-identity",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-metadata/health.ts",
+      "to": "src/lib/affiliate-research/url-gate.ts",
+      "specifier": "../affiliate-research/url-gate",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-metadata/buyability.ts",
+      "to": "src/lib/affiliate-research/url-gate.ts",
+      "specifier": "../affiliate-research/url-gate",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-identity/index.ts",
+      "to": "src/lib/product-identity/brand-resolution.ts",
+      "specifier": "./brand-resolution",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-identity/index.ts",
+      "to": "src/lib/product-identity/normalize.ts",
+      "specifier": "./normalize",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-identity/index.ts",
+      "to": "src/lib/product-identity/normalize.ts",
+      "specifier": "./normalize",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-specs/concern-taxonomy.ts",
+      "to": "src/lib/bondbuilder/constants.ts",
+      "specifier": "@/lib/bondbuilder/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-specs/concern-taxonomy.ts",
+      "to": "src/lib/conditioner/constants.ts",
+      "specifier": "@/lib/conditioner/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-specs/concern-taxonomy.ts",
+      "to": "src/lib/deep-cleansing-shampoo/constants.ts",
+      "specifier": "@/lib/deep-cleansing-shampoo/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-specs/concern-taxonomy.ts",
+      "to": "src/lib/dry-shampoo/constants.ts",
+      "specifier": "@/lib/dry-shampoo/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-specs/concern-taxonomy.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "specifier": "@/lib/leave-in/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-specs/concern-taxonomy.ts",
+      "to": "src/lib/oil/constants.ts",
+      "specifier": "@/lib/oil/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-specs/concern-taxonomy.ts",
+      "to": "src/lib/mask/constants.ts",
+      "specifier": "@/lib/mask/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-specs/concern-taxonomy.ts",
+      "to": "src/lib/peeling/constants.ts",
+      "specifier": "@/lib/peeling/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-specs/concern-taxonomy.ts",
+      "to": "src/lib/shampoo/constants.ts",
+      "specifier": "@/lib/shampoo/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/scan/identifier-lookup.ts",
+      "to": "src/lib/product-identity/normalize.ts",
+      "specifier": "@/lib/product-identity/normalize",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/scan/identifier-lookup.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "specifier": "@/lib/personal-plan/products/contracts",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/scan/identifier-lookup.ts",
+      "to": "src/lib/scan/catalog-eligibility.ts",
+      "specifier": "./catalog-eligibility",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/product-intake/expansion/preflight.ts",
+      "to": "src/lib/product-intake/expansion-apply.ts",
+      "specifier": "@/lib/product-intake/expansion-apply",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/product-intake/expansion/preflight.ts",
+      "to": "src/lib/product-intake/expansion-manifest.ts",
+      "specifier": "@/lib/product-intake/expansion-manifest",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/product-intake/expansion/preflight.ts",
+      "to": "scripts/product-intake/cli.ts",
+      "specifier": "../cli",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/product-intake/expansion/apply.ts",
+      "to": "scripts/product-intake/cli.ts",
+      "specifier": "../cli",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/audit-product-metadata.ts",
+      "to": "src/lib/affiliate-research/csv.ts",
+      "specifier": "../src/lib/affiliate-research/csv",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/audit-product-metadata.ts",
+      "to": "src/lib/product-metadata/buyability.ts",
+      "specifier": "../src/lib/product-metadata/buyability",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/audit-product-metadata.ts",
+      "to": "src/lib/product-metadata/health.ts",
+      "specifier": "../src/lib/product-metadata/health",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/catalog-authority/verify-product-spec-relationships.ts",
+      "to": "src/lib/catalog-authority/product-spec-relationships.ts",
+      "specifier": "../../src/lib/catalog-authority/product-spec-relationships",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/catalog-authority/verify-product-spec-relationships.ts",
+      "to": "scripts/product-intake/catalog-enrichment/stage5-protocol-client.ts",
+      "specifier": "../product-intake/catalog-enrichment/stage5-protocol-client",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/catalog-authority/oil-repair-client.ts",
+      "to": "src/lib/catalog-authority/oil-repair.ts",
+      "specifier": "@/lib/catalog-authority/oil-repair",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/catalog-authority/oil-repair-client.ts",
+      "to": "src/lib/catalog-authority/repair.ts",
+      "specifier": "@/lib/catalog-authority/repair",
+      "typeOnly": true
+    },
+    {
+      "from": "scripts/catalog-authority/oil-repair-client.ts",
+      "to": "scripts/product-intake/cli.ts",
+      "specifier": "../product-intake/cli",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/catalog-enrichment/index.ts",
+      "to": "src/lib/product-intake/category-validators.ts",
+      "specifier": "@/lib/product-intake/category-validators",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/[id]/route.ts",
+      "to": "src/lib/supabase/server.ts",
+      "specifier": "@/lib/supabase/server",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/[id]/route.ts",
+      "to": "src/lib/validators/index.ts",
+      "specifier": "@/lib/validators",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/[id]/route.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "specifier": "@/lib/vocabulary",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/[id]/route.ts",
+      "to": "src/lib/bondbuilder/constants.ts",
+      "specifier": "@/lib/bondbuilder/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/[id]/route.ts",
+      "to": "src/lib/conditioner/constants.ts",
+      "specifier": "@/lib/conditioner/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/[id]/route.ts",
+      "to": "src/lib/deep-cleansing-shampoo/constants.ts",
+      "specifier": "@/lib/deep-cleansing-shampoo/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/[id]/route.ts",
+      "to": "src/lib/dry-shampoo/constants.ts",
+      "specifier": "@/lib/dry-shampoo/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/[id]/route.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "specifier": "@/lib/leave-in/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/[id]/route.ts",
+      "to": "src/lib/mask/constants.ts",
+      "specifier": "@/lib/mask/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/[id]/route.ts",
+      "to": "src/lib/peeling/constants.ts",
+      "specifier": "@/lib/peeling/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/[id]/route.ts",
+      "to": "src/lib/shampoo/constants.ts",
+      "specifier": "@/lib/shampoo/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/[id]/route.ts",
+      "to": "src/lib/admin/product-category-write-policy.ts",
+      "specifier": "@/lib/admin/product-category-write-policy",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/route.ts",
+      "to": "src/lib/supabase/server.ts",
+      "specifier": "@/lib/supabase/server",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/route.ts",
+      "to": "src/lib/supabase/admin.ts",
+      "specifier": "@/lib/supabase/admin",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/route.ts",
+      "to": "src/lib/validators/index.ts",
+      "specifier": "@/lib/validators",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/route.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "specifier": "@/lib/vocabulary",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/route.ts",
+      "to": "src/lib/admin/product-filters.ts",
+      "specifier": "@/lib/admin/product-filters",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/route.ts",
+      "to": "src/lib/bondbuilder/constants.ts",
+      "specifier": "@/lib/bondbuilder/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/route.ts",
+      "to": "src/lib/conditioner/constants.ts",
+      "specifier": "@/lib/conditioner/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/route.ts",
+      "to": "src/lib/deep-cleansing-shampoo/constants.ts",
+      "specifier": "@/lib/deep-cleansing-shampoo/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/route.ts",
+      "to": "src/lib/dry-shampoo/constants.ts",
+      "specifier": "@/lib/dry-shampoo/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/route.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "specifier": "@/lib/leave-in/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/route.ts",
+      "to": "src/lib/mask/constants.ts",
+      "specifier": "@/lib/mask/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/route.ts",
+      "to": "src/lib/shampoo/constants.ts",
+      "specifier": "@/lib/shampoo/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/route.ts",
+      "to": "src/lib/peeling/constants.ts",
+      "specifier": "@/lib/peeling/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/app/api/admin/products/route.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "specifier": "@/lib/vocabulary",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/ingest-products.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "specifier": "../src/lib/leave-in/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/ingest-products.ts",
+      "to": "src/lib/mask/constants.ts",
+      "specifier": "../src/lib/mask/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/ingest-products.ts",
+      "to": "src/lib/shampoo/constants.ts",
+      "specifier": "../src/lib/shampoo/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/ingest-products.ts",
+      "to": "src/lib/shampoo/eligibility.ts",
+      "specifier": "../src/lib/shampoo/eligibility",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/ingest-products.ts",
+      "to": "src/lib/product-metadata/ingest-identity.ts",
+      "specifier": "../src/lib/product-metadata/ingest-identity",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/catalog-authority/oil-repair.ts",
+      "to": "src/lib/routines/personal-plan/application/contracts.ts",
+      "specifier": "@/lib/routines/personal-plan/application/contracts",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/catalog-authority/oil-repair.ts",
+      "to": "src/lib/catalog-authority/repair.ts",
+      "specifier": "./repair",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/hair-types.ts",
+      "specifier": "./hair-types",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/hair-types.ts",
+      "specifier": "./hair-types",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/hair-length.ts",
+      "specifier": "./hair-length",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/hair-length.ts",
+      "specifier": "./hair-length",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "specifier": "./concerns-goals",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "specifier": "./concerns-goals",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "specifier": "./frequencies",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "specifier": "./frequencies",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/profile-labels.ts",
+      "specifier": "./profile-labels",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/profile-labels.ts",
+      "specifier": "./profile-labels",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "specifier": "../leave-in/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "specifier": "../leave-in/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/source-labels.ts",
+      "specifier": "./source-labels",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/source-labels.ts",
+      "specifier": "./source-labels",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/errors.ts",
+      "specifier": "./errors",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/onboarding-goals.ts",
+      "specifier": "./onboarding-goals",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "specifier": "./frequencies",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "specifier": "./frequencies",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/onboarding-care.ts",
+      "specifier": "./onboarding-care",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/vocabulary/index.ts",
+      "to": "src/lib/vocabulary/onboarding-care.ts",
+      "specifier": "./onboarding-care",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/deep-cleansing-shampoo/constants.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "specifier": "@/lib/product-specs/constants",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/deep-cleansing-shampoo/constants.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "specifier": "@/lib/recommendation-engine/types",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/conditioner/constants.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "specifier": "@/lib/product-specs/constants",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/mask/constants.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "specifier": "@/lib/product-specs/constants",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/oil/constants.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "specifier": "@/lib/vocabulary",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/shampoo/constants.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "specifier": "@/lib/vocabulary",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/shampoo/constants.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "specifier": "@/lib/vocabulary",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/bondbuilder/constants.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "specifier": "@/lib/product-specs/constants",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/dry-shampoo/constants.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "specifier": "@/lib/product-specs/constants",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/peeling/constants.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "specifier": "@/lib/product-specs/constants",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/recommendation-engine/contracts.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "specifier": "@/lib/vocabulary/frequencies",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "specifier": "@/lib/personal-plan/types",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "specifier": "@/lib/vocabulary/frequencies",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/personal-plan/products/authorities.ts",
+      "specifier": "./authorities",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/personal-plan/products/contracts.ts",
+      "to": "src/lib/personal-plan/products/authority/contracts.ts",
+      "specifier": "./authority/contracts",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/product-identity/brand-resolution.ts",
+      "to": "src/lib/product-identity/normalize.ts",
+      "specifier": "./normalize",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/product-intake/cli.ts",
+      "to": "src/lib/observability/product-intake.ts",
+      "specifier": "@/lib/observability/product-intake",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/product-intake/catalog-enrichment/stage5-protocol-client.ts",
+      "to": "scripts/product-intake/cli.ts",
+      "specifier": "../cli",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/product-intake/catalog-enrichment/stage5-protocol-client.ts",
+      "to": "src/lib/product-intake/catalog-enrichment/stage5-protocols.ts",
+      "specifier": "@/lib/product-intake/catalog-enrichment/stage5-protocols",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/product-intake/catalog-enrichment/stage5-protocol-client.ts",
+      "to": "src/lib/product-intake/catalog-enrichment/stage5-v2-application.ts",
+      "specifier": "@/lib/product-intake/catalog-enrichment/stage5-v2-application",
+      "typeOnly": true
+    },
+    {
+      "from": "scripts/product-intake/catalog-enrichment/stage5-protocol-client.ts",
+      "to": "src/lib/product-intake/catalog-enrichment/stage5-v2-pointer-delta.ts",
+      "specifier": "@/lib/product-intake/catalog-enrichment/stage5-v2-pointer-delta",
+      "typeOnly": false
+    },
+    {
+      "from": "scripts/product-intake/catalog-enrichment/stage5-protocol-client.ts",
+      "to": "src/lib/catalog-authority/product-spec-relationships.ts",
+      "specifier": "@/lib/catalog-authority/product-spec-relationships",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/admin/product-filters.ts",
+      "to": "src/lib/types.ts",
+      "specifier": "@/lib/types",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/shampoo/eligibility.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "specifier": "@/lib/vocabulary",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/shampoo/eligibility.ts",
+      "to": "src/lib/shampoo/constants.ts",
+      "specifier": "@/lib/shampoo/constants",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/vocabulary/onboarding-goals.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "specifier": "./concerns-goals",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/vocabulary/onboarding-goals.ts",
+      "to": "src/lib/vocabulary/concerns-goals.ts",
+      "specifier": "./concerns-goals",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/vocabulary/onboarding-goals.ts",
+      "to": "src/lib/vocabulary/hair-types.ts",
+      "specifier": "./hair-types",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/recommendation-engine/types.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "specifier": "@/lib/vocabulary",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/recommendation-engine/types.ts",
+      "to": "src/lib/shampoo/constants.ts",
+      "specifier": "@/lib/shampoo/constants",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/recommendation-engine/types.ts",
+      "to": "src/lib/oil/constants.ts",
+      "specifier": "@/lib/oil/constants",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/recommendation-engine/types.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "specifier": "@/lib/leave-in/constants",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/recommendation-engine/types.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "specifier": "@/lib/product-specs/constants",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/recommendation-engine/types.ts",
+      "to": "src/lib/recommendation-engine/contracts.ts",
+      "specifier": "@/lib/recommendation-engine/contracts",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/personal-plan/types.ts",
+      "to": "src/lib/personal-plan-quiz/types.ts",
+      "specifier": "@/lib/personal-plan-quiz/types",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/personal-plan/types.ts",
+      "to": "src/lib/vocabulary/frequencies.ts",
+      "specifier": "@/lib/vocabulary/frequencies",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/personal-plan/products/authorities.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "specifier": "@/lib/personal-plan/types",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/personal-plan/products/authorities.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "specifier": "./contracts",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/contracts.ts",
+      "to": "src/lib/personal-plan/types.ts",
+      "specifier": "@/lib/personal-plan/types",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/personal-plan/products/authority/contracts.ts",
+      "to": "src/lib/personal-plan/products/contracts.ts",
+      "specifier": "../contracts",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/observability/product-intake.ts",
+      "to": "src/lib/observability/checkout.ts",
+      "specifier": "@/lib/observability/checkout",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/catalog-enrichment/stage5-protocols.ts",
+      "to": "src/lib/routines/personal-plan/application/contracts.ts",
+      "specifier": "@/lib/routines/personal-plan/application/contracts",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/product-intake/catalog-enrichment/stage5-protocols.ts",
+      "to": "src/lib/routines/personal-plan/application/contracts.ts",
+      "specifier": "@/lib/routines/personal-plan/application/contracts",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/catalog-enrichment/stage5-protocols.ts",
+      "to": "src/lib/product-intake/shampoo-protocol-roles.ts",
+      "specifier": "@/lib/product-intake/shampoo-protocol-roles",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/catalog-enrichment/stage5-v2-application.ts",
+      "to": "src/lib/routines/personal-plan/application/contracts-v2.ts",
+      "specifier": "@/lib/routines/personal-plan/application/contracts-v2",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/catalog-enrichment/stage5-v2-pointer-delta.ts",
+      "to": "src/lib/routines/personal-plan/application/contracts-v2.ts",
+      "specifier": "@/lib/routines/personal-plan/application/contracts-v2",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/product-intake/catalog-enrichment/stage5-v2-pointer-delta.ts",
+      "to": "src/lib/product-intake/catalog-enrichment/stage5-v2-application.ts",
+      "specifier": "./stage5-v2-application",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "specifier": "@/lib/vocabulary",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/leave-in/constants.ts",
+      "specifier": "@/lib/leave-in/constants",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/mask/constants.ts",
+      "specifier": "@/lib/mask/constants",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/conditioner/constants.ts",
+      "specifier": "@/lib/conditioner/constants",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/bondbuilder/constants.ts",
+      "specifier": "@/lib/bondbuilder/constants",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/deep-cleansing-shampoo/constants.ts",
+      "specifier": "@/lib/deep-cleansing-shampoo/constants",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/dry-shampoo/constants.ts",
+      "specifier": "@/lib/dry-shampoo/constants",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/oil/constants.ts",
+      "specifier": "@/lib/oil/constants",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/peeling/constants.ts",
+      "specifier": "@/lib/peeling/constants",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/product-specs/constants.ts",
+      "specifier": "@/lib/product-specs/constants",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/recommendation-engine/types.ts",
+      "specifier": "@/lib/recommendation-engine/types",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/shampoo/constants.ts",
+      "specifier": "@/lib/shampoo/constants",
+      "typeOnly": true
+    },
+    {
+      "from": "src/lib/types.ts",
+      "to": "src/lib/vocabulary/index.ts",
+      "specifier": "@/lib/vocabulary",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/personal-plan-quiz/types.ts",
+      "to": "src/lib/quiz/diagnostic-input.ts",
+      "specifier": "@/lib/quiz/diagnostic-input",
+      "typeOnly": false
+    },
+    {
+      "from": "src/lib/observability/checkout.ts",
+      "to": "src/lib/observability/sentry-scrubbing.ts",
+      "specifier": "@/lib/observability/sentry-scrubbing",
+      "typeOnly": false
+    }
+  ],
+  "files": 92
+}

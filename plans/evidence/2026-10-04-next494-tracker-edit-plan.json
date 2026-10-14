@@ -1,0 +1,1428 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "scope": "Tracker93 native cohort; four proposed declarations; no SQL/security cuts",
+  "counts": {
+    "before": 93,
+    "transfer": 93,
+    "cut": 89
+  },
+  "sourceAndDependencyGuards": {
+    "src/lib/tracking/aggregation.ts": "657c128065c8c126ab7613e3280a15fb84b36cecbfbea69e8fbdb2cab3300332",
+    "src/lib/tracking/nudges.ts": "01d34c6d21825ad729f24ce8cc1a9fe13ee3d54290b8935e6373039b8dc0092e",
+    "src/lib/tracking/types.ts": "605bfb56a6c3db801e143dad6e26ad4b7d25d1a48dceed8e0a1257a8f44017e7",
+    "src/lib/vocabulary/frequencies.ts": "d79bb3584473a8f6541feecff58a40633736f9376981ff190b645114dc0eb3a9",
+    "package.json": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+    ".github/workflows/ci.yml": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+    "tsconfig.json": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd"
+  },
+  "files": [
+    {
+      "file": "tests/tracker-agent-context.test.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/before/tests/tracker-agent-context.test.ts",
+          "sha256": "a2ab0169be1ffaf2299f7bd0cea607bf1a8c0ddd72f47b1193b8765b82c4da8d",
+          "count": 8
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/transfer/tests/tracker-agent-context.test.ts",
+          "sha256": "a2ab0169be1ffaf2299f7bd0cea607bf1a8c0ddd72f47b1193b8765b82c4da8d",
+          "count": 8
+        },
+        "cut": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/cut/tests/tracker-agent-context.test.ts",
+          "sha256": "a2ab0169be1ffaf2299f7bd0cea607bf1a8c0ddd72f47b1193b8765b82c4da8d",
+          "count": 8
+        }
+      },
+      "expectedDeclarations": {
+        "before": [
+          {
+            "title": "returns null with no logged days",
+            "bodySha256": "075943fee664a210863c75cc434fb3b0f430d23b6e0c4230a29c444c4d19ff7b"
+          },
+          {
+            "title": "emits the raw diary: every logged day with its products",
+            "bodySha256": "c27afaf7405f13c532b18b06ee849ed5a4bf21c74795d14bd4278b1123d96f2b"
+          },
+          {
+            "title": "keeps custom entries as user-authored, non-standardized diary context",
+            "bodySha256": "c1ab95e278f36b329b35a9b49931bc94d95be51d91c44b73a7aebd500eb88571"
+          },
+          {
+            "title": "raw diary context includes only the latest 14 days from the shared evidence window",
+            "bodySha256": "0d17861b5455c335a04adf0e2f415652b8ea26f35f2a517802f5ffcb78c43992"
+          },
+          {
+            "title": "serializes a bounded diary while retaining each day and category",
+            "bodySha256": "1a75174db797f6ee939fea0d0c52651d8edc213567dda9cde180ef8762202acb"
+          },
+          {
+            "title": "structured insights stay locked when recent diary coverage is sparse",
+            "bodySha256": "917ce25288109b73207bd52a8041a0089ce1b7a3d12c211f781338b9456478e5"
+          },
+          {
+            "title": "structured insights compare sufficiently covered observations with CareBalance",
+            "bodySha256": "67b23391f1df1e95d14f74e0e5ae8824ada3f9a5eaf4d69d8e0e6265ed9a7a55"
+          },
+          {
+            "title": "structured insights honor an active tracker dismissal",
+            "bodySha256": "a76b4354c90a9249c45774ea6b71536c12874aba5ee8b33b21f7948f879c4e16"
+          }
+        ],
+        "transfer": [
+          {
+            "title": "returns null with no logged days",
+            "bodySha256": "075943fee664a210863c75cc434fb3b0f430d23b6e0c4230a29c444c4d19ff7b"
+          },
+          {
+            "title": "emits the raw diary: every logged day with its products",
+            "bodySha256": "c27afaf7405f13c532b18b06ee849ed5a4bf21c74795d14bd4278b1123d96f2b"
+          },
+          {
+            "title": "keeps custom entries as user-authored, non-standardized diary context",
+            "bodySha256": "c1ab95e278f36b329b35a9b49931bc94d95be51d91c44b73a7aebd500eb88571"
+          },
+          {
+            "title": "raw diary context includes only the latest 14 days from the shared evidence window",
+            "bodySha256": "0d17861b5455c335a04adf0e2f415652b8ea26f35f2a517802f5ffcb78c43992"
+          },
+          {
+            "title": "serializes a bounded diary while retaining each day and category",
+            "bodySha256": "1a75174db797f6ee939fea0d0c52651d8edc213567dda9cde180ef8762202acb"
+          },
+          {
+            "title": "structured insights stay locked when recent diary coverage is sparse",
+            "bodySha256": "917ce25288109b73207bd52a8041a0089ce1b7a3d12c211f781338b9456478e5"
+          },
+          {
+            "title": "structured insights compare sufficiently covered observations with CareBalance",
+            "bodySha256": "67b23391f1df1e95d14f74e0e5ae8824ada3f9a5eaf4d69d8e0e6265ed9a7a55"
+          },
+          {
+            "title": "structured insights honor an active tracker dismissal",
+            "bodySha256": "a76b4354c90a9249c45774ea6b71536c12874aba5ee8b33b21f7948f879c4e16"
+          }
+        ],
+        "cut": [
+          {
+            "title": "returns null with no logged days",
+            "bodySha256": "075943fee664a210863c75cc434fb3b0f430d23b6e0c4230a29c444c4d19ff7b"
+          },
+          {
+            "title": "emits the raw diary: every logged day with its products",
+            "bodySha256": "c27afaf7405f13c532b18b06ee849ed5a4bf21c74795d14bd4278b1123d96f2b"
+          },
+          {
+            "title": "keeps custom entries as user-authored, non-standardized diary context",
+            "bodySha256": "c1ab95e278f36b329b35a9b49931bc94d95be51d91c44b73a7aebd500eb88571"
+          },
+          {
+            "title": "raw diary context includes only the latest 14 days from the shared evidence window",
+            "bodySha256": "0d17861b5455c335a04adf0e2f415652b8ea26f35f2a517802f5ffcb78c43992"
+          },
+          {
+            "title": "serializes a bounded diary while retaining each day and category",
+            "bodySha256": "1a75174db797f6ee939fea0d0c52651d8edc213567dda9cde180ef8762202acb"
+          },
+          {
+            "title": "structured insights stay locked when recent diary coverage is sparse",
+            "bodySha256": "917ce25288109b73207bd52a8041a0089ce1b7a3d12c211f781338b9456478e5"
+          },
+          {
+            "title": "structured insights compare sufficiently covered observations with CareBalance",
+            "bodySha256": "67b23391f1df1e95d14f74e0e5ae8824ada3f9a5eaf4d69d8e0e6265ed9a7a55"
+          },
+          {
+            "title": "structured insights honor an active tracker dismissal",
+            "bodySha256": "a76b4354c90a9249c45774ea6b71536c12874aba5ee8b33b21f7948f879c4e16"
+          }
+        ]
+      }
+    },
+    {
+      "file": "tests/tracker-agent-loader.test.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/before/tests/tracker-agent-loader.test.ts",
+          "sha256": "7f12c9e19a52957b01488297e8ceddef00b8fd2f7289cc181ad6d4ff426cc97c",
+          "count": 3
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/transfer/tests/tracker-agent-loader.test.ts",
+          "sha256": "7f12c9e19a52957b01488297e8ceddef00b8fd2f7289cc181ad6d4ff426cc97c",
+          "count": 3
+        },
+        "cut": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/cut/tests/tracker-agent-loader.test.ts",
+          "sha256": "7f12c9e19a52957b01488297e8ceddef00b8fd2f7289cc181ad6d4ff426cc97c",
+          "count": 3
+        }
+      },
+      "expectedDeclarations": {
+        "before": [
+          {
+            "title": "loader distinguishes an empty diary from a failed load",
+            "bodySha256": "71a874128272fa7c44f994381d62a4ce2340ea498608054eb072fd57a87e9f42"
+          },
+          {
+            "title": "loader returns recent diary facts and only active dismissals",
+            "bodySha256": "af526a1760a92f7f3b2e6431e6a2bb07effed37d258c768222df4b29557a67d6"
+          },
+          {
+            "title": "loader includes a local-next-day entry while UTC is still on the prior day",
+            "bodySha256": "f03ea5a8914b46a2dd4228f1b25af763f2a210cabf07636e442452956af9e0bd"
+          }
+        ],
+        "transfer": [
+          {
+            "title": "loader distinguishes an empty diary from a failed load",
+            "bodySha256": "71a874128272fa7c44f994381d62a4ce2340ea498608054eb072fd57a87e9f42"
+          },
+          {
+            "title": "loader returns recent diary facts and only active dismissals",
+            "bodySha256": "af526a1760a92f7f3b2e6431e6a2bb07effed37d258c768222df4b29557a67d6"
+          },
+          {
+            "title": "loader includes a local-next-day entry while UTC is still on the prior day",
+            "bodySha256": "f03ea5a8914b46a2dd4228f1b25af763f2a210cabf07636e442452956af9e0bd"
+          }
+        ],
+        "cut": [
+          {
+            "title": "loader distinguishes an empty diary from a failed load",
+            "bodySha256": "71a874128272fa7c44f994381d62a4ce2340ea498608054eb072fd57a87e9f42"
+          },
+          {
+            "title": "loader returns recent diary facts and only active dismissals",
+            "bodySha256": "af526a1760a92f7f3b2e6431e6a2bb07effed37d258c768222df4b29557a67d6"
+          },
+          {
+            "title": "loader includes a local-next-day entry while UTC is still on the prior day",
+            "bodySha256": "f03ea5a8914b46a2dd4228f1b25af763f2a210cabf07636e442452956af9e0bd"
+          }
+        ]
+      }
+    },
+    {
+      "file": "tests/tracker-aggregation.test.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/before/tests/tracker-aggregation.test.ts",
+          "sha256": "546043fc6150db59f8501f8ab7d174e7f19de86814987a73e1f9038d6a2e72ea",
+          "count": 15
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/transfer/tests/tracker-aggregation.test.ts",
+          "sha256": "2eb298ee719e77ec5a7dbb992f732849d4d5e4be0c0a71640ede2fe892a3373a",
+          "count": 15
+        },
+        "cut": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/cut/tests/tracker-aggregation.test.ts",
+          "sha256": "8cad15839af8c7581c76b9779a2c829ba88a7250bcc251d3a6bcab93b7c55214",
+          "count": 12
+        }
+      },
+      "expectedDeclarations": {
+        "before": [
+          {
+            "title": "observed wash cadence: 4 washes over 2 observed weeks -> 2/week",
+            "bodySha256": "faf908b709c6738e9b6589572ffde58511758953f532f7e1f262891c30e7de29"
+          },
+          {
+            "title": "observed wash cadence: null with fewer than 2 observed weeks",
+            "bodySha256": "5f136fc98f10417d5fd7844c1dd5dcfce4d4cb39e3aed70ed03ada549ad61419"
+          },
+          {
+            "title": "shampoo cadence is the measured wash rhythm, not the self-report",
+            "bodySha256": "0e61b24ce1aec10a2dcd66fd1874519dc5713e42c07ca40e9f0ac72d1b086cbf"
+          },
+          {
+            "title": "shampoo emits no cadence when wash rhythm is unobserved (sparse logging)",
+            "bodySha256": "85b571af48422dafb7d82d577a091cb0e93653e40512e804bfd7b3a43aa7cc9a"
+          },
+          {
+            "title": "need-based policy: mask uses observed-week cadence instead of wash share",
+            "bodySha256": "04810de79b3edc5e18e75717864536a5546ae9dfcfbf5d59e31976b3be1a6215"
+          },
+          {
+            "title": "match-shampoo policy falls back to self-reported anchor for sparse loggers",
+            "bodySha256": "1ec76b7fe3b4756f925e2d7b7ff05bde9f76dff34849f680822b1afb422c7272"
+          },
+          {
+            "title": "match-shampoo policy without any anchor emits no cadence",
+            "bodySha256": "c01fb83179b92b4fcef094ba964d2e7c4b1d17b948c7e30e27b2b0b004626d11"
+          },
+          {
+            "title": "match-shampoo cadence excludes product use from partially observed weeks",
+            "bodySha256": "17ad8321a624d4b86f8927ef39a8f4789123b4882247dc1bc1c15e6286ea55e0"
+          },
+          {
+            "title": "duplicate category rows on one day count once",
+            "bodySha256": "dfbce6b9d07a153f7e2ce64f4e9c95ca08e83750cf6ec6b0b1c37bfc9945a413"
+          },
+          {
+            "title": "day-level: dry shampoo 4 days across 2 observed weeks -> 2/week",
+            "bodySha256": "312ef99ee10fb3168a342a79a5ed26ce4dd84637ae3676d89c3e4ea4bebadc9b"
+          },
+          {
+            "title": "heat-exposure policy uses observed-day cadence instead of wash share",
+            "bodySha256": "27d1acce9d21f030296838e4793112a16b97ee804d216acd1bdff10582bf0c73"
+          },
+          {
+            "title": "not-applicable policy suppresses cadence output",
+            "bodySha256": "885e6035a165cce6843010486167cbfdbc7d9eaaef017c7faebe26a8b42b0a88"
+          },
+          {
+            "title": "day-level: weeks with fewer than 4 logged days are not observed",
+            "bodySha256": "9083e7f6a6bf1bb33eeb7d0a7b3396626c0907cbd7cff1366fe786c11eb55555"
+          },
+          {
+            "title": "daysSinceLastWash: counts from most recent wash-like day",
+            "bodySha256": "35feffb06bc9548e8cad2c0355b066ff7e3311bcc3882b49b99c06681aeb207b"
+          },
+          {
+            "title": "custom and unconfirmed days do not affect cadence denominators or category usage",
+            "bodySha256": "ca30b1b385f1a79d80775114cb34036fa469aa46f00a733f19318c5f4dea3a88"
+          }
+        ],
+        "transfer": [
+          {
+            "title": "observed wash cadence: 4 washes over 2 observed weeks -> 2/week",
+            "bodySha256": "faf908b709c6738e9b6589572ffde58511758953f532f7e1f262891c30e7de29"
+          },
+          {
+            "title": "observed wash cadence: null with fewer than 2 observed weeks",
+            "bodySha256": "5f136fc98f10417d5fd7844c1dd5dcfce4d4cb39e3aed70ed03ada549ad61419"
+          },
+          {
+            "title": "shampoo cadence is the measured wash rhythm, not the self-report",
+            "bodySha256": "0e61b24ce1aec10a2dcd66fd1874519dc5713e42c07ca40e9f0ac72d1b086cbf"
+          },
+          {
+            "title": "shampoo emits no cadence when wash rhythm is unobserved (sparse logging)",
+            "bodySha256": "85b571af48422dafb7d82d577a091cb0e93653e40512e804bfd7b3a43aa7cc9a"
+          },
+          {
+            "title": "need-based policy: mask uses observed-week cadence instead of wash share",
+            "bodySha256": "04810de79b3edc5e18e75717864536a5546ae9dfcfbf5d59e31976b3be1a6215"
+          },
+          {
+            "title": "match-shampoo policy falls back to self-reported anchor for sparse loggers",
+            "bodySha256": "1ec76b7fe3b4756f925e2d7b7ff05bde9f76dff34849f680822b1afb422c7272"
+          },
+          {
+            "title": "match-shampoo policy without any anchor emits no cadence",
+            "bodySha256": "c01fb83179b92b4fcef094ba964d2e7c4b1d17b948c7e30e27b2b0b004626d11"
+          },
+          {
+            "title": "match-shampoo cadence excludes product use from partially observed weeks",
+            "bodySha256": "17ad8321a624d4b86f8927ef39a8f4789123b4882247dc1bc1c15e6286ea55e0"
+          },
+          {
+            "title": "duplicate category rows on one day count once",
+            "bodySha256": "dfbce6b9d07a153f7e2ce64f4e9c95ca08e83750cf6ec6b0b1c37bfc9945a413"
+          },
+          {
+            "title": "day-level: dry shampoo 4 days across 2 observed weeks -> 2/week",
+            "bodySha256": "312ef99ee10fb3168a342a79a5ed26ce4dd84637ae3676d89c3e4ea4bebadc9b"
+          },
+          {
+            "title": "heat-exposure policy uses observed-day cadence instead of wash share",
+            "bodySha256": "27d1acce9d21f030296838e4793112a16b97ee804d216acd1bdff10582bf0c73"
+          },
+          {
+            "title": "not-applicable policy suppresses cadence output",
+            "bodySha256": "885e6035a165cce6843010486167cbfdbc7d9eaaef017c7faebe26a8b42b0a88"
+          },
+          {
+            "title": "day-level: weeks with fewer than 4 logged days are not observed",
+            "bodySha256": "9083e7f6a6bf1bb33eeb7d0a7b3396626c0907cbd7cff1366fe786c11eb55555"
+          },
+          {
+            "title": "daysSinceLastWash: counts from most recent wash-like day",
+            "bodySha256": "35feffb06bc9548e8cad2c0355b066ff7e3311bcc3882b49b99c06681aeb207b"
+          },
+          {
+            "title": "custom and unconfirmed days do not affect cadence denominators or category usage",
+            "bodySha256": "529b0b71b2cbf7df4d662902321fd492fd4ad19f1a681c4dcdc829c132729b36"
+          }
+        ],
+        "cut": [
+          {
+            "title": "shampoo cadence is the measured wash rhythm, not the self-report",
+            "bodySha256": "0e61b24ce1aec10a2dcd66fd1874519dc5713e42c07ca40e9f0ac72d1b086cbf"
+          },
+          {
+            "title": "shampoo emits no cadence when wash rhythm is unobserved (sparse logging)",
+            "bodySha256": "85b571af48422dafb7d82d577a091cb0e93653e40512e804bfd7b3a43aa7cc9a"
+          },
+          {
+            "title": "match-shampoo policy falls back to self-reported anchor for sparse loggers",
+            "bodySha256": "1ec76b7fe3b4756f925e2d7b7ff05bde9f76dff34849f680822b1afb422c7272"
+          },
+          {
+            "title": "match-shampoo policy without any anchor emits no cadence",
+            "bodySha256": "c01fb83179b92b4fcef094ba964d2e7c4b1d17b948c7e30e27b2b0b004626d11"
+          },
+          {
+            "title": "match-shampoo cadence excludes product use from partially observed weeks",
+            "bodySha256": "17ad8321a624d4b86f8927ef39a8f4789123b4882247dc1bc1c15e6286ea55e0"
+          },
+          {
+            "title": "duplicate category rows on one day count once",
+            "bodySha256": "dfbce6b9d07a153f7e2ce64f4e9c95ca08e83750cf6ec6b0b1c37bfc9945a413"
+          },
+          {
+            "title": "day-level: dry shampoo 4 days across 2 observed weeks -> 2/week",
+            "bodySha256": "312ef99ee10fb3168a342a79a5ed26ce4dd84637ae3676d89c3e4ea4bebadc9b"
+          },
+          {
+            "title": "heat-exposure policy uses observed-day cadence instead of wash share",
+            "bodySha256": "27d1acce9d21f030296838e4793112a16b97ee804d216acd1bdff10582bf0c73"
+          },
+          {
+            "title": "not-applicable policy suppresses cadence output",
+            "bodySha256": "885e6035a165cce6843010486167cbfdbc7d9eaaef017c7faebe26a8b42b0a88"
+          },
+          {
+            "title": "day-level: weeks with fewer than 4 logged days are not observed",
+            "bodySha256": "9083e7f6a6bf1bb33eeb7d0a7b3396626c0907cbd7cff1366fe786c11eb55555"
+          },
+          {
+            "title": "daysSinceLastWash: counts from most recent wash-like day",
+            "bodySha256": "35feffb06bc9548e8cad2c0355b066ff7e3311bcc3882b49b99c06681aeb207b"
+          },
+          {
+            "title": "custom and unconfirmed days do not affect cadence denominators or category usage",
+            "bodySha256": "529b0b71b2cbf7df4d662902321fd492fd4ad19f1a681c4dcdc829c132729b36"
+          }
+        ]
+      }
+    },
+    {
+      "file": "tests/tracker-api.test.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/before/tests/tracker-api.test.ts",
+          "sha256": "5824f4dd9d615f3d5d204d81de3d8d1fe32b3561faeeaee84569bee3b780ea35",
+          "count": 22
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/transfer/tests/tracker-api.test.ts",
+          "sha256": "5824f4dd9d615f3d5d204d81de3d8d1fe32b3561faeeaee84569bee3b780ea35",
+          "count": 22
+        },
+        "cut": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/cut/tests/tracker-api.test.ts",
+          "sha256": "5824f4dd9d615f3d5d204d81de3d8d1fe32b3561faeeaee84569bee3b780ea35",
+          "count": 22
+        }
+      },
+      "expectedDeclarations": {
+        "before": [
+          {
+            "title": "getTracker: 401 without user",
+            "bodySha256": "97f91b4f3db598bd794ca3df6ee1336db16fb9bc3ae2c94a6e44611a37248781"
+          },
+          {
+            "title": "`getTracker: permits current ${access} access`",
+            "bodySha256": "978673d6fc7019495d0a2bc3b75491e604a9150e99f7cc931a8aeafc7e49fe77"
+          },
+          {
+            "title": "tracker handlers fail closed for expired or unavailable access",
+            "bodySha256": "195435221b62ec64ceb902a3ce0c91417468691d73588c91227950601258a446"
+          },
+          {
+            "title": "tracker handlers deny paid pending access without subscription-required copy",
+            "bodySha256": "140efa1e55f52e6ab800621eb30a6ca077559b18038965785d681d68d98e12b7"
+          },
+          {
+            "title": "getTracker: rejects an invalid IANA timezone with 400",
+            "bodySha256": "4a9cdf5288e83b1441b99c0a437fadf8b42c7f0a7115b80aea6949afa97c1126"
+          },
+          {
+            "title": "getTracker: returns shelf image URLs from artifact usage rows with null fallbacks",
+            "bodySha256": "88485d580362b82e01f5db15a9592ca607e5ab0f6b0319e782f4bdb4c0ed2ee0"
+          },
+          {
+            "title": "getTracker: returns 500 instead of empty diary when log read fails",
+            "bodySha256": "31da71819c3616e0dafec64ab34d67198270297ee5848d0f2efc966cd7395825"
+          },
+          {
+            "title": "getTracker: excludes deleted and custom rows from trust and rhythm history",
+            "bodySha256": "5dde4d987fa42d1bf073a01131aef2be1c35859ed54b4a00715756f965422fe3"
+          },
+          {
+            "title": "getTracker: returns the full shampoo target and only 63 calendar days of rhythm history",
+            "bodySha256": "a23177d74a5e7a6c886fe555773f165242110307ecd62e734c1f6afb0560f90b"
+          },
+          {
+            "title": "putLog: valid wash day upserts log and replaces products",
+            "bodySha256": "75437683fab56419e78eb5cb2852a307cd37488e2a20c0f9a70520d54de5bb0e"
+          },
+          {
+            "title": "putLog: rejects future date and stale backfill",
+            "bodySha256": "c9240e7a982bd0e3243417f25233814fe48b2cd265990f933282d5697ab38324"
+          },
+          {
+            "title": "putLog: rejects unknown day type",
+            "bodySha256": "b6c9c17e5441ca0489fc9356db37b9b5cb6f31fbd6c3dd6af62b1a552a5df18d"
+          },
+          {
+            "title": "putLog: rejects unknown product category with 400",
+            "bodySha256": "6b283c6c6b20167f13576dcca3205d1a510f81060ff1462b4a985d7eafb2d6a5"
+          },
+          {
+            "title": "putLog: rejects a userProductUsageId owned by another user",
+            "bodySha256": "92d32af26a83af96b3463a5388077125b326f152273f6e673cd8fe6ac633def2"
+          },
+          {
+            "title": "putLog: rejects a linked product whose category does not match",
+            "bodySha256": "8c4a0fa80c26fe25abf9872f9e465ce58769482aad253df9eb911b43d1e63de7"
+          },
+          {
+            "title": "putLog: an RPC error is never reported as a successful save",
+            "bodySha256": "afaba0562dec654a65de705def99de798048d4d71ab69cc13238a01aa95dde16"
+          },
+          {
+            "title": "putLog: rejects an invalid IANA timezone with 400",
+            "bodySha256": "b9f7f50f4667da7ebdddde537739c995e334f64e44a678b41cab92ebde7cbe68"
+          },
+          {
+            "title": "putLog: validates custom names and rejects products for none",
+            "bodySha256": "1ffa1dbdc57e5ea362d6f5691d36c5744ad996b7feeb2239e9fba86f15d44999"
+          },
+          {
+            "title": "tracker RPC contract: stale save after delete cannot resurrect; another session remains last-write-wins",
+            "bodySha256": "6c1f210287f5afd260a6ce1ec949abcd1cfc63f5b2534f01471fa8ab6d319821"
+          },
+          {
+            "title": "dismissNudge: upserts dismissal with 30-day cooldown",
+            "bodySha256": "5a795a55891f43cac712667dbdec6df74aa1a982e166b200b8663b09ef7bc530"
+          },
+          {
+            "title": "tracker admin reads remain scoped to the authenticated user",
+            "bodySha256": "a7de63a896bd33805b9a5394766ddfbb9728f7bd528aef5f5df8cd2d84e919e4"
+          },
+          {
+            "title": "getTracker: unlocked gate computes nudges from logs",
+            "bodySha256": "ae42d1db30d89ec0a3455d38d7167ec78562822b2db8a52a50a0399f83cb29b6"
+          }
+        ],
+        "transfer": [
+          {
+            "title": "getTracker: 401 without user",
+            "bodySha256": "97f91b4f3db598bd794ca3df6ee1336db16fb9bc3ae2c94a6e44611a37248781"
+          },
+          {
+            "title": "`getTracker: permits current ${access} access`",
+            "bodySha256": "978673d6fc7019495d0a2bc3b75491e604a9150e99f7cc931a8aeafc7e49fe77"
+          },
+          {
+            "title": "tracker handlers fail closed for expired or unavailable access",
+            "bodySha256": "195435221b62ec64ceb902a3ce0c91417468691d73588c91227950601258a446"
+          },
+          {
+            "title": "tracker handlers deny paid pending access without subscription-required copy",
+            "bodySha256": "140efa1e55f52e6ab800621eb30a6ca077559b18038965785d681d68d98e12b7"
+          },
+          {
+            "title": "getTracker: rejects an invalid IANA timezone with 400",
+            "bodySha256": "4a9cdf5288e83b1441b99c0a437fadf8b42c7f0a7115b80aea6949afa97c1126"
+          },
+          {
+            "title": "getTracker: returns shelf image URLs from artifact usage rows with null fallbacks",
+            "bodySha256": "88485d580362b82e01f5db15a9592ca607e5ab0f6b0319e782f4bdb4c0ed2ee0"
+          },
+          {
+            "title": "getTracker: returns 500 instead of empty diary when log read fails",
+            "bodySha256": "31da71819c3616e0dafec64ab34d67198270297ee5848d0f2efc966cd7395825"
+          },
+          {
+            "title": "getTracker: excludes deleted and custom rows from trust and rhythm history",
+            "bodySha256": "5dde4d987fa42d1bf073a01131aef2be1c35859ed54b4a00715756f965422fe3"
+          },
+          {
+            "title": "getTracker: returns the full shampoo target and only 63 calendar days of rhythm history",
+            "bodySha256": "a23177d74a5e7a6c886fe555773f165242110307ecd62e734c1f6afb0560f90b"
+          },
+          {
+            "title": "putLog: valid wash day upserts log and replaces products",
+            "bodySha256": "75437683fab56419e78eb5cb2852a307cd37488e2a20c0f9a70520d54de5bb0e"
+          },
+          {
+            "title": "putLog: rejects future date and stale backfill",
+            "bodySha256": "c9240e7a982bd0e3243417f25233814fe48b2cd265990f933282d5697ab38324"
+          },
+          {
+            "title": "putLog: rejects unknown day type",
+            "bodySha256": "b6c9c17e5441ca0489fc9356db37b9b5cb6f31fbd6c3dd6af62b1a552a5df18d"
+          },
+          {
+            "title": "putLog: rejects unknown product category with 400",
+            "bodySha256": "6b283c6c6b20167f13576dcca3205d1a510f81060ff1462b4a985d7eafb2d6a5"
+          },
+          {
+            "title": "putLog: rejects a userProductUsageId owned by another user",
+            "bodySha256": "92d32af26a83af96b3463a5388077125b326f152273f6e673cd8fe6ac633def2"
+          },
+          {
+            "title": "putLog: rejects a linked product whose category does not match",
+            "bodySha256": "8c4a0fa80c26fe25abf9872f9e465ce58769482aad253df9eb911b43d1e63de7"
+          },
+          {
+            "title": "putLog: an RPC error is never reported as a successful save",
+            "bodySha256": "afaba0562dec654a65de705def99de798048d4d71ab69cc13238a01aa95dde16"
+          },
+          {
+            "title": "putLog: rejects an invalid IANA timezone with 400",
+            "bodySha256": "b9f7f50f4667da7ebdddde537739c995e334f64e44a678b41cab92ebde7cbe68"
+          },
+          {
+            "title": "putLog: validates custom names and rejects products for none",
+            "bodySha256": "1ffa1dbdc57e5ea362d6f5691d36c5744ad996b7feeb2239e9fba86f15d44999"
+          },
+          {
+            "title": "tracker RPC contract: stale save after delete cannot resurrect; another session remains last-write-wins",
+            "bodySha256": "6c1f210287f5afd260a6ce1ec949abcd1cfc63f5b2534f01471fa8ab6d319821"
+          },
+          {
+            "title": "dismissNudge: upserts dismissal with 30-day cooldown",
+            "bodySha256": "5a795a55891f43cac712667dbdec6df74aa1a982e166b200b8663b09ef7bc530"
+          },
+          {
+            "title": "tracker admin reads remain scoped to the authenticated user",
+            "bodySha256": "a7de63a896bd33805b9a5394766ddfbb9728f7bd528aef5f5df8cd2d84e919e4"
+          },
+          {
+            "title": "getTracker: unlocked gate computes nudges from logs",
+            "bodySha256": "ae42d1db30d89ec0a3455d38d7167ec78562822b2db8a52a50a0399f83cb29b6"
+          }
+        ],
+        "cut": [
+          {
+            "title": "getTracker: 401 without user",
+            "bodySha256": "97f91b4f3db598bd794ca3df6ee1336db16fb9bc3ae2c94a6e44611a37248781"
+          },
+          {
+            "title": "`getTracker: permits current ${access} access`",
+            "bodySha256": "978673d6fc7019495d0a2bc3b75491e604a9150e99f7cc931a8aeafc7e49fe77"
+          },
+          {
+            "title": "tracker handlers fail closed for expired or unavailable access",
+            "bodySha256": "195435221b62ec64ceb902a3ce0c91417468691d73588c91227950601258a446"
+          },
+          {
+            "title": "tracker handlers deny paid pending access without subscription-required copy",
+            "bodySha256": "140efa1e55f52e6ab800621eb30a6ca077559b18038965785d681d68d98e12b7"
+          },
+          {
+            "title": "getTracker: rejects an invalid IANA timezone with 400",
+            "bodySha256": "4a9cdf5288e83b1441b99c0a437fadf8b42c7f0a7115b80aea6949afa97c1126"
+          },
+          {
+            "title": "getTracker: returns shelf image URLs from artifact usage rows with null fallbacks",
+            "bodySha256": "88485d580362b82e01f5db15a9592ca607e5ab0f6b0319e782f4bdb4c0ed2ee0"
+          },
+          {
+            "title": "getTracker: returns 500 instead of empty diary when log read fails",
+            "bodySha256": "31da71819c3616e0dafec64ab34d67198270297ee5848d0f2efc966cd7395825"
+          },
+          {
+            "title": "getTracker: excludes deleted and custom rows from trust and rhythm history",
+            "bodySha256": "5dde4d987fa42d1bf073a01131aef2be1c35859ed54b4a00715756f965422fe3"
+          },
+          {
+            "title": "getTracker: returns the full shampoo target and only 63 calendar days of rhythm history",
+            "bodySha256": "a23177d74a5e7a6c886fe555773f165242110307ecd62e734c1f6afb0560f90b"
+          },
+          {
+            "title": "putLog: valid wash day upserts log and replaces products",
+            "bodySha256": "75437683fab56419e78eb5cb2852a307cd37488e2a20c0f9a70520d54de5bb0e"
+          },
+          {
+            "title": "putLog: rejects future date and stale backfill",
+            "bodySha256": "c9240e7a982bd0e3243417f25233814fe48b2cd265990f933282d5697ab38324"
+          },
+          {
+            "title": "putLog: rejects unknown day type",
+            "bodySha256": "b6c9c17e5441ca0489fc9356db37b9b5cb6f31fbd6c3dd6af62b1a552a5df18d"
+          },
+          {
+            "title": "putLog: rejects unknown product category with 400",
+            "bodySha256": "6b283c6c6b20167f13576dcca3205d1a510f81060ff1462b4a985d7eafb2d6a5"
+          },
+          {
+            "title": "putLog: rejects a userProductUsageId owned by another user",
+            "bodySha256": "92d32af26a83af96b3463a5388077125b326f152273f6e673cd8fe6ac633def2"
+          },
+          {
+            "title": "putLog: rejects a linked product whose category does not match",
+            "bodySha256": "8c4a0fa80c26fe25abf9872f9e465ce58769482aad253df9eb911b43d1e63de7"
+          },
+          {
+            "title": "putLog: an RPC error is never reported as a successful save",
+            "bodySha256": "afaba0562dec654a65de705def99de798048d4d71ab69cc13238a01aa95dde16"
+          },
+          {
+            "title": "putLog: rejects an invalid IANA timezone with 400",
+            "bodySha256": "b9f7f50f4667da7ebdddde537739c995e334f64e44a678b41cab92ebde7cbe68"
+          },
+          {
+            "title": "putLog: validates custom names and rejects products for none",
+            "bodySha256": "1ffa1dbdc57e5ea362d6f5691d36c5744ad996b7feeb2239e9fba86f15d44999"
+          },
+          {
+            "title": "tracker RPC contract: stale save after delete cannot resurrect; another session remains last-write-wins",
+            "bodySha256": "6c1f210287f5afd260a6ce1ec949abcd1cfc63f5b2534f01471fa8ab6d319821"
+          },
+          {
+            "title": "dismissNudge: upserts dismissal with 30-day cooldown",
+            "bodySha256": "5a795a55891f43cac712667dbdec6df74aa1a982e166b200b8663b09ef7bc530"
+          },
+          {
+            "title": "tracker admin reads remain scoped to the authenticated user",
+            "bodySha256": "a7de63a896bd33805b9a5394766ddfbb9728f7bd528aef5f5df8cd2d84e919e4"
+          },
+          {
+            "title": "getTracker: unlocked gate computes nudges from logs",
+            "bodySha256": "ae42d1db30d89ec0a3455d38d7167ec78562822b2db8a52a50a0399f83cb29b6"
+          }
+        ]
+      }
+    },
+    {
+      "file": "tests/tracker-migration-security.test.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/before/tests/tracker-migration-security.test.ts",
+          "sha256": "fb1ea2d8ee2bf930cb8d4aace9fe9c0e83f690092b125ae739fcdca141ea5143",
+          "count": 6
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/transfer/tests/tracker-migration-security.test.ts",
+          "sha256": "fb1ea2d8ee2bf930cb8d4aace9fe9c0e83f690092b125ae739fcdca141ea5143",
+          "count": 6
+        },
+        "cut": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/cut/tests/tracker-migration-security.test.ts",
+          "sha256": "fb1ea2d8ee2bf930cb8d4aace9fe9c0e83f690092b125ae739fcdca141ea5143",
+          "count": 6
+        }
+      },
+      "expectedDeclarations": {
+        "before": [
+          {
+            "title": "fresh tracker schema allows authenticated reads but no direct log mutations",
+            "bodySha256": "a5907904686b71a20052fc48a63a0cff1c90400adfc183fc890702e7cc8c4895"
+          },
+          {
+            "title": "tracker mutation RPCs run through a fixed-search-path definer boundary",
+            "bodySha256": "3a94e5f17e3e0e6af14cf15db9a5a98242eae20648f265d7149811388cb21fd9"
+          },
+          {
+            "title": "forward hardening removes grants and mutation policies from existing databases",
+            "bodySha256": "31a3f46c30b857fe0c400f01af4fcc033536237e40ca5831d5aed582d091eaa9"
+          },
+          {
+            "title": "replace_routine_log rejects malformed, oversized, and duplicate direct-RPC payloads",
+            "bodySha256": "02aeafbe48bd5f0057f02c3aa49037a316cf6e7fdf22d2cc3ae445bbd56acbf6"
+          },
+          {
+            "title": "delete_routine_log writes an absent-row tombstone before applying revision ordering",
+            "bodySha256": "02e71bd821911d8b5b2dd4720d871f166302273a639c8a18f69b361bf8a65010"
+          },
+          {
+            "title": "entitlement boundary revokes direct tracker access and replaces RPC signatures",
+            "bodySha256": "a1069e0840cd289f3b5515658f250738b8a7b5149ee110943e6c4e378062cde9"
+          }
+        ],
+        "transfer": [
+          {
+            "title": "fresh tracker schema allows authenticated reads but no direct log mutations",
+            "bodySha256": "a5907904686b71a20052fc48a63a0cff1c90400adfc183fc890702e7cc8c4895"
+          },
+          {
+            "title": "tracker mutation RPCs run through a fixed-search-path definer boundary",
+            "bodySha256": "3a94e5f17e3e0e6af14cf15db9a5a98242eae20648f265d7149811388cb21fd9"
+          },
+          {
+            "title": "forward hardening removes grants and mutation policies from existing databases",
+            "bodySha256": "31a3f46c30b857fe0c400f01af4fcc033536237e40ca5831d5aed582d091eaa9"
+          },
+          {
+            "title": "replace_routine_log rejects malformed, oversized, and duplicate direct-RPC payloads",
+            "bodySha256": "02aeafbe48bd5f0057f02c3aa49037a316cf6e7fdf22d2cc3ae445bbd56acbf6"
+          },
+          {
+            "title": "delete_routine_log writes an absent-row tombstone before applying revision ordering",
+            "bodySha256": "02e71bd821911d8b5b2dd4720d871f166302273a639c8a18f69b361bf8a65010"
+          },
+          {
+            "title": "entitlement boundary revokes direct tracker access and replaces RPC signatures",
+            "bodySha256": "a1069e0840cd289f3b5515658f250738b8a7b5149ee110943e6c4e378062cde9"
+          }
+        ],
+        "cut": [
+          {
+            "title": "fresh tracker schema allows authenticated reads but no direct log mutations",
+            "bodySha256": "a5907904686b71a20052fc48a63a0cff1c90400adfc183fc890702e7cc8c4895"
+          },
+          {
+            "title": "tracker mutation RPCs run through a fixed-search-path definer boundary",
+            "bodySha256": "3a94e5f17e3e0e6af14cf15db9a5a98242eae20648f265d7149811388cb21fd9"
+          },
+          {
+            "title": "forward hardening removes grants and mutation policies from existing databases",
+            "bodySha256": "31a3f46c30b857fe0c400f01af4fcc033536237e40ca5831d5aed582d091eaa9"
+          },
+          {
+            "title": "replace_routine_log rejects malformed, oversized, and duplicate direct-RPC payloads",
+            "bodySha256": "02aeafbe48bd5f0057f02c3aa49037a316cf6e7fdf22d2cc3ae445bbd56acbf6"
+          },
+          {
+            "title": "delete_routine_log writes an absent-row tombstone before applying revision ordering",
+            "bodySha256": "02e71bd821911d8b5b2dd4720d871f166302273a639c8a18f69b361bf8a65010"
+          },
+          {
+            "title": "entitlement boundary revokes direct tracker access and replaces RPC signatures",
+            "bodySha256": "a1069e0840cd289f3b5515658f250738b8a7b5149ee110943e6c4e378062cde9"
+          }
+        ]
+      }
+    },
+    {
+      "file": "tests/tracker-nudges.test.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/before/tests/tracker-nudges.test.ts",
+          "sha256": "b2d918171c06640d9e035b056ebb9f8a7e451bb7186fe135e4afb66b1cdc8c76",
+          "count": 8
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/transfer/tests/tracker-nudges.test.ts",
+          "sha256": "326e1ef04898aa06f98e50fca9669f7b1d396c3b5226d789575497128269e154",
+          "count": 8
+        },
+        "cut": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/cut/tests/tracker-nudges.test.ts",
+          "sha256": "acc4368e57387b454c654fa7a935fb8b7ea462e09cbdef270baa356fc357fbf3",
+          "count": 7
+        }
+      },
+      "expectedDeclarations": {
+        "before": [
+          {
+            "title": "observed clearly below band -> increase nudge with German copy",
+            "bodySha256": "6cfb6c3210d6e2914a3e3ab8a98f0a1104f1c1ef0b107fb8a96862b466d1a1f0"
+          },
+          {
+            "title": "observed inside band -> no nudge",
+            "bodySha256": "b4da62cf46c718dd04a2cc6c724f6ac8bb8ea758024ce06fb70b411dd8b742e0"
+          },
+          {
+            "title": "boundary wobble guard: less than 0.5/week outside band -> no nudge",
+            "bodySha256": "3c7453ecc1b2225f7d87034a54d4ff3fe2aeb10726effce49c03ea86972f56cd"
+          },
+          {
+            "title": "exactly 0.5/week outside the band fires (spec: >= margin)",
+            "bodySha256": "f466c7c7c95ef513fcf0ad67782c4b0b3d9f02cf99fb4cf747aa3e8169ab7107"
+          },
+          {
+            "title": "wash_rhythm nudge speaks about washing, not the shampoo product",
+            "bodySha256": "31b2ae98c4d55607538c7dc17e7c7ec25829abc657cec09e05e5b169c03ee8fd"
+          },
+          {
+            "title": "observed clearly above band -> decrease nudge",
+            "bodySha256": "6c10d12490db90f3af23439806eeb9ad628724a218dbb2550a75d6608ac66da7"
+          },
+          {
+            "title": "dismissed direction stays hidden; other direction still fires",
+            "bodySha256": "21ed020c1641b48a88f43ac68299d942514cfa90329d952e7b5bc3aadf83fc95"
+          },
+          {
+            "title": "no target for category -> no nudge",
+            "bodySha256": "fbbadf9d632706ee78e186457af61d86f86284c5700a5e39a8e189e440396c42"
+          }
+        ],
+        "transfer": [
+          {
+            "title": "observed clearly below band -> increase nudge with German copy",
+            "bodySha256": "6cfb6c3210d6e2914a3e3ab8a98f0a1104f1c1ef0b107fb8a96862b466d1a1f0"
+          },
+          {
+            "title": "observed inside band -> no nudge",
+            "bodySha256": "b4da62cf46c718dd04a2cc6c724f6ac8bb8ea758024ce06fb70b411dd8b742e0"
+          },
+          {
+            "title": "boundary wobble guard: less than 0.5/week outside band -> no nudge",
+            "bodySha256": "3c7453ecc1b2225f7d87034a54d4ff3fe2aeb10726effce49c03ea86972f56cd"
+          },
+          {
+            "title": "exactly 0.5/week outside the band fires (spec: >= margin)",
+            "bodySha256": "f466c7c7c95ef513fcf0ad67782c4b0b3d9f02cf99fb4cf747aa3e8169ab7107"
+          },
+          {
+            "title": "wash_rhythm nudge speaks about washing, not the shampoo product",
+            "bodySha256": "31b2ae98c4d55607538c7dc17e7c7ec25829abc657cec09e05e5b169c03ee8fd"
+          },
+          {
+            "title": "observed clearly above band -> decrease nudge",
+            "bodySha256": "6c10d12490db90f3af23439806eeb9ad628724a218dbb2550a75d6608ac66da7"
+          },
+          {
+            "title": "dismissed direction stays hidden; other direction still fires",
+            "bodySha256": "19b965239db2d5acddae2ab1e27d9c91ae3361cdbe54b17176a5d2239fb9a432"
+          },
+          {
+            "title": "no target for category -> no nudge",
+            "bodySha256": "fbbadf9d632706ee78e186457af61d86f86284c5700a5e39a8e189e440396c42"
+          }
+        ],
+        "cut": [
+          {
+            "title": "observed clearly below band -> increase nudge with German copy",
+            "bodySha256": "6cfb6c3210d6e2914a3e3ab8a98f0a1104f1c1ef0b107fb8a96862b466d1a1f0"
+          },
+          {
+            "title": "observed inside band -> no nudge",
+            "bodySha256": "b4da62cf46c718dd04a2cc6c724f6ac8bb8ea758024ce06fb70b411dd8b742e0"
+          },
+          {
+            "title": "boundary wobble guard: less than 0.5/week outside band -> no nudge",
+            "bodySha256": "3c7453ecc1b2225f7d87034a54d4ff3fe2aeb10726effce49c03ea86972f56cd"
+          },
+          {
+            "title": "exactly 0.5/week outside the band fires (spec: >= margin)",
+            "bodySha256": "f466c7c7c95ef513fcf0ad67782c4b0b3d9f02cf99fb4cf747aa3e8169ab7107"
+          },
+          {
+            "title": "wash_rhythm nudge speaks about washing, not the shampoo product",
+            "bodySha256": "31b2ae98c4d55607538c7dc17e7c7ec25829abc657cec09e05e5b169c03ee8fd"
+          },
+          {
+            "title": "dismissed direction stays hidden; other direction still fires",
+            "bodySha256": "19b965239db2d5acddae2ab1e27d9c91ae3361cdbe54b17176a5d2239fb9a432"
+          },
+          {
+            "title": "no target for category -> no nudge",
+            "bodySha256": "fbbadf9d632706ee78e186457af61d86f86284c5700a5e39a8e189e440396c42"
+          }
+        ]
+      }
+    },
+    {
+      "file": "tests/tracker-presentation.test.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/before/tests/tracker-presentation.test.ts",
+          "sha256": "c8bde91f440457ac958cdd903377e59b949ab6a89d956b3e1a2683501ce78172",
+          "count": 4
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/transfer/tests/tracker-presentation.test.ts",
+          "sha256": "c8bde91f440457ac958cdd903377e59b949ab6a89d956b3e1a2683501ce78172",
+          "count": 4
+        },
+        "cut": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/cut/tests/tracker-presentation.test.ts",
+          "sha256": "c8bde91f440457ac958cdd903377e59b949ab6a89d956b3e1a2683501ce78172",
+          "count": 4
+        }
+      },
+      "expectedDeclarations": {
+        "before": [
+          {
+            "title": "activity presentation defines all six German labels and descriptions",
+            "bodySha256": "4f95cb3ca3a75ab2f9ba9a292456b7ef822d10ea03ca80b8c9d0624c92629473"
+          },
+          {
+            "title": "shelf order is category, normalized product name, then stable usage id",
+            "bodySha256": "2099354cae664287d930e58f8db1117fd96c6d6b227a082c30cfb65ff56f4755"
+          },
+          {
+            "title": "activity ordering surfaces likely categories without hiding the stable remaining shelf",
+            "bodySha256": "cff4f66e3e8cae3c83af7c4aef8bc3a5f833768b5207ec9b1e2bc4651802f5b0"
+          },
+          {
+            "title": "presentation copy names prefill source and profile ownership without retired progress language",
+            "bodySha256": "11248ef90e3e53ea17deb414c06a09e34b5c8706d0022d69300d740819fb63f3"
+          }
+        ],
+        "transfer": [
+          {
+            "title": "activity presentation defines all six German labels and descriptions",
+            "bodySha256": "4f95cb3ca3a75ab2f9ba9a292456b7ef822d10ea03ca80b8c9d0624c92629473"
+          },
+          {
+            "title": "shelf order is category, normalized product name, then stable usage id",
+            "bodySha256": "2099354cae664287d930e58f8db1117fd96c6d6b227a082c30cfb65ff56f4755"
+          },
+          {
+            "title": "activity ordering surfaces likely categories without hiding the stable remaining shelf",
+            "bodySha256": "cff4f66e3e8cae3c83af7c4aef8bc3a5f833768b5207ec9b1e2bc4651802f5b0"
+          },
+          {
+            "title": "presentation copy names prefill source and profile ownership without retired progress language",
+            "bodySha256": "11248ef90e3e53ea17deb414c06a09e34b5c8706d0022d69300d740819fb63f3"
+          }
+        ],
+        "cut": [
+          {
+            "title": "activity presentation defines all six German labels and descriptions",
+            "bodySha256": "4f95cb3ca3a75ab2f9ba9a292456b7ef822d10ea03ca80b8c9d0624c92629473"
+          },
+          {
+            "title": "shelf order is category, normalized product name, then stable usage id",
+            "bodySha256": "2099354cae664287d930e58f8db1117fd96c6d6b227a082c30cfb65ff56f4755"
+          },
+          {
+            "title": "activity ordering surfaces likely categories without hiding the stable remaining shelf",
+            "bodySha256": "cff4f66e3e8cae3c83af7c4aef8bc3a5f833768b5207ec9b1e2bc4651802f5b0"
+          },
+          {
+            "title": "presentation copy names prefill source and profile ownership without retired progress language",
+            "bodySha256": "11248ef90e3e53ea17deb414c06a09e34b5c8706d0022d69300d740819fb63f3"
+          }
+        ]
+      }
+    },
+    {
+      "file": "tests/tracker-rhythm.test.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/before/tests/tracker-rhythm.test.ts",
+          "sha256": "96764b815ce54f2641fae4441c2a3a3ffab49c94cc034a24d868b910c7073ed7",
+          "count": 8
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/transfer/tests/tracker-rhythm.test.ts",
+          "sha256": "96764b815ce54f2641fae4441c2a3a3ffab49c94cc034a24d868b910c7073ed7",
+          "count": 8
+        },
+        "cut": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/cut/tests/tracker-rhythm.test.ts",
+          "sha256": "96764b815ce54f2641fae4441c2a3a3ffab49c94cc034a24d868b910c7073ed7",
+          "count": 8
+        }
+      },
+      "expectedDeclarations": {
+        "before": [
+          {
+            "title": "weekly rhythm uses the ISO week across year boundaries and shows target bands",
+            "bodySha256": "d4686ec56c74dd1d42863400b9c9afb02de7b56cdd9cc0d3e55e4adf22188a92"
+          },
+          {
+            "title": "rhythm pluralizes below-target encouragement and caps preferred-target progress",
+            "bodySha256": "7be810c7ed0bcc6c19afe34c61622a70c176d9cd9ae755939cc1c68976bdbd38"
+          },
+          {
+            "title": "biweekly and monthly periods use the fixed Monday 1970-01-05 anchor",
+            "bodySha256": "42b24a5d6e34f56681bf0ffd0cd694e87ad9d4aa67d509950cd3ca8997c9af0d"
+          },
+          {
+            "title": "only completed eligible weekly periods form a consecutive rhythm",
+            "bodySha256": "de939577a29451590e5b4a57633f8abdba16f5698b35cb1fd3e16dd17c9dd759"
+          },
+          {
+            "title": "custom and unconfirmed drafts do not affect current rhythm",
+            "bodySha256": "beb3bed311025a5060582dd06d22c604fb52e3ea676194ee2a6934552e78f262"
+          },
+          {
+            "title": "no target and less-than-monthly targets stay neutral",
+            "bodySha256": "e6b8434a261f9c30e2fb360ca48995ddf03ec5ac71661aba628c35ad914ba56a"
+          },
+          {
+            "title": "tracker renders the in-range headline from confirmed washes",
+            "bodySha256": "5cbceca4d4c3f282b55edf58fa3456d722ac1a83b5296c2896351763d8d41957"
+          },
+          {
+            "title": "tracker day strip labels activities and keeps future days disabled",
+            "bodySha256": "27bcdfbc01a035f964034ba50806a4d916c1b8166c5405f2983ac6a111664eb8"
+          }
+        ],
+        "transfer": [
+          {
+            "title": "weekly rhythm uses the ISO week across year boundaries and shows target bands",
+            "bodySha256": "d4686ec56c74dd1d42863400b9c9afb02de7b56cdd9cc0d3e55e4adf22188a92"
+          },
+          {
+            "title": "rhythm pluralizes below-target encouragement and caps preferred-target progress",
+            "bodySha256": "7be810c7ed0bcc6c19afe34c61622a70c176d9cd9ae755939cc1c68976bdbd38"
+          },
+          {
+            "title": "biweekly and monthly periods use the fixed Monday 1970-01-05 anchor",
+            "bodySha256": "42b24a5d6e34f56681bf0ffd0cd694e87ad9d4aa67d509950cd3ca8997c9af0d"
+          },
+          {
+            "title": "only completed eligible weekly periods form a consecutive rhythm",
+            "bodySha256": "de939577a29451590e5b4a57633f8abdba16f5698b35cb1fd3e16dd17c9dd759"
+          },
+          {
+            "title": "custom and unconfirmed drafts do not affect current rhythm",
+            "bodySha256": "beb3bed311025a5060582dd06d22c604fb52e3ea676194ee2a6934552e78f262"
+          },
+          {
+            "title": "no target and less-than-monthly targets stay neutral",
+            "bodySha256": "e6b8434a261f9c30e2fb360ca48995ddf03ec5ac71661aba628c35ad914ba56a"
+          },
+          {
+            "title": "tracker renders the in-range headline from confirmed washes",
+            "bodySha256": "5cbceca4d4c3f282b55edf58fa3456d722ac1a83b5296c2896351763d8d41957"
+          },
+          {
+            "title": "tracker day strip labels activities and keeps future days disabled",
+            "bodySha256": "27bcdfbc01a035f964034ba50806a4d916c1b8166c5405f2983ac6a111664eb8"
+          }
+        ],
+        "cut": [
+          {
+            "title": "weekly rhythm uses the ISO week across year boundaries and shows target bands",
+            "bodySha256": "d4686ec56c74dd1d42863400b9c9afb02de7b56cdd9cc0d3e55e4adf22188a92"
+          },
+          {
+            "title": "rhythm pluralizes below-target encouragement and caps preferred-target progress",
+            "bodySha256": "7be810c7ed0bcc6c19afe34c61622a70c176d9cd9ae755939cc1c68976bdbd38"
+          },
+          {
+            "title": "biweekly and monthly periods use the fixed Monday 1970-01-05 anchor",
+            "bodySha256": "42b24a5d6e34f56681bf0ffd0cd694e87ad9d4aa67d509950cd3ca8997c9af0d"
+          },
+          {
+            "title": "only completed eligible weekly periods form a consecutive rhythm",
+            "bodySha256": "de939577a29451590e5b4a57633f8abdba16f5698b35cb1fd3e16dd17c9dd759"
+          },
+          {
+            "title": "custom and unconfirmed drafts do not affect current rhythm",
+            "bodySha256": "beb3bed311025a5060582dd06d22c604fb52e3ea676194ee2a6934552e78f262"
+          },
+          {
+            "title": "no target and less-than-monthly targets stay neutral",
+            "bodySha256": "e6b8434a261f9c30e2fb360ca48995ddf03ec5ac71661aba628c35ad914ba56a"
+          },
+          {
+            "title": "tracker renders the in-range headline from confirmed washes",
+            "bodySha256": "5cbceca4d4c3f282b55edf58fa3456d722ac1a83b5296c2896351763d8d41957"
+          },
+          {
+            "title": "tracker day strip labels activities and keeps future days disabled",
+            "bodySha256": "27bcdfbc01a035f964034ba50806a4d916c1b8166c5405f2983ac6a111664eb8"
+          }
+        ]
+      }
+    },
+    {
+      "file": "tests/tracker-route-wiring.test.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/before/tests/tracker-route-wiring.test.ts",
+          "sha256": "794b3597073258d317347307bc43d15ac86c3d4266e840dea06237f337955f6b",
+          "count": 1
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/transfer/tests/tracker-route-wiring.test.ts",
+          "sha256": "794b3597073258d317347307bc43d15ac86c3d4266e840dea06237f337955f6b",
+          "count": 1
+        },
+        "cut": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/cut/tests/tracker-route-wiring.test.ts",
+          "sha256": "794b3597073258d317347307bc43d15ac86c3d4266e840dea06237f337955f6b",
+          "count": 1
+        }
+      },
+      "expectedDeclarations": {
+        "before": [
+          {
+            "title": "every production tracker route wires the canonical one-time access resolver",
+            "bodySha256": "75842851575e65ee927bd8ed5cb9d293470630cefd5e45b50dd11ba57287087a"
+          }
+        ],
+        "transfer": [
+          {
+            "title": "every production tracker route wires the canonical one-time access resolver",
+            "bodySha256": "75842851575e65ee927bd8ed5cb9d293470630cefd5e45b50dd11ba57287087a"
+          }
+        ],
+        "cut": [
+          {
+            "title": "every production tracker route wires the canonical one-time access resolver",
+            "bodySha256": "75842851575e65ee927bd8ed5cb9d293470630cefd5e45b50dd11ba57287087a"
+          }
+        ]
+      }
+    },
+    {
+      "file": "tests/tracker-save-coordinator.test.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/before/tests/tracker-save-coordinator.test.ts",
+          "sha256": "01771d645f4ec3600c4a1e878d48beec62ee867442269d1462937b1ecd6c1051",
+          "count": 11
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/transfer/tests/tracker-save-coordinator.test.ts",
+          "sha256": "01771d645f4ec3600c4a1e878d48beec62ee867442269d1462937b1ecd6c1051",
+          "count": 11
+        },
+        "cut": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/cut/tests/tracker-save-coordinator.test.ts",
+          "sha256": "01771d645f4ec3600c4a1e878d48beec62ee867442269d1462937b1ecd6c1051",
+          "count": 11
+        }
+      },
+      "expectedDeclarations": {
+        "before": [
+          {
+            "title": "recognizes a same-origin followed pricing redirect",
+            "bodySha256": "e8d1bf3dc1654092821e32cb5c3b516ab6a6f9f259e81b1f43443bb52d6b76dc"
+          },
+          {
+            "title": "coalesces rapid updates and never runs more than one save",
+            "bodySha256": "8d6942b2d45c5678ad88a6f65bc35a37bb153300bd520c29cca39d54fc9eac8d"
+          },
+          {
+            "title": "retains updates for two dates and saves them serially",
+            "bodySha256": "62c8be6365940ed422b07110a5a56c7f0b6eef0d65e7d22ec630a2353a23c6f6"
+          },
+          {
+            "title": "an older success cannot mark a newer revision saved",
+            "bodySha256": "1dd90cf7cfb1e09d8264353c55b941fe8e42bc166477626c8704648e2b4b8aa4"
+          },
+          {
+            "title": "retries retryable failures once before surfacing an error",
+            "bodySha256": "42c9360b1b7bae4a2f0375250c4f593012b33cca56dc9a058e9631c6ea373da8"
+          },
+          {
+            "title": "does not retry a non-retryable validation failure",
+            "bodySha256": "9b3c7efc6aed7c08d37d5c39ae0911ff2479d92cd0aedcd68d3c7a8d5bfb4adb"
+          },
+          {
+            "title": "manual retry reuses the failed revision and can recover",
+            "bodySha256": "4fb760d9f4de90683d3a975adbfa0cb5cedc003c2fd3a9e656ae8cdab2319057"
+          },
+          {
+            "title": "flush bypasses the trailing debounce and idle fires once",
+            "bodySha256": "ea66c78ae75432a029351705565ead80d3aa11107d12998433e0ff2f77d77b10"
+          },
+          {
+            "title": "dismissing an invalid custom draft restores the latest valid snapshot after an in-flight save",
+            "bodySha256": "162208c61753c1aabc484de3816d86c932df9f9b37907ff636fa2f06321d8f20"
+          },
+          {
+            "title": "a dispatched date can receive a higher-revision tombstone when no valid snapshot remains",
+            "bodySha256": "47196fda81f23586d00436a3add7d1730f7d4934660cfefb7b70e7beb0be6570"
+          },
+          {
+            "title": "superseding during retry backoff prevents the obsolete retry",
+            "bodySha256": "8aa0b817abc0537757d53d19c22e056da3fc8fc6ffc19b28f37343adace3bd68"
+          }
+        ],
+        "transfer": [
+          {
+            "title": "recognizes a same-origin followed pricing redirect",
+            "bodySha256": "e8d1bf3dc1654092821e32cb5c3b516ab6a6f9f259e81b1f43443bb52d6b76dc"
+          },
+          {
+            "title": "coalesces rapid updates and never runs more than one save",
+            "bodySha256": "8d6942b2d45c5678ad88a6f65bc35a37bb153300bd520c29cca39d54fc9eac8d"
+          },
+          {
+            "title": "retains updates for two dates and saves them serially",
+            "bodySha256": "62c8be6365940ed422b07110a5a56c7f0b6eef0d65e7d22ec630a2353a23c6f6"
+          },
+          {
+            "title": "an older success cannot mark a newer revision saved",
+            "bodySha256": "1dd90cf7cfb1e09d8264353c55b941fe8e42bc166477626c8704648e2b4b8aa4"
+          },
+          {
+            "title": "retries retryable failures once before surfacing an error",
+            "bodySha256": "42c9360b1b7bae4a2f0375250c4f593012b33cca56dc9a058e9631c6ea373da8"
+          },
+          {
+            "title": "does not retry a non-retryable validation failure",
+            "bodySha256": "9b3c7efc6aed7c08d37d5c39ae0911ff2479d92cd0aedcd68d3c7a8d5bfb4adb"
+          },
+          {
+            "title": "manual retry reuses the failed revision and can recover",
+            "bodySha256": "4fb760d9f4de90683d3a975adbfa0cb5cedc003c2fd3a9e656ae8cdab2319057"
+          },
+          {
+            "title": "flush bypasses the trailing debounce and idle fires once",
+            "bodySha256": "ea66c78ae75432a029351705565ead80d3aa11107d12998433e0ff2f77d77b10"
+          },
+          {
+            "title": "dismissing an invalid custom draft restores the latest valid snapshot after an in-flight save",
+            "bodySha256": "162208c61753c1aabc484de3816d86c932df9f9b37907ff636fa2f06321d8f20"
+          },
+          {
+            "title": "a dispatched date can receive a higher-revision tombstone when no valid snapshot remains",
+            "bodySha256": "47196fda81f23586d00436a3add7d1730f7d4934660cfefb7b70e7beb0be6570"
+          },
+          {
+            "title": "superseding during retry backoff prevents the obsolete retry",
+            "bodySha256": "8aa0b817abc0537757d53d19c22e056da3fc8fc6ffc19b28f37343adace3bd68"
+          }
+        ],
+        "cut": [
+          {
+            "title": "recognizes a same-origin followed pricing redirect",
+            "bodySha256": "e8d1bf3dc1654092821e32cb5c3b516ab6a6f9f259e81b1f43443bb52d6b76dc"
+          },
+          {
+            "title": "coalesces rapid updates and never runs more than one save",
+            "bodySha256": "8d6942b2d45c5678ad88a6f65bc35a37bb153300bd520c29cca39d54fc9eac8d"
+          },
+          {
+            "title": "retains updates for two dates and saves them serially",
+            "bodySha256": "62c8be6365940ed422b07110a5a56c7f0b6eef0d65e7d22ec630a2353a23c6f6"
+          },
+          {
+            "title": "an older success cannot mark a newer revision saved",
+            "bodySha256": "1dd90cf7cfb1e09d8264353c55b941fe8e42bc166477626c8704648e2b4b8aa4"
+          },
+          {
+            "title": "retries retryable failures once before surfacing an error",
+            "bodySha256": "42c9360b1b7bae4a2f0375250c4f593012b33cca56dc9a058e9631c6ea373da8"
+          },
+          {
+            "title": "does not retry a non-retryable validation failure",
+            "bodySha256": "9b3c7efc6aed7c08d37d5c39ae0911ff2479d92cd0aedcd68d3c7a8d5bfb4adb"
+          },
+          {
+            "title": "manual retry reuses the failed revision and can recover",
+            "bodySha256": "4fb760d9f4de90683d3a975adbfa0cb5cedc003c2fd3a9e656ae8cdab2319057"
+          },
+          {
+            "title": "flush bypasses the trailing debounce and idle fires once",
+            "bodySha256": "ea66c78ae75432a029351705565ead80d3aa11107d12998433e0ff2f77d77b10"
+          },
+          {
+            "title": "dismissing an invalid custom draft restores the latest valid snapshot after an in-flight save",
+            "bodySha256": "162208c61753c1aabc484de3816d86c932df9f9b37907ff636fa2f06321d8f20"
+          },
+          {
+            "title": "a dispatched date can receive a higher-revision tombstone when no valid snapshot remains",
+            "bodySha256": "47196fda81f23586d00436a3add7d1730f7d4934660cfefb7b70e7beb0be6570"
+          },
+          {
+            "title": "superseding during retry backoff prevents the obsolete retry",
+            "bodySha256": "8aa0b817abc0537757d53d19c22e056da3fc8fc6ffc19b28f37343adace3bd68"
+          }
+        ]
+      }
+    },
+    {
+      "file": "tests/tracker-trust-gate.test.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/before/tests/tracker-trust-gate.test.ts",
+          "sha256": "55121eec6a7342c251183f83816ba15213b4faeb15084a9548a0a7fea566b043",
+          "count": 7
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/transfer/tests/tracker-trust-gate.test.ts",
+          "sha256": "55121eec6a7342c251183f83816ba15213b4faeb15084a9548a0a7fea566b043",
+          "count": 7
+        },
+        "cut": {
+          "path": "/tmp/test-audit-tracker-pattern-staging-9aUaQJ/cut/tests/tracker-trust-gate.test.ts",
+          "sha256": "55121eec6a7342c251183f83816ba15213b4faeb15084a9548a0a7fea566b043",
+          "count": 7
+        }
+      },
+      "expectedDeclarations": {
+        "before": [
+          {
+            "title": "no logs: locked, no first-log date",
+            "bodySha256": "ba09400a57dd8221ac7a4e9cff5dc82b78f10529c07d547f30e4db7637d90e41"
+          },
+          {
+            "title": "first log today: locked with 14 days remaining (unlock lands on day 14)",
+            "bodySha256": "10d464b29f1e281bf8f68053c9f911668a3d5b0ce068878fd201d3a21e6655b7"
+          },
+          {
+            "title": "14 days elapsed but only 9 logged days: still locked",
+            "bodySha256": "970348995bfffecad312b5b58778af57daa2fb2dbfa03a0d46901c7f4b3a46fa"
+          },
+          {
+            "title": "14 days elapsed and 10 logged days: unlocked",
+            "bodySha256": "aab349dea98120a4e2ddb31f95dfcda8d4296100b8ea8e62ef069370fb818535"
+          },
+          {
+            "title": "duplicate dates count once",
+            "bodySha256": "5dc8071df2375c0601458ddb14f2dca95205fe79f8394d3c676444a67ff1b094"
+          },
+          {
+            "title": "custom activity names trim whitespace and reject blank values",
+            "bodySha256": "6e08a49cda822b47ccb0d13b26c1d95b890518159399e3a413198cbd0ccc9d95"
+          },
+          {
+            "title": "custom and unconfirmed days do not count toward the ten qualifying trust-gate days",
+            "bodySha256": "030b25ebcbf22b11e87fc4fcc79da40295a4c5de8fe4c2f6b1ecbc92e4e931ce"
+          }
+        ],
+        "transfer": [
+          {
+            "title": "no logs: locked, no first-log date",
+            "bodySha256": "ba09400a57dd8221ac7a4e9cff5dc82b78f10529c07d547f30e4db7637d90e41"
+          },
+          {
+            "title": "first log today: locked with 14 days remaining (unlock lands on day 14)",
+            "bodySha256": "10d464b29f1e281bf8f68053c9f911668a3d5b0ce068878fd201d3a21e6655b7"
+          },
+          {
+            "title": "14 days elapsed but only 9 logged days: still locked",
+            "bodySha256": "970348995bfffecad312b5b58778af57daa2fb2dbfa03a0d46901c7f4b3a46fa"
+          },
+          {
+            "title": "14 days elapsed and 10 logged days: unlocked",
+            "bodySha256": "aab349dea98120a4e2ddb31f95dfcda8d4296100b8ea8e62ef069370fb818535"
+          },
+          {
+            "title": "duplicate dates count once",
+            "bodySha256": "5dc8071df2375c0601458ddb14f2dca95205fe79f8394d3c676444a67ff1b094"
+          },
+          {
+            "title": "custom activity names trim whitespace and reject blank values",
+            "bodySha256": "6e08a49cda822b47ccb0d13b26c1d95b890518159399e3a413198cbd0ccc9d95"
+          },
+          {
+            "title": "custom and unconfirmed days do not count toward the ten qualifying trust-gate days",
+            "bodySha256": "030b25ebcbf22b11e87fc4fcc79da40295a4c5de8fe4c2f6b1ecbc92e4e931ce"
+          }
+        ],
+        "cut": [
+          {
+            "title": "no logs: locked, no first-log date",
+            "bodySha256": "ba09400a57dd8221ac7a4e9cff5dc82b78f10529c07d547f30e4db7637d90e41"
+          },
+          {
+            "title": "first log today: locked with 14 days remaining (unlock lands on day 14)",
+            "bodySha256": "10d464b29f1e281bf8f68053c9f911668a3d5b0ce068878fd201d3a21e6655b7"
+          },
+          {
+            "title": "14 days elapsed but only 9 logged days: still locked",
+            "bodySha256": "970348995bfffecad312b5b58778af57daa2fb2dbfa03a0d46901c7f4b3a46fa"
+          },
+          {
+            "title": "14 days elapsed and 10 logged days: unlocked",
+            "bodySha256": "aab349dea98120a4e2ddb31f95dfcda8d4296100b8ea8e62ef069370fb818535"
+          },
+          {
+            "title": "duplicate dates count once",
+            "bodySha256": "5dc8071df2375c0601458ddb14f2dca95205fe79f8394d3c676444a67ff1b094"
+          },
+          {
+            "title": "custom activity names trim whitespace and reject blank values",
+            "bodySha256": "6e08a49cda822b47ccb0d13b26c1d95b890518159399e3a413198cbd0ccc9d95"
+          },
+          {
+            "title": "custom and unconfirmed days do not count toward the ten qualifying trust-gate days",
+            "bodySha256": "030b25ebcbf22b11e87fc4fcc79da40295a4c5de8fe4c2f6b1ecbc92e4e931ce"
+          }
+        ]
+      }
+    }
+  ]
+}

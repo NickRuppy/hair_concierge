@@ -7,7 +7,6 @@ import {
 } from "../src/lib/agent-v2/contracts"
 import {
   doesRoutineCallMatchPendingAction,
-  isPendingRoutineMutation,
   legacyRoutineActionToFollowup,
   readPendingFollowupAction,
   resolvePendingRoutineMutationPolicy,
@@ -162,29 +161,6 @@ test("readPendingFollowupAction reads current action state and falls back to leg
     },
   )
   assert.equal(readPendingFollowupAction({ pending_followup_action: { kind: "bogus" } }), null)
-})
-
-test("isPendingRoutineMutation only accepts routine mutation actions", () => {
-  assert.equal(
-    isPendingRoutineMutation({
-      kind: "routine_mutation",
-      category: null,
-      routine_layer: null,
-      routine_action: "simplify",
-      source: "assistant_offer",
-    }),
-    true,
-  )
-  assert.equal(
-    isPendingRoutineMutation({
-      kind: "product_recommendation",
-      category: "mask",
-      routine_layer: null,
-      routine_action: null,
-      source: "assistant_offer",
-    }),
-    false,
-  )
 })
 
 test("doesRoutineCallMatchPendingAction matches category, layer, and action", () => {

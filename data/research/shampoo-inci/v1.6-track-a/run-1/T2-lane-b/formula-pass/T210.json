@@ -1,0 +1,76 @@
+{
+  "blindId": "T210",
+  "inciFingerprintSha256": "ed76225ec79293dce5791880a50de40ba3ca27ba02c5e1e885ebed5214948b83",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "completeness": "complete",
+    "sourceTier": 1,
+    "identityConfidence": "high",
+    "normalization": "No split entries; positions = packet order (normalized, one-based).",
+    "prominenceCutoff": "E3: Parfum at 21; positions 1-20 prominent."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "strong",
+      "confidence": "moderate",
+      "rationale": "Strong (C1, reinforcing route): Sodium Laureth Sulfate (2) is the defining ether-sulfate anionic and further prominent strong anionics of the same type are listed before Parfum: Sodium Laureth-8 Sulfate (14), Magnesium Laureth Sulfate (16), Magnesium Laureth-8 Sulfate (17), Sodium Oleth Sulfate (19), Magnesium Oleth Sulfate (20). Under C1 a reinforcing route gives strong.",
+      "counterSignal": "The reinforcing ether sulfates sit after Glycol Distearate (15) and look like a small mild magnesium-ether-sulfate blend; three buffers (Cocamidopropyl Betaine 3, Coco-Glucoside 5, Sodium Cocoyl Glutamate 6) and Glyceryl Oleate (7) argue for moderate. Counter-signals lower confidence only (C rules).",
+      "neighboringAlternative": "moderate",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: no cationic polymer, silicone or payload lipid; only weak refatters Glyceryl Oleate (7), Hydrogenated Vegetable Glycerides Citrate (22), pearlizing Glycol Distearate (15) and humectants Panthenol (10), Glycerin (13).",
+      "counterSignal": "Refatter plus pearlizer plus humectants are several light routes (neighbor moderate).",
+      "neighboringAlternative": "moderate",
+      "ruleIds": ["C2", "Section 5 anchors"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: the only deposition family is weak refatters (Glyceryl Oleate 7, Hydrogenated Vegetable Glycerides Citrate 22), facing a reinforced ether-sulfate chassis.",
+      "neighboringAlternative": "none",
+      "subjudgments": {
+        "depositionLoad": {"value": "light", "rationale": "Weak refatters only."},
+        "persistence": {"value": "low", "rationale": "No persistent system."},
+        "resetCapacity": {"value": "strong", "rationale": "SLES plus reinforcing ether sulfates, with buffers."}
+      },
+      "extractedEvidence": {
+        "weak_refatter": [{"ingredient": "Glyceryl Oleate", "position": 7}, {"ingredient": "Hydrogenated Vegetable Glycerides Citrate", "position": 22}],
+        "silicone": [], "cationic_polymer": [], "payload_lipid": [], "protein_film": [], "film_former": [],
+        "reset": [{"ingredient": "Sodium Laureth Sulfate", "position": 2}, {"ingredient": "Cocamidopropyl Betaine", "position": 3}, {"ingredient": "Coco-Glucoside", "position": 5}, {"ingredient": "Sodium Cocoyl Glutamate", "position": 6}, {"ingredient": "Sodium Laureth-8 Sulfate", "position": 14}, {"ingredient": "Magnesium Laureth Sulfate", "position": 16}, {"ingredient": "Magnesium Laureth-8 Sulfate", "position": 17}, {"ingredient": "Sodium Oleth Sulfate", "position": 19}, {"ingredient": "Magnesium Oleth Sulfate", "position": 20}],
+        "excluded": [{"ingredient": "Glycol Distearate", "position": 15, "reason": "pearlizing wax (6.4)"}, {"ingredient": "Laureth-4", "position": 18, "reason": "ethoxylate thickener"}, {"ingredient": "Menthol", "position": 12, "reason": "cooling agent"}],
+        "context_humectants": [{"ingredient": "Panthenol", "position": 10}, {"ingredient": "Glycerin", "position": 13}]
+      },
+      "whyThisBand": "Single weak-refatter family with strong reset: low anchor.",
+      "whyNotNeighborBand": "Only one deposition family (weak_refatter), no polymer, silicone or lipid; W2 not triggered; moderate would need at least one plausible depositing system.",
+      "limitingFactor": "None material."
+    },
+    "focusPrimary": {"value": "scalp_active", "confidence": "low", "provisional": true, "rationale": "Pending claims. Piroctone Olamine (8), Sodium Salicylate (9), Menthol (12), Caffeine (11): scalp-active architecture; needs a dandruff claim. Caffeine is not a focus route (F5). Lengths care-direction: nonspecific."},
+    "focusSecondary": {"value": [], "confidence": "low", "provisional": true, "rationale": "Empty default pending claims."},
+    "usageRole": {"value": "regular", "confidence": "low", "provisional": true, "rationale": "Default; with strong cleansing, alternating needs reset intent (U4); treatment needs a dandruff claim (U3)."},
+    "scalpComfortTarget": {"value": "not_targeted", "confidence": "low", "provisional": true, "rationale": "No positioning yet. CSA formula half met: prominent Panthenol (10) comfort route, Glyceryl Oleate (7), Glycerin (13) humectant/refatting routes. Counter-signals: cleansingStrength strong, prominent Menthol (12)."},
+    "dandruffSupport": {"value": "supported", "confidence": "high", "rationale": "Complete INCI contains Piroctone Olamine (8)."}
+  },
+  "formulaFacts": [
+    {"ingredient": "Sodium Laureth Sulfate", "position": 2, "role": "defining anionic (ether type)"},
+    {"ingredient": "Cocamidopropyl Betaine", "position": 3, "role": "amphoteric buffer"},
+    {"ingredient": "Coco-Glucoside", "position": 5, "role": "nonionic buffer"},
+    {"ingredient": "Sodium Cocoyl Glutamate", "position": 6, "role": "mild anionic buffer"},
+    {"ingredient": "Glyceryl Oleate", "position": 7, "role": "weak_refatter / E4 refatting route"},
+    {"ingredient": "Piroctone Olamine", "position": 8, "role": "recognized anti-dandruff active"},
+    {"ingredient": "Panthenol", "position": 10, "role": "E4 comfort + humectant route"},
+    {"ingredient": "Caffeine", "position": 11, "role": "hair-loss-associated, not a focus route"},
+    {"ingredient": "Menthol", "position": 12, "role": "prominent cooling agent (CSA counter-signal)"},
+    {"ingredient": "Glycerin", "position": 13, "role": "humectant"},
+    {"ingredient": "Sodium Laureth-8 Sulfate", "position": 14, "role": "reinforcing strong anionic (ether type)"},
+    {"ingredient": "Glycol Distearate", "position": 15, "role": "pearlizing route"},
+    {"ingredient": "Magnesium Laureth Sulfate", "position": 16, "role": "reinforcing strong anionic"},
+    {"ingredient": "Magnesium Laureth-8 Sulfate", "position": 17, "role": "reinforcing strong anionic"},
+    {"ingredient": "Sodium Oleth Sulfate", "position": 19, "role": "reinforcing strong anionic"},
+    {"ingredient": "Magnesium Oleth Sulfate", "position": 20, "role": "reinforcing strong anionic"},
+    {"ingredient": "Parfum", "position": 21, "role": "E3 fragrance marker"}
+  ],
+  "unresolvedMaterialIngredients": []
+}

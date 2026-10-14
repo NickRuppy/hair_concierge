@@ -1,0 +1,89 @@
+--- a/tests/personal-plan-portfolio-presentation.test.ts
++++ b/tests/personal-plan-portfolio-presentation.test.ts
+@@ -62,11 +62,9 @@
+     plannedPurchaseDecisionKeys: ["decision-replace"],
+     retainedOwnedProducts: [],
+   })
+-  assert.equal(v3.plannedLabelFor(["decision-replace"]), "Noch kaufen")
+   assert.equal(v3.fitLabelFor("informed_override"), "Mit Einschränkung")
+ 
+   const legacy = routinePresentationLabels(null)
+-  assert.equal(legacy.plannedLabelFor(["decision-replace"]), null)
+   assert.equal(legacy.fitLabelFor("informed_override"), null)
+ })
+ 
+@@ -105,10 +103,6 @@
+ 
+   assert.equal(presentation?.schemaVersion, 4)
+   assert.deepEqual(presentation?.retainedInventoryProducts, snapshot.retainedInventoryProducts)
+-  assert.equal(
+-    routinePresentationLabels(presentation).plannedLabelFor(["decision-replace"]),
+-    "Noch kaufen",
+-  )
+ })
+ 
+ test("fails closed when a stored portfolio snapshot is not strict", async () => {
+@@ -125,36 +119,7 @@
+   )
+ })
+ 
+-test("marks a v3 pending-source replacement as Noch kaufen even without a retained catalog product", async () => {
+-  const snapshot = v3Snapshot()
+-  snapshot.retainedOwnedProducts = []
+-  snapshot.plannedPurchases[0].sourceDecisionKey = "decision-pending-replace"
+-  snapshot.categoryResolutions = [
+-    {
+-      decisionKey: "decision-pending-replace",
+-      category: "shampoo",
+-      role: "shampoo_everyday",
+-      verdict: "unknown",
+-      choiceState: "planned_purchase",
+-      capturedProductId: "captured-pending",
+-      executable: false,
+-      gapPreserved: true,
+-    },
+-  ]
+-  const query = {
+-    select: () => query,
+-    eq: () => query,
+-    maybeSingle: async () => ({ data: { id: ids.portfolio, snapshot }, error: null }),
+-  }
+-  const presentation = await loadOwnerPortfolioPresentation(
+-    { from: () => query },
+-    ids.user,
+-    ids.plan,
+-    ids.portfolio,
+-  )
+-  const labels = routinePresentationLabels(presentation)
+-  assert.equal(labels.plannedLabelFor(["decision-pending-replace"]), "Noch kaufen")
+-})
++
+ 
+ test("marks a v3 planned purchase without an owned source as Noch kaufen", async () => {
+   const snapshot = v3Snapshot()
+@@ -185,10 +150,6 @@
+   )
+ 
+   assert.deepEqual(presentation?.plannedPurchaseDecisionKeys, ["decision-replace"])
+-  assert.equal(
+-    routinePresentationLabels(presentation).plannedLabelFor(["decision-replace"]),
+-    "Noch kaufen",
+-  )
+ })
+ 
+ test("carries a server-derived deferral reason keyed by its decision, dropping capture-level reasons without one", async () => {
+--- a/src/lib/personal-plan/routine/portfolio-presentation.ts
++++ b/src/lib/personal-plan/routine/portfolio-presentation.ts
+@@ -94,12 +94,6 @@
+   const hasReplacementPresentation =
+     presentation?.schemaVersion === 3 || presentation?.schemaVersion === 4
+   return {
+-    plannedLabelFor(sourceDecisionKeys: readonly string[]) {
+-      return hasReplacementPresentation &&
+-        sourceDecisionKeys.some((key) => presentation.plannedPurchaseDecisionKeys.includes(key))
+-        ? "Noch kaufen"
+-        : null
+-    },
+     fitLabelFor(fitDecision: string) {
+       return hasReplacementPresentation && fitDecision === "informed_override"
+         ? "Mit Einschränkung"

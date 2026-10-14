@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "mask-inci-capture-v1",
+  "productNumber": 12,
+  "role": "primary",
+  "archetypeSlots": ["12 - boundary stress: plausibly-just-a-conditioner (charter's own named exclusion example, F1-excluded)"],
+  "identity": {
+    "brand": "Guhl",
+    "productName": "Panthenol + Reparatur 2in1 Kur & Spülung",
+    "packSize": "200 ml",
+    "gtinEan": "4072600703403",
+    "eanSourceNote": "Proposal figure, dm.de + Rossmann.de + Müller all list this EAN consistently in their URLs (cross-agreement across three independent retailers).",
+    "market": "DE (dm.de + Rossmann.de + Müller)"
+  },
+  "rawInci": "AQUA, CETEARYL ALCOHOL, BEHENTRIMONIUM CHLORIDE, DIPROPYLENE GLYCOL, CETYL ESTERS, PANTHENOL, TETRASODIUM GLUTAMATE DIACETATE, LACTIC ACID, ETHYLHEXYLGLYCERIN, GLYCINE, AVENA SATIVA KERNEL OIL, PHENOXYETHANOL, PARFUM, VANILLIN",
+  "inciSource": {
+    "url": "https://www.hautschutzengel.de/guhl-haarkur-conditioner-2in1-panthenol-reparatur-inhaltsstoffe/produkt/363600.html",
+    "accessDate": "2026-09-04",
+    "tier": "hautschutzengel (fallback - dm.de and Rossmann.de both blocked this pass)",
+    "notes": "Short, simple ingredient list consistent with a light conditioner-style formula rather than a rich mask formula - supports the charter's own framing of this product as conditioner-engine territory."
+  },
+  "directions": {
+    "text": "Als Spülung (für sofortige Regeneration): ins gewaschene, nasse Haar einmassieren, kurz einwirken lassen (ca. 30 Sekunden) und gut ausspülen. Als Kur (für Tiefenregeneration): ins gewaschene, nasse Haar einmassieren, 2-3 Minuten einwirken lassen und genießen, dann ausspülen.",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "dual-mode: ~0.5 (as Spülung/conditioner) or 2-3 (as Kur/treatment)",
+    "source": "Aggregated dm.de and guhl.com official copy via web search - not a single verbatim page fetch, but the dual-mode structure is consistent and repeated across every source found.",
+    "confidence": "high (dual-mode structure verified consistently across dm.de, guhl.com, and retailer copy, even without a single raw page fetch)"
+  },
+  "claims": [
+    "silikonfrei",
+    "dermatologisch bestätigt",
+    "schützt vor Haarbruch",
+    "mit Panthenol (Provitamin B5)"
+  ],
+  "conflicts": [],
+  "status": "captured",
+  "statusNotes": "This is the charter's own named boundary-exclusion example. The directions text is itself the key evidence: the product explicitly offers TWO named modes (Spülung vs Kur) with different, short contact times, and the INCI is a light conditioner-style formula - consistent with F1-exclusion (conditioner-engine territory, not mask-engine)."
+}

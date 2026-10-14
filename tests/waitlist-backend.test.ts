@@ -12,26 +12,13 @@ import {
   waitlistCustomerIoEventTimestamp,
   waitlistCustomerIoIdentity,
 } from "@/lib/waitlist/customerio"
-import {
-  normalizeWaitlistEmail,
-  recordWaitlistSurvey,
-  saveWaitlistSignup,
-  WAITLIST_CAMPAIGN,
-} from "@/lib/waitlist/persistence"
-import {
-  hashWaitlistSurveyToken,
-  issueWaitlistSurveyToken,
-  verifyWaitlistSurveyToken,
-} from "@/lib/waitlist/tokens"
+import { recordWaitlistSurvey } from "@/lib/waitlist/persistence"
+import { hashWaitlistSurveyToken } from "@/lib/waitlist/tokens"
 
 const migrationPath =
   "supabase/migrations/20260803121000_waitlist_signups_and_customerio_outbox.sql"
 const fixMigrationPath =
   "supabase/migrations/20260803122000_fix_waitlist_signup_outbox_conflict.sql"
-
-test("waitlist campaign matches the live Customer.io launch segment", () => {
-  assert.equal(WAITLIST_CAMPAIGN, "launch_1_2026_08")
-})
 
 test("waitlist migration keeps signups private, idempotent, and independently queued", () => {
   const migration = readFileSync(migrationPath, "utf8")
@@ -68,60 +55,15 @@ test("waitlist signup fix targets the named outbox constraint without changing t
   assert.doesNotMatch(migration, /ON CONFLICT \(signup_id, event_type\)/i)
 })
 
-test("signup persistence normalizes email and withholds survey authority from a public duplicate", async () => {
-  const calls: Array<{ fn: string; values: Record<string, unknown> }> = []
-  const fake = {
-    rpc: async (fn: string, values: Record<string, unknown>) => {
-      calls.push({ fn, values })
-      return {
-        data: [
-          { signup_id: "signup-1", created: calls.length === 1, survey_already_completed: false },
-        ],
-        error: null,
-      }
-    },
+test("historic survey tokens are hashed and recording accepts only the matching signup capability", async () => {
+  const first = {
+    token: "historic-survey-token",
+    tokenHash: hashWaitlistSurveyToken("historic-survey-token"),
   }
-  const first = await saveWaitlistSignup(fake as never, {
-    name: "  Ada ",
-    email: " ADA@Example.com ",
-    marketingConsent: true,
-  })
-  const duplicate = await saveWaitlistSignup(fake as never, {
-    name: "Ada",
-    email: "ada@example.com",
-    marketingConsent: true,
-  })
-  assert.equal(normalizeWaitlistEmail(" ADA@Example.com "), "ada@example.com")
-  assert.equal(first.duplicate, false)
-  assert.equal(duplicate.duplicate, true)
-  assert.equal(first.surveyAlreadyCompleted, false)
-  assert.equal(calls[0].values.p_normalized_email, "ada@example.com")
-  assert.notEqual(calls[0].values.p_survey_token_hash, calls[1].values.p_survey_token_hash)
-  assert.equal(first.surveyToken?.includes("signup-1"), false)
-  assert.equal(duplicate.surveyToken, undefined)
-})
-
-test("completed duplicate withholds a dead survey token", async () => {
-  const fake = {
-    rpc: async () => ({
-      data: [{ signup_id: "signup-1", created: false, survey_already_completed: true }],
-      error: null,
-    }),
+  const second = {
+    token: "other-survey-token",
+    tokenHash: hashWaitlistSurveyToken("other-survey-token"),
   }
-  const result = await saveWaitlistSignup(fake as never, {
-    name: "Ada",
-    email: "ada@example.com",
-    marketingConsent: false,
-  })
-  assert.deepEqual(result, { signupId: "signup-1", duplicate: true, surveyAlreadyCompleted: true })
-})
-
-test("survey tokens are hashed and cannot be forged or used for another signup", async () => {
-  const first = issueWaitlistSurveyToken()
-  const second = issueWaitlistSurveyToken()
-  assert.equal(verifyWaitlistSurveyToken(first.token, first.tokenHash), true)
-  assert.equal(verifyWaitlistSurveyToken("forged", first.tokenHash), false)
-  assert.equal(verifyWaitlistSurveyToken(first.token, second.tokenHash), false)
 
   const hashes: string[] = []
   const fake = {

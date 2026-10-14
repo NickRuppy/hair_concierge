@@ -1,0 +1,546 @@
+{
+  "rawFlags": 42,
+  "newFlagsVs575": [],
+  "sourceSummaryChangesVs575": [
+    {
+      "path": "src/lib/auth/authenticated-app-route-access.ts",
+      "before": {
+        "lines": {
+          "total": 238,
+          "covered": 205,
+          "skipped": 0,
+          "pct": 86.13
+        },
+        "functions": {
+          "total": 23,
+          "covered": 18,
+          "skipped": 0,
+          "pct": 78.26
+        },
+        "statements": {
+          "total": 238,
+          "covered": 205,
+          "skipped": 0,
+          "pct": 86.13
+        },
+        "branches": {
+          "total": 51,
+          "covered": 47,
+          "skipped": 0,
+          "pct": 92.15
+        }
+      },
+      "after": {
+        "lines": {
+          "total": 227,
+          "covered": 194,
+          "skipped": 0,
+          "pct": 85.46
+        },
+        "functions": {
+          "total": 22,
+          "covered": 17,
+          "skipped": 0,
+          "pct": 77.27
+        },
+        "statements": {
+          "total": 227,
+          "covered": 194,
+          "skipped": 0,
+          "pct": 85.46
+        },
+        "branches": {
+          "total": 50,
+          "covered": 46,
+          "skipped": 0,
+          "pct": 92
+        }
+      },
+      "branchZero": {
+        "before": 4,
+        "after": 4,
+        "same": false,
+        "new": [
+          {
+            "end": {
+              "column": 4,
+              "line": 158
+            },
+            "start": {
+              "column": 2,
+              "line": 154
+            }
+          },
+          {
+            "end": {
+              "column": 4,
+              "line": 226
+            },
+            "start": {
+              "column": 2,
+              "line": 219
+            }
+          },
+          {
+            "end": {
+              "column": 94,
+              "line": 217
+            },
+            "start": {
+              "column": 22,
+              "line": 217
+            }
+          }
+        ],
+        "removed": [
+          {
+            "end": {
+              "column": 4,
+              "line": 169
+            },
+            "start": {
+              "column": 2,
+              "line": 165
+            }
+          },
+          {
+            "end": {
+              "column": 4,
+              "line": 237
+            },
+            "start": {
+              "column": 2,
+              "line": 230
+            }
+          },
+          {
+            "end": {
+              "column": 94,
+              "line": 228
+            },
+            "start": {
+              "column": 22,
+              "line": 228
+            }
+          }
+        ],
+        "sameAfterApproved11LineRemovalMapping": true
+      },
+      "functionZero": {
+        "before": 5,
+        "after": 5,
+        "same": true,
+        "new": [],
+        "removed": [],
+        "sameAfterApproved11LineRemovalMapping": true
+      },
+      "statementZero": {
+        "before": 33,
+        "after": 33,
+        "same": false,
+        "new": [
+          {
+            "end": {
+              "column": 4,
+              "line": 158
+            },
+            "start": {
+              "column": 0,
+              "line": 158
+            }
+          },
+          {
+            "end": {
+              "column": 4,
+              "line": 226
+            },
+            "start": {
+              "column": 0,
+              "line": 226
+            }
+          },
+          {
+            "end": {
+              "column": 42,
+              "line": 155
+            },
+            "start": {
+              "column": 0,
+              "line": 155
+            }
+          },
+          {
+            "end": {
+              "column": 43,
+              "line": 221
+            },
+            "start": {
+              "column": 0,
+              "line": 221
+            }
+          },
+          {
+            "end": {
+              "column": 45,
+              "line": 157
+            },
+            "start": {
+              "column": 0,
+              "line": 157
+            }
+          },
+          {
+            "end": {
+              "column": 45,
+              "line": 220
+            },
+            "start": {
+              "column": 0,
+              "line": 220
+            }
+          },
+          {
+            "end": {
+              "column": 63,
+              "line": 225
+            },
+            "start": {
+              "column": 0,
+              "line": 225
+            }
+          },
+          {
+            "end": {
+              "column": 67,
+              "line": 156
+            },
+            "start": {
+              "column": 0,
+              "line": 156
+            }
+          },
+          {
+            "end": {
+              "column": 81,
+              "line": 222
+            },
+            "start": {
+              "column": 0,
+              "line": 222
+            }
+          },
+          {
+            "end": {
+              "column": 88,
+              "line": 224
+            },
+            "start": {
+              "column": 0,
+              "line": 224
+            }
+          },
+          {
+            "end": {
+              "column": 89,
+              "line": 223
+            },
+            "start": {
+              "column": 0,
+              "line": 223
+            }
+          }
+        ],
+        "removed": [
+          {
+            "end": {
+              "column": 4,
+              "line": 169
+            },
+            "start": {
+              "column": 0,
+              "line": 169
+            }
+          },
+          {
+            "end": {
+              "column": 4,
+              "line": 237
+            },
+            "start": {
+              "column": 0,
+              "line": 237
+            }
+          },
+          {
+            "end": {
+              "column": 42,
+              "line": 166
+            },
+            "start": {
+              "column": 0,
+              "line": 166
+            }
+          },
+          {
+            "end": {
+              "column": 43,
+              "line": 232
+            },
+            "start": {
+              "column": 0,
+              "line": 232
+            }
+          },
+          {
+            "end": {
+              "column": 45,
+              "line": 168
+            },
+            "start": {
+              "column": 0,
+              "line": 168
+            }
+          },
+          {
+            "end": {
+              "column": 45,
+              "line": 231
+            },
+            "start": {
+              "column": 0,
+              "line": 231
+            }
+          },
+          {
+            "end": {
+              "column": 63,
+              "line": 236
+            },
+            "start": {
+              "column": 0,
+              "line": 236
+            }
+          },
+          {
+            "end": {
+              "column": 67,
+              "line": 167
+            },
+            "start": {
+              "column": 0,
+              "line": 167
+            }
+          },
+          {
+            "end": {
+              "column": 81,
+              "line": 233
+            },
+            "start": {
+              "column": 0,
+              "line": 233
+            }
+          },
+          {
+            "end": {
+              "column": 88,
+              "line": 235
+            },
+            "start": {
+              "column": 0,
+              "line": 235
+            }
+          },
+          {
+            "end": {
+              "column": 89,
+              "line": 234
+            },
+            "start": {
+              "column": 0,
+              "line": 234
+            }
+          }
+        ],
+        "sameAfterApproved11LineRemovalMapping": true
+      },
+      "attribution": "The only executable difference is removal of unused resolver export alias (covered export getter); 11 deleted comment/type/alias lines shift the same uncovered locations. Existing earlier comment-only gated-page name correction is unchanged since575."
+    },
+    {
+      "path": "src/lib/billing/trial-admission.ts",
+      "before": {
+        "lines": {
+          "total": 190,
+          "covered": 114,
+          "skipped": 0,
+          "pct": 60
+        },
+        "functions": {
+          "total": 19,
+          "covered": 15,
+          "skipped": 0,
+          "pct": 78.94
+        },
+        "statements": {
+          "total": 190,
+          "covered": 114,
+          "skipped": 0,
+          "pct": 60
+        },
+        "branches": {
+          "total": 49,
+          "covered": 41,
+          "skipped": 0,
+          "pct": 83.67
+        }
+      },
+      "after": {
+        "lines": {
+          "total": 190,
+          "covered": 114,
+          "skipped": 0,
+          "pct": 60
+        },
+        "functions": {
+          "total": 19,
+          "covered": 15,
+          "skipped": 0,
+          "pct": 78.94
+        },
+        "statements": {
+          "total": 190,
+          "covered": 114,
+          "skipped": 0,
+          "pct": 60
+        },
+        "branches": {
+          "total": 48,
+          "covered": 40,
+          "skipped": 0,
+          "pct": 83.33
+        }
+      },
+      "branchZero": {
+        "before": 8,
+        "after": 8,
+        "same": true,
+        "new": [],
+        "removed": []
+      },
+      "functionZero": {
+        "before": 4,
+        "after": 4,
+        "same": true,
+        "new": [],
+        "removed": []
+      },
+      "statementZero": {
+        "before": 76,
+        "after": 76,
+        "same": true,
+        "new": [],
+        "removed": []
+      },
+      "attribution": "Source unchanged in fresh freeze; one covered V8 branch record disappears, all mapped zero-count locations identical."
+    },
+    {
+      "path": "src/lib/scan/enrichment/dm-mcp-client.ts",
+      "before": {
+        "lines": {
+          "total": 178,
+          "covered": 177,
+          "skipped": 0,
+          "pct": 99.43
+        },
+        "functions": {
+          "total": 15,
+          "covered": 15,
+          "skipped": 0,
+          "pct": 100
+        },
+        "statements": {
+          "total": 178,
+          "covered": 177,
+          "skipped": 0,
+          "pct": 99.43
+        },
+        "branches": {
+          "total": 64,
+          "covered": 58,
+          "skipped": 0,
+          "pct": 90.62
+        }
+      },
+      "after": {
+        "lines": {
+          "total": 178,
+          "covered": 177,
+          "skipped": 0,
+          "pct": 99.43
+        },
+        "functions": {
+          "total": 15,
+          "covered": 15,
+          "skipped": 0,
+          "pct": 100
+        },
+        "statements": {
+          "total": 178,
+          "covered": 177,
+          "skipped": 0,
+          "pct": 99.43
+        },
+        "branches": {
+          "total": 64,
+          "covered": 60,
+          "skipped": 0,
+          "pct": 93.75
+        }
+      },
+      "branchZero": {
+        "before": 6,
+        "after": 4,
+        "same": false,
+        "new": [],
+        "removed": [
+          {
+            "end": {
+              "column": 36,
+              "line": 27
+            },
+            "start": {
+              "column": 4,
+              "line": 27
+            }
+          },
+          {
+            "end": {
+              "column": 75,
+              "line": 26
+            },
+            "start": {
+              "column": 23,
+              "line": 26
+            }
+          }
+        ]
+      },
+      "functionZero": {
+        "before": 0,
+        "after": 0,
+        "same": true,
+        "new": [],
+        "removed": []
+      },
+      "statementZero": {
+        "before": 1,
+        "after": 1,
+        "same": true,
+        "new": [],
+        "removed": []
+      },
+      "attribution": "Source unchanged in fresh freeze; two formerly zero-count locations are covered in this run; no new zero locations. No execution-time performance claim."
+    }
+  ],
+  "scope": "Actual mapped zero-count locations for every source path with changed summary. Source hashes/fresh freeze separate; no per-file green claim."
+}

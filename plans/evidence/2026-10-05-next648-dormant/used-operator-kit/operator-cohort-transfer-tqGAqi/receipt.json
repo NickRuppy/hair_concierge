@@ -1,0 +1,17 @@
+[
+  {
+    "status": 0,
+    "signal": null,
+    "tests": 103,
+    "pass": 103,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "todo": 0,
+    "timedOut": false,
+    "spawnError": null,
+    "log": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-transfer-tqGAqi/cohort-full.tap",
+    "logSHA256": "e072d6e3c16b232b4b49dd804ab1d6eaabc74208efaa96d341990189b7340409",
+    "commandSHA256": "b3ef729db420367d862776136afc9935da8c5c7d5299737d25413943c2b01bb5"
+  }
+]

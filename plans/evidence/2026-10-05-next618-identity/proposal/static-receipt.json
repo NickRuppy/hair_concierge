@@ -1,0 +1,27 @@
+{
+  "status": "STATIC_ONLY_PASS",
+  "ownedCounts": {
+    "before": 31,
+    "transfer": 31,
+    "cut": 30
+  },
+  "files": 5,
+  "phaseFilesParsed": 15,
+  "sourceFaultsParsed": 4,
+  "unchangedCallbacks": 29,
+  "heldFUnchanged": 1,
+  "classification": {
+    "R": 29,
+    "F": 1,
+    "C": 1,
+    "D": 0
+  },
+  "readsetHashesMatched": 49,
+  "keeperNonAssertionCallAndInputListUnchanged": true,
+  "repositoryWrites": 0,
+  "ownerImports": 0,
+  "testsExecuted": 0,
+  "sourceFaultsExecuted": 0,
+  "childrenSpawnedByPreparation": 0,
+  "limits": "TypeScript parser only, not typecheck/runtime/SQL/SDK proof; C1 depends on explicit current none(rawText) branch equivalence, not identical raw fixture bytes."
+}

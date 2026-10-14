@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: activation-aware delegating RPC permits no proposal pointer for first activation
+ok 1 - activation-aware delegating RPC permits no proposal pointer for first activation
+  ---
+  duration_ms: 2.562041
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 260.96025

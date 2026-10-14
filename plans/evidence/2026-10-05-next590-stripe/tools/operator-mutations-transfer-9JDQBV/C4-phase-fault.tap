@@ -1,0 +1,37 @@
+TAP version 13
+# Subtest: late failure retrieving paid truth dispatches Purchase, while absent failure facts stay a no-op
+not ok 1 - late failure retrieving paid truth dispatches Purchase, while absent failure facts stay a no-op
+  ---
+  duration_ms: 6.009208
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/stripe-trial-invoice.test.ts:2:14972'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    +   'stripe:payment_completed:in_1'
+    -   'stripe:purchase_completed:in_1'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'stripe:purchase_completed:in_1'
+  actual:
+    0: 'stripe:payment_completed:in_1'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/stripe-trial-invoice.test.ts:550:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 939.765584

@@ -1,0 +1,122 @@
+[
+  {
+    "source": "/tmp/scanner-ledger-cohort-ledger.md",
+    "archive": "scanner-ledger-cohort-ledger.md",
+    "sha256": "1f64ecace08496d09039e4f236f7e874e349e0204e576584fe8a0b672eff70ee"
+  },
+  {
+    "source": "/tmp/scanner-ledger-cohort-evidence.json",
+    "archive": "scanner-ledger-cohort-evidence.json",
+    "sha256": "48891096684e13b96c5b2d53d5621b361b9cb269f3f1ae0ad5b5fe7b03908ef4"
+  },
+  {
+    "source": "/tmp/scanner-ledger-cohort-faults.json",
+    "archive": "scanner-ledger-cohort-faults.json",
+    "sha256": "50eeb5000052f0cb68744fbe32042cb461ca5fd53c96bed62f0582e59f1e9a98"
+  },
+  {
+    "source": "/tmp/scanner-ledger-independent-preflight.md",
+    "archive": "scanner-ledger-independent-preflight.md",
+    "sha256": "671202ecf953ac5feeb9329e8280241cfcc09c9fdcc070b20ddbfa30eb006daa"
+  },
+  {
+    "source": "/tmp/scanner-ledger-independent-amendment.md",
+    "archive": "scanner-ledger-independent-amendment.md",
+    "sha256": "066bb069987da35e2546348476e65c55aef6394a1d671bb55370d698c956ff17"
+  },
+  {
+    "source": "/tmp/scanner-ledger-independent-amendment-static.json",
+    "archive": "scanner-ledger-independent-amendment-static.json",
+    "sha256": "7ae6eb45af09394b3a5837ec1389cfea2c26cf287bda0ab88a4dde4199693a1d"
+  },
+  {
+    "source": "/tmp/catalog8-guarded-manifest.json",
+    "archive": "catalog8-guarded-manifest.json",
+    "sha256": "178a9f2642414241a7ad55c4e37b6d986b35527ba1f6d71699dbc303a742c69d"
+  },
+  {
+    "source": "/tmp/catalog8-main-handback.md",
+    "archive": "catalog8-main-handback.md",
+    "sha256": "1113717322aea8f73a7bba983b108ee36fdbd9dd868a8f304d9b07123ea1b0c7"
+  },
+  {
+    "source": "/tmp/test-audit-mobile-delivery-layer-plan.md",
+    "archive": "test-audit-mobile-delivery-layer-plan.md",
+    "sha256": "fb0dc4e5e13319d4546ee03a6301f6b7e231ef9b2ec07f97e13b058294b99940"
+  },
+  {
+    "source": "/tmp/test-audit-mobile-delivery-ledger.md",
+    "archive": "test-audit-mobile-delivery-ledger.md",
+    "sha256": "4106da7fef12b18174a2846165ab3637d935cdd2623b2cd41cfeb77296fc9501"
+  },
+  {
+    "source": "/tmp/test-audit-mobile-delivery-judgments.json",
+    "archive": "test-audit-mobile-delivery-judgments.json",
+    "sha256": "5252cda0d13610d9d72cde0bd29fbc310dcc65652b70e15c18fe697d96ff1311"
+  },
+  {
+    "source": "/tmp/mobile1-independent-preflight.md",
+    "archive": "mobile1-independent-preflight.md",
+    "sha256": "a85d3205760c90a841a1b476bdab40b7126d3f8d9096d11f3678615242a4f337"
+  },
+  {
+    "source": "/tmp/mobile1-independent-static.json",
+    "archive": "mobile1-independent-static.json",
+    "sha256": "5611793ae289d5f9f313dadbd3b3ea505bdd8dff997923ad110b11c5191502aa"
+  },
+  {
+    "source": "/tmp/test-audit-research32-layer-plan.md",
+    "archive": "test-audit-research32-layer-plan.md",
+    "sha256": "791740158f6a9f009b3bd1936b2e4087cd6fe28b2023e783cff40db23b66d50b"
+  },
+  {
+    "source": "/tmp/test-audit-research32-ledger.md",
+    "archive": "test-audit-research32-ledger.md",
+    "sha256": "ee4a5353fb6106acdb9e89fbe492a02a05c19bee84087444566a35a4d0bc975b"
+  },
+  {
+    "source": "/tmp/test-audit-research32-ledger.json",
+    "archive": "test-audit-research32-ledger.json",
+    "sha256": "f675c5684f646e0b42b06681b2afe3c48e5d22cb90a615b46898ae5bdd04fffa"
+  },
+  {
+    "source": "/tmp/test-audit-research32-independent-preflight.md",
+    "archive": "test-audit-research32-independent-preflight.md",
+    "sha256": "053d4514ad729b7189ba757f96c327e558a5af2ff121129608a26cd439c53ea7"
+  },
+  {
+    "source": "/tmp/test-audit-research32-main-handback.md",
+    "archive": "test-audit-research32-main-handback.md",
+    "sha256": "4d3b5a6502f2a9bfe40c590619c8f7c1c42cfef4302abced3eb249c696d3e1c6"
+  },
+  {
+    "source": "/tmp/test-audit-next549-before.tap",
+    "archive": "test-audit-next549-before.tap",
+    "sha256": "95f4927cc3266234705cc5f23a1b0c85041375c81acd7ad1ee5ba14fdcbd0c09"
+  },
+  {
+    "source": "/tmp/test-audit-next549-transfer.tap",
+    "archive": "test-audit-next549-transfer.tap",
+    "sha256": "3f24387eec13628669c68ae00781c6ae7076875d6b34eff22db266239a1935ca"
+  },
+  {
+    "source": "/tmp/test-audit-next549-cut.tap",
+    "archive": "test-audit-next549-cut.tap",
+    "sha256": "996f52f1b19629bfc0a1f5886a16bdc37798d73d3e2d628bdc98e4343c4d95c7"
+  },
+  {
+    "source": "/tmp/catalog8-cut-dR9Bj0/receipt.json",
+    "archive": "catalog8-cut-dR9Bj0-receipt.json",
+    "sha256": "0a492e729ffa57aed4309646bfb71df671b845cd6d68f6b2e6258a8fedf48124"
+  },
+  {
+    "source": "/tmp/test-audit-mobile-delivery-apply-cut-WpeAuq/receipt.json",
+    "archive": "test-audit-mobile-delivery-apply-cut-WpeAuq-receipt.json",
+    "sha256": "db32b28f49efef35af7356012651ce9a6a14adb1a81c94131547528ee7a205fd"
+  },
+  {
+    "source": "/tmp/test-audit-research32-apply-TxIKyA/applied.json",
+    "archive": "test-audit-research32-apply-TxIKyA-applied.json",
+    "sha256": "5c588aeb80672496f410d43c6f10869adfb7a610eeaf5aa016a56b244f2761a8"
+  }
+]

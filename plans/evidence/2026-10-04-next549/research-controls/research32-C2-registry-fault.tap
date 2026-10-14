@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: Leave-In fixture carries no unseen-test adjudication points any more (T18 retired)
+not ok 1 - Leave-In fixture carries no unseen-test adjudication points any more (T18 retired)
+  ---
+  duration_ms: 136.959458
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/leave-in-research-fixture.test.ts:2:6952'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + [
+    +   {
+    +     id: 'focus_permissive_vs_conservative',
+    +     note: 'reopened',
+    +     source: 'audit',
+    +     title: 'reopened'
+    +   }
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0:
+      id: 'focus_permissive_vs_conservative'
+      title: 'reopened'
+      note: 'reopened'
+      source: 'audit'
+  operator: 'deepStrictEqual'
+  stack: |-
+    <anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/leave-in-research-fixture.test.ts:186:12)
+    async withLabEnvironment (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/leave-in-research-fixture.test.ts:20:5)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 301.622959

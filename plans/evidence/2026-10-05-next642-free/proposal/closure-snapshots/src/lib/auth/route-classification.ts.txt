@@ -1,0 +1,220 @@
+export type RouteClassification = "public" | "protected" | "legacy" | "development" | "unknown"
+
+export type RouteEnvironment = {
+  ciOfferPageLabEnabled?: boolean
+  ciPersonalPlanStage3LabEnabled?: boolean
+  ciPersonalPlanProductionJourneyEnabled?: boolean
+  nodeEnv: string | undefined
+  localDevLoginEnabled: boolean
+  vercelEnv?: string | undefined
+}
+
+const PUBLIC_EXACT_ROUTES = [
+  "/",
+  "/agb",
+  // discovery-call toolkit: the personal invite link and the magic-link
+  // continuation are both opened before an account or a session exists. Exact,
+  // so every other /beratung page stays protected below. Both 410/404 while the
+  // DISCOVERY_CALL_TOOLKIT_ENABLED flag is off.
+  "/beratung/einladung",
+  "/beratung/weiter",
+  "/datenschutz",
+  "/icon",
+  "/impressum",
+  "/kontakt",
+  "/kuendigen",
+  "/methodik",
+  "/opengraph-image",
+  "/pricing",
+  "/quiz",
+  "/quiz/return",
+  // freemium-scanner-first T18: free registration happens before an account
+  // exists. The page itself 404s while the feature flag is off.
+  "/registrierung",
+  "/robots.txt",
+  "/sitemap.xml",
+  "/twitter-image",
+  "/welcome",
+  "/warteliste",
+  "/warteliste/b",
+  "/warteliste/umfrage",
+  "/warteliste/danke",
+  "/widerruf",
+  "/widerruf/erklaeren",
+]
+
+const PUBLIC_ROUTE_PREFIXES = [
+  "/auth",
+  // The email handoff renders only a generic, noindex app-opening page. The
+  // authenticated native result endpoint remains protected under /api/mobile/v1.
+  "/app/research",
+  "/lp",
+  "/partner",
+  "/result",
+  "/test/haarplan",
+  "/test/quiz",
+  "/api/funnel",
+  "/api/og",
+  "/api/paypal",
+  "/api/partner-access",
+  "/api/quiz",
+  "/api/stripe",
+]
+
+const PUBLIC_API_EXACT_ROUTES = [
+  // Checkout preflight validates its session or opaque quiz lead in the handler.
+  "/api/checkout/eligibility",
+  "/api/openai-ads/context",
+  "/api/billing/contract-declarations",
+  "/api/analytics/meta-offer-view",
+  "/api/analytics/offer-engaged",
+  "/api/auth/callback",
+  // freemium-scanner-first T18: turns a quiz lead into a free account, so it
+  // is reached without a session. Own flag gate + lead guards + rate limit.
+  "/api/auth/free-registration",
+  "/api/auth/send-magic-link",
+  "/api/auth/send-setup-link",
+  "/api/auth/set-checkout-password",
+  // Calendly signs every delivery (HMAC, replay-window checked in the
+  // handler); a session can never exist on an inbound webhook.
+  "/api/calendly/webhook",
+  // Apple signs every App Store Server Notification (JWS verified in the handler);
+  // a session can never exist on an inbound webhook.
+  "/api/app-store/notifications",
+  // discovery-call toolkit: both are reached from the invite page before a
+  // session exists. They authenticate the signed invite credential themselves
+  // and refuse a revoked or rotated enrollment.
+  "/api/beratung/claim",
+  "/api/beratung/resolve",
+  // A paid buyer reaches this capability before an account/session exists.
+  // Keep it exact: all other billing APIs remain behind the billing prefix.
+  "/api/billing/one-time-activation-status",
+  // The field-test handler performs its own signed campaign, funnel, lead,
+  // session, and rate-limit checks before it creates or reuses a guest.
+  "/api/personal-plan/field-test/activate",
+  // These email-bound moderator handlers authenticate their own session and
+  // must remain reachable before the moderator receives an entitlement.
+  "/api/personal-plan/field-test/moderator/start",
+  "/api/personal-plan/field-test/moderator/activate",
+  "/api/personal-plan/field-test/moderator/activate-organic",
+  "/api/quiz/field-test/activate",
+  "/api/waitlist",
+  "/api/waitlist/survey",
+  "/api/waitlist/survey-access",
+]
+
+const PROTECTED_ROUTE_PREFIXES = [
+  // Native handlers validate their own bearer credentials.
+  "/api/mobile/v1",
+  "/admin",
+  "/anwendung",
+  // discovery-call toolkit: the checklist, the intake API and the admin cockpit
+  // all require a session. The two public invite pages and their two public APIs
+  // above are exact carve-outs and are matched first.
+  "/beratung",
+  "/api/beratung",
+  "/chat",
+  "/onboarding",
+  "/plan-bereit",
+  "/profile",
+  "/plan-start",
+  "/reactivate",
+  "/routine",
+  "/scan",
+  "/tracker",
+  // Account-deletion cron (CRON_SECRET bearer; Task 7 adds the native endpoints under /api/mobile/v1).
+  "/api/account-deletion",
+  "/api/admin",
+  "/api/billing",
+  "/api/chat",
+  "/api/customerio",
+  "/api/feedback",
+  // freemium-scanner-first T14: contextual purchase completion. Authenticated by
+  // definition — it verifies and admits the CALLER's own purchase.
+  "/api/freemium",
+  "/api/memory",
+  "/api/personal-plan",
+  "/api/product-intake",
+  "/api/products",
+  "/api/profile",
+  "/api/routine",
+  "/api/scan",
+  "/api/tracker",
+  // The public waitlist entries above are intentionally exact; later
+  // descendants must not silently inherit public access.
+  "/warteliste",
+  "/api/waitlist",
+]
+
+const DEVELOPMENT_ROUTE_PREFIXES = ["/labs", "/api/labs"]
+const DEVELOPMENT_EXACT_ROUTES = ["/api/debug/build-info"]
+const LOCAL_LOGIN_ROUTE = "/api/dev/login"
+const VERCEL_PREVIEW_DEVELOPMENT_ROUTES = [
+  "/labs/offer-page",
+  "/labs/personal-plan/stage-3",
+  "/labs/portrait",
+]
+
+export function pathMatchesRoutePrefix(pathname: string, prefix: string) {
+  return pathname === prefix || pathname.startsWith(`${prefix}/`)
+}
+
+function matchesRoutePrefix(pathname: string, prefixes: readonly string[]) {
+  return prefixes.some((prefix) => pathMatchesRoutePrefix(pathname, prefix))
+}
+
+export function classifyRoute(
+  pathname: string,
+  environment: RouteEnvironment,
+): RouteClassification {
+  if (pathname === "/offer") {
+    return "legacy"
+  }
+
+  const isDevelopment = environment.nodeEnv === "development"
+  const isVercelPreview = environment.vercelEnv === "preview"
+  const isCiOfferPageLab =
+    pathname === "/labs/offer-page" && environment.ciOfferPageLabEnabled === true
+  const isCiPersonalPlanStage3Lab =
+    pathname === "/labs/personal-plan/stage-3" &&
+    environment.ciPersonalPlanStage3LabEnabled === true
+  const isCiPersonalPlanProductionJourney =
+    pathname === "/plan-start" &&
+    isDevelopment &&
+    environment.ciPersonalPlanProductionJourneyEnabled === true
+  const isLocalLoginRoute = pathname === LOCAL_LOGIN_ROUTE
+  const isStandardDevelopmentRoute =
+    DEVELOPMENT_EXACT_ROUTES.includes(pathname) ||
+    matchesRoutePrefix(pathname, DEVELOPMENT_ROUTE_PREFIXES)
+
+  if (isLocalLoginRoute) {
+    return isDevelopment && environment.localDevLoginEnabled ? "development" : "protected"
+  }
+
+  if (
+    (VERCEL_PREVIEW_DEVELOPMENT_ROUTES.includes(pathname) && isVercelPreview) ||
+    isCiOfferPageLab ||
+    isCiPersonalPlanStage3Lab ||
+    isCiPersonalPlanProductionJourney
+  ) {
+    return "development"
+  }
+
+  if (isStandardDevelopmentRoute) {
+    return isDevelopment ? "development" : "protected"
+  }
+
+  if (
+    PUBLIC_EXACT_ROUTES.includes(pathname) ||
+    PUBLIC_API_EXACT_ROUTES.includes(pathname) ||
+    matchesRoutePrefix(pathname, PUBLIC_ROUTE_PREFIXES)
+  ) {
+    return "public"
+  }
+
+  if (matchesRoutePrefix(pathname, PROTECTED_ROUTE_PREFIXES)) {
+    return "protected"
+  }
+
+  return "unknown"
+}

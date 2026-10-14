@@ -1,0 +1,232 @@
+[
+  {
+    "id": "research32-C1-products",
+    "file": "src/lib/labs/leave-in-research-access.ts",
+    "sourceSha256": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "anchor": {
+      "kind": "function",
+      "scope": "getLeaveInResearchLabData",
+      "expectedOccurrences": 1
+    },
+    "from": "products: details.length,",
+    "to": "products: details.length - 1,",
+    "mutatedSha256": "220e01298bdf91a2c346421be6ba5139a2c50a6f6270cd61d36829efa272b295",
+    "test": {
+      "file": "tests/leave-in-research-api.test.ts",
+      "name": "Leave-In queue API returns the queue and the selected detail in development"
+    },
+    "intendedAssertion": "summary.products is exactly19",
+    "requiresMainIntendedAssertionInspection": true,
+    "testPhaseHashes": {
+      "transfer": "20b294610aff475e017652b9049db981f5bdcaeb69e050d3061f6e45297329ae",
+      "cut": "20b294610aff475e017652b9049db981f5bdcaeb69e050d3061f6e45297329ae"
+    }
+  },
+  {
+    "id": "research32-C1-excluded",
+    "file": "src/lib/labs/leave-in-research-access.ts",
+    "sourceSha256": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "anchor": {
+      "kind": "function",
+      "scope": "getLeaveInResearchLabData",
+      "expectedOccurrences": 1
+    },
+    "from": "excluded: details.filter((detail) => detail.excluded).length,",
+    "to": "excluded: details.filter((detail) => detail.excluded).length + 1,",
+    "mutatedSha256": "742eed248bd33676c29b5f4adc1f5f3be5ddd60a8f77721ea2e8de1d5cea7b87",
+    "test": {
+      "file": "tests/leave-in-research-api.test.ts",
+      "name": "Leave-In queue API returns the queue and the selected detail in development"
+    },
+    "intendedAssertion": "summary.excluded is exactly4",
+    "requiresMainIntendedAssertionInspection": true,
+    "testPhaseHashes": {
+      "transfer": "20b294610aff475e017652b9049db981f5bdcaeb69e050d3061f6e45297329ae",
+      "cut": "20b294610aff475e017652b9049db981f5bdcaeb69e050d3061f6e45297329ae"
+    }
+  },
+  {
+    "id": "research32-C1-in-category",
+    "file": "src/lib/labs/leave-in-research-access.ts",
+    "sourceSha256": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "anchor": {
+      "kind": "function",
+      "scope": "getLeaveInResearchLabData",
+      "expectedOccurrences": 1
+    },
+    "from": "inCategory: details.filter((detail) => !detail.excluded).length,",
+    "to": "inCategory: details.filter((detail) => !detail.excluded).length - 1,",
+    "mutatedSha256": "d63ffc926ca2f7282b00b6c44a40915d8f71a800e51a4c51051fc11ed82e9518",
+    "test": {
+      "file": "tests/leave-in-research-api.test.ts",
+      "name": "Leave-In queue API returns the queue and the selected detail in development"
+    },
+    "intendedAssertion": "summary.inCategory is exactly15",
+    "requiresMainIntendedAssertionInspection": true,
+    "testPhaseHashes": {
+      "transfer": "20b294610aff475e017652b9049db981f5bdcaeb69e050d3061f6e45297329ae",
+      "cut": "20b294610aff475e017652b9049db981f5bdcaeb69e050d3061f6e45297329ae"
+    }
+  },
+  {
+    "id": "research32-C1-review-count",
+    "file": "src/lib/labs/leave-in-research-access.ts",
+    "sourceSha256": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "anchor": {
+      "kind": "function",
+      "scope": "getLeaveInResearchLabData",
+      "expectedOccurrences": 1
+    },
+    "from": "needsReview: details.filter((detail) => detail.reviewStatus === \"needs_review\").length,",
+    "to": "needsReview: 0,",
+    "mutatedSha256": "e88d2fe8b26ea613559dd803ad97f130490717072445685905936b5219ba1aa1",
+    "test": {
+      "file": "tests/leave-in-research-api.test.ts",
+      "name": "Leave-In queue API returns the queue and the selected detail in development"
+    },
+    "intendedAssertion": "summary.reviewCounts.needsReview is exactly19",
+    "requiresMainIntendedAssertionInspection": true,
+    "testPhaseHashes": {
+      "transfer": "20b294610aff475e017652b9049db981f5bdcaeb69e050d3061f6e45297329ae",
+      "cut": "20b294610aff475e017652b9049db981f5bdcaeb69e050d3061f6e45297329ae"
+    }
+  },
+  {
+    "id": "research32-C1-effective-label",
+    "file": "src/lib/labs/leave-in-research-access.ts",
+    "sourceSha256": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "anchor": {
+      "kind": "function",
+      "scope": "getLeaveInResearchLabData",
+      "expectedOccurrences": 1
+    },
+    "from": "      effectiveStandard: fixture.effectiveStandard.label,",
+    "to": "      effectiveStandard: fixture.standardVersion,",
+    "mutatedSha256": "a49c3d2a3517981e023258d7bea29445c12f1e3b0c6e6e28afd3a2b9c583de47",
+    "test": {
+      "file": "tests/leave-in-research-api.test.ts",
+      "name": "Leave-In queue API returns the queue and the selected detail in development"
+    },
+    "intendedAssertion": "meta.effectiveStandard exact v1.1 label",
+    "requiresMainIntendedAssertionInspection": true,
+    "testPhaseHashes": {
+      "transfer": "20b294610aff475e017652b9049db981f5bdcaeb69e050d3061f6e45297329ae",
+      "cut": "20b294610aff475e017652b9049db981f5bdcaeb69e050d3061f6e45297329ae"
+    }
+  },
+  {
+    "id": "research32-C1-overlay",
+    "file": "src/lib/labs/leave-in-research-access.ts",
+    "sourceSha256": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "anchor": {
+      "kind": "function",
+      "scope": "getLeaveInResearchLabData",
+      "expectedOccurrences": 1
+    },
+    "from": "      effectiveStandardOverlay: fixture.effectiveStandard.overlay,",
+    "to": "      effectiveStandardOverlay: \"docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md\",",
+    "mutatedSha256": "ed2595c0660c0afd971fc10a7b3b46677f668258ca47b7a8cbadd606ffe9882e",
+    "test": {
+      "file": "tests/leave-in-research-api.test.ts",
+      "name": "Leave-In queue API returns the queue and the selected detail in development"
+    },
+    "intendedAssertion": "meta.effectiveStandardOverlay exact v1.1 path",
+    "requiresMainIntendedAssertionInspection": true,
+    "testPhaseHashes": {
+      "transfer": "20b294610aff475e017652b9049db981f5bdcaeb69e050d3061f6e45297329ae",
+      "cut": "20b294610aff475e017652b9049db981f5bdcaeb69e050d3061f6e45297329ae"
+    }
+  },
+  {
+    "id": "research32-C1-order",
+    "file": "src/lib/labs/leave-in-research-access.ts",
+    "sourceSha256": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "anchor": {
+      "kind": "function",
+      "scope": "getLeaveInResearchLabData",
+      "expectedOccurrences": 1
+    },
+    "from": "queueItems: details.map(queueItemFromDetail),",
+    "to": "queueItems: [...details].reverse().map(queueItemFromDetail),",
+    "mutatedSha256": "5a323240b9a353dc7d353cf21d15c91524c8bcc96dd271723bad72a8e0837deb",
+    "test": {
+      "file": "tests/leave-in-research-api.test.ts",
+      "name": "Leave-In queue API returns the queue and the selected detail in development"
+    },
+    "intendedAssertion": "goldSet.map(slot) exact1..13 sequence",
+    "requiresMainIntendedAssertionInspection": true,
+    "testPhaseHashes": {
+      "transfer": "20b294610aff475e017652b9049db981f5bdcaeb69e050d3061f6e45297329ae",
+      "cut": "20b294610aff475e017652b9049db981f5bdcaeb69e050d3061f6e45297329ae"
+    }
+  },
+  {
+    "id": "research32-C1-prefix",
+    "file": "src/lib/labs/leave-in-research-access.ts",
+    "sourceSha256": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "anchor": {
+      "kind": "function",
+      "scope": "queueItemFromDetail",
+      "expectedOccurrences": 1
+    },
+    "from": "function queueItemFromDetail(detail: LeaveInResearchProductDetail): LeaveInResearchQueueItem {\n  return {\n    productId: detail.productId,",
+    "to": "function queueItemFromDetail(detail: LeaveInResearchProductDetail): LeaveInResearchQueueItem {\n  return {\n    productId: detail.batch === \"unseen-test\" ? detail.productId.replace(\"unseen-0\", \"unseen-\") : detail.productId,",
+    "mutatedSha256": "b8f65361befda02d066d86781216d6bc4ae0d9bcd71dd39eed8ec6b791aca225",
+    "test": {
+      "file": "tests/leave-in-research-api.test.ts",
+      "name": "Leave-In queue API returns the queue and the selected detail in development"
+    },
+    "intendedAssertion": "each unseen ID startsWith unseen-0 before subsequent detail GET",
+    "requiresMainIntendedAssertionInspection": true,
+    "testPhaseHashes": {
+      "transfer": "20b294610aff475e017652b9049db981f5bdcaeb69e050d3061f6e45297329ae",
+      "cut": "20b294610aff475e017652b9049db981f5bdcaeb69e050d3061f6e45297329ae"
+    }
+  },
+  {
+    "id": "research32-C2-registry",
+    "file": "src/lib/labs/leave-in-research-access.ts",
+    "sourceSha256": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "anchor": {
+      "kind": "function",
+      "scope": "getLeaveInResearchLabData",
+      "expectedOccurrences": 1
+    },
+    "from": "    openAdjudications: fixture.openAdjudications,",
+    "to": "    openAdjudications: [{ id: \"focus_permissive_vs_conservative\", title: \"reopened\", note: \"reopened\", source: \"audit\" }],",
+    "mutatedSha256": "d4590d4e0965bb6d803b7eaef12d7d31ae6fa2583489c7d56a99ff4f90b2c61c",
+    "test": {
+      "file": "tests/leave-in-research-fixture.test.ts",
+      "name": "Leave-In fixture carries no unseen-test adjudication points any more (T18 retired)"
+    },
+    "intendedAssertion": "data.openAdjudications deepEqual []",
+    "requiresMainIntendedAssertionInspection": true,
+    "testPhaseHashes": {
+      "transfer": "08e6011775431b4708e01a6a761209d82eb011ffc7139925d4ba276bf6d00cf8",
+      "cut": "ea45859bc56fd1fa3794f538a1ac3fdcd9b4501ca52c50503a6aa8d1aa48f283"
+    }
+  },
+  {
+    "id": "research32-C2-attached",
+    "file": "src/lib/labs/leave-in-research-access.ts",
+    "sourceSha256": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildDetail",
+      "expectedOccurrences": 1
+    },
+    "from": "    ...property,\n    humanReviewStatus: propertyStatuses[property.path] ?? \"unreviewed\",",
+    "to": "    ...property,\n    adjudication: product.batch === \"gold-set\" && product.slot === 2 ? { id: \"focus_permissive_vs_conservative\", title: \"reopened\", note: \"reopened\", source: \"audit\" } : property.adjudication,\n    humanReviewStatus: propertyStatuses[property.path] ?? \"unreviewed\",",
+    "mutatedSha256": "b4d8e88837655eb77857f89116cea07d525148671d3585c46a4c344a3f3b7190",
+    "test": {
+      "file": "tests/leave-in-research-fixture.test.ts",
+      "name": "Leave-In fixture carries no unseen-test adjudication points any more (T18 retired)"
+    },
+    "intendedAssertion": "all-product detail loop slot2 has zero adjudication properties; does not fail unseen14 prefix/values",
+    "requiresMainIntendedAssertionInspection": true,
+    "testPhaseHashes": {
+      "transfer": "08e6011775431b4708e01a6a761209d82eb011ffc7139925d4ba276bf6d00cf8",
+      "cut": "ea45859bc56fd1fa3794f538a1ac3fdcd9b4501ca52c50503a6aa8d1aa48f283"
+    }
+  }
+]

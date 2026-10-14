@@ -1,5 +1,4 @@
 import {
-  STAGE2_MODULES,
   type PersonalPlanRefinementAnswersV1,
   type Stage2Module,
   type Stage2QuestionId,
@@ -21,7 +20,11 @@ import {
   type Stage2RefinementHandoff,
   type Stage2RefinementSession,
 } from "./session"
-import { getStage2ModulePathStates, resolveStage2RefinementContract } from "./question-path"
+import {
+  areAllStage2ModulesSettled,
+  getStage2ModulePathStates,
+  resolveStage2RefinementContract,
+} from "./question-path"
 
 export type Stage2FixtureRuntimeEnvironment = "development" | "test" | "production"
 
@@ -130,7 +133,7 @@ export class Stage2FixtureGateway implements Stage2RefinementGateway {
     }
     const stage3Handoff = input.module === "products"
     const recompute = input.module === "habits" ? ({ outcome: "applied" } as const) : undefined
-    if (STAGE2_MODULES.every((candidate) => moduleStates[candidate].status === "complete")) {
+    if (areAllStage2ModulesSettled(moduleStates)) {
       const handoff = await this.complete({ expectedRevision: input.expectedRevision })
       return {
         ...handoff,

@@ -1,0 +1,27 @@
+{
+  "scope": "tests/agent-guidance.spec.ts",
+  "declaration_count": 32,
+  "donor": {
+    "line_start": 676,
+    "line_end": 694,
+    "name": "current-turn separated hair-loss wording can load safety overlay",
+    "sha256": "af9eff1a64daffb039041e4869c47bff755bab7b67c71f04423c9f6e3809ac63"
+  },
+  "keeper": {
+    "line_start": 696,
+    "line_end": 715,
+    "name": "current-turn separated hair-loss wording loads safety overlay without model focus",
+    "sha256": "086c507e8d9d60462814898f3246e136e91d92f65a79a1943b5bcddbff6ba789"
+  },
+  "guards": {
+    "test_neighborhood_649_715_sha256": "978875604c2a9ab2b8ce156fb98c04a29c76fccb62b514f5bf16e600e8199059",
+    "source_safety_derivation_355_401_sha256": "261980aff68f165dfdf983fb6cd55ade065f178814c0e07a5c53031bc6c3bd85",
+    "source_hair_loss_detector_476_500_sha256": "c44ad910811003b53dc6f177da281af78968131fb7033fbc0417ddc30792d302",
+    "source_projection_510_548_sha256": "2a022714786c4d347945a1def6328690cc40e5283742e93dc9494b1557de2cc6",
+    "hair_loss_overlay_sha256": "c7f971cc3fd81bef7042b9cf9d609164679bdb51c16d214bda6897640ec0ecd3",
+    "test_agent_script_sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+    "server_only_register_sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+  },
+  "native_command": "node --import ./tests/server-only-register.cjs --import tsx --test tests/agent-guidance.spec.ts",
+  "ci_command": "npm run test:agent"
+}

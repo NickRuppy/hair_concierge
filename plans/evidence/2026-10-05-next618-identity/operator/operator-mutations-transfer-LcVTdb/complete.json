@@ -1,0 +1,209 @@
+{
+  "phase": "transfer",
+  "verified": 4,
+  "controlIds": [
+    "none-match",
+    "none-confidence",
+    "none-reason",
+    "none-raw-preservation"
+  ],
+  "cleanRuns": 8,
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA": "132c346bff375008376b55eb0499f0701fcf11dfa905ad34c0842e29c2d19e0a",
+  "receiptSHA256": "c94d4468241ab560fb62914cb7decce0931a50c8048dd4f9daedcb7d2af40d39",
+  "allTestHashes": {
+    "tests/product-identity-normalize.test.ts": "512c74fa5948366cf8249991fe58a6ac490b3f537398d17ef18301a58b2e4e4f",
+    "tests/product-identity-resolution.test.ts": "7b9c4752c20736e753132490431e577c614536537f10ddbb9eb26276d5ce4d58",
+    "tests/product-identity-schema.test.ts": "392cad4a08642b04c4bc4a2e660adad2a25b821b6648fee8c207090d56023f57",
+    "tests/product-identity-title.test.ts": "c9e2616cdbb7ee31cf47c7f1f739ac26db03cd9e1882c855d8d1b943cbc709bd",
+    "tests/product-identity-correction.test.ts": "7a47c34d36387609bd4eac938b6b6dd8c188b88d0ffff1e5856a9e8667e85a46"
+  },
+  "sourceGuards": [
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
+    {
+      "file": ".nvmrc",
+      "sha": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "file": "AGENTS.md",
+      "sha": "9072f0e4ef99aef972395aab4b26e4718be6ab7cac755a0fc303746d8ee162f8"
+    },
+    {
+      "file": "docs/product-identity-normalization.md",
+      "sha": "68e4ed008fb3c5416e569676fffef613a3abda2ea6eada1cf8ffe5ef9913e6a6"
+    },
+    {
+      "file": "node_modules/tsx/package.json",
+      "sha": "6e764b21991c21595441f82387c1451ccd10a3e7a3f0973cc5e3649a12dea7d2"
+    },
+    {
+      "file": "node_modules/typescript/lib/typescript.js",
+      "sha": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675"
+    },
+    {
+      "file": "package-lock.json",
+      "sha": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799"
+    },
+    {
+      "file": "package.json",
+      "sha": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": "plans/2026-06-18-product-identity-canonical-correction.md",
+      "sha": "711439692d8aadb076c7fcaab4cc16dfb946fc42861f6c2bdfb1df48755a9217"
+    },
+    {
+      "file": "scripts/product-identity/apply-normalization.ts",
+      "sha": "9202c6cd37273ae1fa384ca5abdd361ef4546fea9cea577b966ec28da59a5adb"
+    },
+    {
+      "file": "scripts/product-identity/correct-canonical-identities.ts",
+      "sha": "8ea40065d227fa6d8ab3b74632630ed43517c9d3102c4567a5481940e19cc5bb"
+    },
+    {
+      "file": "scripts/product-identity/validate-normalization.ts",
+      "sha": "3866d8c377342b7130447c03f11141540a17965514ee3e6b90e8de398e848e1e"
+    },
+    {
+      "file": "scripts/product-intake/codex-research-worker.ts",
+      "sha": "caefa549edf2c1be3695616d8057e12b5249cc8a9615ff2832a42a49ec689652"
+    },
+    {
+      "file": "scripts/product-intake/review.ts",
+      "sha": "ab5f90114f6837bc31f52058bd86590085bd043c23b1eb03b725ab306ccbab41"
+    },
+    {
+      "file": "src/app/api/mobile/v1/scan/search/route.ts",
+      "sha": "e5dbe68d707d4f495e13c4923236d403980553593f32e77b535e76e8913a4d29"
+    },
+    {
+      "file": "src/app/api/product-intake/brand-options/route.ts",
+      "sha": "b2df73ba75a7df37c9d81c6e0c715dc065ae545ea3cb56de952bfc6bd9e9b9e0"
+    },
+    {
+      "file": "src/app/api/product-intake/chat/route.ts",
+      "sha": "9fe5c1c24c34d181cbedd14001b92d3a94391774fd905b5f3bf5312f240e8e3a"
+    },
+    {
+      "file": "src/app/api/product-intake/onboarding/route.ts",
+      "sha": "e5e101a3dce5a2bb1a2a909fdb0dbefe17a2a213746d4da84e4b78d0466b5966"
+    },
+    {
+      "file": "src/app/api/scan/submit/route.ts",
+      "sha": "b509ae15cc10aee607e086ac10c843d77668386dc546a6c640a167cb729c2dad"
+    },
+    {
+      "file": "src/components/discovery/intake/add-flow.ts",
+      "sha": "e75bc0e87d52f2691e0f8f13517e97381c23cbd7865a97aa5a997e4000242df4"
+    },
+    {
+      "file": "src/components/scan/scan-search-sheet.tsx",
+      "sha": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa"
+    },
+    {
+      "file": "src/lib/agent-v2/production/product-lookup-turn-outcome.ts",
+      "sha": "1b7c9ea81ed89f5db08c1267daa07a882a93306003cb3582ec597c61eadc7518"
+    },
+    {
+      "file": "src/lib/discovery/product-label.ts",
+      "sha": "8d357c9064bde86270829baad10c17674ea312d9b4afdef0f239e5c30070e185"
+    },
+    {
+      "file": "src/lib/mobile/scan-service.ts",
+      "sha": "eb56a474d802c60c12856aca5efbf23702fdab02f4350ab525a6be5fcbec3459"
+    },
+    {
+      "file": "src/lib/product-identity/brand-resolution.ts",
+      "sha": "5182615a8419b477e73b0a00e05e78bb9436d8b7ad9c3c7f2d35850f65e48b8a"
+    },
+    {
+      "file": "src/lib/product-identity/display-title.ts",
+      "sha": "b3227a1c978a5e704bba7413087b75e97cd0b99b62aed25d05a3d6100e23c5cf"
+    },
+    {
+      "file": "src/lib/product-identity/index.ts",
+      "sha": "fd7c23ab66221159b693d8f3c076ad1169160e1d2ed1cd1de7b923d1e3a82d46"
+    },
+    {
+      "file": "src/lib/product-identity/normalize.ts",
+      "sha": "817e15aed0f145308fb7e971ac9ab6171ddb0d3f0b2c043e9e06377b765d69db"
+    },
+    {
+      "file": "src/lib/product-intake/product-lookup.ts",
+      "sha": "5d71101e81c78dc1f2252e03c8b16d95527023327590ac5a8bcd631b3fbca971"
+    },
+    {
+      "file": "src/lib/product-intake/product-matching.ts",
+      "sha": "216efda432f30a2bfebcc6a1f6cf3a3557605e61d3ae733b743c898b74294f29"
+    },
+    {
+      "file": "src/lib/product-intake/repository.ts",
+      "sha": "42accc64e3d9ab2519ce470615cc4f0760c30ce0ad2ffcac467e31841ab22cc6"
+    },
+    {
+      "file": "src/lib/product-intake/route-handlers.ts",
+      "sha": "0310e374ef568684dd6589b1bc86ab567f5c18967f9b89b223d73a10cc556f8c"
+    },
+    {
+      "file": "src/lib/product-intake/submissions.ts",
+      "sha": "3098f48d86d40549f982a2a96c465e34f4278c59b593da4ef182f81d0df6fcf3"
+    },
+    {
+      "file": "src/lib/product-lines/display.ts",
+      "sha": "db984b35934573bd62617cd2affbbe75adf7b174326c80eabdfca4cc5f7cb40e"
+    },
+    {
+      "file": "src/lib/routines/shape-for-ui.ts",
+      "sha": "29f45dc67edc8b41a25933b5e7accf5ef12460fd60dd73a96f0d161c7b6c47e1"
+    },
+    {
+      "file": "src/lib/vocabulary/frequencies.ts",
+      "sha": "d79bb3584473a8f6541feecff58a40633736f9376981ff190b645114dc0eb3a9"
+    },
+    {
+      "file": "supabase/migrations/20260612120000_product_identity_normalization.sql",
+      "sha": "c80c84821f78c3a93381031051feeaac2c8adc686418ec18cbced6676cbf7b08"
+    },
+    {
+      "file": "supabase/migrations/20260706120000_product_visibility_policy_lifecycle.sql",
+      "sha": "252a561ada662f9b94b6009cf4585a31ab96638f87ace54270d677ab377d920f"
+    },
+    {
+      "file": "tests/discovery-product-label.test.ts",
+      "sha": "1587b2aa9cc8a22ce8a1963aa836cfdd9416eb6fcfc6e547965cb955b7e60473"
+    },
+    {
+      "file": "tests/discovery-product-line-title.test.tsx",
+      "sha": "327c7ebc938eafccc422abeccd2dda076d7ad315fa201a9c8fdaddb0bab3307b"
+    },
+    {
+      "file": "tests/mobile-scan-search-identity.test.ts",
+      "sha": "1dbad87ea6821484affc64db99e5d9aa054e5a41c4b8686889e12f44023157d7"
+    },
+    {
+      "file": "tests/product-card-rendering.test.tsx",
+      "sha": "2d9c33bcba310547f4a156c3ccf957600811c412b3115752cecc7fe8ac5edad4"
+    },
+    {
+      "file": "tests/product-catalog-lifecycle.test.ts",
+      "sha": "6d3ca9c727a344c8375ffc9d69e24c82cd2243c052c6b1a57e879c30fc7f2766"
+    },
+    {
+      "file": "tests/product-line-display.test.ts",
+      "sha": "683d5b4a6b4330b5f2da232eac5a60ff836a80b929b2dfeb0de0a3ae9e2739d0"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    },
+    {
+      "file": "tsconfig.json",
+      "sha": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd"
+    }
+  ]
+}

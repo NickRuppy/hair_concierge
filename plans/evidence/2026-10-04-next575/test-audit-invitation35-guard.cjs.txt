@@ -1,0 +1,62 @@
+'use strict'
+// Read-only validation. No child process creation; no product module imports.
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto')
+const ROOT='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning'
+const PLAN='/tmp/test-audit-invitation35-main-imU8JS/plan.json'
+const PLAN_SHA='78bd8b073b523977c59989fa0d714e85030a331ffa54a92d3fa53ee07431b2fc'
+const BASE='/tmp/test-audit-invitation35'
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex')
+const fail=s=>{throw Error(s)}
+function same(file,hash){if(sha(fs.readFileSync(file))!==hash)fail('Pinned bytes drift: '+file)}
+function identity(p){
+ if(process.cwd()!==ROOT||fs.realpathSync(process.cwd())!==ROOT)fail('Exact task cwd required')
+ if(p.root!==ROOT||process.version!==p.node.version||fs.realpathSync(process.execPath)!==p.node.realpath)fail('Root/Node identity drift')
+ same(process.execPath,p.node.sha)
+ if(fs.readFileSync(ROOT+'/.git','utf8').trim()!=='gitdir: '+p.gitdir)fail('Worktree identity drift')
+ if(fs.readFileSync(p.gitdir+'/HEAD','utf8').trim()!=='ref: '+p.ref||p.ref!=='refs/heads/'+p.branch)fail('Branch drift')
+ const loose=path.join(p.common,p.ref)
+ const head=fs.existsSync(loose)?fs.readFileSync(loose,'utf8').trim():fs.readFileSync(p.common+'/packed-refs','utf8').split('\n').find(x=>x.endsWith(' '+p.ref))?.split(' ')[0]
+ if(head!==p.head)fail('HEAD drift')
+}
+function parse(ts,file,text){const sf=ts.createSourceFile(file,text,ts.ScriptTarget.Latest,true,file.endsWith('.tsx')?ts.ScriptKind.TSX:ts.ScriptKind.TS);if(sf.parseDiagnostics.length)fail('TS parse diagnostics '+file);return sf}
+function sites(ts,file,text){const sf=parse(ts,file,text),out=[];function v(n){if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test'){const cb=n.arguments.find(a=>ts.isArrowFunction(a)||ts.isFunctionExpression(a));if(cb){let st=n;while(!ts.isExpressionStatement(st))st=st.parent;const assertions=[],calls=[];function a(x){if(ts.isCallExpression(x)){if(x.expression.getText(sf).startsWith('assert.'))assertions.push({line:sf.getLineAndCharacterOfPosition(x.getStart(sf)).line+1,text:x.getText(sf)});else calls.push(x.getText(sf))}ts.forEachChild(x,a)}a(cb);out.push({name:n.arguments[0].text,body:st.getText(sf),callback:cb.getText(sf),assertions,calls})}}ts.forEachChild(n,v)}v(sf);return out}
+function once(text,from,to){if(text.split(from).length!==2)fail('Non-unique exact anchor');return text.replace(from,()=>to)}
+function load(){
+ same(PLAN,PLAN_SHA);const p=JSON.parse(fs.readFileSync(PLAN));identity(p)
+ for(const[f,h]of Object.entries(p.dependencies))same(f,h)
+ const ts=require(ROOT+'/node_modules/typescript'),snapshots={},counts={before:0,transfer:0,cut:0}
+ for(const phase of Object.keys(counts)){snapshots[phase]={};for(const[file,entry]of Object.entries(p.phases[phase])){same(entry.path,entry.sha);const bytes=fs.readFileSync(entry.path),rows=sites(ts,file,bytes.toString());if(rows.length!==entry.sites.length)fail('Count drift');for(const r of rows){const pin=entry.sites.find(x=>x.name===r.name);if(!pin||sha(r.body)!==pin.bodySha||sha(r.callback)!==pin.callbackSha)fail('Callback drift');}snapshots[phase][file]={bytes,rows};counts[phase]+=rows.length}}
+ if(JSON.stringify(counts)!==JSON.stringify(p.counts)||Object.keys(snapshots.before).length!==4)fail('Full four-file phase conservation')
+ const changed='tests/discovery-invitation-card.test.tsx',keeper=p.candidates[0].keeperBefore.title
+ if(p.candidates.length!==2||p.controls.length!==3||p.candidates.some(c=>c.keeperBefore.title!==keeper))fail('Proposal scope drift')
+ let untouched=0,changedUntouched=0
+ for(const[file,b]of Object.entries(snapshots.before)){
+  const t=snapshots.transfer[file],c=snapshots.cut[file];let text=b.bytes.toString()
+  if(file===changed){text=once(text,p.candidates[0].keeperBefore.body,p.candidates[0].keeperAfter.body)
+   const beforeKeeper=b.rows.find(x=>x.name===keeper),afterKeeper=t.rows.find(x=>x.name===keeper)
+   // The three extra assertion subtrees may call includes; all original statements,
+   // renderer invocations, fixtures and old assertions are otherwise literal preserved.
+   let reverse=afterKeeper.body
+   for(const line of ['  assert.ok(prefilled.includes("bg-[var(--brand-coral)]"), "positive coral CTA absent")\n','  assert.ok(!prefilled.includes("bg-[var(--brand-plum)]"), "negative plum token present")\n','  assert.match(empty, /motion-safe:animate-\\[personalPlanStageTargetFade_var\\(--motion-screen\\)/)\n'])reverse=once(reverse,line,'')
+   if(reverse!==beforeKeeper.body)fail('Keeper adds anything beyond exact three assertions')
+  }
+  if(text!==t.bytes.toString())fail('Transfer whole-file reconstruction '+file)
+  for(const donor of p.candidates.filter(x=>x.file===file)){if(b.rows.find(r=>r.name===donor.donor.title)?.body!==donor.donor.body)fail('Donor mismatch');text=once(text,donor.donor.body+'\n\n','')}
+  if(text!==c.bytes.toString())fail('Cut whole-file reconstruction '+file)
+  for(const r of b.rows){if(p.candidates.some(x=>x.file===file&&x.donor.title===r.name))continue;if(c.rows.find(x=>x.name===r.name)?.body!==t.rows.find(x=>x.name===r.name)?.body)fail('Cut modified survivor');if(file===changed&&r.name===keeper)continue;if(t.rows.find(x=>x.name===r.name)?.body!==r.body)fail('Unrelated callback changed');untouched++;if(file===changed)changedUntouched++}
+ }
+ if(untouched!==32||changedUntouched!==8)fail('Unrelated callback conservation')
+ function current(overrides={}){identity(p);for(const[f,h]of Object.entries(p.dependencies))same(f,h);for(const[f,h]of Object.entries(p.guards))same(f,overrides[f]||h);const matches=Object.keys(counts).filter(phase=>Object.entries(snapshots[phase]).every(([f,s])=>fs.readFileSync(ROOT+'/'+f).equals(s.bytes)));if(matches.length!==1)fail('Mixed/unknown cohort phase');return matches[0]}
+ return{p,ts,snapshots,counts,current,untouched,changedUntouched}
+}
+function fault(ctx,control){
+ const file=ROOT+'/'+control.source,original=fs.readFileSync(file);if(sha(original)!==control.sourceHash)fail('Original source drift');const text=original.toString(),sf=parse(ctx.ts,control.source,text),owners=[]
+ function visit(n){if(control.scope.kind==='function'&&ctx.ts.isFunctionDeclaration(n)&&n.name?.text===control.scope.name)owners.push(n);if(control.scope.kind==='variable'&&ctx.ts.isVariableDeclaration(n)&&n.name.getText(sf)===control.scope.name)owners.push(n);ctx.ts.forEachChild(n,visit)}visit(sf)
+ if(owners.length!==1)fail('Unique actual owner missing');const n=owners[0],body=n.getText(sf);once(body,control.from,control.to);if(text.split(control.from).length!==2)fail('Anchor not file unique')
+ const mutant=Buffer.from(text.slice(0,n.getStart(sf))+once(body,control.from,control.to)+text.slice(n.end));parse(ctx.ts,control.source,mutant.toString());if(sha(mutant)!==control.mutantSha)fail('Mutant hash drift')
+ for(const phase of['transfer','cut']){const k=ctx.snapshots[phase][control.keeperFile].rows.find(x=>x.name===control.keeperTitle),o=control.oracles[phase];if(!k?.assertions.some(a=>a.line===o.line&&a.text===o.text))fail('Oracle line/text drift')}
+ return{file,original,mutant}
+}
+function atomicCAS(file,before,after){const temp=file+'.audit-'+crypto.randomUUID()+'.tmp';if(!fs.readFileSync(file).equals(before))fail('Owned CAS refused '+file);try{fs.writeFileSync(temp,after,{flag:'wx',mode:fs.statSync(file).mode});if(!fs.readFileSync(file).equals(before))fail('Pre-rename CAS refused');fs.renameSync(temp,file)}finally{if(fs.existsSync(temp))fs.unlinkSync(temp)}}
+function lock(){const dir=BASE+'-operator-lock',token=crypto.randomUUID();fs.mkdirSync(dir);fs.writeFileSync(dir+'/owner.json',JSON.stringify({token,pid:process.pid}),{flag:'wx'});return()=>{if(JSON.parse(fs.readFileSync(dir+'/owner.json')).token!==token)fail('Lock ownership lost');fs.unlinkSync(dir+'/owner.json');fs.rmdirSync(dir)}}
+module.exports={ROOT,BASE,PLAN,PLAN_SHA,sha,fail,same,load,fault,atomicCAS,lock,identity}

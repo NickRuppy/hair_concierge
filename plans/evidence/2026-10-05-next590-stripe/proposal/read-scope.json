@@ -1,0 +1,287 @@
+{
+  "wholeTests": [
+    {
+      "file": "tests/stripe-trial-invoice.test.ts",
+      "sites": 21,
+      "sha256": "4e801d34fe02adbb862106f9c328c7404eef12113c5ee591107f7b6175b13d51",
+      "ownerImports": [
+        {
+          "file": "src/lib/stripe/trial-invoice.ts",
+          "typeOnly": false
+        },
+        {
+          "file": "src/lib/stripe/webhook-failure.ts",
+          "typeOnly": false
+        },
+        {
+          "file": "src/lib/billing/trial-offer.ts",
+          "typeOnly": false
+        },
+        {
+          "file": "src/lib/billing/trial-runtime.ts",
+          "typeOnly": true
+        },
+        {
+          "file": "src/lib/billing/trial-payment-events.ts",
+          "typeOnly": true
+        },
+        {
+          "file": "src/app/api/stripe/webhook/route.ts",
+          "typeOnly": false
+        }
+      ]
+    },
+    {
+      "file": "tests/stripe-trial-account-activation.test.ts",
+      "sites": 18,
+      "sha256": "7891ab86622d9d708a75e8d92b964cb8c3f7c4498d2c228830c9979056968ab4",
+      "ownerImports": [
+        {
+          "file": "src/lib/stripe/checkout-activation.ts",
+          "typeOnly": false
+        },
+        {
+          "file": "src/lib/auth/checkout-activation-outcome.ts",
+          "typeOnly": false
+        },
+        {
+          "file": "src/lib/billing/trial-offer.ts",
+          "typeOnly": false
+        }
+      ]
+    },
+    {
+      "file": "tests/stripe-trial-subscription-lifecycle.test.ts",
+      "sites": 14,
+      "sha256": "fa5206bb4626cdb32c5c6a7f4e1d18c0f19522d98aa34ec881fc26c06c524651",
+      "ownerImports": [
+        {
+          "file": "src/lib/stripe/webhook-handlers.ts",
+          "typeOnly": false
+        }
+      ]
+    },
+    {
+      "file": "tests/stripe-trial-continuation.test.ts",
+      "sites": 12,
+      "sha256": "2adaa26b3787d1b866360f06f5a7b5325701bc673cddd106a9e43c40a52dc036",
+      "ownerImports": [
+        {
+          "file": "src/lib/stripe/trial-continuation.ts",
+          "typeOnly": false
+        },
+        {
+          "file": "src/lib/billing/trial-offer.ts",
+          "typeOnly": false
+        },
+        {
+          "file": "src/lib/billing/trial-runtime.ts",
+          "typeOnly": true
+        }
+      ]
+    },
+    {
+      "file": "tests/stripe-trial-authorization.test.ts",
+      "sites": 11,
+      "sha256": "cc503f5aaffafde6c89351aaafcb05a002c94294807bd6e621c4329778d625ba",
+      "ownerImports": [
+        {
+          "file": "src/lib/billing/trial-offer.ts",
+          "typeOnly": false
+        },
+        {
+          "file": "src/lib/stripe/trial-authorization.ts",
+          "typeOnly": false
+        }
+      ]
+    },
+    {
+      "file": "tests/stripe-trial-checkout.test.ts",
+      "sites": 9,
+      "sha256": "b7ca67b634e0381d0a60a56fa1b2f977a9e43530868b4719b1dffa58e1f95292",
+      "ownerImports": [
+        {
+          "file": "src/lib/stripe/trial-checkout.ts",
+          "typeOnly": false
+        },
+        {
+          "file": "src/lib/billing/trial-offer.ts",
+          "typeOnly": false
+        }
+      ]
+    },
+    {
+      "file": "tests/stripe-trial-continuation-reconcile.test.ts",
+      "sites": 9,
+      "sha256": "2fb3d2e2b1813994b02b581dbe0e338f8b18b5802d827274af28fbe49789d250",
+      "ownerImports": [
+        {
+          "file": "src/lib/billing/trial-offer.ts",
+          "typeOnly": false
+        },
+        {
+          "file": "src/lib/stripe/trial-continuation-reconcile.ts",
+          "typeOnly": false
+        },
+        {
+          "file": "src/app/api/billing/stripe-trial-continuation/reconcile/route.ts",
+          "typeOnly": false
+        }
+      ]
+    },
+    {
+      "file": "tests/stripe-trial-management.test.ts",
+      "sites": 8,
+      "sha256": "fdcc0443934d110adc0adbaa2e3b003432ebef2cc5efa7b745bba3e6ac0d2855",
+      "ownerImports": [
+        {
+          "file": "src/lib/billing/trial-offer.ts",
+          "typeOnly": false
+        },
+        {
+          "file": "src/lib/billing/trial-runtime.ts",
+          "typeOnly": true
+        },
+        {
+          "file": "src/lib/billing/trial-management-operations.ts",
+          "typeOnly": true
+        },
+        {
+          "file": "src/lib/stripe/trial-management.ts",
+          "typeOnly": false
+        }
+      ]
+    },
+    {
+      "file": "tests/stripe-trial-cancellation.test.ts",
+      "sites": 7,
+      "sha256": "aa683f1e596ff838934812921ce7d2baf5ea081ff8a2db515ab9ec9255705767",
+      "ownerImports": [
+        {
+          "file": "src/lib/stripe/trial-cancellation.ts",
+          "typeOnly": false
+        }
+      ]
+    },
+    {
+      "file": "tests/stripe-trial-prior-paid-history.test.ts",
+      "sites": 6,
+      "sha256": "6b24bb9eae7e2fb3b1c2ece6f43532d809b64766cceae626c6d81eef81ad87f7",
+      "ownerImports": [
+        {
+          "file": "src/lib/billing/trial-runtime.ts",
+          "typeOnly": true
+        },
+        {
+          "file": "src/lib/stripe/trial-prior-paid-history.ts",
+          "typeOnly": false
+        }
+      ]
+    },
+    {
+      "file": "tests/stripe-trial-checkout-route.test.ts",
+      "sites": 5,
+      "sha256": "9ecb370408c14ef478200373ac33bc74b583294b23da2f7e18681ab2a187d571",
+      "ownerImports": []
+    },
+    {
+      "file": "tests/stripe-trial-checkout-session-params.test.ts",
+      "sites": 5,
+      "sha256": "a6924fe6bcff65baecb70a7845d7293c4190c76cd6fad0a16fa1ff1ff51e9066",
+      "ownerImports": [
+        {
+          "file": "src/lib/billing/trial-offer.ts",
+          "typeOnly": true
+        },
+        {
+          "file": "src/lib/stripe/checkout-session-params.ts",
+          "typeOnly": false
+        },
+        {
+          "file": "src/lib/stripe/trial-checkout-session-params.ts",
+          "typeOnly": false
+        }
+      ]
+    },
+    {
+      "file": "tests/stripe-trial-catalog.test.ts",
+      "sites": 3,
+      "sha256": "7d69cb89ee4618f690fcfd1d542a569959716a0cf9754867edcef152219ad2e7",
+      "ownerImports": [
+        {
+          "file": "src/lib/billing/trial-offer.ts",
+          "typeOnly": false
+        },
+        {
+          "file": "src/lib/stripe/trial-catalog.ts",
+          "typeOnly": false
+        }
+      ]
+    }
+  ],
+  "extraWholeTests": [
+    "tests/stripe-checkout-session-params.spec.ts"
+  ],
+  "wholeHelpers": [
+    "tests/helpers/returning-checkout-route-fixture.ts"
+  ],
+  "wholeOwners": [
+    "src/lib/stripe/trial-authorization.ts",
+    "src/lib/stripe/trial-account-admission.ts",
+    "src/lib/stripe/trial-checkout.ts",
+    "src/lib/stripe/trial-catalog.ts",
+    "src/lib/stripe/trial-checkout-session-params.ts",
+    "src/lib/stripe/checkout-session-params.ts",
+    "src/lib/stripe/trial-invoice.ts",
+    "src/lib/stripe/trial-continuation.ts",
+    "src/lib/stripe/trial-management.ts",
+    "src/lib/stripe/trial-continuation-reconcile.ts",
+    "src/app/api/billing/stripe-trial-continuation/reconcile/route.ts",
+    "src/lib/stripe/webhook-failure.ts",
+    "src/lib/auth/checkout-activation-outcome.ts",
+    "src/lib/billing/trial-effective-contract.ts"
+  ],
+  "priorWholeOwnersReused": [
+    "src/lib/billing/trial-offer.ts",
+    "src/lib/billing/trial-runtime.ts",
+    "src/lib/billing/trial-admission.ts",
+    "src/lib/billing/trial-policy.ts",
+    "src/lib/billing/trial-access-projection.ts",
+    "src/lib/billing/trial-payment-events.ts",
+    "src/lib/billing/trial-checkout-attempt.ts",
+    "src/lib/billing/trial-identity-claims.ts",
+    "src/lib/billing/trial-management-operations.ts",
+    "src/lib/billing/subscriptions.ts",
+    "src/lib/stripe/trial-cancellation.ts",
+    "src/lib/stripe/trial-prior-paid-history.ts"
+  ],
+  "partialOwners": [
+    {
+      "file": "src/lib/billing/analytics-outbox.ts",
+      "depth": "1–74,148–203,427–440; actual keyed lookup and empty delivery loop read; downstream destination delivery bodies not read or executed"
+    },
+    {
+      "file": "src/lib/stripe/checkout-activation.ts",
+      "depth": "1–198,327–522,972–1170,1254–1421,1466–1572; one-time fulfillment and full reactivation path not read"
+    },
+    {
+      "file": "src/lib/stripe/webhook-handlers.ts",
+      "depth": "589–972,1058–1084; unrelated legacy handler branches not fully read"
+    },
+    {
+      "file": "src/app/api/stripe/webhook/route.ts",
+      "depth": "145–190,802–910; unrelated checkout/refund/dispute/full HTTP prelude not fully read"
+    },
+    {
+      "file": "src/app/api/stripe/create-checkout-session/route.ts",
+      "depth": "915–1055 and current caller searches; full earlier route schema/auth/payment lanes not fully read"
+    }
+  ],
+  "limits": [
+    "No runtime tests, provider/DB/env-file access, mutations, or repository edits.",
+    "PGlite callbacks/SQL fixtures read completely, but loaded migration SQL bodies not fully re-read in this lane; no SQL test deletion proposed. Prior billing210 SQL evidence is supporting context only.",
+    "Installed Stripe/Supabase SDK implementation was not executed or comprehensively read. Claims concern actual repository adapter outputs observed at injected transport/storage boundaries, not remote provider or transaction correctness.",
+    "No whole-tree reachability or source-retirement claim. Full provider runtime/rollback remains supported by current runbook.",
+    "Historical log and selected 8a5e42c2/5e1f009e changes read; history does not establish current live deployment/configuration."
+  ]
+}

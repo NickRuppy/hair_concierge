@@ -136,10 +136,6 @@ test("renders the frame, the Beispiel band, the benefit line and exactly one CTA
   const section = requireByData(tree, "data-gated-preview")
   assert.equal(section.props["data-gated-preview"], "routine")
   assert.match(section.props.className as string, /100dvh/)
-})
-
-test("the example content sits inside the one in-frame scroll container", () => {
-  const tree = renderPreview().render()
 
   const scroll = requireByData(tree, "data-gated-preview-scroll")
   assert.match(scroll.props.className as string, /overflow-y-auto/)
@@ -152,7 +148,6 @@ test("the example content sits inside the one in-frame scroll container", () => 
   // „Beispiel" band instead of repeating its text in a separate `aria-label` — a screen
   // reader announced the same string twice back to back before this.
   assert.equal(scroll.props["aria-label"], undefined)
-  const label = requireByData(tree, "data-gated-preview-label")
   assert.equal(scroll.props["aria-labelledby"], label.props.id)
   assert.ok(label.props.id, "the band needs an id for the region to reference")
   assert.equal(scroll.props.tabIndex, 0)

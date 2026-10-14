@@ -1,0 +1,121 @@
+{
+  "blindId": "L05",
+  "positionNote": "The packet splits 'Aqua (Water, Eau)' into two array entries; positions below treat it as one ingredient (#1), so each cited position is the array index minus one from entry 3 onward.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: exact C1 pattern - early Sodium Laureth Sulfate #2 buffered by Cocamidopropyl Betaine #3, refatting PEG-7 Glyceryl Cocoate #5, no second reinforcing anionic or reset route, no reset intent ('reinigt sanft').",
+      "ruleIds": ["§4", "C1"],
+      "formulaFacts": ["Sodium Laureth Sulfate #2", "Cocamidopropyl Betaine #3", "PEG-7 Glyceryl Cocoate #5"],
+      "counterSignal": "SLES is a strong-cleansing clue in isolation.",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "rationale": "High: multiple complementary systems per C2 - early Dimethicone #8, Amodimethicone #12, cationic Guar Hydroxypropyltrimonium Chloride #13, pearlizing/waxy Glycol Distearate #16 and Hydrogenated Castor Oil #15, humectant Panthenol #7, refatting PEG-7 Glyceryl Cocoate #5, Hydrolyzed Keratin #6, Apricot Kernel Oil #21. C2 says cleansing does not lower this.",
+      "ruleIds": ["§5", "C2"],
+      "formulaFacts": ["PEG-7 Glyceryl Cocoate #5", "Hydrolyzed Keratin #6", "Panthenol #7", "Dimethicone #8", "Amodimethicone #12", "Guar Hydroxypropyltrimonium Chloride #13", "Hydrogenated Castor Oil #15", "Glycol Distearate #16"],
+      "counterSignal": "Effective SLES/betaine base.",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: W1 pattern - silicone (Dimethicone #8) plus cationic guar #13 plus later Amodimethicone #12 in an effective SLES/betaine base and not a rich 2-in-1 -> moderate, not high.",
+      "ruleIds": ["§6", "W1"],
+      "subjudgments": {"depositionLoad": "moderate", "persistence": "moderate", "resetCapacity": "moderate"},
+      "whyThisBand": "Silicone/guar/amodimethicone deposition is persistent but bounded by a C1 cleansing base (W1).",
+      "whyNotNeighborBand": "High needs multiple converging persistent systems with limited reset or a rich 2-in-1; extra hydrogenated castor oil #15, glycol distearate #16 and apricot oil #21 converge further, so high is the realistic neighbor.",
+      "formulaFacts": ["Dimethicone #8", "Amodimethicone #12", "Guar Hydroxypropyltrimonium Chloride #13", "Hydrogenated Castor Oil #15", "Glycol Distearate #16"],
+      "counterSignal": "More converging routes than the W1 reference (waxy HCO, pearlizer, keratin, apricot oil).",
+      "neighboringAlternative": "high",
+      "sources": ["packet INCI"]
+    },
+    "focusPrimary": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "rationale": "Moisture: dominant exact-product claim is the '3% Panthenol-Feuchtigkeits-Komplex' and 'Spendet langanhaltende Feuchtigkeit'/'Nährt'; formula verdict dual_supported (humectant/refatting cluster Panthenol #7 + PEG-7 Glyceryl Cocoate #5 + Propylene Glycol with emollient deposition; and a substantive deposition/damage-care cluster keratin #6 + amodimethicone #12 + dimethicone #8). Claims break the tie toward moisture (F1). Curl definition is a hair_texture outcome, not a focus.",
+      "ruleIds": ["7.2", "7.3", "F1"],
+      "careDirection": {"verdict": "dual_supported", "moistureRoutes": ["PEG-7 Glyceryl Cocoate #5", "Panthenol #7", "Propylene Glycol (late)"], "repairRoutes": ["Hydrolyzed Keratin #6", "Amodimethicone #12"], "sharedRoutes": ["Dimethicone #8", "Guar Hydroxypropyltrimonium Chloride #13", "Glycol Distearate #16"], "limitation": "Humectant cluster is thin (no glycerin); '3%' is a claim, not proven concentration."},
+      "claimRole": "tie_breaker",
+      "formulaFacts": ["Panthenol #7", "Hydrolyzed Keratin #6", "Amodimethicone #12"],
+      "counterSignal": "'stärkt das Haar von innen' and keratin/amodimethicone point to repair.",
+      "neighboringAlternative": "repair",
+      "decisionTrace": "Blind: rich silicone/guar/keratin deposition + panthenol -> dual_supported. Unblind: name/claims center on moisture complex -> tie broken to moisture.",
+      "sources": ["manufacturer claims", "packet INCI"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "rationale": "Empty: 'stärkt von innen' and curl definition are outcomes of the same deposition route used by the primary (F2); no distinct secondary positioning with its own route.",
+      "ruleIds": ["§8", "F2"],
+      "counterSignal": "Strengthening wording.",
+      "neighboringAlternative": "repair",
+      "sources": ["manufacturer claims"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "rationale": "Regular: no explicit daily/frequent positioning; 'reinigt sanft' is mildness wording, not a frequent-use instruction; not strong (§9 default).",
+      "ruleIds": ["§9"],
+      "counterSignal": "'Reinigt sanft' could be read as 'mild-use positioning' -> frequent.",
+      "neighboringAlternative": "frequent",
+      "sources": ["manufacturer claims"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "Not targeted: no sensitive/itchy/dry-scalp positioning ('reinigt sanft die Kopfhaut' is mildness); ordinary fragranced formula.",
+      "ruleIds": ["§10"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["manufacturer claims"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole (Sodium Salicylate is a preservative).",
+      "ruleIds": ["§11"],
+      "counterSignal": "none",
+      "neighboringAlternative": "none",
+      "sources": ["packet INCI"]
+    }
+  },
+  "projection": {
+    "status": "proposal_blocked_by_review",
+    "thicknessFit": {"fine": "acceptable", "normal": "ideal", "coarse": "ideal"},
+    "thicknessFitConfidence": {"fine": "moderate", "normal": "moderate", "coarse": "moderate"},
+    "thicknessRationale": "T1 W moderate, C high: fine acceptable, normal ideal, coarse ideal. Ordinary target, no T6. T4: W neighbor high would make fine not_suited (ordinary, acceptable->not_suited) -> flag fine; would make normal acceptable -> flag normal; coarse stays ideal at W high and C has no neighbor -> no flag. T2: curl/Locken claims ignored for fit.",
+    "weight": "moderate",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: moderate -> moderate.",
+    "scalpTargets": {"primary": "ordinary", "secondary": null},
+    "scalpTargetConfidence": "high",
+    "scalpTargetRationale": "S-ORDINARY: no E2 scalp claim.",
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "high",
+    "cleansingIntensityRationale": "I1: moderate -> regular. I3: no neighbor.",
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserRationale": "No D1 term ('Tiefenpflegende'/'Tiefenspülung' are care, not cleansing terms).",
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "acceptable"},
+      {"thickness": "normal", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal"},
+      {"thickness": "coarse", "shampoo_bucket": "normal", "scalp_route": "balanced", "cleansing_intensity": "regular", "weight": "moderate", "tier": "ideal"}
+    ],
+    "requiredProtocolRoles": ["shampoo_everyday"],
+    "reviewFlags": ["review_thickness_boundary:fine", "review_thickness_boundary:normal"],
+    "informationalNotes": [],
+    "liveComparison": "Not evaluated (live rows not in sealed packet)."
+  },
+  "uncertainties": [
+    "Packet INCI artifact: 'Aqua (Water' / 'Eau)' split into two entries; treated as one ingredient. Does not affect any value.",
+    "§9 'mild-use positioning' is undefined: whether 'reinigt sanft' counts as frequent trigger. Resolved to regular (default) since no daily/frequent wording.",
+    "W1 fixes silicone+guar+late amodimethicone at moderate but does not say how many extra converging routes (HCO, glycol distearate, oil) move it to high; resolved moderate with high as neighbor, which triggers two T4 flags.",
+    "Coarse T7 parity: coarse x C high x W moderate is ideal in T1 but would display amber live (T7 known divergence)."
+  ]
+}

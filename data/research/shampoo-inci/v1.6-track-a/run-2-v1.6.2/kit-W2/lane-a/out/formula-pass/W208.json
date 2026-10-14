@@ -1,0 +1,142 @@
+{
+  "blindId": "W208",
+  "inciFingerprintSha256": "10bad7dd846d5f9d98b6fd278514e1ea952c56ca98277bb09bf38d263a7f1512",
+  "phase": "formula-pass (blind, stage A only; no claims seen)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "moderate",
+    "normalization": "ID-2: no split synonym entries; packet positions equal normalized one-based positions.",
+    "e3ProminenceCutoff": "Parfum @21; positions 1-20 prominent"
+  },
+  "normalizedInci": ["1 Aqua", "2 Sodium Laureth Sulfate", "3 Laureth-2", "4 Panthenol", "5 Disodium Laureth Sulfosuccinate", "6 Sodium Chloride", "7 Sodium Lauroyl Glutamate", "8 Propylene Glycol", "9 Caffeine", "10 PEG-120 Methyl Glucose Dioleate", "11 Citric Acid", "12 Sodium Citrate", "13 Polyquaternium-7", "14 Camellia Sinensis Leaf Extract", "15 Zinc PCA", "16 Niacinamide", "17 Hydrolyzed Wheat Protein", "18 Potassium Sorbate", "19 Sodium Benzoate", "20 Phenoxyethanol", "21 Parfum", "22 Hexyl Cinnamal", "23 Limonene", "24 Tetramethyl Acetyloctahydronaphthalenes", "25 Linalool", "26 Citrus Aurantium Peel Oil", "27 Linalyl Acetate"],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic Sodium Laureth Sulfate @2 with prominent mild-anionic buffers Disodium Laureth Sulfosuccinate @5 and Sodium Lauroyl Glutamate @7, no reinforcing strong anionic. Laureth-2 @3 is a low-ethoxylate thickener (not a route).",
+      "ruleIds": ["C3", "C4", "C1"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low: cleansing-led architecture; conditioning is limited to one light cationic polymer listed after the salt (Polyquaternium-7 @13), a trace protein (Hydrolyzed Wheat Protein @17) and Panthenol @4. C2 not met (no silicone, payload lipid or pearlizing route). Moderate is the neighbor if Polyquaternium-7 gives noticeable slip.",
+      "ruleIds": ["5", "C2"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Polyquaternium-7 @13"],
+        "payload_lipid": [],
+        "weak_refatter": [],
+        "silicone": [],
+        "protein_film": ["Hydrolyzed Wheat Protein @17"],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Disodium Laureth Sulfosuccinate @5", "Sodium Lauroyl Glutamate @7"],
+        "humectantContext": ["Panthenol @4"],
+        "excluded": ["Laureth-2 @3 (thickener)", "Propylene Glycol @8 (solvent)", "PEG-120 Methyl Glucose Dioleate @10 (PEG thickener)", "Caffeine @9, Zinc PCA @15, Niacinamide @16, Camellia Sinensis Leaf Extract @14 (scalp actives/extracts, no deposition)", "Citrus Aurantium Peel Oil @26 (essential oil)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 9,
+        "inci": "Caffeine",
+        "candidateClasses": ["sub1_active"],
+        "cap": "e3Point @21 (Parfum)",
+        "alphabeticalRun": "none",
+        "skipped": ["w_line_skipped:Panthenol@4 (ii: Disodium Laureth Sulfosuccinate @5 and Sodium Lauroyl Glutamate @7, cleansing surfactants, listed after it before the cap)"],
+        "codes": [],
+        "payloadLipidMaterial": [],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "light: Polyquaternium-7 after the salt and a trace wheat protein.",
+      "persistence": "low: light cationic polymer, no silicone or lipid.",
+      "resetCapacity": "moderate: C1 SLES with mild anionic buffers.",
+      "counterevidence": "Two families present (cationic_polymer, protein_film).",
+      "whyThisBand": "Low: only a light polymer and a trace protein face an effective reset.",
+      "whyNotNeighborBand": "Not moderate (W2): both families are late/trace (Polyquaternium-7 @13 and Hydrolyzed Wheat Protein @17, both after Sodium Chloride @6 among the minor ingredients), no silicone, lipid or film former; the SLES chassis faces only light routes.",
+      "confidenceLimitingFactor": "Unknown Polyquaternium-7 dose.",
+      "rationale": "Low: light polymer @13 plus trace protein @17; no payload lipid (W-line @9 irrelevant).",
+      "ruleIds": ["6.3", "6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "volume",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": ["Panthenol @4"],
+        "repairRoutes": ["Hydrolyzed Wheat Protein @17 (single token)"],
+        "sharedConditioningRoutes": ["Polyquaternium-7 @13"],
+        "limitation": "Light formula; scalp actives (Caffeine @9, Zinc PCA @15, Niacinamide @16) suggest a scalp/hair-root positioning that may be hair-loss related (F5 out of scope)."
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "Caffeine is not a focus route (F5); Zinc PCA is not a recognized dandruff active.",
+      "decisionTrace": "Claim direction null (blind); light formula compatible with volume or an oily-scalp clarifying role; provisional general.",
+      "rationale": "Provisional (claim-dependent).",
+      "ruleIds": ["3.1", "7.2", "F5"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["clarifying"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional (claim-dependent).",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional: default regular; frequent possible with frequency wording (cleansing not strong).",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: no SC1 positioning visible blind. CSA formula half met via listed prominent routes: Panthenol @4 (comfort and humectant), Niacinamide @16 (comfort). MB excluded: Sodium Laureth Sulfate @2 is a prominent strong anionic. Counter-signal: Parfum @21; citrus peel oil only post-E3.",
+      "csaRoute": "listed route (Panthenol @4, Niacinamide @16); MB excluded by Sodium Laureth Sulfate @2",
+      "ruleIds": ["10", "CSA", "MB", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No Piroctone Olamine, Climbazole or Selenium Sulfide; Zinc PCA is not a recognized dandruff active.",
+      "ruleIds": ["11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactantClasses": {
+      "strongAnionicEtherSulfonate": ["Sodium Laureth Sulfate @2 (defining)"],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": ["Disodium Laureth Sulfosuccinate @5 (buffer)", "Sodium Lauroyl Glutamate @7 (buffer)"],
+      "amphoteric": [],
+      "nonionicCleansing": [],
+      "notRouteNotBuffer": ["Laureth-2 @3", "PEG-120 Methyl Glucose Dioleate @10"]
+    },
+    "conditioningRoutes": ["Polyquaternium-7 @13", "Hydrolyzed Wheat Protein @17"],
+    "humectants": ["Panthenol @4"],
+    "actives": ["Caffeine @9", "Zinc PCA @15", "Niacinamide @16", "Panthenol @4", "Camellia Sinensis Leaf Extract @14"],
+    "recognizedDandruffActives": [],
+    "exposureFlags": ["Parfum @21", "Citrus Aurantium Peel Oil @26 (post-E3)", "allergens @22-25", "no cooling agent"],
+    "chelatorsPhAdjusters": ["Citric Acid @11", "Sodium Citrate @12"],
+    "preservatives": ["Potassium Sorbate @18", "Sodium Benzoate @19", "Phenoxyethanol @20"]
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": ["Packet identityConfidence is moderate; no formula conflict visible."]
+}

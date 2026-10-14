@@ -1,0 +1,121 @@
+{
+  "slot": "G02",
+  "productId": "088b1427-ed22-424e-8cfd-ea2578120ae6",
+  "name": "Head & Shoulders DERMAXPRO Shampoo Beruhigende Pflege",
+  "brand": "Head & Shoulders",
+  "packSize": "250 ml",
+  "gtins": [
+    "8700216328661"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/1343250/head-und-shoulders-shampoo-derma-x-pro-beruhigende-pflege",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "retailer_dm_de",
+      "gtinShown": "8700216328661 (page text \"GTIN: 8700216328661\", dm-Artikelnummer 1343250, JSON-LD gtin; title \"..., 250 ml\")",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Sodium Citrate, Piroctone Olamine, Dimethiconol, Citric Acid, Cocamide MEA, Glycol Distearate, Sodium Chloride, Parfum, Dimethicone, Guar Hydroxypropyltrimonium Chloride, Sodium Benzoate, Menthol, TEA-Dodecylbenzenesulfonate, Sodium Salicylate, Tetrasodium EDTA, Trideceth-10, Sodium Hydroxide, Hexyl Cinnamal, Butylene Glycol, Aloe Barbadensis Leaf Juice, Linalool, Hydroxycitronellal, Geraniol, Citronellol, Acetic Acid, Oryza Sativa Bran Extract, Triethylene Glycol, Propylene Glycol, Benzyl Alcohol, CI 42090, CI 19140",
+      "claimsVerbatim": "Anti-Schuppen-Shampoo | Mit Aloe Vera | Schutz vor Schuppen und Feuchtigkeitsverlust | Einfache Anwendung | Das Head & Shoulders DermaXPro Beruhigende Pflege Anti-Schuppen-Shampoo wurde speziell für trockene, juckende Kopfhaut entwickelt. Die Formel mit Aloe Vera-Extrakt, Ceramiden und Pirocton-Olamin kann bei Juckreiz helfen, sowie dabei den Ceramidespiegel der Haut wiederherzustellen. Das Shampoo spendet zudem Feuchtigkeit und kann vor Schuppenbildung schützen. Es reinigt sanft, pflegt die Kopfhaut intensiv und sorgt für ein schuppenfreies Haargefühl. | Wirkung: Anti-Schuppen, Pflege, Feuchtigkeit",
+      "directionsVerbatim": null
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-head-und-shoulders-dermaxpro-beruhigend-anti-schuppen-shampoo/p/8700216328661",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "retailer_rossmann_de",
+      "gtinShown": "8700216328661 (in URL; Rossmann Artikelnummer 153949; \"250 ml (1 L = 21,96 €)\"; shown \"Online momentan nicht verfügbar\")",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Sodium Citrate, Piroctone Olamine, Dimethiconol, Citric Acid, Cocamide MEA, Glycol Distearate, Sodium Chloride, Parfum, Dimethicone, Guar Hydroxypropyltrimonium Chloride, Sodium Benzoate, Menthol, TEA-Dodecylbenzenesulfonate, Sodium Salicylate, Tetrasodium EDTA, Trideceth-10, Sodium Hydroxide, Hexyl Cinnamal, Butylene Glycol, Aloe Barbadensis Leaf Juice, Linalool, Hydroxycitronellal, Geraniol, Citronellol, Acetic Acid, Oryza Sativa Bran Extract, Triethylene Glycol, Propylene Glycol, Benzyl Alcohol, CI 42090, CI 19140",
+      "claimsVerbatim": "Wussten Sie, dass Ihre trockene, schuppige Kopfhaut mehr als nur Feuchtigkeit braucht? Bei trockener Kopfhaut fehlt es der Haut an Ceramiden - den natürlichen Lipiden, die normalerweise in der Haut vorkommen und helfen, die Zellen zusammenzuhalten und Feuchtigkeitsverlust zu verhindern. Das Head & Shoulders DermaXPro Beruhigende Pflege Anti-Schuppen-Shampoo mit Aloe Vera-Extrakt und Ceramide-Komplex (Piroctone Olamine + Ceramide) wirkt auf der Kopfhautoberfläche und hilft, den Ceramidespiegel wiederherzustellen und das Austrocknen der Haut zu verhindern. Es wurde speziell für juckende* Kopfhaut entwickelt und es ist klinisch nachgewiesen, dass es die Haut-Ceramide wiederherstellt und den Juckreiz* der Kopfhaut reduziert. Das Ergebnis? Eine mit Feuchtigkeit versorgte, beruhigte und schuppenfreie** Kopfhaut, damit Ihr Haar in voller Pracht erstrahlen kann. | beruhigend bei trockener, juckender Kopfhaut (Juckreiz verbunden mit Schuppen) | stärkt die natürliche Hautbarriere & stellt das natürliche Gleichgewicht der Kopfhaut wieder her | verhindert Trockenheit & Juckreiz verbunden mit Schuppen bei regelmäßiger Anwendung | Anti-Schuppen Wirkung mit Pirocton Olamin - klinisch getestet | dermatologisch getestet | *Juckreiz aufgrund von Schuppen **Sichtbare Schuppen, ab der ersten Anwendung",
+      "directionsVerbatim": "Shampoo im Haar verteilen. Aufschäumen, dann ausspülen."
+    },
+    {
+      "url": "https://www.headandshoulders.de/de-de/anti-schuppen-produkte/anti-schuppen-shampoo/dermaxpro-beruhigend/",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "manufacturer_de",
+      "gtinShown": "none labelled on page; page offers variant selector 250 ml / 400 ml without saying which one the INCI belongs to; page markup contains unlabelled numbers 8006530455978, 8006530455954, 8006540444245 (not the catalog GTIN)",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Sodium Lauryl Sulfate, Sodium Chloride, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Glycol Distearate, Sodium Citrate, Dimethiconol, Dimethicone, Piroctone Olamine, Parfum, Citric Acid, Sodium Benzoate, Sodium Salicylate, TEA-Dodecylbenzenesulfonate, Guar Hydroxypropyltrimonium Chloride, Menthol, Tocopheryl Acetate, Trideceth-10, Tetrasodium EDTA, Sodium Hydroxide, Hexyl Cinnamal, Linalool, Aloe Barbadensis Leaf Juice, Hydroxycitronellal, Geraniol, Propylene Glycol, Benzyl Alcohol, Triethylene Glycol, Cereus Grandiflorus Flower Extract, Bambusa Vulgaris Leaf/Stemextract Bitte beachten Sie die Produktverpackung für die aktuellste Liste der Inhaltstoffe.",
+      "claimsVerbatim": "Head & Shoulders DERMA X PRO Shampoo gegen Kopfhautjucken, reinigt und stärkt die Kopfhautbarriere. | Sofortige Linderung juckender Kopfhaut & geschmeidiges Haar (image text) | Text zu Aloe Vera Extrakt und Ceramide-Komplex zur Beruhigung und Stärkung der Kopfhautbarriere (image alt text) | Beruhigend bei trockener, juckender Kopfhaut (Juckreiz verbunden mit Schuppen) | Stärkt die natürliche Hautbarriere & stellt das natürliche Gleichgewicht der Kopfhaut wieder her | Verhindert Trockenheit & Juckreiz verbunden mit Schuppen bei regelmäßiger Anwendung | Anti-Schuppen Wirkung mit Pirocton Olamin - klinisch getestet | Feuchtigkeitsspendend mit Kaktus-Extrakt, aktiver Aloe & Vitamin E | Dermatologisch getestet | Wussten Sie, dass trockene, juckende Kopfhaut mehr als nur Feuchtigkeit benötigt? | Das Ergebnis? Eine mit Feuchtigkeit versorgte, schuppenfreie* Kopfhaut. | *sichtbare Schuppen, bei regelmäßiger Anwendung",
+      "directionsVerbatim": "Anwendung: Shampoo ins nasse Haar einmassieren, ausspülen und Conditioner verwenden."
+    },
+    {
+      "url": "https://www.office-partner.de/h-s-derma-shampoo-beruh.-250ml-n2000013048",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "retailer_b2b_de_identity_only",
+      "gtinShown": "8700216328661 (Herstellernr.), 250 ml; also notes a 400 ml variant",
+      "inciVerbatim": null,
+      "claimsVerbatim": "Mit Kaktus-Extrakt, aktiver Aloe und Vitamin E für trockene, juckende Kopfhaut. (Besonderheiten field; no INCI on page)",
+      "directionsVerbatim": null
+    },
+    {
+      "url": "repo: data/research/shampoo-inci/v1.3/products/head-shoulders-dermaxpro-shampoo-beruhigende-pflege/formula-source.json",
+      "retrievedAt": "2026-08-10 (prior capture)",
+      "sourceType": "prior_manufacturer_de",
+      "gtinShown": "none (packSize and gtinEan null in prior record)",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Sodium Lauryl Sulfate, Sodium Chloride, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Glycol Distearate, Sodium Citrate, Dimethiconol, Dimethicone, Piroctone Olamine, Parfum, Citric Acid, Sodium Benzoate, Sodium Salicylate, TEA-Dodecylbenzenesulfonate, Guar Hydroxypropyltrimonium Chloride, Menthol, Tocopheryl Acetate, Trideceth-10, Tetrasodium EDTA, Sodium Hydroxide, Hexyl Cinnamal, Linalool, Aloe Barbadensis Leaf Juice, Hydroxycitronellal, Geraniol, Propylene Glycol, Benzyl Alcohol, Triethylene Glycol, Cereus Grandiflorus Flower Extract, Bambusa Vulgaris Leaf/Stemextract",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "formula_conflict",
+      "summary": "Manufacturer DE page (and the prior v1.3/v1.4 pinned list) = list A (with Sodium Lauryl Sulfate, Tocopheryl Acetate, Cereus Grandiflorus Flower Extract, Bambusa Vulgaris Leaf/Stemextract). dm.de and Rossmann.de, both exact-GTIN 8700216328661 / 250 ml, = list B (no SLS; adds Cocamide MEA, Butylene Glycol, Citronellol, Acetic Acid, Oryza Sativa Bran Extract, CI 42090, CI 19140; no Tocopheryl Acetate, no Cereus/Bambusa). Not an ordering difference: different ingredient sets.",
+      "listA_manufacturer": "Aqua, Sodium Laureth Sulfate, Sodium Lauryl Sulfate, Sodium Chloride, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Glycol Distearate, Sodium Citrate, Dimethiconol, Dimethicone, Piroctone Olamine, Parfum, Citric Acid, Sodium Benzoate, Sodium Salicylate, TEA-Dodecylbenzenesulfonate, Guar Hydroxypropyltrimonium Chloride, Menthol, Tocopheryl Acetate, Trideceth-10, Tetrasodium EDTA, Sodium Hydroxide, Hexyl Cinnamal, Linalool, Aloe Barbadensis Leaf Juice, Hydroxycitronellal, Geraniol, Propylene Glycol, Benzyl Alcohol, Triethylene Glycol, Cereus Grandiflorus Flower Extract, Bambusa Vulgaris Leaf/Stemextract",
+      "listB_dm_and_rossmann": "Aqua, Sodium Laureth Sulfate, Sodium Xylenesulfonate, Cocamidopropyl Betaine, Sodium Citrate, Piroctone Olamine, Dimethiconol, Citric Acid, Cocamide MEA, Glycol Distearate, Sodium Chloride, Parfum, Dimethicone, Guar Hydroxypropyltrimonium Chloride, Sodium Benzoate, Menthol, TEA-Dodecylbenzenesulfonate, Sodium Salicylate, Tetrasodium EDTA, Trideceth-10, Sodium Hydroxide, Hexyl Cinnamal, Butylene Glycol, Aloe Barbadensis Leaf Juice, Linalool, Hydroxycitronellal, Geraniol, Citronellol, Acetic Acid, Oryza Sativa Bran Extract, Triethylene Glycol, Propylene Glycol, Benzyl Alcohol, CI 42090, CI 19140",
+      "listA_fingerprintSha256": "49c10450b9a6fa245084a4d37f440925fb2d678d02b35f5697f0b3b3ae6564ed",
+      "listB_fingerprintSha256": "528ff372f5b35c8bbfffc4ad41b9d573b3969160005bb754aa85ccf31a8a5f5c",
+      "observations": [
+        "dm and Rossmann claims text both describe an \"Aloe Vera-Extrakt und Ceramide-Komplex\" formula, consistent with list B (Oryza Sativa Bran Extract) not list A.",
+        "The manufacturer page is internally mixed: its image text/alt says \"Aloe Vera Extrakt und Ceramide-Komplex\" while its bullet list says \"Feuchtigkeitsspendend mit Kaktus-Extrakt, aktiver Aloe & Vitamin E\" and its INCI (list A) contains Cereus (cactus) and Tocopheryl Acetate (vitamin E). The page itself warns to check the pack for the most current list. It shows no GTIN and a 250/400 ml selector, so list A is not bound to the 250 ml / 8700216328661 pack.",
+        "Rossmann search snippet (not fetched): the 400 ml Rossmann listing (GTIN 8700216328869) also reportedly shows Oryza Sativa Bran Extract, i.e. list B family.",
+        "Interpretation (unverified): list A looks like the older/other-generation formula; B looks like the current DE retail pack. Only the physical pack can settle it."
+      ]
+    }
+  ],
+  "canonicalReason": "Provisional: list B (dm.de + Rossmann.de, two independent retailers, both anchored to catalog GTIN 8700216328661 and 250 ml, agreeing verbatim, and consistent with their own Ceramide-complex claims). Manufacturer list A is preserved but is not GTIN/pack-anchored. Because the manufacturer page is the first-authority source and disagrees, status is frozen_with_conflict, not frozen. Orchestrator decides whether lanes see B (recommended) or are given both.",
+  "identityConfidence": "moderate",
+  "status": "frozen_with_conflict",
+  "blockReason": null,
+  "notes": [
+    "GTIN anchor resolved for G02: 8700216328661 / 250 ml confirmed on dm.de (JSON-LD + page text) and Rossmann (URL); it is already attached in prod via the E16 manifest (phase1-existing-identifier-backfill-e16-v1.json, item head-shoulders-dermaxpro).",
+    "The v1.4 candidate pinned list A (fingerprint 652a4675...3b0b, comma-joined) under identityConfidence moderate; that pin is now contradicted by the exact-GTIN retailers.",
+    "Scalp-claim wording differs between sources (Ceramide-restoration claim on retailers vs cactus/vitamin E bullet on manufacturer); retailer claim wording is what the catalog pack currently carries."
+  ],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Sodium Xylenesulfonate",
+    "Cocamidopropyl Betaine",
+    "Sodium Citrate",
+    "Piroctone Olamine",
+    "Dimethiconol",
+    "Citric Acid",
+    "Cocamide MEA",
+    "Glycol Distearate",
+    "Sodium Chloride",
+    "Parfum",
+    "Dimethicone",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Sodium Benzoate",
+    "Menthol",
+    "TEA-Dodecylbenzenesulfonate",
+    "Sodium Salicylate",
+    "Tetrasodium EDTA",
+    "Trideceth-10",
+    "Sodium Hydroxide",
+    "Hexyl Cinnamal",
+    "Butylene Glycol",
+    "Aloe Barbadensis Leaf Juice",
+    "Linalool",
+    "Hydroxycitronellal",
+    "Geraniol",
+    "Citronellol",
+    "Acetic Acid",
+    "Oryza Sativa Bran Extract",
+    "Triethylene Glycol",
+    "Propylene Glycol",
+    "Benzyl Alcohol",
+    "CI 42090",
+    "CI 19140"
+  ],
+  "inciFingerprintSha256": "528ff372f5b35c8bbfffc4ad41b9d573b3969160005bb754aa85ccf31a8a5f5c",
+  "normalization": "Split the canonical raw INCI on ',' (or '•' where the source uses bullets); per ingredient: lower-case, trim, collapse internal whitespace; drop leading code/prefix text that is not an ingredient (e.g. '1229017 - INGREDIENTS:'); keep asterisks, parentheses and slashes as published; join the normalized ingredients with '|' and sha256 the UTF-8 string. Note: the v1.3/v1.4 fingerprints in earlier files were computed over ', '-joined (comma, no space) lists, so they differ from this '|' fingerprint even for identical lists."
+}

@@ -1,0 +1,145 @@
+{
+  "config": {
+    "configFile": "/tmp/test-audit-chat18-main-R6uLyX/playwright.config.cjs",
+    "rootDir": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/tmp/test-audit-chat18-controls-q0Mukt/C1-return-null/mutant/browser-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "isolated-contract",
+        "name": "isolated-contract",
+        "testDir": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "user-memory.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.59.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "user-memory.spec.ts",
+      "file": "user-memory.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "User memory persistence with fake Supabase",
+          "file": "user-memory.spec.ts",
+          "line": 344,
+          "column": 6,
+          "specs": [
+            {
+              "title": "manual edits clear hidden product metadata and rebuild cache",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "isolated-contract",
+                  "projectName": "isolated-contract",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 2,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mnot\u001b[2m.\u001b[22mtoBeNull\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mnull\u001b[39m",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mnot\u001b[2m.\u001b[22mtoBeNull\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mnull\u001b[39m\n    at /Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/user-memory.spec.ts:437:24",
+                        "location": {
+                          "file": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/user-memory.spec.ts",
+                          "column": 24,
+                          "line": 437
+                        },
+                        "snippet": "  435 |     )\n  436 |\n> 437 |     expect(result).not.toBeNull()\n      |                        ^\n  438 |     expect(fake.tables.user_memory_entries?.[0]).toEqual(\n  439 |       expect.objectContaining({\n  440 |         id: \"memory-1\","
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/user-memory.spec.ts",
+                            "column": 24,
+                            "line": 437
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mnot\u001b[2m.\u001b[22mtoBeNull\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mnull\u001b[39m\n\n  435 |     )\n  436 |\n> 437 |     expect(result).not.toBeNull()\n      |                        ^\n  438 |     expect(fake.tables.user_memory_entries?.[0]).toEqual(\n  439 |       expect.objectContaining({\n  440 |         id: \"memory-1\",\n    at /Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/user-memory.spec.ts:437:24"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-04T11:28:41.771Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/tmp/test-audit-chat18-controls-q0Mukt/C1-return-null/mutant/browser-output/user-memory-User-memory-pe-fb16f--metadata-and-rebuild-cache-isolated-contract/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/user-memory.spec.ts",
+                        "column": 24,
+                        "line": 437
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "640d24558c904660d2b3-719f7a0362f943877c35",
+              "file": "user-memory.spec.ts",
+              "line": 418,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-04T11:28:40.728Z",
+    "duration": 1066.608,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

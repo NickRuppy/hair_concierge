@@ -83,17 +83,6 @@ export function resolveDefaultFunnelPackage(): FunnelPackage {
   return funnelPackage
 }
 
-export function resolveOfferVariantForSession(
-  session: { packageKey: string; offerVariant?: string | null } | null,
-): string {
-  if (session?.offerVariant) return session.offerVariant
-  if (!session) return resolveDefaultFunnelPackage().offerVariant
-
-  const funnelPackage = getFunnelPackageByKey(session.packageKey)
-  if (!funnelPackage) throw new Error(`Unknown funnel package: ${session.packageKey}`)
-  return funnelPackage.offerVariant
-}
-
 /**
  * Legacy result links are an attribution boundary: preserve an explicitly stored
  * arm, but never recreate a retired package default for an old null value.

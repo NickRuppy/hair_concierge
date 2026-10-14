@@ -1,0 +1,57 @@
+import { pathMatchesRoutePrefix } from "@/lib/auth/route-classification"
+
+const AUTH_FIRST_PREFIXES = [
+  "/chat",
+  "/anwendung",
+  "/routine",
+  "/profile",
+  "/reactivate",
+  "/onboarding",
+  "/tracker",
+  "/admin",
+  "/scan",
+  // A discovery participant who closes the tab and returns to the checklist
+  // already has an account, so send them to sign in rather than into the quiz.
+  // The public `/beratung/einladung` and `/beratung/weiter` never reach this
+  // function — an unauthenticated request to a public route is not redirected.
+  //
+  // `/api/beratung` needs its own entry: `pathMatchesRoutePrefix` compares whole
+  // segments, so an API path is NOT covered by the page prefix. Without it an
+  // expired-session XHR from the checklist would be answered with the `/quiz`
+  // HTML page, which the client then tries to parse as JSON.
+  "/beratung",
+  "/api/beratung",
+  "/api/chat",
+  "/api/routine",
+  "/api/tracker",
+  "/api/profile",
+  "/api/products",
+  "/api/memory",
+  "/api/admin",
+  // The list's page prefixes and `/api/...` prefixes are consumed the same way (see
+  // `isAuthFirstRoute`), so the scan API belongs here next to its page.
+  "/api/scan",
+]
+
+function isAuthFirstRoute(pathname: string): boolean {
+  return AUTH_FIRST_PREFIXES.some((prefix) => pathMatchesRoutePrefix(pathname, prefix))
+}
+
+export function getUnauthenticatedRedirectTarget(
+  pathname: string,
+  search: string,
+  hasReturningCookie: boolean,
+): string {
+  const next = `${pathname}${search}`
+
+  if (hasReturningCookie || isAuthFirstRoute(pathname)) {
+    const params = new URLSearchParams()
+    if (hasReturningCookie) {
+      params.set("reason", "session_expired")
+    }
+    params.set("next", next)
+    return `/auth?${params.toString()}`
+  }
+
+  return "/quiz"
+}

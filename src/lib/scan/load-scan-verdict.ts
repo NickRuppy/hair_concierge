@@ -1,3 +1,4 @@
+import { stage3HeatRoutesFromSnapshot } from "@/lib/personal-plan/oil-heat-context"
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import { ROLE_SENSITIVE_CANDIDATE_CATEGORIES } from "@/lib/personal-plan/product-previews"
@@ -7,8 +8,13 @@ import type {
   loadScanProductFacts,
   loadStage3RecommendationCandidatesByRole,
 } from "@/lib/personal-plan/products/authority/catalog-facts"
+import {
+  buildStage3SelectionProfile,
+  type Stage3VisibleHairColor,
+} from "@/lib/personal-plan/products/authority/selection-profile"
 import type { PersonalPlanCategory } from "@/lib/personal-plan/products/contracts"
 import type { PlanCategoryDecision, PlanProductRole } from "@/lib/personal-plan/types"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 
 import type { ScanEvaluationContext } from "./profile-context"
 import { buildScanVerdict, isNotNeeded, type ScanRoleFacts } from "./resolve-verdict"
@@ -47,6 +53,16 @@ export async function loadScanVerdictForProduct(
    * it; `/api/scan/resolve` passes a callback that restores the original two-stage split.
    */
   onEnterVerdictStage?: () => void,
+  /**
+   * The user's saved shopping budget, already flag-gated and loaded fail-open by the caller.
+   * Default none: callers that pass nothing (discovery, tests) get the pre-budget verdict.
+   */
+  budget?: ShoppingBudget | null,
+  /**
+   * The user-answered visible root colour (`loadVisibleHairColor`, fail-open). Default unknown:
+   * tinted dry shampoos then carry the colour caution, exactly as in the plan without an answer.
+   */
+  visibleHairColor: Stage3VisibleHairColor | null = null,
 ): Promise<ScanVerdictPayload> {
   const shampooTarget =
     category === "shampoo" && decision.target?.category === "shampoo" ? decision.target : null
@@ -119,10 +135,13 @@ export async function loadScanVerdictForProduct(
     perRoleFacts: roleSensitive ? Object.fromEntries(loadedFacts) : undefined,
     coverage: context.snapshot.coverage,
     hairThickness: context.snapshot.profile.hair.thickness,
+    heatRoutes: stage3HeatRoutesFromSnapshot(context.snapshot),
+    selectionProfile: buildStage3SelectionProfile(context.snapshot, visibleHairColor),
     // No Stage3ProductDraft exists for scan — mirrors product-previews.ts's no-draft
     // default for heat-carrier coverage instead of computing a real one.
     heatCarrierCoverage: { carrierCategory: null, verifiedRoutes: [] },
     refinedVersionId: context.refinedVersionId,
     refinedInputHash: context.refinedInputHash,
+    ...(budget ? { budget } : {}),
   })
 }

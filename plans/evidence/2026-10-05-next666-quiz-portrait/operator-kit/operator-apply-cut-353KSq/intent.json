@@ -1,0 +1,62 @@
+{
+  "mode": "cut",
+  "from": "transfer",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA": "f834e22d29ca38c7105a3723a4aad845ef6ed96ee367b9ddfc78dac28308c396",
+  "prerequisite": {
+    "dir": "/tmp/test-audit-quizportrait43-tools-bpihum9l/operator-mutations-transfer-B4cpLn",
+    "completionSHA": "64f52928de3d0607efc16d073059943c07199cf67067cb5c6c11af7f44ed614b",
+    "verified": 3,
+    "logFiles": 9,
+    "phase": "transfer"
+  },
+  "files": [
+    {
+      "file": "tests/hair-length-option-card.test.tsx",
+      "before": "b307f3f8d1e96f269a6649d955cd3aa50aa2a5a6988e7c226458ca6050e74965",
+      "after": "6f576124ad635d5558c86f77f6f0f6bb9fa40a6d25611f8a55564ff92a374588"
+    },
+    {
+      "file": "tests/hair-portrait-assets.test.ts",
+      "before": "f189a64c78f7bfb6880897359b26ba7da173b419921308e6566b4c2b68664eb7",
+      "after": "f189a64c78f7bfb6880897359b26ba7da173b419921308e6566b4c2b68664eb7"
+    },
+    {
+      "file": "tests/hair-portrait-gallery.test.tsx",
+      "before": "cbc6afdfe40668f1a3e498123430fb0b274a2532c40e4e517d16242351b7ff66",
+      "after": "cbc6afdfe40668f1a3e498123430fb0b274a2532c40e4e517d16242351b7ff66"
+    },
+    {
+      "file": "tests/hair-portrait-length-progression.test.ts",
+      "before": "c77890aaddfe133a6ea5a565bff5e92997c942c78566de34bb4810947a44b50f",
+      "after": "c77890aaddfe133a6ea5a565bff5e92997c942c78566de34bb4810947a44b50f"
+    },
+    {
+      "file": "tests/hair-portrait.test.tsx",
+      "before": "c67863f7c0a983129b6d7d77658d7b0bf5670c8acecd41b1873e2c3615c57c9c",
+      "after": "c67863f7c0a983129b6d7d77658d7b0bf5670c8acecd41b1873e2c3615c57c9c"
+    },
+    {
+      "file": "tests/portrait-config.test.ts",
+      "before": "daef86d9c37d63eac194eec571d0913eb36633c89b1fe3f0804655a415a154d8",
+      "after": "daef86d9c37d63eac194eec571d0913eb36633c89b1fe3f0804655a415a154d8"
+    },
+    {
+      "file": "tests/quiz-option-card.test.tsx",
+      "before": "d6087e2170a0afa7c535ad98f19c670c15462366e107527c2bd801e2f3acfb8b",
+      "after": "d6087e2170a0afa7c535ad98f19c670c15462366e107527c2bd801e2f3acfb8b"
+    },
+    {
+      "file": "tests/quiz-motion-tokens.test.ts",
+      "before": "02811647eb7af64d199919a8bb419f41ec900eab04de1ea05b3c9cb8cf2adf9c",
+      "after": "02811647eb7af64d199919a8bb419f41ec900eab04de1ea05b3c9cb8cf2adf9c"
+    },
+    {
+      "file": "tests/personal-plan-option-card-layout.test.ts",
+      "before": "3f5b791dd3f39a8c77678d5226ffee6d3de1cf76351609083f654c26496a2b32",
+      "after": "3f5b791dd3f39a8c77678d5226ffee6d3de1cf76351609083f654c26496a2b32"
+    }
+  ]
+}

@@ -62,6 +62,7 @@ type PresentationRow = {
   affiliate_link: string | null
   purchase_link_status: string | null
   price_checked_at: string | null
+  market_segment?: string | null
 }
 
 /**
@@ -78,7 +79,7 @@ export function createPresentationRowLoader(errorCode: string): ScanPresentation
     const { data, error } = await client
       .from("products")
       .select(
-        "id, name, brand, category_key, image_url, price_eur, currency, affiliate_link, purchase_link_status, price_checked_at",
+        "id, name, brand, category_key, image_url, price_eur, currency, affiliate_link, purchase_link_status, price_checked_at, market_segment",
       )
       .in("id", [...new Set(productIds)])
     if (error) throw new Error(errorCode)
@@ -96,6 +97,10 @@ export function createPresentationRowLoader(errorCode: string): ScanPresentation
           ? row.purchase_link_status
           : null,
       priceCheckedAt: row.price_checked_at,
+      marketSegment:
+        row.market_segment === "drugstore" || row.market_segment === "professional"
+          ? row.market_segment
+          : null,
     }))
   }
 }

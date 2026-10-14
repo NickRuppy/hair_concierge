@@ -1,0 +1,14 @@
+'use strict'
+// Static text/hash/parser diagnostics only. No test/owner loading or child process.
+const fs=require('node:fs'),vm=require('node:vm'),crypto=require('node:crypto')
+const D=__dirname,T='/tmp/test-audit-refinement37-tools-5ce9vx77',P='/tmp/test-audit-billing-operational125',sha=b=>crypto.createHash('sha256').update(b).digest('hex'),read=p=>JSON.parse(fs.readFileSync(p))
+const oldRaw=fs.readFileSync(T+'/operator-pins.json');if(sha(oldRaw)!=='ffb6b2428bdceb285246596cafeba5e3b1a6870ec0ce885b875531178b10f0cd')throw Error('Template drift')
+const old=JSON.parse(oldRaw),pins=read(D+'/operator-pins.json'),m=read(P+'/manifest.json'),controls=read(D+'/operator-controls-normalized.json'),closure=read(D+'/operator-selected-closure.json')
+for(const key of ['root','head','branch','gitDir','commonDir','identityFiles','node','typescriptVersion','metadataPolicy','dependencyTrees'])if(JSON.stringify(old[key])!==JSON.stringify(pins[key]))throw Error('Prior strict pin changed: '+key)
+if(JSON.stringify(m.readsets)!==JSON.stringify(pins.original55Guards)||m.readsets.length!==55)throw Error('Original55 repinned')
+const depMap=new Map(pins.dependencies.map(p=>[p.path,p]));for(const p of old.dependencies)if(JSON.stringify(p)!==JSON.stringify(depMap.get(p.path)))throw Error('Prior dependency repinned')
+const prefix=s=>s.slice(0,s.indexOf('function validateTransferReceipt('));if(prefix(fs.readFileSync(D+'/operator-proof.cjs','utf8'))!==prefix(fs.readFileSync(T+'/operator-proof.cjs','utf8')))throw Error('Strict proof predicate/decoder changed')
+const parsed=[];for(const file of fs.readdirSync(D).filter(n=>n.endsWith('.cjs'))){new vm.Script(fs.readFileSync(D+'/'+file,'utf8'),{filename:file});parsed.push(file)}
+if(controls.length!==5||new Set(controls.map(c=>c.mutatedSha256)).size!==5||closure.nonliteralImports.length)throw Error('Five faults/closure failed')
+const oldDep=new Set(old.dependencies.map(p=>p.path));const added=pins.dependencies.filter(p=>!oldDep.has(p.path)).map(p=>p.path)
+console.log(JSON.stringify({status:'PASS_STATIC_INTEGRITY',pinsSHA256:sha(fs.readFileSync(D+'/operator-pins.json')),original55GuardsUnchanged:true,priorRuntimeIdentitySharedConfigAndDependenciesUnchanged:true,strictDecoderAndFIRSTOuterAssertionPredicateByteIdentical:true,parsedCJS:parsed,phaseFiles:13,snapshots:39,counts:m.counts,heldF:5,exactSurvivors:119,unrelatedCallbacks:114,localClosure:closure.localFiles.length,unresolvedDynamicImports:closure.nonliteralImports,sourceReadsets:pins.readset.length,priorDependencies:old.dependencies.length,dependencyFiles:pins.dependencies.length,addedSelectedDependencyEntries:added,dependencyTrees:pins.dependencyTrees.length,sourceControls:5,repositoryWrites:0,childrenStarted:0,ownerImports:0,runtimeProof:false},null,2))

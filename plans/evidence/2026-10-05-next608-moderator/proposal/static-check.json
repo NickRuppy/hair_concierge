@@ -1,0 +1,31 @@
+{
+  "scope": "static parsing/text/hash checks only; no test or owner module imports",
+  "phaseCounts": {
+    "before": 183,
+    "transfer": 183,
+    "cut": 182
+  },
+  "files": 27,
+  "snapshots": 81,
+  "unrelatedCallbacksByteExact": 181,
+  "unchangedWholeFiles": 26,
+  "marks": {
+    "R": 169,
+    "F": 13,
+    "C": 1,
+    "D": 0
+  },
+  "assertionUnionExact": true,
+  "newRegistration": false,
+  "newOwnerCalls": false,
+  "newInput": false,
+  "newFixtureRows": false,
+  "newTables": false,
+  "skipsAdded": false,
+  "sourceFilesEdited": 0,
+  "sourceFaultsRun": 0,
+  "nativeTestsRun": 0,
+  "parseDiagnostics": 0,
+  "currentBeforeMatches": true,
+  "heldFsByteExact": true
+}

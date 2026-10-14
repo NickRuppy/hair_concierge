@@ -1,0 +1,61 @@
+--- a/tests/trial-reminders-delivery.test.ts
++++ b/tests/trial-reminders-delivery.test.ts
+@@ -1,6 +1,7 @@
+ import assert from "node:assert/strict"
+ import test from "node:test"
+ import { dispatchTrialReminders } from "../src/lib/billing/trial-reminders-delivery"
++import type { TrialReminderMessage } from "../src/lib/billing/trial-reminders"
+ import {
+   CustomerIoAmbiguousDeliveryError,
+   CustomerIoHttpError,
+@@ -68,12 +69,49 @@
+ }
+ test("enabled reminder enqueues cutoff and revalidates just before sending once to verified owner", async () => {
+   const f = fixture()
+-  const result = await dispatchTrialReminders(f.deps)
++  const deliveredMessages: TrialReminderMessage[] = []
++  const result = await dispatchTrialReminders({
++    ...f.deps,
++    send: async (input) => {
++      deliveredMessages.push(input.message)
++      return f.deps.send(input)
++    },
++  })
+   assert.deepEqual(f.calls, ["enqueue", "claim", "recipient", "prepare", "send", "settle"])
+   assert.equal(result.queued, 1)
+   assert.deepEqual(f.outcomes, [
+     { status: "queued", deliveryId: "delivery1", queuedAt: "2026-09-19T10:00:00.000Z" },
+   ])
++  const message = deliveredMessages[0]!
++  assert.equal(message.subject, "Dein kostenloser Test endet am 21. September 2026")
++  assert.match(message.receipt_text, /Testende: 21\. September 2026 um 12:00 Uhr MESZ/)
++  assert.match(message.receipt_text, /Erste Zahlung: 69,99\s*€ am 21\. September 2026/)
++  assert.match(message.receipt_text, /Jahresmitgliedschaft: danach 99,99\s*€ jährlich\./)
++  assert.match(message.receipt_text, /Nach dem Test beginnt dein gewählter Tarif automatisch/)
++  assert.match(message.receipt_text, /Vor Testende kündigen: https:\/\/chaarlie\.de\/kuendigen/)
++  assert.doesNotMatch(message.receipt_text, /Rabatt|Angebot|scanner|quiz/i)
++  assert.equal(message.messageData.management_url, "https://chaarlie.de/profile")
++  assert.equal(message.messageData.cancellation_url, "https://chaarlie.de/kuendigen")
++  assert.match(message.htmlBody, /69,99\s*€/)
++  assert.match(message.htmlBody, /href="https:\/\/chaarlie\.de\/kuendigen"/)
++  assert.match(message.htmlBody, /1111B S Governors Ave # 84075/)
++
++  assert.doesNotMatch(message.htmlBody, /<script|onerror=/i)
++  assert.doesNotMatch(message.htmlBody, /\{\{\s*trigger\./)
++  assert.deepEqual(
++    Array.from(message.htmlBody.matchAll(/href="([^"]+)"/g), (match) => match[1]),
++    [
++      "https://chaarlie.de/profile",
++      "https://chaarlie.de/kuendigen",
++      "{% unsubscribe_url %}",
++      "https://chaarlie.de/impressum",
++      "https://chaarlie.de/datenschutz",
++    ],
++  )
++  assert.equal(message.messageData.trial_end_date, "21. September 2026 um 12:00 Uhr MESZ")
++
++  assert.equal(message.messageData.first_charge_date, "21. September 2026")
++  assert.match(message.messageData.subject, /21\. September 2026/)
+ })
+ test("off switch and missing configuration cannot enqueue, claim or send", async () => {
+   for (const bad of [

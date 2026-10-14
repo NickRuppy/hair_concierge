@@ -9,6 +9,7 @@ import {
   bondbuilderInternalAdmissionSha256,
   type BondbuilderInternalAdmissionRequest,
 } from "../src/lib/product-intake/bondbuilder-internal-admission"
+import { fact, sealProfile } from "./fixtures/bondbuilder-research/profile"
 import { migratedDatabase } from "./scan-expansion-batch-postgres.test"
 
 const ROOT = new URL("../", import.meta.url)
@@ -16,7 +17,17 @@ const ASSET_BASE =
   "https://pqdkhefxsxkyeqelqegq.supabase.co/storage/v1/object/public/product-images/"
 const REQUEST_ID = "60000000-0000-4000-8000-000000000006"
 
-async function database(t: Parameters<typeof migratedDatabase>[0]) {
+async function bedtimeMigration() {
+  return readFile(
+    new URL(
+      "supabase/migrations/20261006143746_bondbuilder_bedtime_leave_in_application_mode.sql",
+      ROOT,
+    ),
+    "utf8",
+  )
+}
+
+async function database(t: Parameters<typeof migratedDatabase>[0], applyBedtimeMigration = true) {
   const pg = await migratedDatabase(t)
   await pg.exec(
     await readFile(
@@ -53,6 +64,7 @@ async function database(t: Parameters<typeof migratedDatabase>[0]) {
       "utf8",
     ),
   )
+  if (applyBedtimeMigration) await pg.exec(await bedtimeMigration())
   return pg
 }
 
@@ -162,6 +174,48 @@ test("the generated SQL schema and independently computed request digest match t
     bondbuilderInternalAdmissionSha256(await request()),
     "f7e93c2e63f0584c5c91d52e43d160c3b0162dbad9515f3bc3234ed23ab18a10",
   )
+})
+
+test("bedtime migration refuses a stale admission-function predecessor", async (t) => {
+  const pg = await database(t, false)
+  await pg.exec(`
+    CREATE OR REPLACE FUNCTION public.bondbuilder_internal_admit_v1(
+      p_request jsonb, p_expected_sha256 text, p_request_id uuid, p_reviewed_by text
+    ) RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path = '' AS $$
+    BEGIN
+      RETURN '{}'::jsonb;
+    END $$;
+  `)
+  await assert.rejects(pg.exec(await bedtimeMigration()), /predecessor drifted/)
+})
+
+test("internal admission preserves an explicit standalone bedtime leave-in mode", async (t) => {
+  const pg = await database(t)
+  const input = await request()
+  const profile = input.category_specs.product_bondbuilder_specs.research_profile
+  profile.application.state_modifiers = fact(["at_bedtime"])
+  profile.application.timing = fact({ kind: "overnight", purpose: "contact" })
+  profile.application.rinse = fact({
+    treatment_mode: "leave_in",
+    standalone_treatment_rinse: false,
+  })
+  sealProfile(profile)
+  const projection = projectBondbuilderForProduction({
+    version: "bondbuilder-research-envelope-v1",
+    submission_id: null,
+    profile,
+  })
+  assert.ok(projection.productionProjection)
+  input.category_specs.product_bondbuilder_specs =
+    projection.productionProjection!.category_specs.product_bondbuilder_specs
+  input.review.profile_sha256 = profile.review.profile_sha256
+
+  const receipt = (await admit(pg, input, "60000000-0000-4000-8000-000000000007")).rows[0].receipt
+  const row = await pg.query<{ application_mode: string }>(
+    "SELECT application_mode FROM public.product_bondbuilder_specs WHERE product_id=$1",
+    [receipt.product_id],
+  )
+  assert.equal(row.rows[0]?.application_mode, "bedtime_leave_in")
 })
 
 test("service admission stages the exact P04 alias without fit, protocol, publication, or legacy selectors", async (t) => {

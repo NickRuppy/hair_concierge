@@ -1,0 +1,422 @@
+[
+  {
+    "source": "/tmp/test-audit-offer-experiments87-authorization-closure/check.cjs",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/proposal/check.cjs.txt",
+    "sha256": "5893c780c340d255ec5c397b51b6a4d5f7e04ecfb761c5c3dda8f1d81dab5126",
+    "bytes": 2849
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87-authorization-closure/control.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/proposal/control.json",
+    "sha256": "90159e6a5592f9e28d5ccc9dacabf72d12e77225dca75a7b87c4ceff8d6766b3",
+    "bytes": 1020
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87-authorization-closure/finalize.py",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/proposal/finalize.py.txt",
+    "sha256": "721a56203980990ee6107b6655a7ac8d15bcda1e0e3078e00a712f554c8f48ed",
+    "bytes": 2468
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87-authorization-closure/handoff.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/proposal/handoff.json",
+    "sha256": "e711038f959207e95ad468a5226601139c1572233dc9bfc2040f0701f25f61bc",
+    "bytes": 2242
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87-authorization-closure/import-text.txt",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/proposal/import-text.txt",
+    "sha256": "17cdfaf327a3529da3af9c7166ab4458ec62f10a8da2bd8bb5f69a57d180d402",
+    "bytes": 2963
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87-authorization-closure/main-commands.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/proposal/main-commands.json",
+    "sha256": "9bb62c99f30e0c6326a0fd4932a914528881affbd77545def6acd659cd82d26e",
+    "bytes": 930
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87-authorization-closure/module-closure.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/proposal/module-closure.json",
+    "sha256": "55cc0185c406a2c3a732a90999f671aa2d2d8ad40b989f876318e0c42e9d751e",
+    "bytes": 12682
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87-authorization-closure/phases/before/src/app/api/stripe/create-checkout-session/route.ts",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/proposal/phases/before/src/app/api/stripe/create-checkout-session/route.ts.txt",
+    "sha256": "0808a083b02a9611deab703bf9fc7a9b3cecb5dce2b5be1889003a0cd06a9bd8",
+    "bytes": 90232
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87-authorization-closure/phases/before/src/lib/funnel/server.ts",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/proposal/phases/before/src/lib/funnel/server.ts.txt",
+    "sha256": "d664770e0103972242ab81c3a3573243695f901e68ecfe4461e61d0410360df6",
+    "bytes": 24620
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87-authorization-closure/phases/before/tests/personal-plan-pricing-experiment.test.ts",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/proposal/phases/before/tests/personal-plan-pricing-experiment.test.ts.txt",
+    "sha256": "1f3abe43446c8ec3d487bbbec3692b49454dba7ba1310d8bdaa85e8faa252f31",
+    "bytes": 16140
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87-authorization-closure/phases/cut/src/app/api/stripe/create-checkout-session/route.ts",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/proposal/phases/cut/src/app/api/stripe/create-checkout-session/route.ts.txt",
+    "sha256": "2b4d0e46ea8558bcd54b04124bf57ccf9b6d6b2eb6afe6aacb140c63c8400946",
+    "bytes": 84106
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87-authorization-closure/phases/cut/src/lib/funnel/server.ts",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/proposal/phases/cut/src/lib/funnel/server.ts.txt",
+    "sha256": "aec7ac4e2ec1c193f1d5e8145e76e58084c0c779c04aaef16f3223e232bcd3ba",
+    "bytes": 21873
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87-authorization-closure/phases/cut/tests/personal-plan-pricing-experiment.test.ts",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/proposal/phases/cut/tests/personal-plan-pricing-experiment.test.ts.txt",
+    "sha256": "bb971461b6198bbff84b75885d43c8dd492322521f74d72ad02c7065a8d0ae7f",
+    "bytes": 13908
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87-authorization-closure/proposal.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/proposal/proposal.json",
+    "sha256": "e89d870b26ead6dbf74bcd743babeb9146dcc5ee62ec411f3a9eaf2300165f63",
+    "bytes": 24434
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87-authorization-closure/propose.cjs",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/proposal/propose.cjs.txt",
+    "sha256": "b7f058e570f9968fe4d74d3d27aabf6d108b7ebcadf555e05db375cce31ae537",
+    "bytes": 6472
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87-authorization-closure/prospective.diff",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/proposal/prospective.diff",
+    "sha256": "8b29a9dc9d01d8196f48056b2332c76f001639b978a1c6c865f42d84915ec874",
+    "bytes": 13116
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87-authorization-closure/report.md",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/proposal/report.md",
+    "sha256": "cdc9399795aede10fd5743b5d941021e439eedfc4f898fe4458026ad9261861d",
+    "bytes": 10032
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87-authorization-closure/retirement-response-mutant.ts",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/proposal/retirement-response-mutant.ts.txt",
+    "sha256": "a0bdb74c4318390be5f9d258a2599c0910bd37d5adb06828d7aaa6f1dec12ff8",
+    "bytes": 90232
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87-authorization-closure/scan.cjs",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/proposal/scan.cjs.txt",
+    "sha256": "4f2e32e0af09686b7c5b2e69e38a1216660c53510e7100c33d8fa2b6a626ba92",
+    "bytes": 2532
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87-authorization-closure/static-receipt.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/proposal/static-receipt.json",
+    "sha256": "9af1d7202603b2d775cd2ecfc22fc61109b11665e71f352f47d5ebc562286b42",
+    "bytes": 459
+  },
+  {
+    "source": "/tmp/test-audit-offer-experiments87-authorization-closure/symbol-text.txt",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/proposal/symbol-text.txt",
+    "sha256": "59a5b70b73ac68cfb9124d328d23238188d185f7704e0f219fbe9bd38c29f64f",
+    "bytes": 2184
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/README.md",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/README.md",
+    "sha256": "6fadc44aa0912c3e321a8a213eb415bf03ae1ef99d00ecb2e1bfcb1dd7ed2ef2",
+    "bytes": 6494
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/bounded-readset-evidence.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/bounded-readset-evidence.json",
+    "sha256": "d8a9d8139813fe3553c354a911b7cd216cccafa74f00a0b1e9a3aae023bda433",
+    "bytes": 12096
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/driver-static-check.log",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/driver-static-check.log",
+    "sha256": "ecc1a24d0eb565d64d0943d57bebabb5dcc41ecd5b5acb822883d807632a98b2",
+    "bytes": 366
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/editor-static-check.log",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/editor-static-check.log",
+    "sha256": "3415db72ccf61822ddf7f73f348978545b10219114d03998ce901ef405f40c15",
+    "bytes": 386
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/full-operator-code.txt",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/full-operator-code.txt",
+    "sha256": "b585e0e5d8b47b2b5ea0b5ae12b61fb79f112081715e2cc8dfaf6510be270900",
+    "bytes": 39715
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/full-tooling-adaptation.diff",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/full-tooling-adaptation.diff",
+    "sha256": "c6f475e7ce5df3fdec2878d1c219e0b99803b43286c5e3eb5ae063206bb72cf7",
+    "bytes": 42083
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-apply-cut-ooU7Pz/intent.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-apply-cut-ooU7Pz/intent.json",
+    "sha256": "138ff562c92a5c9d73a78d3b505b6659a30db36a5edfd85594c35b3d651b76ac",
+    "bytes": 1298
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-apply-cut-ooU7Pz/originals/src/app/api/stripe/create-checkout-session/route.ts",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-apply-cut-ooU7Pz/originals/src/app/api/stripe/create-checkout-session/route.ts.txt",
+    "sha256": "0808a083b02a9611deab703bf9fc7a9b3cecb5dce2b5be1889003a0cd06a9bd8",
+    "bytes": 90232
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-apply-cut-ooU7Pz/originals/src/lib/funnel/server.ts",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-apply-cut-ooU7Pz/originals/src/lib/funnel/server.ts.txt",
+    "sha256": "d664770e0103972242ab81c3a3573243695f901e68ecfe4461e61d0410360df6",
+    "bytes": 24620
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-apply-cut-ooU7Pz/originals/tests/personal-plan-pricing-experiment.test.ts",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-apply-cut-ooU7Pz/originals/tests/personal-plan-pricing-experiment.test.ts.txt",
+    "sha256": "1f3abe43446c8ec3d487bbbec3692b49454dba7ba1310d8bdaa85e8faa252f31",
+    "bytes": 16140
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-apply-cut-ooU7Pz/receipt.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-apply-cut-ooU7Pz/receipt.json",
+    "sha256": "232d8661f4a888ed6e8c587dfce0b25f9f76d6f0b833bfcc1012b4300b62b33a",
+    "bytes": 1169
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-controls-normalized.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-controls-normalized.json",
+    "sha256": "2574cdfdb6e3dd887d1ac5677d3ce1bb992333bb1e9fc83c619e45ab37f39fbf",
+    "bytes": 1786
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-edit.cjs",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-edit.cjs.txt",
+    "sha256": "04b4bd4ec36298dd4fb3e38aa40cf5f931239a4cc1ce39506c91e098e492993b",
+    "bytes": 3567
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-guard.cjs",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-guard.cjs.txt",
+    "sha256": "52395495e5dc549b45ce5fe2819f53fbb6c3326a1f6bdc480c21fcc93905845f",
+    "bytes": 11127
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-mutations-before-eO3xTh/all-originals/src/app/api/stripe/create-checkout-session/route.ts",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-mutations-before-eO3xTh/all-originals/src/app/api/stripe/create-checkout-session/route.ts.txt",
+    "sha256": "0808a083b02a9611deab703bf9fc7a9b3cecb5dce2b5be1889003a0cd06a9bd8",
+    "bytes": 90232
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-mutations-before-eO3xTh/all-originals/src/lib/funnel/server.ts",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-mutations-before-eO3xTh/all-originals/src/lib/funnel/server.ts.txt",
+    "sha256": "d664770e0103972242ab81c3a3573243695f901e68ecfe4461e61d0410360df6",
+    "bytes": 24620
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-mutations-before-eO3xTh/all-originals/tests/personal-plan-pricing-experiment.test.ts",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-mutations-before-eO3xTh/all-originals/tests/personal-plan-pricing-experiment.test.ts.txt",
+    "sha256": "1f3abe43446c8ec3d487bbbec3692b49454dba7ba1310d8bdaa85e8faa252f31",
+    "bytes": 16140
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-mutations-before-eO3xTh/complete.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-mutations-before-eO3xTh/complete.json",
+    "sha256": "cd78bd22e6efdbd2582a04230b0742a3aafede90e1054b71410f04f3e63e0c04",
+    "bytes": 15611
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-mutations-before-eO3xTh/intent.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-mutations-before-eO3xTh/intent.json",
+    "sha256": "52eb5aa24765ee4cff08ae732050610ba592f5af80ac7e880b1acb54aa86e8c5",
+    "bytes": 534
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-mutations-before-eO3xTh/receipt.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-mutations-before-eO3xTh/receipt.json",
+    "sha256": "8d62139bcb5cf8a87ab5a6bffca5ad6e27927ba5f5b75e9b6cab968208ce30e9",
+    "bytes": 26458
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-mutations-before-eO3xTh/retirement-response-status/originals/src/app/api/stripe/create-checkout-session/route.ts",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-mutations-before-eO3xTh/retirement-response-status/originals/src/app/api/stripe/create-checkout-session/route.ts.txt",
+    "sha256": "0808a083b02a9611deab703bf9fc7a9b3cecb5dce2b5be1889003a0cd06a9bd8",
+    "bytes": 90232
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-mutations-before-eO3xTh/retirement-response-status-after.command.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-mutations-before-eO3xTh/retirement-response-status-after.command.json",
+    "sha256": "c98fb4bce2889c569f6374d9fa0e75c14f07b3329e5f55f4d9bfa94eaa55e8a5",
+    "bytes": 470
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-mutations-before-eO3xTh/retirement-response-status-after.tap",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-mutations-before-eO3xTh/retirement-response-status-after.tap",
+    "sha256": "0d111bf45e40cc1193d3127b095c18af32f3533a821d41f0a55bb3e3a373e836",
+    "bytes": 317
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-mutations-before-eO3xTh/retirement-response-status-before.command.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-mutations-before-eO3xTh/retirement-response-status-before.command.json",
+    "sha256": "c98fb4bce2889c569f6374d9fa0e75c14f07b3329e5f55f4d9bfa94eaa55e8a5",
+    "bytes": 470
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-mutations-before-eO3xTh/retirement-response-status-before.tap",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-mutations-before-eO3xTh/retirement-response-status-before.tap",
+    "sha256": "6eda19fe325b91592b08b866b3a01fe6266d22d7bb9edfbb4acaf834d01678b5",
+    "bytes": 317
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-mutations-before-eO3xTh/retirement-response-status-fault.command.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-mutations-before-eO3xTh/retirement-response-status-fault.command.json",
+    "sha256": "c98fb4bce2889c569f6374d9fa0e75c14f07b3329e5f55f4d9bfa94eaa55e8a5",
+    "bytes": 470
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-mutations-before-eO3xTh/retirement-response-status-fault.tap",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-mutations-before-eO3xTh/retirement-response-status-fault.tap",
+    "sha256": "4e347a69df33de729972415af0df2e1d1da08b08488e2ce02b482374095ba6d1",
+    "bytes": 981
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-pins.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-pins.json",
+    "sha256": "693f7db9ff92ae74f9541de924803d5c98322d38e9ddf3c5d9e4f7ba5ab0147f",
+    "bytes": 1084111
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-proof.cjs",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-proof.cjs.txt",
+    "sha256": "548e91757b0f1e0745bd0303740ba22237039ea1c6c925a32c0b9fa87c95535d",
+    "bytes": 4909
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-readonly-preload.cjs",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-readonly-preload.cjs.txt",
+    "sha256": "47dac6cfe5ba900ca08fed8a9ac7c33915c40f0b533a4cbfa23ace5d442620bd",
+    "bytes": 1276
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-run-controls.cjs",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/operator-run-controls.cjs.txt",
+    "sha256": "96216803fa29a55fcc3251231df0400ec393f8a881cf03bfc1851efd00cbc7b2",
+    "bytes": 8039
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/prepare-pins.cjs",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/prepare-pins.cjs.txt",
+    "sha256": "e9adba1faa6f1660a697822bd0235db1182583940e5e368f26a1aa47fa5f1649",
+    "bytes": 10622
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/retirement-response-status-prospective-owner.ts",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/retirement-response-status-prospective-owner.ts.txt",
+    "sha256": "a0bdb74c4318390be5f9d258a2599c0910bd37d5adb06828d7aaa6f1dec12ff8",
+    "bytes": 90232
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/static-receipt.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/static-receipt.json",
+    "sha256": "a36ea96bc3282af6ebf133efb9cd53793d386d395a39b7e6b11a8619a3f1a1f9",
+    "bytes": 3075
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-tools-89785z66/tool-code-syntax-check.log",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/tools/tool-code-syntax-check.log",
+    "sha256": "b91f797cac344fb96400052c772bc1990265ea811e4f58d028608551282443d1",
+    "bytes": 210
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-independent-review.md",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/test-audit-one-time-authorization-independent-review.md",
+    "sha256": "25a2a747431523b767089602a411ad80e68c6ae80d314a084e38389777ff82da",
+    "bytes": 11687
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-independent-byte-review.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/test-audit-one-time-authorization-independent-byte-review.json",
+    "sha256": "b886cd60dbc4235b5b34cbaae71774db85963fe222f9492143ed17c9083647ae",
+    "bytes": 4467
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-independent-evidence.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/test-audit-one-time-authorization-independent-evidence.json",
+    "sha256": "e8e31d6e1bc03cd863d64ee1d5f311ced0f7f52f6a3cf20e939a645c58e892d7",
+    "bytes": 5190
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-main-before.tap",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/test-audit-one-time-authorization-main-before.tap",
+    "sha256": "05efe050a919ef1a4ad0238b6b4e6704714132485bbe8e8596bfa04020239551",
+    "bytes": 11490
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-main-cut.tap",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/test-audit-one-time-authorization-main-cut.tap",
+    "sha256": "1990004ac4fa2c7144a75569601f41af6edeb75a03370aa1762e16b95098fb90",
+    "bytes": 11085
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-main-controls.log",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/test-audit-one-time-authorization-main-controls.log",
+    "sha256": "3d3838062c64947a0a79b92513237109876404faee847c913a5fbc78912419f1",
+    "bytes": 317
+  },
+  {
+    "source": "/tmp/test-audit-one-time-authorization-main-formatted-verification.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/test-audit-one-time-authorization-main-formatted-verification.json",
+    "sha256": "b44afd2d3eff454d7c391ddc8329902169ec12e801bcdbf101624a7e5420470a",
+    "bytes": 412
+  },
+  {
+    "source": "/tmp/test-audit-next607-current-inventory.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/test-audit-next607-current-inventory.json",
+    "sha256": "ead3b835a60ef5914821bd4f69067888531c7db3899d9b59d04e1343988d5f23",
+    "bytes": 2491158
+  },
+  {
+    "source": "/tmp/test-audit-next607-counts.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/test-audit-next607-counts.json",
+    "sha256": "dd006ba0a0057cabe73f0dd7ecee35762b18410990a1f9fb34db5b5920421c9f",
+    "bytes": 81
+  },
+  {
+    "source": "/tmp/test-audit-final607-tree.py",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/test-audit-final607-tree.py.txt",
+    "sha256": "7eb676c17375d47e576e0c2c78836bd31727e2af6652c0004dca13b86d8eba90",
+    "bytes": 3385
+  },
+  {
+    "source": "/tmp/test-audit-final607-compare.cjs",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/test-audit-final607-compare.cjs.txt",
+    "sha256": "dd0d55ccc1f6b4eed03ec56fe513ddebba7fde1c3acab3e91c56674f1ca359cc",
+    "bytes": 3663
+  },
+  {
+    "source": "/tmp/test-audit-final607-tested-tree.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/test-audit-final607-tested-tree.json",
+    "sha256": "1180983b44d4f4020b5d84cde440f47cae5dd87c85356f53ea17490d1d012b78",
+    "bytes": 1706030
+  },
+  {
+    "source": "/tmp/test-audit-run-guarded.cjs",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/test-audit-run-guarded.cjs.txt",
+    "sha256": "13346d44b185f21abc074d8ebcc7641aed4ecfa3d289d3b9cab9b2a7acff9e1c",
+    "bytes": 1970
+  },
+  {
+    "source": "/tmp/test-audit-next607-loc.json",
+    "archive": "plans/evidence/2026-10-05-next607-authorization/test-audit-next607-loc.json",
+    "sha256": "c0b7b1ff93a3742a6d951c57ca85e0e576e31de395641046648a0cd9b6d3411d",
+    "bytes": 392
+  }
+]

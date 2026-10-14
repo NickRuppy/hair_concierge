@@ -1,0 +1,14 @@
+{
+  "priorPinSHA": "f5e80b3913eec100e58a097a4a880797a77873ced3378eb7686aa79788a2dc7d",
+  "finalPinSHA": "76ba7677d1cd5e8d202cc00f1ce81757e25b5eaf5d18f7aadc2f18cc9a8ff847",
+  "changed": [
+    "proof-attestation.cjs",
+    "operator-proof.cjs",
+    "operator-run-cohort.cjs"
+  ],
+  "nonArtifactPinsUnchanged": true,
+  "reason": "Synthetic fragment rejection now alters only decoded error text. Full7-file cohort has bounded180s timeout; individual fault children retain reviewed45s. Strict TAP decoder and first-outer-assertion predicate unchanged.",
+  "repositoryWrites": 0,
+  "children": 0,
+  "ownerImports": 0
+}

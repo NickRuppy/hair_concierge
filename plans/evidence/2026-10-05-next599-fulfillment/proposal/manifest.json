@@ -1,0 +1,450 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "phases": {
+    "before": {
+      "tests/stripe-one-time-confirmation.test.ts": {
+        "sha256": "ca1de738e9ac257063c23524d6f1d8d56c27cf64f70ce5fa7f939d20a497e42c",
+        "bytes": 24862,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/before/tests/stripe-one-time-confirmation.test.ts"
+      },
+      "tests/one-time-recovery-command.test.ts": {
+        "sha256": "69887834dd8e2df03dd0a5ebe426f02951d55acecfe2749d4e5cdfbe3e194d05",
+        "bytes": 16865,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/before/tests/one-time-recovery-command.test.ts"
+      },
+      "tests/billing-one-time-fulfillment-reconcile.test.ts": {
+        "sha256": "3d01c66a46f500c9bbd009e770dd1fa0a3488fc0ababc180a9deb129e5fd44c9",
+        "bytes": 19796,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/before/tests/billing-one-time-fulfillment-reconcile.test.ts"
+      },
+      "tests/one-time-activation-status-route.test.ts": {
+        "sha256": "61d712bc3a6d4b9111d212b8ef7c9d01f2c5aee3f8812ef7fe20a423b84cb2cf",
+        "bytes": 14005,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/before/tests/one-time-activation-status-route.test.ts"
+      },
+      "tests/personal-plan-one-time-confirmation.test.ts": {
+        "sha256": "afa54c5c0a9463490daccc8809ff267cb0f13cd9e7bb60132fa38376700a5594",
+        "bytes": 4490,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/before/tests/personal-plan-one-time-confirmation.test.ts"
+      },
+      "tests/one-time-paid-pending-ux.test.ts": {
+        "sha256": "3857082e8351d940879673c987371b453255bf9826845d4b4ec3f32c350959bf",
+        "bytes": 3627,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/before/tests/one-time-paid-pending-ux.test.ts"
+      },
+      "tests/one-time-payment-recovery-migration.test.ts": {
+        "sha256": "06b7eaf062f916f8e421104b3cdb7361fbd38a3a7165aa4f228f080845e9e5d0",
+        "bytes": 3053,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/before/tests/one-time-payment-recovery-migration.test.ts"
+      },
+      "tests/personal-plan-one-time-first-access.test.ts": {
+        "sha256": "f389506fb70cfe3e5dba2f7fefdad84d9145dd2233278af54e1f0f20c0a37b78",
+        "bytes": 6949,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/before/tests/personal-plan-one-time-first-access.test.ts"
+      }
+    },
+    "transfer": {
+      "tests/stripe-one-time-confirmation.test.ts": {
+        "sha256": "ca1de738e9ac257063c23524d6f1d8d56c27cf64f70ce5fa7f939d20a497e42c",
+        "bytes": 24862,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/transfer/tests/stripe-one-time-confirmation.test.ts"
+      },
+      "tests/one-time-recovery-command.test.ts": {
+        "sha256": "65dbdc081adbad4392c95dccb9908585525f2e859236bc96a481cc11875f0a6b",
+        "bytes": 17121,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/transfer/tests/one-time-recovery-command.test.ts"
+      },
+      "tests/billing-one-time-fulfillment-reconcile.test.ts": {
+        "sha256": "3d01c66a46f500c9bbd009e770dd1fa0a3488fc0ababc180a9deb129e5fd44c9",
+        "bytes": 19796,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/transfer/tests/billing-one-time-fulfillment-reconcile.test.ts"
+      },
+      "tests/one-time-activation-status-route.test.ts": {
+        "sha256": "61d712bc3a6d4b9111d212b8ef7c9d01f2c5aee3f8812ef7fe20a423b84cb2cf",
+        "bytes": 14005,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/transfer/tests/one-time-activation-status-route.test.ts"
+      },
+      "tests/personal-plan-one-time-confirmation.test.ts": {
+        "sha256": "afa54c5c0a9463490daccc8809ff267cb0f13cd9e7bb60132fa38376700a5594",
+        "bytes": 4490,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/transfer/tests/personal-plan-one-time-confirmation.test.ts"
+      },
+      "tests/one-time-paid-pending-ux.test.ts": {
+        "sha256": "3857082e8351d940879673c987371b453255bf9826845d4b4ec3f32c350959bf",
+        "bytes": 3627,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/transfer/tests/one-time-paid-pending-ux.test.ts"
+      },
+      "tests/one-time-payment-recovery-migration.test.ts": {
+        "sha256": "06b7eaf062f916f8e421104b3cdb7361fbd38a3a7165aa4f228f080845e9e5d0",
+        "bytes": 3053,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/transfer/tests/one-time-payment-recovery-migration.test.ts"
+      },
+      "tests/personal-plan-one-time-first-access.test.ts": {
+        "sha256": "f389506fb70cfe3e5dba2f7fefdad84d9145dd2233278af54e1f0f20c0a37b78",
+        "bytes": 6949,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/transfer/tests/personal-plan-one-time-first-access.test.ts"
+      }
+    },
+    "cut": {
+      "tests/stripe-one-time-confirmation.test.ts": {
+        "sha256": "ca1de738e9ac257063c23524d6f1d8d56c27cf64f70ce5fa7f939d20a497e42c",
+        "bytes": 24862,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/cut/tests/stripe-one-time-confirmation.test.ts"
+      },
+      "tests/one-time-recovery-command.test.ts": {
+        "sha256": "b0ef567977d3953a99cf3c36f2836a947003e577ab0a84aa61fb08f3bd8e29d4",
+        "bytes": 16471,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/cut/tests/one-time-recovery-command.test.ts"
+      },
+      "tests/billing-one-time-fulfillment-reconcile.test.ts": {
+        "sha256": "3d01c66a46f500c9bbd009e770dd1fa0a3488fc0ababc180a9deb129e5fd44c9",
+        "bytes": 19796,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/cut/tests/billing-one-time-fulfillment-reconcile.test.ts"
+      },
+      "tests/one-time-activation-status-route.test.ts": {
+        "sha256": "61d712bc3a6d4b9111d212b8ef7c9d01f2c5aee3f8812ef7fe20a423b84cb2cf",
+        "bytes": 14005,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/cut/tests/one-time-activation-status-route.test.ts"
+      },
+      "tests/personal-plan-one-time-confirmation.test.ts": {
+        "sha256": "afa54c5c0a9463490daccc8809ff267cb0f13cd9e7bb60132fa38376700a5594",
+        "bytes": 4490,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/cut/tests/personal-plan-one-time-confirmation.test.ts"
+      },
+      "tests/one-time-paid-pending-ux.test.ts": {
+        "sha256": "3857082e8351d940879673c987371b453255bf9826845d4b4ec3f32c350959bf",
+        "bytes": 3627,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/cut/tests/one-time-paid-pending-ux.test.ts"
+      },
+      "tests/one-time-payment-recovery-migration.test.ts": {
+        "sha256": "06b7eaf062f916f8e421104b3cdb7361fbd38a3a7165aa4f228f080845e9e5d0",
+        "bytes": 3053,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/cut/tests/one-time-payment-recovery-migration.test.ts"
+      },
+      "tests/personal-plan-one-time-first-access.test.ts": {
+        "sha256": "f389506fb70cfe3e5dba2f7fefdad84d9145dd2233278af54e1f0f20c0a37b78",
+        "bytes": 6949,
+        "path": "/tmp/test-audit-one-time-fulfillment75/snapshots/cut/tests/personal-plan-one-time-first-access.test.ts"
+      }
+    }
+  },
+  "readset": [
+    {
+      "file": "tests/stripe-one-time-confirmation.test.ts",
+      "sha256": "ca1de738e9ac257063c23524d6f1d8d56c27cf64f70ce5fa7f939d20a497e42c",
+      "bytes": 24862,
+      "readDepth": "complete"
+    },
+    {
+      "file": "tests/one-time-recovery-command.test.ts",
+      "sha256": "69887834dd8e2df03dd0a5ebe426f02951d55acecfe2749d4e5cdfbe3e194d05",
+      "bytes": 16865,
+      "readDepth": "complete"
+    },
+    {
+      "file": "tests/billing-one-time-fulfillment-reconcile.test.ts",
+      "sha256": "3d01c66a46f500c9bbd009e770dd1fa0a3488fc0ababc180a9deb129e5fd44c9",
+      "bytes": 19796,
+      "readDepth": "complete"
+    },
+    {
+      "file": "tests/one-time-activation-status-route.test.ts",
+      "sha256": "61d712bc3a6d4b9111d212b8ef7c9d01f2c5aee3f8812ef7fe20a423b84cb2cf",
+      "bytes": 14005,
+      "readDepth": "complete"
+    },
+    {
+      "file": "tests/personal-plan-one-time-confirmation.test.ts",
+      "sha256": "afa54c5c0a9463490daccc8809ff267cb0f13cd9e7bb60132fa38376700a5594",
+      "bytes": 4490,
+      "readDepth": "complete"
+    },
+    {
+      "file": "tests/one-time-paid-pending-ux.test.ts",
+      "sha256": "3857082e8351d940879673c987371b453255bf9826845d4b4ec3f32c350959bf",
+      "bytes": 3627,
+      "readDepth": "complete"
+    },
+    {
+      "file": "tests/one-time-payment-recovery-migration.test.ts",
+      "sha256": "06b7eaf062f916f8e421104b3cdb7361fbd38a3a7165aa4f228f080845e9e5d0",
+      "bytes": 3053,
+      "readDepth": "complete"
+    },
+    {
+      "file": "tests/personal-plan-one-time-first-access.test.ts",
+      "sha256": "f389506fb70cfe3e5dba2f7fefdad84d9145dd2233278af54e1f0f20c0a37b78",
+      "bytes": 6949,
+      "readDepth": "complete"
+    },
+    {
+      "file": "scripts/billing/one-time-recover.ts",
+      "sha256": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75",
+      "bytes": 24818,
+      "readDepth": "complete"
+    },
+    {
+      "file": "src/lib/stripe/checkout-activation.ts",
+      "sha256": "f33ca66366ec59a915fdeba82bb397ad20891dd837495de25c6bf4e51deb8bdc",
+      "bytes": 54607,
+      "readDepth": "complete"
+    },
+    {
+      "file": "src/lib/billing/personal-plan-one-time-activation.ts",
+      "sha256": "1efa98c6055012f5912c22c5e7420b36331ffc702b52344a2db40bc2ade458eb",
+      "bytes": 28225,
+      "readDepth": "complete"
+    },
+    {
+      "file": "src/lib/billing/one-time-fulfillment-reconcile.ts",
+      "sha256": "2a73f737617dbe97dba7d032fcb29b723180b01c79f1403e9a8af7896683763d",
+      "bytes": 11236,
+      "readDepth": "complete"
+    },
+    {
+      "file": "src/lib/billing/purchases.ts",
+      "sha256": "3c4ef0bc20b982ec38e7eff8f3a1e00b40b47412fc5d822151e117e85e53a6b6",
+      "bytes": 9853,
+      "readDepth": "complete"
+    },
+    {
+      "file": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "sha256": "9780ca72927361d64c493de99f1780e7b9a58800e3fb52ea0fbad8227b97a544",
+      "bytes": 7589,
+      "readDepth": "complete"
+    },
+    {
+      "file": "src/lib/billing/personal-plan-one-time-first-access.ts",
+      "sha256": "01048dbc75107e07f774615a8dfef0c0a401016658770ffc200344c4639e8231",
+      "bytes": 2138,
+      "readDepth": "complete"
+    },
+    {
+      "file": "src/lib/customerio/personal-plan-one-time-confirmation.ts",
+      "sha256": "627a204e17815ce524940b15737e73af314d020c69b9744729c2c9b3de4d7439",
+      "bytes": 4959,
+      "readDepth": "complete"
+    },
+    {
+      "file": "src/lib/customerio/transactional.ts",
+      "sha256": "5756d3bda21c0be6cbc1ed8885846a646edd8560f22c8b7fc5ac6601c62b95e2",
+      "bytes": 6178,
+      "readDepth": "complete"
+    },
+    {
+      "file": "src/app/api/billing/one-time-activation-status/route.ts",
+      "sha256": "fab9ef797b506b624e565238129b3ffcc3b82a9830d4f3bdb4a36efa5778d149",
+      "bytes": 7961,
+      "readDepth": "complete"
+    },
+    {
+      "file": "src/app/plan-bereit/page.tsx",
+      "sha256": "3266d35f5b0a8f5312e6415d40bc52224dc660a830134dc44089600343d96289",
+      "bytes": 12344,
+      "readDepth": "complete"
+    },
+    {
+      "file": "supabase/migrations/20260731125000_one_time_payment_recovery_state.sql",
+      "sha256": "f717f5603edffbe1cce24640200239fc122b3c6343c773380ab63fd3c469a233",
+      "bytes": 17046,
+      "readDepth": "complete"
+    },
+    {
+      "file": "docs/personal-plan-one-time-recovery-runbook.md",
+      "sha256": "30d5525b0a5f6f3d0e294fa9baeaa05c7a3b628946da44a99598ece08ddf8799",
+      "bytes": 10230,
+      "readDepth": "complete"
+    },
+    {
+      "file": "docs/runbooks/one-time-payment-recovery.md",
+      "sha256": "e8dabb5030bbe4060e55ff5cdf1806f2fe58bb8f292ad454f87b7577505c7540",
+      "bytes": 2880,
+      "readDepth": "complete"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+      "bytes": 391,
+      "readDepth": "complete"
+    },
+    {
+      "file": "tsconfig.json",
+      "sha256": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd",
+      "bytes": 770,
+      "readDepth": "complete"
+    },
+    {
+      "file": ".nvmrc",
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+      "bytes": 3,
+      "readDepth": "complete"
+    },
+    {
+      "file": "node_modules/next/dist/server/web/spec-extension/response.js",
+      "sha256": "68a5a07540d57a4beb3275fddd0502fd5ef9a42986b414c0bcee99a3f9033366",
+      "bytes": 4977,
+      "readDepth": "complete"
+    },
+    {
+      "file": "src/lib/paypal/order-activation.ts",
+      "sha256": "f3bce8ac0eed4b1db6517e1a0b63bb942023661c0149a0ed438d4d6c70852435",
+      "bytes": 33808,
+      "readDepth": "1–109,253–383,534–999; activation/recovery/retry/verifier/finalizer/capture persistence; initial capture and reporter middle not whole read"
+    },
+    {
+      "file": "src/lib/paypal/checkout-activation.ts",
+      "sha256": "4a0c4bd392e72c2b3851855ba99f0a06cba4c4b0c0ef978d360a61b92ea9738b",
+      "bytes": 25832,
+      "readDepth": "30–82 error types/class only, subscription/account body not read"
+    },
+    {
+      "file": "src/app/api/billing/reconcile/route.ts",
+      "sha256": "961323aa73cfedd70c40597e205201c454d06f7007c568025edd78b01310a297",
+      "bytes": 18320,
+      "readDepth": "100–160,340–492 plus flag/callsite search"
+    },
+    {
+      "file": "src/app/welcome/page.tsx",
+      "sha256": "e6c5c768deee6f4f304e1dc5a4ed27ba8c0a186938069fec0c579ed560fda24e",
+      "bytes": 20094,
+      "readDepth": "150–210 one-time branch"
+    },
+    {
+      "file": "src/app/welcome/welcome-client.tsx",
+      "sha256": "2f877931f7c2808f67448d6d10d0a9357c2fd3665c37f3b9d49efb43a630288a",
+      "bytes": 34253,
+      "readDepth": "835–877 request URL builder"
+    },
+    {
+      "file": "src/components/checkout/paypal-one-time-button.tsx",
+      "sha256": "a60cf97517aa398c79d87eb6132a72430708474bf81054c35496be911ffaa07b",
+      "bytes": 32474,
+      "readDepth": "425–465 recovery fetch"
+    },
+    {
+      "file": "src/app/result/[leadId]/page.tsx",
+      "sha256": "83ce34fd0d9d356a66b9e4201a3676236d11c7e06ec09563e0742ee91ca36ae1",
+      "bytes": 22548,
+      "readDepth": "360–415 actual first-access writer and access continuation"
+    },
+    {
+      "file": "src/app/api/auth/set-checkout-password/route.ts",
+      "sha256": "97b0718697d5c0d827e6bebc225aad46858b56ffdc99689aa9dcb4b8a42d80f1",
+      "bytes": 15432,
+      "readDepth": "280–313 activation dispatch"
+    },
+    {
+      "file": "src/app/api/auth/send-magic-link/route.ts",
+      "sha256": "323c959b8058cb7aa72809c637498a5c5a78b8a91d3b01706dfe31aa19b3e6a1",
+      "bytes": 16121,
+      "readDepth": "304–337 activation dispatch"
+    },
+    {
+      "file": "tests/personal-plan-one-time-activation.test.ts",
+      "sha256": "e1aaf052733494fe8d44e711e6d532c051794c5a5484fbfeaa3a5a55344c2b2c",
+      "bytes": 46827,
+      "readDepth": "1–259 complete selected initial/hook/confirmation-replay bodies; rest navigation only, shared createActivationDb not fully reread; no cut depends on equivalence to it"
+    },
+    {
+      "file": "tests/billing-one-time-purchases.test.ts",
+      "sha256": "21fed930765724cae5be7a302be0638f8b5fdb4624928cd148ff8319f81b0197",
+      "bytes": 14573,
+      "readDepth": "348–418 complete selected migration callbacks; rest navigation only"
+    },
+    {
+      "file": "tests/customerio-transactional.test.ts",
+      "sha256": "e63066b69234b91eb7631d8c84eb3ede31c110e8855293f0c0b17f0c31d7c623",
+      "bytes": 6694,
+      "readDepth": "1–116 complete first five callbacks; no transfer into this different payload fixture"
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+      "bytes": 25353,
+      "readDepth": "test:node/test:personal-plan/test:agent and recovery command entries"
+    },
+    {
+      "file": "vercel.json",
+      "sha256": "cb38b0cd0013dc1dff9a5bc2bafc4a9ccb5e6646bdcf6dcf0bfcebc4b676c55a",
+      "bytes": 1108,
+      "readDepth": "billing/reconcile path and daily schedule"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+      "bytes": 17598,
+      "readDepth": "145–165 quality-node job plus routing search"
+    },
+    {
+      "file": "node_modules/zod/v3/types.cjs",
+      "sha256": "9c7618e57545b5e44faecbcfc3bb00eed67ca46efbb11bd1b6ad3a1d69de95eb",
+      "bytes": 140156,
+      "readDepth": "Navigation-only obsolete v3 branch; not the actual import target. Replaced dependency claim by v4 reads below."
+    },
+    {
+      "file": "AGENTS.md",
+      "sha256": "9072f0e4ef99aef972395aab4b26e4718be6ab7cac755a0fc303746d8ee162f8",
+      "bytes": 16111,
+      "readDepth": "current routing and supplied complete user instruction; no scoped AGENTS found"
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799",
+      "bytes": 590438,
+      "readDepth": "hash/config guard only; not full semantic read"
+    },
+    {
+      "file": "node_modules/typescript/lib/typescript.js",
+      "sha256": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675",
+      "bytes": 9112572,
+      "readDepth": "static parser dependency hash only; not a compiler/test/owner runtime"
+    },
+    {
+      "file": "node_modules/zod/index.cjs",
+      "sha256": "2a3455cecff4f7021c92d0a3e2e5fc170c0448dc5cc261160127e08f4888a9c2",
+      "bytes": 1486,
+      "readDepth": "complete 35-line entry; confirms v4/classic export target"
+    },
+    {
+      "file": "node_modules/zod/v4/core/api.cjs",
+      "sha256": "df63ac3f2809bbb806c7bf371baadb21923e9be527e4e02ca27e88c238e1c1fa",
+      "bytes": 31685,
+      "readDepth": "160–177 email constructor and832–834 trim overwrite"
+    },
+    {
+      "file": "node_modules/zod/v4/core/checks.cjs",
+      "sha256": "d9b6a4b1d366015f4f2b7ca931f1a65cf787d7892f50d693350834b9a345f2e1",
+      "bytes": 21559,
+      "readDepth": "432–478 string format pattern checks"
+    },
+    {
+      "file": "node_modules/zod/v4/classic/schemas.cjs",
+      "sha256": "fbb612b8ec2f7408653908aec137a855e6763f92fbab19d4bd61c5be13341db5",
+      "bytes": 56344,
+      "readDepth": "185–211 parse delegation and370–392 string email check construction"
+    }
+  ],
+  "declarations": {
+    "before": 75,
+    "transfer": 75,
+    "cut": 74
+  },
+  "runtimeCaseEstimate": {
+    "before": 78,
+    "transfer": 78,
+    "cut": 77,
+    "basis": "first-access template declaration registers four rows; no runtime executed"
+  },
+  "targetTestLines": 2677,
+  "unchangedRetainedCallbacks": 73,
+  "changedRetainedCallbacks": 1,
+  "removedCallbacks": 1,
+  "newCalls": 0,
+  "newInputs": 0,
+  "newRows": 0,
+  "sourceChanges": 0,
+  "supportChanges": 0,
+  "validation": "Static TypeScript parse and byte/callback reconciliation only. No source/test owner imported, native test, browser, provider, DB, env-file read, or mutation executed."
+}

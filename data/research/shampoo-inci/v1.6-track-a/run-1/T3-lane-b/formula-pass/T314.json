@@ -1,0 +1,163 @@
+{
+  "blindId": "T314",
+  "inciFingerprintSha256": "4871d6edeb1c4a74bb8123dc09d22d76a8888bf42f570a16fd8b5f91ac931e73",
+  "phase": "blind_formula_pass",
+  "normalizationNote": "No split synonym entries; packet positions are normalized positions.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic Sodium Laureth Sulfate (3); prominent buffers Cocamidopropyl Hydroxysultaine (4), Coco-Glucoside (7), Cocamidopropyl Betaine (17); no reinforcing route. E3 point Parfum (18).",
+      "neighboringAlternative": "none",
+      "counterSignal": "Hydrogenated Starch Hydrolysate (2) dilutes the chassis; C1 fixes moderate."
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "One meaningful system: Guar Hydroxypropyltrimonium Chloride (14) with Hydrolyzed Keratin (12), pearlizer Glycol Distearate (16) and humectants Glycerin (5), Panthenol (11). No silicone or payload lipid, so C2 is not met.",
+      "neighboringAlternative": "low",
+      "counterSignal": "Guar and keratin late; could read as cleansing-led."
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Two light, late families (protein 12, guar 14) facing an ordinary C1 reset; no silicone, lipid or film.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Hydrolyzed keratin + one guar, both after the comfort-active block."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "No persistent system."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES + three buffers."
+        }
+      },
+      "whyThisBand": "Light routes, ordinary reset.",
+      "whyNotNeighborBand": "W2: two families present, but both are light and late (hydrolyzed keratin at 12, guar at 14 behind actives and a botanical extract); no silicone, payload lipid or film former to make residue noticeable.",
+      "counterSignal": "Two families together.",
+      "excluded": [
+        "Hydrogenated Starch Hydrolysate (2): humectant/sugar alcohol, context",
+        "Glycol Distearate (16): pearlizer",
+        "Zinc PCA (10): sebum-regulating",
+        "Camellia Sinensis Leaf Extract (13): extract"
+      ]
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "low",
+      "rationale": "Provisional. Prominent comfort routes Allantoin (8), Bisabolol (9), Panthenol (11) plus Zinc PCA (10) suggest a scalp-comfort role; needs SC1 positioning.",
+      "neighboringAlternative": "general",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "limitation": "Scalp-comfort candidate; keratin is a single protein token."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "rationale": "Provisional empty default.",
+      "neighboringAlternative": [
+        "clarifying"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "rationale": "Provisional default.",
+      "neighboringAlternative": "frequent"
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "low",
+      "rationale": "Provisional pending SC1. CSA formula half passes: prominent Allantoin (8), Bisabolol (9), Panthenol (11) (comfort) and Glycerin (5) (humectant).",
+      "neighboringAlternative": "not_targeted",
+      "csaFormulaHalf": "pass",
+      "prominentComfortRoute": true,
+      "prominentHumectantRefattingRoute": true
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none"
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Hydrogenated Starch Hydrolysate",
+      "position": 2,
+      "role": "humectant (not on C2/E4 lists)"
+    },
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 3,
+      "role": "defining anionic"
+    },
+    {
+      "ingredient": "Cocamidopropyl Hydroxysultaine",
+      "position": 4,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 5,
+      "role": "humectant"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 7,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Allantoin",
+      "position": 8,
+      "role": "E4 comfort"
+    },
+    {
+      "ingredient": "Bisabolol",
+      "position": 9,
+      "role": "E4 comfort"
+    },
+    {
+      "ingredient": "Zinc PCA",
+      "position": 10,
+      "role": "sebum-regulating"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 11,
+      "role": "E4 comfort/humectant"
+    },
+    {
+      "ingredient": "Hydrolyzed Keratin",
+      "position": 12,
+      "role": "protein_film"
+    },
+    {
+      "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+      "position": 14,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 16,
+      "role": "pearlizer"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 17,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Parfum",
+      "position": 18,
+      "role": "E3 point"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

@@ -1,0 +1,57 @@
+21e0e41fa996ec6a725c258ab3766971f0edb94d 2026-09-30 feat(catalog): recurring price-audit lane + always-show price rule (#633)
+
+tests/audit-product-metadata-script.test.ts
+bc0bfa0674e19d0fdc53f1625885554a228ead1d 2026-09-29 fix(catalog): NULL-safe approval guards + shared product-apply lock for all catalog-apply executors (#625)
+
+tests/catalog-apply-executor-hardening-postgres.test.ts
+3e5018eb72dfc3b46b6876041690642dee85a693 2026-09-04 feat(personal-plan): simplify oil heat capability (#516)
+
+tests/expansion-apply-templates.test.ts
+39dbc789a255ab4c099245899309b45d62c0f8e2 2026-09-03 Fix scan-expansion preflight blockers: non-mask protocol stamps + evidence quotes (#510)
+
+tests/expansion-apply-batch.test.ts
+b6d146af23f3753b313a8f54bef405beea0a3db3 2026-09-02 Scan DB expansion: pilot research, contract, loader, and image pipeline (#509)
+
+tests/expansion-apply-batch.test.ts
+tests/expansion-apply-templates.test.ts
+457c64be805c71f6f9bec9e0a92688d3ac903a12 2026-09-01 Add existing-catalog GTIN coverage waves (#499)
+
+tests/product-identifier-global-ownership-migration.test.ts
+ddc553f6233d29d9c216aa0df5d3bfab1977f7d0 2026-09-01 feat(catalog): add approved oil authority bundle (#492)
+
+tests/catalog-authority-repair.test.ts
+5908d7f16a86b6d6db2b79f89689afb14730c276 2026-08-16 feat(catalog): retire destructive legacy sync triggers and close Task 3 constraints (#440)
+
+tests/catalog-authority-legacy-sync-retirement-migration.test.ts
+123078a93cea477d8f290c6a2893fc7b4e09fedd 2026-08-16 feat(catalog): Task 3 historical repair manifests and structural guardrails (#435)
+
+tests/catalog-authority-historical-repair-migration.test.ts
+tests/catalog-authority-lifecycle-repair.test.ts
+tests/catalog-authority-repair.test.ts
+ff888a55c3df33c1d9d15ed6d4d33e32d62bdaac 2026-08-16 Fix Anwendung catalog relationship resolution (#427)
+
+tests/catalog-authority-product-spec-relationship-verification.test.ts
+tests/catalog-authority-relationship-convergence-migration.test.ts
+fc3cee0c87677aba932bfc5b8b6365a74b358ba3 2026-08-15 feat(catalog): add normalized authority schema (#416)
+
+tests/admin-product-category-write-policy.test.ts
+tests/admin-product-support-specs.test.ts
+tests/catalog-authority-schema-foundations-migration.test.ts
+2ae3d7e04aa464a64c90f0068a9606c0febd0287 2026-06-11 fix(products): add metadata health audit
+
+tests/admin-product-support-specs.test.ts
+tests/audit-product-metadata-script.test.ts
+tests/product-metadata-health.test.ts
+tests/product-metadata-ingest-identity.test.ts
+fc8b7e2018e8517fc5bd90111db9b5f2a709c124 2026-05-29 feat(agent): ship AgentV2 CareBalance chat pipeline
+
+tests/admin-product-support-specs.test.ts
+faa7a74f5b1005983e41e7216c21a27aaad0a817 2026-05-05 feat(recommendations): add dry shampoo category (#87)
+
+tests/admin-product-support-specs.test.ts
+92820e30e9d3f7157eb4856c94829a2cc4209278 2026-05-03 feat(agent): add bondbuilder product recommendations (#73)
+
+tests/admin-product-support-specs.test.ts
+5e5d8f0009f7f97370600b92129da989c587e134 2026-04-18 feat: add quiz hair concerns and split product concern taxonomy (#41)
+
+tests/admin-product-support-specs.test.ts

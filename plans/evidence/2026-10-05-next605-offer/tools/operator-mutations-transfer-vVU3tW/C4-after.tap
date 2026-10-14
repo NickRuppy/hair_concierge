@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: loadFreeRevealRecord: does not leak across users
+ok 1 - loadFreeRevealRecord: does not leak across users
+  ---
+  duration_ms: 1.062125
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 213.295292

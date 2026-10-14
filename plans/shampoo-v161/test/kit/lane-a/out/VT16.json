@@ -1,0 +1,457 @@
+{
+ "blindId": "VT16",
+ "identity": {
+  "brand": "Vichy",
+  "productName": "Dercos Ultra-Sensitiv Shampoo trockene Kopfhaut",
+  "packSize": "200 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "62c6f9e1036abf77934bec6b3629a4f56d6f273a10d4a86d539a8ea34d46c167",
+  "normalization": "Split synonym entries merged into one item (ID-2); every position cited is the normalized one-based position. lower-case, trim, collapse whitespace, join with |; split synonym entries merged into one item",
+  "completeness": "complete (formula source tier 2, identity confidence high)",
+  "e3ProminenceCutoff": "PARFUM / FRAGRANCE@38",
+  "note": "Market DE."
+ },
+ "formulaPassRef": {
+  "file": "out/formula-pass/VT16.json",
+  "note": "hash-pinned blind record; not edited after release"
+ },
+ "formulaFacts": {
+  "e3Point": {
+   "position": 38,
+   "inci": "PARFUM / FRAGRANCE",
+   "note": "Positions 9-37 form an alphabetical run, so their order says nothing about relative amounts; E3 still counts them as prominent (convention)."
+  },
+  "surfactants": [
+   {
+    "inci": "SODIUM COCOYL ISETHIONATE",
+    "position": 2,
+    "class": "mild anionic (isethionate)",
+    "prominent": true
+   },
+   {
+    "inci": "DISODIUM LAURETH SULFOSUCCINATE",
+    "position": 3,
+    "class": "mild anionic (sulfosuccinate)",
+    "prominent": true
+   },
+   {
+    "inci": "SODIUM LAURYL SULFOACETATE",
+    "position": 4,
+    "class": "mild anionic (sulfoacetate)",
+    "prominent": true
+   },
+   {
+    "inci": "SODIUM LAUROYL SARCOSINATE",
+    "position": 5,
+    "class": "mild anionic (sarcosinate)",
+    "prominent": true
+   },
+   {
+    "inci": "COCAMIDOPROPYL BETAINE",
+    "position": 8,
+    "class": "amphoteric (buffer)",
+    "prominent": true
+   },
+   {
+    "inci": "COCO-BETAINE",
+    "position": 16,
+    "class": "amphoteric (buffer)",
+    "prominent": true
+   },
+   {
+    "inci": "DECYL GLUCOSIDE",
+    "position": 17,
+    "class": "nonionic cleansing (buffer)",
+    "prominent": true
+   },
+   {
+    "inci": "C12-13 PARETH-23 / C12-13 PARETH-3 / POLYSORBATE 21 / PPG-5-CETETH-20 / PEG-55 PROPYLENE GLYCOL OLEATE / TRIDECETH-6",
+    "position": [
+     11,
+     12,
+     27,
+     28,
+     22,
+     37
+    ],
+    "class": "not a cleansing route (emulsifiers/thickeners/solubilizers)"
+   },
+   {
+    "inci": "SODIUM ISETHIONATE",
+    "position": 36,
+    "class": "not a surfactant (isethionate salt)"
+   }
+  ],
+  "conditioningRoutes": {
+   "silicone": [
+    "AMODIMETHICONE@9",
+    "DIVINYLDIMETHICONE/DIMETHICONE COPOLYMER@18"
+   ],
+   "cationic_conditioner": [
+    "CETRIMONIUM CHLORIDE@14"
+   ],
+   "cationic_polymer": [
+    "POLYQUATERNIUM-10@25",
+    "POLYQUATERNIUM-7@26"
+   ],
+   "payload_lipid": [
+    "HYDROGENATED COCONUT ACID@19 (fatty acid; non-material)",
+    "PRUNUS ARMENIACA KERNEL OIL / APRICOT KERNEL OIL@30 (non-material)"
+   ],
+   "pearlizing_fatty_route": [
+    "GLYCOL DISTEARATE@7"
+   ],
+   "humectants": [
+    "GLYCERIN@6",
+    "PANTHENOL@21",
+    "PROPYLENE GLYCOL@29 (solvent)"
+   ]
+  },
+  "actives": [
+   "PIROCTONE OLAMINE@24",
+   "SALICYLIC ACID@31",
+   "PANTHENOL@21"
+  ],
+  "scalpRelevant": {
+   "e4ComfortRoutesProminent": [
+    "PANTHENOL@21"
+   ],
+   "e4HumectantRefattingProminent": [
+    "GLYCERIN@6",
+    "PANTHENOL@21",
+    "PRUNUS ARMENIACA KERNEL OIL@30"
+   ],
+   "coolingAgents": [],
+   "essentialOilsOrAllergens": [],
+   "recognizedDandruffActives": [
+    "PIROCTONE OLAMINE@24"
+   ]
+  },
+  "preservatives": [
+   "BENZOIC ACID@10",
+   "PHENOXYETHANOL@23",
+   "SODIUM BENZOATE@33",
+   "PIROCTONE OLAMINE@24 (capped active)"
+  ]
+ },
+ "wLineRecord": {
+  "wLine": {
+   "position": 10,
+   "inci": "BENZOIC ACID",
+   "classes": [
+    "preservative_or_capped_active",
+    "alphabetical_tail"
+   ]
+  },
+  "cap": {
+   "e3Point": 38
+  },
+  "alphabeticalRun": {
+   "first": 9,
+   "last": 37
+  },
+  "skipped": [],
+  "codes": [],
+  "payloadLipidMaterial": [],
+  "payloadLipidNonMaterial": [
+   "HYDROGENATED COCONUT ACID@19",
+   "PRUNUS ARMENIACA KERNEL OIL / APRICOT KERNEL OIL@30"
+  ],
+  "derivation": "Alphabetical run 9 (AMODIMETHICONE) to 37 (TRIDECETH-6): 29 consecutive ascending entries (C12-13 PARETH-23 / C12-13 PARETH-3 differ only in digits and count as in order). It does not contain the earliest cleansing surfactant (SODIUM COCOYL ISETHIONATE@2), so it is a tail; its second entry BENZOIC ACID@10 is a candidate (class d, and also class b). No candidate precedes it. (i) SODIUM COCOYL ISETHIONATE@2 before it; (ii) entries of the same run are ignored and nothing between the run end 37 and the cap 38 -> plausible. W-line 10."
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "low by C6: no prominent strong anionic; the earliest prominent cleansing surfactant is the mild anionic SODIUM COCOYL ISETHIONATE@2 and prominent amphoteric/glucoside co-surfactants are present (COCAMIDOPROPYL BETAINE@8, COCO-BETAINE@16, DECYL GLUCOSIDE@17). Counter-signal: four mild anionics occupy positions 2-5 ahead of the first amphoteric (@8), and positions 16-17 lie inside the alphabetical run, so the buffering share is uncertain; confidence moderate, neighbor moderate.",
+   "ruleIds": [
+    "C3",
+    "C4",
+    "C6",
+    "N-ALT"
+   ],
+   "counterSignal": "See rationale (counter-signal stated there).",
+   "formulaFacts": "see formulaFacts block (normalized positions)"
+  },
+  "conditioningLevel": {
+   "value": "high",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "high: C2 is met - early (prominent, E3 point 38) silicone AMODIMETHICONE@9 (plus DIVINYLDIMETHICONE/DIMETHICONE COPOLYMER@18), cationic polymers POLYQUATERNIUM-10@25 and POLYQUATERNIUM-7@26, pearlizing route GLYCOL DISTEARATE@7 and humectants GLYCERIN@6 / PANTHENOL@21; CETRIMONIUM CHLORIDE@14 adds a cationic conditioner. Counter-signal: everything from position 9 on is an alphabetized block (run 9-37), so the cationic and second silicone routes are probably sub-1 %; confidence moderate, neighbor moderate.",
+   "ruleIds": [
+    "C2",
+    "E3",
+    "N-ALT"
+   ],
+   "counterSignal": "See rationale (counter-signal stated there).",
+   "formulaFacts": "see formulaFacts block (normalized positions)"
+  },
+  "weightPotential": {
+   "value": "high",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "high via the convergence route: three plausibly persistent deposition families converge - amino-silicone AMODIMETHICONE@9 plus DIVINYLDIMETHICONE/DIMETHICONE COPOLYMER@18, cationic polymers POLYQUATERNIUM-10@25 / POLYQUATERNIUM-7@26 and the cationic conditioner CETRIMONIUM CHLORIDE@14 - in a mild C6 chassis whose reset is weak. No lipid leg is used: the only payload lipids (HYDROGENATED COCONUT ACID@19, APRICOT KERNEL OIL@30) lie after the W-line BENZOIC ACID@10 and are non-material, so W-RICH does not hold. Confidence moderate, neighbor moderate: all routes but amodimethicone sit in the alphabetized sub-1 % zone.",
+   "ruleIds": [
+    "6.6",
+    "6.7",
+    "W-LINE",
+    "W-RICH",
+    "W3",
+    "P0",
+    "N-ALT"
+   ],
+   "evidence": {
+    "cationic_polymer": [
+     "POLYQUATERNIUM-10@25",
+     "POLYQUATERNIUM-7@26"
+    ],
+    "payload_lipid": [
+     "HYDROGENATED COCONUT ACID@19 (non-material; fatty acid, family payload_lipid vs weak_refatter uncertain - immaterial)",
+     "APRICOT KERNEL OIL@30 (non-material)"
+    ],
+    "weak_refatter": [],
+    "silicone": [
+     "AMODIMETHICONE@9",
+     "DIVINYLDIMETHICONE/DIMETHICONE COPOLYMER@18"
+    ],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [
+     "CETRIMONIUM CHLORIDE@14"
+    ],
+    "reset": [
+     "SODIUM COCOYL ISETHIONATE@2",
+     "DISODIUM LAURETH SULFOSUCCINATE@3",
+     "SODIUM LAURYL SULFOACETATE@4",
+     "SODIUM LAUROYL SARCOSINATE@5 (mild anionics)",
+     "COCAMIDOPROPYL BETAINE@8",
+     "COCO-BETAINE@16 (amphoterics)",
+     "DECYL GLUCOSIDE@17 (nonionic)"
+    ],
+    "humectantContext": [
+     "GLYCERIN@6",
+     "PANTHENOL@21",
+     "PROPYLENE GLYCOL@29"
+    ],
+    "excluded": [
+     "GLYCOL DISTEARATE@7 (pearlizing wax)",
+     "CARBOMER@13 (anionic acrylate rheology polymer, 6.4)",
+     "PEG-55 PROPYLENE GLYCOL OLEATE@22, PPG-5-CETETH-20@28 (PEG/PPG thickeners/solubilizers)",
+     "C12-13 PARETH-23@11, C12-13 PARETH-3@12, POLYSORBATE 21@27, TRIDECETH-6@37 (emulsifiers)",
+     "ISOPROPYL ALCOHOL@20 (solvent)",
+     "PIROCTONE OLAMINE@24, SALICYLIC ACID@31 (actives)"
+    ],
+    "unresolved": []
+   },
+   "depositionLoad": "moderate",
+   "persistence": "high",
+   "resetCapacity": "weak",
+   "counterevidence": "Positions 9-37 are alphabetized (W-LINE run), so the cationic polymers, cetrimonium and the second silicone are likely low-dose; the payload lipids are non-material (after the W-line); the four mild anionics could give more reset than \"weak\".",
+   "whyThisBand": "Amino-silicone, a silicone elastomer copolymer, two cationic polymers and a quat are designed to deposit and persist even at low dose (6.4/W-LINE rationale), and a mild isethionate/sulfosuccinate/sulfoacetate/sarcosinate chassis does not offset them.",
+   "whyNotNeighborBand": "moderate would require the reset to offset the deposition or the deposition to be light; neither is shown by the formula - the late (alphabetized) listing argues for lower amounts but cannot bound them, and a lighter call on doubt is the recommending direction (P0).",
+   "confidenceLimitingFactor": "Amounts inside the alphabetized block are unknown; the band rests on non-lipid families whose dose cannot be read from order.",
+   "counterSignal": "Positions 9-37 are alphabetized (W-LINE run), so the cationic polymers, cetrimonium and the second silicone are likely low-dose; the payload lipids are non-material (after the W-line); the four mild anionics could give more reset than \"weak\".",
+   "formulaFacts": "see formulaFacts block (normalized positions)"
+  },
+  "focusPrimary": {
+   "value": "scalp_active",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": "Chosen focus is a scalp role, not a repair/moisture decision."
+   },
+   "claimRole": "candidate",
+   "counterSignal": "Lengths-care wording also present (manufacturer: \"Kräftigt sensibilisierte Haarfasern\", \"Spendet dem Haar intensive Feuchtigkeit\"); a recognized dandruff active (PIROCTONE OLAMINE@24) is present without any dandruff claim.",
+   "decisionTrace": "Claim direction: dry/sensitive scalp (product name \"... Shampoo trockene Kopfhaut\", high; manufacturer_de, moderate: \"Gegen Juckreiz\", \"Für empfindliche, trockene Kopfhaut\", \"Mildert effektiv Juckreiz, Hautbrennen und Rötungen\"). F7 step 1: the product name names the scalp role (\"trockene Kopfhaut\"), so scalp_active is primary. Formula compatible: scalpComfortTarget targeted (CSA: PANTHENOL@21 comfort, GLYCERIN@6 humectant, both prominent). Decision: scalp_active.",
+   "rationale": "scalp_active: explicit dry/sensitive-scalp positioning named in the product name (F7 step 1) with a targeted, formula-compatible comfort architecture (7.2, SC1, CSA).",
+   "ruleIds": [
+    "7.2",
+    "F7",
+    "SC1",
+    "CSA",
+    "E1",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "moderate",
+   "neighboringAlternative": [
+    "moisture"
+   ],
+   "decisionTrace": "Empty default considered. Moisture (\"Spendet dem Haar intensive Feuchtigkeit\") is positioned, but the formula moisture verdict is nonspecific (GLYCERIN@6 and PANTHENOL@21 only, both cited for the scalp route) - no independent route (F3). Repair (\"Kräftigt sensibilisierte Haarfasern\") is generic strengthening without damage/breakage positioning (F1). Kept [].",
+   "rationale": "[]: no secondary with distinct positioning and an independent route (Section 8, F3).",
+   "ruleIds": [
+    "8",
+    "F1",
+    "F3",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [
+    "treatment not fired: dandruffSupport supported but no E2 dandruff claim unit (U3, R17.3)"
+   ],
+   "rationale": "regular: no frequency wording, no D1, not strong, and no dandruff claim for treatment (U3).",
+   "ruleIds": [
+    "9",
+    "U3",
+    "N-ALT"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "targeted: SC1 holds (E2 sensitive/dry claim units from the product name, high, and manufacturer_de, moderate: \"Gegen Juckreiz\", \"Für empfindliche, trockene Kopfhaut\", \"Mildert effektiv Juckreiz, Hautbrennen und Rötungen\") and CSA holds (prominent E4 comfort route PANTHENOL@21, humectant GLYCERIN@6; E3 point PARFUM@38). No CSA counter-signal (cleansing low, no cooling agent, no prominent essential oil).",
+   "ruleIds": [
+    "10",
+    "SC1",
+    "CSA",
+    "E2",
+    "E3",
+    "E4"
+   ],
+   "counterSignal": "PANTHENOL@21 sits inside the alphabetized block (run 9-37), so its amount is unknown; declared PARFUM@38."
+  },
+  "dandruffSupport": {
+   "value": "supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "supported: the complete INCI contains PIROCTONE OLAMINE@24, a recognized anti-dandruff active (Section 11 table; DS1 for selenium sulfide). Formula-only property, final in the blind pass; whether a dandruff target is projected depends on the claim (S-DANDRUFF, R17.3).",
+   "ruleIds": [
+    "11",
+    "DS1",
+    "ID-1",
+    "N-ALT"
+   ],
+   "counterSignal": "See rationale (counter-signal stated there).",
+   "formulaFacts": "see formulaFacts block (normalized positions)"
+  }
+ },
+ "reconciliation": [
+  "Blind-to-final: focusPrimary general -> scalp_active (name names dry scalp, F7 step 1; targeted).",
+  "Blind-to-final: scalpComfortTarget not_targeted -> targeted (SC1 positioning revealed; CSA already passed in the blind pass).",
+  "Blind-to-final: usageRole regular kept; neighbor treatment no longer possible (no dandruff claim) -> confidence high.",
+  "Blind-to-final: focusSecondary [] kept (moisture route not independent).",
+  "dandruffSupport supported unchanged; no dandruff claim -> regular shampoo, note active_without_dandruff_positioning (S-DANDRUFF, R17.3); sensitive and dry paths stay open."
+ ],
+ "projection": {
+  "status": "projected proposal, blocked by review flags",
+  "thicknessFit": {
+   "fine": "acceptable",
+   "normal": "acceptable",
+   "coarse": "ideal"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 with W=high, C=high then T6 (scalp-concern targets); T4 checked with N-ALT neighbors after T6.",
+  "weight": "heavy",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential high -> heavy (1:1).",
+  "scalpTargets": {
+   "primary": {
+    "target": "dry",
+    "confidence": "moderate",
+    "rationale": "S-DRY passes: positioning \"trockene Kopfhaut\" in the exact product name (high) and \"Für empfindliche, trockene Kopfhaut\" (manufacturer, moderate); formula: scalpComfortTarget targeted and prominent humectant/refatting routes GLYCERIN@6, PANTHENOL@21; cleansing low (no review). S-PRIMARY: of the passing targets (dry, sensitive) the product name names dry. Confidence = min(positioning high, scalpComfortTarget high, cleansingStrength moderate used for the strong-cleansing check) = moderate."
+   },
+   "secondary": {
+    "target": "sensitive",
+    "confidence": "moderate",
+    "rationale": "S-SENSITIVE passes with its own claim units (\"Gegen Juckreiz\", \"Mildert effektiv Juckreiz, Hautbrennen und Rötungen\", manufacturer, moderate) and formula (targeted + prominent comfort route PANTHENOL@21). S-SECONDARY: one secondary allowed, no dandruff claim (E2b not applicable), dry+sensitive is permitted. Confidence moderate (positioning moderate, cleansing moderate)."
+   }
+  },
+  "researchCombinationTargets": [],
+  "cleansingIntensity": "gentle",
+  "cleansingIntensityConfidence": "moderate",
+  "cleansingIntensityRationale": "I1: cleansingStrength low, D1 false -> gentle. I3 checked against neighbor moderate.",
+  "explicitResetPositioning": false,
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D2 not met (no explicit deep-cleanser positioning with a strong formula).",
+  "deepCleanserRecord": "not_applicable",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "trocken",
+    "scalp_route": "dry",
+    "cleansing_intensity": "gentle",
+    "weight": "heavy",
+    "tier": "acceptable"
+   },
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "irritationen",
+    "scalp_route": "irritated",
+    "cleansing_intensity": "gentle",
+    "weight": "heavy",
+    "tier": "acceptable"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "trocken",
+    "scalp_route": "dry",
+    "cleansing_intensity": "gentle",
+    "weight": "heavy",
+    "tier": "acceptable"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "irritationen",
+    "scalp_route": "irritated",
+    "cleansing_intensity": "gentle",
+    "weight": "heavy",
+    "tier": "acceptable"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "trocken",
+    "scalp_route": "dry",
+    "cleansing_intensity": "gentle",
+    "weight": "heavy",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "irritationen",
+    "scalp_route": "irritated",
+    "cleansing_intensity": "gentle",
+    "weight": "heavy",
+    "tier": "ideal"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   "review_intensity_boundary:trocken",
+   "review_intensity_boundary:irritationen"
+  ],
+  "informationalNotes": [
+   "scalp_concern_floor_applied:fine",
+   "active_without_dandruff_positioning"
+  ],
+  "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze; lanes never see catalog ids."
+ },
+ "selfCheck": "6.11 self-check: fingerprint matches the frozen packet (re-read by exact path); claims and labels were hidden during the blind formula pass (formula-pass record frozen before reveal); no ingredient, family count or position window assigned the weight band (W-line used only to gate payload_lipid legs); W-line derived from the frozen list per W-LINE and every skipped candidate recorded; depositionLoad, persistence and resetCapacity present with rationales; counterevidence and whyNotNeighborBand specific (W2 where applicable); confidence names its limiting factor; no comparison with earlier or catalog values was made inside the lane.",
+ "uncertainties": [
+  "\"Besänftigt die Kopfhaut\" is not a lexicon term (lexicon: \"beruhigt die Kopfhaut\"); not needed because other units qualify.",
+  "\"Ultra-Sensitiv\" in the name does not name the scalp (F7 post-round 2); primary chosen from \"trockene Kopfhaut\" in the name.",
+  "Cleansing low (moderate confidence, four mild anionics ahead of the first amphoteric) drives the two I3 review flags.",
+  "Weight high (convergence route in alphabetized tail); alternative moderate would make fine acceptable anyway via T6 and normal ideal.",
+  "Scalp-target confidence: included cleansingStrength (used by the gate's strong-cleansing check); alternative reading high for dry."
+ ]
+}

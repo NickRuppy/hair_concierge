@@ -1,0 +1,97 @@
+{
+  "mode": "cut",
+  "from": "transfer",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA": "4ac6d1b4344d4296e8c91668d9c62bc352869ce8636f4d2c54f42612bf118a3d",
+  "prerequisite": {
+    "dir": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-mutations-transfer-LuHPcD",
+    "completionSHA": "06dd50c3bf7d995758b16e6d49af9eb10406d78c6ded7c70d4418d5895dcb234",
+    "verified": 6,
+    "logFiles": 18,
+    "phase": "transfer"
+  },
+  "files": [
+    {
+      "file": "tests/expansion-apply-batch.test.ts",
+      "before": "b88065bfeeeba0bc6a2391b88f336c66829d796bf9db259b80353c708502bee0",
+      "after": "bcbe4a6111c1ba2e7d30d2de1834910f19adc0ad7ce6d4d12060c90b469df6f5"
+    },
+    {
+      "file": "tests/expansion-apply-templates.test.ts",
+      "before": "c3fa72a4020d1986c003f22fd95a6ac6b70b13353c90a0bb3c7ec5757a0850a5",
+      "after": "a590852fd6258fb798e7781131a6e07307049e3c0b6b093cf658a041bb6b77d4"
+    },
+    {
+      "file": "tests/admin-product-category-write-policy.test.ts",
+      "before": "d514f46097b447fe1b5dcbd3b295278faef6171b913a67984a72d56671f0ad9d",
+      "after": "d514f46097b447fe1b5dcbd3b295278faef6171b913a67984a72d56671f0ad9d"
+    },
+    {
+      "file": "tests/admin-product-support-specs.test.ts",
+      "before": "0a699fb0d2bc8dc18029e9cdc870fd99c296525f3247c89bc944a5f2af0ec7e8",
+      "after": "0a699fb0d2bc8dc18029e9cdc870fd99c296525f3247c89bc944a5f2af0ec7e8"
+    },
+    {
+      "file": "tests/catalog-authority-historical-repair-migration.test.ts",
+      "before": "fe9ad82db99a589fdd2efd8a616303a06a7ee1cb6ff98943765d599f80b34182",
+      "after": "fe9ad82db99a589fdd2efd8a616303a06a7ee1cb6ff98943765d599f80b34182"
+    },
+    {
+      "file": "tests/catalog-authority-legacy-sync-retirement-migration.test.ts",
+      "before": "8d275f1272daeae6368df33db91edb717dbe0e3d09ce1cdb655aa275b932789b",
+      "after": "8d275f1272daeae6368df33db91edb717dbe0e3d09ce1cdb655aa275b932789b"
+    },
+    {
+      "file": "tests/catalog-authority-lifecycle-repair.test.ts",
+      "before": "6d39e19cf0bcd141b8d331825d95d809d8bfdf47ff2c1dc06aeb9b81921f11d9",
+      "after": "6d39e19cf0bcd141b8d331825d95d809d8bfdf47ff2c1dc06aeb9b81921f11d9"
+    },
+    {
+      "file": "tests/catalog-authority-product-spec-relationship-verification.test.ts",
+      "before": "ea17f620d4a5eee9c4c4dea903d155982f1ac64da19d231dc1e48a1360b78309",
+      "after": "ea17f620d4a5eee9c4c4dea903d155982f1ac64da19d231dc1e48a1360b78309"
+    },
+    {
+      "file": "tests/catalog-authority-relationship-convergence-migration.test.ts",
+      "before": "60e55dba47fc6cf284c8dec4af3dea6f36e635465ded021d00294f6653bb9b05",
+      "after": "60e55dba47fc6cf284c8dec4af3dea6f36e635465ded021d00294f6653bb9b05"
+    },
+    {
+      "file": "tests/catalog-authority-repair.test.ts",
+      "before": "122cb85071c3d033e087698fed73b50d62bdb72a19d64bec5aabc1041f8be27e",
+      "after": "122cb85071c3d033e087698fed73b50d62bdb72a19d64bec5aabc1041f8be27e"
+    },
+    {
+      "file": "tests/catalog-authority-schema-foundations-migration.test.ts",
+      "before": "38c4775d77780e01c516e60bf2e7ec7678a9941fb7b425b0f3bfe3ef840302d4",
+      "after": "38c4775d77780e01c516e60bf2e7ec7678a9941fb7b425b0f3bfe3ef840302d4"
+    },
+    {
+      "file": "tests/catalog-apply-executor-hardening-postgres.test.ts",
+      "before": "1d3ebeb58c69d1822e05dc192d278eb03ffe5c9d05671b3c5a8108b70ab1ca49",
+      "after": "1d3ebeb58c69d1822e05dc192d278eb03ffe5c9d05671b3c5a8108b70ab1ca49"
+    },
+    {
+      "file": "tests/product-identifier-global-ownership-migration.test.ts",
+      "before": "b31189e4db4f3a4be4092aa308239377b0cc5948c84e746804bf67d42e0b7d15",
+      "after": "b31189e4db4f3a4be4092aa308239377b0cc5948c84e746804bf67d42e0b7d15"
+    },
+    {
+      "file": "tests/audit-product-metadata-script.test.ts",
+      "before": "e5512246eb5bd26b0a50c5fd44cfc9c1030c38a8fb0aa3a38766df22745d268c",
+      "after": "e5512246eb5bd26b0a50c5fd44cfc9c1030c38a8fb0aa3a38766df22745d268c"
+    },
+    {
+      "file": "tests/product-metadata-health.test.ts",
+      "before": "a7901948598a66553af2ce65ca81076c8b11fcab46a5d34eb3b9bdadfce4c5eb",
+      "after": "a7901948598a66553af2ce65ca81076c8b11fcab46a5d34eb3b9bdadfce4c5eb"
+    },
+    {
+      "file": "tests/product-metadata-ingest-identity.test.ts",
+      "before": "b7eef8effe81bdafa8c0101eae8184242ae781a9eb98b7cfd842cefda4cd9635",
+      "after": "b7eef8effe81bdafa8c0101eae8184242ae781a9eb98b7cfd842cefda4cd9635"
+    }
+  ]
+}

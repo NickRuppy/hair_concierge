@@ -1,0 +1,490 @@
+TAP version 13
+# Subtest: admin product edits allow aliases of the same canonical category
+ok 1 - admin product edits allow aliases of the same canonical category
+  ---
+  duration_ms: 1.250917
+  ...
+# Subtest: admin product edits reject category changes and unresolved legacy values
+ok 2 - admin product edits reject category changes and unresolved legacy values
+  ---
+  duration_ms: 0.133875
+  ...
+# Subtest: product schema accepts bondbuilder support specs
+ok 3 - product schema accepts bondbuilder support specs
+  ---
+  duration_ms: 2.229417
+  ...
+# Subtest: product schema accepts canonical leave-in fit specs
+ok 4 - product schema accepts canonical leave-in fit specs
+  ---
+  duration_ms: 0.432166
+  ...
+# Subtest: product schema accepts engine-native mask specs
+ok 5 - product schema accepts engine-native mask specs
+  ---
+  duration_ms: 0.265667
+  ...
+# Subtest: product schema preserves purchase-link health fields without category specs
+ok 6 - product schema preserves purchase-link health fields without category specs
+  ---
+  duration_ms: 0.15525
+  ...
+# Subtest: product schema rejects missing and unmapped catalogue categories
+ok 7 - product schema rejects missing and unmapped catalogue categories
+  ---
+  duration_ms: 0.568458
+  ...
+# Subtest: product schema requires deep-cleansing specs for deep-cleansing products
+ok 8 - product schema requires deep-cleansing specs for deep-cleansing products
+  ---
+  duration_ms: 0.132833
+  ...
+# Subtest: product schema rejects incomplete deep-cleansing specs to preserve fit metadata
+ok 9 - product schema rejects incomplete deep-cleansing specs to preserve fit metadata
+  ---
+  duration_ms: 0.720208
+  ...
+# Subtest: product schema accepts complete deep-cleansing reset specs
+ok 10 - product schema accepts complete deep-cleansing reset specs
+  ---
+  duration_ms: 0.93675
+  ...
+# Subtest: product schema restricts dry shampoo to supported bridge spec fields
+ok 11 - product schema restricts dry shampoo to supported bridge spec fields
+  ---
+  duration_ms: 0.3025
+  ...
+# Subtest: product schema accepts peeling specs with canonical peeling type
+ok 12 - product schema accepts peeling specs with canonical peeling type
+  ---
+  duration_ms: 0.222542
+  ...
+# Subtest: product schema rejects profile-only concerns on products
+ok 13 - product schema rejects profile-only concerns on products
+  ---
+  duration_ms: 0.29475
+  ...
+# Subtest: product schema allows tangling on leave-in but not on shampoo
+ok 14 - product schema allows tangling on leave-in but not on shampoo
+  ---
+  duration_ms: 0.165167
+  ...
+# Subtest: product schema allows dryness on shampoo
+ok 15 - product schema allows dryness on shampoo
+  ---
+  duration_ms: 0.056
+  ...
+# Subtest: checkStoredLinkBuyability returns unavailable for missing or unusable links
+ok 16 - checkStoredLinkBuyability returns unavailable for missing or unusable links
+  ---
+  duration_ms: 0.1245
+  ...
+# Subtest: checkStoredLinkBuyability classifies known retailer content
+ok 17 - checkStoredLinkBuyability classifies known retailer content
+  ---
+  duration_ms: 8.296167
+  ...
+# Subtest: checkStoredLinkBuyability lets unavailable dm text win over cart markup
+ok 18 - checkStoredLinkBuyability lets unavailable dm text win over cart markup
+  ---
+  duration_ms: 0.470917
+  ...
+# Subtest: checkStoredLinkBuyability lets unavailable Mueller text win over cart markup
+ok 19 - checkStoredLinkBuyability lets unavailable Mueller text win over cart markup
+  ---
+  duration_ms: 0.749166
+  ...
+# Subtest: checkStoredLinkBuyability lets generic unavailable Rossmann text win over cart markup
+ok 20 - checkStoredLinkBuyability lets generic unavailable Rossmann text win over cart markup
+  ---
+  duration_ms: 0.214583
+  ...
+# Subtest: checkStoredLinkBuyability returns manual-review null for inconclusive fetch results
+ok 21 - checkStoredLinkBuyability returns manual-review null for inconclusive fetch results
+  ---
+  duration_ms: 0.21925
+  ...
+# Subtest: the migration's inventory is every reviewer-gated apply executor not already hardened
+ok 22 - the migration's inventory is every reviewer-gated apply executor not already hardened
+  ---
+  duration_ms: 51.005542
+  ...
+# Subtest: the rebuilt pre-hardening definitions are exactly production's
+ok 23 - the rebuilt pre-hardening definitions are exactly production's
+  ---
+  duration_ms: 872.70075
+  ...
+# Subtest: the whole migration applies, and each body changes only by its listed edits
+ok 24 - the whole migration applies, and each body changes only by its listed edits
+  ---
+  duration_ms: 667.284875
+  ...
+# Subtest: every patched executor takes the shared lock first and has no NULL-unsafe argument guard
+ok 25 - every patched executor takes the shared lock first and has no NULL-unsafe argument guard
+  ---
+  duration_ms: 571.298667
+  ...
+# Subtest: historical repair migration exists
+ok 26 - historical repair migration exists
+  ---
+  duration_ms: 0.074875
+  ...
+# Subtest: Leave-in shared semantics are canonical and legacy parity fails closed
+ok 27 - Leave-in shared semantics are canonical and legacy parity fails closed
+  ---
+  duration_ms: 0.200958
+  ...
+# Subtest: contextual eligibility foreign keys receive demonstrated supporting indexes
+ok 28 - contextual eligibility foreign keys receive demonstrated supporting indexes
+  ---
+  duration_ms: 0.128
+  ...
+# Subtest: constraint validation remains gated on clean reviewed repair receipts
+ok 29 - constraint validation remains gated on clean reviewed repair receipts
+  ---
+  duration_ms: 0.082084
+  ...
+# Subtest: new writes cannot create contradictory recommendation lifecycle state
+ok 30 - new writes cannot create contradictory recommendation lifecycle state
+  ---
+  duration_ms: 0.07725
+  ...
+# Subtest: every destructive legacy-derivation trigger and function is retired
+ok 31 - every destructive legacy-derivation trigger and function is retired
+  ---
+  duration_ms: 0.171125
+  ...
+# Subtest: the Neqi legacy projection sync is guarded and asserts canonical safety
+ok 32 - the Neqi legacy projection sync is guarded and asserts canonical safety
+  ---
+  duration_ms: 0.090209
+  ...
+# Subtest: deferred constraints are validated and category identity becomes a column contract
+ok 33 - deferred constraints are validated and category identity becomes a column contract
+  ---
+  duration_ms: 0.089
+  ...
+# Subtest: the schema contract matches the migration outcome
+ok 34 - the schema contract matches the migration outcome
+  ---
+  duration_ms: 0.062291
+  ...
+# Subtest: lifecycle repair preflight pins every approved source row
+ok 35 - lifecycle repair preflight pins every approved source row
+  ---
+  duration_ms: 0.085
+  ...
+# Subtest: lifecycle repair is one guarded transaction with bounded table writes
+ok 36 - lifecycle repair is one guarded transaction with bounded table writes
+  ---
+  duration_ms: 0.323208
+  ...
+# Subtest: relationship verification requires an explicit matching non-production project
+ok 37 - relationship verification requires an explicit matching non-production project
+  ---
+  duration_ms: 0.254958
+  ...
+# Subtest: relationship verification requires representative rows with exact embed cardinality
+ok 38 - relationship verification requires representative rows with exact embed cardinality
+  ---
+  duration_ms: 0.143667
+  ...
+# Subtest: relationship convergence validates every composite FK before removing its legacy FK
+ok 39 - relationship convergence validates every composite FK before removing its legacy FK
+  ---
+  duration_ms: 0.514625
+  ...
+# Subtest: schema receipt inspects the exact redundant relationship names
+ok 40 - schema receipt inspects the exact redundant relationship names
+  ---
+  duration_ms: 0.17975
+  ...
+# Subtest: an approved repair is bound to its reviewed content and current authority fingerprint
+ok 41 - an approved repair is bound to its reviewed content and current authority fingerprint
+  ---
+  duration_ms: 2.238208
+  ...
+# Subtest: review becomes stale when intended authority changes
+ok 42 - review becomes stale when intended authority changes
+  ---
+  duration_ms: 0.174917
+  ...
+# Subtest: duplicate products and missing current authority stop the whole slice
+ok 43 - duplicate products and missing current authority stop the whole slice
+  ---
+  duration_ms: 0.483125
+  ...
+# Subtest: draft or partially reviewed manifests cannot execute
+ok 44 - draft or partially reviewed manifests cannot execute
+  ---
+  duration_ms: 0.107625
+  ...
+# Subtest: category-bounded slices reject entries from another repair lane
+ok 45 - category-bounded slices reject entries from another repair lane
+  ---
+  duration_ms: 0.104208
+  ...
+# Subtest: value fingerprints are stable across key insertion order
+ok 46 - value fingerprints are stable across key insertion order
+  ---
+  duration_ms: 0.041917
+  ...
+# Subtest: unicode-equivalent but distinct keys produce distinct fingerprints in any order
+ok 47 - unicode-equivalent but distinct keys produce distinct fingerprints in any order
+  ---
+  duration_ms: 0.066958
+  ...
+# Subtest: fingerprinting rejects values JSON would silently coerce
+ok 48 - fingerprinting rejects values JSON would silently coerce
+  ---
+  duration_ms: 0.084917
+  ...
+# Subtest: manifest entries reject non-JSON intended authority values
+ok 49 - manifest entries reject non-JSON intended authority values
+  ---
+  duration_ms: 0.558166
+  ...
+# Subtest: explicit expected current authority is fingerprint-bound before approval can execute
+ok 50 - explicit expected current authority is fingerprint-bound before approval can execute
+  ---
+  duration_ms: 0.294333
+  ...
+# Subtest: migration creates normalized service-only eligibility relations
+ok 51 - migration creates normalized service-only eligibility relations
+  ---
+  duration_ms: 0.733416
+  ...
+# Subtest: migration backfills eligibility idempotently from legacy arrays and category-valid tuples
+ok 52 - migration backfills eligibility idempotently from legacy arrays and category-valid tuples
+  ---
+  duration_ms: 0.404125
+  ...
+# Subtest: migration establishes the product spine keys in expand-before-validate order
+ok 53 - migration establishes the product spine keys in expand-before-validate order
+  ---
+  duration_ms: 0.150584
+  ...
+# Subtest: every category fact table carries constant identity and an unvalidated composite FK
+ok 54 - every category fact table carries constant identity and an unvalidated composite FK
+  ---
+  duration_ms: 3.462291
+  ...
+# Subtest: the schema receipt inspects supporting indexes and both eligibility FK layers
+ok 55 - the schema receipt inspects supporting indexes and both eligibility FK layers
+  ---
+  duration_ms: 0.035833
+  ...
+# Subtest: exact protocols assert their indexed category against product identity
+ok 56 - exact protocols assert their indexed category against product identity
+  ---
+  duration_ms: 0.216917
+  ...
+# Subtest: contextual thickness rows reference normalized eligibility without validating historical debt
+ok 57 - contextual thickness rows reference normalized eligibility without validating historical debt
+  ---
+  duration_ms: 0.96675
+  ...
+# Subtest: expand-phase compatibility keeps existing product and contextual writers valid
+ok 58 - expand-phase compatibility keeps existing product and contextual writers valid
+  ---
+  duration_ms: 1.82875
+  ...
+# Subtest: the reviewed mask manifest parks only its excluded-identifier product
+ok 59 - the reviewed mask manifest parks only its excluded-identifier product
+  ---
+  duration_ms: 18.273667
+  ...
+# Subtest: a deviation-flagged protocol parks the product for Nick's review (R4/F-06)
+ok 60 - a deviation-flagged protocol parks the product for Nick's review (R4/F-06)
+  ---
+  duration_ms: 7.579833
+  ...
+# Subtest: a product without a finalized own-bucket image is parked, not published (R5/T4b)
+ok 61 - a product without a finalized own-bucket image is parked, not published (R5/T4b)
+  ---
+  duration_ms: 3.8895
+  ...
+# Subtest: a product with no operator supplement is parked with a named gap
+ok 62 - a product with no operator supplement is parked with a named gap
+  ---
+  duration_ms: 3.594833
+  ...
+# Subtest: evidence with no quote anywhere is parked — a source text is never invented
+ok 63 - evidence with no quote anywhere is parked — a source text is never invented
+  ---
+  duration_ms: 2.701083
+  ...
+# Subtest: the manifest's own evidence source_text wins over every fallback
+ok 64 - the manifest's own evidence source_text wins over every fallback
+  ---
+  duration_ms: 4.075
+  ...
+# Subtest: a manifest quote rescues a product the operator supplement would have parked
+ok 65 - a manifest quote rescues a product the operator supplement would have parked
+  ---
+  duration_ms: 6.452542
+  ...
+# Subtest: an existing-product update whose target is quarantined is parked (disposition guard)
+ok 66 - an existing-product update whose target is quarantined is parked (disposition guard)
+  ---
+  duration_ms: 0.865583
+  ...
+# Subtest: a canonical GTIN already owned by another product parks the item
+ok 67 - a canonical GTIN already owned by another product parks the item
+  ---
+  duration_ms: 3.461541
+  ...
+# Subtest: an active product with the same brand+name parks the item as an identity collision (F-09)
+ok 68 - an active product with the same brand+name parks the item as an identity collision (F-09)
+  ---
+  duration_ms: 4.323291
+  ...
+# Subtest: an oil product's non-mask protocols stamp instead of parking (B1)
+ok 69 - an oil product's non-mask protocols stamp instead of parking (B1)
+  ---
+  duration_ms: 5.548083
+  ...
+# Subtest: a stray mask wait copy in the supplement cannot break a non-mask stamp (B1)
+ok 70 - a stray mask wait copy in the supplement cannot break a non-mask stamp (B1)
+  ---
+  duration_ms: 7.308041
+  ...
+# Subtest: a leave-in product's TPL-LEAVEIN-DAMP protocol stamps instead of parking (B1)
+ok 71 - a leave-in product's TPL-LEAVEIN-DAMP protocol stamps instead of parking (B1)
+  ---
+  duration_ms: 7.922
+  ...
+# Subtest: the apply gate opens only when the switch is armed on the exact reviewed head
+ok 72 - the apply gate opens only when the switch is armed on the exact reviewed head
+  ---
+  duration_ms: 0.076208
+  ...
+# Subtest: --confirm alone cannot execute: the environment switch is independent
+ok 73 - --confirm alone cannot execute: the environment switch is independent
+  ---
+  duration_ms: 0.058792
+  ...
+# Subtest: a well-formed but stale --reviewed-head is refused
+ok 74 - a well-formed but stale --reviewed-head is refused
+  ---
+  duration_ms: 0.034
+  ...
+# Subtest: a dirty worktree is refused even on the right head
+ok 75 - a dirty worktree is refused even on the right head
+  ---
+  duration_ms: 0.033
+  ...
+# Subtest: all 11 templates produce a schema-valid, product-scoped V1 guidance payload
+ok 76 - all 11 templates produce a schema-valid, product-scoped V1 guidance payload
+  ---
+  duration_ms: 1.159334
+  ...
+# Subtest: §2.4 column ↔ payload invariants hold for all 11 templates
+ok 77 - §2.4 column ↔ payload invariants hold for all 11 templates
+  ---
+  duration_ms: 0.468625
+  ...
+# Subtest: stamped rows build a V2 pointer whose applicationFamily matches the template map
+ok 78 - stamped rows build a V2 pointer whose applicationFamily matches the template map
+  ---
+  duration_ms: 0.431208
+  ...
+# Subtest: the ruled contact windows survive the V2 builder's German copy parsing (§2.5)
+ok 79 - the ruled contact windows survive the V2 builder's German copy parsing (§2.5)
+  ---
+  duration_ms: 0.317459
+  ...
+# Subtest: TPL-MASK accepts a sourced range/maximum with contactTimeSeconds null
+ok 80 - TPL-MASK accepts a sourced range/maximum with contactTimeSeconds null
+  ---
+  duration_ms: 0.37475
+  ...
+# Subtest: heat templates switch family/stage/state on the researched damp-or-dry fact (P9)
+ok 81 - heat templates switch family/stage/state on the researched damp-or-dry fact (P9)
+  ---
+  duration_ms: 0.152917
+  ...
+# Subtest: missing or invalid required per-product slots throw
+ok 82 - missing or invalid required per-product slots throw
+  ---
+  duration_ms: 0.352458
+  ...
+# Subtest: unknown template ids throw instead of silently stamping nothing
+ok 83 - unknown template ids throw instead of silently stamping nothing
+  ---
+  duration_ms: 0.042792
+  ...
+# Subtest: GTIN expand migration adds checksum canonicalization and keeps invalid legacy rows outside canonical ownership
+ok 84 - GTIN expand migration adds checksum canonicalization and keeps invalid legacy rows outside canonical ownership
+  ---
+  duration_ms: 0.100042
+  ...
+# Subtest: GTIN writer migration preflights inactive canonical owners before approval or link-existing transitions
+ok 85 - GTIN writer migration preflights inactive canonical owners before approval or link-existing transitions
+  ---
+  duration_ms: 0.109667
+  ...
+# Subtest: GTIN writer migration retires legacy Heat and Scalp executor replay
+ok 86 - GTIN writer migration retires legacy Heat and Scalp executor replay
+  ---
+  duration_ms: 0.081792
+  ...
+# Subtest: GTIN invariant migration blocks duplicate valid ownership before creating the partial unique index
+ok 87 - GTIN invariant migration blocks duplicate valid ownership before creating the partial unique index
+  ---
+  duration_ms: 0.059833
+  ...
+# Subtest: GTIN migrations execute and enforce canonical ownership in Postgres
+ok 88 - GTIN migrations execute and enforce canonical ownership in Postgres
+  ---
+  duration_ms: 376.953041
+  ...
+# Subtest: hasSuspiciousNameMarker flags catalog footnote markers
+ok 89 - hasSuspiciousNameMarker flags catalog footnote markers
+  ---
+  duration_ms: 0.085917
+  ...
+# Subtest: numericPrice handles number, comma decimal, and empty values
+ok 90 - numericPrice handles number, comma decimal, and empty values
+  ---
+  duration_ms: 0.055833
+  ...
+# Subtest: auditProductMetadata reports known metadata issues
+ok 91 - auditProductMetadata reports known metadata issues
+  ---
+  duration_ms: 0.2205
+  ...
+# Subtest: hasStalePrice flags watched price deltas above the expected maximum
+ok 92 - hasStalePrice flags watched price deltas above the expected maximum
+  ---
+  duration_ms: 0.039666
+  ...
+# Subtest: resolveProductIdentity fails closed when explicit id is missing
+ok 93 - resolveProductIdentity fails closed when explicit id is missing
+  ---
+  duration_ms: 0.101
+  ...
+# Subtest: resolveProductIdentity fails closed when alias points to a missing row
+ok 94 - resolveProductIdentity fails closed when alias points to a missing row
+  ---
+  duration_ms: 0.092125
+  ...
+# Subtest: resolveProductIdentity falls back to name/category when no explicit id or alias exists
+ok 95 - resolveProductIdentity falls back to name/category when no explicit id or alias exists
+  ---
+  duration_ms: 0.046084
+  ...
+# Subtest: mergeCommercialFields preserves existing commercial fields unless force overwrite is set
+ok 96 - mergeCommercialFields preserves existing commercial fields unless force overwrite is set
+  ---
+  duration_ms: 0.060166
+  ...
+1..96
+# tests 96
+# suites 0
+# pass 96
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4237.59275

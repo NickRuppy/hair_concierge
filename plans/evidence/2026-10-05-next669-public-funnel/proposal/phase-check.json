@@ -1,0 +1,24 @@
+{
+  "status": "PASS_STATIC_ONLY",
+  "counts": {
+    "before": {
+      "declarations": 66,
+      "native": 79
+    },
+    "transfer": {
+      "declarations": 66,
+      "native": 79
+    },
+    "cut": {
+      "declarations": 63,
+      "native": 74
+    }
+  },
+  "unrelatedCallbacksByteExact": 60,
+  "phaseFiles": 36,
+  "tableRowsAdded": 0,
+  "testsExecuted": 0,
+  "ownerImports": 0,
+  "repositoryWrites": 0,
+  "limits": "TypeScript createSourceFile only; no test/native execution or type checking."
+}

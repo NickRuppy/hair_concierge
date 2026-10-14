@@ -1,0 +1,286 @@
+{
+ "blindId": "VT18",
+ "inciFingerprintSha256": "b0e2b65b9820cb98896157e9be265a953e96246e26b6ba348e8e062356d040ec",
+ "phase": "formula-pass (blind, claims hidden)",
+ "lane": "lane-a",
+ "standard": "lane copy of candidate shampoo-classification-v1.6.1 (not locked)",
+ "identity": {
+  "packSize": "250 ml",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "moderate",
+  "normalizationNote": "Packet entries already merge split synonyms (ID-2); every position cited is the normalized one-based position, identical to the packet index + 1.",
+  "inciCount": 27
+ },
+ "formulaFacts": {
+  "e3Point": {
+   "position": 17,
+   "inci": "Fragrance (Parfum)"
+  },
+  "surfactants": [
+   {
+    "inci": "Sodium Coco-Sulfate",
+    "position": 2,
+    "class": "strong anionic, alkyl sulfate type (defining anionic)",
+    "prominent": true
+   },
+   {
+    "inci": "Babassuamidopropyl Betaine",
+    "position": 4,
+    "class": "amphoteric (buffer)",
+    "prominent": true
+   },
+   {
+    "inci": "Cocamidopropylamine Oxide",
+    "position": 16,
+    "class": "amphoteric, buffer only (C3b)",
+    "prominent": true
+   }
+  ],
+  "conditioningRoutes": {
+   "payload_lipid": [
+    "Helianthus Annuus (Sunflower) Seed Oil@6"
+   ],
+   "cationic_conditioner": [
+    "Stearamidopropyl Dimethylamine@10"
+   ],
+   "cationic_polymer": [
+    "Polyquaternium-4@12"
+   ],
+   "silicone": [],
+   "pearlizing_fatty_route": [],
+   "humectants": [
+    "Glycerin@3"
+   ]
+  },
+  "actives": [
+   "Menthol@8",
+   "Camphor@9",
+   "Mentha Piperita (Peppermint) Oil@7",
+   "Rosmarinus Officinalis (Rosemary) Leaf Extract@5",
+   "Vinegar/Acetum/Vinaigre@13"
+  ],
+  "scalpRelevant": {
+   "e4ComfortRoutesProminent": [],
+   "e4HumectantRefattingProminent": [
+    "Glycerin@3",
+    "Helianthus Annuus (Sunflower) Seed Oil@6"
+   ],
+   "coolingAgents": [
+    "Mentha Piperita (Peppermint) Oil@7",
+    "Menthol@8",
+    "Camphor@9 (all prominent)"
+   ],
+   "essentialOilsOrAllergens": [
+    "Mentha Piperita (Peppermint) Oil@7 (prominent)",
+    "Linalool@18",
+    "Limonene@19",
+    "Pinene@20",
+    "Carvone@21",
+    "Beta-Caryophyllene@22",
+    "Terpineol@23",
+    "Linalyl Acetate@24"
+   ],
+   "recognizedDandruffActives": []
+  },
+  "preservatives": [
+   "Benzoic Acid@25",
+   "Phenoxyethanol@26",
+   "Sodium Benzoate@27"
+  ],
+  "chelators": [
+   "Sodium Gluconate@11"
+  ]
+ },
+ "wLine": {
+  "wLine": {
+   "position": 17,
+   "inci": "Fragrance (Parfum)",
+   "classes": [
+    "fragrance"
+   ]
+  },
+  "cap": {
+   "e3Point": 17
+  },
+  "alphabeticalRun": null,
+  "skipped": [],
+  "codes": [],
+  "payloadLipidMaterial": [
+   "Helianthus Annuus (Sunflower) Seed Oil@6"
+  ],
+  "payloadLipidNonMaterial": [],
+  "derivation": "No class a/b/c candidate precedes the E3 marker (Menthol, Camphor and essential oils are not on the closed lists; Linalool/Limonene follow the cap); no alphabetical run. The marker Fragrance (Parfum)@17 is itself a class a candidate: (i) Sodium Coco-Sulfate@2 before it; (ii) nothing between it and the cap -> W-line = cap = 17, no fallback code."
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "strong",
+   "rationale": "moderate by C5: the defining anionic is Sodium Coco-Sulfate@2 (alkyl sulfate type) with two prominent buffers (Babassuamidopropyl Betaine@4, Cocamidopropylamine Oxide@16) and no reinforcing strong anionic. C3b: Cocamidopropylamine Oxide is the buffer that brings C5 down to moderate (with one buffer C5 yields strong), so confidence is at most moderate and the neighbor is strong.",
+   "ruleIds": [
+    "C3",
+    "C3b",
+    "C4",
+    "C5",
+    "N-ALT"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "moderate: one meaningful system - the cationic conditioner Stearamidopropyl Dimethylamine@10 with Polyquaternium-4@12 - plus the prominent liquid oil Sunflower Seed Oil@6 and Glycerin@3. C2 is not met: no silicone (the oil may take its place) but no pearlizing/fatty route. Counter-signal: Polyquaternium-4 is a low-substantivity polymer and the chassis is cleansing-led (sulfate, essential oils, vinegar); low and high are not equally realistic - low is the realistic neighbor (and the lower value per N-ALT tie rule).",
+   "ruleIds": [
+    "C2",
+    "5",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "high",
+   "rationale": "moderate: W-RICH is established (material Sunflower Seed Oil@6, before the W-line Fragrance@17, converging with cationic deposition Stearamidopropyl Dimethylamine@10 / Polyquaternium-4@12), but the C5 sodium coco-sulfate chassis gives moderate reset, so the rich route does not reach high; the convergence route is not convincingly met because the routes are light (liquid oil, low-charge PQ-4). W-RICH recorded as counter-signal, high as neighbor.",
+   "ruleIds": [
+    "6.6",
+    "6.7",
+    "W-RICH",
+    "W-LINE",
+    "W2",
+    "N-ALT"
+   ],
+   "evidence": {
+    "cationic_polymer": [
+     "Polyquaternium-4@12"
+    ],
+    "payload_lipid": [
+     "Helianthus Annuus (Sunflower) Seed Oil@6 (material, liquid oil)"
+    ],
+    "weak_refatter": [],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [
+     "Stearamidopropyl Dimethylamine@10"
+    ],
+    "reset": [
+     "Sodium Coco-Sulfate@2 (strong anionic, alkyl sulfate)",
+     "Babassuamidopropyl Betaine@4 (amphoteric buffer)",
+     "Cocamidopropylamine Oxide@16 (C3b buffer only)"
+    ],
+    "humectantContext": [
+     "Glycerin@3"
+    ],
+    "excluded": [
+     "Mentha Piperita (Peppermint) Oil@7 (essential oil, 6.4)",
+     "Menthol@8, Camphor@9 (cooling/fragrance materials)",
+     "Rosmarinus Officinalis Leaf Extract@5 (botanical extract)",
+     "Vinegar@13, Citric Acid@15 (acids)",
+     "terpene allergens @18-24 (fragrance)"
+    ],
+    "unresolved": []
+   },
+   "depositionLoad": "moderate",
+   "persistence": "moderate",
+   "resetCapacity": "moderate",
+   "counterevidence": "Three deposition families (payload_lipid, cationic_conditioner, cationic_polymer) and W-RICH are present; the amidoamine conditioner is a genuinely substantive cationic.",
+   "whyThisBand": "An amidoamine conditioner plus a prominent oil plausibly leaves bounded residue (not lightweight), but an alkyl-sulfate chassis with buffers resets it and no silicone or waxy lipid is present.",
+   "whyNotNeighborBand": "high needs W-RICH with weak reset or converging persistent systems that reset does not offset; reset is moderate (alkyl sulfate) and the converging routes are light (liquid oil, PQ-4).",
+   "confidenceLimitingFactor": "W-RICH is formally present; the oil and amidoamine levels are unknown and could move the band to high."
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "low",
+   "neighboringAlternative": "clarifying",
+   "rationale": "PROVISIONAL (formula-only, claims hidden): general. No claim direction is visible in the blind pass, so no specialist focus has a claim-plus-formula case yet (7.2 \"unsupported/generic claims\"). Formula care-direction verdict recorded for reconciliation: nonspecific. Formula compatible with clarifying (F6: cleansing moderate, conditioning not high, weight not high) should an oily/reset claim appear.",
+   "ruleIds": [
+    "3.1",
+    "7.2",
+    "7.3",
+    "F1",
+    "N-ALT"
+   ],
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "Glycerin@3",
+     "Helianthus Annuus (Sunflower) Seed Oil@6"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Stearamidopropyl Dimethylamine@10",
+     "Polyquaternium-4@12"
+    ],
+    "limitation": "Light generic conditioning; the formula is cleansing- and cooling-led (peppermint, menthol, camphor, vinegar)."
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Claims hidden; the provisional value can change only through 3.2 reconciliation.",
+   "decisionTrace": "Claim direction: null (blind). Formula compatible: n/a until a claim names a job. Decision: provisional general."
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "low",
+   "neighboringAlternative": [
+    "clarifying"
+   ],
+   "decisionTrace": "Empty default considered and kept: no exact-product positioning is visible in the blind pass (Section 8 condition 1 cannot be met).",
+   "rationale": "PROVISIONAL (formula-only): []. Secondary focus requires distinct exact-product positioning, hidden in the blind pass.",
+   "ruleIds": [
+    "3.1",
+    "8",
+    "F3",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "low",
+   "neighboringAlternative": "frequent",
+   "rationale": "PROVISIONAL (formula-only): regular, the default (Section 9). Every non-default trigger needs a moderate/high-graded claim or direction (CL-SRC), hidden in the blind pass. alternating impossible while cleansingStrength is moderate; treatment impossible (no active).",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "CL-SRC",
+    "N-ALT"
+   ],
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": []
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "low",
+   "neighboringAlternative": "targeted",
+   "rationale": "PROVISIONAL (formula-only): not_targeted, because SC1 positioning (an E2 sensitive/dry claim unit graded moderate/high) cannot be seen in the blind pass. Formula half (CSA) recorded for reconciliation: CSA would pass only through the humectant/refatting list (Glycerin@3, Sunflower Seed Oil@6 prominent); no E4 comfort route. Counter-signals: prominent cooling agents and essential oil (Peppermint Oil@7, Menthol@8, Camphor@9); declared Fragrance@17 with terpenes.",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "SC1",
+    "E3",
+    "E4",
+    "N-ALT"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "not_supported: the complete INCI contains none of Piroctone Olamine, Climbazole, Selenium Sulfide or Selenium Disulfide (Section 11 table). Formula complete per packet (ID-1).",
+   "ruleIds": [
+    "11",
+    "DS1",
+    "ID-1",
+    "N-ALT"
+   ]
+  }
+ },
+ "unresolvedMaterialIngredients": [],
+ "provisionalNotes": [
+  "Packet identity confidence is moderate (formula complete, tier 2).",
+  "focusPrimary, focusSecondary, usageRole and scalpComfortTarget are claim-dependent and provisional (formula-only)."
+ ]
+}

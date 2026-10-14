@@ -1,0 +1,41 @@
+{
+  "phase": "transfer",
+  "controls": [
+    "C1",
+    "C2",
+    "C3",
+    "C4",
+    "C5"
+  ],
+  "originalHashes": {
+    "tests/discovery-call-toolkit-migration.test.ts": "1ee51c75306d8775ff4cee05dd02b3852da087b14c6a425dce4b70ac28946abf",
+    "tests/discovery-call-tracking.test.ts": "9c3ea13ed20f209f05bc169eb41a28e16b705a86ea79fb9854ec2f68373b0099",
+    "tests/discovery-checklist-categories.test.tsx": "bc5834985d03ee1835737c3287af4f329ff59d6e5d24f5565667098da298569f",
+    "tests/discovery-checklist-projection.test.ts": "b8c7060865a6e50ff49cd8ce318e973f7424c15e9fa79a841cdf0d097b21ee4b",
+    "tests/discovery-cockpit-complexity-dom.test.tsx": "8d5b43ccf7a711bf8c866a19b00294f55b2897c06b7eac1f95f8f1d5032855cd",
+    "tests/discovery-cockpit-depth.test.ts": "41ea1bfde884c29a287dd497cb76a8e9f70c4316db8ea55a6b3e91929436d6b3",
+    "tests/discovery-enrollment-optional-email-migration.test.ts": "5632475e27c720306b3e899e54f8166f1ab61bb74111c47175ca243cf13bc41b",
+    "tests/discovery-frequency.test.ts": "b2d14aeccd279edbec7d90bd4cf9e8d8ed16c827a0284f3940d2ce2fb0c68a39",
+    "tests/discovery-heat-flow.test.ts": "117f0297375f6073bba712fedc432e5f6dbebd0fc3858df1bdd59f6513ef515a",
+    "tests/discovery-heat-styling.test.ts": "10e30cbd1d7485fc393d4cad449101fd581451a665b86da1fe4cba3914518286",
+    "tests/discovery-intake-item-image.test.tsx": "fe2662597e5e5e7af21af338f2cbdd6fafd6431597fa28d5d8523ed5e18920da",
+    "tests/discovery-middleware-gate.test.ts": "da83933377ce4bf204795e1d58e837d105e9df8ab520386076bbfc294f6dee70",
+    "tests/discovery-participant-routing.test.ts": "b3d1dd51358ae192f933baf5a8dc77c0d753c5084af04aa5c787a68434af4d04",
+    "tests/discovery-product-label.test.ts": "1587b2aa9cc8a22ce8a1963aa836cfdd9416eb6fcfc6e547965cb955b7e60473",
+    "tests/discovery-products-loading.test.tsx": "cc8b83d3e6e8d672417d9c04ae868bc89d0f8aeade78cf129fd804cff17086a2",
+    "tests/discovery-quiz-answers.test.ts": "f381faacfaaeec77e6052a7198dcde8b624a372326c17b6d4abb36b5bd0c63ba",
+    "tests/discovery-quiz-identity.test.ts": "8a6275533ad9d6ebd61ba67c4672ad87f2f1c5e711e0166a9b12750e6c920aa3",
+    "tests/discovery-reconcile.test.ts": "bae78027c1ea52bd3523aaac4fcd95c74cfc6f54d4950280ad281bef4eb4cdf9",
+    "tests/discovery-refined-usage.test.ts": "1a4965fd9db1aa6d8aca434bda2de4b65a4ef11fd2c13e29a80d82eb98a26815",
+    "tests/discovery-runsheet-locked-in-dom.test.tsx": "1cf7c86ee20881ff829e4f3941193c24b04f67a0e1e94e2713518eb95f0851f5",
+    "tests/discovery-search-sheet-props.test.tsx": "b9cfcc0d1f2a641d36d249283c2bdc9f0e55970932cc27b39351b5111cf38ea1",
+    "tests/discovery-swap-sort.test.ts": "a4ecc1d9bd281ba636c1c6247dd24cb1cc6f19b31d3b813e1951fcd3a8b767cc",
+    "tests/discovery-unanswered-categories.test.tsx": "0d6adadde489969f63e027e45aa890ccb85805320febd9ffa1b03133bd5c6537",
+    "tests/discovery-call-toolkit-sql-execution.test.ts": "49403f1fd2e947a6c9f0499632674a63c66b6a115c493c5fe706765113aa9bce",
+    "src/app/beratung/produkte/loading.tsx": "740f4a80b796a766d1981dba5dd2b184f5f1ba769ffeee523a93463711347551",
+    "src/components/discovery/cockpit/discovery-call-cockpit.tsx": "2d0adde32589464e10ba2b9a1bb9d13263ca40bbfada8b9d4ab82a1572d68071",
+    "src/lib/discovery/refined-routine.ts": "79a8321c4bb5c53a9594b0664cc708f326bca7ff058c6aeba4faa18cd821ee00",
+    "src/app/admin/beratung/[enrollmentId]/page.tsx": "586f0276c8add490377ab3340ce08c9045ea76b029ea7a07389a82fef0cc7eb5"
+  },
+  "pinsSHA": "3fca83bc5a719ae90107a6ae8408aa2d8f45c511701b31ce2ac5ff279c8efdac"
+}

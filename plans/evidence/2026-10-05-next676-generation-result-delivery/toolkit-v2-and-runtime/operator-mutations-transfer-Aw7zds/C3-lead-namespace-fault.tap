@@ -1,0 +1,30 @@
+TAP version 13
+# Subtest: prepare applies the IP ceiling before journey resolution and persists the browser replay identity
+not ok 1 - prepare applies the IP ceiling before journey resolution and persists the browser replay identity
+  ---
+  duration_ms: 15.94925
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-prepare-route.test.ts:2:5251'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected "actual" to be strictly unequal to:
+    
+    'personal-plan-prepare-ip'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'personal-plan-prepare-ip'
+  actual: 'personal-plan-prepare-ip'
+  operator: 'notStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-prepare-route.test.ts:164:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 850.068916

@@ -1,0 +1,539 @@
+{
+  "scope": [
+    "src",
+    "scripts",
+    "apps",
+    "packages",
+    "docs",
+    "plans",
+    ".github",
+    "supabase"
+  ],
+  "excludedDirectories": [
+    "node_modules",
+    ".next",
+    ".git",
+    "evidence",
+    "receipts",
+    "archive",
+    "dist",
+    "coverage",
+    "test-results"
+  ],
+  "excludedEnvironmentFiles": true,
+  "scannedFileCount": 3448,
+  "inventorySHA": "38c5411daee3f1dfa8a715f5f980da1f835485d868a5c61a288f7a711bbc9b42",
+  "runtimeSymbolHits": [
+    {
+      "file": "src/lib/personal-plan/journey-access-loader.ts",
+      "sha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+      "matches": [
+        {
+          "line": 11,
+          "text": "  canAccessPersonalPlanAppV1Rollout,"
+        },
+        {
+          "line": 16,
+          "text": "  resolvePersonalPlanAppV1Rollout,"
+        },
+        {
+          "line": 17,
+          "text": "  type PersonalPlanAppV1Rollout,"
+        },
+        {
+          "line": 20,
+          "text": "import { isPersonalPlanInternalUser, type PersonalPlanInternalUserClient } from \"./rollout-access\""
+        },
+        {
+          "line": 49,
+          "text": "  appRollout: () => PersonalPlanAppV1Rollout"
+        },
+        {
+          "line": 69,
+          "text": "  loadIsInternal: (userId: string) => Promise<boolean>"
+        },
+        {
+          "line": 205,
+          "text": "  const appRollout = deps.appRollout()"
+        },
+        {
+          "line": 206,
+          "text": "  if (appEnabled && appRollout !== \"all\") {"
+        },
+        {
+          "line": 207,
+          "text": "    const isInternal = appRollout === \"internal\" ? await deps.loadIsInternal(userId) : false"
+        },
+        {
+          "line": 208,
+          "text": "    if (!canAccessPersonalPlanAppV1Rollout({ appEnabled, rollout: appRollout, isInternal })) {"
+        },
+        {
+          "line": 472,
+          "text": "    appRollout: resolvePersonalPlanAppV1Rollout,"
+        },
+        {
+          "line": 590,
+          "text": "    async loadIsInternal(userId) {"
+        },
+        {
+          "line": 591,
+          "text": "      return isPersonalPlanInternalUser(userId, admin as unknown as PersonalPlanInternalUserClient)"
+        }
+      ]
+    },
+    {
+      "file": "src/lib/personal-plan/release.ts",
+      "sha256": "92d24c0e4c010e20e13f75db0c561cf9da8f490a17de4a0e4cbbf10691a8d55c",
+      "matches": [
+        {
+          "line": 3,
+          "text": "  PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS?: string"
+        },
+        {
+          "line": 10,
+          "text": "export type PersonalPlanAppV1Rollout = \"off\" | \"internal\" | \"all\""
+        },
+        {
+          "line": 12,
+          "text": "export function resolvePersonalPlanAppV1Rollout("
+        },
+        {
+          "line": 14,
+          "text": "): PersonalPlanAppV1Rollout {"
+        },
+        {
+          "line": 19,
+          "text": "export function canAccessPersonalPlanAppV1Rollout(input: {"
+        },
+        {
+          "line": 21,
+          "text": "  rollout: PersonalPlanAppV1Rollout"
+        },
+        {
+          "line": 28,
+          "text": "export function resolvePersonalPlanAppV1InternalEmails("
+        },
+        {
+          "line": 32,
+          "text": "    (environment.PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS ?? \"\")"
+        }
+      ]
+    },
+    {
+      "file": "src/lib/personal-plan/rollout-access.ts",
+      "sha256": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+      "matches": [
+        {
+          "line": 7,
+          "text": "import { resolvePersonalPlanAppV1InternalEmails } from \"./release\""
+        },
+        {
+          "line": 9,
+          "text": "export type PersonalPlanInternalUserClient = {"
+        },
+        {
+          "line": 76,
+          "text": "export async function isActivePersonalPlanFieldTestOwner("
+        },
+        {
+          "line": 140,
+          "text": "export async function isPersonalPlanInternalUser("
+        },
+        {
+          "line": 142,
+          "text": "  client: PersonalPlanInternalUserClient,"
+        },
+        {
+          "line": 153,
+          "text": "    await isActivePersonalPlanFieldTestOwner(userId, client as unknown as FieldTestEnrollmentClient)"
+        },
+        {
+          "line": 158,
+          "text": "  const allowedEmails = resolvePersonalPlanAppV1InternalEmails()"
+        },
+        {
+          "line": 168,
+          "text": "  _client?: PersonalPlanInternalUserClient,"
+        }
+      ]
+    }
+  ],
+  "historicalDocumentationHits": [
+    {
+      "file": "plans/2026-08-08-personal-plan-five-stage-consolidation.md",
+      "sha256": "fe0b8e14ac9a0a4eea4e85975bf0994d194de3f758345dadf33b6871258d5b2e",
+      "matches": [
+        {
+          "line": 758,
+          "text": "- `PERSONAL_PLAN_APP_V1_ROLLOUT=off|internal|all` is the whole-app cohort gate. Invalid values fail closed to `off`; an absent value preserves the reviewed boolean behavior (`PERSONAL_PLAN_APP_V1_ENABLED=true` means `all`, otherwise `off`)."
+        },
+        {
+          "line": 759,
+          "text": "- `internal` uses the existing server-owned `profiles.is_admin` signal plus an optional exact `PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS` allowlist resolved from the confirmed Supabase Auth user. The production audit found exactly one admin account, Nick's. Browser metadata, quiz answers and checkout metadata never participate in access."
+        },
+        {
+          "line": 763,
+          "text": "- Internal production testing requires all four stage code flags enabled, `PERSONAL_PLAN_APP_V1_ROLLOUT=internal`, `PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS` set to the test address, and `PERSONAL_PLAN_STAGE5_ROLLOUT=internal`. Moving to customers is a later explicit environment-only decision to set both rollout variables to `all`; the global app kill switch remains independently reversible."
+        }
+      ]
+    },
+    {
+      "file": "plans/2026-08-13-personal-plan-stage5-production-activation.md",
+      "sha256": "4aa53e7896e017765617e8b0af3e481a19135113a4a3fc30904b59e3bba5536d",
+      "matches": [
+        {
+          "line": 25,
+          "text": "- Production also has `PERSONAL_PLAN_APP_V1_ENABLED` and `PERSONAL_PLAN_APP_V1_ROLLOUT` empty."
+        }
+      ]
+    }
+  ],
+  "staticModuleEdges": [
+    {
+      "file": "src/app/anwendung/page.tsx",
+      "line": 14,
+      "text": "import {\n  isPersonalPlanAppV1Enabled,\n  isPersonalPlanStage4Enabled,\n} from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/accept-ideal-plan/route.ts",
+      "line": 14,
+      "text": "import { loadPersonalPlanJourneyAccessForUser } from \"@/lib/personal-plan/journey-access-loader\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/accept-ideal-plan/route.ts",
+      "line": 18,
+      "text": "import {\n  isPersonalPlanAppV1Enabled,\n  isPersonalPlanStage2Enabled,\n  isPersonalPlanStage3Enabled,\n  isPersonalPlanStage4Enabled,\n} from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/routine/attention/route.ts",
+      "line": 3,
+      "text": "import {\n  isPersonalPlanAppV1Enabled,\n  isPersonalPlanStage4Enabled,\n} from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/routine/attention/route.ts",
+      "line": 11,
+      "text": "import { loadPersonalPlanJourneyAccessForUser } from \"@/lib/personal-plan/journey-access-loader\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/routine/items/[itemKey]/route.ts",
+      "line": 4,
+      "text": "import {\n  isPersonalPlanAppV1Enabled,\n  isPersonalPlanStage4Enabled,\n} from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/routine/items/[itemKey]/route.ts",
+      "line": 12,
+      "text": "import { loadPersonalPlanJourneyAccessForUser } from \"@/lib/personal-plan/journey-access-loader\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/routine/planned-items/[itemKey]/acquire/route.ts",
+      "line": 4,
+      "text": "import {\n  isPersonalPlanAppV1Enabled,\n  isPersonalPlanStage4Enabled,\n} from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/routine/planned-items/[itemKey]/acquire/route.ts",
+      "line": 12,
+      "text": "import { loadPersonalPlanJourneyAccessForUser } from \"@/lib/personal-plan/journey-access-loader\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/routine/proposals/[proposalId]/resolve/route.ts",
+      "line": 4,
+      "text": "import {\n  isPersonalPlanAppV1Enabled,\n  isPersonalPlanStage4Enabled,\n} from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/routine/proposals/[proposalId]/resolve/route.ts",
+      "line": 12,
+      "text": "import { loadPersonalPlanJourneyAccessForUser } from \"@/lib/personal-plan/journey-access-loader\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/routine/proposals/route.ts",
+      "line": 3,
+      "text": "import {\n  isPersonalPlanAppV1Enabled,\n  isPersonalPlanStage4Enabled,\n} from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/routine/proposals/route.ts",
+      "line": 11,
+      "text": "import { loadPersonalPlanJourneyAccessForUser } from \"@/lib/personal-plan/journey-access-loader\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/routine/route.ts",
+      "line": 5,
+      "text": "import {\n  isPersonalPlanAppV1Enabled,\n  isPersonalPlanStage4Enabled,\n} from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/routine/route.ts",
+      "line": 13,
+      "text": "import { loadPersonalPlanJourneyAccessForUser } from \"@/lib/personal-plan/journey-access-loader\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/routine/sync/route.ts",
+      "line": 3,
+      "text": "import {\n  isPersonalPlanAppV1Enabled,\n  isPersonalPlanStage4Enabled,\n} from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/routine/sync/route.ts",
+      "line": 11,
+      "text": "import { loadPersonalPlanJourneyAccessForUser } from \"@/lib/personal-plan/journey-access-loader\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-1/previews/route.ts",
+      "line": 13,
+      "text": "import { loadPersonalPlanJourneyAccessForUser } from \"@/lib/personal-plan/journey-access-loader\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-1/route.ts",
+      "line": 14,
+      "text": "import { loadPersonalPlanJourneyAccessForUser } from \"@/lib/personal-plan/journey-access-loader\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-2/complete/route.ts",
+      "line": 5,
+      "text": "import { isPersonalPlanAppV1Enabled } from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-2/complete/route.ts",
+      "line": 8,
+      "text": "import {\n  loadPersonalPlanStage2AccessForUser,\n  type PersonalPlanStage2Access,\n} from \"@/lib/personal-plan/journey-access-loader\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-2/optional-entry/route.ts",
+      "line": 4,
+      "text": "import {\n  loadPersonalPlanStage2AccessForUser,\n  type PersonalPlanStage2Access,\n} from \"@/lib/personal-plan/journey-access-loader\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-2/optional-entry/route.ts",
+      "line": 13,
+      "text": "import { isPersonalPlanAppV1Enabled } from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-2/route.ts",
+      "line": 6,
+      "text": "import { isPersonalPlanAppV1Enabled } from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-2/route.ts",
+      "line": 9,
+      "text": "import {\n  loadPersonalPlanStage2AccessForUser,\n  type PersonalPlanStage2Access,\n} from \"@/lib/personal-plan/journey-access-loader\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-3/complete/route.ts",
+      "line": 10,
+      "text": "import { isPersonalPlanAppV1Enabled } from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-3/complete/route.ts",
+      "line": 31,
+      "text": "import { loadPersonalPlanJourneyAccessForUser } from \"@/lib/personal-plan/journey-access-loader\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-3/intake/route.ts",
+      "line": 10,
+      "text": "import { isPersonalPlanAppV1Enabled } from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-3/intake/route.ts",
+      "line": 26,
+      "text": "import { loadPersonalPlanJourneyAccessForUser } from \"@/lib/personal-plan/journey-access-loader\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-3/optional-entry/route.ts",
+      "line": 8,
+      "text": "import { loadPersonalPlanJourneyAccessForUser } from \"@/lib/personal-plan/journey-access-loader\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-3/optional-entry/route.ts",
+      "line": 25,
+      "text": "import { isPersonalPlanAppV1Enabled } from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-3/route.ts",
+      "line": 36,
+      "text": "import { isPersonalPlanAppV1Enabled } from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-3/route.ts",
+      "line": 48,
+      "text": "import { loadPersonalPlanJourneyAccessForUser } from \"@/lib/personal-plan/journey-access-loader\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-3/search/route.ts",
+      "line": 10,
+      "text": "import { isPersonalPlanAppV1Enabled } from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-3/search/route.ts",
+      "line": 18,
+      "text": "import { loadPersonalPlanJourneyAccessForUser } from \"@/lib/personal-plan/journey-access-loader\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/auth/confirm/route.ts",
+      "line": 3,
+      "text": "import { loadPersonalPlanJourneyAccessForUser } from \"@/lib/personal-plan/journey-access-loader\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/plan-bereit/page.tsx",
+      "line": 16,
+      "text": "import { isPersonalPlanAppV1AllowedForUser } from \"@/lib/personal-plan/rollout-access\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/plan-bereit/status/route.ts",
+      "line": 7,
+      "text": "import { isPersonalPlanAppV1AllowedForUser } from \"@/lib/personal-plan/rollout-access\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/plan-start/page.tsx",
+      "line": 14,
+      "text": "import { loadPersonalPlanJourneyAccessForUser } from \"@/lib/personal-plan/journey-access-loader\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/plan-start/page.tsx",
+      "line": 29,
+      "text": "import {\n  isPersonalPlanAppV1Enabled,\n  isPersonalPlanStage2Enabled,\n  isPersonalPlanStage3Enabled,\n  isPersonalPlanStage4Enabled,\n} from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/routine/page.tsx",
+      "line": 23,
+      "text": "import {\n  isPersonalPlanAppV1Enabled,\n  isPersonalPlanStage4Enabled,\n} from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/welcome/page.tsx",
+      "line": 28,
+      "text": "import { getPersonalPlanNewBuyerCohortCutoff } from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/app/welcome/page.tsx",
+      "line": 29,
+      "text": "import { isPersonalPlanAppV1AllowedForUser } from \"@/lib/personal-plan/rollout-access\"",
+      "namespace": false
+    },
+    {
+      "file": "src/lib/freemium/plan-provisioning-supabase.ts",
+      "line": 12,
+      "text": "import {\n  isPersonalPlanStage2Enabled,\n  isPersonalPlanStage3Enabled,\n  isPersonalPlanStage4Enabled,\n} from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/lib/personal-plan/enrollment.ts",
+      "line": 14,
+      "text": "import {\n  getPersonalPlanNewBuyerCohortCutoff,\n  isPersonalPlanLegacyQuizCutoverEnabled,\n} from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/lib/personal-plan/enrollment.ts",
+      "line": 18,
+      "text": "import { isPersonalPlanAppV1AllowedForUser } from \"@/lib/personal-plan/rollout-access\"",
+      "namespace": false
+    },
+    {
+      "file": "src/lib/personal-plan/frontier-routing-loader.ts",
+      "line": 8,
+      "text": "import {\n  getPersonalPlanNewBuyerCohortCutoff,\n  isPersonalPlanLegacyQuizCutoverEnabled,\n} from \"./release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/lib/personal-plan/frontier-routing-loader.ts",
+      "line": 12,
+      "text": "import { isPersonalPlanAppV1AllowedForUser } from \"./rollout-access\"",
+      "namespace": false
+    },
+    {
+      "file": "src/lib/personal-plan/journey-access-loader.ts",
+      "line": 9,
+      "text": "import {\n  getPersonalPlanNewBuyerCohortCutoff,\n  canAccessPersonalPlanAppV1Rollout,\n  isPersonalPlanAppV1Enabled,\n  isPersonalPlanStage2Enabled,\n  isPersonalPlanStage3Enabled,\n  isPersonalPlanStage4Enabled,\n  resolvePersonalPlanAppV1Rollout,\n  type PersonalPlanAppV1Rollout,\n} from \"./release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/lib/personal-plan/journey-access-loader.ts",
+      "line": 20,
+      "text": "import { isPersonalPlanInternalUser, type PersonalPlanInternalUserClient } from \"./rollout-access\"",
+      "namespace": false
+    },
+    {
+      "file": "src/lib/personal-plan/legacy-cutover-eligibility.ts",
+      "line": 4,
+      "text": "import {\n  getPersonalPlanNewBuyerCohortCutoff,\n  isPersonalPlanLegacyQuizCutoverEnabled,\n} from \"./release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/lib/personal-plan/legacy-cutover-eligibility.ts",
+      "line": 8,
+      "text": "import { isPersonalPlanAppV1AllowedForUser } from \"./rollout-access\"",
+      "namespace": false
+    },
+    {
+      "file": "src/lib/personal-plan/navigation-access.ts",
+      "line": 20,
+      "text": "import { loadPersonalPlanJourneyAccessForUser } from \"./journey-access-loader\"",
+      "namespace": false
+    },
+    {
+      "file": "src/lib/personal-plan/persistence/stage1-supabase.ts",
+      "line": 1,
+      "text": "import {\n  getPersonalPlanNewBuyerCohortCutoff,\n  isPersonalPlanAppV1Enabled,\n} from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/lib/personal-plan/products/production-persistence-gateway.ts",
+      "line": 52,
+      "text": "import {\n  isPersonalPlanStage3InventoryAuthorityV2Enabled,\n  isPersonalPlanStage3ThumbnailsEnabled,\n} from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/lib/personal-plan/products/stage3-persistence-supabase.ts",
+      "line": 35,
+      "text": "import { isPersonalPlanStage3ThumbnailsEnabled } from \"@/lib/personal-plan/release\"",
+      "namespace": false
+    },
+    {
+      "file": "src/lib/personal-plan/rollout-access.ts",
+      "line": 7,
+      "text": "import { resolvePersonalPlanAppV1InternalEmails } from \"./release\"",
+      "namespace": false
+    }
+  ],
+  "dynamicNamedModuleEdges": [],
+  "namespaceEdges": [],
+  "limits": "Static named/property/literal and AST import/export/require search only. Does not prove arbitrary external untracked consumers absent. Private application package, no export surface for these owners, default wrapper closure, and explicit retirement history supply supporting context. Scanned files are not semantic full-read credit."
+}

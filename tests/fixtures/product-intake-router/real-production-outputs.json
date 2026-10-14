@@ -151,8 +151,7 @@
         "treatment_mode": "rinse_out",
         "usage_protocol": "epres_spray",
         "application_mode": "post_wash_leave_in",
-        "bond_repair_axis": "peptide_chain",
-        "bond_repair_intensity": "intensive"
+        "bond_repair_axis": "peptide_chain"
        },
        "caveat": "Die Taxonomie enthält weder Serumformat noch L’Oréal-Protokoll. spray_treatment und epres_spray sind die nächstliegenden erlaubten Werte. Anwendung nach dem Shampoo ist belegt, aber kein Leave-in; treatment_mode bleibt rinse_out.",
        "category": "bondbuilder"
@@ -242,8 +241,7 @@
          "treatment_mode": "rinse_out",
          "usage_protocol": "epres_spray",
          "application_mode": "post_wash_leave_in",
-         "bond_repair_axis": "peptide_chain",
-         "bond_repair_intensity": "intensive"
+         "bond_repair_axis": "peptide_chain"
         }
        ],
        "product_application_protocols": [

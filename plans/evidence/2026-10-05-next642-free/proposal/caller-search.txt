@@ -1,0 +1,99 @@
+tests/freemium-plan-provisioning.test.ts:6:  createFreemiumProvisioningService,
+tests/freemium-plan-provisioning.test.ts:11:import { classifyRoutineAcceptanceFailure } from "../src/lib/freemium/plan-provisioning-supabase"
+tests/freemium-plan-provisioning.test.ts:126:  return createFreemiumProvisioningService(deps).provisionAfterPurchase({
+tests/freemium-plan-provisioning.test.ts:244:  const result = await classifyRoutineAcceptanceFailure(
+tests/freemium-plan-provisioning.test.ts:256:  const result = await classifyRoutineAcceptanceFailure(
+tests/freemium-plan-provisioning.test.ts:264:  const result = await classifyRoutineAcceptanceFailure(
+tests/freemium-plan-provisioning.test.ts:274:  const result = await classifyRoutineAcceptanceFailure(
+tests/freemium-plan-provisioning.test.ts:287:    await classifyRoutineAcceptanceFailure(
+tests/freemium-plan-provisioning.test.ts:294:    await classifyRoutineAcceptanceFailure(new Error("boom"), async () => true),
+tests/free-registration-handoff.test.ts:20: * split-for-testability approach `FreeRegistrationScreen` used in fix round 1
+src/lib/stripe/webhook-handlers.ts:348:    { createFreemiumProvisioningService },
+src/lib/stripe/webhook-handlers.ts:349:    { createFreemiumProvisioningSupabaseDependencies },
+src/lib/stripe/webhook-handlers.ts:356:  return createFreemiumProvisioningService(
+src/lib/stripe/webhook-handlers.ts:357:    createFreemiumProvisioningSupabaseDependencies(createAdminClient() as never),
+tests/freemium-sheet-checkout-contract.test.ts:5:  resolveCheckoutPricingCatalog,
+tests/freemium-sheet-checkout-contract.test.ts:43:      resolveCheckoutPricingCatalog({ source: "premium_sheet", launchPricingEnabled }),
+tests/freemium-sheet-checkout-contract.test.ts:52:    assert.equal(resolveCheckoutPricingCatalog({ source, launchPricingEnabled: false }), "standard")
+tests/freemium-sheet-checkout-contract.test.ts:54:      resolveCheckoutPricingCatalog({ source, launchPricingEnabled: true }),
+tests/freemium-sheet-checkout-contract.test.ts:63:    const catalog = resolveCheckoutPricingCatalog({
+tests/personal-plan/persistence/free-snapshot-service.test.ts:5:  createFreeSnapshotService,
+tests/personal-plan/persistence/free-snapshot-service.test.ts:32:  const service = createFreeSnapshotService(
+tests/personal-plan/persistence/free-snapshot-service.test.ts:60:  const service = createFreeSnapshotService(
+tests/personal-plan/persistence/free-snapshot-service.test.ts:86:  const service = createFreeSnapshotService(
+tests/personal-plan/persistence/free-snapshot-service.test.ts:103:  const invalidSource = createFreeSnapshotService(
+tests/personal-plan/persistence/free-snapshot-service.test.ts:110:  const artifactLoadFails = createFreeSnapshotService(
+tests/personal-plan/persistence/free-snapshot-service.test.ts:121:  const writeFails = createFreeSnapshotService(
+tests/personal-plan/persistence/free-snapshot-service.test.ts:134:  const service = createFreeSnapshotService(
+tests/personal-plan/persistence/free-snapshot-service.test.ts:165:  const service = createFreeSnapshotService(
+tests/personal-plan/persistence/free-snapshot-service.test.ts:187:  const service = createFreeSnapshotService(
+tests/free-registration-recovery-terminal.test.ts:4:import { recoverMissingFreeSnapshot } from "../src/lib/auth/free-registration-recovery"
+tests/free-registration-recovery-terminal.test.ts:16: * These tests exercise `recoverMissingFreeSnapshot`'s injectable seams
+tests/free-registration-recovery-terminal.test.ts:34:  const result = await recoverMissingFreeSnapshot({
+tests/free-registration-recovery-terminal.test.ts:54:  const result = await recoverMissingFreeSnapshot({
+tests/free-registration-recovery-terminal.test.ts:69:  const result = await recoverMissingFreeSnapshot({
+tests/free-registration-recovery-terminal.test.ts:82:  // sharing one mutable "stored outcome" across both `recoverMissingFreeSnapshot`
+tests/free-registration-recovery-terminal.test.ts:89:    return recoverMissingFreeSnapshot({
+tests/free-registration-recovery-terminal.test.ts:121:    return recoverMissingFreeSnapshot({
+tests/free-registration-recovery-terminal.test.ts:152:  const result = await recoverMissingFreeSnapshot({
+tests/free-registration-recovery-terminal.test.ts:168:    await recoverMissingFreeSnapshot({
+tests/free-registration-recovery-terminal.test.ts:191:  const result = await recoverMissingFreeSnapshot({
+tests/free-registration-screen.test.tsx:5:import { FreeRegistrationScreen } from "../src/app/registrierung/free-registration-client"
+tests/free-registration-screen.test.tsx:11: * split into the pure `FreeRegistrationScreen` — these tests pin every screen
+tests/free-registration-screen.test.tsx:17:function render(overrides: Partial<Parameters<typeof FreeRegistrationScreen>[0]> = {}) {
+tests/free-registration-screen.test.tsx:19:    <FreeRegistrationScreen
+tests/free-registration-journey.test.ts:8:import { createFreeSnapshotService } from "../src/lib/personal-plan/persistence/free-snapshot-service"
+tests/free-registration-journey.test.ts:22:import { recoverMissingFreeSnapshot } from "../src/lib/auth/free-registration-recovery"
+tests/free-registration-journey.test.ts:405:      return createFreeSnapshotService(
+tests/free-registration-journey.test.ts:823:  const retried = await recoverMissingFreeSnapshot({
+tests/free-registration-journey.test.ts:828:      createFreeSnapshotService(
+tests/free-registration-journey.test.ts:840:  const second = await recoverMissingFreeSnapshot({
+tests/free-snapshot-provisioning-acceptance.test.ts:6:import { createFreeSnapshotService } from "../src/lib/personal-plan/persistence/free-snapshot-service"
+tests/free-snapshot-provisioning-acceptance.test.ts:273:  const service = createFreeSnapshotService(createFreeSnapshotSupabaseDependencies(admin as never))
+tests/free-snapshot-provisioning-acceptance.test.ts:293:  const service = createFreeSnapshotService(createFreeSnapshotSupabaseDependencies(admin as never))
+tests/free-snapshot-provisioning-acceptance.test.ts:311:    const service = createFreeSnapshotService(
+tests/free-snapshot-provisioning-acceptance.test.ts:337:  const service = createFreeSnapshotService(createFreeSnapshotSupabaseDependencies(admin as never))
+tests/free-snapshot-provisioning-acceptance.test.ts:355:  const service = createFreeSnapshotService(createFreeSnapshotSupabaseDependencies(admin as never))
+tests/free-snapshot-provisioning-acceptance.test.ts:378:  const service = createFreeSnapshotService(createFreeSnapshotSupabaseDependencies(admin as never))
+tests/free-snapshot-provisioning-acceptance.test.ts:402:  const service = createFreeSnapshotService(createFreeSnapshotSupabaseDependencies(admin as never))
+tests/free-snapshot-provisioning-acceptance.test.ts:415:  const service = createFreeSnapshotService(createFreeSnapshotSupabaseDependencies(admin as never))
+tests/free-snapshot-provisioning-acceptance.test.ts:434:  const service = createFreeSnapshotService(createFreeSnapshotSupabaseDependencies(admin as never))
+tests/freemium-paypal-webhook-provisioning.test.ts:6:  createFreemiumProvisioningService,
+tests/freemium-paypal-webhook-provisioning.test.ts:383:      createFreemiumProvisioningService(fakeDeps(state)).provisionAfterPurchase({
+tests/freemium-paypal-webhook-provisioning.test.ts:430:  const service = createFreemiumProvisioningService(fakeDeps(state))
+src/lib/discovery/load-ideal-routine.ts:47: * `provisionFreeInitialSnapshotForUser` writes a snapshot that would collide with the
+src/lib/auth/free-registration-recovery.ts:4:import { provisionFreeInitialSnapshotForUser } from "@/lib/personal-plan/persistence/free-snapshot-supabase"
+src/lib/auth/free-registration-recovery.ts:60:export async function recoverMissingFreeSnapshot(input: {
+src/lib/auth/free-registration-recovery.ts:81:  const provision = input.provision ?? provisionFreeInitialSnapshotForUser
+src/lib/auth/free-registration-recovery.ts:151:  // `recoverMissingFreeSnapshot`'s own swallowed write failure makes.
+src/lib/freemium/plan-provisioning.ts:126:export function createFreemiumProvisioningService(deps: FreemiumProvisioningDependencies) {
+src/lib/personal-plan/persistence/free-snapshot-service.ts:138:export function createFreeSnapshotService(deps: FreeSnapshotDependencies) {
+src/lib/freemium/plan-provisioning-supabase.ts:35: * Server-only wiring for `createFreemiumProvisioningService`. Nothing here decides policy —
+src/lib/freemium/plan-provisioning-supabase.ts:66:export function createFreemiumProvisioningSupabaseDependencies(
+src/lib/freemium/plan-provisioning-supabase.ts:251:    return classifyRoutineAcceptanceFailure(error, () => hasActiveRoutineVersion(admin, userId))
+src/lib/freemium/plan-provisioning-supabase.ts:265:export async function classifyRoutineAcceptanceFailure(
+src/lib/personal-plan/persistence/free-snapshot-supabase.ts:6:  createFreeSnapshotService,
+src/lib/personal-plan/persistence/free-snapshot-supabase.ts:40:export function provisionFreeInitialSnapshotForUser(input: {
+src/lib/personal-plan/persistence/free-snapshot-supabase.ts:45:  return createFreeSnapshotService(
+src/lib/paypal/freemium-webhook-provisioning.ts:221:    { createFreemiumProvisioningService },
+src/lib/paypal/freemium-webhook-provisioning.ts:222:    { createFreemiumProvisioningSupabaseDependencies },
+src/lib/paypal/freemium-webhook-provisioning.ts:229:  return createFreemiumProvisioningService(
+src/lib/paypal/freemium-webhook-provisioning.ts:230:    createFreemiumProvisioningSupabaseDependencies(createAdminClient() as never),
+src/app/auth/confirm/route.ts:22:import { provisionFreeInitialSnapshotForUser } from "@/lib/personal-plan/persistence/free-snapshot-supabase"
+src/app/auth/confirm/route.ts:97:  provisionFreeSnapshot: provisionFreeInitialSnapshotForUser,
+src/app/scan/page.tsx:8:import { recoverMissingFreeSnapshot } from "@/lib/auth/free-registration-recovery"
+src/app/scan/page.tsx:63:        await recoverMissingFreeSnapshot({ userId: data.user.id, email: data.user.email })
+src/app/registrierung/page.tsx:7:import { FreeRegistrationClient } from "./free-registration-client"
+src/app/registrierung/page.tsx:35:    <FreeRegistrationClient
+src/app/registrierung/free-registration-client.tsx:66: * reason `FreeRegistrationScreen` was split out in fix round 1 (W6). */
+src/app/registrierung/free-registration-client.tsx:179:export function FreeRegistrationClient({
+src/app/registrierung/free-registration-client.tsx:322:    <FreeRegistrationScreen
+src/app/registrierung/free-registration-client.tsx:350: * Split out of `FreeRegistrationClient` in fix round 1 so the states are
+src/app/registrierung/free-registration-client.tsx:355:export function FreeRegistrationScreen({
+src/app/api/stripe/create-checkout-session/route.ts:459:export function resolveCheckoutPricingCatalog({
+src/app/api/stripe/create-checkout-session/route.ts:945:    const pricingCatalog = resolveCheckoutPricingCatalog({
+src/app/api/paypal/create-subscription-intent/route.ts:139: * `source: "premium_sheet"` (`resolveCheckoutPricingCatalog`).
+src/app/api/freemium/purchase/complete/route.ts:8:import { createFreemiumProvisioningService } from "@/lib/freemium/plan-provisioning"
+src/app/api/freemium/purchase/complete/route.ts:13:import { createFreemiumProvisioningSupabaseDependencies } from "@/lib/freemium/plan-provisioning-supabase"
+src/app/api/freemium/purchase/complete/route.ts:497:    createFreemiumProvisioningService(
+src/app/api/freemium/purchase/complete/route.ts:498:      createFreemiumProvisioningSupabaseDependencies(createAdminClient() as never),

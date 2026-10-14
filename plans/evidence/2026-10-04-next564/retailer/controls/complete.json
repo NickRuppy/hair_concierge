@@ -1,0 +1,161 @@
+{
+  "phase": "transfer",
+  "verified": 41,
+  "cleanRuns": 82,
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "sourceGuards": [
+    {
+      "file": "src/lib/scan/enrichment/toon.ts",
+      "sha": "6100c37fffce7e2c1ebc2cb6feb740bac28a46f90971e39f48574441dc835471"
+    },
+    {
+      "file": "src/lib/scan/enrichment/dm-mcp-client.ts",
+      "sha": "fa02e011e6e79893ed3536a379891f7a4f4952a8366cf201e18d363c97da3b7b"
+    },
+    {
+      "file": "src/lib/scan/enrichment/resolve-enrichment.ts",
+      "sha": "3095cc18fb84cc650a33a42a92425ed986882446230e4e7275c3901f8509877f"
+    },
+    {
+      "file": "src/lib/scan/enrichment/suggest-category.ts",
+      "sha": "e529d63be689f70a6b2cc4f92d6107f902383ddfd3a2094c044117b7a995a26d"
+    },
+    {
+      "file": "src/lib/scan/enrichment/flag.ts",
+      "sha": "1ff09f57c924f0392f177086264a78fe71b6eb148a803d6be4b3f2ccc6dc5f8d"
+    },
+    {
+      "file": "src/lib/scan/identifier-lookup.ts",
+      "sha": "5770b9b643b39849dd1bc98f293ba9ca82de4ff968c82158c79558e8d95de403"
+    },
+    {
+      "file": "src/app/api/scan/search/route.ts",
+      "sha": "98cb7df79a80ae7ab18e3a85cbdceb1c8b48b7ac110d5b1c08adc2ff41f8ef2e"
+    },
+    {
+      "file": "src/app/api/scan/search-retailer/route.ts",
+      "sha": "c5404803758fa829df9db3141eda2f6920876f26ec65aa84320b9c93314da156"
+    },
+    {
+      "file": "src/lib/scan/catalog-search.ts",
+      "sha": "12d36f3026d9c7d711e89fda9e2fabcbcf86f3c2f3922d456252b7f349f547b6"
+    },
+    {
+      "file": "src/lib/scan/catalog-eligibility.ts",
+      "sha": "0bcee33a0110e82bf580ac2a978866670829a91a592c1261fe9242ec6500741d"
+    },
+    {
+      "file": "src/lib/scan/route.ts",
+      "sha": "fe5d062ff939962807c453c1feaabaf6bde3cd4e76dac9b9831e9316b3efadb3"
+    },
+    {
+      "file": "src/lib/product-identity/normalize.ts",
+      "sha": "817e15aed0f145308fb7e971ac9ab6171ddb0d3f0b2c043e9e06377b765d69db"
+    },
+    {
+      "file": "src/lib/product-identity/display-title.ts",
+      "sha": "b3227a1c978a5e704bba7413087b75e97cd0b99b62aed25d05a3d6100e23c5cf"
+    },
+    {
+      "file": "src/lib/rate-limit.ts",
+      "sha": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08"
+    },
+    {
+      "file": "src/components/scan/scan-search-sheet.tsx",
+      "sha": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa"
+    },
+    {
+      "file": "src/app/api/scan/resolve/route.ts",
+      "sha": "9502eac574fbc19276f1c994b47a82f9c7c22e29a4f7bf89438203ed5a835ad4"
+    },
+    {
+      "file": "src/app/api/scan/submit/route.ts",
+      "sha": "b509ae15cc10aee607e086ac10c843d77668386dc546a6c640a167cb729c2dad"
+    },
+    {
+      "file": "src/lib/mobile/scan-service.ts",
+      "sha": "eb56a474d802c60c12856aca5efbf23702fdab02f4350ab525a6be5fcbec3459"
+    },
+    {
+      "file": "src/lib/scan/submit-dm-event-log.ts",
+      "sha": "57e8cdc7975addcc9eb9758fb7137d413235eb438b39cb649554f58f0f8291e6"
+    },
+    {
+      "file": "src/lib/scan/resolve-event-log.ts",
+      "sha": "cde316a0d8ecf6b25463cf79bffb8fc2304cbcba24b411a719d51ac63b65ba4d"
+    },
+    {
+      "file": "supabase/migrations/20260917062353_scan_dm_lookup_telemetry.sql",
+      "sha": "7df1caae0b5c3cc7a75bf70d43dedb82dc4a9ae3de569a92f0cf088464885d13"
+    },
+    {
+      "file": "tests/fixtures/dm-mcp/details-all-gtins.txt",
+      "sha": "6452b245601815d9b9eee60b3da8d6f4a14031cf478ae844a59c8affa04ec3b7"
+    },
+    {
+      "file": "tests/fixtures/dm-mcp/search-ogx-argan-oil-shampoo.json",
+      "sha": "16745ee6de0a5693aef1913566389e1ff678b3b6624de1a54914e747b3a5cd12"
+    },
+    {
+      "file": "plans/scan-dm-enrichment.md",
+      "sha": "38fb235b1442244ff0defa7b1e663bc7fc98ad0462e630143d962bfecbfe0dc0"
+    },
+    {
+      "file": "plans/scan-search-revamp.md",
+      "sha": "e9becf84c38f4f7b90569009005c09a8ff8eaeab5dba5d1519522736a76ec140"
+    },
+    {
+      "file": "plans/discovery-refinement-b7/plan.md",
+      "sha": "3d38c63740d81a5422789c9805d7d55c6dfef2d1316bf90a00b5179f0f73677e"
+    },
+    {
+      "file": "package.json",
+      "sha": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": "package-lock.json",
+      "sha": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
+    {
+      "file": "node_modules/@modelcontextprotocol/sdk/dist/esm/client/index.js",
+      "sha": "db6cc643f5cc095b2fd0b70bf691d1775f07a317e97555e3928559e815f5e32a"
+    },
+    {
+      "file": "node_modules/@modelcontextprotocol/sdk/dist/esm/shared/protocol.js",
+      "sha": "8de524602541771e084f7185e7d0fc418b8142a9cae1bd80a3ee7c70e9a9e132"
+    },
+    {
+      "file": "node_modules/@modelcontextprotocol/sdk/dist/esm/client/streamableHttp.js",
+      "sha": "a181da6a31e8a34acd3e011ce5e574e8f1381b17f4541f64afcfb6b7209bafa3"
+    },
+    {
+      "file": ".nvmrc",
+      "sha": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    },
+    {
+      "file": "tsconfig.json",
+      "sha": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd"
+    },
+    {
+      "file": "node_modules/@modelcontextprotocol/sdk/package.json",
+      "sha": "0690cbe02511a95d1ff199acf20b5a12ac4dfde1bbe30c82a0de73afa92dffc9"
+    },
+    {
+      "file": "node_modules/typescript/lib/typescript.js",
+      "sha": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675"
+    },
+    {
+      "file": "node_modules/tsx/package.json",
+      "sha": "6e764b21991c21595441f82387c1451ccd10a3e7a3f0973cc5e3649a12dea7d2"
+    }
+  ]
+}

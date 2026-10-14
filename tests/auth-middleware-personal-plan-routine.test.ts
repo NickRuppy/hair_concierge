@@ -276,35 +276,19 @@ test("tracker skips proxy intake and Personal Plan frontier reads", async () => 
   assert.equal(frontierCalls.count, 0)
 })
 
-test("tracker still redirects an authenticated user without current access to reactivate", async () => {
-  const observedTables: string[] = []
-  const frontierCalls = { count: 0 }
-  const response = await createMiddleware({
-    currentAccess: false,
-    userAppMetadata: {},
-    observedTables,
-    frontierCalls,
-  })(new NextRequest("https://chaarlie.de/tracker"))
-
-  assert.equal(response.status, 307)
-  assert.equal(
-    response.headers.get("location"),
-    "https://chaarlie.de/reactivate?reason=expired&next=%2Ftracker",
-  )
-  assert.ok(!observedTables.includes("profiles"))
-  assert.ok(!observedTables.includes("hair_profiles"))
-  assert.equal(frontierCalls.count, 0)
-})
-
 // --- Freemium scanner-first flag (T2), end-to-end through createUpdateSession ---
 
 test("flag off: FREEMIUM_SCANNER_FIRST_ENABLED unset still redirects tracker to reactivate (byte-identical)", async () => {
+  const observedTables: string[] = []
+  const frontierCalls = { count: 0 }
   const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
   delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
   try {
     const response = await createMiddleware({
       currentAccess: false,
       userAppMetadata: {},
+      observedTables,
+      frontierCalls,
     })(new NextRequest("https://chaarlie.de/tracker"))
 
     assert.equal(response.status, 307)
@@ -312,6 +296,9 @@ test("flag off: FREEMIUM_SCANNER_FIRST_ENABLED unset still redirects tracker to 
       response.headers.get("location"),
       "https://chaarlie.de/reactivate?reason=expired&next=%2Ftracker",
     )
+    assert.ok(!observedTables.includes("profiles"))
+    assert.ok(!observedTables.includes("hair_profiles"))
+    assert.equal(frontierCalls.count, 0)
   } finally {
     if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
     else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
@@ -322,13 +309,29 @@ test("flag on: a free authenticated user (no current access) reaches /tracker in
   const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
   process.env.FREEMIUM_SCANNER_FIRST_ENABLED = "true"
   try {
-    const response = await createMiddleware({
-      currentAccess: false,
-      userAppMetadata: {},
-    })(new NextRequest("https://chaarlie.de/tracker"))
-
-    assert.equal(response.status, 200)
-    assert.equal(response.headers.get("location"), null)
+    for (const pathname of [
+      "/anwendung",
+      "/anwendung/wash_day",
+      "/chat",
+      "/chat/verlauf",
+      "/routine",
+      "/routine/current",
+      "/scan",
+      "/scan/ergebnis",
+      "/api/scan",
+      "/api/scan/analyze",
+      "/profile",
+      "/profile/edit",
+      "/tracker",
+      "/tracker/entries",
+    ]) {
+      const response = await createMiddleware({
+        currentAccess: false,
+        userAppMetadata: {},
+      })(new NextRequest(`https://chaarlie.de${pathname}`))
+      assert.equal(response.status, 200, pathname)
+      assert.equal(response.headers.get("location"), null, pathname)
+    }
   } finally {
     if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
     else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original
@@ -371,13 +374,21 @@ test("expired trial cannot fall back to free pages or keepsake APIs; recovery st
       trialHistory: true,
       userAppMetadata: {},
     })
-    const page = await middleware(new NextRequest("https://chaarlie.de/tracker"))
-    assert.equal(page.status, 307)
-    assert.equal(
-      page.headers.get("location"),
-      "https://chaarlie.de/reactivate?reason=expired&next=%2Ftracker",
-    )
-    for (const pathname of ["/api/scan", "/api/chat", "/api/chat/conversation-1"]) {
+    for (const pathname of ["/tracker", "/scan", "/profile", "/routine"]) {
+      const page = await middleware(new NextRequest(`https://chaarlie.de${pathname}`))
+      assert.equal(page.status, 307, pathname)
+      assert.equal(
+        page.headers.get("location"),
+        `https://chaarlie.de/reactivate?reason=expired&next=${encodeURIComponent(pathname === "/scan" || pathname === "/anwendung" ? "/chat" : pathname)}`,
+        pathname,
+      )
+    }
+    for (const pathname of [
+      "/api/scan",
+      "/api/chat",
+      "/api/chat/conversation-1",
+      "/api/personal-plan/state",
+    ]) {
       const response = await middleware(new NextRequest(`https://chaarlie.de${pathname}`))
       assert.equal(response.status, 403, pathname)
       assert.deepEqual(await response.json(), { error: "subscription_required" })
@@ -591,17 +602,6 @@ test("email-bound moderator access reaches gated app routes without a synthetic 
 
   assert.equal(response.status, 200)
   assert.equal(response.headers.get("location"), null)
-})
-
-test("an ended moderator account receives the field-test end state unless paid access is valid", async () => {
-  const response = await createMiddleware({
-    currentAccess: false,
-    userAppMetadata: {},
-    moderatorAccess: "ended",
-  })(new NextRequest("https://chaarlie.de/routine"))
-
-  assert.equal(response.status, 307)
-  assert.equal(response.headers.get("location"), "https://chaarlie.de/test/haarplan/beendet")
 })
 
 test("an ended moderator cannot retain access through its still-active tester grant", async () => {
@@ -1057,17 +1057,33 @@ test("flag off: a user without any paid access is still bounced off /scan by the
   const original = process.env.FREEMIUM_SCANNER_FIRST_ENABLED
   delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
   try {
-    const response = await createMiddleware({
-      currentAccess: false,
-      userAppMetadata: {},
-      oneTimeAccessState: "none",
-      moderatorAccess: "none",
-    })(new NextRequest("https://chaarlie.de/scan"))
-
-    // No paid access at all: the subscription paywall owns this request and
-    // sends the user to /reactivate, never into the scan shell.
-    assert.equal(response.status, 307)
-    assert.ok(response.headers.get("location")?.startsWith("https://chaarlie.de/reactivate"))
+    for (const pathname of [
+      "/anwendung",
+      "/chat",
+      "/routine",
+      "/scan",
+      "/api/scan",
+      "/profile",
+      "/tracker",
+    ]) {
+      const response = await createMiddleware({
+        currentAccess: false,
+        userAppMetadata: {},
+        oneTimeAccessState: "none",
+        moderatorAccess: "none",
+      })(new NextRequest(`https://chaarlie.de${pathname}`))
+      if (pathname === "/api/scan") {
+        assert.equal(response.status, 403, pathname)
+        assert.deepEqual(await response.json(), { error: "subscription_required" })
+      } else {
+        assert.equal(response.status, 307, pathname)
+        assert.equal(
+          response.headers.get("location"),
+          `https://chaarlie.de/reactivate?reason=expired&next=${encodeURIComponent(pathname === "/scan" || pathname === "/anwendung" ? "/chat" : pathname)}`,
+          pathname,
+        )
+      }
+    }
   } finally {
     if (original === undefined) delete process.env.FREEMIUM_SCANNER_FIRST_ENABLED
     else process.env.FREEMIUM_SCANNER_FIRST_ENABLED = original

@@ -28,12 +28,19 @@ export function compactCriterionSchema(
           criterionId: "dry_shampoo.sensitivity.verified",
           label: "Kopfhautverträglichkeit",
         },
+        { criterionId: "dry_shampoo.tint.verified", label: "Farbpassung" },
+        { criterionId: "dry_shampoo.styling.direction", label: "Volumen" },
         { criterionId: "dry_shampoo.protocol.verified", label: "Verifizierte Anwendung" },
       ]
     case "deep_cleansing_shampoo":
       return [
         { criterionId: "deep_cleansing.reset_role", label: "Reset-Rolle" },
         { criterionId: "deep_cleansing.protocol", label: "Anwendungsprotokoll" },
+        // Soft scalp target (residue reset only): a non-match emits no criterion, so the row
+        // reads „nicht bestätigt" without lowering the verdict.
+        ...(role === "residue_reset"
+          ? [{ criterionId: "deep_cleansing.scalp_target", label: "Kopfhauttyp" }]
+          : []),
       ]
     // Bondbuilder projects real product differences through comparison dimensions instead of
     // engine criterion labels; its criteria stay authority-internal.

@@ -1,0 +1,113 @@
+TAP version 13
+# Subtest: mask-missing-thickness: required Mask target input fails closed at the shared parser
+not ok 1 - mask-missing-thickness: required Mask target input fails closed at the shared parser
+  ---
+  duration_ms: 3.327209
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan/input.test.ts:2:3249'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+    +   envelope: {
+    +     answers: {
+    +       adaptationConfidence: 'partly',
+    +       blockers: [
+    +         'product_fit'
+    +       ],
+    +       chemicalTreatments: [
+    +         'colored'
+    +       ],
+    +       concernRecurrence: {
+    +         concernId: 'dry_lengths',
+    +         frequency: 'often'
+    +       },
+    +       currentConcerns: [
+    +         'dry_lengths',
+    +         'split_ends'
+    +       ],
+    +       density: 'medium',
+    +       elasticResponse: 'stretches_stays',
+    +       goals: [
+    +         'moisture',
+    +         'shine'
+    +       ],
+    +       hairLength: 'long',
+    +       hairSurface: 'rough',
+    +       meaningfulMoment: 'everyday',
+    +       previousAttempts: 'some_steps_helped',
+    +       resultReliability: 'sometimes',
+    +       routineClarity: 'partial',
+    +       routineStyle: 'simple_reliable',
+    +       scalpConcerns: [],
+    +       scalpOiliness: 'balanced',
+    +       texture: 'wavy',
+    +       thickness: undefined
+    +     },
+    +     kind: 'personal_plan',
+    +     version: 3
+    -   error: {
+    -     code: 'invalid_quiz_envelope',
+    -     quizVersion: 3
+        },
+    +   ok: true
+    -   ok: false
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    ok: false
+    error:
+      code: 'invalid_quiz_envelope'
+      quizVersion: 3
+  actual:
+    ok: true
+    envelope:
+      kind: 'personal_plan'
+      version: 3
+      answers:
+        texture: 'wavy'
+        density: 'medium'
+        goals:
+          0: 'moisture'
+          1: 'shine'
+        routineClarity: 'partial'
+        resultReliability: 'sometimes'
+        adaptationConfidence: 'partly'
+        currentConcerns:
+          0: 'dry_lengths'
+          1: 'split_ends'
+        concernRecurrence:
+          concernId: 'dry_lengths'
+          frequency: 'often'
+        hairLength: 'long'
+        hairSurface: 'rough'
+        elasticResponse: 'stretches_stays'
+        chemicalTreatments:
+          0: 'colored'
+        scalpOiliness: 'balanced'
+        scalpConcerns:
+        previousAttempts: 'some_steps_helped'
+        blockers:
+          0: 'product_fit'
+        routineStyle: 'simple_reliable'
+        meaningfulMoment: 'everyday'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan/input.test.ts:77:12)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 282.43075

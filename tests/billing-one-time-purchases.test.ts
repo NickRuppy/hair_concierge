@@ -4,7 +4,6 @@ import test from "node:test"
 
 import {
   findCurrentOneTimePurchaseForUser,
-  hasCurrentOneTimePurchaseAccess,
   resolveOneTimeAccessStateForUser,
   resolveOneTimePurchaseAccessState,
   upsertOneTimePurchase,
@@ -76,7 +75,6 @@ function fulfilledConsent(
 test("only a fully confirmed and delivered paid one-time personal-plan purchase grants access", () => {
   const active = { purchase: paidPurchase(), consent: fulfilledConsent() }
   assert.equal(resolveOneTimePurchaseAccessState(active), "active")
-  assert.equal(hasCurrentOneTimePurchaseAccess(active), true)
   assert.equal(
     resolveOneTimePurchaseAccessState({
       purchase: paidPurchase(),

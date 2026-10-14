@@ -1,0 +1,405 @@
+TAP version 13
+# Subtest: Methodik shows the required trust, commercial, ownership, and medical boundaries
+ok 1 - Methodik shows the required trust, commercial, ownership, and medical boundaries
+  ---
+  duration_ms: 64.102708
+  ...
+# Subtest: the Methodik shell keeps the shared frame without exposing a premature Ratgeber
+ok 2 - the Methodik shell keeps the shared frame without exposing a premature Ratgeber
+  ---
+  duration_ms: 4.650542
+  ...
+# Subtest: Methodik bootstraps first-party funnel context without editorial vendor tracking
+ok 3 - Methodik bootstraps first-party funnel context without editorial vendor tracking
+  ---
+  duration_ms: 0.227291
+  ...
+# Subtest: unknown routes render a branded German recovery page
+ok 4 - unknown routes render a branded German recovery page
+  ---
+  duration_ms: 1.921875
+  ...
+# Subtest: unknown routes keep the default tracking-free editorial shell
+ok 5 - unknown routes keep the default tracking-free editorial shell
+  ---
+  duration_ms: 0.111083
+  ...
+# Subtest: approved public copy uses serious, non-medical product framing
+ok 6 - approved public copy uses serious, non-medical product framing
+  ---
+  duration_ms: 0.620333
+  ...
+# Subtest: legal pages preserve existing one-time purchases without offering new ones in the trial launch
+ok 7 - legal pages preserve existing one-time purchases without offering new ones in the trial launch
+  ---
+  duration_ms: 5.194042
+  ...
+# Subtest: rendered membership terms disclose approved trial prices and preserve legacy price promises
+ok 8 - rendered membership terms disclose approved trial prices and preserve legacy price promises
+  ---
+  duration_ms: 3.458625
+  ...
+# Subtest: accepts a bounded browser milestone payload
+ok 9 - accepts a bounded browser milestone payload
+  ---
+  duration_ms: 0.668542
+  ...
+# Subtest: does not accept a browser-supplied quiz variant
+ok 10 - does not accept a browser-supplied quiz variant
+  ---
+  duration_ms: 0.120125
+  ...
+# Subtest: rejects malformed IDs and server-confirmed milestones
+ok 11 - rejects malformed IDs and server-confirmed milestones
+  ---
+  duration_ms: 0.204291
+  ...
+# Subtest: enforces UTF-8 body and property byte limits
+ok 12 - enforces UTF-8 body and property byte limits
+  ---
+  duration_ms: 0.097084
+  ...
+# Subtest: funnel context only admits the allowlisted server envelope
+ok 13 - funnel context only admits the allowlisted server envelope
+  ---
+  duration_ms: 0.753333
+  ...
+# Subtest: failed bounded bootstrap retries and a later caller can retry again
+ok 14 - failed bounded bootstrap retries and a later caller can retry again
+  ---
+  duration_ms: 8.197833
+  ...
+# Subtest: a timed-out request is bounded and the following attempt can recover
+ok 15 - a timed-out request is bounded and the following attempt can recover
+  ---
+  duration_ms: 5.548541
+  ...
+# Subtest: milestone identity retains acquisition fields and a slow older GET cannot replace a new journey
+ok 16 - milestone identity retains acquisition fields and a slow older GET cannot replace a new journey
+  ---
+  duration_ms: 0.314083
+  ...
+# Subtest: a successful retry publishes its resolved context to subscribers
+ok 17 - a successful retry publishes its resolved context to subscribers
+  ---
+  duration_ms: 0.243917
+  ...
+# Subtest: a same-journey milestone arriving before GET does not discard acquisition enrichment
+ok 18 - a same-journey milestone arriving before GET does not discard acquisition enrichment
+  ---
+  duration_ms: 0.349125
+  ...
+# Subtest: an identity-only milestone before bootstrap still permits the acquisition GET
+ok 19 - an identity-only milestone before bootstrap still permits the acquisition GET
+  ---
+  duration_ms: 0.307416
+  ...
+# Subtest: a successful HTTP response with incomplete scanner metadata is retried and never cached as ready
+ok 20 - a successful HTTP response with incomplete scanner metadata is retried and never cached as ready
+  ---
+  duration_ms: 1.059541
+  ...
+# Subtest: round trips a signed funnel context
+ok 21 - round trips a signed funnel context
+  ---
+  duration_ms: 3.239334
+  ...
+# Subtest: preserves campaign touch through same-session quiz navigation
+ok 22 - preserves campaign touch through same-session quiz navigation
+  ---
+  duration_ms: 0.290708
+  ...
+# Subtest: rejects tampering, unknown packages, and expired contexts
+ok 23 - rejects tampering, unknown packages, and expired contexts
+  ---
+  duration_ms: 1.134542
+  ...
+# Subtest: touch cookies expire independently
+ok 24 - touch cookies expire independently
+  ---
+  duration_ms: 0.886166
+  ...
+# Subtest: migration creates private summary and append-only event tables
+ok 25 - migration creates private summary and append-only event tables
+  ---
+  duration_ms: 0.477667
+  ...
+# Subtest: atomic recorder serializes event IDs and keeps first milestones
+ok 26 - atomic recorder serializes event IDs and keeps first milestones
+  ---
+  duration_ms: 0.13825
+  ...
+# Subtest: atomic recorder is service-role only
+ok 27 - atomic recorder is service-role only
+  ---
+  duration_ms: 0.106042
+  ...
+# Subtest: quiz variant migration validates known sessions before mutation and makes the snapshot immutable
+ok 28 - quiz variant migration validates known sessions before mutation and makes the snapshot immutable
+  ---
+  duration_ms: 0.255375
+  ...
+# Subtest: quiz variant RPC migration supports old named callers while granting only the new signature
+ok 29 - quiz variant RPC migration supports old named callers while granting only the new signature
+  ---
+  duration_ms: 0.149875
+  ...
+# Subtest: funnel limiter uses normalized signed-session keys
+ok 30 - funnel limiter uses normalized signed-session keys
+  ---
+  duration_ms: 0.733
+  ...
+# Subtest: funnel limiter fails closed when its service is unavailable
+ok 31 - funnel limiter fails closed when its service is unavailable
+  ---
+  duration_ms: 0.101167
+  ...
+# Subtest: funnel limiter returns an ordinary rejection when quota is exhausted
+ok 32 - funnel limiter returns an ordinary rejection when quota is exhausted
+  ---
+  duration_ms: 0.069375
+  ...
+# Subtest: funnel route rejects browser-spoofed purchases before database access
+ok 33 - funnel route rejects browser-spoofed purchases before database access
+  ---
+  duration_ms: 5.878542
+  ...
+# Subtest: funnel route rejects tampered context without database access
+ok 34 - funnel route rejects tampered context without database access
+  ---
+  duration_ms: 0.5485
+  ...
+# Subtest: funnel route rejects oversized declared bodies before reading them
+ok 35 - funnel route rejects oversized declared bodies before reading them
+  ---
+  duration_ms: 1.397334
+  ...
+# Subtest: browser funnel writes cannot claim server-confirmed conversions
+ok 36 - browser funnel writes cannot claim server-confirmed conversions
+  ---
+  duration_ms: 0.387833
+  ...
+# Subtest: record helper maps signed context and touch into the atomic RPC contract
+ok 37 - record helper maps signed context and touch into the atomic RPC contract
+  ---
+  duration_ms: 1.200375
+  ...
+# Subtest: record helper surfaces RPC failures
+ok 38 - record helper surfaces RPC failures
+  ---
+  duration_ms: 0.385542
+  ...
+# Subtest: result-only trusted offer context preserves a stored arm while browser events use packages
+ok 39 - result-only trusted offer context preserves a stored arm while browser events use packages
+  ---
+  duration_ms: 0.073792
+  ...
+# Subtest: browser funnel helper retains wall-clock occurrence when none is supplied
+ok 40 - browser funnel helper retains wall-clock occurrence when none is supplied
+  ---
+  duration_ms: 0.09125
+  ...
+# Subtest: purchase helper returns typed permanent and transient outcomes
+ok 41 - purchase helper returns typed permanent and transient outcomes
+  ---
+  duration_ms: 0.196458
+  ...
+# Subtest: with the freemium flag off the tier resolves premium without any lookup
+ok 42 - with the freemium flag off the tier resolves premium without any lookup
+  ---
+  duration_ms: 0.533375
+  ...
+# Subtest: app/routine/page.tsx gates on the server tier before it renders the real page
+ok 43 - app/routine/page.tsx gates on the server tier before it renders the real page
+  ---
+  duration_ms: 0.33225
+  ...
+# Subtest: app/anwendung/page.tsx gates on the server tier before it renders the real page
+ok 44 - app/anwendung/page.tsx gates on the server tier before it renders the real page
+  ---
+  duration_ms: 0.280083
+  ...
+# Subtest: app/chat/page.tsx gates on the server tier before it renders the real page
+ok 45 - app/chat/page.tsx gates on the server tier before it renders the real page
+  ---
+  duration_ms: 0.154834
+  ...
+# Subtest: app/chat/[conversationId]/page.tsx gates on the server tier before it renders the real page
+ok 46 - app/chat/[conversationId]/page.tsx gates on the server tier before it renders the real page
+  ---
+  duration_ms: 0.238875
+  ...
+# Subtest: routine and anwendung resolve the tier concurrently with their own page data (F2)
+ok 47 - routine and anwendung resolve the tier concurrently with their own page data (F2)
+  ---
+  duration_ms: 0.202542
+  ...
+# Subtest: /chat streams the tier check behind Suspense only when the flag is on; flag off stays branch-free (X2)
+ok 48 - /chat streams the tier check behind Suspense only when the flag is on; flag off stays branch-free (X2)
+  ---
+  duration_ms: 0.141583
+  ...
+# Subtest: each page has its own benefit line, never the sheet's own copy and never a generic pitch
+ok 49 - each page has its own benefit line, never the sheet's own copy and never a generic pitch
+  ---
+  duration_ms: 0.130333
+  ...
+# Subtest: the sheet context is the page's own
+ok 50 - the sheet context is the page's own
+  ---
+  duration_ms: 0.42075
+  ...
+# Subtest: the Routine example is the real Routine page, filled with real catalog products
+ok 51 - the Routine example is the real Routine page, filled with real catalog products
+  ---
+  duration_ms: 13.010708
+  ...
+# Subtest: the Anwendung example shows populated days, not empty ones
+ok 52 - the Anwendung example shows populated days, not empty ones
+  ---
+  duration_ms: 4.222625
+  ...
+# Subtest: the Chat example is a short, capability-true transcript through the real bubbles
+ok 53 - the Chat example is a short, capability-true transcript through the real bubbles
+  ---
+  duration_ms: 10.06625
+  ...
+# Subtest: no example message carries a timestamp — a formatted one would mismatch on hydration
+ok 54 - no example message carries a timestamp — a formatted one would mismatch on hydration
+  ---
+  duration_ms: 5.333542
+  ...
+# Subtest: every example is framed by GatedPreview with its own label, benefit and one CTA
+ok 55 - every example is framed by GatedPreview with its own label, benefit and one CTA
+  ---
+  duration_ms: 8.696792
+  ...
+# Subtest: gated routine renders without touching the network
+ok 56 - gated routine renders without touching the network
+  ---
+  duration_ms: 13.389709
+  ...
+# Subtest: gated routine renders no form and no submit control
+ok 57 - gated routine renders no form and no submit control
+  ---
+  duration_ms: 2.595416
+  ...
+# Subtest: gated anwendung renders without touching the network
+ok 58 - gated anwendung renders without touching the network
+  ---
+  duration_ms: 4.269792
+  ...
+# Subtest: gated anwendung renders no form and no submit control
+ok 59 - gated anwendung renders no form and no submit control
+  ---
+  duration_ms: 2.899709
+  ...
+# Subtest: gated chat renders without touching the network
+ok 60 - gated chat renders without touching the network
+  ---
+  duration_ms: 10.30575
+  ...
+# Subtest: gated chat renders no form and no submit control
+ok 61 - gated chat renders no form and no submit control
+  ---
+  duration_ms: 3.569875
+  ...
+# Subtest: the import-graph walker actually reaches the real page components
+ok 62 - the import-graph walker actually reaches the real page components
+  ---
+  duration_ms: 17.328291
+  ...
+# Subtest: gated routine never reaches a module that writes
+ok 63 - gated routine never reaches a module that writes
+  ---
+  duration_ms: 5.107209
+  ...
+# Subtest: gated routine contains no request call of its own
+ok 64 - gated routine contains no request call of its own
+  ---
+  duration_ms: 6.452542
+  ...
+# Subtest: gated anwendung never reaches a module that writes
+ok 65 - gated anwendung never reaches a module that writes
+  ---
+  duration_ms: 4.256083
+  ...
+# Subtest: gated anwendung contains no request call of its own
+ok 66 - gated anwendung contains no request call of its own
+  ---
+  duration_ms: 3.909875
+  ...
+# Subtest: gated chat never reaches a module that writes
+ok 67 - gated chat never reaches a module that writes
+  ---
+  duration_ms: 5.211375
+  ...
+# Subtest: gated chat contains no request call of its own
+ok 68 - gated chat contains no request call of its own
+  ---
+  duration_ms: 5.096459
+  ...
+# Subtest: gated routine: every example link sits inside the inert wrapper
+ok 69 - gated routine: every example link sits inside the inert wrapper
+  ---
+  duration_ms: 2.593458
+  ...
+# Subtest: gated anwendung: every example link sits inside the inert wrapper
+ok 70 - gated anwendung: every example link sits inside the inert wrapper
+  ---
+  duration_ms: 3.104167
+  ...
+# Subtest: gated chat: every example link sits inside the inert wrapper
+ok 71 - gated chat: every example link sits inside the inert wrapper
+  ---
+  duration_ms: 4.422
+  ...
+# Subtest: InertExample cancels activation before the wrapped component's own handler runs
+ok 72 - InertExample cancels activation before the wrapped component's own handler runs
+  ---
+  duration_ms: 0.119917
+  ...
+# Subtest: InertExample also cancels keyboard activation
+ok 73 - InertExample also cancels keyboard activation
+  ---
+  duration_ms: 0.124291
+  ...
+# Subtest: renders the frame, the Beispiel band, the benefit line and exactly one CTA
+ok 74 - renders the frame, the Beispiel band, the benefit line and exactly one CTA
+  ---
+  duration_ms: 1.484208
+  ...
+# Subtest: the example content sits inside the one in-frame scroll container
+ok 75 - the example content sits inside the one in-frame scroll container
+  ---
+  duration_ms: 0.182417
+  ...
+# Subtest: the CTA opens the Premium sheet with the exact page context
+ok 76 - the CTA opens the Premium sheet with the exact page context
+  ---
+  duration_ms: 0.556167
+  ...
+# Subtest: every user-facing string comes from the caller — the component hard-codes no copy
+ok 77 - every user-facing string comes from the caller — the component hard-codes no copy
+  ---
+  duration_ms: 0.116459
+  ...
+# Subtest: landing client dependency graphs contain no static Sentry SDK import
+ok 78 - landing client dependency graphs contain no static Sentry SDK import
+  ---
+  duration_ms: 123.836875
+  ...
+# Subtest: fresh personal-plan entry keeps the full quiz behind a dynamic import boundary
+ok 79 - fresh personal-plan entry keeps the full quiz behind a dynamic import boundary
+  ---
+  duration_ms: 15.991
+  ...
+1..79
+# tests 79
+# suites 0
+# pass 79
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9642.421709

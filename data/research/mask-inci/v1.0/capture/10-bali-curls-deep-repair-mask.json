@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "mask-inci-capture-v1",
+  "productNumber": 10,
+  "role": "primary",
+  "archetypeSlots": ["9 - curl mask"],
+  "identity": {
+    "brand": "Bali Curls (by Hank Ge) / Bali Care",
+    "productName": "Deep Repair Mask (official current name per bali-care.com; see naming conflict below)",
+    "packSize": "200 ml",
+    "gtinEan": "4262391990001",
+    "eanSourceNote": "Proposal figure, sourced from an INCI-database product-URL number. A dm.de listing URL (dm.de/bali-curls-haarmaske-deep-repair-p4262391990001.html) surfaced in search results using this same EAN - see tier-upgrade flag below.",
+    "market": "Primarily specialty curly-hair retail (brand site bali-care.com, Lockenbox, CurlyTools) per approved below-tier sourcing; a dm.de listing for this exact EAN was found in search results this pass but could not be confirmed live (see notes)."
+  },
+  "rawInci": "AQUA, CETEARYL ALCOHOL, GLYCERIN, BUTYROSPERMUM PARKII BUTTER, COCOS NUCIFERA OIL, GLYCINE SOJA OIL, PERSEA GRATISSIMA OIL, CETRIMONIUM CHLORIDE, BETAINE, BEHENTRIMONIUM METHOSULFATE, PANTHENOL, SODIUM BENZOATE, PARFUM, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, GLYCERYL STEARATE SE, POTASSIUM SORBATE, LACTIC ACID, LINALOOL, CITRIC ACID, LIMONENE, CANANGA ODORATA FLOWER EXTRACT, BENZOIC ACID",
+  "inciSource": {
+    "url": "https://www.bali-care.com/de-de/products/deep-hydration-mask",
+    "accessDate": "2026-09-04",
+    "tier": "brand-direct (upgraded from hautschutzengel-only; Bali Curls below-tier sourcing approved by Nick)",
+    "notes": "URL slug still says 'deep-hydration-mask' (legacy name) but the page's own body content confirms the current official product name is 'DEEP REPAIR MASK'. Cross-confirmed against hautschutzengel.de/en/bali-curls-inhaltsstoffe/marke/14479777.html and an incibeauty.com/en/produit/4262391990001 search snippet, both listing the same core ingredient set (the incibeauty snippet additionally listed 'AMYL SALICYLATE, LINALYL ACETATE, METHYL BENZOATE' at the tail, which the brand-direct page's list did not show - likely a truncation artifact rather than a true formula difference, not resolved with full certainty)."
+  },
+  "directions": {
+    "text": "Trage die Haarmaske in die Längen und Spitzen des gewaschenen, handtuchtrockenen Haares auf und lasse sie 2-3 Minuten einwirken. Spüle sie dann im Anschluss gründlich aus.",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "2-3",
+    "source": "bali-care.com/de-de official German product page (direct fetch, verbatim)",
+    "confidence": "high"
+  },
+  "claims": [
+    "vegan",
+    "mit Sheabutter, Kokosöl & Avocadoöl",
+    "tiefenpflegend für Locken & trockenes Haar",
+    "mit Ylang-Ylang-Extrakt"
+  ],
+  "conflicts": [
+    {
+      "type": "naming",
+      "description": "hautschutzengel.de titles this product 'Deep Hydration Mask' (an older/legacy name), while bali-care.com's own current page content, dm.de's listing, and the calibration proposal all use 'Deep Repair Mask' for the same EAN and formula. Treated as a naming discrepancy, not a formula conflict - the INCI matches across all sources.",
+      "resolution": "using 'Deep Repair Mask' as the current official name, per brand-direct page content"
+    },
+    {
+      "type": "sourcing tier (positive finding, needs confirmation)",
+      "description": "A dm.de listing URL for this exact EAN (dm.de/bali-curls-haarmaske-deep-repair-p4262391990001.html) appeared in search results, which would contradict the proposal's §4.3 framing that Bali Curls is not sold at dm/Rossmann/Müller. The dm.de page itself could not be fetched (JS-blocked, returned header-only markup), so this is an UNCONFIRMED positive tier-upgrade signal, not a verified fact.",
+      "resolution": "unresolved - flagged for the orchestrator; if dm.de availability is confirmed at freeze time, this product's source tier should be upgraded from 'below-tier' to 'dm'"
+    }
+  ],
+  "status": "captured_with_conflict",
+  "statusNotes": "INCI and directions both high-confidence via brand-direct source. Two flags for orchestrator: a naming discrepancy (cosmetic, resolved in favor of the current brand name) and a possible dm.de tier-upgrade that could not be confirmed by direct fetch this pass."
+}

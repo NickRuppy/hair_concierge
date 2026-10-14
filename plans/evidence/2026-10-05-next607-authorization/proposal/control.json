@@ -1,0 +1,17 @@
+{
+  "id": "retirement-response-status",
+  "source": "src/app/api/stripe/create-checkout-session/route.ts",
+  "beforeSha256": "0808a083b02a9611deab703bf9fc7a9b3cecb5dce2b5be1889003a0cd06a9bd8",
+  "find": "return NextResponse.json({ error: \"one_time_purchase_retired\" }, { status: 410 })",
+  "replace": "return NextResponse.json({ error: \"one_time_purchase_retired\" }, { status: 409 })",
+  "mutantPath": "/tmp/test-audit-offer-experiments87-authorization-closure/retirement-response-mutant.ts",
+  "mutantSha256": "a0bdb74c4318390be5f9d258a2599c0910bd37d5adb06828d7aaa6f1dec12ff8",
+  "keeperFile": "tests/stripe-checkout-session-route-contract.test.ts",
+  "keeperTitle": "retired one-time purchase requests stop before account or provider work",
+  "firstKeeperAssertionLine": 117,
+  "code": "ERR_ASSERTION",
+  "operator": "strictEqual",
+  "actual": 409,
+  "expected": 410,
+  "limit": "Representative unchanged early-response contract. Do not delete/bypass gate as a fault; that would enter framework/provider setup."
+}

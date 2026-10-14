@@ -1,0 +1,150 @@
+{
+  "kind": "Frozen command-only amendment handback",
+  "artifacts": [
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/README.md",
+      "sha256": "10e071fb8155fb407d4fd79c3c450d1ddd9cdbedbc656f37a5a205685478fcc0",
+      "bytes": 4250
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/amendment-check.json",
+      "sha256": "1425bb73f5e647f079192485aebf6577b9631f61a2f5ffe3b3e5bcd92082bc31",
+      "bytes": 1082
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/amendment-provenance.json",
+      "sha256": "ee265f412769039f966002849424902eb1ebe32ed86b07f919a04363df46f22b",
+      "bytes": 8937
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/bounded-delta.patch",
+      "sha256": "664b657675d0134b67258a7c88b5455db1e054768cd5e6fc8a2853e2f3316fd8",
+      "bytes": 7370
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/controls-check.log",
+      "sha256": "4bc6560b14063232f25982fad273789015c93dd314e12d2767c8fcd718e080b6",
+      "bytes": 366
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/editor-check.log",
+      "sha256": "4aed229194b94c74fd2c5dd3d926b04c0612a26ad86071d567379dc825351f38",
+      "bytes": 408
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/operator-candidates.json",
+      "sha256": "3a224646fe938aa4cbd3d9bee45222a395816607a3236d43f600954693b14994",
+      "bytes": 14112
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/operator-controls-normalized.json",
+      "sha256": "e28698d53100fba4cc4d43c6c3c18f6fa271d596ecc9c389dda85c61ff183405",
+      "bytes": 29050
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/operator-edit.cjs",
+      "sha256": "f9a623c4b8fb78f07185f833f2f4842336ff4bd2567db3d695c070fae549bd90",
+      "bytes": 3530
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/operator-evidence.json",
+      "sha256": "8f1b413de00583714b4d3d04774927175394493068d7f1c54e1318a592b58f7f",
+      "bytes": 961
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/operator-guard.cjs",
+      "sha256": "a19709a327f84751f5fe01e57aec9dab223b561a3b5f7ebb608de7dfd9254262",
+      "bytes": 13844
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/operator-pins.json",
+      "sha256": "68a3621c1a438274ec566d261ee5087b84f0a8d54424d85fc5ed81c8ffdd44bb",
+      "bytes": 967400
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/operator-proof.cjs",
+      "sha256": "ac2caa50115e31e56bad616e602cdeda204544042bbe2529e49c399c3506d0d5",
+      "bytes": 5725
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/operator-readonly-preload.cjs",
+      "sha256": "e1d17e207ee830cae3197a07bb0c142ba1288dc972958cefac0951abbfda4d6c",
+      "bytes": 2054
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/operator-run-controls.cjs",
+      "sha256": "42a621c6affbd2af1ca1fce79b89fd59b00d6d7644e536b789815706d4eaf2bd",
+      "bytes": 8059
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/operator-selected-closure.json",
+      "sha256": "4fa2e5fb1cb3d32eb67d3615ddcfb8a1167bef740ed22d5dc275c1a3036cef5b",
+      "bytes": 19166
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/originals/operator-candidates.json",
+      "sha256": "3a224646fe938aa4cbd3d9bee45222a395816607a3236d43f600954693b14994",
+      "bytes": 14112
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/originals/operator-controls-normalized.json",
+      "sha256": "ad5ca6a5f07acca70e164230b6952bc4a9e90823a03b06550b9b1f5a434d1311",
+      "bytes": 28434
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/originals/operator-edit.cjs",
+      "sha256": "4d0d57e7627d4887d9674c9144eec6dadec654e3535fb1d69f7e94d1fef6e116",
+      "bytes": 3530
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/originals/operator-evidence.json",
+      "sha256": "8f1b413de00583714b4d3d04774927175394493068d7f1c54e1318a592b58f7f",
+      "bytes": 961
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/originals/operator-guard.cjs",
+      "sha256": "138b98bcc23fb557728710eda4bfa40d187db09c57a441faf06603719cf01066",
+      "bytes": 13803
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/originals/operator-pins.json",
+      "sha256": "bfbedb7adb1865d0cc2ada97d9e74fe934645326654e6001273713495e390a5c",
+      "bytes": 956918
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/originals/operator-proof.cjs",
+      "sha256": "ac2caa50115e31e56bad616e602cdeda204544042bbe2529e49c399c3506d0d5",
+      "bytes": 5725
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/originals/operator-readonly-preload.cjs",
+      "sha256": "e1d17e207ee830cae3197a07bb0c142ba1288dc972958cefac0951abbfda4d6c",
+      "bytes": 2054
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/originals/operator-run-controls.cjs",
+      "sha256": "1e9282a217065bdd1fa3a1627ddc0227ade4f213d35430a224c74c4db7440fee",
+      "bytes": 8059
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/originals/operator-selected-closure.json",
+      "sha256": "4fa2e5fb1cb3d32eb67d3615ddcfb8a1167bef740ed22d5dc275c1a3036cef5b",
+      "bytes": 19166
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/prepare-amendment.py",
+      "sha256": "64da08e3eb1fdf54d4cf4572e5337be62fd6ddb1a2798b55c96823182062d3ca",
+      "bytes": 6423
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/static-verification.log",
+      "sha256": "44e323312993a2bfd2d2f5533338b3e0400b72b9c275a5faa8d5b358cbea7098",
+      "bytes": 571
+    },
+    {
+      "path": "/tmp/test-audit-scanner-intake26-isolation-dml82bss/verify-amendment.cjs",
+      "sha256": "37f6d67e0c5f19f1ba3c0b31e58a56a365bcfce94a9432d0209ae5e158b51307",
+      "bytes": 2878
+    }
+  ]
+}

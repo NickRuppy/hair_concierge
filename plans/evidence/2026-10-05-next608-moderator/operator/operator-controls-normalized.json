@@ -1,0 +1,102 @@
+[
+  {
+    "id": "C1-copy",
+    "file": "src/components/personal-plan-field-test/personal-plan-field-test-ended.tsx",
+    "sourceSha256": "7898dc4da1566e74de856fc8176b5a478398dae9fc8813f5836e2f7a1e0d3ffd",
+    "mutatedSha256": "49a2f0737ee39d4fe80d302b644e81aed2be21d4443cd6597677bd6d7937aad9",
+    "from": "Der Testzeitraum ist beendet oder der Zugang wurde geschlossen. Bitte frage das Chaarlie-Team, wenn du weiter testen möchtest.",
+    "to": "Der Testzugang wurde pausiert. Bitte frage das Chaarlie-Team, wenn du weiter testen möchtest.",
+    "anchor": {
+      "kind": "function",
+      "scope": "PersonalPlanFieldTestEnded",
+      "scopeSha256": "73bdfe15cebe5e87b394530d76a4cd27b59d525bd208edd7c349aa2ca43960cb",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/personal-plan-field-test-ui.test.tsx",
+      "name": "lost field-test authorization renders a dedicated non-commercial end state"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^lost field-test authorization renders a dedicated non-commercial end state$",
+      "tests/personal-plan-field-test-ui.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 93,
+        "text": "assert.match(html, /Testzeitraum ist beendet oder der Zugang wurde geschlossen/)",
+        "keeperSha256": "3ebbf0866cf130f3bdb6c5a87076b69f6588b3cf7391971589be6bfca5ee1a08",
+        "testFileSha256": "399ab430e51c6b7781d49ced998e98c930204f8835dd60d5d14babf19562f51d"
+      },
+      "cut": {
+        "startLine": 92,
+        "text": "assert.match(html, /Testzeitraum ist beendet oder der Zugang wurde geschlossen/)",
+        "keeperSha256": "3ebbf0866cf130f3bdb6c5a87076b69f6588b3cf7391971589be6bfca5ee1a08",
+        "testFileSha256": "4737c57eee0061e44ab84e47abef535bef3de94df7cc05de70622b9bc65965e8"
+      }
+    },
+    "expectedOperator": "match",
+    "errorMessageIncludes": [
+      "The input",
+      "match the regular expression",
+      "Testzeitraum ist beendet oder der Zugang wurde geschlossen"
+    ],
+    "intendedAssertion": "Keeps original heading/team and all original negative assertions true; only transferred default-paragraph positive fails.",
+    "proofKind": "transferred leaf output assertion"
+  },
+  {
+    "id": "C1-payment",
+    "file": "src/components/personal-plan-field-test/personal-plan-field-test-ended.tsx",
+    "sourceSha256": "7898dc4da1566e74de856fc8176b5a478398dae9fc8813f5836e2f7a1e0d3ffd",
+    "mutatedSha256": "9f0712e23e200e9bc78bf147d73e5f3fc4569ffab4b8f3f07b40dbeb80b1a909",
+    "from": "Der Testzeitraum ist beendet oder der Zugang wurde geschlossen. Bitte frage das Chaarlie-Team, wenn du weiter testen möchtest.",
+    "to": "Der Testzeitraum ist beendet oder der Zugang wurde geschlossen. Bitte frage das Chaarlie-Team, wenn du weiter testen möchtest. Abo",
+    "anchor": {
+      "kind": "function",
+      "scope": "PersonalPlanFieldTestEnded",
+      "scopeSha256": "73bdfe15cebe5e87b394530d76a4cd27b59d525bd208edd7c349aa2ca43960cb",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/personal-plan-field-test-ui.test.tsx",
+      "name": "lost field-test authorization renders a dedicated non-commercial end state"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^lost field-test authorization renders a dedicated non-commercial end state$",
+      "tests/personal-plan-field-test-ui.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 94,
+        "text": "assert.doesNotMatch(html, /Abo|Zahlung|Stripe|PayPal|Preis/)",
+        "keeperSha256": "3ebbf0866cf130f3bdb6c5a87076b69f6588b3cf7391971589be6bfca5ee1a08",
+        "testFileSha256": "399ab430e51c6b7781d49ced998e98c930204f8835dd60d5d14babf19562f51d"
+      },
+      "cut": {
+        "startLine": 93,
+        "text": "assert.doesNotMatch(html, /Abo|Zahlung|Stripe|PayPal|Preis/)",
+        "keeperSha256": "3ebbf0866cf130f3bdb6c5a87076b69f6588b3cf7391971589be6bfca5ee1a08",
+        "testFileSha256": "4737c57eee0061e44ab84e47abef535bef3de94df7cc05de70622b9bc65965e8"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "errorMessageIncludes": [
+      "The input",
+      "match the regular expression",
+      "Abo|Zahlung|Stripe|PayPal|Preis"
+    ],
+    "intendedAssertion": "Retains original paragraph and original keeper negative (which omits Abo); only transferred payment-free negative fails.",
+    "proofKind": "transferred leaf output assertion"
+  }
+]

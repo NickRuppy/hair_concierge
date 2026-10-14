@@ -1,0 +1,10 @@
+import "server-only"
+
+export async function isPersonalPlanAppV1AllowedForUser(
+  _userId: string,
+  _client?: unknown,
+): Promise<boolean> {
+  void _userId
+  void _client
+  return true
+}

@@ -24,6 +24,7 @@ const SUPPORTED_LEGACY_AUTHORITY_VERSIONS: Partial<Record<PersonalPlanCategory, 
   shampoo: "personal-plan.shampoo.v3",
   mask: "personal-plan.mask.v3",
   scalp_care: "personal-plan.scalp-care.v2",
+  bondbuilder: "personal-plan.bondbuilder.v2",
 }
 
 function refreshableAuthorityCategories(

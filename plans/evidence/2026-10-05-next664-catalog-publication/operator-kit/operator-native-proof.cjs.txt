@@ -1,0 +1,14 @@
+'use strict';
+// Main's read-only full-cohort receipt checker. Does not run native or import tests.
+const fs=require('node:fs'),path=require('node:path'),g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs');
+const PIN_SHA='4ac6d1b4344d4296e8c91668d9c62bc352869ce8636f4d2c54f42612bf118a3d';
+if(process.argv.length!==5)g.fail('Use <before|transfer|cut> <closed-native.tap> <command.json>');
+const [phase,logPath,commandPath]=process.argv.slice(2),ctx=g.load(PIN_SHA);
+if(!['before','transfer','cut'].includes(phase)||ctx.current().phase!==phase)g.fail('Exact current native phase required');
+const expectedCommand=JSON.parse(fs.readFileSync(__dirname+'/full-native-command.json'));
+const raw=fs.readFileSync(logPath),commandBytes=fs.readFileSync(commandPath),command=JSON.parse(commandBytes);
+if(JSON.stringify(command)!==JSON.stringify(expectedCommand))g.fail('Exact full cohort command receipt required');
+const text=raw.toString(),totals=proof.parseTAP(text),names=[...text.matchAll(/^# Subtest: (.+)$/gm)].map(x=>x[1]);
+const expected=ctx.evidence.nativeNames[phase],n=phase==='cut'?96:99;
+if(totals.tests!==n||totals.pass!==n||totals.fail!==0||totals.skipped!==0||totals.cancelled!==0||totals.todo!==0||names.length!==n||JSON.stringify([...names].sort())!==JSON.stringify([...expected].sort())||/^not ok /m.test(text))g.fail('Full native names/count/pass proof failed');
+console.log(JSON.stringify({status:'PASS_RECORDED_FULL_NATIVE_TAP',phase,totals,logPath:path.resolve(logPath),logSHA256:g.sha(raw),commandSHA256:g.sha(commandBytes),pinsSHA:PIN_SHA,counts:ctx.counts,limits:'Main must attest closed process exit 0; text validation cannot prove process status. No runtime launched by this checker.',repositoryWrites:0,children:0,ownerImports:0},null,2));

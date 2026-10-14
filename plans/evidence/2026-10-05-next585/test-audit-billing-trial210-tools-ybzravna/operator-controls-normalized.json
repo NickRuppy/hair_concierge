@@ -1,0 +1,201 @@
+[
+  {
+    "id": "C1-inclusive-authorization",
+    "candidate": "C1",
+    "file": "src/lib/billing/trial-policy.ts",
+    "sourceSha256": "a88f33d5abfefd705629a0ca8ef739b893dd1908aeec639627916fc815daef02",
+    "mutatedSha256": "05e30ca0284a607b8a1e37d660fec8051149b2e115edf181ee6f5f3236fa4849",
+    "from": "parsed.authorizationSucceededAt > nowAt",
+    "to": "parsed.authorizationSucceededAt >= nowAt",
+    "anchor": {
+      "kind": "function",
+      "scope": "resolveTrialAccess",
+      "scopeSha256": "d8d0bf983bea4f2aa5a96229cc8db4441e908d900a2c2fe6305ae73ab151ae26",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/billing-trial-access-projection.test.ts",
+      "name": "bridges the first-collection window at the seven-day boundary and locks when it closes"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^bridges\\ the\\ first\\-collection\\ window\\ at\\ the\\ seven\\-day\\ boundary\\ and\\ locks\\ when\\ it\\ closes$",
+      "tests/billing-trial-access-projection.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 48,
+        "text": "assert.deepEqual(resolveBillingTrialAccess(row(), new Date(AUTHORIZED_AT)), {\n    hasAccess: true,\n    phase: \"trial\",\n    reason: \"trial_active\",\n  })",
+        "keeperSha256": "b8ad04bb5911f4209bbcbdaa5eda099237c60371e8510d06f06ffcbd6f7fa511",
+        "testFileSha256": "28dd9a4b37dae54d8c7e7c69120b22b5735329e5ff83499e0394113eb80e27de"
+      },
+      "cut": {
+        "startLine": 48,
+        "text": "assert.deepEqual(resolveBillingTrialAccess(row(), new Date(AUTHORIZED_AT)), {\n    hasAccess: true,\n    phase: \"trial\",\n    reason: \"trial_active\",\n  })",
+        "keeperSha256": "b8ad04bb5911f4209bbcbdaa5eda099237c60371e8510d06f06ffcbd6f7fa511",
+        "testFileSha256": "28dd9a4b37dae54d8c7e7c69120b22b5735329e5ff83499e0394113eb80e27de"
+      }
+    },
+    "intendedAssertion": "keeper first deepEqual at exact authorization must report awaiting_authorization versus expected trial_active",
+    "expectedOperator": "deepStrictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:",
+      "awaiting_authorization",
+      "authorization_pending",
+      "trial_active"
+    ]
+  },
+  {
+    "id": "C1-exclusive-end",
+    "candidate": "C1",
+    "file": "src/lib/billing/trial-policy.ts",
+    "sourceSha256": "a88f33d5abfefd705629a0ca8ef739b893dd1908aeec639627916fc815daef02",
+    "mutatedSha256": "e2f38d279cdd94fd00016f4e476c3e1bac9ec848a8718d53cbc0f360edbdcc6c",
+    "from": "if (nowAt < parsed.originalTrialEndAt) {",
+    "to": "if (nowAt <= parsed.originalTrialEndAt) {",
+    "anchor": {
+      "kind": "function",
+      "scope": "resolveTrialAccess",
+      "scopeSha256": "d8d0bf983bea4f2aa5a96229cc8db4441e908d900a2c2fe6305ae73ab151ae26",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/billing-trial-access-projection.test.ts",
+      "name": "bridges the first-collection window at the seven-day boundary and locks when it closes"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^bridges\\ the\\ first\\-collection\\ window\\ at\\ the\\ seven\\-day\\ boundary\\ and\\ locks\\ when\\ it\\ closes$",
+      "tests/billing-trial-access-projection.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 53,
+        "text": "assert.deepEqual(resolveBillingTrialAccess(row(), new Date(TRIAL_END_AT)), {\n    hasAccess: true,\n    phase: \"trial\",\n    reason: \"first_collection_pending\",\n  })",
+        "keeperSha256": "b8ad04bb5911f4209bbcbdaa5eda099237c60371e8510d06f06ffcbd6f7fa511",
+        "testFileSha256": "28dd9a4b37dae54d8c7e7c69120b22b5735329e5ff83499e0394113eb80e27de"
+      },
+      "cut": {
+        "startLine": 53,
+        "text": "assert.deepEqual(resolveBillingTrialAccess(row(), new Date(TRIAL_END_AT)), {\n    hasAccess: true,\n    phase: \"trial\",\n    reason: \"first_collection_pending\",\n  })",
+        "keeperSha256": "b8ad04bb5911f4209bbcbdaa5eda099237c60371e8510d06f06ffcbd6f7fa511",
+        "testFileSha256": "28dd9a4b37dae54d8c7e7c69120b22b5735329e5ff83499e0394113eb80e27de"
+      }
+    },
+    "intendedAssertion": "keeper second deepEqual at exact trial end must report trial_active versus expected first_collection_pending",
+    "expectedOperator": "deepStrictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:",
+      "trial_active",
+      "first_collection_pending"
+    ]
+  },
+  {
+    "id": "C2-stripe-first-charge",
+    "candidate": "C2",
+    "file": "src/lib/billing/trial-required-notices.ts",
+    "sourceSha256": "c7b2d3f9b9818a2cd5d72839f6c772c8ceb48b7a5aa4442c0eefdc200837a7fa",
+    "mutatedSha256": "d6cc036c23c0ac8671eb9d413684bae121f1b27753413cdf4886f600a8af37d9",
+    "from": "Die erste Zahlung ist zu diesem Zeitpunkt vorgesehen, sofern du nicht vorher kündigst.",
+    "to": "Die erste Zahlung ist nach diesem Zeitpunkt vorgesehen, sofern du nicht vorher kündigst.",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildTrialRequiredNoticeMessage",
+      "scopeSha256": "e9c90bfb4dfd302cddd5f3e85b6d8a80334a9f0071aa4d19649fa81a377484ef",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/billing-trial-required-notices.test.ts",
+      "name": "contract confirms actual accepted progression, Berlin deadline, cancellation and full withdrawal instruction"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^contract\\ confirms\\ actual\\ accepted\\ progression,\\ Berlin\\ deadline,\\ cancellation\\ and\\ full\\ withdrawal\\ instruction$",
+      "tests/billing-trial-required-notices.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 82,
+        "text": "assert.match(message.receipt_text, /Die erste Zahlung ist zu diesem Zeitpunkt vorgesehen/)",
+        "keeperSha256": "bebe96a5d7ecc0aabbd08594ab61d44014c6a6f57ab1a6e9e301e8c59d1f0ccb",
+        "testFileSha256": "a15b8bd4f60f3cdf5a7848eeea985e63655f856de2af8e0e813b9c55fa65a186"
+      },
+      "cut": {
+        "startLine": 82,
+        "text": "assert.match(message.receipt_text, /Die erste Zahlung ist zu diesem Zeitpunkt vorgesehen/)",
+        "keeperSha256": "bebe96a5d7ecc0aabbd08594ab61d44014c6a6f57ab1a6e9e301e8c59d1f0ccb",
+        "testFileSha256": "6d928e6657417c53ad58f39c4d468c5adc241d53cb8ccad04413d438f0ed0239"
+      }
+    },
+    "intendedAssertion": "keeper transferred regex must fail on receipt_text first-charge sentence",
+    "expectedOperator": "match",
+    "errorMessageIncludes": [
+      "The input did not match the regular expression",
+      "Die erste Zahlung ist zu diesem Zeitpunkt vorgesehen",
+      "Die erste Zahlung ist nach diesem Zeitpunkt vorgesehen"
+    ]
+  },
+  {
+    "id": "C3-accepted-offer-readback",
+    "candidate": "C3",
+    "file": "src/lib/billing/trial-admission.ts",
+    "sourceSha256": "00dea2cbb5dad16446ee405f289aa7912c9cb895774653512d549ddea02d0017",
+    "mutatedSha256": "a858a63aab9a7878bcac5ee88ae8ed12d41ee89a3a620ad4bf2b981fb2a41be1",
+    "from": "JSON.stringify(accepted) !== JSON.stringify(offer)",
+    "to": "false",
+    "anchor": {
+      "kind": "function",
+      "scope": "createTrialEnrollment",
+      "scopeSha256": "2fbfeead3929c76af871307ee5de8bfe6acaebf05dbae02a004495d76c34964d",
+      "expectedOccurrences": 1
+    },
+    "test": {
+      "file": "tests/billing-trial-admission-postgres.test.ts",
+      "name": "trial admission adapter creates one immutable enrollment attempt through its real SQL shape"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^trial\\ admission\\ adapter\\ creates\\ one\\ immutable\\ enrollment\\ attempt\\ through\\ its\\ real\\ SQL\\ shape$",
+      "tests/billing-trial-admission-postgres.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 279,
+        "text": "assert.rejects(\n      () => createTrialEnrollment(client, changed),\n      /does not match accepted terms/,\n    )",
+        "keeperSha256": "1984c7d714d8a8515b8a7135980807046e56d11a5b97bdb4fa8ddc521032a24c",
+        "testFileSha256": "8d93d7fd495017bf38594450300a4a4483ca4bbeb932781c12409614c329a5f1"
+      },
+      "cut": {
+        "startLine": 279,
+        "text": "assert.rejects(\n      () => createTrialEnrollment(client, changed),\n      /does not match accepted terms/,\n    )",
+        "keeperSha256": "1984c7d714d8a8515b8a7135980807046e56d11a5b97bdb4fa8ddc521032a24c",
+        "testFileSha256": "38058edac4dd80694462b97060d94fd6bd2f30c1f58d568beb234f72e4f73bb3"
+      }
+    },
+    "intendedAssertion": "keeper first changed annual-offer assert.rejects must fail with Missing expected rejection; later user/provider cases are not the intended oracle",
+    "expectedOperator": "rejects",
+    "errorMessageIncludes": [
+      "Missing expected rejection"
+    ]
+  }
+]

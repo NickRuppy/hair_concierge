@@ -16,8 +16,9 @@ import {
   type ScanSessionState,
 } from "../src/lib/scan/scanner-session"
 
-test("createScanSessionState: returns the fully-reset default shape", () => {
-  assert.deepEqual(createScanSessionState(), {
+test("createScanSessionState: returns a fresh object each call — mutating one does not leak into the next", () => {
+  const first = createScanSessionState()
+  assert.deepEqual<ScanSessionState>(first, {
     detecting: false,
     frameCounter: 0,
     blockedValue: null,
@@ -38,10 +39,6 @@ test("createScanSessionState: returns the fully-reset default shape", () => {
     hint: null,
     hintChangedAt: 0,
   })
-})
-
-test("createScanSessionState: returns a fresh object each call — mutating one does not leak into the next", () => {
-  const first = createScanSessionState()
   first.detecting = true
   first.lastFiredValue = "4006381333931"
   first.frameCounter = 42
@@ -97,17 +94,6 @@ test("restartScanSessionState: re-arms the guards that would block a second scan
   assert.equal(session.hintChangedAt, 5_000)
 })
 
-test("restartScanSessionState: mutates in place so the running detection loop sees it", () => {
-  const session = createScanSessionState()
-  const loopReference = session
-  session.lastFiredValue = "4006381333931"
-
-  restartScanSessionState(session, 1)
-
-  assert.equal(loopReference, session)
-  assert.equal(loopReference.lastFiredValue, null)
-})
-
 test("restartScanSessionState: keeps loop lifecycle flags, not scan-attempt state", () => {
   const session = createScanSessionState()
   session.detecting = true
@@ -141,27 +127,18 @@ function read(
   return applyRawDetection(session, { rawValue, boundingBoxRatio: 0.3, now }, validate).fire
 }
 
-test("applyRawDetection: two consecutive matching reads fire once", () => {
+test("applyRawDetection: a third and fourth identical read do not re-fire", () => {
   const session = createScanSessionState()
-
   assert.equal(read(session, EAN_A, 100), null)
   assert.equal(session.consecutiveMatch, 1)
-
   assert.equal(read(session, EAN_A, 200), EAN_A)
   assert.equal(session.lastFiredValue, EAN_A)
   assert.equal(session.hasDecoded, true)
-  // The fire consumes the streak so the next frame starts a fresh one.
   assert.equal(session.consecutiveMatch, 0)
   assert.equal(session.lastRawValue, null)
   assert.equal(session.rawDetectionsWithoutStableRead, 0)
   assert.equal(session.lastDetectionTime, 200)
   assert.equal(session.lastBoundingBoxRatio, 0.3)
-})
-
-test("applyRawDetection: a third and fourth identical read do not re-fire", () => {
-  const session = createScanSessionState()
-  read(session, EAN_A, 100)
-  assert.equal(read(session, EAN_A, 200), EAN_A)
 
   assert.equal(read(session, EAN_A, 300), null)
   assert.equal(read(session, EAN_A, 400), null)
@@ -366,16 +343,6 @@ test("shouldFireTimeout: paused wall time never counts — a long sheet does not
   assert.equal(shouldFireTimeout(session), false)
   advanceActiveClock(session, SCAN_TIMEOUT_MS)
   assert.equal(shouldFireTimeout(session), true)
-})
-
-test("shouldFireTimeout: a decoded session never fires the fallback", () => {
-  const session = createScanSessionState()
-  session.hasDecoded = true
-  advanceActiveClock(session, SCAN_TIMEOUT_MS * 2)
-
-  assert.equal(shouldFireTimeout(session), false)
-  // Not consumed either: the one-shot stays armed for the next attempt.
-  assert.equal(session.timeoutFired, false)
 })
 
 test("restartScanSessionState: resets the active clock so the fallback re-arms per attempt", () => {

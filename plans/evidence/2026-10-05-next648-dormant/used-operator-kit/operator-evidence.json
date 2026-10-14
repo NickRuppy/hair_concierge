@@ -1,0 +1,4894 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "files": [
+    "src/lib/personal-plan/rollout-access.ts",
+    "src/lib/personal-plan/journey-access-loader.ts",
+    "src/lib/personal-plan/release.ts",
+    "tests/personal-plan-journey-access-loader.test.ts",
+    "tests/personal-plan-stage3-release.test.ts",
+    "tests/auth-middleware-personal-plan-routine.test.ts",
+    "tests/freemium-enrollment-admission.test.ts",
+    "tests/personal-plan-trial-stage1-journey.test.ts",
+    "tests/personal-plan-field-test-access.test.ts",
+    "tests/personal-plan-rollout-access.test.ts"
+  ],
+  "phases": {
+    "before": [
+      {
+        "file": "src/lib/personal-plan/rollout-access.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/src/lib/personal-plan/rollout-access.ts.txt",
+        "sha256": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+        "bytes": 4691
+      },
+      {
+        "file": "src/lib/personal-plan/journey-access-loader.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/src/lib/personal-plan/journey-access-loader.ts.txt",
+        "sha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+        "bytes": 21991
+      },
+      {
+        "file": "src/lib/personal-plan/release.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/src/lib/personal-plan/release.ts.txt",
+        "sha256": "92d24c0e4c010e20e13f75db0c561cf9da8f490a17de4a0e4cbbf10691a8d55c",
+        "bytes": 3346
+      },
+      {
+        "file": "tests/personal-plan-journey-access-loader.test.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/tests/personal-plan-journey-access-loader.test.ts.txt",
+        "sha256": "16b77c5f68870a0cda0ea86910b26408cae10f85f2213d6f8b219a74ff832e67",
+        "bytes": 36647
+      },
+      {
+        "file": "tests/personal-plan-stage3-release.test.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/tests/personal-plan-stage3-release.test.ts.txt",
+        "sha256": "d25fd6ac50e6ba5a09c3870b83ae55cbc729a72b55cb0329b2d6c414b4dc2f1e",
+        "bytes": 6797
+      },
+      {
+        "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/tests/auth-middleware-personal-plan-routine.test.ts.txt",
+        "sha256": "772d32f6e8bce05037c324ea7b11a9260d75c99c54bc00e6e4c13588e7129e24",
+        "bytes": 42307
+      },
+      {
+        "file": "tests/freemium-enrollment-admission.test.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/tests/freemium-enrollment-admission.test.ts.txt",
+        "sha256": "fcc6c0f7c564fa5078c7c81823991341ab1859d414d6e00c33f72c369b8a2389",
+        "bytes": 10249
+      },
+      {
+        "file": "tests/personal-plan-trial-stage1-journey.test.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/tests/personal-plan-trial-stage1-journey.test.ts.txt",
+        "sha256": "ce32342ee184872e96bc13191d0f5dc25d0d863a8acaa477e4ccd8df62bf9fc0",
+        "bytes": 13002
+      },
+      {
+        "file": "tests/personal-plan-field-test-access.test.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/tests/personal-plan-field-test-access.test.ts.txt",
+        "sha256": "9b6b6880e409e68a531f1d281dbbc19054ec4cee05535f48e21df67a6b0b0e8a",
+        "bytes": 5892
+      },
+      {
+        "file": "tests/personal-plan-rollout-access.test.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/tests/personal-plan-rollout-access.test.ts.txt",
+        "sha256": "108669d5b64d304c772e0a3b5878b19b18cc69a407b5792574f0b9b0c192dd41",
+        "bytes": 6398
+      }
+    ],
+    "transfer": [
+      {
+        "file": "src/lib/personal-plan/rollout-access.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/src/lib/personal-plan/rollout-access.ts.txt",
+        "sha256": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+        "bytes": 4691
+      },
+      {
+        "file": "src/lib/personal-plan/journey-access-loader.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/src/lib/personal-plan/journey-access-loader.ts.txt",
+        "sha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+        "bytes": 21991
+      },
+      {
+        "file": "src/lib/personal-plan/release.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/src/lib/personal-plan/release.ts.txt",
+        "sha256": "92d24c0e4c010e20e13f75db0c561cf9da8f490a17de4a0e4cbbf10691a8d55c",
+        "bytes": 3346
+      },
+      {
+        "file": "tests/personal-plan-journey-access-loader.test.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/tests/personal-plan-journey-access-loader.test.ts.txt",
+        "sha256": "16b77c5f68870a0cda0ea86910b26408cae10f85f2213d6f8b219a74ff832e67",
+        "bytes": 36647
+      },
+      {
+        "file": "tests/personal-plan-stage3-release.test.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/tests/personal-plan-stage3-release.test.ts.txt",
+        "sha256": "d25fd6ac50e6ba5a09c3870b83ae55cbc729a72b55cb0329b2d6c414b4dc2f1e",
+        "bytes": 6797
+      },
+      {
+        "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/tests/auth-middleware-personal-plan-routine.test.ts.txt",
+        "sha256": "772d32f6e8bce05037c324ea7b11a9260d75c99c54bc00e6e4c13588e7129e24",
+        "bytes": 42307
+      },
+      {
+        "file": "tests/freemium-enrollment-admission.test.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/tests/freemium-enrollment-admission.test.ts.txt",
+        "sha256": "fcc6c0f7c564fa5078c7c81823991341ab1859d414d6e00c33f72c369b8a2389",
+        "bytes": 10249
+      },
+      {
+        "file": "tests/personal-plan-trial-stage1-journey.test.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/tests/personal-plan-trial-stage1-journey.test.ts.txt",
+        "sha256": "ce32342ee184872e96bc13191d0f5dc25d0d863a8acaa477e4ccd8df62bf9fc0",
+        "bytes": 13002
+      },
+      {
+        "file": "tests/personal-plan-field-test-access.test.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/tests/personal-plan-field-test-access.test.ts.txt",
+        "sha256": "9b6b6880e409e68a531f1d281dbbc19054ec4cee05535f48e21df67a6b0b0e8a",
+        "bytes": 5892
+      },
+      {
+        "file": "tests/personal-plan-rollout-access.test.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/tests/personal-plan-rollout-access.test.ts.txt",
+        "sha256": "108669d5b64d304c772e0a3b5878b19b18cc69a407b5792574f0b9b0c192dd41",
+        "bytes": 6398
+      }
+    ],
+    "cut": [
+      {
+        "file": "src/lib/personal-plan/rollout-access.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/src/lib/personal-plan/rollout-access.ts.txt",
+        "sha256": "b4efd27a848a803c60848cf16ac8b9d0c845ae22dabb84a09cc912472eeb206c",
+        "bytes": 187
+      },
+      {
+        "file": "src/lib/personal-plan/journey-access-loader.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/src/lib/personal-plan/journey-access-loader.ts.txt",
+        "sha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+        "bytes": 20849
+      },
+      {
+        "file": "src/lib/personal-plan/release.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/src/lib/personal-plan/release.ts.txt",
+        "sha256": "7fff03697221fa4281c0a3756c3cfab618460c536e60cb05e060e38d2693fdd0",
+        "bytes": 2571
+      },
+      {
+        "file": "tests/personal-plan-journey-access-loader.test.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/tests/personal-plan-journey-access-loader.test.ts.txt",
+        "sha256": "7a18014ae40a06640e9fa54354a1109fd613986858c53c7ff072144ed175b6c8",
+        "bytes": 35233
+      },
+      {
+        "file": "tests/personal-plan-stage3-release.test.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/tests/personal-plan-stage3-release.test.ts.txt",
+        "sha256": "b875712849799021f740e63ef79e82e8eadd355b09df66a62d12031c605a7bec",
+        "bytes": 6087
+      },
+      {
+        "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/tests/auth-middleware-personal-plan-routine.test.ts.txt",
+        "sha256": "772d32f6e8bce05037c324ea7b11a9260d75c99c54bc00e6e4c13588e7129e24",
+        "bytes": 42307
+      },
+      {
+        "file": "tests/freemium-enrollment-admission.test.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/tests/freemium-enrollment-admission.test.ts.txt",
+        "sha256": "30e53eaa8a77054424780676bd341ea6aeb7821c652d36ea69faa8440c20b3e1",
+        "bytes": 10181
+      },
+      {
+        "file": "tests/personal-plan-trial-stage1-journey.test.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/tests/personal-plan-trial-stage1-journey.test.ts.txt",
+        "sha256": "1af6fcb04a9e0d8e864fdcd1760bb325130fa3bea7f8104bb44996933679feb2",
+        "bytes": 12925
+      },
+      {
+        "file": "tests/personal-plan-field-test-access.test.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/tests/personal-plan-field-test-access.test.ts.txt",
+        "sha256": "0701492072d7229a19c832017a5d46b708be3785a7839e9325eee3e5d1a7e963",
+        "bytes": 5820
+      },
+      {
+        "file": "tests/personal-plan-rollout-access.test.ts",
+        "path": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/tests/personal-plan-rollout-access.test.ts.txt",
+        "sha256": "3f9f358536dc36b6197100414281d55315a8c0d65b098c1433676edf925a1d18",
+        "bytes": 1905
+      }
+    ]
+  },
+  "testMapping": [
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "a currently paid bound migration keeps Stage 2 access independently of the old cutoff",
+      "beforeLine": 240,
+      "beforeBodySHA": "4ee5e299f9a861b74569bd6e5a89bdd1c0ee76fd1ef695520a761bd0116a23f8",
+      "cutTitle": "a currently paid bound migration keeps Stage 2 access independently of the old cutoff",
+      "cutLine": 238,
+      "cutBodySHA": "4ee5e299f9a861b74569bd6e5a89bdd1c0ee76fd1ef695520a761bd0116a23f8",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 254,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(access, { allowed: accessState === \"active\" })"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 252,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(access, { allowed: accessState === \"active\" })"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "verified normal paid pre-cutoff sources enter the journey only while migration is enabled",
+      "beforeLine": 258,
+      "beforeBodySHA": "b2d8add2e7fc89dbdc4c98a6383a60e02472d9029ac62c9fbda252af64e99581",
+      "cutTitle": "verified normal paid pre-cutoff sources enter the journey only while migration is enabled",
+      "cutLine": 256,
+      "cutBodySHA": "b2d8add2e7fc89dbdc4c98a6383a60e02472d9029ac62c9fbda252af64e99581",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 274,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(disabled, { allowed: false })"
+        },
+        {
+          "line": 287,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(await loadPersonalPlanStage2AccessWithDeps(enabledDeps, \"owner-1\"), {\n      allowed: true,\n    })"
+        },
+        {
+          "line": 292,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 272,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(disabled, { allowed: false })"
+        },
+        {
+          "line": 285,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(await loadPersonalPlanStage2AccessWithDeps(enabledDeps, \"owner-1\"), {\n      allowed: true,\n    })"
+        },
+        {
+          "line": 290,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "Stage 2 access keeps the app rollout gate and stops before later-stage authority reads",
+      "beforeLine": 296,
+      "beforeBodySHA": "acd24a2aa5cae804fcb0f4d384e7ed63ed3445ccba2e5c4e67e8d89a0c2e5acb",
+      "cutTitle": "Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing",
+      "cutLine": 294,
+      "cutBodySHA": "865700740561099b23c65f055ea1b9fbe23a43cbc8a74155a97e37c2e6350498",
+      "decision": "R",
+      "unchangedCallback": false,
+      "removedAssertions": [
+        "assert.deepEqual(excluded, { allowed: false })",
+        "assert.equal(entitlementReads, 0)"
+      ],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 309,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(excluded, { allowed: false })"
+        },
+        {
+          "line": 310,
+          "callee": "assert.equal",
+          "text": "assert.equal(entitlementReads, 0)"
+        },
+        {
+          "line": 339,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(access, { allowed: true })"
+        },
+        {
+          "line": 340,
+          "callee": "assert.equal",
+          "text": "assert.equal(refinedReads, 0)"
+        },
+        {
+          "line": 341,
+          "callee": "assert.equal",
+          "text": "assert.equal(draftReads, 0)"
+        },
+        {
+          "line": 342,
+          "callee": "assert.equal",
+          "text": "assert.equal(stage3Reads, 0)"
+        },
+        {
+          "line": 343,
+          "callee": "assert.equal",
+          "text": "assert.equal(stage4Reads, 0)"
+        },
+        {
+          "line": 344,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(timings, [])"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 322,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(access, { allowed: true })"
+        },
+        {
+          "line": 323,
+          "callee": "assert.equal",
+          "text": "assert.equal(refinedReads, 0)"
+        },
+        {
+          "line": 324,
+          "callee": "assert.equal",
+          "text": "assert.equal(draftReads, 0)"
+        },
+        {
+          "line": 325,
+          "callee": "assert.equal",
+          "text": "assert.equal(stage3Reads, 0)"
+        },
+        {
+          "line": 326,
+          "callee": "assert.equal",
+          "text": "assert.equal(stage4Reads, 0)"
+        },
+        {
+          "line": 327,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(timings, [])"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "Stage 2 access remains fail-closed for incomplete owner source facts and throws on reads",
+      "beforeLine": 347,
+      "beforeBodySHA": "4322114b6beefd378b915709d330d1057475d58eb75c78f0b5c287bfebc6690f",
+      "cutTitle": "Stage 2 access remains fail-closed for incomplete owner source facts and throws on reads",
+      "cutLine": 330,
+      "cutBodySHA": "4322114b6beefd378b915709d330d1057475d58eb75c78f0b5c287bfebc6690f",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 348,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(\n    await loadPersonalPlanStage2AccessWithDeps(deps({ appEnabled: () => false }), \"owner-1\"),\n    { allowed: false },\n  )"
+        },
+        {
+          "line": 354,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(\n      await loadPersonalPlanStage2AccessWithDeps(\n        deps({\n          loadEntitlement: async () => ({\n            accessState,\n            qualifiedAt: \"2026-08-08T00:00:00Z\",\n            artifactLeadId: \"lead-1\",\n          }),\n        }),\n        \"owner-1\",\n      ),\n      { allowed: false },\n    )"
+        },
+        {
+          "line": 368,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(\n    await loadPersonalPlanStage2AccessWithDeps(\n      deps({\n        loadEntitlement: async () => ({\n          accessState: \"active\",\n          qualifiedAt: \"2026-07-31T23:59:59Z\",\n          artifactLeadId: \"lead-1\",\n        }),\n      }),\n      \"owner-1\",\n    ),\n    { allowed: false },\n  )"
+        },
+        {
+          "line": 381,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(\n    await loadPersonalPlanStage2AccessWithDeps(deps({ stage2Enabled: () => false }), \"owner-1\"),\n    { allowed: false },\n  )"
+        },
+        {
+          "line": 399,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(await loadPersonalPlanStage2AccessWithDeps(deps(override), \"owner-1\"), {\n      allowed: false,\n    })"
+        },
+        {
+          "line": 404,
+          "callee": "assert.rejects",
+          "text": "assert.rejects(\n    () =>\n      loadPersonalPlanStage2AccessWithDeps(\n        deps({\n          loadPreparedArtifact: async () => {\n            throw new Error(\"artifact database unavailable\")\n          },\n        }),\n        \"owner-1\",\n      ),\n    /artifact database unavailable/,\n  )"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 331,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(\n    await loadPersonalPlanStage2AccessWithDeps(deps({ appEnabled: () => false }), \"owner-1\"),\n    { allowed: false },\n  )"
+        },
+        {
+          "line": 337,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(\n      await loadPersonalPlanStage2AccessWithDeps(\n        deps({\n          loadEntitlement: async () => ({\n            accessState,\n            qualifiedAt: \"2026-08-08T00:00:00Z\",\n            artifactLeadId: \"lead-1\",\n          }),\n        }),\n        \"owner-1\",\n      ),\n      { allowed: false },\n    )"
+        },
+        {
+          "line": 351,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(\n    await loadPersonalPlanStage2AccessWithDeps(\n      deps({\n        loadEntitlement: async () => ({\n          accessState: \"active\",\n          qualifiedAt: \"2026-07-31T23:59:59Z\",\n          artifactLeadId: \"lead-1\",\n        }),\n      }),\n      \"owner-1\",\n    ),\n    { allowed: false },\n  )"
+        },
+        {
+          "line": 364,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(\n    await loadPersonalPlanStage2AccessWithDeps(deps({ stage2Enabled: () => false }), \"owner-1\"),\n    { allowed: false },\n  )"
+        },
+        {
+          "line": 382,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(await loadPersonalPlanStage2AccessWithDeps(deps(override), \"owner-1\"), {\n      allowed: false,\n    })"
+        },
+        {
+          "line": 387,
+          "callee": "assert.rejects",
+          "text": "assert.rejects(\n    () =>\n      loadPersonalPlanStage2AccessWithDeps(\n        deps({\n          loadPreparedArtifact: async () => {\n            throw new Error(\"artifact database unavailable\")\n          },\n        }),\n        \"owner-1\",\n      ),\n    /artifact database unavailable/,\n  )"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "internal app rollout excludes non-internal users before plan data is read",
+      "beforeLine": 418,
+      "beforeBodySHA": "394f6e301c5335704cb79756b3affedfc511ffb168998ce46a03ea125950c2c5",
+      "cutTitle": null,
+      "cutLine": null,
+      "cutBodySHA": null,
+      "decision": "D-conditional",
+      "unchangedCallback": false,
+      "removedAssertions": [
+        "assert.deepEqual(access, { kind: \"legacy\" })",
+        "assert.equal(entitlementReads, 0)"
+      ],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 432,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(access, { kind: \"legacy\" })"
+        },
+        {
+          "line": 433,
+          "callee": "assert.equal",
+          "text": "assert.equal(entitlementReads, 0)"
+        }
+      ],
+      "cutAssertions": []
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "internal app rollout admits the internal owner to the regular journey",
+      "beforeLine": 436,
+      "beforeBodySHA": "11643bdcf5a54be75337b7ded552d63270bffcb2bd596edf462783b60d67573c",
+      "cutTitle": null,
+      "cutLine": null,
+      "cutBodySHA": null,
+      "decision": "D-conditional",
+      "unchangedCallback": false,
+      "removedAssertions": [
+        "assert.equal(access.kind, \"personal_plan\")"
+      ],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 442,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        }
+      ],
+      "cutAssertions": []
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "journey access accepts a current Stage 3 draft with a valid product-load overlay",
+      "beforeLine": 445,
+      "beforeBodySHA": "4d43d2abd1bc12cd5598a30a82d2e4e3efa1e7875f5e77c30793834b8f63d00d",
+      "cutTitle": "journey access accepts a current Stage 3 draft with a valid product-load overlay",
+      "cutLine": 401,
+      "cutBodySHA": "4d43d2abd1bc12cd5598a30a82d2e4e3efa1e7875f5e77c30793834b8f63d00d",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 464,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 466,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.frontier, \"stage3\")"
+        },
+        {
+          "line": 467,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage3, true)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 420,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 422,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.frontier, \"stage3\")"
+        },
+        {
+          "line": 423,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage3, true)"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "journey access accepts a product-load upgrade of an existing base category",
+      "beforeLine": 470,
+      "beforeBodySHA": "e6efb62f2c1c7801fd3a59acbe78b45a98744da01c1cc1379ef6bb6322ab11cc",
+      "cutTitle": "journey access accepts a product-load upgrade of an existing base category",
+      "cutLine": 426,
+      "cutBodySHA": "e6efb62f2c1c7801fd3a59acbe78b45a98744da01c1cc1379ef6bb6322ab11cc",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 472,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    draft.orderedCategories.filter((category) => category === \"deep_cleansing_shampoo\").length,\n    1,\n  )"
+        },
+        {
+          "line": 492,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 494,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.frontier, \"stage3\")"
+        },
+        {
+          "line": 495,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage3, true)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 428,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    draft.orderedCategories.filter((category) => category === \"deep_cleansing_shampoo\").length,\n    1,\n  )"
+        },
+        {
+          "line": 448,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 450,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.frontier, \"stage3\")"
+        },
+        {
+          "line": 451,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage3, true)"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "journey access still rejects a semantically stale product-load overlay",
+      "beforeLine": 498,
+      "beforeBodySHA": "116e97ff48aed882b567386e2163dd47ed92c692b290b45592db0dce0f380cda",
+      "cutTitle": "journey access still rejects a semantically stale product-load overlay",
+      "cutLine": 454,
+      "cutBodySHA": "116e97ff48aed882b567386e2163dd47ed92c692b290b45592db0dce0f380cda",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 507,
+          "callee": "assert.throws",
+          "text": "assert.throws(() => requireCurrentAuthoritySnapshot(staleDraft), /stale_product_load_resolution/)"
+        },
+        {
+          "line": 516,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 518,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.frontier, \"stage2\")"
+        },
+        {
+          "line": 519,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage3, false)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 463,
+          "callee": "assert.throws",
+          "text": "assert.throws(() => requireCurrentAuthoritySnapshot(staleDraft), /stale_product_load_resolution/)"
+        },
+        {
+          "line": 472,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 474,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.frontier, \"stage2\")"
+        },
+        {
+          "line": 475,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage3, false)"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "full journey access reports non-identifying Stage 3 sub-phase timings in dependency order",
+      "beforeLine": 522,
+      "beforeBodySHA": "cfa0504d34f25df4280ef3f6917057cb1a827c74da0279b4d0945ab4ff2ff92c",
+      "cutTitle": "full journey access reports non-identifying Stage 3 sub-phase timings in dependency order",
+      "cutLine": 478,
+      "cutBodySHA": "cfa0504d34f25df4280ef3f6917057cb1a827c74da0279b4d0945ab4ff2ff92c",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 538,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 540,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.frontier, \"stage4\")"
+        },
+        {
+          "line": 541,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage3, true)"
+        },
+        {
+          "line": 542,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage4, true)"
+        },
+        {
+          "line": 543,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(timings, [\n    { operation: \"stage3_access_entitlement\", outcome: \"eligible\", durationMs: 5 },\n    { operation: \"stage3_access_artifact_plan\", outcome: \"ready\", durationMs: 5 },\n    { operation: \"stage3_access_refined_draft\", outcome: \"ready\", durationMs: 5 },\n  ])"
+        },
+        {
+          "line": 548,
+          "callee": "assert.equal",
+          "text": "assert.equal(JSON.stringify(timings).includes(\"user-1\"), false)"
+        },
+        {
+          "line": 549,
+          "callee": "assert.equal",
+          "text": "assert.equal(JSON.stringify(timings).includes(\"plan-1\"), false)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 494,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 496,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.frontier, \"stage4\")"
+        },
+        {
+          "line": 497,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage3, true)"
+        },
+        {
+          "line": 498,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage4, true)"
+        },
+        {
+          "line": 499,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(timings, [\n    { operation: \"stage3_access_entitlement\", outcome: \"eligible\", durationMs: 5 },\n    { operation: \"stage3_access_artifact_plan\", outcome: \"ready\", durationMs: 5 },\n    { operation: \"stage3_access_refined_draft\", outcome: \"ready\", durationMs: 5 },\n  ])"
+        },
+        {
+          "line": 504,
+          "callee": "assert.equal",
+          "text": "assert.equal(JSON.stringify(timings).includes(\"user-1\"), false)"
+        },
+        {
+          "line": 505,
+          "callee": "assert.equal",
+          "text": "assert.equal(JSON.stringify(timings).includes(\"plan-1\"), false)"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "full journey access stops access timing after an early entitlement denial",
+      "beforeLine": 552,
+      "beforeBodySHA": "b5f240e5417d7df56f95aa2e84faa31686325a92b05976c9947450ce0ba1f8cd",
+      "cutTitle": "full journey access stops access timing after an early entitlement denial",
+      "cutLine": 508,
+      "cutBodySHA": "b5f240e5417d7df56f95aa2e84faa31686325a92b05976c9947450ce0ba1f8cd",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 572,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(access, { kind: \"paid_pending\", recoveryHref: \"/plan-bereit\" })"
+        },
+        {
+          "line": 573,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(timings, [\n    { operation: \"stage3_access_entitlement\", outcome: \"denied\", durationMs: 6 },\n  ])"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 528,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(access, { kind: \"paid_pending\", recoveryHref: \"/plan-bereit\" })"
+        },
+        {
+          "line": 529,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(timings, [\n    { operation: \"stage3_access_entitlement\", outcome: \"denied\", durationMs: 6 },\n  ])"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "full journey access reports the reached sub-phase when a dependency throws",
+      "beforeLine": 578,
+      "beforeBodySHA": "3d862836a6077a7529a0ec561e51292c258de0d892a3563d2d914b6b7b0a6491",
+      "cutTitle": "full journey access reports the reached sub-phase when a dependency throws",
+      "cutLine": 534,
+      "cutBodySHA": "3d862836a6077a7529a0ec561e51292c258de0d892a3563d2d914b6b7b0a6491",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 582,
+          "callee": "assert.rejects",
+          "text": "assert.rejects(\n    () =>\n      loadPersonalPlanJourneyAccessWithDeps(\n        deps({\n          loadPreparedArtifact: async () => {\n            throw new Error(\"artifact database unavailable\")\n          },\n          now: () => clockValues.shift() ?? 99,\n          reportStage3AccessTiming: (timing) => timings.push(timing),\n        }),\n        \"user-1\",\n      ),\n    /artifact database unavailable/,\n  )"
+        },
+        {
+          "line": 597,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(timings, [\n    { operation: \"stage3_access_entitlement\", outcome: \"eligible\", durationMs: 4 },\n    { operation: \"stage3_access_artifact_plan\", outcome: \"error\", durationMs: 7 },\n  ])"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 538,
+          "callee": "assert.rejects",
+          "text": "assert.rejects(\n    () =>\n      loadPersonalPlanJourneyAccessWithDeps(\n        deps({\n          loadPreparedArtifact: async () => {\n            throw new Error(\"artifact database unavailable\")\n          },\n          now: () => clockValues.shift() ?? 99,\n          reportStage3AccessTiming: (timing) => timings.push(timing),\n        }),\n        \"user-1\",\n      ),\n    /artifact database unavailable/,\n  )"
+        },
+        {
+          "line": 553,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(timings, [\n    { operation: \"stage3_access_entitlement\", outcome: \"eligible\", durationMs: 4 },\n    { operation: \"stage3_access_artifact_plan\", outcome: \"error\", durationMs: 7 },\n  ])"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "loader starts independent current refined-need and product-draft reads together",
+      "beforeLine": 603,
+      "beforeBodySHA": "d382989d7dea16fdabf644c65f9a78d7aab4ae6853484d23fdae856c2247b9c9",
+      "cutTitle": "loader starts independent current refined-need and product-draft reads together",
+      "cutLine": 559,
+      "cutBodySHA": "d382989d7dea16fdabf644c65f9a78d7aab4ae6853484d23fdae856c2247b9c9",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 628,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 629,
+          "callee": "assert.equal",
+          "text": "assert.equal(startedTogether, true)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 584,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 585,
+          "callee": "assert.equal",
+          "text": "assert.equal(startedTogether, true)"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "loader starts independent prepared-artifact and plan reads together",
+      "beforeLine": 632,
+      "beforeBodySHA": "c01de21a5874020db3eef7b29783ce3b18aa302b15cafc333bb553b459eda36e",
+      "cutTitle": "loader starts independent prepared-artifact and plan reads together",
+      "cutLine": 588,
+      "cutBodySHA": "c01de21a5874020db3eef7b29783ce3b18aa302b15cafc333bb553b459eda36e",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 657,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 658,
+          "callee": "assert.equal",
+          "text": "assert.equal(startedTogether, true)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 613,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 614,
+          "callee": "assert.equal",
+          "text": "assert.equal(startedTogether, true)"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "loader keeps paid-pending buyers on the compact wait route and throws on authoritative read failure",
+      "beforeLine": 661,
+      "beforeBodySHA": "2a962f64594d09e9e4450c9d1cad30b03523044bc03a3457f3631ffdd59db002",
+      "cutTitle": "loader keeps paid-pending buyers on the compact wait route and throws on authoritative read failure",
+      "cutLine": 617,
+      "cutBodySHA": "2a962f64594d09e9e4450c9d1cad30b03523044bc03a3457f3631ffdd59db002",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 672,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(pending, { kind: \"paid_pending\", recoveryHref: \"/plan-bereit\" })"
+        },
+        {
+          "line": 684,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(pendingWithoutArtifactLead, {\n    kind: \"paid_pending\",\n    recoveryHref: \"/plan-bereit\",\n  })"
+        },
+        {
+          "line": 689,
+          "callee": "assert.rejects",
+          "text": "assert.rejects(\n    () =>\n      loadPersonalPlanJourneyAccessWithDeps(\n        deps({\n          loadPlan: async () => {\n            throw new Error(\"db failed\")\n          },\n        }),\n        \"user-1\",\n      ),\n    /db failed/,\n  )"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 628,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(pending, { kind: \"paid_pending\", recoveryHref: \"/plan-bereit\" })"
+        },
+        {
+          "line": 640,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(pendingWithoutArtifactLead, {\n    kind: \"paid_pending\",\n    recoveryHref: \"/plan-bereit\",\n  })"
+        },
+        {
+          "line": 645,
+          "callee": "assert.rejects",
+          "text": "assert.rejects(\n    () =>\n      loadPersonalPlanJourneyAccessWithDeps(\n        deps({\n          loadPlan: async () => {\n            throw new Error(\"db failed\")\n          },\n        }),\n        \"user-1\",\n      ),\n    /db failed/,\n  )"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "full journey keeps an active enrollment without an attached artifact lead on legacy routing",
+      "beforeLine": 703,
+      "beforeBodySHA": "a35bb25ec1c82b27139a74d137ac99e534ae622db9d47ad3dc07abfb0dbaa977",
+      "cutTitle": "full journey keeps an active enrollment without an attached artifact lead on legacy routing",
+      "cutLine": 659,
+      "cutBodySHA": "a35bb25ec1c82b27139a74d137ac99e534ae622db9d47ad3dc07abfb0dbaa977",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 715,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(access, { kind: \"legacy\" })"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 671,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(access, { kind: \"legacy\" })"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "a valid refined source admits Stage 3 before a draft exists and while its current draft is active",
+      "beforeLine": 718,
+      "beforeBodySHA": "b697543ed4dc45a7ab5392585a35b58f1fc23f9128986bd793a9c47d099fe069",
+      "cutTitle": "a valid refined source admits Stage 3 before a draft exists and while its current draft is active",
+      "cutLine": 674,
+      "cutBodySHA": "b697543ed4dc45a7ab5392585a35b58f1fc23f9128986bd793a9c47d099fe069",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 733,
+          "callee": "assert.equal",
+          "text": "assert.equal(noDraft.kind, \"personal_plan\")"
+        },
+        {
+          "line": 735,
+          "callee": "assert.equal",
+          "text": "assert.equal(noDraft.allowed.stage3, true)"
+        },
+        {
+          "line": 736,
+          "callee": "assert.equal",
+          "text": "assert.equal(noDraft.allowed.stage4, false)"
+        },
+        {
+          "line": 747,
+          "callee": "assert.equal",
+          "text": "assert.equal(activeDraft.kind, \"personal_plan\")"
+        },
+        {
+          "line": 749,
+          "callee": "assert.equal",
+          "text": "assert.equal(activeDraft.allowed.stage3, true)"
+        },
+        {
+          "line": 750,
+          "callee": "assert.equal",
+          "text": "assert.equal(activeDraft.allowed.stage4, false)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 689,
+          "callee": "assert.equal",
+          "text": "assert.equal(noDraft.kind, \"personal_plan\")"
+        },
+        {
+          "line": 691,
+          "callee": "assert.equal",
+          "text": "assert.equal(noDraft.allowed.stage3, true)"
+        },
+        {
+          "line": 692,
+          "callee": "assert.equal",
+          "text": "assert.equal(noDraft.allowed.stage4, false)"
+        },
+        {
+          "line": 703,
+          "callee": "assert.equal",
+          "text": "assert.equal(activeDraft.kind, \"personal_plan\")"
+        },
+        {
+          "line": 705,
+          "callee": "assert.equal",
+          "text": "assert.equal(activeDraft.allowed.stage3, true)"
+        },
+        {
+          "line": 706,
+          "callee": "assert.equal",
+          "text": "assert.equal(activeDraft.allowed.stage4, false)"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "an accepted Routine keeps Stage 4/5 reachable while a malformed successor resumes at the Stage 2 bridge",
+      "beforeLine": 753,
+      "beforeBodySHA": "7ac236c23e9b56aa345beea6a8b5096a1ed144f4808f738a78dffbf4fce5ed10",
+      "cutTitle": "an accepted Routine keeps Stage 4/5 reachable while a malformed successor resumes at the Stage 2 bridge",
+      "cutLine": 709,
+      "cutBodySHA": "7ac236c23e9b56aa345beea6a8b5096a1ed144f4808f738a78dffbf4fce5ed10",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 775,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 777,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage4, true)"
+        },
+        {
+          "line": 778,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage5, true)"
+        },
+        {
+          "line": 779,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage3, false)"
+        },
+        {
+          "line": 781,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(\n      await resolvePlanStartPageState({\n        enabled: () => true,\n        stage2Enabled: () => true,\n        getUserId: async () => \"user-1\",\n        loadJourneyAccess: async () => access,\n        loadExistingRefinementSession: async () =>\n          ({\n            status: \"complete\",\n            completedHandoff: { refinedVersionId: \"refined-successor-2\" },\n          }) as never,\n      }),\n      // `allowed.stage4` is asserted true above — this owner has an accepted\n      // Routine and a COMPLETE refinement draft, undirected — Task 2.3's D3\n      // guard redirects this cohort to `/routine` instead of falling through\n      // to the Stage-2 bridge (which would seed a completed session and\n      // auto-hand off into a brand-new Stage-3 creation funnel).\n      { state: \"routine_redirect\" },\n    )"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 731,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 733,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage4, true)"
+        },
+        {
+          "line": 734,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage5, true)"
+        },
+        {
+          "line": 735,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage3, false)"
+        },
+        {
+          "line": 737,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(\n      await resolvePlanStartPageState({\n        enabled: () => true,\n        stage2Enabled: () => true,\n        getUserId: async () => \"user-1\",\n        loadJourneyAccess: async () => access,\n        loadExistingRefinementSession: async () =>\n          ({\n            status: \"complete\",\n            completedHandoff: { refinedVersionId: \"refined-successor-2\" },\n          }) as never,\n      }),\n      // `allowed.stage4` is asserted true above — this owner has an accepted\n      // Routine and a COMPLETE refinement draft, undirected — Task 2.3's D3\n      // guard redirects this cohort to `/routine` instead of falling through\n      // to the Stage-2 bridge (which would seed a completed session and\n      // auto-hand off into a brand-new Stage-3 creation funnel).\n      { state: \"routine_redirect\" },\n    )"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "an accepted active Routine retains Stage 3 when its current successor authority is valid",
+      "beforeLine": 803,
+      "beforeBodySHA": "7ad08b09642e4dfee9815c596ee52714a8fd384457729941371e368b3900f835",
+      "cutTitle": "an accepted active Routine retains Stage 3 when its current successor authority is valid",
+      "cutLine": 759,
+      "cutBodySHA": "7ad08b09642e4dfee9815c596ee52714a8fd384457729941371e368b3900f835",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 818,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 820,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage3, true)"
+        },
+        {
+          "line": 821,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage4, true)"
+        },
+        {
+          "line": 822,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage5, true)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 774,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 776,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage3, true)"
+        },
+        {
+          "line": 777,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage4, true)"
+        },
+        {
+          "line": 778,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage5, true)"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "the Routine page reads and renders an accepted Routine when only its successor Stage 3 access is degraded",
+      "beforeLine": 825,
+      "beforeBodySHA": "ce00972573f1b21a98ec294e4be8f92ad6e16575d9ed24d0e305a9254f450783",
+      "cutTitle": "the Routine page reads and renders an accepted Routine when only its successor Stage 3 access is degraded",
+      "cutLine": 781,
+      "cutBodySHA": "ce00972573f1b21a98ec294e4be8f92ad6e16575d9ed24d0e305a9254f450783",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 842,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 844,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage3, false)"
+        },
+        {
+          "line": 845,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage4, true)"
+        },
+        {
+          "line": 861,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(readInput, { userId: \"user-1\", enabled: true })"
+        },
+        {
+          "line": 862,
+          "callee": "assert.equal",
+          "text": "assert.equal(page.kind, \"personal_plan\")"
+        },
+        {
+          "line": 864,
+          "callee": "assert.equal",
+          "text": "assert.equal(page.view.activeVersion?.id, \"routine-version-accepted-1\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 798,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 800,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage3, false)"
+        },
+        {
+          "line": 801,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage4, true)"
+        },
+        {
+          "line": 817,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(readInput, { userId: \"user-1\", enabled: true })"
+        },
+        {
+          "line": 818,
+          "callee": "assert.equal",
+          "text": "assert.equal(page.kind, \"personal_plan\")"
+        },
+        {
+          "line": 820,
+          "callee": "assert.equal",
+          "text": "assert.equal(page.view.activeVersion?.id, \"routine-version-accepted-1\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "a pending proposal remains fail-closed when its successor source is unavailable",
+      "beforeLine": 868,
+      "beforeBodySHA": "503d7ec8d1f0d6b1248c24de630932310cbb9e41ea4ef48f102dfd1b9c875307",
+      "cutTitle": "a pending proposal remains fail-closed when its successor source is unavailable",
+      "cutLine": 824,
+      "cutBodySHA": "503d7ec8d1f0d6b1248c24de630932310cbb9e41ea4ef48f102dfd1b9c875307",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 869,
+          "callee": "assert.rejects",
+          "text": "assert.rejects(\n    () =>\n      loadPersonalPlanJourneyAccessWithDeps(\n        deps({\n          loadPlan: async () => ({\n            id: \"plan-1\",\n            currentInitialNeedVersionId: \"initial-1\",\n            currentRefinedNeedVersionId: \"refined-successor-2\",\n            productDraftCompleted: true,\n            pendingRoutineProposalId: \"proposal-pending-1\",\n            activeRoutineVersionId: null,\n          }),\n          loadCurrentRefinedNeed: async () => {\n            throw new Error(\"successor refined source unavailable\")\n          },\n        }),\n        \"user-1\",\n      ),\n    /successor refined source unavailable/,\n  )"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 825,
+          "callee": "assert.rejects",
+          "text": "assert.rejects(\n    () =>\n      loadPersonalPlanJourneyAccessWithDeps(\n        deps({\n          loadPlan: async () => ({\n            id: \"plan-1\",\n            currentInitialNeedVersionId: \"initial-1\",\n            currentRefinedNeedVersionId: \"refined-successor-2\",\n            productDraftCompleted: true,\n            pendingRoutineProposalId: \"proposal-pending-1\",\n            activeRoutineVersionId: null,\n          }),\n          loadCurrentRefinedNeed: async () => {\n            throw new Error(\"successor refined source unavailable\")\n          },\n        }),\n        \"user-1\",\n      ),\n    /successor refined source unavailable/,\n  )"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "Supabase draft selection ignores stale rows while retaining a current row, and treats stale-only as absent",
+      "beforeLine": 891,
+      "beforeBodySHA": "a13da1435bc1a95b83cc5a027d9f4d1ee786caa95ff7a70535e4cc394b9fd374",
+      "cutTitle": "Supabase draft selection ignores stale rows while retaining a current row, and treats stale-only as absent",
+      "cutLine": 847,
+      "cutBodySHA": "a13da1435bc1a95b83cc5a027d9f4d1ee786caa95ff7a70535e4cc394b9fd374",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 940,
+          "callee": "assert.equal",
+          "text": "assert.equal(loaded?.status, \"active\")"
+        },
+        {
+          "line": 941,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(loaded?.products, current.payload.products)"
+        },
+        {
+          "line": 942,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(loaded?.roleAssignments, current.payload.roleAssignments)"
+        },
+        {
+          "line": 943,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(loaded?.productLoadResolution, current.payload.productLoadResolution)"
+        },
+        {
+          "line": 944,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(mixed.predicates.at(-1), [\"status\", \"neq:stale\"])"
+        },
+        {
+          "line": 947,
+          "callee": "assert.equal",
+          "text": "assert.equal(await staleOnly.load(\"user-1\", \"plan-1\", \"refined-1\"), null)"
+        },
+        {
+          "line": 948,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(staleOnly.predicates.at(-1), [\"status\", \"neq:stale\"])"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 896,
+          "callee": "assert.equal",
+          "text": "assert.equal(loaded?.status, \"active\")"
+        },
+        {
+          "line": 897,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(loaded?.products, current.payload.products)"
+        },
+        {
+          "line": 898,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(loaded?.roleAssignments, current.payload.roleAssignments)"
+        },
+        {
+          "line": 899,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(loaded?.productLoadResolution, current.payload.productLoadResolution)"
+        },
+        {
+          "line": 900,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(mixed.predicates.at(-1), [\"status\", \"neq:stale\"])"
+        },
+        {
+          "line": 903,
+          "callee": "assert.equal",
+          "text": "assert.equal(await staleOnly.load(\"user-1\", \"plan-1\", \"refined-1\"), null)"
+        },
+        {
+          "line": 904,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(staleOnly.predicates.at(-1), [\"status\", \"neq:stale\"])"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "title": "Supabase loader keeps every journey fact owner and aggregate scoped",
+      "beforeLine": 951,
+      "beforeBodySHA": "af8bdc613868ec355d2d6f052b7ae91efbabe6827ae003a0de6f8a99525a42df",
+      "cutTitle": "Supabase loader keeps every journey fact owner and aggregate scoped",
+      "cutLine": 907,
+      "cutBodySHA": "edec36a94b8378a434088a44e731df0746e6842e90f5328fa72b937167037d16",
+      "decision": "R",
+      "unchangedCallback": false,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 1040,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    (await loader.loadEntitlement(\"user-1\")).accessState,\n    \"active\",\n    JSON.stringify(queries),\n  )"
+        },
+        {
+          "line": 1057,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 1061,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(predicatesFor(\"personal_plan_prepared_artifacts\"), [\n    [\"user_id\", \"user-1\"],\n    [\"lead_id\", \"lead-1\"],\n    [\"status\", \"attached\"],\n  ])"
+        },
+        {
+          "line": 1066,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(predicatesFor(\"personal_plans\"), [[\"user_id\", \"user-1\"]])"
+        },
+        {
+          "line": 1067,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(predicatesFor(\"personal_plan_need_versions\"), [\n    [\"id\", \"refined-1\"],\n    [\"user_id\", \"user-1\"],\n    [\"personal_plan_id\", \"plan-1\"],\n    [\"kind\", \"refined\"],\n  ])"
+        },
+        {
+          "line": 1073,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(predicatesFor(\"personal_plan_product_drafts\"), [\n    [\"user_id\", \"user-1\"],\n    [\"personal_plan_id\", \"plan-1\"],\n    [\"refined_need_version_id\", \"refined-1\"],\n    [\"status\", \"neq:stale\"],\n  ])"
+        },
+        {
+          "line": 1079,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(predicatesFor(\"profiles\"), [])"
+        },
+        {
+          "line": 1094,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    queries.some((query) => query.table === \"profiles\"),\n    false,\n  )"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 996,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    (await loader.loadEntitlement(\"user-1\")).accessState,\n    \"active\",\n    JSON.stringify(queries),\n  )"
+        },
+        {
+          "line": 1012,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 1016,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(predicatesFor(\"personal_plan_prepared_artifacts\"), [\n    [\"user_id\", \"user-1\"],\n    [\"lead_id\", \"lead-1\"],\n    [\"status\", \"attached\"],\n  ])"
+        },
+        {
+          "line": 1021,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(predicatesFor(\"personal_plans\"), [[\"user_id\", \"user-1\"]])"
+        },
+        {
+          "line": 1022,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(predicatesFor(\"personal_plan_need_versions\"), [\n    [\"id\", \"refined-1\"],\n    [\"user_id\", \"user-1\"],\n    [\"personal_plan_id\", \"plan-1\"],\n    [\"kind\", \"refined\"],\n  ])"
+        },
+        {
+          "line": 1028,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(predicatesFor(\"personal_plan_product_drafts\"), [\n    [\"user_id\", \"user-1\"],\n    [\"personal_plan_id\", \"plan-1\"],\n    [\"refined_need_version_id\", \"refined-1\"],\n    [\"status\", \"neq:stale\"],\n  ])"
+        },
+        {
+          "line": 1034,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(predicatesFor(\"profiles\"), [])"
+        },
+        {
+          "line": 1048,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    queries.some((query) => query.table === \"profiles\"),\n    false,\n  )"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-stage3-release.test.ts",
+      "title": "the released Personal Plan app ignores obsolete launch flags",
+      "beforeLine": 19,
+      "beforeBodySHA": "c480793a1c92c86ad8a3e06df6acdabdcc16a3fc8ea6e981582135ba71646ee9",
+      "cutTitle": "the released Personal Plan app ignores obsolete launch flags",
+      "cutLine": 17,
+      "cutBodySHA": "c480793a1c92c86ad8a3e06df6acdabdcc16a3fc8ea6e981582135ba71646ee9",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 20,
+          "callee": "assert.equal",
+          "text": "assert.equal(isPersonalPlanAppV1Enabled({ PERSONAL_PLAN_APP_V1_ENABLED: \"true\" }), true)"
+        },
+        {
+          "line": 21,
+          "callee": "assert.equal",
+          "text": "assert.equal(isPersonalPlanAppV1Enabled({ PERSONAL_PLAN_APP_V1_ENABLED: \"false\" }), true)"
+        },
+        {
+          "line": 22,
+          "callee": "assert.equal",
+          "text": "assert.equal(isPersonalPlanAppV1Enabled({}), true)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 18,
+          "callee": "assert.equal",
+          "text": "assert.equal(isPersonalPlanAppV1Enabled({ PERSONAL_PLAN_APP_V1_ENABLED: \"true\" }), true)"
+        },
+        {
+          "line": 19,
+          "callee": "assert.equal",
+          "text": "assert.equal(isPersonalPlanAppV1Enabled({ PERSONAL_PLAN_APP_V1_ENABLED: \"false\" }), true)"
+        },
+        {
+          "line": 20,
+          "callee": "assert.equal",
+          "text": "assert.equal(isPersonalPlanAppV1Enabled({}), true)"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-stage3-release.test.ts",
+      "title": "the legacy-quiz Personal Plan cutover is independently strict and default-off",
+      "beforeLine": 25,
+      "beforeBodySHA": "b82b084ee9eca9151ee201998d5949ab6c0fa6bc5f25df1a8c595c0a6c4249cc",
+      "cutTitle": "the legacy-quiz Personal Plan cutover is independently strict and default-off",
+      "cutLine": 23,
+      "cutBodySHA": "b82b084ee9eca9151ee201998d5949ab6c0fa6bc5f25df1a8c595c0a6c4249cc",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 26,
+          "callee": "assert.equal",
+          "text": "assert.equal(isPersonalPlanLegacyQuizCutoverEnabled({}), false)"
+        },
+        {
+          "line": 27,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    isPersonalPlanLegacyQuizCutoverEnabled({\n      PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED: \"TRUE\",\n    }),\n    false,\n  )"
+        },
+        {
+          "line": 33,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    isPersonalPlanLegacyQuizCutoverEnabled({\n      PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED: \"true\",\n    }),\n    true,\n  )"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 24,
+          "callee": "assert.equal",
+          "text": "assert.equal(isPersonalPlanLegacyQuizCutoverEnabled({}), false)"
+        },
+        {
+          "line": 25,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    isPersonalPlanLegacyQuizCutoverEnabled({\n      PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED: \"TRUE\",\n    }),\n    false,\n  )"
+        },
+        {
+          "line": 31,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    isPersonalPlanLegacyQuizCutoverEnabled({\n      PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED: \"true\",\n    }),\n    true,\n  )"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-stage3-release.test.ts",
+      "title": "the released Personal Plan rollout is all and ignores obsolete cohort flags",
+      "beforeLine": 41,
+      "beforeBodySHA": "7962d8afc1fbe2a37c5d9bffebec2e33f985271f97ee858d5309df90af62a752",
+      "cutTitle": "the released Personal Plan rollout is all and ignores obsolete cohort flags",
+      "cutLine": 39,
+      "cutBodySHA": "1ae7bfcdff3625f7a42d5dd6561eaecc781959a4555e0d8b15abe463c680a2dd",
+      "decision": "R",
+      "unchangedCallback": false,
+      "removedAssertions": [
+        "assert.deepEqual(\n    [\n      ...resolvePersonalPlanAppV1InternalEmails({\n        PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS:\n          \" Nick+Plan@Example.com,invalid, nick+plan@example.com \",\n      }),\n    ],\n    [\"nick+plan@example.com\"],\n  )",
+        "assert.equal(\n    canAccessPersonalPlanAppV1Rollout({ appEnabled: true, rollout: \"internal\", isInternal: true }),\n    true,\n  )",
+        "assert.equal(\n    canAccessPersonalPlanAppV1Rollout({ appEnabled: true, rollout: \"internal\", isInternal: false }),\n    false,\n  )",
+        "assert.equal(\n    canAccessPersonalPlanAppV1Rollout({ appEnabled: false, rollout: \"all\", isInternal: true }),\n    false,\n  )"
+      ],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 42,
+          "callee": "assert.equal",
+          "text": "assert.equal(resolvePersonalPlanAppV1Rollout({}), \"all\")"
+        },
+        {
+          "line": 43,
+          "callee": "assert.equal",
+          "text": "assert.equal(resolvePersonalPlanAppV1Rollout({ PERSONAL_PLAN_APP_V1_ENABLED: \"true\" }), \"all\")"
+        },
+        {
+          "line": 45,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(\n    [\n      ...resolvePersonalPlanAppV1InternalEmails({\n        PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS:\n          \" Nick+Plan@Example.com,invalid, nick+plan@example.com \",\n      }),\n    ],\n    [\"nick+plan@example.com\"],\n  )"
+        },
+        {
+          "line": 54,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    resolvePersonalPlanAppV1Rollout({\n      PERSONAL_PLAN_APP_V1_ENABLED: \"true\",\n      PERSONAL_PLAN_APP_V1_ROLLOUT: \"internal\",\n    }),\n    \"all\",\n  )"
+        },
+        {
+          "line": 61,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    resolvePersonalPlanAppV1Rollout({\n      PERSONAL_PLAN_APP_V1_ENABLED: \"true\",\n      PERSONAL_PLAN_APP_V1_ROLLOUT: \"invalid\",\n    }),\n    \"all\",\n  )"
+        },
+        {
+          "line": 69,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    canAccessPersonalPlanAppV1Rollout({ appEnabled: true, rollout: \"internal\", isInternal: true }),\n    true,\n  )"
+        },
+        {
+          "line": 73,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    canAccessPersonalPlanAppV1Rollout({ appEnabled: true, rollout: \"internal\", isInternal: false }),\n    false,\n  )"
+        },
+        {
+          "line": 77,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    canAccessPersonalPlanAppV1Rollout({ appEnabled: false, rollout: \"all\", isInternal: true }),\n    false,\n  )"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 40,
+          "callee": "assert.equal",
+          "text": "assert.equal(resolvePersonalPlanAppV1Rollout({}), \"all\")"
+        },
+        {
+          "line": 41,
+          "callee": "assert.equal",
+          "text": "assert.equal(resolvePersonalPlanAppV1Rollout({ PERSONAL_PLAN_APP_V1_ENABLED: \"true\" }), \"all\")"
+        },
+        {
+          "line": 43,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    resolvePersonalPlanAppV1Rollout({\n      PERSONAL_PLAN_APP_V1_ENABLED: \"true\",\n      PERSONAL_PLAN_APP_V1_ROLLOUT: \"internal\",\n    }),\n    \"all\",\n  )"
+        },
+        {
+          "line": 50,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    resolvePersonalPlanAppV1Rollout({\n      PERSONAL_PLAN_APP_V1_ENABLED: \"true\",\n      PERSONAL_PLAN_APP_V1_ROLLOUT: \"invalid\",\n    }),\n    \"all\",\n  )"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-stage3-release.test.ts",
+      "title": "released Stage 2 and Stage 3 ignore obsolete launch flags",
+      "beforeLine": 83,
+      "beforeBodySHA": "9ecd2218ff699cc8ce1f59c087dfab3d0b3608efbd6dc59e9482e893287494d4",
+      "cutTitle": "released Stage 2 and Stage 3 ignore obsolete launch flags",
+      "cutLine": 60,
+      "cutBodySHA": "9ecd2218ff699cc8ce1f59c087dfab3d0b3608efbd6dc59e9482e893287494d4",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 88,
+          "callee": "assert.equal",
+          "text": "assert.equal(reader({}), true)"
+        },
+        {
+          "line": 89,
+          "callee": "assert.equal",
+          "text": "assert.equal(reader({ [key]: \"false\" }), true)"
+        },
+        {
+          "line": 90,
+          "callee": "assert.equal",
+          "text": "assert.equal(reader({ [key]: \"TRUE\" }), true)"
+        },
+        {
+          "line": 91,
+          "callee": "assert.equal",
+          "text": "assert.equal(reader({ [key]: \"true\" }), true)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 65,
+          "callee": "assert.equal",
+          "text": "assert.equal(reader({}), true)"
+        },
+        {
+          "line": 66,
+          "callee": "assert.equal",
+          "text": "assert.equal(reader({ [key]: \"false\" }), true)"
+        },
+        {
+          "line": 67,
+          "callee": "assert.equal",
+          "text": "assert.equal(reader({ [key]: \"TRUE\" }), true)"
+        },
+        {
+          "line": 68,
+          "callee": "assert.equal",
+          "text": "assert.equal(reader({ [key]: \"true\" }), true)"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-stage3-release.test.ts",
+      "title": "complete Stage 3 catalogue authority has no retired environment or persistence branch",
+      "beforeLine": 95,
+      "beforeBodySHA": "e550e1508a38856f1abcfa0a790c2de3029f5be00e5db82bb84a47f50d5b5ebf",
+      "cutTitle": "complete Stage 3 catalogue authority has no retired environment or persistence branch",
+      "cutLine": 72,
+      "cutBodySHA": "e550e1508a38856f1abcfa0a790c2de3029f5be00e5db82bb84a47f50d5b5ebf",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 105,
+          "callee": "assert.equal",
+          "text": "assert.equal(source.includes(retiredEnvironmentKey), false)"
+        },
+        {
+          "line": 106,
+          "callee": "assert.equal",
+          "text": "assert.equal(source.includes(retiredOption), false)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 82,
+          "callee": "assert.equal",
+          "text": "assert.equal(source.includes(retiredEnvironmentKey), false)"
+        },
+        {
+          "line": 83,
+          "callee": "assert.equal",
+          "text": "assert.equal(source.includes(retiredOption), false)"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-stage3-release.test.ts",
+      "title": "current Stage 3 plans contain no obsolete complete-catalogue activation instructions",
+      "beforeLine": 110,
+      "beforeBodySHA": "9c08e20977e333a8ad1f47b6710dc13ef1e31e37216a6d4b5be58b506501df00",
+      "cutTitle": "current Stage 3 plans contain no obsolete complete-catalogue activation instructions",
+      "cutLine": 87,
+      "cutBodySHA": "9c08e20977e333a8ad1f47b6710dc13ef1e31e37216a6d4b5be58b506501df00",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 130,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n        source.includes(instruction.toLocaleLowerCase()),\n        false,\n        `${path}: ${instruction}`,\n      )"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 107,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n        source.includes(instruction.toLocaleLowerCase()),\n        false,\n        `${path}: ${instruction}`,\n      )"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-stage3-release.test.ts",
+      "title": "Stage 3 thumbnail delivery is a strict default-off rollback gate",
+      "beforeLine": 139,
+      "beforeBodySHA": "32698e673e18022212bb830dc6fca5ce54573d8bed1310c25edaf219c67b986b",
+      "cutTitle": "Stage 3 thumbnail delivery is a strict default-off rollback gate",
+      "cutLine": 116,
+      "cutBodySHA": "32698e673e18022212bb830dc6fca5ce54573d8bed1310c25edaf219c67b986b",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 140,
+          "callee": "assert.equal",
+          "text": "assert.equal(isPersonalPlanStage3ThumbnailsEnabled({}), false)"
+        },
+        {
+          "line": 141,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    isPersonalPlanStage3ThumbnailsEnabled({ PERSONAL_PLAN_STAGE3_THUMBNAILS_ENABLED: \"TRUE\" }),\n    false,\n  )"
+        },
+        {
+          "line": 145,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    isPersonalPlanStage3ThumbnailsEnabled({ PERSONAL_PLAN_STAGE3_THUMBNAILS_ENABLED: \"true\" }),\n    true,\n  )"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 117,
+          "callee": "assert.equal",
+          "text": "assert.equal(isPersonalPlanStage3ThumbnailsEnabled({}), false)"
+        },
+        {
+          "line": 118,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    isPersonalPlanStage3ThumbnailsEnabled({ PERSONAL_PLAN_STAGE3_THUMBNAILS_ENABLED: \"TRUE\" }),\n    false,\n  )"
+        },
+        {
+          "line": 122,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    isPersonalPlanStage3ThumbnailsEnabled({ PERSONAL_PLAN_STAGE3_THUMBNAILS_ENABLED: \"true\" }),\n    true,\n  )"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-stage3-release.test.ts",
+      "title": "new-buyer cutoff accepts only real ISO-8601 UTC instants",
+      "beforeLine": 151,
+      "beforeBodySHA": "f472c40b27ade52e2f73f6901d45a2765bbe147ad491b1e10f6265b89355b199",
+      "cutTitle": "new-buyer cutoff accepts only real ISO-8601 UTC instants",
+      "cutLine": 128,
+      "cutBodySHA": "f472c40b27ade52e2f73f6901d45a2765bbe147ad491b1e10f6265b89355b199",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 152,
+          "callee": "assert.equal",
+          "text": "assert.equal(getPersonalPlanNewBuyerCohortCutoff({}), null)"
+        },
+        {
+          "line": 153,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    getPersonalPlanNewBuyerCohortCutoff({\n      PERSONAL_PLAN_APP_V1_NEW_BUYER_CUTOFF: \"2026-08-08T00:00:00Z\",\n    })?.toISOString(),\n    \"2026-08-08T00:00:00.000Z\",\n  )"
+        },
+        {
+          "line": 159,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    getPersonalPlanNewBuyerCohortCutoff({\n      PERSONAL_PLAN_APP_V1_NEW_BUYER_CUTOFF: \"2026-08-08T00:00:00.125Z\",\n    })?.toISOString(),\n    \"2026-08-08T00:00:00.125Z\",\n  )"
+        },
+        {
+          "line": 171,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n      getPersonalPlanNewBuyerCohortCutoff({\n        PERSONAL_PLAN_APP_V1_NEW_BUYER_CUTOFF: value,\n      }),\n      null,\n      value,\n    )"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 129,
+          "callee": "assert.equal",
+          "text": "assert.equal(getPersonalPlanNewBuyerCohortCutoff({}), null)"
+        },
+        {
+          "line": 130,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    getPersonalPlanNewBuyerCohortCutoff({\n      PERSONAL_PLAN_APP_V1_NEW_BUYER_CUTOFF: \"2026-08-08T00:00:00Z\",\n    })?.toISOString(),\n    \"2026-08-08T00:00:00.000Z\",\n  )"
+        },
+        {
+          "line": 136,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    getPersonalPlanNewBuyerCohortCutoff({\n      PERSONAL_PLAN_APP_V1_NEW_BUYER_CUTOFF: \"2026-08-08T00:00:00.125Z\",\n    })?.toISOString(),\n    \"2026-08-08T00:00:00.125Z\",\n  )"
+        },
+        {
+          "line": 148,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n      getPersonalPlanNewBuyerCohortCutoff({\n        PERSONAL_PLAN_APP_V1_NEW_BUYER_CUTOFF: value,\n      }),\n      null,\n      value,\n    )"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-stage3-release.test.ts",
+      "title": "Stage 3 fixture lab is available only in dev, Preview, or explicitly flagged CI",
+      "beforeLine": 181,
+      "beforeBodySHA": "99786d488a4d8973af89e5074bf87609051a9163ab11744a5ee52873b9e9e814",
+      "cutTitle": "Stage 3 fixture lab is available only in dev, Preview, or explicitly flagged CI",
+      "cutLine": 158,
+      "cutBodySHA": "99786d488a4d8973af89e5074bf87609051a9163ab11744a5ee52873b9e9e814",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 182,
+          "callee": "assert.equal",
+          "text": "assert.equal(isPersonalPlanStage3LabEnabled({ NODE_ENV: \"development\" }), true)"
+        },
+        {
+          "line": 183,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    isPersonalPlanStage3LabEnabled({ NODE_ENV: \"production\", VERCEL_ENV: \"preview\" }),\n    true,\n  )"
+        },
+        {
+          "line": 187,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    isPersonalPlanStage3LabEnabled({\n      CI: \"true\",\n      CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED: \"true\",\n      NODE_ENV: \"production\",\n    }),\n    true,\n  )"
+        },
+        {
+          "line": 195,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    isPersonalPlanStage3LabEnabled({\n      CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED: \"true\",\n      NODE_ENV: \"production\",\n    }),\n    false,\n  )"
+        },
+        {
+          "line": 202,
+          "callee": "assert.equal",
+          "text": "assert.equal(isPersonalPlanStage3LabEnabled({ CI: \"true\", NODE_ENV: \"production\" }), false)"
+        },
+        {
+          "line": 203,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    isPersonalPlanStage3LabEnabled({ NODE_ENV: \"production\", VERCEL_ENV: \"production\" }),\n    false,\n  )"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 159,
+          "callee": "assert.equal",
+          "text": "assert.equal(isPersonalPlanStage3LabEnabled({ NODE_ENV: \"development\" }), true)"
+        },
+        {
+          "line": 160,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    isPersonalPlanStage3LabEnabled({ NODE_ENV: \"production\", VERCEL_ENV: \"preview\" }),\n    true,\n  )"
+        },
+        {
+          "line": 164,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    isPersonalPlanStage3LabEnabled({\n      CI: \"true\",\n      CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED: \"true\",\n      NODE_ENV: \"production\",\n    }),\n    true,\n  )"
+        },
+        {
+          "line": 172,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    isPersonalPlanStage3LabEnabled({\n      CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED: \"true\",\n      NODE_ENV: \"production\",\n    }),\n    false,\n  )"
+        },
+        {
+          "line": 179,
+          "callee": "assert.equal",
+          "text": "assert.equal(isPersonalPlanStage3LabEnabled({ CI: \"true\", NODE_ENV: \"production\" }), false)"
+        },
+        {
+          "line": 180,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    isPersonalPlanStage3LabEnabled({ NODE_ENV: \"production\", VERCEL_ENV: \"production\" }),\n    false,\n  )"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "released routing ignores obsolete internal rollout environment",
+      "beforeLine": 192,
+      "beforeBodySHA": "dd0f8a7000ff6a0dbe6552be1c75d186546ad569541f866d4648c790a8d91bf2",
+      "cutTitle": "released routing ignores obsolete internal rollout environment",
+      "cutLine": 192,
+      "cutBodySHA": "dd0f8a7000ff6a0dbe6552be1c75d186546ad569541f866d4648c790a8d91bf2",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 237,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 238,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/plan-start\")"
+        },
+        {
+          "line": 239,
+          "callee": "assert.ok",
+          "text": "assert.ok(requests.every(({ url }) => !url.includes(`/auth/v1/admin/users/${fieldTestUserId}`)))"
+        },
+        {
+          "line": 240,
+          "callee": "assert.ok",
+          "text": "assert.ok(requests.every(({ url }) => !url.includes(\"/rest/v1/profiles\")))"
+        },
+        {
+          "line": 241,
+          "callee": "assert.ok",
+          "text": "assert.ok(\n      requests.every(({ authorization }) => authorization === \"Bearer test-service-role-key\"),\n    )"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 237,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 238,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/plan-start\")"
+        },
+        {
+          "line": 239,
+          "callee": "assert.ok",
+          "text": "assert.ok(requests.every(({ url }) => !url.includes(`/auth/v1/admin/users/${fieldTestUserId}`)))"
+        },
+        {
+          "line": 240,
+          "callee": "assert.ok",
+          "text": "assert.ok(requests.every(({ url }) => !url.includes(\"/rest/v1/profiles\")))"
+        },
+        {
+          "line": 241,
+          "callee": "assert.ok",
+          "text": "assert.ok(\n      requests.every(({ authorization }) => authorization === \"Bearer test-service-role-key\"),\n    )"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "field-test user with current access and a pending proposal reaches /routine",
+      "beforeLine": 254,
+      "beforeBodySHA": "5675cd96bde836d2444c50ebb827226994fd9b9ebf4fbdcb4b7288a264d14d78",
+      "cutTitle": "field-test user with current access and a pending proposal reaches /routine",
+      "cutLine": 254,
+      "cutBodySHA": "5675cd96bde836d2444c50ebb827226994fd9b9ebf4fbdcb4b7288a264d14d78",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 260,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        },
+        {
+          "line": 261,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null)"
+        },
+        {
+          "line": 262,
+          "callee": "assert.ok",
+          "text": "assert.ok(observedTables.includes(\"profiles\"))"
+        },
+        {
+          "line": 263,
+          "callee": "assert.ok",
+          "text": "assert.ok(observedTables.includes(\"hair_profiles\"))"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 260,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        },
+        {
+          "line": 261,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null)"
+        },
+        {
+          "line": 262,
+          "callee": "assert.ok",
+          "text": "assert.ok(observedTables.includes(\"profiles\"))"
+        },
+        {
+          "line": 263,
+          "callee": "assert.ok",
+          "text": "assert.ok(observedTables.includes(\"hair_profiles\"))"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "tracker skips proxy intake and Personal Plan frontier reads",
+      "beforeLine": 266,
+      "beforeBodySHA": "59d256080554ca6fe4e9a5eb9576326d76fd3f2cf955f3449bb04c14e2ddd94b",
+      "cutTitle": "tracker skips proxy intake and Personal Plan frontier reads",
+      "cutLine": 266,
+      "cutBodySHA": "59d256080554ca6fe4e9a5eb9576326d76fd3f2cf955f3449bb04c14e2ddd94b",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 273,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        },
+        {
+          "line": 274,
+          "callee": "assert.ok",
+          "text": "assert.ok(!observedTables.includes(\"profiles\"))"
+        },
+        {
+          "line": 275,
+          "callee": "assert.ok",
+          "text": "assert.ok(!observedTables.includes(\"hair_profiles\"))"
+        },
+        {
+          "line": 276,
+          "callee": "assert.equal",
+          "text": "assert.equal(frontierCalls.count, 0)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 273,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        },
+        {
+          "line": 274,
+          "callee": "assert.ok",
+          "text": "assert.ok(!observedTables.includes(\"profiles\"))"
+        },
+        {
+          "line": 275,
+          "callee": "assert.ok",
+          "text": "assert.ok(!observedTables.includes(\"hair_profiles\"))"
+        },
+        {
+          "line": 276,
+          "callee": "assert.equal",
+          "text": "assert.equal(frontierCalls.count, 0)"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "flag off: FREEMIUM_SCANNER_FIRST_ENABLED unset still redirects tracker to reactivate (byte-identical)",
+      "beforeLine": 281,
+      "beforeBodySHA": "c2fc3176f58ae5b67f71cfdea007bb9508711bd29ea75ec2f24d9063a72aca36",
+      "cutTitle": "flag off: FREEMIUM_SCANNER_FIRST_ENABLED unset still redirects tracker to reactivate (byte-identical)",
+      "cutLine": 281,
+      "cutBodySHA": "c2fc3176f58ae5b67f71cfdea007bb9508711bd29ea75ec2f24d9063a72aca36",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 294,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 295,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n      response.headers.get(\"location\"),\n      \"https://chaarlie.de/reactivate?reason=expired&next=%2Ftracker\",\n    )"
+        },
+        {
+          "line": 299,
+          "callee": "assert.ok",
+          "text": "assert.ok(!observedTables.includes(\"profiles\"))"
+        },
+        {
+          "line": 300,
+          "callee": "assert.ok",
+          "text": "assert.ok(!observedTables.includes(\"hair_profiles\"))"
+        },
+        {
+          "line": 301,
+          "callee": "assert.equal",
+          "text": "assert.equal(frontierCalls.count, 0)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 294,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 295,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n      response.headers.get(\"location\"),\n      \"https://chaarlie.de/reactivate?reason=expired&next=%2Ftracker\",\n    )"
+        },
+        {
+          "line": 299,
+          "callee": "assert.ok",
+          "text": "assert.ok(!observedTables.includes(\"profiles\"))"
+        },
+        {
+          "line": 300,
+          "callee": "assert.ok",
+          "text": "assert.ok(!observedTables.includes(\"hair_profiles\"))"
+        },
+        {
+          "line": 301,
+          "callee": "assert.equal",
+          "text": "assert.equal(frontierCalls.count, 0)"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "flag on: a free authenticated user (no current access) reaches /tracker instead of being sent to reactivate",
+      "beforeLine": 308,
+      "beforeBodySHA": "6d3e1cf988c3f30669929fdf50bfde54c005604d66f58e0a20343ae86cf39854",
+      "cutTitle": "flag on: a free authenticated user (no current access) reaches /tracker instead of being sent to reactivate",
+      "cutLine": 308,
+      "cutBodySHA": "6d3e1cf988c3f30669929fdf50bfde54c005604d66f58e0a20343ae86cf39854",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 332,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200, pathname)"
+        },
+        {
+          "line": 333,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null, pathname)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 332,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200, pathname)"
+        },
+        {
+          "line": 333,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null, pathname)"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "flag on: a free authenticated user without current access is still gated on a non-admitted route (POST /api/chat stays subscription_required)",
+      "beforeLine": 341,
+      "beforeBodySHA": "e644369ba0812ec6d52f975ffd3faf96182ce513ec3b09ad766729dc39fc131a",
+      "cutTitle": "flag on: a free authenticated user without current access is still gated on a non-admitted route (POST /api/chat stays subscription_required)",
+      "cutLine": 341,
+      "cutBodySHA": "e644369ba0812ec6d52f975ffd3faf96182ce513ec3b09ad766729dc39fc131a",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 358,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 403, `${request.method} ${request.nextUrl.pathname}`)"
+        },
+        {
+          "line": 360,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(body, { error: \"subscription_required\" })"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 358,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 403, `${request.method} ${request.nextUrl.pathname}`)"
+        },
+        {
+          "line": 360,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(body, { error: \"subscription_required\" })"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "expired trial cannot fall back to free pages or keepsake APIs; recovery stays reachable",
+      "beforeLine": 368,
+      "beforeBodySHA": "d373ef49df4767914ae96ee157f3dd49cf63fa21105890dd388ca696f68de13c",
+      "cutTitle": "expired trial cannot fall back to free pages or keepsake APIs; recovery stays reachable",
+      "cutLine": 368,
+      "cutBodySHA": "d373ef49df4767914ae96ee157f3dd49cf63fa21105890dd388ca696f68de13c",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 379,
+          "callee": "assert.equal",
+          "text": "assert.equal(page.status, 307, pathname)"
+        },
+        {
+          "line": 380,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n        page.headers.get(\"location\"),\n        `https://chaarlie.de/reactivate?reason=expired&next=${encodeURIComponent(pathname === \"/scan\" || pathname === \"/anwendung\" ? \"/chat\" : pathname)}`,\n        pathname,\n      )"
+        },
+        {
+          "line": 393,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 403, pathname)"
+        },
+        {
+          "line": 394,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(await response.json(), { error: \"subscription_required\" })"
+        },
+        {
+          "line": 397,
+          "callee": "assert.equal",
+          "text": "assert.equal(recovery.status, 200)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 379,
+          "callee": "assert.equal",
+          "text": "assert.equal(page.status, 307, pathname)"
+        },
+        {
+          "line": 380,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n        page.headers.get(\"location\"),\n        `https://chaarlie.de/reactivate?reason=expired&next=${encodeURIComponent(pathname === \"/scan\" || pathname === \"/anwendung\" ? \"/chat\" : pathname)}`,\n        pathname,\n      )"
+        },
+        {
+          "line": 393,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 403, pathname)"
+        },
+        {
+          "line": 394,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(await response.json(), { error: \"subscription_required\" })"
+        },
+        {
+          "line": 397,
+          "callee": "assert.equal",
+          "text": "assert.equal(recovery.status, 200)"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "verified current access takes precedence over trial history and unavailable history never opens previews",
+      "beforeLine": 404,
+      "beforeBodySHA": "812a6c0bfeb4ca79b50b51905ba4f2eb01e0b719f6ca23b58a9e2380edfe29f0",
+      "cutTitle": "verified current access takes precedence over trial history and unavailable history never opens previews",
+      "cutLine": 404,
+      "cutBodySHA": "812a6c0bfeb4ca79b50b51905ba4f2eb01e0b719f6ca23b58a9e2380edfe29f0",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 415,
+          "callee": "assert.equal",
+          "text": "assert.equal(active.status, 200)"
+        },
+        {
+          "line": 421,
+          "callee": "assert.equal",
+          "text": "assert.equal(unavailable.status, 503)"
+        },
+        {
+          "line": 422,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(await unavailable.json(), { error: \"access_check_unavailable\" })"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 415,
+          "callee": "assert.equal",
+          "text": "assert.equal(active.status, 200)"
+        },
+        {
+          "line": 421,
+          "callee": "assert.equal",
+          "text": "assert.equal(unavailable.status, 503)"
+        },
+        {
+          "line": 422,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(await unavailable.json(), { error: \"access_check_unavailable\" })"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "flag on: GET /api/chat and GET /api/chat/[id] are admitted for keepsake reads (T17)",
+      "beforeLine": 436,
+      "beforeBodySHA": "d57447d082fdb4f6532b3d69ec28cf157e1fd63998b7361ec5694ce000160743",
+      "cutTitle": "flag on: GET /api/chat and GET /api/chat/[id] are admitted for keepsake reads (T17)",
+      "cutLine": 436,
+      "cutBodySHA": "d57447d082fdb4f6532b3d69ec28cf157e1fd63998b7361ec5694ce000160743",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 446,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200, pathname)"
+        },
+        {
+          "line": 447,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null, pathname)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 446,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200, pathname)"
+        },
+        {
+          "line": 447,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null, pathname)"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "flag off: GET /api/chat is still subscription_required (byte-identical)",
+      "beforeLine": 455,
+      "beforeBodySHA": "982b336910734010dfd1607ddd26d0a14bb75db7cd046937028bc7a1cfd9e9fe",
+      "cutTitle": "flag off: GET /api/chat is still subscription_required (byte-identical)",
+      "cutLine": 455,
+      "cutBodySHA": "982b336910734010dfd1607ddd26d0a14bb75db7cd046937028bc7a1cfd9e9fe",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 464,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 403)"
+        },
+        {
+          "line": 465,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(await response.json(), { error: \"subscription_required\" })"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 464,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 403)"
+        },
+        {
+          "line": 465,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(await response.json(), { error: \"subscription_required\" })"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "flag on: a free authenticated user reaches the /scan page shell without being bounced to onboarding",
+      "beforeLine": 472,
+      "beforeBodySHA": "cacfd5b94911a9a57022387f0232357f4962d5fce5e564ed59ce823c25e4a784",
+      "cutTitle": "flag on: a free authenticated user reaches the /scan page shell without being bounced to onboarding",
+      "cutLine": 472,
+      "cutBodySHA": "cacfd5b94911a9a57022387f0232357f4962d5fce5e564ed59ce823c25e4a784",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 483,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        },
+        {
+          "line": 484,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null)"
+        },
+        {
+          "line": 487,
+          "callee": "assert.ok",
+          "text": "assert.ok(!observedTables.includes(\"personal_plans\"))"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 483,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        },
+        {
+          "line": 484,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null)"
+        },
+        {
+          "line": 487,
+          "callee": "assert.ok",
+          "text": "assert.ok(!observedTables.includes(\"personal_plans\"))"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "flag on: needs_onboarding + no paid access reaches /anwendung without being bounced to onboarding",
+      "beforeLine": 494,
+      "beforeBodySHA": "f96ef3067966e47c9818bbaeb17ccce86748bf9e923464e9f37a24a4472480b9",
+      "cutTitle": "flag on: needs_onboarding + no paid access reaches /anwendung without being bounced to onboarding",
+      "cutLine": 494,
+      "cutBodySHA": "f96ef3067966e47c9818bbaeb17ccce86748bf9e923464e9f37a24a4472480b9",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 508,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        },
+        {
+          "line": 509,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 508,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        },
+        {
+          "line": 509,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null)"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "flag on: a one-time-access owner (active, but hasCurrentAppAccess false) at needs_onboarding is still redirected to /onboarding from /anwendung (I1 regression)",
+      "beforeLine": 516,
+      "beforeBodySHA": "2653fb7bbb5261dd9d0971f68b223e5bb71df672ee006ea1edc31998255ca899",
+      "cutTitle": "flag on: a one-time-access owner (active, but hasCurrentAppAccess false) at needs_onboarding is still redirected to /onboarding from /anwendung (I1 regression)",
+      "cutLine": 516,
+      "cutBodySHA": "2653fb7bbb5261dd9d0971f68b223e5bb71df672ee006ea1edc31998255ca899",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 531,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 532,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/onboarding\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 531,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 532,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/onboarding\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "flag off: a one-time-access owner at needs_onboarding is redirected to /onboarding from /anwendung (baseline)",
+      "beforeLine": 539,
+      "beforeBodySHA": "e3398d128ca18ae230ccd3414279fceaa5e37ae034d5a742313b12ae1201be01",
+      "cutTitle": "flag off: a one-time-access owner at needs_onboarding is redirected to /onboarding from /anwendung (baseline)",
+      "cutLine": 539,
+      "cutBodySHA": "e3398d128ca18ae230ccd3414279fceaa5e37ae034d5a742313b12ae1201be01",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 550,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 551,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/onboarding\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 550,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 551,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/onboarding\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "chat retains proxy intake and preserves redirect query parameters",
+      "beforeLine": 558,
+      "beforeBodySHA": "46b44f76ce5eed548ae671b50e176f264d67e2a189494fc6fde1b8daeb932a2a",
+      "cutTitle": "chat retains proxy intake and preserves redirect query parameters",
+      "cutLine": 558,
+      "cutBodySHA": "46b44f76ce5eed548ae671b50e176f264d67e2a189494fc6fde1b8daeb932a2a",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 570,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 571,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    response.headers.get(\"location\"),\n    \"https://chaarlie.de/onboarding?lead=lead-1&tab=history\",\n  )"
+        },
+        {
+          "line": 575,
+          "callee": "assert.ok",
+          "text": "assert.ok(observedTables.includes(\"profiles\"))"
+        },
+        {
+          "line": 576,
+          "callee": "assert.ok",
+          "text": "assert.ok(observedTables.includes(\"hair_profiles\"))"
+        },
+        {
+          "line": 577,
+          "callee": "assert.equal",
+          "text": "assert.equal(frontierCalls.count, 1)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 570,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 571,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    response.headers.get(\"location\"),\n    \"https://chaarlie.de/onboarding?lead=lead-1&tab=history\",\n  )"
+        },
+        {
+          "line": 575,
+          "callee": "assert.ok",
+          "text": "assert.ok(observedTables.includes(\"profiles\"))"
+        },
+        {
+          "line": 576,
+          "callee": "assert.ok",
+          "text": "assert.ok(observedTables.includes(\"hair_profiles\"))"
+        },
+        {
+          "line": 577,
+          "callee": "assert.equal",
+          "text": "assert.equal(frontierCalls.count, 1)"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "a pending proposal does not grant /anwendung before an active routine exists",
+      "beforeLine": 580,
+      "beforeBodySHA": "1e6f1dabf4e3ad77fa6dff2f4dd4cef622d15b1b70955e480aec74e82ad8e5db",
+      "cutTitle": "a pending proposal does not grant /anwendung before an active routine exists",
+      "cutLine": 580,
+      "cutBodySHA": "1e6f1dabf4e3ad77fa6dff2f4dd4cef622d15b1b70955e480aec74e82ad8e5db",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 583,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 584,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/onboarding\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 583,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 584,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/onboarding\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "field-test access fails closed when the app-access check is false",
+      "beforeLine": 587,
+      "beforeBodySHA": "f1a19d89acdc3cd181fa030cdc0cc4e44bbe7236ddca8029536c2731d8f11537",
+      "cutTitle": "field-test access fails closed when the app-access check is false",
+      "cutLine": 587,
+      "cutBodySHA": "f1a19d89acdc3cd181fa030cdc0cc4e44bbe7236ddca8029536c2731d8f11537",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 592,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 593,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/test/haarplan/beendet\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 592,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 593,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/test/haarplan/beendet\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "email-bound moderator access reaches gated app routes without a synthetic guest marker",
+      "beforeLine": 596,
+      "beforeBodySHA": "3549ec743efabd9d5fdc063a879e2dcf13d7fa940b7c2212e39a85223df576ea",
+      "cutTitle": "email-bound moderator access reaches gated app routes without a synthetic guest marker",
+      "cutLine": 596,
+      "cutBodySHA": "3549ec743efabd9d5fdc063a879e2dcf13d7fa940b7c2212e39a85223df576ea",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 603,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        },
+        {
+          "line": 604,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 603,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        },
+        {
+          "line": 604,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null)"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "an ended moderator cannot retain access through its still-active tester grant",
+      "beforeLine": 607,
+      "beforeBodySHA": "d873f714959d0ccd2384ecb00be2721a9c021fd75975bbb2d78d18ec0df2eba9",
+      "cutTitle": "an ended moderator cannot retain access through its still-active tester grant",
+      "cutLine": 607,
+      "cutBodySHA": "d873f714959d0ccd2384ecb00be2721a9c021fd75975bbb2d78d18ec0df2eba9",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 615,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 616,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/test/haarplan/beendet\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 615,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 616,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/test/haarplan/beendet\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "an unavailable moderator lookup with only its tester grant returns unavailable",
+      "beforeLine": 619,
+      "beforeBodySHA": "0ab209ad3be056de7782bc404f0f431fa6bbd1ef3430b5ec4544acd582eeb6b4",
+      "cutTitle": "an unavailable moderator lookup with only its tester grant returns unavailable",
+      "cutLine": 619,
+      "cutBodySHA": "0ab209ad3be056de7782bc404f0f431fa6bbd1ef3430b5ec4544acd582eeb6b4",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 627,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 503)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 627,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 503)"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "an ended moderator with independently verified paid access remains admitted",
+      "beforeLine": 630,
+      "beforeBodySHA": "60316eae88a82427bba21ed9b53811258f3f3a47bd28f479df49b7c207f7beae",
+      "cutTitle": "an ended moderator with independently verified paid access remains admitted",
+      "cutLine": 630,
+      "cutBodySHA": "60316eae88a82427bba21ed9b53811258f3f3a47bd28f479df49b7c207f7beae",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 638,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 638,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "an ended moderator with an active partner grant remains admitted",
+      "beforeLine": 645,
+      "beforeBodySHA": "0978ef1c9789240a4b6984f267b4180845d0c2fc96bbeae08b02dfa58d37eb70",
+      "cutTitle": "an ended moderator with an active partner grant remains admitted",
+      "cutLine": 645,
+      "cutBodySHA": "0978ef1c9789240a4b6984f267b4180845d0c2fc96bbeae08b02dfa58d37eb70",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 654,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 654,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "an ended moderator without paid or partner access is still routed to the ended screen",
+      "beforeLine": 657,
+      "beforeBodySHA": "24559a146be92c3a57d9d8a152a45038b06e7b21743508b136d8ac04a7eb12bf",
+      "cutTitle": "an ended moderator without paid or partner access is still routed to the ended screen",
+      "cutLine": 657,
+      "cutBodySHA": "24559a146be92c3a57d9d8a152a45038b06e7b21743508b136d8ac04a7eb12bf",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 666,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 667,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/test/haarplan/beendet\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 666,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 667,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/test/haarplan/beendet\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "a partner grant with a fresh-start profile is routed from /chat to /quiz, not /reactivate or /onboarding",
+      "beforeLine": 676,
+      "beforeBodySHA": "2c0b28cc70a00f575687d24198e7c7eb7ba95cd96e4b196b4fe6a40d8f2c2358",
+      "cutTitle": "a partner grant with a fresh-start profile is routed from /chat to /quiz, not /reactivate or /onboarding",
+      "cutLine": 676,
+      "cutBodySHA": "2c0b28cc70a00f575687d24198e7c7eb7ba95cd96e4b196b4fe6a40d8f2c2358",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 685,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 686,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/quiz\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 685,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 686,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/quiz\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "a currently paying account that also carries partner metadata keeps ordinary /chat access",
+      "beforeLine": 697,
+      "beforeBodySHA": "627916de4e44cad764651ac831160ffecd239df6944d0c921eeba0c4fe9c5d69",
+      "cutTitle": "a currently paying account that also carries partner metadata keeps ordinary /chat access",
+      "cutLine": 697,
+      "cutBodySHA": "627916de4e44cad764651ac831160ffecd239df6944d0c921eeba0c4fe9c5d69",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 705,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        },
+        {
+          "line": 706,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 705,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        },
+        {
+          "line": 706,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null)"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "an ended moderator with independently verified paid access and partner metadata passes through /chat unredirected",
+      "beforeLine": 715,
+      "beforeBodySHA": "e16120f44c21bdde0fc31246a1218e3703e15e352cb9e59200db7534526fbc12",
+      "cutTitle": "an ended moderator with independently verified paid access and partner metadata passes through /chat unredirected",
+      "cutLine": 715,
+      "cutBodySHA": "e16120f44c21bdde0fc31246a1218e3703e15e352cb9e59200db7534526fbc12",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 725,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        },
+        {
+          "line": 726,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 725,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        },
+        {
+          "line": 726,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null)"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "an ended moderator with partner metadata but no independently verified access is still routed to the ended screen",
+      "beforeLine": 734,
+      "beforeBodySHA": "94bd8c62a86104aaf41d017db8e4f0faba033a52a7b7e5768e0d0e611c7b4a86",
+      "cutTitle": "an ended moderator with partner metadata but no independently verified access is still routed to the ended screen",
+      "cutLine": 734,
+      "cutBodySHA": "94bd8c62a86104aaf41d017db8e4f0faba033a52a7b7e5768e0d0e611c7b4a86",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 744,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 745,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/test/haarplan/beendet\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 744,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 745,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/test/haarplan/beendet\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "a moderator access lookup outage is unavailable rather than an expiry or paywall",
+      "beforeLine": 748,
+      "beforeBodySHA": "bd0ac20d4afb37830dfdb0e01f0d5d67d74c5613fe7ff6d08aa878aba48cacdc",
+      "cutTitle": "a moderator access lookup outage is unavailable rather than an expiry or paywall",
+      "cutLine": 748,
+      "cutBodySHA": "bd0ac20d4afb37830dfdb0e01f0d5d67d74c5613fe7ff6d08aa878aba48cacdc",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 754,
+          "callee": "assert.equal",
+          "text": "assert.equal(page.status, 503)"
+        },
+        {
+          "line": 755,
+          "callee": "assert.match",
+          "text": "assert.match(await page.text(), /Zugang wird gerade geprüft/)"
+        },
+        {
+          "line": 762,
+          "callee": "assert.equal",
+          "text": "assert.equal(api.status, 503)"
+        },
+        {
+          "line": 763,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(await api.json(), { error: \"moderator_access_unavailable\" })"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 754,
+          "callee": "assert.equal",
+          "text": "assert.equal(page.status, 503)"
+        },
+        {
+          "line": 755,
+          "callee": "assert.match",
+          "text": "assert.match(await page.text(), /Zugang wird gerade geprüft/)"
+        },
+        {
+          "line": 762,
+          "callee": "assert.equal",
+          "text": "assert.equal(api.status, 503)"
+        },
+        {
+          "line": 763,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(await api.json(), { error: \"moderator_access_unavailable\" })"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "a personal-plan lookup error preserves legacy onboarding protection",
+      "beforeLine": 766,
+      "beforeBodySHA": "3d6e670f53df4d8b7397eb38b4bd12d4eacfb208ca6f5a577b6cf7d6df01e224",
+      "cutTitle": "a personal-plan lookup error preserves legacy onboarding protection",
+      "cutLine": 766,
+      "cutBodySHA": "3d6e670f53df4d8b7397eb38b4bd12d4eacfb208ca6f5a577b6cf7d6df01e224",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 771,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 772,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/onboarding\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 771,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 772,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/onboarding\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "a thrown personal-plan lookup preserves legacy onboarding protection",
+      "beforeLine": 775,
+      "beforeBodySHA": "1359ad9a363e80a08067c485bb97ef00cd517df38c55a41c076e30143c27cb16",
+      "cutTitle": "a thrown personal-plan lookup preserves legacy onboarding protection",
+      "cutLine": 775,
+      "cutBodySHA": "1359ad9a363e80a08067c485bb97ef00cd517df38c55a41c076e30143c27cb16",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 780,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 781,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/onboarding\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 780,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 781,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/onboarding\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "an eligible new buyer follows the Personal Plan frontier instead of legacy onboarding",
+      "beforeLine": 784,
+      "beforeBodySHA": "e72086f6603bd1677fe24aee649b0c39e2fd86b17e473a91dd43da297ce62a58",
+      "cutTitle": "an eligible new buyer follows the Personal Plan frontier instead of legacy onboarding",
+      "cutLine": 784,
+      "cutBodySHA": "e72086f6603bd1677fe24aee649b0c39e2fd86b17e473a91dd43da297ce62a58",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 792,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 793,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/plan-start\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 792,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 793,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/plan-start\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "a Stage 1 frontier no longer bounces chat into the Personal Plan flow",
+      "beforeLine": 796,
+      "beforeBodySHA": "24ff3792f87f1a46e3c828edf3b975939e8c142d76cea3ad4919d4dfa2e5b08d",
+      "cutTitle": "a Stage 1 frontier no longer bounces chat into the Personal Plan flow",
+      "cutLine": 796,
+      "cutBodySHA": "24ff3792f87f1a46e3c828edf3b975939e8c142d76cea3ad4919d4dfa2e5b08d",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 804,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        },
+        {
+          "line": 805,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 804,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        },
+        {
+          "line": 805,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null)"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "an activated moderator returns to the saved plan instead of legacy onboarding",
+      "beforeLine": 808,
+      "beforeBodySHA": "9d552e6c1822b54e19659ce235a44b2c2028a4345afd33f6459b551429bd3df5",
+      "cutTitle": "an activated moderator returns to the saved plan instead of legacy onboarding",
+      "cutLine": 808,
+      "cutBodySHA": "9d552e6c1822b54e19659ce235a44b2c2028a4345afd33f6459b551429bd3df5",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 818,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 819,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/plan-start\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 818,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 819,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/plan-start\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "an activated moderator return stays in recovery while its plan is not ready",
+      "beforeLine": 822,
+      "beforeBodySHA": "46197958498099e8c62013e28d18768202e158ce2e1381dbe526be3984687c5f",
+      "cutTitle": "an activated moderator return stays in recovery while its plan is not ready",
+      "cutLine": 822,
+      "cutBodySHA": "46197958498099e8c62013e28d18768202e158ce2e1381dbe526be3984687c5f",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 832,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/plan-bereit\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 832,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/plan-bereit\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "an activated moderator return cannot fall through to legacy onboarding on a routing outage",
+      "beforeLine": 835,
+      "beforeBodySHA": "7c0e87d39fb4da4a9d9490942957f4214b5b85efa6966e74fe05979b599fd770",
+      "cutTitle": "an activated moderator return cannot fall through to legacy onboarding on a routing outage",
+      "cutLine": 835,
+      "cutBodySHA": "7c0e87d39fb4da4a9d9490942957f4214b5b85efa6966e74fe05979b599fd770",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 842,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 503)"
+        },
+        {
+          "line": 843,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 842,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 503)"
+        },
+        {
+          "line": 843,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null)"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "an eligible buyer with an unready source stays in readiness recovery",
+      "beforeLine": 846,
+      "beforeBodySHA": "71af9806246d35e4b810c8e859269d661c4af98882fc07ec77bcc1cf7be6c0b2",
+      "cutTitle": "an eligible buyer with an unready source stays in readiness recovery",
+      "cutLine": 846,
+      "cutBodySHA": "71af9806246d35e4b810c8e859269d661c4af98882fc07ec77bcc1cf7be6c0b2",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 854,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 855,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/plan-bereit\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 854,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 855,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/plan-bereit\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "a routing-frontier outage cannot silently fall through to legacy onboarding",
+      "beforeLine": 858,
+      "beforeBodySHA": "0e5a8caaecb2b465ebc7c9f6101c3a9637d2c3bbd1e789e80b676b321eebabda",
+      "cutTitle": "a routing-frontier outage cannot silently fall through to legacy onboarding",
+      "cutLine": 858,
+      "cutBodySHA": "0e5a8caaecb2b465ebc7c9f6101c3a9637d2c3bbd1e789e80b676b321eebabda",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 866,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 503)"
+        },
+        {
+          "line": 867,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null)"
+        },
+        {
+          "line": 868,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"cache-control\"), \"private, no-store\")"
+        },
+        {
+          "line": 869,
+          "callee": "assert.match",
+          "text": "assert.match(await response.text(), /Bitte versuche es gleich noch einmal/)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 866,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 503)"
+        },
+        {
+          "line": 867,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null)"
+        },
+        {
+          "line": 868,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"cache-control\"), \"private, no-store\")"
+        },
+        {
+          "line": 869,
+          "callee": "assert.match",
+          "text": "assert.match(await response.text(), /Bitte versuche es gleich noch einmal/)"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "a routing-frontier outage leaves chat to the intake gate",
+      "beforeLine": 872,
+      "beforeBodySHA": "2e2715d55ae5c135fa0fa5553aad28f222fa8ac7f9bc40c9e259e768a96b5339",
+      "cutTitle": "a routing-frontier outage leaves chat to the intake gate",
+      "cutLine": 872,
+      "cutBodySHA": "2e2715d55ae5c135fa0fa5553aad28f222fa8ac7f9bc40c9e259e768a96b5339",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 881,
+          "callee": "assert.equal",
+          "text": "assert.equal(withRoutine.status, 200)"
+        },
+        {
+          "line": 882,
+          "callee": "assert.equal",
+          "text": "assert.equal(withRoutine.headers.get(\"location\"), null)"
+        },
+        {
+          "line": 891,
+          "callee": "assert.equal",
+          "text": "assert.equal(withoutRoutine.status, 307)"
+        },
+        {
+          "line": 892,
+          "callee": "assert.equal",
+          "text": "assert.equal(withoutRoutine.headers.get(\"location\"), \"https://chaarlie.de/onboarding\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 881,
+          "callee": "assert.equal",
+          "text": "assert.equal(withRoutine.status, 200)"
+        },
+        {
+          "line": 882,
+          "callee": "assert.equal",
+          "text": "assert.equal(withRoutine.headers.get(\"location\"), null)"
+        },
+        {
+          "line": 891,
+          "callee": "assert.equal",
+          "text": "assert.equal(withoutRoutine.status, 307)"
+        },
+        {
+          "line": 892,
+          "callee": "assert.equal",
+          "text": "assert.equal(withoutRoutine.headers.get(\"location\"), \"https://chaarlie.de/onboarding\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "chat stays reachable across the Personal Plan frontier",
+      "beforeLine": 895,
+      "beforeBodySHA": "623f15d25a9413022bb1bd9f0f675332cc24c6f145074bbf7337bd50672d0839",
+      "cutTitle": "chat stays reachable across the Personal Plan frontier",
+      "cutLine": 895,
+      "cutBodySHA": "623f15d25a9413022bb1bd9f0f675332cc24c6f145074bbf7337bd50672d0839",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 931,
+          "callee": "assert.equal",
+          "text": "assert.equal(activeRoutine.status, 200)"
+        },
+        {
+          "line": 932,
+          "callee": "assert.equal",
+          "text": "assert.equal(activeRoutine.headers.get(\"location\"), null)"
+        },
+        {
+          "line": 937,
+          "callee": "assert.equal",
+          "text": "assert.equal(pendingRoutine.status, 200)"
+        },
+        {
+          "line": 938,
+          "callee": "assert.equal",
+          "text": "assert.equal(pendingRoutine.headers.get(\"location\"), null)"
+        },
+        {
+          "line": 947,
+          "callee": "assert.equal",
+          "text": "assert.equal(moderatorChat.status, 200)"
+        },
+        {
+          "line": 948,
+          "callee": "assert.equal",
+          "text": "assert.equal(moderatorChat.headers.get(\"location\"), null)"
+        },
+        {
+          "line": 955,
+          "callee": "assert.equal",
+          "text": "assert.equal(recoveryFrontier.status, 200)"
+        },
+        {
+          "line": 956,
+          "callee": "assert.equal",
+          "text": "assert.equal(recoveryFrontier.headers.get(\"location\"), null)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 931,
+          "callee": "assert.equal",
+          "text": "assert.equal(activeRoutine.status, 200)"
+        },
+        {
+          "line": 932,
+          "callee": "assert.equal",
+          "text": "assert.equal(activeRoutine.headers.get(\"location\"), null)"
+        },
+        {
+          "line": 937,
+          "callee": "assert.equal",
+          "text": "assert.equal(pendingRoutine.status, 200)"
+        },
+        {
+          "line": 938,
+          "callee": "assert.equal",
+          "text": "assert.equal(pendingRoutine.headers.get(\"location\"), null)"
+        },
+        {
+          "line": 947,
+          "callee": "assert.equal",
+          "text": "assert.equal(moderatorChat.status, 200)"
+        },
+        {
+          "line": 948,
+          "callee": "assert.equal",
+          "text": "assert.equal(moderatorChat.headers.get(\"location\"), null)"
+        },
+        {
+          "line": 955,
+          "callee": "assert.equal",
+          "text": "assert.equal(recoveryFrontier.status, 200)"
+        },
+        {
+          "line": 956,
+          "callee": "assert.equal",
+          "text": "assert.equal(recoveryFrontier.headers.get(\"location\"), null)"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "chat without a routine pointer, quiz or entitlement keeps the intake gate",
+      "beforeLine": 959,
+      "beforeBodySHA": "4f85486cfede0552e12c574045b41608a1153471beefb506bbe6d16e78d3a6d3",
+      "cutTitle": "chat without a routine pointer, quiz or entitlement keeps the intake gate",
+      "cutLine": 959,
+      "cutBodySHA": "4f85486cfede0552e12c574045b41608a1153471beefb506bbe6d16e78d3a6d3",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 970,
+          "callee": "assert.equal",
+          "text": "assert.equal(entitledWithoutRoutine.status, 307)"
+        },
+        {
+          "line": 971,
+          "callee": "assert.equal",
+          "text": "assert.equal(entitledWithoutRoutine.headers.get(\"location\"), \"https://chaarlie.de/onboarding\")"
+        },
+        {
+          "line": 976,
+          "callee": "assert.equal",
+          "text": "assert.equal(needsQuiz.status, 307)"
+        },
+        {
+          "line": 977,
+          "callee": "assert.equal",
+          "text": "assert.equal(needsQuiz.headers.get(\"location\"), \"https://chaarlie.de/quiz\")"
+        },
+        {
+          "line": 982,
+          "callee": "assert.equal",
+          "text": "assert.equal(withoutEntitlement.status, 307)"
+        },
+        {
+          "line": 983,
+          "callee": "assert.equal",
+          "text": "assert.equal(withoutEntitlement.headers.get(\"location\"), \"https://chaarlie.de/onboarding\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 970,
+          "callee": "assert.equal",
+          "text": "assert.equal(entitledWithoutRoutine.status, 307)"
+        },
+        {
+          "line": 971,
+          "callee": "assert.equal",
+          "text": "assert.equal(entitledWithoutRoutine.headers.get(\"location\"), \"https://chaarlie.de/onboarding\")"
+        },
+        {
+          "line": 976,
+          "callee": "assert.equal",
+          "text": "assert.equal(needsQuiz.status, 307)"
+        },
+        {
+          "line": 977,
+          "callee": "assert.equal",
+          "text": "assert.equal(needsQuiz.headers.get(\"location\"), \"https://chaarlie.de/quiz\")"
+        },
+        {
+          "line": 982,
+          "callee": "assert.equal",
+          "text": "assert.equal(withoutEntitlement.status, 307)"
+        },
+        {
+          "line": 983,
+          "callee": "assert.equal",
+          "text": "assert.equal(withoutEntitlement.headers.get(\"location\"), \"https://chaarlie.de/onboarding\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "explicit legacy onboarding edits are not intercepted by the Personal Plan frontier",
+      "beforeLine": 986,
+      "beforeBodySHA": "8ae72a3da95805c3f59df2b51f7aa9ad70639413611e864652ce1b6910f68241",
+      "cutTitle": "explicit legacy onboarding edits are not intercepted by the Personal Plan frontier",
+      "cutLine": 986,
+      "cutBodySHA": "8ae72a3da95805c3f59df2b51f7aa9ad70639413611e864652ce1b6910f68241",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 998,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        },
+        {
+          "line": 999,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 998,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        },
+        {
+          "line": 999,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null)"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "synthetic guest access does not depend on the unrelated moderator membership lookup",
+      "beforeLine": 1002,
+      "beforeBodySHA": "d15595838f42110eefe0c9f542dd785376eae1a7c138d265bc13e0f48f956984",
+      "cutTitle": "synthetic guest access does not depend on the unrelated moderator membership lookup",
+      "cutLine": 1002,
+      "cutBodySHA": "d15595838f42110eefe0c9f542dd785376eae1a7c138d265bc13e0f48f956984",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 1006,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 1006,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "flag off: a subscription buyer at needs_onboarding reaches /scan without a personal_plans lookup",
+      "beforeLine": 1009,
+      "beforeBodySHA": "c8414552842854631fd7c58856d5f5d4bf0e65aa5529656079d5a6fd4c108c1c",
+      "cutTitle": "flag off: a subscription buyer at needs_onboarding reaches /scan without a personal_plans lookup",
+      "cutLine": 1009,
+      "cutBodySHA": "c8414552842854631fd7c58856d5f5d4bf0e65aa5529656079d5a6fd4c108c1c",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 1025,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        },
+        {
+          "line": 1026,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null)"
+        },
+        {
+          "line": 1028,
+          "callee": "assert.ok",
+          "text": "assert.ok(!observedTables.includes(\"personal_plans\"))"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 1025,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        },
+        {
+          "line": 1026,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), null)"
+        },
+        {
+          "line": 1028,
+          "callee": "assert.ok",
+          "text": "assert.ok(!observedTables.includes(\"personal_plans\"))"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "flag off: the same subscription buyer is still sent to /onboarding from /chat and /anwendung",
+      "beforeLine": 1035,
+      "beforeBodySHA": "c441e50c9b692cd39e3b8b91b501471c9eacf43db8ec240b699104091cb62b3e",
+      "cutTitle": "flag off: the same subscription buyer is still sent to /onboarding from /chat and /anwendung",
+      "cutLine": 1035,
+      "cutBodySHA": "c441e50c9b692cd39e3b8b91b501471c9eacf43db8ec240b699104091cb62b3e",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 1047,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 1048,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/onboarding\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 1047,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307)"
+        },
+        {
+          "line": 1048,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.headers.get(\"location\"), \"https://chaarlie.de/onboarding\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/auth-middleware-personal-plan-routine.test.ts",
+      "title": "flag off: a user without any paid access is still bounced off /scan by the paywall",
+      "beforeLine": 1056,
+      "beforeBodySHA": "286852c66b7e2fe5c5e67119a053f204a5b7991303c018f0ed50b48cdff0cd3f",
+      "cutTitle": "flag off: a user without any paid access is still bounced off /scan by the paywall",
+      "cutLine": 1056,
+      "cutBodySHA": "286852c66b7e2fe5c5e67119a053f204a5b7991303c018f0ed50b48cdff0cd3f",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 1076,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 403, pathname)"
+        },
+        {
+          "line": 1077,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(await response.json(), { error: \"subscription_required\" })"
+        },
+        {
+          "line": 1079,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307, pathname)"
+        },
+        {
+          "line": 1080,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n          response.headers.get(\"location\"),\n          `https://chaarlie.de/reactivate?reason=expired&next=${encodeURIComponent(pathname === \"/scan\" || pathname === \"/anwendung\" ? \"/chat\" : pathname)}`,\n          pathname,\n        )"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 1076,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 403, pathname)"
+        },
+        {
+          "line": 1077,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(await response.json(), { error: \"subscription_required\" })"
+        },
+        {
+          "line": 1079,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 307, pathname)"
+        },
+        {
+          "line": 1080,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n          response.headers.get(\"location\"),\n          `https://chaarlie.de/reactivate?reason=expired&next=${encodeURIComponent(pathname === \"/scan\" || pathname === \"/anwendung\" ? \"/chat\" : pathname)}`,\n          pathname,\n        )"
+        }
+      ]
+    },
+    {
+      "file": "tests/freemium-enrollment-admission.test.ts",
+      "title": "an admitted buyer with current paid authority is a plan owner",
+      "beforeLine": 51,
+      "beforeBodySHA": "2109aafdc333f814d0230bfb53ee005756effc3a9b163b77ffc9de966b46adae",
+      "cutTitle": "an admitted buyer with current paid authority is a plan owner",
+      "cutLine": 51,
+      "cutBodySHA": "2109aafdc333f814d0230bfb53ee005756effc3a9b163b77ffc9de966b46adae",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 53,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(resolved, {\n    sourceId: \"admission-1\",\n    admittedAt: ADMISSION.admitted_at,\n    leadId: \"lead-1\",\n  })"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 53,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(resolved, {\n    sourceId: \"admission-1\",\n    admittedAt: ADMISSION.admitted_at,\n    leadId: \"lead-1\",\n  })"
+        }
+      ]
+    },
+    {
+      "file": "tests/freemium-enrollment-admission.test.ts",
+      "title": "the source id is the admission, not the provider reference",
+      "beforeLine": 60,
+      "beforeBodySHA": "f87c3745152fb842758894ab2b8741fae560c7f990cb16b4212f64b2189bbd6d",
+      "cutTitle": "the source id is the admission, not the provider reference",
+      "cutLine": 60,
+      "cutBodySHA": "f87c3745152fb842758894ab2b8741fae560c7f990cb16b4212f64b2189bbd6d",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 64,
+          "callee": "assert.notEqual",
+          "text": "assert.notEqual(resolved?.sourceId, ADMISSION.provider_reference)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 64,
+          "callee": "assert.notEqual",
+          "text": "assert.notEqual(resolved?.sourceId, ADMISSION.provider_reference)"
+        }
+      ]
+    },
+    {
+      "file": "tests/freemium-enrollment-admission.test.ts",
+      "title": "flag off: nothing resolves, and the admission table is never read",
+      "beforeLine": 67,
+      "beforeBodySHA": "a46a6614c09e865e3221999d06b939e47468d07a59bc00ab908c6eb083c1322e",
+      "cutTitle": "flag off: nothing resolves, and the admission table is never read",
+      "cutLine": 67,
+      "cutBodySHA": "a46a6614c09e865e3221999d06b939e47468d07a59bc00ab908c6eb083c1322e",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 77,
+          "callee": "assert.equal",
+          "text": "assert.equal(resolved, null)"
+        },
+        {
+          "line": 78,
+          "callee": "assert.equal",
+          "text": "assert.equal(reads, 0)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 77,
+          "callee": "assert.equal",
+          "text": "assert.equal(resolved, null)"
+        },
+        {
+          "line": 78,
+          "callee": "assert.equal",
+          "text": "assert.equal(reads, 0)"
+        }
+      ]
+    },
+    {
+      "file": "tests/freemium-enrollment-admission.test.ts",
+      "title": "a lapsed subscription loses the plan even with the record in place",
+      "beforeLine": 81,
+      "beforeBodySHA": "e9cb86c98dbd560de05a04ade2d0e2033add15e5afb9c931454a2ee54f55ead8",
+      "cutTitle": "a lapsed subscription loses the plan even with the record in place",
+      "cutLine": 81,
+      "cutBodySHA": "e9cb86c98dbd560de05a04ade2d0e2033add15e5afb9c931454a2ee54f55ead8",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 86,
+          "callee": "assert.equal",
+          "text": "assert.equal(resolved, null)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 86,
+          "callee": "assert.equal",
+          "text": "assert.equal(resolved, null)"
+        }
+      ]
+    },
+    {
+      "file": "tests/freemium-enrollment-admission.test.ts",
+      "title": "no admission record means no freemium enrollment — legacy standard subscribers are untouched",
+      "beforeLine": 89,
+      "beforeBodySHA": "ee17835278afb8ea1ba92955256409493030d34c74aa7ff2fe7593a19fb489b9",
+      "cutTitle": "no admission record means no freemium enrollment — legacy standard subscribers are untouched",
+      "cutLine": 89,
+      "cutBodySHA": "ee17835278afb8ea1ba92955256409493030d34c74aa7ff2fe7593a19fb489b9",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 94,
+          "callee": "assert.equal",
+          "text": "assert.equal(resolved, null)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 94,
+          "callee": "assert.equal",
+          "text": "assert.equal(resolved, null)"
+        }
+      ]
+    },
+    {
+      "file": "tests/freemium-enrollment-admission.test.ts",
+      "title": "a malformed admission row resolves to nothing rather than a half-enrollment",
+      "beforeLine": 97,
+      "beforeBodySHA": "21d29272fe0f593b2a136e1636361da976d7152f797c52ac311ca9d338180554",
+      "cutTitle": "a malformed admission row resolves to nothing rather than a half-enrollment",
+      "cutLine": 97,
+      "cutBodySHA": "21d29272fe0f593b2a136e1636361da976d7152f797c52ac311ca9d338180554",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 98,
+          "callee": "assert.equal",
+          "text": "assert.equal(parseFreemiumPlanAdmission(null), null)"
+        },
+        {
+          "line": 99,
+          "callee": "assert.equal",
+          "text": "assert.equal(parseFreemiumPlanAdmission({ ...ADMISSION, lead_id: null }), null)"
+        },
+        {
+          "line": 100,
+          "callee": "assert.equal",
+          "text": "assert.equal(parseFreemiumPlanAdmission({ ...ADMISSION, provider: \"klarna\" }), null)"
+        },
+        {
+          "line": 101,
+          "callee": "assert.equal",
+          "text": "assert.equal(parseFreemiumPlanAdmission({ ...ADMISSION, id: 7 }), null)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 98,
+          "callee": "assert.equal",
+          "text": "assert.equal(parseFreemiumPlanAdmission(null), null)"
+        },
+        {
+          "line": 99,
+          "callee": "assert.equal",
+          "text": "assert.equal(parseFreemiumPlanAdmission({ ...ADMISSION, lead_id: null }), null)"
+        },
+        {
+          "line": 100,
+          "callee": "assert.equal",
+          "text": "assert.equal(parseFreemiumPlanAdmission({ ...ADMISSION, provider: \"klarna\" }), null)"
+        },
+        {
+          "line": 101,
+          "callee": "assert.equal",
+          "text": "assert.equal(parseFreemiumPlanAdmission({ ...ADMISSION, id: 7 }), null)"
+        }
+      ]
+    },
+    {
+      "file": "tests/freemium-enrollment-admission.test.ts",
+      "title": "a provisioned freemium buyer reaches Stage 4 and Stage 5 — the gates open",
+      "beforeLine": 137,
+      "beforeBodySHA": "60e751fbb22e82fc18709920f4ebebc9a840e26bc064fc42fc0189cf2add5239",
+      "cutTitle": "a provisioned freemium buyer reaches Stage 4 and Stage 5 — the gates open",
+      "cutLine": 135,
+      "cutBodySHA": "60e751fbb22e82fc18709920f4ebebc9a840e26bc064fc42fc0189cf2add5239",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 149,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 151,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage4, true)"
+        },
+        {
+          "line": 152,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage5, true)"
+        },
+        {
+          "line": 153,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.nextHref, \"/anwendung\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 147,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 149,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage4, true)"
+        },
+        {
+          "line": 150,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage5, true)"
+        },
+        {
+          "line": 151,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.nextHref, \"/anwendung\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/freemium-enrollment-admission.test.ts",
+      "title": "without the accepted Routine the same buyer stops short of Stage 4",
+      "beforeLine": 156,
+      "beforeBodySHA": "802ab4c328fd3e7a2c61382e5f665e0a440cab71d1e54c0bc9464c0e5b2b5a10",
+      "cutTitle": "without the accepted Routine the same buyer stops short of Stage 4",
+      "cutLine": 154,
+      "cutBodySHA": "802ab4c328fd3e7a2c61382e5f665e0a440cab71d1e54c0bc9464c0e5b2b5a10",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 170,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 172,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage4, false)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 168,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.kind, \"personal_plan\")"
+        },
+        {
+          "line": 170,
+          "callee": "assert.equal",
+          "text": "assert.equal(access.allowed.stage4, false)"
+        }
+      ]
+    },
+    {
+      "file": "tests/freemium-enrollment-admission.test.ts",
+      "title": "server-recommended acceptance plans every buyable role and defers the rest honestly",
+      "beforeLine": 204,
+      "beforeBodySHA": "9114a83bbdd1c19a69db2954decdd3a285d338630055698027f1f7e5a3f83d14",
+      "cutTitle": "server-recommended acceptance plans every buyable role and defers the rest honestly",
+      "cutLine": 202,
+      "cutBodySHA": "9114a83bbdd1c19a69db2954decdd3a285d338630055698027f1f7e5a3f83d14",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 212,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(intents, [\n    {\n      type: \"resolve_decision\",\n      subjectKey: \"decision:shampoo:cleanse:gap\",\n      action: \"plan_recommendation\",\n    },\n    {\n      type: \"resolve_decision\",\n      subjectKey: \"decision:mask:repair:gap\",\n      action: \"leave_uncovered\",\n      // Never previewed by an Idealplan the buyer never saw → the refinement owns it.\n      deferralReason: \"refinement_required\",\n    },\n  ])"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 210,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(intents, [\n    {\n      type: \"resolve_decision\",\n      subjectKey: \"decision:shampoo:cleanse:gap\",\n      action: \"plan_recommendation\",\n    },\n    {\n      type: \"resolve_decision\",\n      subjectKey: \"decision:mask:repair:gap\",\n      action: \"leave_uncovered\",\n      // Never previewed by an Idealplan the buyer never saw → the refinement owns it.\n      deferralReason: \"refinement_required\",\n    },\n  ])"
+        }
+      ]
+    },
+    {
+      "file": "tests/freemium-enrollment-admission.test.ts",
+      "title": "D1: a refinement-required category is never auto-provisioned, even when buyable",
+      "beforeLine": 228,
+      "beforeBodySHA": "32ff3ec7108ad2cf9f21768a7662fe905378dbb76ae746d1f011c1d6b4828397",
+      "cutTitle": "D1: a refinement-required category is never auto-provisioned, even when buyable",
+      "cutLine": 226,
+      "cutBodySHA": "32ff3ec7108ad2cf9f21768a7662fe905378dbb76ae746d1f011c1d6b4828397",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 241,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(intents, [\n    {\n      type: \"resolve_decision\",\n      subjectKey: \"decision:shampoo:cleanse:gap\",\n      action: \"plan_recommendation\",\n    },\n    {\n      type: \"resolve_decision\",\n      subjectKey: \"decision:scalp_care:scalp_comfort:gap\",\n      action: \"leave_uncovered\",\n      deferralReason: \"refinement_required\",\n    },\n  ])"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 239,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(intents, [\n    {\n      type: \"resolve_decision\",\n      subjectKey: \"decision:shampoo:cleanse:gap\",\n      action: \"plan_recommendation\",\n    },\n    {\n      type: \"resolve_decision\",\n      subjectKey: \"decision:scalp_care:scalp_comfort:gap\",\n      action: \"leave_uncovered\",\n      deferralReason: \"refinement_required\",\n    },\n  ])"
+        }
+      ]
+    },
+    {
+      "file": "tests/freemium-enrollment-admission.test.ts",
+      "title": "a role whose authority forbids leaving it uncovered is not forged into a decision",
+      "beforeLine": 256,
+      "beforeBodySHA": "b136160bd122fadf1eb17d36a41955542d85f913dd9a8bba77e86bd2cca6b9c9",
+      "cutTitle": "a role whose authority forbids leaving it uncovered is not forged into a decision",
+      "cutLine": 254,
+      "cutBodySHA": "b136160bd122fadf1eb17d36a41955542d85f913dd9a8bba77e86bd2cca6b9c9",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 265,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(buildServerRecommendedIntents([unsupported], new Set()), [])"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 263,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(buildServerRecommendedIntents([unsupported], new Set()), [])"
+        }
+      ]
+    },
+    {
+      "file": "tests/freemium-enrollment-admission.test.ts",
+      "title": "two evaluations for one subject are a server invariant violation, not a merge",
+      "beforeLine": 268,
+      "beforeBodySHA": "853b17c1d5135455770e8991a63007539b6e12871b4e1686298ee90594b01ef9",
+      "cutTitle": "two evaluations for one subject are a server invariant violation, not a merge",
+      "cutLine": 266,
+      "cutBodySHA": "853b17c1d5135455770e8991a63007539b6e12871b4e1686298ee90594b01ef9",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 269,
+          "callee": "assert.throws",
+          "text": "assert.throws(() =>\n    buildServerRecommendedIntents(\n      [\n        knownEvaluation(\"decision:shampoo:cleanse:gap\"),\n        knownEvaluation(\"decision:shampoo:cleanse:gap\"),\n      ],\n      new Set(),\n    ),\n  )"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 267,
+          "callee": "assert.throws",
+          "text": "assert.throws(() =>\n    buildServerRecommendedIntents(\n      [\n        knownEvaluation(\"decision:shampoo:cleanse:gap\"),\n        knownEvaluation(\"decision:shampoo:cleanse:gap\"),\n      ],\n      new Set(),\n    ),\n  )"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-trial-stage1-journey.test.ts",
+      "title": "an active post-cutoff trial creates Stage 1 from its exact legacy lead and pins the stable enrollment id",
+      "beforeLine": 142,
+      "beforeBodySHA": "ce5f01e3e3744e0c4e9e80c6a674461c3faa099532164d71296374ece9c7f03c",
+      "cutTitle": "an active post-cutoff trial creates Stage 1 from its exact legacy lead and pins the stable enrollment id",
+      "cutLine": 142,
+      "cutBodySHA": "ce5f01e3e3744e0c4e9e80c6a674461c3faa099532164d71296374ece9c7f03c",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 156,
+          "callee": "assert.equal",
+          "text": "assert.equal(ownerId, userId)"
+        },
+        {
+          "line": 157,
+          "callee": "assert.equal",
+          "text": "assert.equal(sourceLeadId, leadId)"
+        },
+        {
+          "line": 177,
+          "callee": "assert.equal",
+          "text": "assert.equal(result.status, \"completed\")"
+        },
+        {
+          "line": 178,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(requests, [\n    { enrollmentPurchaseSourceId: enrollmentId, stage1SourceLeadId: leadId },\n  ])"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 156,
+          "callee": "assert.equal",
+          "text": "assert.equal(ownerId, userId)"
+        },
+        {
+          "line": 157,
+          "callee": "assert.equal",
+          "text": "assert.equal(sourceLeadId, leadId)"
+        },
+        {
+          "line": 177,
+          "callee": "assert.equal",
+          "text": "assert.equal(result.status, \"completed\")"
+        },
+        {
+          "line": 178,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(requests, [\n    { enrollmentPurchaseSourceId: enrollmentId, stage1SourceLeadId: leadId },\n  ])"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-trial-stage1-journey.test.ts",
+      "title": "the actual trial resolver reaches readiness and Stage 1 without a paid funnel-session correlation",
+      "beforeLine": 183,
+      "beforeBodySHA": "58acbded54a336250069f26ce6e36d414136a73f02ccae2059a580c62b4ca0c1",
+      "cutTitle": "the actual trial resolver reaches readiness and Stage 1 without a paid funnel-session correlation",
+      "cutLine": 183,
+      "cutBodySHA": "58acbded54a336250069f26ce6e36d414136a73f02ccae2059a580c62b4ca0c1",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 185,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(enrollment, {\n    accessState: \"active\",\n    sourceId: enrollmentId,\n    paidAt: null,\n    qualifiedAt: \"2026-09-15T19:48:05.000Z\",\n    artifactLeadId: leadId,\n    quizSourceKind: \"legacy\",\n    sourceKind: \"trial\",\n  })"
+        },
+        {
+          "line": 209,
+          "callee": "assert.equal",
+          "text": "assert.equal(request.enrollmentPurchaseSourceId, enrollmentId)"
+        },
+        {
+          "line": 210,
+          "callee": "assert.equal",
+          "text": "assert.equal(request.stage1SourceLeadId, leadId)"
+        },
+        {
+          "line": 214,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(await stage1.loadOrCreate({ userId }), { status: \"invalid_source\" })"
+        },
+        {
+          "line": 232,
+          "callee": "assert.equal",
+          "text": "assert.equal(input.leadId, leadId)"
+        },
+        {
+          "line": 233,
+          "callee": "assert.equal",
+          "text": "assert.equal(input.expectedQuizSourceKind, \"legacy\")"
+        },
+        {
+          "line": 248,
+          "callee": "assert.equal",
+          "text": "assert.equal((await response.json()).status, \"ready\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 185,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(enrollment, {\n    accessState: \"active\",\n    sourceId: enrollmentId,\n    paidAt: null,\n    qualifiedAt: \"2026-09-15T19:48:05.000Z\",\n    artifactLeadId: leadId,\n    quizSourceKind: \"legacy\",\n    sourceKind: \"trial\",\n  })"
+        },
+        {
+          "line": 209,
+          "callee": "assert.equal",
+          "text": "assert.equal(request.enrollmentPurchaseSourceId, enrollmentId)"
+        },
+        {
+          "line": 210,
+          "callee": "assert.equal",
+          "text": "assert.equal(request.stage1SourceLeadId, leadId)"
+        },
+        {
+          "line": 214,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(await stage1.loadOrCreate({ userId }), { status: \"invalid_source\" })"
+        },
+        {
+          "line": 232,
+          "callee": "assert.equal",
+          "text": "assert.equal(input.leadId, leadId)"
+        },
+        {
+          "line": 233,
+          "callee": "assert.equal",
+          "text": "assert.equal(input.expectedQuizSourceKind, \"legacy\")"
+        },
+        {
+          "line": 248,
+          "callee": "assert.equal",
+          "text": "assert.equal((await response.json()).status, \"ready\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-trial-stage1-journey.test.ts",
+      "title": "a trial remains subject to the normal new-buyer cutoff even while paid migration is enabled",
+      "beforeLine": 251,
+      "beforeBodySHA": "5aed1b125b8497747036243ab776505ff2ddc51d1565c0af7c4f35b14c61fe49",
+      "cutTitle": "a trial remains subject to the normal new-buyer cutoff even while paid migration is enabled",
+      "cutLine": 251,
+      "cutBodySHA": "5aed1b125b8497747036243ab776505ff2ddc51d1565c0af7c4f35b14c61fe49",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 270,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(await stage1.loadOrCreate({ userId }), {\n    status: \"personal_plan_not_available\",\n  })"
+        },
+        {
+          "line": 273,
+          "callee": "assert.equal",
+          "text": "assert.equal(readLegacyLead, false)"
+        },
+        {
+          "line": 274,
+          "callee": "assert.equal",
+          "text": "assert.equal(writes, 0)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 270,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(await stage1.loadOrCreate({ userId }), {\n    status: \"personal_plan_not_available\",\n  })"
+        },
+        {
+          "line": 273,
+          "callee": "assert.equal",
+          "text": "assert.equal(readLegacyLead, false)"
+        },
+        {
+          "line": 274,
+          "callee": "assert.equal",
+          "text": "assert.equal(writes, 0)"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-trial-stage1-journey.test.ts",
+      "title": "an active post-cutoff trial reaches the existing Stage 1 CTA; expired trial access stays denied",
+      "beforeLine": 277,
+      "beforeBodySHA": "4211508c574a1f416f1dbf762d7485df501661839f9fac6da5bd013bc50bc908",
+      "cutTitle": "an active post-cutoff trial reaches the existing Stage 1 CTA; expired trial access stays denied",
+      "cutLine": 277,
+      "cutBodySHA": "a512c34a8a7b6632307a2f210e6fe8362b79b5e7d72d09842e2afea97eb23dd9",
+      "decision": "R",
+      "unchangedCallback": false,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 287,
+          "callee": "assert.equal",
+          "text": "assert.equal(ownerId, userId)"
+        },
+        {
+          "line": 288,
+          "callee": "assert.equal",
+          "text": "assert.equal(sourceLeadId, leadId)"
+        },
+        {
+          "line": 310,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(active, {\n    kind: \"personal_plan_start\",\n    frontier: \"stage1\",\n    nextHref: \"/plan-start\",\n    allowed: { stage1: true, stage2: false, stage3: false, stage4: false, stage5: false },\n  })"
+        },
+        {
+          "line": 330,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(expired, { kind: \"legacy\" })"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 286,
+          "callee": "assert.equal",
+          "text": "assert.equal(ownerId, userId)"
+        },
+        {
+          "line": 287,
+          "callee": "assert.equal",
+          "text": "assert.equal(sourceLeadId, leadId)"
+        },
+        {
+          "line": 308,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(active, {\n    kind: \"personal_plan_start\",\n    frontier: \"stage1\",\n    nextHref: \"/plan-start\",\n    allowed: { stage1: true, stage2: false, stage3: false, stage4: false, stage5: false },\n  })"
+        },
+        {
+          "line": 328,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(expired, { kind: \"legacy\" })"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-trial-stage1-journey.test.ts",
+      "title": "plan readiness keeps an active trial on its exact source lead and never discovers a replacement lead",
+      "beforeLine": 333,
+      "beforeBodySHA": "e82fd365de404e2488eb0ed28914d26dca60d6932cd9b598ad28ad2312a9b5f2",
+      "cutTitle": "plan readiness keeps an active trial on its exact source lead and never discovers a replacement lead",
+      "cutLine": 331,
+      "cutBodySHA": "e82fd365de404e2488eb0ed28914d26dca60d6932cd9b598ad28ad2312a9b5f2",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 363,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(input, {\n        userId,\n        email: \"trial@example.invalid\",\n        leadId,\n        expectedQuizSourceKind: \"legacy\",\n        funnelSessionId: null,\n      })"
+        },
+        {
+          "line": 386,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        },
+        {
+          "line": 387,
+          "callee": "assert.equal",
+          "text": "assert.equal((await response.json()).status, \"ready\")"
+        },
+        {
+          "line": 388,
+          "callee": "assert.equal",
+          "text": "assert.equal(migrationReads, 0)"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 361,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(input, {\n        userId,\n        email: \"trial@example.invalid\",\n        leadId,\n        expectedQuizSourceKind: \"legacy\",\n        funnelSessionId: null,\n      })"
+        },
+        {
+          "line": 384,
+          "callee": "assert.equal",
+          "text": "assert.equal(response.status, 200)"
+        },
+        {
+          "line": 385,
+          "callee": "assert.equal",
+          "text": "assert.equal((await response.json()).status, \"ready\")"
+        },
+        {
+          "line": 386,
+          "callee": "assert.equal",
+          "text": "assert.equal(migrationReads, 0)"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-field-test-access.test.ts",
+      "title": "an active field-test enrollment uses its activation time without inventing paid access",
+      "beforeLine": 59,
+      "beforeBodySHA": "e0ffb0a82d1df1d6c08d056af3d434bc30fd8bf1ed45fe0c97bbd1285f7033b5",
+      "cutTitle": "an active field-test enrollment uses its activation time without inventing paid access",
+      "cutLine": 59,
+      "cutBodySHA": "e0ffb0a82d1df1d6c08d056af3d434bc30fd8bf1ed45fe0c97bbd1285f7033b5",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 70,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(enrollment, {\n    accessState: \"active\",\n    sourceId: activeEnrollment.id,\n    paidAt: null,\n    qualifiedAt: activeEnrollment.activated_at,\n    artifactLeadId: activeEnrollment.lead_id,\n    quizSourceKind: \"personal_plan\",\n    sourceKind: \"field_test\",\n  })"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 70,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(enrollment, {\n    accessState: \"active\",\n    sourceId: activeEnrollment.id,\n    paidAt: null,\n    qualifiedAt: activeEnrollment.activated_at,\n    artifactLeadId: activeEnrollment.lead_id,\n    quizSourceKind: \"personal_plan\",\n    sourceKind: \"field_test\",\n  })"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-field-test-access.test.ts",
+      "title": "an active regular-quiz field test enters the Personal Plan with legacy source provenance",
+      "beforeLine": 81,
+      "beforeBodySHA": "a51b08810460a629c0bbae79e3886985fc20ac165a28176d9349edf7eaf1f1b6",
+      "cutTitle": "an active regular-quiz field test enters the Personal Plan with legacy source provenance",
+      "cutLine": 81,
+      "cutBodySHA": "a51b08810460a629c0bbae79e3886985fc20ac165a28176d9349edf7eaf1f1b6",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 93,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(enrollment, {\n    accessState: \"active\",\n    sourceId: activeEnrollment.id,\n    paidAt: null,\n    qualifiedAt: activeEnrollment.activated_at,\n    artifactLeadId: activeEnrollment.lead_id,\n    quizSourceKind: \"legacy\",\n    sourceKind: \"field_test\",\n  })"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 93,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(enrollment, {\n    accessState: \"active\",\n    sourceId: activeEnrollment.id,\n    paidAt: null,\n    qualifiedAt: activeEnrollment.activated_at,\n    artifactLeadId: activeEnrollment.lead_id,\n    quizSourceKind: \"legacy\",\n    sourceKind: \"field_test\",\n  })"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-field-test-access.test.ts",
+      "title": "expired, revoked, or manually revoked field-test enrollment fails closed",
+      "beforeLine": 104,
+      "beforeBodySHA": "886172585fd7a14f18d464667ba47521eab90f8f8c437cef29fe5668fef5d2dd",
+      "cutTitle": "expired, revoked, or manually revoked field-test enrollment fails closed",
+      "cutLine": 104,
+      "cutBodySHA": "886172585fd7a14f18d464667ba47521eab90f8f8c437cef29fe5668fef5d2dd",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 125,
+          "callee": "assert.equal",
+          "text": "assert.equal(enrollment.sourceKind, null)"
+        },
+        {
+          "line": 126,
+          "callee": "assert.equal",
+          "text": "assert.equal(enrollment.accessState, \"none\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 125,
+          "callee": "assert.equal",
+          "text": "assert.equal(enrollment.sourceKind, null)"
+        },
+        {
+          "line": 126,
+          "callee": "assert.equal",
+          "text": "assert.equal(enrollment.accessState, \"none\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-field-test-access.test.ts",
+      "title": "field-test activation qualifies Stage 1 and the journey without a payment timestamp",
+      "beforeLine": 130,
+      "beforeBodySHA": "005ea031928e5e90a2a834593eacf9799f1c52d79fd97eb40871c0d9d72959b5",
+      "cutTitle": "field-test activation qualifies Stage 1 and the journey without a payment timestamp",
+      "cutLine": 130,
+      "cutBodySHA": "2931e1550b06cbc40d869b8647c88400b4f610a3d779d39922c567bdf7b6c06f",
+      "decision": "R",
+      "unchangedCallback": false,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 152,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(await stage1.loadOrCreate({ userId: \"user-1\" }), { status: \"invalid_source\" })"
+        },
+        {
+          "line": 177,
+          "callee": "assert.notEqual",
+          "text": "assert.notEqual(journey.kind, \"legacy\")"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 152,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(await stage1.loadOrCreate({ userId: \"user-1\" }), { status: \"invalid_source\" })"
+        },
+        {
+          "line": 175,
+          "callee": "assert.notEqual",
+          "text": "assert.notEqual(journey.kind, \"legacy\")"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-rollout-access.test.ts",
+      "title": "released Personal Plan access no longer reads internal rollout state",
+      "beforeLine": 68,
+      "beforeBodySHA": "1e275b0b7def4a3fdf83fe18db943a433824dcc93f7ce9ed5db4deca03207e91",
+      "cutTitle": "released Personal Plan access no longer reads internal rollout state",
+      "cutLine": 67,
+      "cutBodySHA": "1e275b0b7def4a3fdf83fe18db943a433824dcc93f7ce9ed5db4deca03207e91",
+      "decision": "R",
+      "unchangedCallback": true,
+      "removedAssertions": [],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 70,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    await isPersonalPlanAppV1AllowedForUser(\"customer-1\", customer.client as never),\n    true,\n  )"
+        },
+        {
+          "line": 74,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(customer.calls, [])"
+        }
+      ],
+      "cutAssertions": [
+        {
+          "line": 69,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    await isPersonalPlanAppV1AllowedForUser(\"customer-1\", customer.client as never),\n    true,\n  )"
+        },
+        {
+          "line": 73,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(customer.calls, [])"
+        }
+      ]
+    },
+    {
+      "file": "tests/personal-plan-rollout-access.test.ts",
+      "title": "an active tester grant admits a field-test owner without an email allowlist",
+      "beforeLine": 77,
+      "beforeBodySHA": "c9b1889bf1b9621a10ef7dfb41ce978405a51bb6e02cdaf1eadc3ab590ad8fa1",
+      "cutTitle": null,
+      "cutLine": null,
+      "cutBodySHA": null,
+      "decision": "D-conditional",
+      "unchangedCallback": false,
+      "removedAssertions": [
+        "assert.equal(\n    await isActivePersonalPlanFieldTestOwner(\n      \"guest-1\",\n      client as never,\n      new Date(\"2026-08-10T12:00:00.000Z\"),\n    ),\n    true,\n  )"
+      ],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 117,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    await isActivePersonalPlanFieldTestOwner(\n      \"guest-1\",\n      client as never,\n      new Date(\"2026-08-10T12:00:00.000Z\"),\n    ),\n    true,\n  )"
+        }
+      ],
+      "cutAssertions": []
+    },
+    {
+      "file": "tests/personal-plan-rollout-access.test.ts",
+      "title": "an active regular-quiz tester grant is also an internal field-test owner",
+      "beforeLine": 127,
+      "beforeBodySHA": "6a78a14dfc37ac992857ee3e50d7f1eb1fadf0f84011f526d992864d634f34f7",
+      "cutTitle": null,
+      "cutLine": null,
+      "cutBodySHA": null,
+      "decision": "D-conditional",
+      "unchangedCallback": false,
+      "removedAssertions": [
+        "assert.equal(\n    await isActivePersonalPlanFieldTestOwner(\n      \"guest-1\",\n      client as never,\n      new Date(\"2026-08-10T12:00:00.000Z\"),\n    ),\n    true,\n  )",
+        "assert.deepEqual(queriedTables, [\n    \"personal_plan_test_enrollments\",\n    \"regular_quiz_test_enrollments\",\n  ])"
+      ],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 170,
+          "callee": "assert.equal",
+          "text": "assert.equal(\n    await isActivePersonalPlanFieldTestOwner(\n      \"guest-1\",\n      client as never,\n      new Date(\"2026-08-10T12:00:00.000Z\"),\n    ),\n    true,\n  )"
+        },
+        {
+          "line": 178,
+          "callee": "assert.deepEqual",
+          "text": "assert.deepEqual(queriedTables, [\n    \"personal_plan_test_enrollments\",\n    \"regular_quiz_test_enrollments\",\n  ])"
+        }
+      ],
+      "cutAssertions": []
+    },
+    {
+      "file": "tests/personal-plan-rollout-access.test.ts",
+      "title": "an unapplied field-test relation is not an internal-owner signal",
+      "beforeLine": 184,
+      "beforeBodySHA": "c90a0294eb1028bb4b9f688007c3a3eb787d0dd8e2dd60aaf9673fb8a89d9a97",
+      "cutTitle": null,
+      "cutLine": null,
+      "cutBodySHA": null,
+      "decision": "D-conditional",
+      "unchangedCallback": false,
+      "removedAssertions": [
+        "assert.equal(await isActivePersonalPlanFieldTestOwner(\"user-1\", client as never), false)"
+      ],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 213,
+          "callee": "assert.equal",
+          "text": "assert.equal(await isActivePersonalPlanFieldTestOwner(\"user-1\", client as never), false)"
+        }
+      ],
+      "cutAssertions": []
+    },
+    {
+      "file": "tests/personal-plan-rollout-access.test.ts",
+      "title": "field-test owner reads still fail closed on unrelated database errors",
+      "beforeLine": 216,
+      "beforeBodySHA": "d9a1147644c6b0b2231dfac6817eafc2ffb4944ffc880c715ea72e3658a70c35",
+      "cutTitle": null,
+      "cutLine": null,
+      "cutBodySHA": null,
+      "decision": "D-conditional",
+      "unchangedCallback": false,
+      "removedAssertions": [
+        "assert.rejects(\n    isActivePersonalPlanFieldTestOwner(\"user-1\", client as never),\n    (error: unknown) =>\n      typeof error === \"object\" && error !== null && \"code\" in error && error.code === \"XX000\",\n  )"
+      ],
+      "addedAssertions": [],
+      "originalAssertions": [
+        {
+          "line": 242,
+          "callee": "assert.rejects",
+          "text": "assert.rejects(\n    isActivePersonalPlanFieldTestOwner(\"user-1\", client as never),\n    (error: unknown) =>\n      typeof error === \"object\" && error !== null && \"code\" in error && error.code === \"XX000\",\n  )"
+        }
+      ],
+      "cutAssertions": []
+    }
+  ]
+}

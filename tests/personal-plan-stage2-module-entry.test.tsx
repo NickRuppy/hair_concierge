@@ -13,6 +13,7 @@ import {
   applyStage2ModuleCompletion,
   RefinementFlow,
   stage2BridgeAutoContinues,
+  trackToolsInventoryEntered,
   type Stage2ModuleCompletionPayload,
   type Stage2RefinementTelemetryEvent,
 } from "../src/components/personal-plan-refinement/refinement-flow"
@@ -21,7 +22,6 @@ import {
   moduleCompletionRoutineHref,
   planStartModuleEntry,
   planStartRefinementExitDestination,
-  planStartSuppressesChapterCeremony,
   stage2ModuleCompletionRoutingProps,
   stage3CompletionRoutineHref,
 } from "../src/components/personal-plan-start/plan-start-flow"
@@ -330,6 +330,7 @@ test("the fixture gateway completes one module and delegates the closing one", a
   })
   assert.equal(productsDone.module, "products")
   assert.equal(productsDone.status, "in_progress")
+  assert.equal("recompute" in productsDone, false)
   assert.equal(productsDone.stage3Handoff, true)
   assert.equal(productsDone.nextHref, "/plan-start")
   assert.match(productsDone.refinedVersionId, /^fixture-refined-/)
@@ -350,6 +351,7 @@ test("the fixture gateway completes one module and delegates the closing one", a
   })
   assert.equal(habitsDone.module, "habits")
   assert.equal(habitsDone.status, "complete")
+  assert.deepEqual(habitsDone.recompute, { outcome: "applied" })
   assert.equal(habitsDone.stage3Handoff, false)
   const loaded = await gateway.load()
   assert.equal(loaded.status, "complete")
@@ -484,7 +486,6 @@ test("the accept escape hatch opens the products module with no chapter screen a
   assert.equal(state.state, "production")
   const initialJourney = state.state === "production" ? state.initialJourney : null
   assert.ok(initialJourney)
-  assert.equal(planStartSuppressesChapterCeremony(initialJourney), true)
   // SCOPE without post-accept ORIGIN: this fixture has no Stage-4 access, which
   // is the failed-accept cohort's defining fact. The exit stays inside the flow
   // rather than aiming at a /routine the frontier redirect would bounce
@@ -526,10 +527,6 @@ test("`?refine=1` behaves like an explicit entry into the first open module", ()
   // Relic removal 28.08.2026: `first_open` no longer resurrects the retired
   // ceremony — it IS an explicit module entry, resolved against the session.
   assert.equal(parseRefineModuleParam("1"), "first_open")
-  assert.equal(
-    planStartSuppressesChapterCeremony({ stage: "stage2", refineModule: "first_open" }),
-    true,
-  )
   // The direct-accept cohort (COMPLETE draft) gets the same edit visit an
   // explicit `?refine=products` deep link gets — never the bridge chapter.
   const completeDraft = fullyAnsweredSession("complete")
@@ -996,6 +993,9 @@ test("Modul 2 (habits) completing NON-closing hands back to the host — origin-
     ),
     true,
   )
+  assert.deepEqual(habits.recorded.handedBack[0].moduleCompletion.recompute, {
+    outcome: "applied",
+  })
 })
 
 // The bug report (T2.1): Verhalten is the CLOSING module in the canonical
@@ -1174,29 +1174,6 @@ test("the bridge auto-handoff rule no longer implies a chapter presentation", ()
   assert.equal(stage2BridgeAutoContinues({ autoHandoff: true, explicitModuleEntry: false }), true)
 })
 
-test("chapter ceremony is suppressed exactly for explicit module journeys", () => {
-  assert.equal(
-    planStartSuppressesChapterCeremony({ stage: "stage2", refineModule: "products" }),
-    true,
-  )
-  assert.equal(
-    planStartSuppressesChapterCeremony({ stage: "stage2", refineModule: "habits" }),
-    true,
-  )
-  // The `?refine=1` nudge is a module entry too (relic removal 28.08.2026);
-  // only the legacy linear journeys keep the remaining chapters.
-  assert.equal(
-    planStartSuppressesChapterCeremony({ stage: "stage2", refineModule: "first_open" }),
-    true,
-  )
-  assert.equal(planStartSuppressesChapterCeremony({ stage: "stage2" }), false)
-  assert.equal(planStartSuppressesChapterCeremony({ stage: "stage1" }), false)
-  assert.equal(
-    planStartSuppressesChapterCeremony({ stage: "stage3", refinedVersionId: "refined-1" }),
-    false,
-  )
-})
-
 test("plan-start carries the banner's progress into an explicit module entry only", async () => {
   const refinement = productsDoneSession()
   let progressReads = 0
@@ -1307,21 +1284,6 @@ test("the secondary exit leaves for /routine only once the plan is accepted", ()
     }),
     "stage1",
   )
-})
-
-test("the ceremony stays suppressed for BOTH module cohorts, accepted or not", () => {
-  // Scope is independent of origin: the escape-hatch cohort must not regain the
-  // chapter screens just because their plan is not accepted yet.
-  for (const planAccepted of [true, false]) {
-    assert.equal(
-      planStartSuppressesChapterCeremony({
-        stage: "stage2",
-        refineModule: "products",
-        ...(planAccepted ? { planAccepted } : {}),
-      }),
-      true,
-    )
-  }
 })
 
 test("the „Plan aktualisiert“ toast is never claimed for an initial activation", () => {
@@ -1485,7 +1447,6 @@ test("the ?refine=1 direct-accept journey opens products and completes the edit 
     planAccepted: true,
   })
   assert.equal(planStartModuleEntry(journey), "first_open")
-  assert.equal(planStartSuppressesChapterCeremony(journey), true)
   assert.equal(planStartRefinementExitDestination(journey), "routine")
   assert.equal(moduleCompletionRoutineHref(journey, "applied"), "/routine?planUpdated=1")
 
@@ -1561,4 +1522,370 @@ test("the ?refine=1 direct-accept journey opens products and completes the edit 
     }).mode,
     "question",
   )
+})
+
+/** A session whose path carries tools questions between the products and habits blocks. */
+function withToolsOnPath(
+  base: Stage2RefinementSession,
+  completedToolIds: string[],
+): Stage2RefinementSession {
+  const toolIds = ["tools_overview", "tools:airflow:1"] as never[]
+  const ordered = [
+    ...base.path.orderedQuestionIds.filter(
+      (id) =>
+        !id.startsWith("towel") &&
+        id !== "drying_routes" &&
+        id !== "additional_heat_tools" &&
+        id !== "night_protection",
+    ),
+    ...toolIds,
+    ...base.path.orderedQuestionIds.filter(
+      (id) =>
+        id === "towel_handling" ||
+        id === "drying_routes" ||
+        id === "additional_heat_tools" ||
+        id === "night_protection",
+    ),
+  ]
+  const completed = [...base.path.completedQuestionIds, ...(completedToolIds as never[])]
+  return {
+    ...base,
+    path: {
+      ...base.path,
+      orderedQuestionIds: ordered,
+      requiredQuestionIds: ordered,
+      completedQuestionIds: completed,
+      firstUnresolvedQuestionId: ordered.find((id) => !completed.includes(id)) ?? null,
+    },
+  }
+}
+
+test("tools sit between products and habits: first_open lands on tools once products are done", () => {
+  const session = withToolsOnPath(productsDoneSession(), [])
+  assert.equal(firstOpenStage2Module(session), "tools")
+  assert.equal(resolveStage2EntryModule(session, "first_open"), "tools")
+  assert.equal(resolveStage2EntryModule(session, "tools"), "tools")
+  assert.equal(parseStage2RefineEntry("tools").refine, true)
+  assert.deepEqual(parseStage2RefineEntry("tools"), { refine: true, module: "tools" })
+
+  const scoped = scopeStage2PathToModule(session.path, "tools")
+  assert.deepEqual(scoped.orderedQuestionIds, ["tools_overview", "tools:airflow:1"])
+  assert.equal(scoped.firstUnresolvedQuestionId, "tools_overview")
+
+  const toolsDone = withToolsOnPath(productsDoneSession(), ["tools_overview", "tools:airflow:1"])
+  assert.equal(firstOpenStage2Module(toolsDone), "habits")
+})
+
+test("an explicit entry into a not_applicable module resolves like no module entry", () => {
+  const session = productsDoneSession()
+  assert.equal(resolveStage2EntryModule(session, "tools"), null)
+  assert.equal(
+    resolveStage2ModuleScope("tools", resolveStage2EntryModule(session, "tools")),
+    "none",
+  )
+  // The applicable modules are untouched.
+  assert.equal(resolveStage2EntryModule(session, "habits"), "habits")
+  assert.equal(resolveStage2EntryModule(session, "products"), "products")
+})
+
+test("a complete session whose path grew bridges only once nothing is unresolved", () => {
+  const grown = createStage2RefinementSession({
+    pathVersion: "stage2-module-test",
+    triggerContext: plainTriggerContext,
+    answers: {
+      currentProductCategories: [],
+      wetWashFrequency: "weekly_2x",
+      towel: { material: "no_towel" },
+      dryingRoutes: [],
+      additionalHeatTools: [],
+    },
+    completedQuestionIds: [
+      "current_product_categories",
+      "wet_wash_frequency",
+      "towel_handling",
+      "drying_routes",
+      "additional_heat_tools",
+    ],
+    revision: 6,
+    status: "complete",
+    completedHandoff: { refinedVersionId: "refined-module-test", nextHref: "/plan-start" },
+    tolerateGrownPath: true,
+  })
+  assert.equal(grown.path.firstUnresolvedQuestionId, "night_protection")
+
+  // Legacy linear entry: the grown question is asked, not bridged over.
+  assert.deepEqual(resolveStage2FlowEntryView({ session: grown, moduleScope: "none" }), {
+    mode: "question",
+    activeQuestionId: "night_protection",
+    status: "idle",
+    liveMessage: "",
+    bridge: false,
+  })
+  // Explicit module entry into the grown module asks it too.
+  assert.deepEqual(
+    resolveStage2FlowEntryView({
+      session: scopeStage2SessionToModule(grown, "habits"),
+      moduleScope: "explicit",
+    }),
+    {
+      mode: "question",
+      activeQuestionId: "night_protection",
+      status: "idle",
+      liveMessage: "",
+      bridge: false,
+    },
+  )
+  // A fully answered complete session still bridges.
+  assert.equal(
+    resolveStage2FlowEntryView({ session: fullyAnsweredSession("complete"), moduleScope: "none" })
+      .bridge,
+    true,
+  )
+})
+
+// ---------------------------------------------------------------------------
+// Hair Tools port, Task 5: a `tools` module entry walks only the tools module.
+// ---------------------------------------------------------------------------
+
+const toolsTriggerContext: Stage2TriggerContext = { ...plainTriggerContext, toolsEnabled: true }
+
+function toolsGateway(overrides: { completed?: string[]; answers?: object } = {}) {
+  return createStage2FixtureGateway({
+    runtimeEnvironment: "test",
+    triggerContext: toolsTriggerContext,
+    initialAnswers: {
+      currentProductCategories: [],
+      wetWashFrequency: "weekly_2x",
+      ...overrides.answers,
+    },
+    initialCompletedQuestionIds: (overrides.completed ?? [
+      "current_product_categories",
+      "wet_wash_frequency",
+    ]) as never[],
+    initialRevision: 2,
+  })
+}
+
+test("a tools module entry opens on the tool overview and shows no products or habits question", async () => {
+  const gateway = toolsGateway()
+  const session = await gateway.load()
+  assert.deepEqual(session.path.orderedQuestionIds.slice(0, 3), [
+    "current_product_categories",
+    "wet_wash_frequency",
+    "tools_overview",
+  ])
+  assert.equal(resolveStage2EntryModule(session, "tools"), "tools")
+  assert.equal(resolveStage2EntryModule(session, "first_open"), "tools")
+  assert.equal(
+    resolveStage2EntryModule({ ...session }, "habits"),
+    "habits",
+    "habits stays enterable; tools is only the first open module",
+  )
+
+  const scoped = scopeStage2SessionToModule(session, "tools")
+  assert.deepEqual(scoped.path.orderedQuestionIds, ["tools_overview"])
+  assert.equal(scoped.path.firstUnresolvedQuestionId, "tools_overview")
+
+  const html = renderToStaticMarkup(
+    <RefinementFlow
+      gateway={gateway as never}
+      initialSession={session}
+      moduleEntry="tools"
+      postAcceptModuleEntry
+    />,
+  )
+  assert.match(html, /Was hast du schon\?/)
+  assert.match(html, /Was du schon hast/)
+  assert.doesNotMatch(html, /Was du heute benutzt/)
+  assert.doesNotMatch(html, /Wie du dein Haar behandelst/)
+  // The overview is the module's boundary: back leaves the module.
+  assert.equal(
+    resolveStage2FlowEntryView({ session: scoped, moduleScope: "explicit" }).activeQuestionId,
+    "tools_overview",
+  )
+})
+
+test("walking the tools module answers only tool questions and ends with a non-closing, recompute-free module completion", async () => {
+  const gateway = toolsGateway()
+  let session = await gateway.load()
+
+  // Overview: only Nachtschutz is ticked, so exactly one tool page follows.
+  session = await gateway.saveAnswer({
+    questionId: "tools_overview",
+    answer: ["nachtschutz"],
+    expectedRevision: session.revision,
+  })
+  assert.deepEqual(
+    session.path.orderedQuestionIds.filter((id) => id.startsWith("tools")),
+    ["tools_overview", "tools:night_protection:1"],
+  )
+  const scoped = scopeStage2SessionToModule(session, "tools")
+  assert.deepEqual(scoped.path.orderedQuestionIds, ["tools_overview", "tools:night_protection:1"])
+  assert.equal(scoped.path.firstUnresolvedQuestionId, "tools:night_protection:1")
+
+  const fused = await gateway.saveAnswerAndCompleteModule({
+    module: "tools",
+    questionId: "tools:night_protection:1",
+    answer: ["pillowcase"],
+    expectedRevision: session.revision,
+  })
+  assert.equal(fused.moduleCompletion.module, "tools")
+  assert.equal(fused.moduleCompletion.status, "in_progress", "habits is still open")
+  assert.equal(fused.moduleCompletion.stage3Handoff, false)
+  assert.equal(
+    "recompute" in fused.moduleCompletion,
+    false,
+    "tools completion triggers no recompute",
+  )
+
+  // The finished module hands back to the host (→ the tool checkpoint / Routine), never Stage 3.
+  const recording = recordingEffects()
+  await applyStage2ModuleCompletion(
+    {
+      session: scopeStage2SessionToModule(fused.session, "tools"),
+      hostSession: fused.session,
+      moduleCompletion: fused.moduleCompletion,
+      postAcceptModuleEntry: true,
+    },
+    recording.effects,
+  )
+  assert.equal(recording.recorded.handedBack.length, 1)
+  assert.equal(recording.recorded.bridged.length, 0)
+  assert.equal(recording.recorded.completed.length, 0)
+  assert.deepEqual(
+    recording.recorded.events.map((event) => event.name),
+    ["personal_plan_stage2_module_completed"],
+  )
+})
+
+test("a tools module that cannot be completed (a page is still open) is rejected", async () => {
+  const gateway = toolsGateway()
+  await assert.rejects(
+    () => gateway.completeModule({ module: "tools", expectedRevision: 2 }),
+    (error: unknown) =>
+      error instanceof Stage2RefinementError && error.code === "incomplete_refinement",
+  )
+})
+
+test("re-entering a finished tools module walks it again instead of bridging", async () => {
+  const gateway = toolsGateway()
+  let session = await gateway.load()
+  session = await gateway.saveAnswer({
+    questionId: "tools_overview",
+    answer: [],
+    expectedRevision: session.revision,
+  })
+  const done = scopeStage2SessionToModule(session, "tools")
+  assert.equal(done.path.firstUnresolvedQuestionId, null)
+  const view = resolveStage2FlowEntryView({ session: done, moduleScope: "explicit" })
+  assert.equal(view.mode, "question")
+  assert.equal(view.activeQuestionId, "tools_overview")
+})
+
+/* ── Hair Tools analytics: bounded counts, never a tool identity ───────────────────────────── */
+
+function recordingToolAnalytics() {
+  const tracked: Array<[string, unknown]> = []
+  return {
+    tracked,
+    analytics: {
+      track(eventName: string, payload: unknown) {
+        tracked.push([eventName, payload])
+      },
+    } as Parameters<typeof trackToolsInventoryEntered>[0]["analytics"],
+  }
+}
+
+test("personal_plan_tools_inventory_entered fires once, on the first tools question only", () => {
+  const { tracked, analytics } = recordingToolAnalytics()
+  let alreadyTracked = false
+  // A products question is not the tools module.
+  alreadyTracked = trackToolsInventoryEntered({
+    questionId: "wet_wash_frequency",
+    alreadyTracked,
+    analytics,
+  })
+  assert.equal(alreadyTracked, false)
+  assert.deepEqual(tracked, [])
+  // The overview is the first tools question; the four sections are the only payload.
+  alreadyTracked = trackToolsInventoryEntered({
+    questionId: "tools_overview",
+    alreadyTracked,
+    analytics,
+  })
+  assert.equal(alreadyTracked, true)
+  // Later tools pages and a Back to the overview do not fire again.
+  trackToolsInventoryEntered({ questionId: "tools:airflow:1", alreadyTracked, analytics })
+  trackToolsInventoryEntered({ questionId: "tools_overview", alreadyTracked, analytics })
+  assert.deepEqual(tracked, [["personal_plan_tools_inventory_entered", { sectionCount: 4 }]])
+})
+
+test("completing the tools module emits personal_plan_tools_inventory_completed with family counts", async () => {
+  const toolsTriggerContext: Stage2TriggerContext = { ...plainTriggerContext, toolsEnabled: true }
+  const session = createStage2RefinementSession({
+    pathVersion: "tools-analytics-test",
+    triggerContext: toolsTriggerContext,
+    answers: {
+      currentProductCategories: [],
+      wetWashFrequency: "weekly_2x",
+      toolFamiliesWithSomething: ["drying_textiles", "airflow"],
+      toolForms: {
+        "drying_textiles:1": ["microfiber_towel"],
+        "airflow:1": ["hair_dryer", "hot_air_brush"],
+        "heated_styling:1": [],
+      },
+    },
+    completedQuestionIds: [
+      "current_product_categories",
+      "wet_wash_frequency",
+      "tools_overview",
+      "tools:drying_textiles:1",
+      "tools:airflow:1",
+    ],
+    revision: 5,
+  })
+  const completed: unknown[] = []
+  const recording = recordingEffects()
+  await applyStage2ModuleCompletion(
+    {
+      session,
+      hostSession: session,
+      moduleCompletion: {
+        module: "tools",
+        status: "in_progress",
+        stage3Handoff: false,
+        refinedVersionId: "refined-1",
+        nextHref: "/plan-start",
+      },
+      postAcceptModuleEntry: true,
+    },
+    {
+      ...recording.effects,
+      trackToolsInventoryCompleted: (hostSession) => completed.push(hostSession),
+    },
+  )
+  assert.equal(completed.length, 1)
+  assert.equal(completed[0], session)
+
+  // Other modules never fire it.
+  const other: unknown[] = []
+  await applyStage2ModuleCompletion(
+    {
+      session,
+      hostSession: session,
+      moduleCompletion: {
+        module: "habits",
+        status: "in_progress",
+        stage3Handoff: false,
+        refinedVersionId: "refined-1",
+        nextHref: "/plan-start",
+      },
+      postAcceptModuleEntry: true,
+    },
+    {
+      ...recording.effects,
+      trackToolsInventoryCompleted: (hostSession) => other.push(hostSession),
+    },
+  )
+  assert.deepEqual(other, [])
 })

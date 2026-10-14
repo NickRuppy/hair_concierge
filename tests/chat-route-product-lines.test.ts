@@ -34,7 +34,9 @@ function createProduct(
 }
 
 function createClient(lines: Array<{ id: string; canonical_name: string | null }>) {
+  const calls: string[][] = []
   return {
+    calls,
     from(table: "product_lines") {
       assert.equal(table, "product_lines")
       return {
@@ -43,6 +45,7 @@ function createClient(lines: Array<{ id: string; canonical_name: string | null }
           return {
             async in(column: "id", values: string[]) {
               assert.equal(column, "id")
+              calls.push(values)
               return {
                 data: lines.filter((line) => values.includes(line.id)),
                 error: null,
@@ -64,44 +67,90 @@ test("attachProductLineNamesToMessages preserves message product grouping", asyn
       product_recommendations: [
         createProduct("product-2", "line-2"),
         createProduct("product-3", "line-3", "Existing line"),
+        createProduct("product-4", "missing-line"),
       ],
     },
   ]
 
-  const result = await attachProductLineNamesToMessages(
-    messages,
-    createClient([
-      { id: "line-1", canonical_name: "Line One" },
-      { id: "line-2", canonical_name: "Line Two" },
-    ]),
-  )
+  const client = createClient([
+    { id: "line-1", canonical_name: "NEQI x @_the.beautiful.people" },
+    { id: "line-2", canonical_name: "Line Two" },
+  ])
+  const result = await attachProductLineNamesToMessages(messages, client)
 
   assert.equal(result.length, 3)
   assert.deepEqual(
     result.map((message) => message.product_recommendations?.map((product) => product.id) ?? null),
-    [["product-1"], null, ["product-2", "product-3"]],
+    [["product-1"], null, ["product-2", "product-3", "product-4"]],
   )
-  assert.equal(result[0].product_recommendations?.[0]?.product_line_name, "Line One")
+  assert.equal(
+    result[0].product_recommendations?.[0]?.product_line_name,
+    "NEQI x @_the.beautiful.people",
+  )
   assert.equal(result[2].product_recommendations?.[0]?.product_line_name, "Line Two")
   assert.equal(result[2].product_recommendations?.[1]?.product_line_name, "Existing line")
+  assert.equal(result[2].product_recommendations?.[2]?.product_line_name, null)
+  assert.deepEqual(
+    result
+      .flatMap((message) => message.product_recommendations ?? [])
+      .map((product) => product.product_line_name),
+    ["NEQI x @_the.beautiful.people", "Line Two", "Existing line", null],
+  )
+  assert.deepEqual(client.calls, [["line-1", "line-2", "line-3", "missing-line"]])
 })
 
 test("attachProductLineNamesToMessages returns original messages when enrichment throws", async () => {
   const messages = [
     { id: "message-1", product_recommendations: [createProduct("product-1", "line-1")] },
   ]
-  const client = {
-    from() {
-      throw new Error("client unavailable")
+  const lookupError = new Error("lookup failed")
+  const networkError = new Error("network failed")
+  const syncError = new Error("client unavailable")
+  const cases = [
+    {
+      error: lookupError,
+      prefix: "Failed to load product lines for persisted recommendation products:",
+      client: {
+        from: () => ({ select: () => ({ in: async () => ({ data: null, error: lookupError }) }) }),
+      },
     },
-  }
+    {
+      error: networkError,
+      prefix: "Failed to load product lines for persisted recommendation products:",
+      client: {
+        from: () => ({
+          select: () => ({
+            in: async () => {
+              throw networkError
+            },
+          }),
+        }),
+      },
+    },
+    {
+      error: syncError,
+      prefix: "Failed to load product lines for persisted recommendation products:",
+      client: {
+        from: () => {
+          throw syncError
+        },
+      },
+    },
+  ]
   const originalConsoleError = console.error
-  console.error = () => {}
-
   try {
-    const result = await attachProductLineNamesToMessages(messages, client)
-
-    assert.equal(result, messages)
+    for (const current of cases) {
+      const calls: unknown[][] = []
+      console.error = (...args: unknown[]) => {
+        calls.push(args)
+      }
+      const result = await attachProductLineNamesToMessages(messages, current.client)
+      assert.equal(result, messages)
+      assert.equal(result[0].product_recommendations?.[0], messages[0].product_recommendations?.[0])
+      assert.equal(calls.length, 1)
+      assert.equal(calls[0]?.[0], current.prefix)
+      assert.equal(calls[0]?.[1], current.error)
+    }
   } finally {
     console.error = originalConsoleError
   }

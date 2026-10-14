@@ -171,6 +171,7 @@ test("bounded FIFO drops the oldest exception and preserves rejection order", as
 
   const captures = harness.calls.filter(([name]) => name === "captureException")
   assert.equal(captures.length, 2)
+  assert.equal(harness.calls.filter(([name]) => name === "warn").length, 1, "one overflow warning")
   assert.equal((captures[0]?.[1] as Error).message, "second")
   assert.equal((captures[1]?.[1] as Error).message, "Unhandled promise rejection")
   assert.deepEqual(

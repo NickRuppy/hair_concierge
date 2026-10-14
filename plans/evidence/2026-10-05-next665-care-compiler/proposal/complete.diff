@@ -1,0 +1,181 @@
+--- a/tests/personal-plan-routine-candidate-compiler.test.ts
++++ b/tests/personal-plan-routine-candidate-compiler.test.ts
+@@ -195,90 +195,8 @@
+     portfolio: "personal-plan-product-portfolio.v1",
+     routine: "personal-plan-routine-compiler.v2",
+   })
+-})
+-
+-test("freezes matching delegated exact cadence into the initial Routine and fingerprints its fact", async () => {
+-  const bondPortfolio = {
+-    ...portfolio(),
+-    categoryResolutions: [
+-      {
+-        decisionKey: "decision:bondbuilder:specialized_bond_treatment:owned-bond",
+-        category: "bondbuilder",
+-        role: "specialized_bond_treatment",
+-        verdict: "ideal",
+-        choiceState: "owned_active",
+-        capturedProductId: "captured-bond",
+-        executable: true,
+-        gapPreserved: false,
+-      },
+-    ],
+-    ownedProducts: [
+-      {
+-        capturedProductId: "captured-bond",
+-        userProductId: "user-product-bond",
+-        productId: "product-bond",
+-        displayName: "Bondbuilder",
+-        category: "bondbuilder",
+-        role: "specialized_bond_treatment",
+-        frequencyRange: null,
+-        choiceState: "owned_active",
+-        sourceDecisionKey: "decision:bondbuilder:specialized_bond_treatment:owned-bond",
+-      },
+-    ],
+-    plannedPurchases: [],
+-    pendingProducts: [],
+-    uncoveredRoles: [],
+-  } as unknown as ProposedProductPortfolio
+-  const snapshot = {
+-    ...refinedNeedSnapshot,
+-    decisions: [
+-      {
+-        category: "bondbuilder",
+-        needTier: "optional",
+-        roles: ["specialized_bond_treatment"],
+-        frequency: { kind: "product_protocol_course" },
+-        reasons: [{ id: "bond.protocol.v1" }],
+-      },
+-    ],
+-    renderedOrder: ["bondbuilder"],
+-  } as unknown as InitialNeedPlanSnapshot
+-  const candidate = await compileInitialRoutineCandidate({
+-    ...compilerInput(),
+-    portfolioSnapshot: bondPortfolio as never,
+-    refinedNeedSnapshot: snapshot,
+-    cadenceAuthorityFacts: [
+-      {
+-        productId: "product-bond",
+-        category: "bondbuilder",
+-        role: "specialized_bond_treatment",
+-        cadence: { kind: "label_course", copy_de: "4 Anwendungen, dann 4 Haarwäschen Pause." },
+-      },
+-    ],
+-  })
+-  const payload = candidate.payload as Record<string, any>
+-  assert.deepEqual(payload.items[0]?.cadence.resolved, {
+-    copyDe: "4 Anwendungen, dann 4 Haarwäschen Pause.",
+-    source: "exact_product_protocol",
+-  })
+-  const changed = await compileInitialRoutineCandidate({
+-    ...compilerInput(),
+-    portfolioSnapshot: bondPortfolio as never,
+-    refinedNeedSnapshot: snapshot,
+-    cadenceAuthorityFacts: [
+-      {
+-        productId: "product-bond",
+-        category: "bondbuilder",
+-        role: "specialized_bond_treatment",
+-        cadence: { kind: "label_course", copy_de: "Andere Kursfolge." },
+-      },
+-    ],
+-  })
+-  assert.notEqual(candidate.sourceFingerprint, changed.sourceFingerprint)
+-})
+-
+-test("initial Routine preserves Stage-3 choices and canonical Basis then Optional ordering", async () => {
+-  const candidate = await compileInitialRoutineCandidate(compilerInput())
+-  const payload = candidate.payload as Record<string, any>
++
++  const payload = first.payload as Record<string, any>
+ 
+   assert.deepEqual(payload.sections, [
+     { key: "basis", itemKeys: ["item:conditioner:conditioner_rinse_out:captured-a"] },
+@@ -347,6 +265,85 @@
+   assert.equal("applicationOrder" in payload, false)
+   assert.equal("dayTypes" in payload, false)
+   assert.equal("user_product_usage" in payload, false)
++})
++
++test("freezes matching delegated exact cadence into the initial Routine and fingerprints its fact", async () => {
++  const bondPortfolio = {
++    ...portfolio(),
++    categoryResolutions: [
++      {
++        decisionKey: "decision:bondbuilder:specialized_bond_treatment:owned-bond",
++        category: "bondbuilder",
++        role: "specialized_bond_treatment",
++        verdict: "ideal",
++        choiceState: "owned_active",
++        capturedProductId: "captured-bond",
++        executable: true,
++        gapPreserved: false,
++      },
++    ],
++    ownedProducts: [
++      {
++        capturedProductId: "captured-bond",
++        userProductId: "user-product-bond",
++        productId: "product-bond",
++        displayName: "Bondbuilder",
++        category: "bondbuilder",
++        role: "specialized_bond_treatment",
++        frequencyRange: null,
++        choiceState: "owned_active",
++        sourceDecisionKey: "decision:bondbuilder:specialized_bond_treatment:owned-bond",
++      },
++    ],
++    plannedPurchases: [],
++    pendingProducts: [],
++    uncoveredRoles: [],
++  } as unknown as ProposedProductPortfolio
++  const snapshot = {
++    ...refinedNeedSnapshot,
++    decisions: [
++      {
++        category: "bondbuilder",
++        needTier: "optional",
++        roles: ["specialized_bond_treatment"],
++        frequency: { kind: "product_protocol_course" },
++        reasons: [{ id: "bond.protocol.v1" }],
++      },
++    ],
++    renderedOrder: ["bondbuilder"],
++  } as unknown as InitialNeedPlanSnapshot
++  const candidate = await compileInitialRoutineCandidate({
++    ...compilerInput(),
++    portfolioSnapshot: bondPortfolio as never,
++    refinedNeedSnapshot: snapshot,
++    cadenceAuthorityFacts: [
++      {
++        productId: "product-bond",
++        category: "bondbuilder",
++        role: "specialized_bond_treatment",
++        cadence: { kind: "label_course", copy_de: "4 Anwendungen, dann 4 Haarwäschen Pause." },
++      },
++    ],
++  })
++  const payload = candidate.payload as Record<string, any>
++  assert.deepEqual(payload.items[0]?.cadence.resolved, {
++    copyDe: "4 Anwendungen, dann 4 Haarwäschen Pause.",
++    source: "exact_product_protocol",
++  })
++  const changed = await compileInitialRoutineCandidate({
++    ...compilerInput(),
++    portfolioSnapshot: bondPortfolio as never,
++    refinedNeedSnapshot: snapshot,
++    cadenceAuthorityFacts: [
++      {
++        productId: "product-bond",
++        category: "bondbuilder",
++        role: "specialized_bond_treatment",
++        cadence: { kind: "label_course", copy_de: "Andere Kursfolge." },
++      },
++    ],
++  })
++  assert.notEqual(candidate.sourceFingerprint, changed.sourceFingerprint)
+ })
+ 
+ test("source revision participates in the compiler fingerprint", async () => {

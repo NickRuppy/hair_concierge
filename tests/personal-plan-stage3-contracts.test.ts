@@ -1,8 +1,8 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
+import { CATEGORY_ROLE_POLICIES } from "../src/lib/personal-plan/products/authorities"
 import {
-  CATEGORY_ROLE_POLICIES,
   PERSONAL_PLAN_PRODUCT_CATEGORIES,
   PLAN_PRODUCT_ROLES,
   deriveStage3DecisionSubjects,
@@ -12,7 +12,7 @@ import {
   stage3RoleAssignmentSchema,
   validateStage3Draft,
   type Stage3ProductDraft,
-} from "../src/lib/personal-plan/products"
+} from "../src/lib/personal-plan/products/contracts"
 import { classifyStage3DesiredState } from "../src/lib/personal-plan/products/recovery-desired-state"
 
 const now = "2026-08-07T10:00:00.000Z"

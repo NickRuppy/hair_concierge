@@ -30,19 +30,11 @@ type Stage5ProtocolClient = {
     ) => SelectBuilder<T>
   }
   rpc: (
-    name:
-      | "apply_personal_plan_stage5_protocol_batch_v1"
-      | "apply_personal_plan_stage5_v2_artifact_v1"
-      | typeof STAGE5_V2_POINTER_DELTA_RPC,
+    name: "apply_personal_plan_stage5_protocol_batch_v1" | typeof STAGE5_V2_POINTER_DELTA_RPC,
     args:
       | {
           p_batch_json: string
           p_expected_batch_fingerprint: string
-          p_reviewed_by: "nick"
-        }
-      | {
-          p_artifact_json: string
-          p_expected_artifact_fingerprint: string
           p_reviewed_by: "nick"
         }
       | {
@@ -351,42 +343,6 @@ export function createStage5ProtocolClientAdapters(client: Stage5ProtocolClient)
             brand: products?.brand ?? null,
           })),
         }
-      },
-      async apply(artifactJson: string, fingerprint: string) {
-        const { data, error } = await client.rpc("apply_personal_plan_stage5_v2_artifact_v1", {
-          p_artifact_json: artifactJson,
-          p_expected_artifact_fingerprint: fingerprint,
-          p_reviewed_by: "nick",
-        })
-        if (error) throw new Error(`Stage 5 V2 application apply failed: ${error.message}`)
-        return data ?? []
-      },
-      async listV2Families(guidanceKeys: string[]) {
-        const { data, error } = await client
-          .from("application_guidance_protocols")
-          .select<{
-            guidance_key: string
-            contract_version: number
-            payload: unknown
-            status: string
-          }>("guidance_key,contract_version,payload,status")
-          .in("guidance_key", guidanceKeys)
-        if (error) throw new Error(`Stage 5 V2 family verification failed: ${error.message}`)
-        return data ?? []
-      },
-      async listV2Protocols(productIds: string[]) {
-        const { data, error } = await client
-          .from("product_application_protocols")
-          .select<{
-            product_id: string
-            category: string
-            role: string
-            application_family: string
-            guidance_payload_v2: unknown
-          }>("product_id,category,role,application_family,guidance_payload_v2")
-          .in("product_id", productIds)
-        if (error) throw new Error(`Stage 5 V2 pointer verification failed: ${error.message}`)
-        return data ?? []
       },
     },
   }

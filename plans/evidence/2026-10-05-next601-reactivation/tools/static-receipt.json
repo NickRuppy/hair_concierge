@@ -1,0 +1,79 @@
+{
+  "kind": "worker-static-preparation-only",
+  "proposal": "/tmp/test-audit-reactivation83-proposal-Zzh1n4",
+  "manifestSHA256": "87ceba4ac9d6819ea70ad95daaead398035d3b383742fc8c892e6a6b885ac0e3",
+  "pinsSHA256": "53a0eef9d6f320b4e07ca6987d9b8c995dfbc459e349f3fe2384cf94475a9d76",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "phase": "before",
+  "counts": {
+    "before": 83,
+    "transfer": 83,
+    "cut": 81
+  },
+  "parsedPhaseFiles": 27,
+  "keepers": 2,
+  "unrelatedCallbacksByteIdentical": 79,
+  "originalReadsetGuards": 67,
+  "currentReadsetGuards": 318,
+  "dependencyFiles": 2939,
+  "dependencyTrees": 23,
+  "identityFiles": 8,
+  "sourceControls": 2,
+  "runtimeTests": 0,
+  "ownerImports": 0,
+  "sourceFaults": 0,
+  "repositoryWrites": 0,
+  "staticCheckAttempts": {
+    "writes": 0,
+    "children": 0
+  },
+  "limitations": [
+    "Tool syntax and TS AST parse only, no typecheck/compiler execution.",
+    "No runtime assertion proof is claimed; main must obtain all two serial control records and six TAP logs.",
+    "Browser6 and SQL18 callbacks preserved; no browser execution by this toolkit.",
+    "Guard scope is explicitly bounded; no whole-vendor or whole-repository semantic claim."
+  ],
+  "files": {
+    "C1-retained-password-capability-prospective-owner.ts": "7b566fd8e06bf83639ca04d5523ac3fda6b6ca32aafb838dadc19f0c97bcff07",
+    "C2-billing-before-profile-prospective-owner.ts": "2ff27caf78b782a67bff7fee000c60382849012c8ab844e8bb7a77058e084409",
+    "README.md": "29e4a11d6aae699de47cbb9b49b0433273b3d65341be0415d885a0cff0435781",
+    "UPSTREAM-REFERENCE.txt": "36b86bd78b17f321fea61701d7570249865df73af71e7742a3dd804bcdfc6331",
+    "bounded-readset-evidence.json": "734245f6fb7542fa3b5b19529ad75b39aedf148d21de0511b99525893a9b189f",
+    "driver-static-check.log": "87d432eb3aeaefb195f490287ff7f0f7ab3ab9ece47c61f45fbbd885e4fbc96a",
+    "editor-static-check.log": "f3c0cefee93eda4d4b1b31c3635a982218d9f5742cec67f9883df4a893201eaf",
+    "full-operator-code.txt": "8ddee403ee38f30caf97b0ed7013536ab884f4c74f80baa63dedc9da38c73a30",
+    "full-tooling-adaptation.diff": "74c5745e3f2558c4a9e926b0fe7cad9f856035ef94b60145aae617674fa9a7ac",
+    "identity-refresh-code.diff": "71f4748fe6545669be94ace2a419bc8c81f535f28e6b1a686d8dbb1990c353ef",
+    "identity-refresh-disposition.json": "de5a723bc3bd091b56790097aeb0208ec5432ff6620fc2f86b9428da1aa008a5",
+    "operator-controls-normalized.json": "cf8eb49eee6e66774f811e3a376a325e8f00e75f0dd3827d4037865313a9fe18",
+    "operator-edit.cjs": "d403a06809415251e4de7654d31dfcfd5bd41253cf18d2ef83feb48f7c6c54dd",
+    "operator-guard.cjs": "70ccb5af63b3ea36ae02bee95ef2edffde5ab235eacd4565f037437e26e03f86",
+    "operator-pins.json": "53a0eef9d6f320b4e07ca6987d9b8c995dfbc459e349f3fe2384cf94475a9d76",
+    "operator-proof.cjs": "03f9efb056153fbaaeb3b0066e72103acf13f56b7c4bc8c4d89de17dcdf8b1aa",
+    "operator-readonly-preload.cjs": "47dac6cfe5ba900ca08fed8a9ac7c33915c40f0b533a4cbfa23ace5d442620bd",
+    "operator-run-controls.cjs": "2aae88392fdf31d893b1014c93f4db5add3853177b2b11a2495fc068fd7e116c",
+    "prepare-pins.cjs": "edbb9e8431d474cc46a2c5d30fe21f9e8836d43e6dfd7ad3436178f42ec157f1",
+    "tool-code-syntax-check.log": "6fef7c4d6577e5a6471f3d82cc1cb607c2163258d6111f1eeb9c0b7290c5da84"
+  },
+  "metadataDisposition": {
+    "authority": "parent explicit bounded metadata adoption",
+    "oldPinsSHA256": "7655b21eb599e48cb79ab706e59287b0f253986ef1ad0e391097ceb15019e6b5",
+    "newPinsSHA256": "53a0eef9d6f320b4e07ca6987d9b8c995dfbc459e349f3fe2384cf94475a9d76",
+    "changed": [
+      {
+        "path": "/Users/nick/AI_work/hair_conscierge/.git/config",
+        "oldSHA256": "70c63e8c0a3215a4fae7e4ce3157e36e08c6649054e14886c0034cb0a134b6d0",
+        "newSHA256": "2253b6840e7873e8035e82d6176ab2b7eec30374199874b551cc70fc77bbdeb1"
+      }
+    ],
+    "otherIdentityFilesUnchanged": 7,
+    "sourceTestDependencyArtifactGuardsChanged": 0,
+    "originalConfigBytesUnavailable": true,
+    "contentDiffClaim": false,
+    "entrypointChanges": "PIN_SHA literals only",
+    "archive": "/tmp/test-audit-reactivation83-tools-huh910i2/identity-refresh-original",
+    "onlyAuthorizedPinChangedVerified": true
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "operator-guard.cjs": "042c0a65c9685f722b4edff5a58f9c8afe84f006fcd1aca32d8258f58c64db15",
+  "operator-edit.cjs": "fa3a139c304707975f792191b40babfbcbd534c4ad339241fe155ae74a997f2c",
+  "operator-proof.cjs": "5996f0f10ad76dc01639cd8205ec6ded6a4b906d5179ddb9664bb96dc70dcfdc",
+  "operator-run-controls.cjs": "9a0f631a1d2df21d008989cb6feb36ba485d123b5537379f7d5bb4b8198cf1b4",
+  "operator-readonly-preload.cjs": "e1d17e207ee830cae3197a07bb0c142ba1288dc972958cefac0951abbfda4d6c",
+  "prepare-pins.cjs": "f80b29c5cc82d2ad08bfd58aa358f405f60e62a35bebd072aa8d5a71b994cef3",
+  "operator-pins.json": "40b28a91dfe702eb9b16efdd9fef248075a84be66444db1312ae701928b07d61",
+  "operator-candidates.json": "23568d5059519ed1bd8b3e4e55e5d666243cb2a4907e97a0a4ca7b567f7bf819",
+  "operator-controls-normalized.json": "6e7771cc574dfef29925e427788b76c5f6e0be67b9ecd92d8f57a49b9d102391",
+  "operator-evidence.json": "78f4416ee4bb2abb6bb8c9ab41d474aa2a31e8891b9fd9d2a10244a91dab2410",
+  "operator-selected-closure.json": "1dac7effecfa49ec3a2975309ad8e7db0cd0751de5e276f750bd2096d12deaaf",
+  "operator-before.ts": "3a2b873d802dfb9667ca5f8167bb95d5b6eb23cda0a7b8dc90a4ba153d3335e8",
+  "operator-transfer.ts": "399ab430e51c6b7781d49ced998e98c930204f8835dd60d5d14babf19562f51d",
+  "operator-cut.ts": "4737c57eee0061e44ab84e47abef535bef3de94df7cc05de70622b9bc65965e8",
+  "shared-tools.diff": "5e3fa391d9130022f82f98c6542075a35625a6e59c84136b8f1a09272e03a9a0",
+  "prepare-pins.diff": "70dee43e802534ebfe190d8981bd8a689634df3a74c3db5b502073c1cf3fa7fa",
+  "README.md": "8940322dbf5e0a9b7ca6cc50365d51d3f1ef56dd1eefb67048ec4205313b1ca4",
+  "editor-check.log": "bc47f71e43e37b085dd96cfc93a665b33ce29378a012fcbef37c28ab035ddfca",
+  "controls-check.log": "87d432eb3aeaefb195f490287ff7f0f7ab3ab9ece47c61f45fbbd885e4fbc96a",
+  "syntax-check.log": "723cf1857cd1eaffd8e63eef65f7df52073289e0b5938aa982ebcc65e5ef49cf"
+}

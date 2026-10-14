@@ -1,0 +1,1122 @@
+[
+  {
+    "id": "single-card-root",
+    "file": "src/components/personal-plan-start/need-card.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "  const Container = \"div\"",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "the card leads with the product name and a type-plus-price subline"
+    },
+    "intendedAssertion": "Transferred articleOpenTag existence fails; no browser geometry claim.",
+    "donors": [
+      "C1"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^the\\ card\\ leads\\ with\\ the\\ product\\ name\\ and\\ a\\ type\\-plus\\-price\\ subline$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "  const Container = shellClassName ? \"article\" : \"div\""
+  },
+  {
+    "id": "single-card-preview-hook",
+    "file": "src/components/personal-plan-start/need-card.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "      data-plan-start-card-preview=\"absent\"",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "the card leads with the product name and a type-plus-price subline"
+    },
+    "intendedAssertion": "Transferred outer article preview=example fails.",
+    "donors": [
+      "C1"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^the\\ card\\ leads\\ with\\ the\\ product\\ name\\ and\\ a\\ type\\-plus\\-price\\ subline$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "      data-plan-start-card-preview={hasImage ? \"example\" : \"absent\"}"
+  },
+  {
+    "id": "group-kicker-duplication",
+    "file": "src/components/personal-plan-start/need-card.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "<NeedCardEntry card={member} showKicker />",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "each group member opens its own detail sheet"
+    },
+    "intendedAssertion": "Transferred exactly one Haaröl/Optional kicker fails.",
+    "donors": [
+      "C2"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^each\\ group\\ member\\ opens\\ its\\ own\\ detail\\ sheet$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "<NeedCardEntry card={member} showKicker={false} />"
+  },
+  {
+    "id": "group-divider-missing",
+    "file": "src/components/personal-plan-start/need-card.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "{index > 0 ? <div /> : null}",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "each group member opens its own detail sheet"
+    },
+    "intendedAssertion": "Transferred divider count 1 fails.",
+    "donors": [
+      "C2"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^each\\ group\\ member\\ opens\\ its\\ own\\ detail\\ sheet$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "{index > 0 ? <div className=\"mx-3 border-t border-[rgba(67,55,48,0.12)]\" /> : null}"
+  },
+  {
+    "id": "group-tone-delivery",
+    "file": "src/components/personal-plan-start/need-card.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "      data-plan-start-card-group={group.id}\n      data-plan-start-card-tone=\"basis\"",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "each group member opens its own detail sheet"
+    },
+    "intendedAssertion": "Transferred exact optional group-id/tone pair fails.",
+    "donors": [
+      "C2"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^each\\ group\\ member\\ opens\\ its\\ own\\ detail\\ sheet$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "      data-plan-start-card-group={group.id}\n      data-plan-start-card-tone={group.tone}"
+  },
+  {
+    "id": "oil-product-price",
+    "file": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "  const base = withRecommendation(card, preview)\n  if (preview.role === \"dry_finish\" && base.product) base.product.priceLabel = \"0,00 €\"",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "a role card inside a group renders the role in its subline and keeps the category styling"
+    },
+    "intendedAssertion": "Transferred secondary.product.priceLabel exact24,90€ fails.",
+    "donors": [
+      "C3"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^a\\ role\\ card\\ inside\\ a\\ group\\ renders\\ the\\ role\\ in\\ its\\ subline\\ and\\ keeps\\ the\\ category\\ styling$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "  const base = withRecommendation(card, preview)"
+  },
+  {
+    "id": "oil-image-alt",
+    "file": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "  const base = withRecommendation(card, preview)\n  if (preview.role === \"dry_finish\") base.imageAlt = \"Falsches Produktbild\"",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "a role card inside a group renders the role in its subline and keeps the category styling"
+    },
+    "intendedAssertion": "Transferred secondary.imageAlt exact Produktbild: Leichtes Finish-Öl fails.",
+    "donors": [
+      "C3"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^a\\ role\\ card\\ inside\\ a\\ group\\ renders\\ the\\ role\\ in\\ its\\ subline\\ and\\ keeps\\ the\\ category\\ styling$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "  const base = withRecommendation(card, preview)"
+  },
+  {
+    "id": "oil-image-url",
+    "file": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "  const base = withRecommendation(card, preview)\n  if (preview.role === \"dry_finish\") base.imageUrl = null",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "a role card inside a group renders the role in its subline and keeps the category styling"
+    },
+    "intendedAssertion": "Transferred secondary.imageUrl exact oil-dry-finish.webp fails.",
+    "donors": [
+      "C3"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^a\\ role\\ card\\ inside\\ a\\ group\\ renders\\ the\\ role\\ in\\ its\\ subline\\ and\\ keeps\\ the\\ category\\ styling$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "  const base = withRecommendation(card, preview)"
+  },
+  {
+    "id": "oil-fallback-note",
+    "file": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "  const base = withRecommendation(card, preview)\n  if (preview.role === \"dry_finish\") base.fallbackNote = \"Noch offen\"",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "a role card inside a group renders the role in its subline and keeps the category styling"
+    },
+    "intendedAssertion": "Transferred secondary fallbackNote null fails.",
+    "donors": [
+      "C3"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^a\\ role\\ card\\ inside\\ a\\ group\\ renders\\ the\\ role\\ in\\ its\\ subline\\ and\\ keeps\\ the\\ category\\ styling$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "  const base = withRecommendation(card, preview)"
+  },
+  {
+    "id": "oil-product-reasoning",
+    "file": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "  const base = withRecommendation(card, preview)\n  if (preview.role === \"dry_finish\") base.detailBlocks[0] = { ...base.detailBlocks[0]!, body: \"Falsches Kriterium\" }",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "a role card inside a group renders the role in its subline and keeps the category styling"
+    },
+    "intendedAssertion": "Transferred secondary.detailBlocks fixed productCriteria fails.",
+    "donors": [
+      "C3"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^a\\ role\\ card\\ inside\\ a\\ group\\ renders\\ the\\ role\\ in\\ its\\ subline\\ and\\ keeps\\ the\\ category\\ styling$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "  const base = withRecommendation(card, preview)"
+  },
+  {
+    "id": "oil-fit-reasoning",
+    "file": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "  const base = withRecommendation(card, preview)\n  if (preview.role === \"dry_finish\") base.detailBlocks[1] = { ...base.detailBlocks[1]!, body: \"Falsche Passung\" }",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "a role card inside a group renders the role in its subline and keeps the category styling"
+    },
+    "intendedAssertion": "Transferred secondary.detailBlocks fixed fit fails.",
+    "donors": [
+      "C3"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^a\\ role\\ card\\ inside\\ a\\ group\\ renders\\ the\\ role\\ in\\ its\\ subline\\ and\\ keeps\\ the\\ category\\ styling$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "  const base = withRecommendation(card, preview)"
+  },
+  {
+    "id": "oil-role-purpose",
+    "file": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "          purpose: card.purpose,",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "a role card inside a group renders the role in its subline and keeps the category styling"
+    },
+    "intendedAssertion": "Transferred secondary.purpose fixed Finish copy fails.",
+    "donors": [
+      "C3"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^a\\ role\\ card\\ inside\\ a\\ group\\ renders\\ the\\ role\\ in\\ its\\ subline\\ and\\ keeps\\ the\\ category\\ styling$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "          purpose: routineRolePurposeDescription(preview.role) ?? card.purpose,"
+  },
+  {
+    "id": "oil-role-pill",
+    "file": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "          pills: [],",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "a role card inside a group renders the role in its subline and keeps the category styling"
+    },
+    "intendedAssertion": "Transferred secondary.pills [Finish & Glanz] fails.",
+    "donors": [
+      "C3"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^a\\ role\\ card\\ inside\\ a\\ group\\ renders\\ the\\ role\\ in\\ its\\ subline\\ and\\ keeps\\ the\\ category\\ styling$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "          pills: rolePill ? [rolePill] : [],"
+  },
+  {
+    "id": "oil-role-cadence",
+    "file": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "  const frequency = preview.reasoning.frequency",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "a role card inside a group renders the role in its subline and keeps the category styling"
+    },
+    "intendedAssertion": "Transferred per-role primary/secondary frequency differs from payload generic cadence.",
+    "donors": [
+      "C3"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^a\\ role\\ card\\ inside\\ a\\ group\\ renders\\ the\\ role\\ in\\ its\\ subline\\ and\\ keeps\\ the\\ category\\ styling$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "  const frequency = roleFrequencyLabel(card.frequencyTarget ?? null, preview.role, paused)"
+  },
+  {
+    "id": "basis-count-groups",
+    "file": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "      entryCount(finalBasisCards),",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "same-tier roles of a multi-role category group into one card, each wearing its own role copy"
+    },
+    "intendedAssertion": "Transferred countLabel 2 Kategorien fails with3; number of actual cards remains2.",
+    "donors": [
+      "C4"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^same\\-tier\\ roles\\ of\\ a\\ multi\\-role\\ category\\ group\\ into\\ one\\ card,\\ each\\ wearing\\ its\\ own\\ role\\ copy$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "      new Set(finalBasisCards.map((resultCard) => resultCard.category)).size,"
+  },
+  {
+    "id": "single-role-id-copy",
+    "file": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "    ...(true\n      ? {",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "binds only source-matched authority previews to their exact category cards"
+    },
+    "intendedAssertion": "Transferred final ids [shampoo,conditioner] fails because Conditioner gets role id.",
+    "donors": [
+      "C5"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^binds\\ only\\ source\\-matched\\ authority\\ previews\\ to\\ their\\ exact\\ category\\ cards$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "    ...(multiRole\n      ? {"
+  },
+  {
+    "id": "single-role-target-copy",
+    "file": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "      : { targetType: \"Falsche Kategorie\" }),\n    tone,",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "binds only source-matched authority previews to their exact category cards"
+    },
+    "intendedAssertion": "Transferred targetType Sanft reinigend fails while ids/product preserved.",
+    "donors": [
+      "C5"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^binds\\ only\\ source\\-matched\\ authority\\ previews\\ to\\ their\\ exact\\ category\\ cards$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "      : {}),\n    tone,"
+  },
+  {
+    "id": "paused-card-hook",
+    "file": "src/components/personal-plan-start/need-card.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "      data-plan-start-card-paused=\"false\"",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "keeps Optional and Pausiert as explicit status text without replacing category styling"
+    },
+    "intendedAssertion": "Transferred paused=true actual SSR assertion fails.",
+    "donors": [
+      "C6"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^keeps\\ Optional\\ and\\ Pausiert\\ as\\ explicit\\ status\\ text\\ without\\ replacing\\ category\\ styling$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "      data-plan-start-card-paused={card.paused ? \"true\" : \"false\"}"
+  },
+  {
+    "id": "paused-dialog-affordance",
+    "file": "src/components/personal-plan-start/need-card.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "        aria-haspopup={card.paused ? undefined : \"dialog\"}",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "keeps Optional and Pausiert as explicit status text without replacing category styling"
+    },
+    "intendedAssertion": "Transferred paused SSR dialog affordance missing.",
+    "donors": [
+      "C6"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "2e49a42b74caf0511a120e15e46ca5568ae248d685c4ffc4e2a6362adea152e4",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^keeps\\ Optional\\ and\\ Pausiert\\ as\\ explicit\\ status\\ text\\ without\\ replacing\\ category\\ styling$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "        aria-haspopup=\"dialog\""
+  },
+  {
+    "id": "retired-stagebar-header",
+    "file": "src/components/personal-plan-start/need-plan-screen.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "    <div aria-label={stageLabel}>\n      <div aria-label=\"Stufen im Personal Plan\" />",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "renders the signed-off Basis shell with folded cards and example-preview geometry"
+    },
+    "intendedAssertion": "Transferred exact stagebar aria-label absence fails on actual Basis SSR. Also run S1431/S1544(retry)/S1590 if verifying every transferred subject.",
+    "donors": [
+      "C7"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "aef2027e8ba788faab32c1113e638421f61bfbaf11e81a263bc4da4849be0679",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^renders\\ the\\ signed\\-off\\ Basis\\ shell\\ with\\ folded\\ cards\\ and\\ example\\-preview\\ geometry$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "    <div aria-label={stageLabel}>"
+  },
+  {
+    "id": "retired-stagebar-loading",
+    "file": "src/components/personal-plan-start/plan-start-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "  return <><PlanStartOpening /><div aria-label=\"Stufen im Personal Plan\" /></>",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "renders loading and retry states without questions or legacy destinations"
+    },
+    "intendedAssertion": "Transferred loading stagebar absence fails; direct PlanStartLoading owner.",
+    "donors": [
+      "C7"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "ebdfd12eb051c082a10501370256537fe25ab391370ee90046d247a969048f40",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^renders\\ loading\\ and\\ retry\\ states\\ without\\ questions\\ or\\ legacy\\ destinations$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "  return <PlanStartOpening />"
+  },
+  {
+    "id": "paused-snapshot-status",
+    "file": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "      decision.executionState === \"paused\"\n        ? \"Optional\"",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "does not substitute category-only images for live authority previews"
+    },
+    "intendedAssertion": "Transferred paused.statusLabel exact Pausiert fails.",
+    "donors": [
+      "C8"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^does\\ not\\ substitute\\ category\\-only\\ images\\ for\\ live\\ authority\\ previews$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "      decision.executionState === \"paused\"\n        ? \"Pausiert\""
+  },
+  {
+    "id": "paused-snapshot-target",
+    "file": "src/components/personal-plan-start/snapshot-adapter.ts",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "    targetType: decision.executionState === \"paused\" ? \"Falscher Bedarf\" : presentation.targetType,",
+    "test": {
+      "file": "tests/personal-plan-start-ui.test.tsx",
+      "name": "does not substitute category-only images for live authority previews"
+    },
+    "intendedAssertion": "Transferred paused.targetType Aktuell nicht anwenden fails.",
+    "donors": [
+      "C8"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "76b9f94467764ce1601c36b452031c83e92320bed2e81045d8bfe69e9085a739",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^does\\ not\\ substitute\\ category\\-only\\ images\\ for\\ live\\ authority\\ previews$",
+      "tests/personal-plan-start-ui.test.tsx"
+    ],
+    "from": "    targetType: presentation.targetType,"
+  },
+  {
+    "id": "shampoo-add-another",
+    "file": "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "        showAddAnotherProduct={false}",
+    "test": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "role finalization shows saving immediately and suppresses duplicate actions"
+    },
+    "intendedAssertion": "Transferred firstCapture.showAddAnotherProduct true fails before manual action still available.",
+    "donors": [
+      "C9"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^role\\ finalization\\ shows\\ saving\\ immediately\\ and\\ suppresses\\ duplicate\\ actions$",
+      "tests/personal-plan-stage3-flow.test.tsx"
+    ],
+    "from": "        showAddAnotherProduct={\n          currentProducts.length + localCatalogCaptures.length > 0 ||\n          Boolean(pendingCandidate && frequency)\n        }"
+  },
+  {
+    "id": "successful-category-review-missing",
+    "file": "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "    const bundles = await loadDecisionReviewBundles(sourceDraft, preloaded, preloadedComparisons)\n    setPhase(\"capture\")",
+    "test": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "role finalization shows saving immediately and suppresses duplicate actions"
+    },
+    "intendedAssertion": "Transferred final ProductFitComparison positive assertion fails after release; successful mutation still occurs.",
+    "donors": [
+      "C9"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^role\\ finalization\\ shows\\ saving\\ immediately\\ and\\ suppresses\\ duplicate\\ actions$",
+      "tests/personal-plan-stage3-flow.test.tsx"
+    ],
+    "from": "    const bundles = await loadDecisionReviewBundles(sourceDraft, preloaded, preloadedComparisons)\n    setPhase(\"decisions\")"
+  },
+  {
+    "id": "oil-group-titles",
+    "file": "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "        roleTitle: \"Falscher Einsatz\",",
+    "test": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "committing the full group records one local choice per member and advances past all oil subjects"
+    },
+    "intendedAssertion": "Transferred exact3 roleTitles fails before commit.",
+    "donors": [
+      "C10"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^committing\\ the\\ full\\ group\\ records\\ one\\ local\\ choice\\ per\\ member\\ and\\ advances\\ past\\ all\\ oil\\ subjects$",
+      "tests/personal-plan-stage3-flow.test.tsx"
+    ],
+    "from": "        roleTitle: useCaseCopy?.title ?? ROLE_COPY[member.role].label,"
+  },
+  {
+    "id": "oil-group-default-selection",
+    "file": "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "        .filter((key, index) => index > 0 && !deselected.includes(key)),",
+    "test": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "committing the full group records one local choice per member and advances past all oil subjects"
+    },
+    "intendedAssertion": "Transferred checkedKeys.size3 fails before existing commit.",
+    "donors": [
+      "C10"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^committing\\ the\\ full\\ group\\ records\\ one\\ local\\ choice\\ per\\ member\\ and\\ advances\\ past\\ all\\ oil\\ subjects$",
+      "tests/personal-plan-stage3-flow.test.tsx"
+    ],
+    "from": "        .filter((key) => !deselected.includes(key)),"
+  },
+  {
+    "id": "oil-group-uniform",
+    "file": "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "          uniformProposition={false}",
+    "test": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "committing the full group records one local choice per member and advances past all oil subjects"
+    },
+    "intendedAssertion": "Transferred uniformProposition=true fails before commit.",
+    "donors": [
+      "C10"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^committing\\ the\\ full\\ group\\ records\\ one\\ local\\ choice\\ per\\ member\\ and\\ advances\\ past\\ all\\ oil\\ subjects$",
+      "tests/personal-plan-stage3-flow.test.tsx"
+    ],
+    "from": "          uniformProposition={oilReviewGroup.uniformProposition}"
+  },
+  {
+    "id": "oil-group-heading",
+    "file": "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "        headingOverride=\"Falsche Überschrift\"",
+    "test": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "committing the full group records one local choice per member and advances past all oil subjects"
+    },
+    "intendedAssertion": "Transferred headingOverride undefined fails.",
+    "donors": [
+      "C10"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^committing\\ the\\ full\\ group\\ records\\ one\\ local\\ choice\\ per\\ member\\ and\\ advances\\ past\\ all\\ oil\\ subjects$",
+      "tests/personal-plan-stage3-flow.test.tsx"
+    ],
+    "from": "        headingOverride={oilFollowUp?.headingOverride}"
+  },
+  {
+    "id": "oil-group-scope",
+    "file": "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "        scopeContextLine=\"Falscher Kontext\"",
+    "test": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "committing the full group records one local choice per member and advances past all oil subjects"
+    },
+    "intendedAssertion": "Transferred scopeContextLine undefined fails.",
+    "donors": [
+      "C10"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^committing\\ the\\ full\\ group\\ records\\ one\\ local\\ choice\\ per\\ member\\ and\\ advances\\ past\\ all\\ oil\\ subjects$",
+      "tests/personal-plan-stage3-flow.test.tsx"
+    ],
+    "from": "        scopeContextLine={oilFollowUp?.scopeContextLine}"
+  },
+  {
+    "id": "oil-group-action-label",
+    "file": "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "        primaryActionLabelOverride=\"Falsche Aktion\"",
+    "test": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "committing the full group records one local choice per member and advances past all oil subjects"
+    },
+    "intendedAssertion": "Transferred primaryActionLabelOverride undefined fails.",
+    "donors": [
+      "C10"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^committing\\ the\\ full\\ group\\ records\\ one\\ local\\ choice\\ per\\ member\\ and\\ advances\\ past\\ all\\ oil\\ subjects$",
+      "tests/personal-plan-stage3-flow.test.tsx"
+    ],
+    "from": "        primaryActionLabelOverride={oilFollowUp?.primaryActionLabelOverride}"
+  },
+  {
+    "id": "oil-group-position",
+    "file": "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "        reviewPosition={2}",
+    "test": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "committing the full group records one local choice per member and advances past all oil subjects"
+    },
+    "intendedAssertion": "Transferred reviewPosition1 fails.",
+    "donors": [
+      "C10"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^committing\\ the\\ full\\ group\\ records\\ one\\ local\\ choice\\ per\\ member\\ and\\ advances\\ past\\ all\\ oil\\ subjects$",
+      "tests/personal-plan-stage3-flow.test.tsx"
+    ],
+    "from": "        reviewPosition={groupedReviewPosition(draft, nextSubject.decisionKey)}"
+  },
+  {
+    "id": "oil-group-total",
+    "file": "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "          decisionSubjects.length",
+    "test": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "committing the full group records one local choice per member and advances past all oil subjects"
+    },
+    "intendedAssertion": "Transferred reviewTotal1 fails.",
+    "donors": [
+      "C10"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^committing\\ the\\ full\\ group\\ records\\ one\\ local\\ choice\\ per\\ member\\ and\\ advances\\ past\\ all\\ oil\\ subjects$",
+      "tests/personal-plan-stage3-flow.test.tsx"
+    ],
+    "from": "          groupedReviewCounts(decisionSubjects, nextSubject.decisionKey, groupedOilKeys).total"
+  },
+  {
+    "id": "oil-group-role-kicker",
+    "file": "src/components/personal-plan-products/stage3-products-flow.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "        roleLabel={ROLE_COPY[nextSubject.role].label}",
+    "test": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "committing the full group records one local choice per member and advances past all oil subjects"
+    },
+    "intendedAssertion": "Transferred roleLabel null fails.",
+    "donors": [
+      "C10"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "56fb43ed28f9cea1b49f17788498ddea156df81642e16c9f57e64a058140120d",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^committing\\ the\\ full\\ group\\ records\\ one\\ local\\ choice\\ per\\ member\\ and\\ advances\\ past\\ all\\ oil\\ subjects$",
+      "tests/personal-plan-stage3-flow.test.tsx"
+    ],
+    "from": "        roleLabel={oilReviewGroup ? null : ROLE_COPY[nextSubject.role].label}"
+  },
+  {
+    "id": "group-accessible-name",
+    "file": "src/components/personal-plan-products/oil-group-review.tsx",
+    "anchor": {
+      "kind": "file",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "to": "<div role=\"group\" className=\"mt-2 grid gap-2\">",
+    "test": {
+      "file": "tests/personal-plan-stage3-flow.test.tsx",
+      "name": "the grouped Öl screen lists every named use case pre-checked under one commit action"
+    },
+    "intendedAssertion": "Transferred role/group aria-labelledby association fails while checkbox contents remain.",
+    "donors": [
+      "C11"
+    ],
+    "sensitivityLimit": "Static recipe only. Main must observe intended assertion red and clean before/after with exact source-byte restore.",
+    "sourceSHA256": "d5239dee71b520b38fb0271ae89f5b8f0d58325fde2f4fa1adebe02b5910cf55",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern",
+      "^the\\ grouped\\ Öl\\ screen\\ lists\\ every\\ named\\ use\\ case\\ pre\\-checked\\ under\\ one\\ commit\\ action$",
+      "tests/personal-plan-stage3-flow.test.tsx"
+    ],
+    "from": "<div role=\"group\" aria-labelledby=\"oil-group-use-cases-title\" className=\"mt-2 grid gap-2\">"
+  }
+]

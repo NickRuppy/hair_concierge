@@ -5,7 +5,12 @@ import type {
   DiscoveryCockpitStepView,
   DiscoveryCockpitSwapOption,
 } from "../src/lib/discovery/cockpit"
-import { runsheetLockedIn, type RunsheetLockedInSelection } from "../src/lib/discovery/runsheet"
+import {
+  MARKET_SEGMENT_LABELS,
+  runsheetLockedIn,
+  runsheetSegmentSummary,
+  type RunsheetLockedInSelection,
+} from "../src/lib/discovery/runsheet"
 import type { PersonalPlanCategory } from "../src/lib/personal-plan/products/contracts"
 
 /**
@@ -159,9 +164,16 @@ test("stored decisions: swap → buy with the chosen product's price, keep → k
     }),
   )
   assert.deepEqual(lockedIn.buy, [
-    { label: "Alpha Shampoo", categoryLabel: "Shampoo", priceLabel: EUR("9,95") },
+    {
+      label: "Alpha Shampoo",
+      categoryLabel: "Shampoo",
+      priceLabel: EUR("9,95"),
+      marketSegment: null,
+    },
   ])
-  assert.deepEqual(lockedIn.keep, [{ label: "Balea Spülung", categoryLabel: "Conditioner" }])
+  assert.deepEqual(lockedIn.keep, [
+    { label: "Balea Spülung", categoryLabel: "Conditioner", marketSegment: null },
+  ])
   assert.deepEqual(lockedIn.skip, [{ categoryLabel: "Maske" }])
   assert.deepEqual(lockedIn.discard, [])
   assert.equal(lockedIn.totalLabel, EUR("9,95"))
@@ -195,9 +207,11 @@ test("live selections override the stored outcome (derivation input; click handl
   }
   const lockedIn = runsheetLockedIn(steps, (entry) => live[entry.decisionKey] ?? null)
   assert.deepEqual(lockedIn.buy, [
-    { label: "Beta Shampoo", categoryLabel: "Shampoo", priceLabel: null },
+    { label: "Beta Shampoo", categoryLabel: "Shampoo", priceLabel: null, marketSegment: null },
   ])
-  assert.deepEqual(lockedIn.keep, [{ label: "Balea Spülung", categoryLabel: "Conditioner" }])
+  assert.deepEqual(lockedIn.keep, [
+    { label: "Balea Spülung", categoryLabel: "Conditioner", marketSegment: null },
+  ])
   // The mask has no live selection: open, whatever its stored outcome says.
   assert.equal(lockedIn.openCount, 1)
 })
@@ -258,9 +272,44 @@ test("a decided target the options no longer list keeps the stored label, withou
     }),
   )
   assert.deepEqual(lockedIn.buy, [
-    { label: "Delisted Shampoo", categoryLabel: "Shampoo", priceLabel: null },
+    { label: "Delisted Shampoo", categoryLabel: "Shampoo", priceLabel: null, marketSegment: null },
   ])
   assert.equal(lockedIn.missingPrices, true)
+})
+
+test("a saved swap target the options no longer list keeps its catalog segment", () => {
+  const lockedIn = runsheetLockedIn(
+    nomi({
+      shampoo: {
+        outcome: "swapped",
+        swapProductId: "gone",
+        swapProductLabel: "Delisted Shampoo",
+        swapMarketSegment: "professional",
+      },
+    }),
+  )
+  assert.equal(lockedIn.buy[0]!.marketSegment, "professional")
+  assert.deepEqual(runsheetSegmentSummary(lockedIn), {
+    total: 1,
+    professional: 1,
+    drugstore: 0,
+    unknown: 0,
+  })
+})
+
+test("a swap to another product than the saved one does not borrow the saved segment", () => {
+  const lockedIn = runsheetLockedIn(
+    nomi({
+      shampoo: {
+        outcome: "swapped",
+        swapProductId: "gone",
+        swapProductLabel: "Delisted Shampoo",
+        swapMarketSegment: "professional",
+      },
+    }),
+    () => ({ decision: "swap", swapProductId: "other" }),
+  )
+  assert.equal(lockedIn.buy[0]!.marketSegment, null)
 })
 
 test("a swap without a target is not a finished decision: it stays open", () => {
@@ -306,16 +355,25 @@ test("multi-product step: each of her products is its own decision unit", () => 
   const lockedIn = runsheetLockedIn(
     twoShampoos({ outcome: "kept" }, { outcome: "swapped", swapProductId: "alpha" }),
   )
-  assert.deepEqual(lockedIn.keep, [{ label: "Shampoo A", categoryLabel: "Shampoo" }])
+  assert.deepEqual(lockedIn.keep, [
+    { label: "Shampoo A", categoryLabel: "Shampoo", marketSegment: null },
+  ])
   assert.deepEqual(lockedIn.buy, [
-    { label: "Alpha Shampoo", categoryLabel: "Shampoo", priceLabel: EUR("9,95") },
+    {
+      label: "Alpha Shampoo",
+      categoryLabel: "Shampoo",
+      priceLabel: EUR("9,95"),
+      marketSegment: null,
+    },
   ])
   assert.equal(lockedIn.openCount, 0)
 })
 
 test("multi-product step: a dropped product is „Weglassen“ by name, never „ohne Produkt“; its sibling still counts", () => {
   const lockedIn = runsheetLockedIn(twoShampoos({ outcome: "kept" }, { outcome: "dropped" }))
-  assert.deepEqual(lockedIn.keep, [{ label: "Shampoo A", categoryLabel: "Shampoo" }])
+  assert.deepEqual(lockedIn.keep, [
+    { label: "Shampoo A", categoryLabel: "Shampoo", marketSegment: null },
+  ])
   assert.deepEqual(lockedIn.discard, [{ label: "Shampoo B", categoryLabel: "Shampoo" }])
   assert.deepEqual(lockedIn.skip, [])
   assert.equal(lockedIn.openCount, 0)
@@ -333,7 +391,9 @@ test("multi-product step: one decided, one open — the open one counts once, no
     "item-a": { decision: "keep", swapProductId: null },
   }
   const lockedIn = runsheetLockedIn(steps, (entry) => live[entry.intakeItemId ?? ""] ?? null)
-  assert.deepEqual(lockedIn.keep, [{ label: "Shampoo A", categoryLabel: "Shampoo" }])
+  assert.deepEqual(lockedIn.keep, [
+    { label: "Shampoo A", categoryLabel: "Shampoo", marketSegment: null },
+  ])
   assert.equal(lockedIn.openCount, 1)
 })
 
@@ -365,4 +425,118 @@ test("Codex F1: a non-EUR price label never enters the euro total", () => {
   assert.equal(lockedIn.hasKnownPrice, false)
   // The row still shows the label as delivered; only the sum leaves it out.
   assert.equal(lockedIn.buy[0]?.priceLabel, "5,45 $")
+})
+
+// --- Profi / Drogerie overview -------------------------------------------------------
+
+const withSegment = (
+  segment: "drugstore" | "professional" | null,
+  base: DiscoveryCockpitSwapOption,
+): DiscoveryCockpitSwapOption => ({ ...base, marketSegment: segment })
+
+test("MARKET_SEGMENT_LABELS: the two exact German labels", () => {
+  assert.deepEqual(MARKET_SEGMENT_LABELS, { drugstore: "Drogerie", professional: "Profi" })
+})
+
+test("rows carry the segment: keep → her product, buy → the chosen option (swap list, then ideal)", () => {
+  const lockedIn = runsheetLockedIn(
+    nomi({
+      shampoo: {
+        outcome: "swapped",
+        swapProductId: "alpha",
+        swapOptions: [
+          withSegment("professional", option("alpha", "Alpha Shampoo", EUR("9,95"))),
+          withSegment("drugstore", option("beta", "Beta Shampoo", null)),
+        ],
+      },
+      mask: {
+        outcome: "swapped",
+        swapProductId: "mask-rec",
+        swapOptions: [],
+        idealRecommendation: withSegment(
+          "drugstore",
+          option("mask-rec", "Olaplex No. 8", EUR("28,00"), "ideal_recommendation"),
+        ),
+      },
+      conditioner: { outcome: "kept", ownedMarketSegment: "professional" },
+    }),
+  )
+  assert.deepEqual(
+    lockedIn.buy.map((row) => [row.label, row.marketSegment]),
+    [
+      ["Alpha Shampoo", "professional"],
+      ["Olaplex No. 8", "drugstore"],
+    ],
+  )
+  assert.deepEqual(
+    lockedIn.keep.map((row) => [row.label, row.marketSegment]),
+    [["Balea Spülung", "professional"]],
+  )
+})
+
+test("segment summary counts the routine: Neu kaufen + Behalten, every segment kind", () => {
+  const lockedIn = runsheetLockedIn(
+    nomi({
+      shampoo: {
+        outcome: "swapped",
+        swapProductId: "alpha",
+        swapOptions: [withSegment("professional", option("alpha", "Alpha Shampoo", null))],
+      },
+      conditioner: { outcome: "kept", ownedMarketSegment: "drugstore" },
+      mask: { outcome: "kept" },
+    }),
+  )
+  // The mask step is empty and kept → „Bewusst ohne Produkt": not part of the routine.
+  assert.deepEqual(runsheetSegmentSummary(lockedIn), {
+    total: 2,
+    professional: 1,
+    drugstore: 1,
+    unknown: 0,
+  })
+})
+
+test("segment summary: a null segment counts as unknown, in both groups", () => {
+  const lockedIn = runsheetLockedIn(
+    nomi({
+      shampoo: {
+        outcome: "swapped",
+        swapProductId: "alpha",
+        swapOptions: [option("alpha", "Alpha Shampoo", null)],
+      },
+      conditioner: { outcome: "kept", ownedMarketSegment: null },
+    }),
+  )
+  assert.deepEqual(runsheetSegmentSummary(lockedIn), {
+    total: 2,
+    professional: 0,
+    drugstore: 0,
+    unknown: 2,
+  })
+})
+
+test("segment summary: dropped products and deliberately empty steps are not in the routine", () => {
+  const lockedIn = runsheetLockedIn(
+    nomi({
+      shampoo: { outcome: "dropped", ownedMarketSegment: "professional" },
+      mask: { outcome: "kept" },
+      conditioner: { outcome: "kept", ownedMarketSegment: "drugstore" },
+    }),
+  )
+  assert.equal(lockedIn.discard.length, 1)
+  assert.equal(lockedIn.skip.length, 1)
+  assert.deepEqual(runsheetSegmentSummary(lockedIn), {
+    total: 1,
+    professional: 0,
+    drugstore: 1,
+    unknown: 0,
+  })
+})
+
+test("segment summary: nothing decided → total 0", () => {
+  assert.deepEqual(runsheetSegmentSummary(runsheetLockedIn(nomi())), {
+    total: 0,
+    professional: 0,
+    drugstore: 0,
+    unknown: 0,
+  })
 })

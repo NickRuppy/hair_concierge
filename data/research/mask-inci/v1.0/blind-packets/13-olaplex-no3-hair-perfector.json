@@ -1,0 +1,19 @@
+{
+  "productId": "13-olaplex-no3-hair-perfector",
+  "identity": {
+    "brand": "Olaplex",
+    "productName": "No. 3 Hair Perfector",
+    "packSize": "Multiple formats seen in market (100 ml most common at Douglas/Flaconi; smaller 20/50 ml formats also seen at specialty retailers/salons) - exact pack size not pinned down to one SKU this pass, since this product is a refuse-test capture, not a candidate for classification.",
+    "gtinEan": null,
+    "market": "DE (Douglas, Flaconi, salons - not drugstore per approval record)"
+  },
+  "rawInci": "Water, Bis-Aminopropyl Diglycol Dimaleate, Propylene Glycol, Cetearyl Alcohol, Behentrimonium Methosulfate, Cetyl Alcohol, Phenoxyethanol, Glycerin, Hydroxyethyl Ethylcellulose, Stearamidopropyl Dimethylamine, Quaternium-91, Sodium Benzoate, Cetrimonium Methosulfate, Cetrimonium Chloride, Fragrance, Polyquaternium-37, Tetrasodium EDTA, Benzyl Benzoate, Etidronic Acid, Ascorbic Acid, Phytantriol, Tocopheryl Acetate, Aloe Barbadensis Leaf Juice, Panthenol, Simmondsia Chinensis Seed Oil, Citric Acid, Potassium Sorbate",
+  "directions": {
+    "text": "Olaplex Hair Perfector N°3 großzügig im ungewaschenen, handtuchtrockenen Haar auftragen und durchkämmen. Mindestens 10 Minuten einwirken lassen (für einen intensiveren Effekt: über Nacht). Anschließend auswaschen, danach wie gewohnt shampoonieren und Conditioner/Kur auftragen.",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "minimum 10 (up to overnight for intensified effect)",
+    "source": "olaplex.de official directions text, replicated identically across multiple independent German retailer product pages (aggregated via search, not a single direct fetch, but the wording is uniform everywhere found).",
+    "confidence": "high - this exact directions text is Olaplex's standard universal instruction and is not disputed anywhere found"
+  },
+  "note": "Blind calibration packet. Contains identity, formula of record, and authoritative directions only. No archetype labels, no claims summaries, no prior assessments."
+}

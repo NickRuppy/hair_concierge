@@ -8,10 +8,6 @@ export type LengthCareIntensity =
   | "elevated"
   | "maximum"
 
-export function hasLengthEndsZone(hairLength: HairLength | null | undefined): boolean {
-  return hairLength !== "very_short" && hairLength != null
-}
-
 export function getLengthCareIntensity(
   hairLength: HairLength | null | undefined,
 ): LengthCareIntensity {

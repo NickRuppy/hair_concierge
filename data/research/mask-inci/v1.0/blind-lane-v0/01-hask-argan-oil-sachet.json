@@ -1,0 +1,272 @@
+{
+  "schemaVersion": "mask-research-record-v0.1",
+  "lane": "blind",
+  "productId": "01-hask-argan-oil-sachet",
+  "g0": {
+    "value": "eligible",
+    "modeScoped": false,
+    "multiUse": false,
+    "rationale": "Directions describe a single rinse-out intensive mode: applied after washing ('Nach der Haarwaesche') to towel-dry/wet hair, product-stated contact time ('bis zu 10 Minuten'), then rinsed out ('gruendlich ausspuelen'). This satisfies every leg of the charter eligibility test in standard section 2.1. No second mode is stated, so the section 2.2 five-step multi-use test is not triggered; step 1 (locate authoritative directions) and step 2 (test the single stated mode) resolve to eligible on the first pass. The directions do not name 'Laengen und Spitzen' explicitly, but per the R8 mask delta only an explicit whole-head or root instruction is a P5 protocol deviation; silence on placement is not an exclusion ground.",
+    "evidenceSignals": [
+      "directions: 'Nach der Haarwaesche in das handtuchtrockene/nasse Haar einmassieren' - post-cleansing placement",
+      "directions: 'bis zu 10 Minuten einwirken lassen' - product-stated contact time (protocol metadata only, zero classification credit per section 7.2)",
+      "directions: 'danach gruendlich ausspuelen' - rinse-out",
+      "identity: exact DE market pack, GTIN 071164333068, 50 ml sachet, raw INCI present",
+      "directions source confidence recorded as 'moderate' in the packet (aggregated retail copy, no verbatim primary fetch) - identity gate section 2.3 is satisfied but the directions leg is a documented sourcing gap"
+    ]
+  },
+  "tailMarker": {
+    "ingredient": "PARFUM",
+    "rank": 6,
+    "anomalyNote": "Resolved, no anomaly fired: rank 6 is above the section 3.1 'rank <= 3 is implausible' cut and four conditioning ingredients (Cetearyl Alcohol 2, Lanolin 3, Cetrimonium Chloride 4, Quaternium-18 5) precede it. Structurally decisive consequence: the entire declared protein/humectant payload of this product - Hydroxypropyltrimonium Hydrolyzed Oryza Sativa Protein (8), Hydrolyzed Collagen (10), Hydrolyzed Keratin (11), Silk Amino Acids (12), Hydrolyzed Soy Protein (13), Glycerin (19), Panthenol (20), Isopropyl Palmitate (21), Sodium PCA (22), Argania Spinosa Kernel Oil (7) - sits at or after rank 6 and therefore carries zero structural credit. This is the textbook sub-1% hero tail named in section 3.1 and D1."
+  },
+  "profile": {
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Above-tail segment (ranks 1-5) of the exact-market INCI of record; formula-only structural position, no finished-product evidence.",
+      "rationale": "Two of the three section 9.1 structural signals are satisfied on the above-tail segment, which under the section 9.1 threshold ('>= 2 of {S1,S2,S3}') reads as high conditioning potential relative to the mask shelf. E2 ceiling: this is an architecture inference about structural position, not a measured or delivered conditioning outcome.",
+      "evidenceSignals": [
+        "S1 satisfied: CETRIMONIUM CHLORIDE (rank 4) and QUATERNIUM-18 (rank 5) are two distinct long-chain cationic species above the tail (rank 6)",
+        "S2 satisfied: CETEARYL ALCOHOL at rank 2 of the full list, immediately after AQUA (rank 1)",
+        "S3 not satisfied: LANOLIN (rank 3) is the only non-fatty-alcohol lipid above the tail; ARGANIA SPINOSA KERNEL OIL (rank 7) and ISOPROPYL PALMITATE (rank 21) are in the tail"
+      ],
+      "derivation": "R1 cationic/fatty-alcohol base read for breadth (S1) and rank (S2); R4 lipid breadth counted above the tail only (S3). Signal count 2 of 3 -> section 9.1 'high' threshold.",
+      "thresholdReasoning": [
+        "Why high, not moderate: 'moderate' is defined as everything else including exactly one satisfied signal. Two signals are satisfied here (S1 and S2), so the moderate bucket does not apply on the written arithmetic.",
+        "Why high, not low: 'low' requires none of S1/S2/S3, i.e. a single cationic species, no fatty alcohol in the top three, and at most one lipid above the tail. Two distinct cationics and a rank-2 fatty alcohol falsify the low anchor on two independent legs.",
+        "The 'and no material counter-signal' clause in the high threshold was tested: the counter-signals present (sub-1% hero tail, long ingredient list) are the exact items section 9.1 declares cannot move the value in any direction, so they cannot function as the blocking counter-signal."
+      ],
+      "counterSignals": [
+        "The above-tail segment contains only four substantive entries; almost the entire declared payload is below the tail marker (sub-1% hero tail per section 3.1 / D1)",
+        "34-entry ingredient list - count is not payload (evidence lexicon family 10)",
+        "QUATERNIUM-18 counted as a distinct long-chain cationic by analogy with the R1 anchors Distearyldimonium Chloride and Quaternium-87; the R1 list does not name Quaternium-18 literally"
+      ],
+      "limitations": [
+        "Section 9.1's own honest limitation applies: a three-step concentration scale is at the edge of INCI support and these anchors are provisional and uncalibrated",
+        "A four-entry above-tail segment gives very little resolution; the lexicon note (section 12) that a short above-tail section is evidence that little can be inferred pulls against reading it as a category extreme",
+        "Confidence held at moderate rather than high because the value rests on a minimal above-tail base and on the Quaternium-18 class assignment"
+      ]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Above-tail segment (ranks 1-5); ingredient-informed matching prior only, never a prediction of visible flattening.",
+      "rationale": "The section 9.2 rich-base condition is met and one supporting alternative (an R4b heavy lipid above the tail) is present, so the formula carries a comparatively high deposition/weight potential within the mask shelf. E2 ceiling: inferred from structural position, never measured.",
+      "evidenceSignals": [
+        "Required base leg 1: >= 2 distinct cationics above the tail - CETRIMONIUM CHLORIDE (4), QUATERNIUM-18 (5)",
+        "Required base leg 2: cetearyl-class fatty alcohol in the top three - CETEARYL ALCOHOL (2)",
+        "Supporting alternative (a): LANOLIN (3) read as an R4b heavy occlusive above the tail",
+        "Supporting alternative (b) absent: no silicone species anywhere above the tail"
+      ],
+      "derivation": "Section 9.2 anchors as ruled by Nick 2026-09-04 (first two markers = required base, last two = alternatives). Base satisfied + alternative (a) satisfied -> high.",
+      "thresholdReasoning": [
+        "Why high, not moderate: moderate is the residual bucket for formulas that miss either the base or every alternative. Both the base and alternative (a) are satisfied here on above-tail ranks, so the residual does not apply.",
+        "Why high, not low: the low anchor requires a single cationic species AND no cetearyl-class fatty alcohol in the top three AND no R4b heavy lipid above the tail. All three legs of the low anchor fail.",
+        "The section 9.2 conflict fallback (formula-only high vs. an exact-product lightness claim) was checked and not applied: no lightness or 'ohne zu beschweren' positioning is available in the packet, and the product-name positioning that is visible ('Argan Oil') is not a lightness claim."
+      ],
+      "counterSignals": [
+        "Silicone presence is not the weight driver and none is present anyway - neither direction is evidence here (section 9.2 counter-signal list)",
+        "ISOPROPYL PALMITATE (21) is a light ester and in the tail; it neither adds nor subtracts weight credit",
+        "No viscosity or 'reichhaltig' claim is available to cross-check the lipid architecture"
+      ],
+      "limitations": [
+        "LANOLIN is not literally enumerated in the R4b list (butters, heavy triglycerides, hydrogenated oils, occlusive hydrocarbons). It is assigned to the heavy band by analogy with the lexicon family-3 heavy entry Cera Alba (wax/occlusive). If a reviewer declines that analogy, alternative (a) fails, no alternative remains, and weight_potential falls to moderate. This single classification carries the whole value.",
+          "Weight drives a soft preference with a stated reason; fine-hair flattening is a fit mismatch, not a hair-type law (section 9.2 wording rule)"
+      ]
+    },
+    "careDirection": {
+      "value": "moisture",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Above-tail segment vs. tail segment of the exact-market INCI; comparative care emphasis only, never an assertion about a user's protein or moisture state (G6).",
+      "rationale": "No qualifying R5 protein/peptide film route exists above the tail, so the material direction is the conditioning/emollient base the formula actually carries - D6's honest category default. E2 ceiling: a comparative emphasis reading, not a delivery claim.",
+      "evidenceSignals": [
+        "Zero R5 species above the tail (rank < 6)",
+        "Every protein token sits in the tail: HYDROXYPROPYLTRIMONIUM HYDROLYZED ORYZA SATIVA PROTEIN/SILOXYSILICATE (8), HYDROLYZED COLLAGEN (10), HYDROLYZED KERATIN (11), HYDROLYZED SOY PROTEIN (13); SILK AMINO ACIDS (12) and SODIUM LAUROYL OAT AMINO ACIDS (14) are free-amino-acid class and non-qualifying regardless of rank",
+        "Conditioning/emollient base above the tail: CETEARYL ALCOHOL (2), LANOLIN (3), CETRIMONIUM CHLORIDE (4), QUATERNIUM-18 (5)",
+        "Humectants (GLYCERIN 19, PANTHENOL 20, SODIUM PCA 22, BUTYLENE GLYCOL 25) are all in the tail - they support neither leg"
+      ],
+      "derivation": "Section 9.3 operational test for a material R5 route (a qualifying species above the tail, plus a second species or a single species within the first eight above-tail ranks) fails at the first condition. Balanced requires the material R5 route as a precondition, so it is unreachable. Residual -> moisture.",
+      "thresholdReasoning": [
+        "Why moisture, not protein: protein needs a material R5 route above the tail. There is none; five protein-family tokens are present but all at or after the tail marker, which section 3.1 gives zero credit. Section 9.3's counter-signal line is directly on point: protein naming with the protein only in the tail resolves to moisture with the claim recorded.",
+        "Why moisture, not balanced: balanced is gated on the same material R5 route and is explicitly reserved, never a 'neither' bucket. With the protein leg absent it cannot be reached.",
+        "Confidence high rather than moderate: the tail marker is resolved, the route separation is unambiguous (no protein above the tail at all), and the D4 protein-payload counter-signal does not fire because no R5 species is above the tail or in the top five ranks - so the section 13 confidence cap is not engaged."
+      ],
+      "counterSignals": [
+        "Very dense protein tail (four hydrolysates plus two amino-acid tokens) which a naive read would convert into care_direction: protein - recorded, decisive for nothing",
+        "The product name visible in the identity block foregrounds an oil, not a protein or a humectant; no claims summary was supplied to test either direction"
+      ],
+      "limitations": [
+        "No claims source was available. Section 9.3 does not permit claims to influence care_direction in any case (section 11 step 4 excludes it explicitly), so the absence costs nothing here - but it means the recorded 'claim' context is only the product name.",
+        "Whether 'a coherent conditioning/emollient architecture' is met by a four-entry above-tail base is a judgment; the base is conventional but thin."
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "low",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Above-tail segment; comparative temporary damage-support route only, never measured repair.",
+      "rationale": "Neither of the two upgrade gates is reachable: no named bond chemistry token anywhere in the list, and no qualifying R5 fibre-film route above the tail. Ordinary R1/R4 conditioning remains, which is by definition low. E2 ceiling; no efficacy is asserted.",
+      "evidenceSignals": [
+        "bond_route = none: no maleate, gluconamide-pair, or bond-positioned peptide token anywhere in the 34-entry list",
+        "No qualifying R5 species above the tail (see care_direction signals)",
+        "Present but explicitly non-upgrading: CITRIC ACID (18), PANTHENOL (20), the tail protein cluster, the free amino acid tokens"
+      ],
+      "derivation": "Section 9.4: high is gated solely on bond_route != none; medium is gated on the same material R5 test as section 9.3. Both fail -> low.",
+      "thresholdReasoning": [
+        "Why low, not medium: medium requires a distinct temporary protein/peptide/keratin fibre-film route by the section 9.3 test. Every protein token is in the tail and therefore carries zero structural credit; hydrolyzed protein alone would not lift the value even above the tail without meeting the two-species / rank-8 test.",
+        "Why low, not high: high requires a named bond-chemistry INCI token above the tail. None exists; the mask delta's three inflation risks (being a mask is not repair; dwell is not repair; repair naming is not repair) are all live here and all closed by the rule."
+      ],
+      "counterSignals": [
+        "conditioning_level: high on the same formula - section 9.4 mask delta 1 states explicitly that conditioning_level: high alone is repair_support_level: low",
+        "The 10-minute contact time carries zero credit (section 7.2, mask delta 2)"
+      ],
+      "limitations": [
+        "No exact-product damage-endpoint evidence exists, so the E2 ceiling is binding; this value ranks formula potential against the mask shelf and says nothing about outcomes."
+      ]
+    },
+    "primaryFocus": {
+      "value": "general",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Above-tail architecture plus the section 9.5.2 deterministic hierarchy; no claims summary was available for any corroboration leg.",
+      "rationale": "No special-purpose route clears its threshold, the humectant cluster fails, the shine architecture is absent, and the dry-surface differentiator does not carry the formula - so 'general' is the honest fallback for a capable conventional rich mask (step 8). E2 ceiling.",
+      "evidenceSignals": [
+        "Step 3 repair fails: no R5 above tail, bond_route none",
+        "Step 3 curl_support fails: slip route is the baseline R1 cationic/fatty-alcohol base; no cationic polymer above the tail; no curl positioning available",
+        "Step 3 color_care fails: CARAMEL (33) and CI 19140 (34) colour the product, not the hair; no colour-protection candidate or positioning",
+        "Step 3 lightness fails: requires weight_potential low; value is high",
+        "Step 4 moisture fails: zero humectants above the tail against a required cluster of >= 3 with >= 2 non-glycerin",
+        "Step 5 shine fails: no silicone and no cationic polymer above the tail, lipid load is not low, no gloss positioning",
+        "Step 6 smoothing fails: no distinct silicone or substantive polymer above the tail; the only beyond-baseline feature is LANOLIN (3), an occlusive emollient, and emollient richness is not dry surface control",
+        "Step 7 detangling fails: slip is category baseline for masks and this base is not distinctively stronger than the shelf"
+      ],
+      "derivation": "Section 9.5.2 hierarchy applied in order after step 1 (exclude the category baseline) and step 2 (group by shared mechanism: the whole R1+R4 base is one M1 observation).",
+      "thresholdReasoning": [
+        "Why general, not smoothing: step 6 needs both conjuncts - dry surface control as the clearest practical differentiator AND an architecture materially beyond the ordinary mask base. The second conjunct is arguably met by LANOLIN at rank 3, but the first is not: nothing in the above-tail segment is a dry-surface film former, so the beyond-baseline feature points at richness, for which the vocabulary has no value.",
+        "Why general, not moisture: the D5 guard fails on criterion 1 outright (cluster size zero above the tail), before criteria 2-4 are even reached.",
+        "Why general, not repair: this is the case the standard predicts most often - a dense protein tail with 'Repair'-adjacent shelf language cannot create a route; section 9.5.2 step 3 lists hydrolyzed protein without a qualifying route among the things that cannot set repair.",
+        "focus_care_verdict = nonspecific: generic intensive conditioning compatible with both directions, distinguishing neither. Per section 9.5.1's hard rule, nonspecific resolves to general (or smoothing where step 6 genuinely clears) - never to moisture or repair.",
+        "claim_role = not_applicable: no claims source was supplied. A claims source would not have changed this outcome, because claims can never convert nonspecific evidence into a specialist focus."
+      ],
+      "counterSignals": [
+        "Product-name positioning (an argan-oil treatment) would, on a naive read, suggest an oil/nourishing focus; ARGANIA SPINOSA KERNEL OIL is at rank 7, in the tail, and is a hero-oil false signal (lexicon family 3)"
+      ],
+      "limitations": [
+        "I had no claims summary. For this product it changes nothing, since every route failed on formula evidence and claims may only corroborate. I would have wanted a claims source only to record the E0 claim context properly.",
+        "Confidence moderate rather than high because 'general' here is a residual: the formula's most distinctive feature (a rank-3 occlusive) has no home in the nine-value vocabulary."
+      ]
+    },
+    "secondaryFocus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Same hierarchy pass as primary_focus.",
+      "rationale": "No candidate adds useful matching information without double-counting the single M1 deposition observation, so no secondary slot is spent. E2 ceiling.",
+      "evidenceSignals": [
+        "smoothing rejected: failed the step 6 threshold as primary, so it cannot qualify as a secondary either",
+        "moisture rejected: D5 cluster size zero above the tail",
+        "detangling rejected: baseline slip, section 6 anti-double-count rule 1 (one rich R1+R4 base is one M1 observation and may not spawn several focus candidates)"
+      ],
+      "derivation": "Section 9.5.2 secondary rule plus section 6 G3 rule 1.",
+      "thresholdReasoning": [
+        "Why zero secondaries, not one: a secondary must represent a distinct user endpoint and add useful matching information. Every remaining candidate here is the optical or tactile consequence of the same M1 film, which section 6 rule 1 forbids counting again."
+      ],
+      "counterSignals": [],
+      "limitations": [
+        "With a primary of 'general', an empty secondary set carries no matching information at all; that is an honest reflection of a thin above-tail segment, not a defect of the product."
+      ]
+    },
+    "hairThicknessFit": {
+      "value": ["normal", "coarse"],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Deterministic derivation from weight_potential; a desired-finish/dosage prior, not a universal exclusion.",
+      "rationale": "weight_potential: high maps deterministically to normal + coarse under the section 9.6 table. E2 ceiling inherited from the parent field.",
+      "evidenceSignals": [
+        "weight_potential = high (see that field's signals)"
+      ],
+      "derivation": "Section 9.6 table row 'high' -> normal, coarse.",
+      "thresholdReasoning": [
+        "Why not fine+normal+coarse: that row belongs to weight_potential moderate, which was falsified by the satisfied base-plus-alternative anchor.",
+        "Why not fine+normal: that row belongs to weight_potential low, which fails on three independent legs."
+      ],
+      "counterSignals": [
+        "Silicone-microemulsion evidence shows fine hair can benefit from conditioning products; this is a soft preference with a stated reason, never 'fine hair must avoid masks' (section 9.2 wording rule)"
+      ],
+      "limitations": [
+        "Fully inherited uncertainty: if the LANOLIN R4b assignment is rejected, weight_potential falls to moderate and this field becomes fine + normal + coarse."
+      ]
+    },
+    "damageFit": {
+      "value": ["healthy", "moderately_damaged"],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Deterministic derivation from conditioning_level and the specialist-route test; a broad product prior, not a repair-efficacy claim.",
+      "rationale": "conditioning_level: high without any qualifying specialist route maps to exactly healthy + moderately_damaged. E2 ceiling inherited.",
+      "evidenceSignals": [
+        "conditioning_level = high",
+        "Specialist route absent: repair_support_level = low (below medium), bond_route = none, no corroborated exceptional protection, no exact-product test"
+      ],
+      "derivation": "Section 9.7 table row 'high without a qualifying specialist route'.",
+      "thresholdReasoning": [
+        "Why not moderately_damaged + highly_damaged: that row needs a qualifying specialist route. None of the four qualifying options (a) protein/peptide film route, (b) named bond chemistry, (c) exceptional corroborated protection, (d) exact-product test is present. The tail protein cluster is explicitly a non-qualifier.",
+        "Why not exactly healthy: that row belongs to conditioning_level low, which is falsified by two satisfied structural signals.",
+        "The specialist result replaces the general-high set; all three values are never emitted."
+      ],
+      "counterSignals": [
+        "Dense tail protein cluster is exactly the kind of leak the section 9.7 mask delta warns about; it was excluded"
+      ],
+      "limitations": [
+        "Inherits the conditioning_level uncertainty; the value is stable across the plausible alternative (moderate) because that row yields the same pair."
+      ]
+    },
+    "textureFit": {
+      "value": ["wavy", "curly", "coily"],
+      "confidence": "low",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Deterministic derivation from weight_potential plus a slip-route check; research-only, not consumed by matching today.",
+      "rationale": "weight_potential: high combined with a coherent R1 high-slip route maps to wavy + curly + coily under the section 9.8 table. E2 ceiling inherited.",
+      "evidenceSignals": [
+        "weight_potential = high",
+        "Coherent R1 slip route above the tail: two distinct cationics (4, 5) on a rank-2 fatty-alcohol base",
+        "No R3 cationic polymer anywhere in the list"
+      ],
+      "derivation": "Section 9.8 table row 'high-slip, high-deposition architecture (weight_potential high with a coherent high-slip R1/R3 route)'.",
+      "thresholdReasoning": [
+        "Why not straight+wavy+curly: that row is keyed to weight_potential moderate.",
+        "Why not straight+wavy: that row is keyed to weight_potential low.",
+        "The 'coherent high-slip R1/R3 route' conjunct is satisfied by R1 alone on a plain reading of the 'R1/R3' disjunction."
+      ],
+      "counterSignals": [
+        "Curl branding alone never determines the result - none is present here in any case"
+      ],
+      "limitations": [
+        "Confidence low, and this field is listed in uncertain_fields: section 9.8 states no fallback for the case 'weight_potential high but the high-slip route is not coherent', so a reviewer who judges a two-cationic base to be mere category baseline has no written row to land on. My reading (R1 alone satisfies the disjunction) is the permissive one."
+      ]
+    }
+  },
+  "bondRoute": {
+    "value": "none",
+    "token": null,
+    "rank": null
+  },
+  "uncertainFields": [
+    "conditioningLevel",
+    "weightPotential",
+    "primaryFocus",
+    "textureFit"
+  ],
+  "assumptionNotes": [
+    "QUATERNIUM-18 assumed to be a distinct long-chain cationic species for S1 and for the weight base, by analogy with the R1 anchors Distearyldimonium Chloride / Quaternium-87. It is not named in the standard's R1 list or in lexicon family 1.",
+    "LANOLIN assumed to be an R4b heavy occlusive lipid, by analogy with the lexicon family-3 heavy band entry Cera Alba. This single assignment carries weight_potential: high, and with it hair_thickness_fit and texture_fit.",
+    "SILK AMINO ACIDS and SODIUM LAUROYL OAT AMINO ACIDS treated as free-amino-acid class (R5 mask delta: free amino acids do not qualify). They are in the tail anyway, so the assignment is not load-bearing.",
+    "Placement 'Laengen und Spitzen' is not stated in the directions. Treated as non-disqualifying per the R8 mask delta (only an explicit whole-head/root instruction is a P5 deviation).",
+    "No claims summary was supplied. For this product no claim-permitted leg (shine corroboration, dual-tie break, bond claim trigger, weight conflict fallback, color_care corroboration) was live, so the gap changed no value.",
+    "Review triggers I would fire: none of the mask-specific triggers is engaged. low_confidence_field is close (texture_fit at low confidence) and is fired.",
+    "The packet's directions confidence is 'moderate' (aggregated retail copy, no verbatim primary fetch). Under section 2.5 / P5 that is a protocol-metadata sourcing weakness, not a classification input; a stamp would need the contact time re-sourced verbatim."
+  ]
+}

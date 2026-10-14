@@ -1,0 +1,9 @@
+# Scanner residual14 focused receipt
+
+Independent full21-file preservation review and root candidate/tool review support12 assertion transfers/subsumptions and2 duplicate SQL admission registrations. No production cleanup or retirement claimed.119→119→105 AST declarations; literal10-row typo table remains unchanged, yielding128→128→114 actual cases.98 unrelated callbacks, two heldF sites and two unchanged keepers stay exact; five keepers retain all original assertions. No new inputs/owner calls/table rows/skips.
+
+All three full native phases close exit0 with128/128/114 passes and zero failures/skips/cancellations/todos. All18 actual-owner controls pass clean1→intended ERR_ASSERTION/red1→owned byte-exact restore→clean1. Root read all18 complete fault TAPs: exact operator/message and first keeper assertion frame. SQL17/18 really reach count1!=2 at SQL keeper211; no migration/setup error is credited. Null storage field is NodeTAP `~`, operator==, explicit persistence message.
+
+Transfer directoryoperator-mutations-transfer-yeVtxk completionSHA77dd80d785b4e535c8414fa201287a169501b5744c7e7b39f2babd4283b4f941. Cut directoryoperator-apply-cut-cBdtwI reopens all54 logs and guards. Root native phase validators pass. Proposal manifest8f982b06fbe8e5481e90c5723c02ab18ebe9d26e46b4e5975f5937e849151048; tool pinsb1619bebc5540a7ee42e2ed0ec18431cc2f9a52c43c471b3cefe9290c1d04d5f. Original76 guards exact; current closure first-time pinning explicitly disposes unrelated oldFree dormant source pins without silently repinning originals.
+
+375 indexed artifacts11,083,361 bytes; indexSHAdfbc905b62313bfe9590d105d3a1fff24339613ff4db509f6b5198dce66ffe1e. This receipt is post-index. Fresh campaign census11,231 confirms661 net removals after the one-registration live coverage repair. LOC20,023 net, application9,387/tests10,636 before final formatting. Whole-tree coverage/CI including this batch remains pending;20% incomplete. No publication or production actions.

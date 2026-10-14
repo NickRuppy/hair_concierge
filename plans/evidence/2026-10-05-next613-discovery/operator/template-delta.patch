@@ -1,0 +1,282 @@
+--- approved-moderator/operator-guard.cjs
++++ discovery163/operator-guard.cjs
+@@ -5,7 +5,7 @@
+ const crypto = require('node:crypto')
+ const ROOT = '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning'
+ const BASE = '<TOOL_DIR>/operator'
+-const PROPOSAL = '/tmp/test-audit-moderator-fieldtest183'
++const PROPOSAL = '/tmp/test-audit-discovery-operational163'
+ const LOCK = '/tmp/test-audit-pruning-operator-lock'
+ const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex')
+ const fail = message => { throw Error(message) }
+@@ -83,36 +83,37 @@
+   guardArtifactsAndDependencies()
+   const evidence=readJSON(BASE+'-evidence.json'),candidates=readJSON(BASE+'-candidates.json'),controls=readJSON(BASE+'-controls-normalized.json')
+   const ts=require(ROOT+'/node_modules/typescript')
+-  if(evidence.root!==ROOT||evidence.head!==pins.head||evidence.branch!==pins.branch||candidates.length!==1||controls.length!==2||ts.version!==pins.typescriptVersion)fail('Proposal identity/count mismatch')
+-  const changedFile='tests/personal-plan-field-test-ui.test.tsx',snapshots={},counts={before:0,transfer:0,cut:0};let unrelated=0,unchangedRetained=0
+-  const keepers=new Map(candidates.map(c=>[c.keeper.name,c]));if(keepers.size!==1)fail('One canonical keeper required')
++  if(evidence.root!==ROOT||evidence.head!==pins.head||evidence.branch!==pins.branch||candidates.length!==5||controls.length!==5||ts.version!==pins.typescriptVersion)fail('Proposal identity/count mismatch')
++  const snapshots={},counts={before:0,transfer:0,cut:0};let unrelated=0
++  const keeperKey=c=>c.file+'\0'+c.keeper.name
++  const keepers=new Map(candidates.map(c=>[keeperKey(c),c]));if(keepers.size!==5)fail('Five distinct keepers required')
++  function assertionTokens(text){const scan=ts.createScanner(ts.ScriptTarget.Latest,true,ts.LanguageVariant.Standard,text),out=[];let t;while((t=scan.scan())!==ts.SyntaxKind.EndOfFileToken)out.push(scan.getTokenText());return out.join('\0')}
++  function assertionConditions(file,statement){const sf=parse(ts,file,statement),out=[];function walk(n){if(ts.isCallExpression(n)&&n.expression.getText(sf).startsWith('assert.')){const name=n.expression.getText(sf),arity=name==='assert.ok'?1:2;out.push(name+'('+n.arguments.slice(0,arity).map(a=>assertionTokens(a.getText(sf).replace(/textSequence\(real\)/g,'textSequence(realEmptyScreen())'))).join(',')+')')}ts.forEachChild(n,walk)}walk(sf);return out.sort()}
+   for(const file of Object.keys(evidence.phases.before)){
+     snapshots[file]={}
+     for(const phase of Object.keys(counts)){
+-      const bytes=fs.readFileSync(file===changedFile?BASE+'-'+phase+'.ts':path.join(ROOT,file)),rows=registrations(ts,file,bytes.toString())
++      const bytes=fs.readFileSync(evidence.snapshotPaths[phase][file]),rows=registrations(ts,file,bytes.toString())
+       if(sha(bytes)!==evidence.phases[phase][file])fail('Phase bytes: '+file)
+       snapshots[file][phase]={bytes,rows};counts[phase]+=rows.size
+     }
+     const {before,transfer,cut}=snapshots[file];let reconstructed=before.bytes.toString()
+-    if(file===changedFile){
+-      for(const c of candidates){if(before.rows.get(c.keeper.name)?.statement!==c.keeper.body||sha(c.keeper.body)!==c.keeper.sha256||before.rows.get(c.donor.name)?.statement!==c.donor.body||sha(c.donor.body)!==c.donor.sha256)fail('Original callback identity')}
+-      for(const c of keepers.values())if(c.keeper.body!==c.keeperAfter)reconstructed=replaceOnce(reconstructed,c.keeper.body,c.keeperAfter,'keeper union')
+-    }
++    const local=candidates.filter(c=>c.file===file)
++    for(const c of local){if(before.rows.get(c.keeper.name)?.statement!==c.keeper.body||sha(c.keeper.body)!==c.keeper.sha256||before.rows.get(c.donor.name)?.statement!==c.donor.body||sha(c.donor.body)!==c.donor.sha256)fail('Original callback identity');reconstructed=replaceOnce(reconstructed,c.keeper.body,c.keeperAfter,'keeper union')}
+     if(reconstructed!==transfer.bytes.toString())fail('Transfer changed unrelated bytes')
+-    if(file===changedFile){for(const c of candidates)reconstructed=replaceOnce(reconstructed,c.donor.body+'\n\n','',c.id);reconstructed=replaceOnce(reconstructed,evidence.removedImport,'','unused direct leaf import')}
++    for(const c of local)reconstructed=replaceOnce(reconstructed,c.donor.body,'',c.id)
+     if(reconstructed!==cut.bytes.toString())fail('Cut changed unrelated bytes')
+     for(const [name,row]of before.rows){const t=transfer.rows.get(name),k=cut.rows.get(name)
+-      if(file===changedFile&&candidates.some(c=>c.donor.name===name)){if(k||t?.statement!==row.statement)fail('Donor phase mismatch');continue}
+-      const candidate=file===changedFile?keepers.get(name):null
+-      if(candidate&&candidate.keeper.body!==candidate.keeperAfter){if(t?.statement!==candidate.keeperAfter||k?.statement!==candidate.keeperAfter)fail('Keeper phase mismatch');continue}
+-      if(t?.statement!==row.statement||k?.statement!==row.statement)fail('Unrelated callback changed');unrelated++;unchangedRetained++
++      if(local.some(c=>c.donor.name===name)){if(k||t?.statement!==row.statement)fail('Donor phase mismatch');continue}
++      const candidate=keepers.get(file+'\0'+name)
++      if(candidate){if(t?.statement!==candidate.keeperAfter||k?.statement!==candidate.keeperAfter)fail('Keeper phase mismatch');continue}
++      if(t?.statement!==row.statement||k?.statement!==row.statement)fail('Unrelated callback changed');unrelated++
+     }
+   }
+-  if(Object.keys(snapshots).length!==27||JSON.stringify(counts)!=='{"before":183,"transfer":183,"cut":182}'||unrelated!==181||[...keepers.values()].filter(c=>c.keeper.body!==c.keeperAfter).length!==1)fail('Phase conservation mismatch')
+-  for(const c of candidates)for(const phase of ['transfer','cut'])if(snapshots[c.file][phase].rows.get(c.keeper.name)?.statement!==c.keeperAfter)fail('All candidate union agreement')
+-  for(const c of candidates){const b=snapshots[c.file].before.rows,k=b.get(c.keeper.name),d=b.get(c.donor.name);for(const p of ['transfer','cut']){const actual=snapshots[c.file][p].rows.get(c.keeper.name).assertions.map(a=>a.text);if(JSON.stringify(actual)!==JSON.stringify([...k.assertions,...d.assertions].map(a=>a.text)))fail('Full ordered assertion union lost')}}
+-  const held=readJSON(PROPOSAL+'/judgments.json').filter(j=>j.mark==='F');if(held.length!==13)fail('Held F count')
+-  for(const j of held)for(const phase of Object.keys(counts))if(sha(snapshots[j.file][phase].rows.get(j.title)?.callback||'')!==j.callbackSha256)fail('Held F changed')
++  if(Object.keys(snapshots).length!==24||JSON.stringify(counts)!=='{"before":163,"transfer":163,"cut":158}'||unrelated!==153)fail('Phase conservation mismatch')
++  for(const c of candidates){const b=snapshots[c.file].before.rows,k=b.get(c.keeper.name),d=b.get(c.donor.name);const expected=[...assertionConditions(c.file,k.statement),...assertionConditions(c.file,d.statement)].sort();for(const phase of ['transfer','cut']){const actual=assertionConditions(c.file,snapshots[c.file][phase].rows.get(c.keeper.name).statement);if(JSON.stringify(actual)!==JSON.stringify(expected))fail('Complete assertion condition union lost')}}
++  const held=readJSON(PROPOSAL+'/ledger.json').filter(j=>j.classification==='F');if(held.length!==1)fail('Held F count')
++  for(const j of held)for(const phase of Object.keys(counts))if(sha(snapshots[j.file][phase].rows.get(JSON.parse(j.title))?.statement||'')!==j.sha256)fail('Held F changed')
++  const unchangedRetained=unrelated
+   function guards(overrides={}) {
+     identity(pins)
+     for(const [file,hash]of Object.entries(overrides))if(!controls.some(c=>c.file===file&&c.mutatedSha256===hash))fail("Unowned source override")
+@@ -138,15 +139,20 @@
+   for(const phase of ['before','transfer','cut'])if([...ctx.snapshots[c.test.file][phase].rows.keys()].filter(n=>pattern.test(n)).length!==1)fail('Exactly one keeper must match in every phase')
+   const original=fs.readFileSync(path.join(ROOT,c.file))
+   if(sha(original)!==c.sourceSha256)fail('Fault owner drift: '+c.id)
+-  const text=original.toString(),sf=parse(ctx.ts,c.file,text),found=[]
+-  function walk(n){if(ctx.ts.isFunctionDeclaration(n)&&n.name?.text===c.anchor.scope)found.push(n);ctx.ts.forEachChild(n,walk)}walk(sf)
+-  if(found.length!==1||sha(found[0].getText(sf))!==c.anchor.scopeSha256||found[0].getText(sf).split(c.from).length!==2)fail('Unique function anchor drift')
+-  const n=found[0],mutated=Buffer.from(text.slice(0,n.getStart(sf))+replaceOnce(n.getText(sf),c.from,c.to,c.id)+text.slice(n.end))
++  const text=original.toString(),sf=parse(ctx.ts,c.file,text)
++  let mutated
++  if(c.anchor.kind==='function'){
++    const found=[];function walk(n){if(ctx.ts.isFunctionDeclaration(n)&&n.name?.text===c.anchor.scope)found.push(n);ctx.ts.forEachChild(n,walk)}walk(sf)
++    if(found.length!==1||sha(found[0].getText(sf))!==c.anchor.scopeSha256||found[0].getText(sf).split(c.from).length!==2)fail('Unique function anchor drift')
++    const n=found[0];mutated=Buffer.from(text.slice(0,n.getStart(sf))+replaceOnce(n.getText(sf),c.from,c.to,c.id)+text.slice(n.end))
++  }else if(c.anchor.kind==='file'&&c.anchor.scopeSha256===sha(original))mutated=Buffer.from(replaceOnce(text,c.from,c.to,c.id))
++  else fail('Unsupported source anchor')
+   parse(ctx.ts,c.file,mutated.toString())
+   if(sha(mutated)!==c.mutatedSha256)fail('Prospective fault hash mismatch')
+   for(const phase of ['transfer','cut']){
+     const row=ctx.snapshots[c.test.file][phase].rows.get(c.test.name),o=c.oracles[phase]
+-    if(sha(row?.statement||'')!==o.keeperSha256||!row?.assertions.some(a=>a.startLine===o.startLine&&a.text===o.text))fail('Fault oracle drift')
++    const matches=row?.assertions.filter(a=>a.text===o.text)||[]
++    if(sha(row?.statement||'')!==o.keeperSha256||matches.length!==1||matches[0].startLine!==o.startLine)fail('Callback-scoped fault oracle drift')
+   }
+   return {original,mutated}
+ }
+--- approved-moderator/operator-edit.cjs
++++ discovery163/operator-edit.cjs
+@@ -9,7 +9,7 @@
+ for(const c of context.controls)g.fault(context,c)
+ const initial=context.current()
+ if(mode==='check'){
+- console.log(JSON.stringify({mode,phase:initial.phase,counts:context.counts,unrelatedCallbacks:context.unrelated,unchangedRetainedCallbacks:context.unchangedRetained,parsedPhaseFiles:81,sourceControlsParsed:2,readsetGuards:context.pins.readset.length,dependencyFiles:context.pins.dependencies.length,repositoryWrites:0,childrenStarted:0},null,2));process.exit(0)
++ console.log(JSON.stringify({mode,phase:initial.phase,counts:context.counts,unrelatedCallbacks:context.unrelated,unchangedRetainedCallbacks:context.unchangedRetained,parsedPhaseFiles:72,sourceControlsParsed:5,readsetGuards:context.pins.readset.length,dependencyFiles:context.pins.dependencies.length,repositoryWrites:0,childrenStarted:0},null,2));process.exit(0)
+ }
+ const from=mode==='transfer'?'before':'transfer'
+ if(initial.phase!==from)g.fail('Expected '+from+', found '+initial.phase)
+@@ -39,5 +39,6 @@
+   try{g.atomicCAS(o.file,o.target,o.original);rollback.push({file:o.file,restored:g.sha(fs.readFileSync(path.join(g.ROOT,o.file)))===g.sha(o.original)})}
+   catch(e){rollback.push({file:o.file,restored:false,error:String(e),note:'Concurrent bytes preserved; original backup retained'})}
+  }
+- if(dir)fs.writeFileSync(path.join(dir,'failure.json'),JSON.stringify({error:String(error),rollback},null,2)+'\n',{flag:'wx'});throw error
++ let restoredGuardError=null;try{context.current()}catch(e){restoredGuardError=String(e)}
++ if(dir)fs.writeFileSync(path.join(dir,'failure.json'),JSON.stringify({error:String(error),rollback,restoredGuardError},null,2)+'\n',{flag:'wx'});throw error
+ }finally{unlock()}
+--- approved-moderator/operator-proof.cjs
++++ discovery163/operator-proof.cjs
+@@ -23,11 +23,11 @@
+  if(!/^[a-f0-9]{64}$/.test(completionSHA||''))g.fail('Main must provide exact completion SHA256')
+  const raw=fs.readFileSync(path.join(dir,'complete.json'));if(g.sha(raw)!==completionSHA)g.fail('Completion receipt hash mismatch')
+  const complete=JSON.parse(raw),receiptBytes=fs.readFileSync(path.join(dir,'receipt.json'))
+- if(complete.pinsSHA!==pinSHA||complete.root!==g.ROOT||complete.head!==ctx.pins.head||complete.branch!==ctx.pins.branch||complete.phase!=='transfer'||complete.verified!==2||complete.cleanRuns!==4||g.sha(receiptBytes)!==complete.receiptSHA256)g.fail('Incomplete/wrong transfer proof')
+- if(JSON.stringify(complete.controlIds)!==JSON.stringify(ctx.controls.map(c=>c.id)))g.fail('Required two controls absent or out of order')
++ if(complete.pinsSHA!==pinSHA||complete.root!==g.ROOT||complete.head!==ctx.pins.head||complete.branch!==ctx.pins.branch||complete.phase!=='transfer'||complete.verified!==5||complete.cleanRuns!==10||g.sha(receiptBytes)!==complete.receiptSHA256)g.fail('Incomplete/wrong transfer proof')
++ if(JSON.stringify(complete.controlIds)!==JSON.stringify(ctx.controls.map(c=>c.id)))g.fail('Required five controls absent or out of order')
+  for(const[file,hash]of Object.entries(complete.allTestHashes||{})){if(!ctx.snapshots[file]||hash!==g.sha(ctx.snapshots[file].transfer.bytes))g.fail('Receipt test phase mismatch')}
+- if(Object.keys(complete.allTestHashes||{}).length!==27)g.fail('Full cohort proof missing')
+- const records=JSON.parse(receiptBytes);if(records.length!==2)g.fail('Two records required')
++ if(Object.keys(complete.allTestHashes||{}).length!==24)g.fail('Full cohort proof missing')
++ const records=JSON.parse(receiptBytes);if(records.length!==5)g.fail('Five records required')
+  function reload(record,label,c){
+   const p=path.join(dir,c.id+'-'+label+'.tap')
+   if(record.log!==p||!record.logSHA256||g.sha(fs.readFileSync(p))!==record.logSHA256)g.fail('TAP path/hash drift')
+@@ -42,6 +42,6 @@
+   for(const readset of ctx.pins.readset)if(r.readsetBefore?.[readset.file]!==readset.sha||r.readsetAfter?.[readset.file]!==readset.sha)g.fail('Readset proof mismatch: '+c.id)
+   if(!clean(c,reload(r.before,'before',c))||!intended(c,reload(r.fault,'fault',c),'transfer').accepted||!clean(c,reload(r.after,'after',c)))g.fail('Required clean1/red1/restored clean1 not proved: '+c.id)
+  }
+- return {dir,completionSHA,verified:2,logFiles:6,phase:'transfer'}
++ return {dir,completionSHA,verified:5,logFiles:15,phase:'transfer'}
+ }
+ module.exports={parseTAP,named,clean,intended,validateTransferReceipt}
+--- approved-moderator/operator-run-controls.cjs
++++ discovery163/operator-run-controls.cjs
+@@ -10,7 +10,7 @@
+ if(!controls.length)g.fail('Unknown control ID')
+ const prepared=new Map(context.controls.map(c=>[c.id,g.fault(context,c)])),initial=context.current()
+ if(mode==='check'){
+-  console.log(JSON.stringify({mode,phase:initial.phase,controls:controls.length,allUniqueOwnersParsed:true,allControlsParsed:prepared.size===2,phaseOracles:'exact assertion startLine and text in transfer/cut',selectedTestCount:1,repositoryWrites:0,runtimeRuns:0,childrenStarted:0},null,2));process.exit(0)
++  console.log(JSON.stringify({mode,phase:initial.phase,controls:controls.length,allUniqueOwnersParsed:true,allControlsParsed:prepared.size===5,phaseOracles:'exact assertion startLine and text in transfer/cut',selectedTestCount:1,repositoryWrites:0,runtimeRuns:0,childrenStarted:0},null,2));process.exit(0)
+ }
+ if(!['transfer','cut'].includes(initial.phase))g.fail('Transfer/cut phase required; no original false-pass claim')
+ for(const key of ['TRIAL_ADMISSION_MUTANT','TRIAL_ACCESS_MUTANT','NODE_OPTIONS','TSX_TSCONFIG_PATH'])if(process.env[key])g.fail('Existing harness mutant is active: '+key)
+@@ -52,7 +52,7 @@
+ ;(async()=>{
+  try{
+   dir=fs.mkdtempSync(g.BASE+'-mutations-'+phase+'-')
+-  // Snapshot ALL27 test originals and ALL unique mutant-owner originals before first child/write.
++  // Snapshot ALL24 test originals and ALL unique mutant-owner originals before first child/write.
+   ensurePhase()
+   const originals=new Map(Object.entries(initial.bytes))
+   for(const control of context.controls)originals.set(control.file,prepared.get(control.id).original)
+@@ -93,6 +93,6 @@
+   const complete={phase,verified:receipts.length,controlIds:receipts.map(r=>r.id),cleanRuns:receipts.length*2,root:g.ROOT,head:context.pins.head,branch:context.pins.branch,pinsSHA:PIN_SHA,receiptSHA256:g.sha(fs.readFileSync(path.join(dir,'receipt.json'))),allTestHashes:Object.fromEntries(Object.entries(final.bytes).map(([f,b])=>[f,g.sha(b)])),sourceGuards:context.pins.readset}
+   const completeBytes=JSON.stringify(complete,null,2)+'\n'
+   fs.writeFileSync(path.join(dir,'complete.json'),completeBytes,{flag:'wx'})
+-  console.log(JSON.stringify({receiptDir:dir,completionSHA256:g.sha(completeBytes),verified:receipts.length,eligibleForCut:phase==='transfer'&&receipts.length===2},null,2))
++  console.log(JSON.stringify({receiptDir:dir,completionSHA256:g.sha(completeBytes),verified:receipts.length,eligibleForCut:phase==='transfer'&&receipts.length===5},null,2))
+  }finally{killOwnedGroup('SIGKILL');process.off('SIGINT',stop);process.off('SIGTERM',stop);unlock()}
+ })().catch(error=>{record();if(dir)fs.writeFileSync(path.join(dir,'failure.json'),JSON.stringify({error:String(error),interrupted},null,2)+'\n',{flag:'wx'});console.error(error);process.exitCode=1})
+--- approved-moderator/operator-readonly-preload.cjs
++++ discovery163/operator-readonly-preload.cjs
+@@ -2,12 +2,20 @@
+ // Static-only audit harness: reject filesystem mutations and child creation.
+ const fs=require('node:fs'),cp=require('node:child_process'),wt=require('node:worker_threads'),mod=require('node:module')
+ let writes=0,children=0
++const standardOutputWrites=Object.fromEntries(['write','writeSync','writev','writevSync'].map(n=>[n,fs[n]]))
+ for(const name of['writeFileSync','appendFileSync','renameSync','unlinkSync','mkdirSync','rmdirSync','rmSync','copyFileSync','truncateSync','chmodSync','chownSync','symlinkSync','linkSync','utimesSync','mkdtempSync'])fs[name]=()=>{writes++;throw Error('Read-only check attempted '+name)}
+-for(const name of ['open','cp','cpSync','writeFile','appendFile','rename','unlink','mkdir','rmdir','rm','copyFile','truncate','ftruncate','ftruncateSync','chmod','fchmod','fchmodSync','chown','fchown','fchownSync','symlink','link','utimes','futimes','futimesSync','mkdtemp','createWriteStream'])fs[name]=()=>{writes++;throw Error('Read-only check attempted '+name)}
+-for(const name of ['write','writeSync','writev','writevSync']){const original=fs[name];fs[name]=function(fd,...args){if(fd!==1&&fd!==2){writes++;throw Error('Read-only check attempted '+name+' fd '+fd)}return original.call(this,fd,...args)}}
++for(const name of ['write','writeSync','writev','writevSync','writeFile','appendFile','rename','unlink','mkdir','rmdir','rm','copyFile','truncate','ftruncate','ftruncateSync','chmod','fchmod','fchmodSync','chown','fchown','fchownSync','symlink','link','utimes','futimes','futimesSync','mkdtemp','createWriteStream'])fs[name]=()=>{writes++;throw Error('Read-only check attempted '+name)}
++for(const [name,original]of Object.entries(standardOutputWrites))fs[name]=function(fd,...args){if(fd===1||fd===2)return original.call(this,fd,...args);writes++;throw Error('Read-only check attempted file descriptor write '+name)}
+ const originalOpen=fs.openSync
+ fs.openSync=function(file,flags,...rest){if(typeof flags!=='string'||!['r','rs'].includes(flags)){writes++;throw Error('Read-only check attempted open '+flags)}return originalOpen.call(this,file,flags,...rest)}
+ for(const name of['writeFile','appendFile','rename','unlink','mkdir','rmdir','rm','copyFile','truncate','chmod','chown','symlink','link','utimes','mkdtemp','open'])fs.promises[name]=async()=>{writes++;throw Error('Read-only check attempted async '+name)}
+ for(const name of['spawn','spawnSync','exec','execSync','execFile','execFileSync','fork'])cp[name]=()=>{children++;throw Error('Read-only check attempted child '+name)}
+ wt.Worker=function(){children++;throw Error('Read-only check attempted worker')};mod.syncBuiltinESMExports()
+ process.on('exit',()=>process.stdout.write(JSON.stringify({staticReadOnlyEnforced:true,attemptedWrites:writes,attemptedChildren:children})+'\n'))
++
++const Module=require('node:module'),load=Module._load
++let ownerImports=0,networkCalls=0
++Module._load=function(request,parent,isMain){const resolved=Module._resolveFilename(request,parent,isMain);if(typeof resolved==='string'&&/^\/Users\/nick\/AI_work\/hair_conscierge\/\.worktrees\/test-audit-pruning\/(?:src|tests|scripts)\//.test(resolved)){ownerImports++;throw Error('Read-only check attempted product/test import')}return load.call(this,request,parent,isMain)}
++for(const name of ['node:http','node:https'])for(const method of ['request','get'])require(name)[method]=()=>{networkCalls++;throw Error('Read-only check attempted network')}
++globalThis.fetch=()=>{networkCalls++;throw Error('Read-only check attempted fetch')}
++process.on('exit',()=>process.stdout.write(JSON.stringify({attemptedOwnerImports:ownerImports,attemptedNetworkCalls:networkCalls})+'\n'))
+--- approved-moderator/prepare-pins.cjs
++++ discovery163/prepare-pins.cjs
+@@ -1,17 +1,18 @@
+ 'use strict'
+ // One-shot TMP-only authoring. No subprocesses, owner/test imports, compiler or repository writes.
+ const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),cp=require('node:child_process'),{createRequire}=require('node:module')
+-const R='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning',D=__dirname,P='/tmp/test-audit-moderator-fieldtest183',OLD='/tmp/test-audit-offer87-tools-j3gv5ax6/operator-pins.json'
++const R='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning',D=__dirname,P='/tmp/test-audit-discovery-operational163',OLD='/tmp/test-audit-offer87-tools-j3gv5ax6/operator-pins.json'
+ let attemptedRepositoryWrites=0,attemptedChildren=0
+ for(const n of ['spawn','spawnSync','exec','execSync','execFile','execFileSync','fork'])cp[n]=()=>{attemptedChildren++;throw Error('Preparation child forbidden: '+n)}
+ for(const n of ['writeFileSync','appendFileSync','mkdirSync','chmodSync','unlinkSync','rmSync','rmdirSync','truncateSync','utimesSync','mkdtempSync']){const fn=fs[n];fs[n]=function(p,...args){if(typeof p!=='string'||!path.resolve(p).startsWith(D+'/')){attemptedRepositoryWrites++;throw Error('Preparation write outside owned TMP: '+n)}return fn.call(this,p,...args)}}
+ for(const n of ['renameSync','copyFileSync','symlinkSync','linkSync']){fs[n]=()=>{attemptedRepositoryWrites++;throw Error('Preparation '+n+' forbidden')}}
+ const sha=b=>crypto.createHash('sha256').update(b).digest('hex'),read=p=>JSON.parse(fs.readFileSync(p)),fail=m=>{throw Error(m)},write=(n,b)=>fs.writeFileSync(D+'/'+n,b,{flag:'wx',mode:0o444})
+-const manifestSHA='736ce42f2cc6dcb915680facd3c0e0b52bb2c22a4fe5616a4abfe53425089288',receiptSHA='baabc8f3a6c49edfa848a1b99915929a34bec147f96283682470cf3e588d3dab'
+-if(sha(fs.readFileSync(P+'/manifest.json'))!==manifestSHA||sha(fs.readFileSync(P+'/handoff-receipt.json'))!==receiptSHA)fail('Authorized proposal drift')
+-const M=read(P+'/manifest.json'),F='tests/personal-plan-field-test-ui.test.tsx',old=read(OLD)
+-for(const p of M.artifacts)if(sha(fs.readFileSync(P+'/'+p.path))!==p.sha256)fail('Proposal artifact drift '+p.path)
+-for(const p of M.readSet)if(sha(fs.readFileSync(R+'/'+p.file))!==p.sha256)fail('Original readset drift '+p.file)
++const manifestSHA='fdaac17a025a772f2127cdd2d69a1885ee53585a12e58564f8d776e4b49bb2e5',receiptSHA='11310743bda3f5c022c81a3bafd091c8ccc537909ecaf128c6acc69ffa639d90'
++if(sha(fs.readFileSync(P+'/manifest.json'))!==manifestSHA||sha(fs.readFileSync(P+'/artifact-hashes.json'))!==receiptSHA)fail('Authorized proposal drift')
++const M=read(P+'/manifest.json'),old=read(OLD),proposalArtifacts=read(P+'/artifact-hashes.json')
++for(const [name,hash]of Object.entries(proposalArtifacts))if(sha(fs.readFileSync(P+'/'+name))!==hash)fail('Proposal artifact drift '+name)
++for(const p of [...M.guards,...M.dependencies])if(sha(fs.readFileSync(R+'/'+p.file))!==p.sha256)fail('Original readset drift '+p.file)
++if(M.guards.length!==81||M.dependencies.length!==8||M.files.length!==24)fail('Original guard counts')
+ const dispositionPath='/tmp/test-audit-next607-shared-config-disposition.json',dispositionSHA='38f962fed8680aaa75a2723158c25d37669e4042e44164d878a6556463143705'
+ if(sha(fs.readFileSync(dispositionPath))!==dispositionSHA)fail('Main metadata disposition drift')
+ const previousIdentity=JSON.parse(JSON.stringify(old.identityFiles)),config=old.identityFiles.find(p=>p.path===old.commonDir+'/config')
+@@ -22,24 +23,25 @@
+ for(const p of old.identityFiles){const current=pin(p.path);if(current.sha!==p.sha||current.realpath!==p.realpath)fail('Git identity drift '+p.path)}
+ const node={version:process.version,realpath:fs.realpathSync(process.execPath),sha:sha(fs.readFileSync(process.execPath))};if(JSON.stringify(node)!==JSON.stringify(old.node))fail('Tested Node runtime drift')
+ const g=require('./operator-guard.cjs'),ts=require(R+'/node_modules/typescript'),req=createRequire(R+'/package.json')
+-const evidence={root:R,head:M.HEAD,branch:M.branch,removedImport:'import { PersonalPlanFieldTestEnded } from "../src/components/personal-plan-field-test/personal-plan-field-test-ended"\n',phases:{}}
+-for(const phase of ['before','transfer','cut']){evidence.phases[phase]={};for(const f of M.phaseFiles.filter(p=>p.phase===phase)){const b=fs.readFileSync(P+'/snapshots/'+phase+'/'+f.file);if(sha(b)!==f.sha256)fail('Frozen snapshot drift');g.registrations(ts,f.file,b.toString());evidence.phases[phase][f.file]=f.sha256;if(f.file===F)write('operator-'+phase+'.ts',b)}}
++const evidence={root:R,head:M.head,branch:M.branch,phases:{},snapshotPaths:{}}
++for(const phase of ['before','transfer','cut']){evidence.phases[phase]={};evidence.snapshotPaths[phase]={};for(const f of M.files){const p=f.phases[phase],bytes=fs.readFileSync(p.path);if(sha(bytes)!==p.sha256)fail('Frozen snapshot drift');g.registrations(ts,f.file,bytes.toString());evidence.phases[phase][f.file]=p.sha256;evidence.snapshotPaths[phase][f.file]=p.path}}
+ write('operator-evidence.json',JSON.stringify(evidence,null,2)+'\n')
+-const b=fs.readFileSync(D+'/operator-before.ts','utf8'),t=fs.readFileSync(D+'/operator-transfer.ts','utf8'),br=g.registrations(ts,F,b),tr=g.registrations(ts,F,t)
+-const candidates=read(P+'/candidates.json').map(c=>{const donor=br.get(c.donor.title),keeper=br.get(c.keeper.title),after=tr.get(c.keeper.title);if(!donor||!keeper||!after)fail('Candidate names');return{id:c.id,file:F,donor:{name:c.donor.title,body:donor.statement,sha256:sha(donor.statement)},keeper:{name:c.keeper.title,body:keeper.statement,sha256:sha(keeper.statement)},keeperAfter:after.statement,union:c.assertionUnion,inputReadset:c.equivalence}})
++const candidates=read(P+'/candidates.json').map(c=>{const before=fs.readFileSync(evidence.snapshotPaths.before[c.file],'utf8'),transfer=fs.readFileSync(evidence.snapshotPaths.transfer[c.file],'utf8'),br=g.registrations(ts,c.file,before),tr=g.registrations(ts,c.file,transfer),donor=[...br.values()].find(r=>r.statement===c.donorBefore),keeper=[...br.values()].find(r=>r.statement===c.keeperBefore);if(!donor||!keeper||tr.get(keeper.name)?.statement!==c.keeperAfter)fail('Candidate bodies');return{id:c.id,file:c.file,donor:{name:donor.name,body:donor.statement,sha256:sha(donor.statement)},keeper:{name:keeper.name,body:keeper.statement,sha256:sha(keeper.statement)},keeperAfter:c.keeperAfter,inputReadset:c.equivalence}})
+ write('operator-candidates.json',JSON.stringify(candidates,null,2)+'\n')
+ const controls=read(P+'/controls.json').map(c=>{
+- const text=fs.readFileSync(R+'/'+c.owner,'utf8'),sf=g.parse(ts,c.owner,text),found=[];function walk(n){if(ts.isFunctionDeclaration(n)&&n.name&&n.getText(sf).includes(c.anchor))found.push(n);ts.forEachChild(n,walk)}walk(sf)
+- if(found.length!==1||text.split(c.anchor).length!==2||sha(text)!==c.ownerSha256||sha(text.replace(c.anchor,c.replacement))!==c.mutatedSha256)fail('Unique owner fault drift')
+- g.parse(ts,c.owner,text.replace(c.anchor,c.replacement));const oracles={}
+- for(const phase of ['transfer','cut']){const source=fs.readFileSync(D+'/operator-'+phase+'.ts','utf8'),row=g.registrations(ts,F,source).get(c.testName),line=c.expectedFirstTestFrame[phase].line;if(!row?.assertions.some(a=>a.startLine===line&&a.text===c.assertionText))fail('Intended exact assertion');oracles[phase]={startLine:line,text:c.assertionText,keeperSha256:sha(row.statement),testFileSha256:sha(source)}}
+- const escaped=c.testName.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
+- return{id:c.id,file:c.owner,sourceSha256:c.ownerSha256,mutatedSha256:c.mutatedSha256,from:c.anchor,to:c.replacement,anchor:{kind:'function',scope:found[0].name.text,scopeSha256:sha(found[0].getText(sf)),expectedOccurrences:1},test:{file:F,name:c.testName},command:['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-name-pattern=^'+escaped+'$',F],oracles,expectedOperator:c.operator,errorMessageIncludes:['The input','match the regular expression',c.expectedMessageContains],intendedAssertion:c.reason,proofKind:'transferred leaf output assertion'}
++ const text=fs.readFileSync(R+'/'+c.owner,'utf8'),sf=g.parse(ts,c.owner,text),found=[];function walk(n){if(ts.isFunctionDeclaration(n)&&n.name&&n.getText(sf).includes(c.search))found.push(n);ts.forEachChild(n,walk)}walk(sf)
++ if(found.length>1||text.split(c.search).length!==2||sha(text)!==c.originalSha256||sha(text.replace(c.search,c.replace))!==c.mutantSha256)fail('Unique owner fault drift')
++ g.parse(ts,c.owner,text.replace(c.search,c.replace));const oracles={}
++ for(const phase of ['transfer','cut']){const source=fs.readFileSync(evidence.snapshotPaths[phase][c.testFile],'utf8'),row=g.registrations(ts,c.testFile,source).get(c.title),o=c.phaseOracles[phase];const matches=row?.assertions.filter(a=>a.text===o.assertion)||[];if(matches.length!==1||matches[0].startLine!==o.line)fail('Intended callback-scoped assertion');oracles[phase]={startLine:o.line,text:o.assertion,keeperSha256:sha(row.statement),testFileSha256:sha(source)}}
++ const escaped=c.title.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
++ const messages=c.id==='C1'?['Expected values to be strictly deep-equal:','Deine Produkte','Deine Pflegeprodukte']:[c.expected.message]
++ if(messages.some(x=>typeof x!=='string'||!x))fail('Explicit diagnostic required')
++ return{id:c.id,file:c.owner,sourceSha256:c.originalSha256,mutatedSha256:c.mutantSha256,from:c.search,to:c.replace,anchor:found.length===1?{kind:'function',scope:found[0].name.text,scopeSha256:sha(found[0].getText(sf)),expectedOccurrences:1}:{kind:'file',scopeSha256:sha(text),expectedOccurrences:1},test:{file:c.testFile,name:c.title},command:['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-name-pattern=^'+escaped+'$',c.testFile],oracles,expectedOperator:c.expected.operator,errorMessageIncludes:messages,intendedAssertion:c.phaseOracles.transfer.assertion,proofKind:'Accepted original assertion condition at actual owner boundary; representative source fault'}
+ })
++if(controls.length!==5)fail('Five controls')
+ write('operator-controls-normalized.json',JSON.stringify(controls,null,2)+'\n')
+-// Phase-aware test bytes cover all27; fixed readset retains every non-test original guard.
+-const cohort=new Set(M.phaseFiles.filter(p=>p.phase==='before').map(p=>p.file)),readset=new Map(M.readSet.filter(p=>!cohort.has(p.file)).map(p=>[p.file,p.sha256]))
+-const queue=[F,'tests/server-only-register.cjs'],seen=new Set(),edges=[],externals=new Set(),typeOnly=new Set(),nonliteral=[]
++const cohort=new Set(M.files.map(p=>p.file)),readset=new Map([...M.guards,...M.dependencies].filter(p=>!cohort.has(p.file)).map(p=>[p.file,p.sha256]))
++const selectedTests=[...new Set(candidates.map(c=>c.file))],queue=[...selectedTests,'tests/server-only-register.cjs'],seen=new Set(),edges=[],externals=new Set(),typeOnly=new Set(),nonliteral=[]
+ const opts={moduleResolution:ts.ModuleResolutionKind.Bundler,module:ts.ModuleKind.ESNext,allowJs:true,resolveJsonModule:true,baseUrl:R,paths:{'@/*':['src/*']}}
+ while(queue.length){const file=queue.shift();if(seen.has(file))continue;seen.add(file);if(seen.size>1500)fail('Selected local import closure unexpectedly large');const text=fs.readFileSync(R+'/'+file,'utf8');if(!cohort.has(file)){const existing=readset.get(file);if(existing&&existing!==sha(text))fail('Original selected source drift');readset.set(file,sha(text))}if(!/\.(?:[cm]?[jt]sx?)$/.test(file))continue;const sf=g.parse(ts,file,text)
+  function add(spec,kind){if(spec.startsWith('node:'))return;if(!spec.startsWith('.')&&!spec.startsWith('@/')){(kind==='type-only'?typeOnly:externals).add(spec);return}const full=ts.resolveModuleName(spec,R+'/'+file,opts,ts.sys).resolvedModule?.resolvedFileName;if(!full||!full.startsWith(R+'/')||full.includes('/node_modules/'))fail('Unresolved selected local import '+file+' '+spec);const dest=path.relative(R,full);edges.push({from:file,to:dest,spec,kind});queue.push(dest)}
+@@ -54,16 +56,16 @@
+ const dependencyTrees=[...treeNames].filter(n=>fs.existsSync(R+'/node_modules/'+n)).sort().map(n=>({path:R+'/node_modules/'+n,names:g.inventory(R+'/node_modules/'+n)}))
+ for(const tree of dependencyTrees)for(const n of tree.names)dependencyFiles.add(tree.path+'/'+n)
+ for(const f of ['typescript/package.json','typescript/lib/typescript.js','next/package.json','next/server.js','next/headers.js','next/navigation.js','next/image.js','next/link.js','next/dist/api/headers.js','next/dist/api/navigation.js','next/dist/api/image.js','next/dist/api/link.js','server-only/package.json','server-only/index.js'])if(fs.existsSync(R+'/node_modules/'+f))dependencyFiles.add(R+'/node_modules/'+f)
+-for(const p of M.readSet)if(p.file.startsWith('node_modules/'))dependencyFiles.add(R+'/'+p.file)
++for(const p of [...M.guards,...M.dependencies])if(p.file.startsWith('node_modules/'))dependencyFiles.add(R+'/'+p.file)
+ if(dependencyFiles.size>4000)fail('Bounded dependency pin budget exceeded')
+-const closure={selectedTest:F,localFiles:[...seen].sort(),edges,runtimeExternals:[...externals].sort(),typeOnlyExternals:[...typeOnly].sort(),externalPins,nonliteralImports:nonliteral,limits:'Static selected keeper import closure includes conservatively followed local type imports and literal dynamic imports. Hashes are not human read credit. Selected runtime distribution/type/loader trees only, no whole node_modules crawl. Nonliteral imports are disclosed; unrelated26-file runtime closure and all transitive third-party runtime code are not exhaustively certified.'}
++const closure={selectedTests,localFiles:[...seen].sort(),edges,runtimeExternals:[...externals].sort(),typeOnlyExternals:[...typeOnly].sort(),externalPins,nonliteralImports:nonliteral,limits:'Static selected keeper import closure includes conservatively followed local type imports and literal dynamic imports. Hashes are not human read credit. Selected runtime distribution/type/loader trees only, no whole node_modules crawl. Nonliteral imports are disclosed; unrelated20-file runtime closure and all transitive third-party runtime code are not exhaustively certified.'}
+ write('operator-selected-closure.json',JSON.stringify(closure,null,2)+'\n')
+-const artifactHashes={};for(const n of ['manifest.json','handoff-receipt.json',...M.artifacts.map(p=>p.path)])artifactHashes[P+'/'+n]=sha(fs.readFileSync(P+'/'+n))
+-for(const p of M.phaseFiles)artifactHashes[P+'/snapshots/'+p.phase+'/'+p.file]=p.sha256
+-for(const n of ['operator-guard.cjs','operator-proof.cjs','operator-readonly-preload.cjs','operator-controls-normalized.json','operator-candidates.json','operator-evidence.json','operator-selected-closure.json','operator-before.ts','operator-transfer.ts','operator-cut.ts','prepare-pins.cjs'])artifactHashes[D+'/'+n]=sha(fs.readFileSync(D+'/'+n))
+-for(const n of ['/tmp/test-audit-moderator183-independent-preservation.md','/tmp/test-audit-moderator183-independent-static.json',dispositionPath])artifactHashes[n]=sha(fs.readFileSync(n))
++const artifactHashes={};for(const name of ['manifest.json','artifact-hashes.json',...Object.keys(proposalArtifacts)])artifactHashes[P+'/'+name]=sha(fs.readFileSync(P+'/'+name))
++for(const f of M.files)for(const phase of ['before','transfer','cut'])artifactHashes[f.phases[phase].path]=f.phases[phase].sha256
++for(const n of ['operator-guard.cjs','operator-proof.cjs','operator-readonly-preload.cjs','operator-controls-normalized.json','operator-candidates.json','operator-evidence.json','operator-selected-closure.json','prepare-pins.cjs','adapt.py','make-preparer.py'])artifactHashes[D+'/'+n]=sha(fs.readFileSync(D+'/'+n))
++artifactHashes[dispositionPath]=sha(fs.readFileSync(dispositionPath))
+ const entrypointTemplateHashes={};for(const n of ['operator-edit.cjs','operator-run-controls.cjs'])entrypointTemplateHashes[D+'/'+n]=sha(fs.readFileSync(D+'/'+n))
+-const pins={root:R,head:M.HEAD,branch:M.branch,gitDir:old.gitDir,commonDir:old.commonDir,identityFiles:old.identityFiles,previousIdentityFiles:previousIdentity,metadataDisposition,node,typescriptVersion:ts.version,originalReadset111:M.readSet,readset:[...readset].sort(([a],[b])=>a.localeCompare(b)).map(([file,sha])=>({file,sha})),dependencies:[...dependencyFiles].sort().map(pin),dependencyTrees,repositoryTrees:[],artifactHashes,entrypointTemplateHashes,limits:closure.limits}
++const pins={root:R,head:M.head,branch:M.branch,gitDir:old.gitDir,commonDir:old.commonDir,identityFiles:old.identityFiles,previousIdentityFiles:previousIdentity,metadataDisposition,node,typescriptVersion:ts.version,originalReadset81:M.guards,originalPackageManifests8:M.dependencies,readset:[...readset].sort(([a],[b])=>a.localeCompare(b)).map(([file,sha])=>({file,sha})),dependencies:[...dependencyFiles].sort().map(pin),dependencyTrees,repositoryTrees:[],artifactHashes,entrypointTemplateHashes,limits:closure.limits}
+ const raw=JSON.stringify(pins,null,2)+'\n',pinSHA=sha(raw);write('operator-pins.json',raw)
+ for(const n of ['operator-edit.cjs','operator-run-controls.cjs'])fs.writeFileSync(D+'/'+n,fs.readFileSync(D+'/'+n,'utf8').replace("const PIN_SHA='PIN_SHA_PLACEHOLDER'","const PIN_SHA='"+pinSHA+"'"))
+-console.log(JSON.stringify({directory:D,pinSHA,originalReadsets:111,phaseAwareTests:27,fixedReadsets:readset.size,localClosure:seen.size,dependencies:pins.dependencies.length,dependencyTrees:dependencyTrees.length,nonliteralImports:nonliteral,controls:2,repositoryWrites:0,attemptedRepositoryWrites,childrenStarted:0,attemptedChildren,metadataDisposition},null,2))
++console.log(JSON.stringify({directory:D,pinSHA,originalReadsets:81,originalPackages:8,phaseAwareTests:24,fixedReadsets:readset.size,localClosure:seen.size,dependencies:pins.dependencies.length,dependencyTrees:dependencyTrees.length,nonliteralImports:nonliteral,controls:5,repositoryWrites:0,attemptedRepositoryWrites,childrenStarted:0,attemptedChildren,metadataDisposition},null,2))

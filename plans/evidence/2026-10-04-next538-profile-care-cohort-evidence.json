@@ -1,0 +1,581 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "counts": {
+    "before": 30,
+    "R": 27,
+    "F": 0,
+    "C": 0,
+    "D": 3,
+    "after": 27
+  },
+  "cohort": [
+    {
+      "file": "tests/profile-plan-overlay.test.ts",
+      "sha256": "1beaaee100327de0d9f087eaa339d2b9aee0f61299f97e0ed7c5f00fc335e9fb",
+      "originalText": "import assert from \"node:assert/strict\"\nimport test from \"node:test\"\n\nimport { selectPlanProductRows } from \"../src/app/profile/page\"\nimport { PROFILE_FIELD_CONFIG } from \"../src/lib/profile/section-config\"\nimport type { HairProfile } from \"../src/lib/types\"\n\nfunction getField(key: string) {\n  const field = PROFILE_FIELD_CONFIG.find((entry) => entry.key === key)\n  assert.ok(field, `expected field config for key \"${key}\"`)\n  return field\n}\n\nconst towelMaterialField = getField(\"towel_material\")\nconst towelTechniqueField = getField(\"towel_technique\")\nconst stylingToolsField = getField(\"styling_tools\")\nconst nightProtectionField = getField(\"night_protection\")\nconst dryingMethodField = getField(\"drying_method\")\n\ntest(\"towel material falls back to plan answer\", () => {\n  const value = towelMaterialField.getValue(null, { towel: { material: \"frottee\" } })\n  assert.equal(value, \"Frottee-Handtuch\")\n})\n\ntest(\"legacy value wins over plan answer\", () => {\n  const value = towelMaterialField.getValue({ towel_material: \"mikrofaser\" } as HairProfile, {\n    towel: { material: \"frottee\" },\n  })\n  assert.equal(value, \"Mikrofaser-Handtuch\")\n})\n\ntest(\"empty additionalHeatTools reads as answered none\", () => {\n  assert.equal(stylingToolsField.getValue(null, { additionalHeatTools: [] }), \"Keine Hitzetools\")\n})\n\ntest(\"empty nightProtection reads as answered none\", () => {\n  assert.equal(nightProtectionField.getValue(null, { nightProtection: [] }), \"Nichts davon\")\n})\n\ntest(\"drying routes join labels\", () => {\n  assert.equal(dryingMethodField.getValue(null, { dryingRoutes: [\"air_dry\"] }), \"Lufttrocknen\")\n})\n\ntest(\"present-but-empty drying routes reads as answered none\", () => {\n  assert.equal(dryingMethodField.getValue(null, { dryingRoutes: [] }), \"Nichts davon\")\n})\n\ntest(\"undefined drying routes stays null\", () => {\n  assert.equal(dryingMethodField.getValue(null, {}), null)\n})\n\ntest(\"unanswered plan leaves value null\", () => {\n  assert.equal(towelMaterialField.getValue(null, null), null)\n  assert.equal(towelMaterialField.getValue(null, {}), null)\n  assert.equal(stylingToolsField.getValue(null, {}), null)\n  assert.equal(nightProtectionField.getValue(null, {}), null)\n  assert.equal(dryingMethodField.getValue(null, {}), null)\n})\n\ntest(\"towel technique falls back to plan answer\", () => {\n  assert.equal(\n    towelTechniqueField.getValue(null, {\n      towel: { material: \"frottee\", technique: \"gentle_press\" },\n    }),\n    \"Sanft ausdrücken / scrunchen\",\n  )\n})\n\ntest(\"towel material and technique resolve as a unit — legacy technique signal blocks plan material\", () => {\n  // Legacy has a technique but no material; plan has a conflicting no_towel material. The two\n  // fields must not mix sources: legacy wins for both, so no plan value leaks into material.\n  const profile = { towel_material: null, towel_technique: \"gentle_press\" } as HairProfile\n  const plan = { towel: { material: \"no_towel\" as const } }\n\n  assert.equal(towelTechniqueField.getValue(profile, plan), \"Sanft ausdrücken / scrunchen\")\n  assert.equal(towelMaterialField.getValue(profile, plan), null)\n})\n\ntest(\"towel material and technique resolve as a unit — pure plan no_towel\", () => {\n  const plan = { towel: { material: \"no_towel\" as const } }\n\n  assert.equal(\n    towelMaterialField.getValue(null, plan),\n    \"Kein Handtuch: Ich lasse meine Haare tropfnass trocknen\",\n  )\n  assert.equal(towelTechniqueField.getValue(null, plan), \"Keine Trocknungstechnik\")\n})\n\ntest(\"plan-derived no_towel material implies no technique needed\", () => {\n  const value = towelTechniqueField.getValue(null, { towel: { material: \"no_towel\" } })\n  assert.equal(value, \"Keine Trocknungstechnik\")\n})\n\ntest(\"plan additional heat tools map to Alltag/Styling labels\", () => {\n  assert.deepEqual(stylingToolsField.getValue(null, { additionalHeatTools: [\"straightener\"] }), [\n    \"Glätteisen\",\n  ])\n})\n\ntest(\"plan night protection maps to existing labels\", () => {\n  assert.deepEqual(nightProtectionField.getValue(null, { nightProtection: [\"pineapple\"] }), [\n    \"Pineapple\",\n  ])\n})\n\nconst samplePlanProduct = {\n  categoryLabel: \"Shampoo\",\n  name: \"Testprodukt\",\n  purposeLabel: \"Reinigung\",\n  state: \"owned\" as const,\n  cadenceLabel: \"2x pro Woche\",\n}\n\ntest(\"selectPlanProductRows falls back to routine products when legacy rows are empty\", () => {\n  assert.deepEqual(selectPlanProductRows(0, [samplePlanProduct]), [samplePlanProduct])\n})\n\ntest(\"selectPlanProductRows stays null when legacy rows exist\", () => {\n  assert.equal(selectPlanProductRows(1, [samplePlanProduct]), null)\n})\n\ntest(\"selectPlanProductRows stays null without an active routine\", () => {\n  assert.equal(selectPlanProductRows(0, null), null)\n})\n\ntest(\"selectPlanProductRows falls through to the empty state for a present-but-empty routine\", () => {\n  assert.equal(selectPlanProductRows(0, []), null)\n})\n",
+      "declarations": [
+        {
+          "id": "0:0",
+          "title": "towel material falls back to plan answer",
+          "line": 20,
+          "start": 717,
+          "end": 904,
+          "statement": "test(\"towel material falls back to plan answer\", () => {\n  const value = towelMaterialField.getValue(null, { towel: { material: \"frottee\" } })\n  assert.equal(value, \"Frottee-Handtuch\")\n})",
+          "callbackBody": "{\n  const value = towelMaterialField.getValue(null, { towel: { material: \"frottee\" } })\n  assert.equal(value, \"Frottee-Handtuch\")\n}",
+          "callbackSha256": "51e6b73dd25c9dc768abe9cd0efaa0fa3d2c2cf07941cb732e8d0e7e2079a84d",
+          "statementSha256": "904abd412560c8ff3f4351224c347f1374458906d26ac1490563c2107bc33f34",
+          "class": "R",
+          "reason": "Plan-only frottee material label; unlike legacy precedence and no-towel inputs."
+        },
+        {
+          "id": "0:1",
+          "title": "legacy value wins over plan answer",
+          "line": 25,
+          "start": 906,
+          "end": 1140,
+          "statement": "test(\"legacy value wins over plan answer\", () => {\n  const value = towelMaterialField.getValue({ towel_material: \"mikrofaser\" } as HairProfile, {\n    towel: { material: \"frottee\" },\n  })\n  assert.equal(value, \"Mikrofaser-Handtuch\")\n})",
+          "callbackBody": "{\n  const value = towelMaterialField.getValue({ towel_material: \"mikrofaser\" } as HairProfile, {\n    towel: { material: \"frottee\" },\n  })\n  assert.equal(value, \"Mikrofaser-Handtuch\")\n}",
+          "callbackSha256": "9eedee813937ee1c4ef006c0131d34d52c9f49a443b02ca4ae17bede2adae08c",
+          "statementSha256": "6fddaaa888695aaf98956668118635227943a7edf33f278e03e6c6bcaff4f6c3",
+          "class": "R",
+          "reason": "Actual legacy mikrofaser takes precedence over conflicting frottee plan; independent precedence branch."
+        },
+        {
+          "id": "0:2",
+          "title": "empty additionalHeatTools reads as answered none",
+          "line": 32,
+          "start": 1142,
+          "end": 1307,
+          "statement": "test(\"empty additionalHeatTools reads as answered none\", () => {\n  assert.equal(stylingToolsField.getValue(null, { additionalHeatTools: [] }), \"Keine Hitzetools\")\n})",
+          "callbackBody": "{\n  assert.equal(stylingToolsField.getValue(null, { additionalHeatTools: [] }), \"Keine Hitzetools\")\n}",
+          "callbackSha256": "582b51361ad1b8a4fffa818929bdb4f95662acfb3cb935a35bd30e2865b053a1",
+          "statementSha256": "37aa5ffde6856be02c5b36949857593e1320cf3016d9d3ff5bbdd86e9c26a195",
+          "class": "R",
+          "reason": "Explicit empty additionalHeatTools is answered none; absent tools must stay null."
+        },
+        {
+          "id": "0:3",
+          "title": "empty nightProtection reads as answered none",
+          "line": 36,
+          "start": 1309,
+          "end": 1465,
+          "statement": "test(\"empty nightProtection reads as answered none\", () => {\n  assert.equal(nightProtectionField.getValue(null, { nightProtection: [] }), \"Nichts davon\")\n})",
+          "callbackBody": "{\n  assert.equal(nightProtectionField.getValue(null, { nightProtection: [] }), \"Nichts davon\")\n}",
+          "callbackSha256": "81727b2a76472f98e94bc83e34033d6e3f9e9c516f6c134a14c141b84ec90a0d",
+          "statementSha256": "ef7b6ac07c9faf99a8a983061ad936ca5dc82692bb359e286a1fd7a00b067de0",
+          "class": "R",
+          "reason": "Explicit empty nightProtection is answered none; absent nightProtection must stay null."
+        },
+        {
+          "id": "0:4",
+          "title": "drying routes join labels",
+          "line": 40,
+          "start": 1467,
+          "end": 1607,
+          "statement": "test(\"drying routes join labels\", () => {\n  assert.equal(dryingMethodField.getValue(null, { dryingRoutes: [\"air_dry\"] }), \"Lufttrocknen\")\n})",
+          "callbackBody": "{\n  assert.equal(dryingMethodField.getValue(null, { dryingRoutes: [\"air_dry\"] }), \"Lufttrocknen\")\n}",
+          "callbackSha256": "9f56e30e3a3b92035a8982116e238e96948a38e7a29cb206550e4ea254db683b",
+          "statementSha256": "db0b36e2bff6c3bf185e5026b6dec8a4dda43b360a818067b0795446b8517b5d",
+          "class": "R",
+          "reason": "Nonempty air_dry plan array projects through dedicated drying-route label map."
+        },
+        {
+          "id": "0:5",
+          "title": "present-but-empty drying routes reads as answered none",
+          "line": 44,
+          "start": 1609,
+          "end": 1769,
+          "statement": "test(\"present-but-empty drying routes reads as answered none\", () => {\n  assert.equal(dryingMethodField.getValue(null, { dryingRoutes: [] }), \"Nichts davon\")\n})",
+          "callbackBody": "{\n  assert.equal(dryingMethodField.getValue(null, { dryingRoutes: [] }), \"Nichts davon\")\n}",
+          "callbackSha256": "c5a61cfed3c71b1f5906b9c6808fbf55201cecb05299b98c606abede8e9d791a",
+          "statementSha256": "bb484ac3229335e9bb32b8ee22e0c5975605a02b7d85e0b328679a25a5eaa087",
+          "class": "R",
+          "reason": "Present empty dryingRoutes is answered none; retain distinction from missing routes."
+        },
+        {
+          "id": "D1",
+          "title": "undefined drying routes stays null",
+          "line": 48,
+          "start": 1771,
+          "end": 1883,
+          "statement": "test(\"undefined drying routes stays null\", () => {\n  assert.equal(dryingMethodField.getValue(null, {}), null)\n})",
+          "callbackBody": "{\n  assert.equal(dryingMethodField.getValue(null, {}), null)\n}",
+          "callbackSha256": "246a2061279fce797de996a0c90855eeca9871be9b4316e1e388535e421affba",
+          "statementSha256": "649bbbaa8c20b467c6604809478bc2d02f0fec03b1860687fd1a98c7a245e2c9",
+          "class": "D",
+          "reason": "D1: Exact same dryingMethodField.getValue(null, {}) call and null assertion already last assertion in callback 8.",
+          "keeper": "0:7"
+        },
+        {
+          "id": "0:7",
+          "title": "unanswered plan leaves value null",
+          "line": 52,
+          "start": 1885,
+          "end": 2239,
+          "statement": "test(\"unanswered plan leaves value null\", () => {\n  assert.equal(towelMaterialField.getValue(null, null), null)\n  assert.equal(towelMaterialField.getValue(null, {}), null)\n  assert.equal(stylingToolsField.getValue(null, {}), null)\n  assert.equal(nightProtectionField.getValue(null, {}), null)\n  assert.equal(dryingMethodField.getValue(null, {}), null)\n})",
+          "callbackBody": "{\n  assert.equal(towelMaterialField.getValue(null, null), null)\n  assert.equal(towelMaterialField.getValue(null, {}), null)\n  assert.equal(stylingToolsField.getValue(null, {}), null)\n  assert.equal(nightProtectionField.getValue(null, {}), null)\n  assert.equal(dryingMethodField.getValue(null, {}), null)\n}",
+          "callbackSha256": "a5ed7175cc64acbde7f19611e069f284171f16c3751ba9fc2af3e9c229d37728",
+          "statementSha256": "6e8610afd2813782b193f5c8435486e176f8bd44c3bfddd8384a433deb64ee37",
+          "class": "R",
+          "reason": "Keeper D1; independently checks null plan and absent per-field properties using five existing calls."
+        },
+        {
+          "id": "0:8",
+          "title": "towel technique falls back to plan answer",
+          "line": 60,
+          "start": 2241,
+          "end": 2471,
+          "statement": "test(\"towel technique falls back to plan answer\", () => {\n  assert.equal(\n    towelTechniqueField.getValue(null, {\n      towel: { material: \"frottee\", technique: \"gentle_press\" },\n    }),\n    \"Sanft ausdrücken / scrunchen\",\n  )\n})",
+          "callbackBody": "{\n  assert.equal(\n    towelTechniqueField.getValue(null, {\n      towel: { material: \"frottee\", technique: \"gentle_press\" },\n    }),\n    \"Sanft ausdrücken / scrunchen\",\n  )\n}",
+          "callbackSha256": "34843dcaf26732589c562dc334ff2d080ce2b53ac586dd198cfd751571016eac",
+          "statementSha256": "1ee5adbcdcad3e65042529943f09777da982adae8797e32a1c6c082dd969bb45",
+          "class": "R",
+          "reason": "Explicit plan gentle_press technique label is different branch from no_towel implicit technique."
+        },
+        {
+          "id": "0:9",
+          "title": "towel material and technique resolve as a unit — legacy technique signal blocks plan material",
+          "line": 69,
+          "start": 2473,
+          "end": 3083,
+          "statement": "test(\"towel material and technique resolve as a unit — legacy technique signal blocks plan material\", () => {\n  // Legacy has a technique but no material; plan has a conflicting no_towel material. The two\n  // fields must not mix sources: legacy wins for both, so no plan value leaks into material.\n  const profile = { towel_material: null, towel_technique: \"gentle_press\" } as HairProfile\n  const plan = { towel: { material: \"no_towel\" as const } }\n\n  assert.equal(towelTechniqueField.getValue(profile, plan), \"Sanft ausdrücken / scrunchen\")\n  assert.equal(towelMaterialField.getValue(profile, plan), null)\n})",
+          "callbackBody": "{\n  // Legacy has a technique but no material; plan has a conflicting no_towel material. The two\n  // fields must not mix sources: legacy wins for both, so no plan value leaks into material.\n  const profile = { towel_material: null, towel_technique: \"gentle_press\" } as HairProfile\n  const plan = { towel: { material: \"no_towel\" as const } }\n\n  assert.equal(towelTechniqueField.getValue(profile, plan), \"Sanft ausdrücken / scrunchen\")\n  assert.equal(towelMaterialField.getValue(profile, plan), null)\n}",
+          "callbackSha256": "9891d1eb915e6b0bf7896be72be856223955d5cb4ff6f0e87b081e657a763381",
+          "statementSha256": "c6c0f1a720f8f9afe454055ffef0d4c5a99951378caa8b245640d9623473177c",
+          "class": "R",
+          "reason": "Legacy technique-only signal blocks conflicting plan material for the whole towel unit."
+        },
+        {
+          "id": "0:10",
+          "title": "towel material and technique resolve as a unit — pure plan no_towel",
+          "line": 79,
+          "start": 3085,
+          "end": 3444,
+          "statement": "test(\"towel material and technique resolve as a unit — pure plan no_towel\", () => {\n  const plan = { towel: { material: \"no_towel\" as const } }\n\n  assert.equal(\n    towelMaterialField.getValue(null, plan),\n    \"Kein Handtuch: Ich lasse meine Haare tropfnass trocknen\",\n  )\n  assert.equal(towelTechniqueField.getValue(null, plan), \"Keine Trocknungstechnik\")\n})",
+          "callbackBody": "{\n  const plan = { towel: { material: \"no_towel\" as const } }\n\n  assert.equal(\n    towelMaterialField.getValue(null, plan),\n    \"Kein Handtuch: Ich lasse meine Haare tropfnass trocknen\",\n  )\n  assert.equal(towelTechniqueField.getValue(null, plan), \"Keine Trocknungstechnik\")\n}",
+          "callbackSha256": "db65d83719e6310567d160856b6476b60901c9a119d33f40b223612a01edd117",
+          "statementSha256": "49645f0668394e0f1d57bd35c3704d4ec92444a4940848b7a86d68eef450b04d",
+          "class": "R",
+          "reason": "Keeper D2; null legacy profile, plan material no_towel, no technique; existing actual technique call equals donor."
+        },
+        {
+          "id": "D2",
+          "title": "plan-derived no_towel material implies no technique needed",
+          "line": 89,
+          "start": 3446,
+          "end": 3660,
+          "statement": "test(\"plan-derived no_towel material implies no technique needed\", () => {\n  const value = towelTechniqueField.getValue(null, { towel: { material: \"no_towel\" } })\n  assert.equal(value, \"Keine Trocknungstechnik\")\n})",
+          "callbackBody": "{\n  const value = towelTechniqueField.getValue(null, { towel: { material: \"no_towel\" } })\n  assert.equal(value, \"Keine Trocknungstechnik\")\n}",
+          "callbackSha256": "56c850ba0a7146d7ed7a70f4036a33d6d01fac53fc71cfb61ef912f603a45430",
+          "statementSha256": "1f8648b40fb768fde5d2cd70e6c8b0e532831a2f377efcc492a797e8351ee410",
+          "class": "D",
+          "reason": "D2: Same runtime input {towel:{material:\"no_towel\"}}, null legacy profile and expected technique as callback 11.",
+          "keeper": "0:10"
+        },
+        {
+          "id": "0:12",
+          "title": "plan additional heat tools map to Alltag/Styling labels",
+          "line": 94,
+          "start": 3662,
+          "end": 3857,
+          "statement": "test(\"plan additional heat tools map to Alltag/Styling labels\", () => {\n  assert.deepEqual(stylingToolsField.getValue(null, { additionalHeatTools: [\"straightener\"] }), [\n    \"Glätteisen\",\n  ])\n})",
+          "callbackBody": "{\n  assert.deepEqual(stylingToolsField.getValue(null, { additionalHeatTools: [\"straightener\"] }), [\n    \"Glätteisen\",\n  ])\n}",
+          "callbackSha256": "79bc89a58f0bedb9cae1bb4746a8193dbb79b5e5956d6a8ea09f9e9a65e04cdf",
+          "statementSha256": "558db025eef1425958044a94a7e182a70f839f979ac43431c9be7e007925a43e",
+          "class": "R",
+          "reason": "Straightener plan key uses dedicated heat-tool label mapping; not equivalent to empty heat tools."
+        },
+        {
+          "id": "0:13",
+          "title": "plan night protection maps to existing labels",
+          "line": 100,
+          "start": 3859,
+          "end": 4039,
+          "statement": "test(\"plan night protection maps to existing labels\", () => {\n  assert.deepEqual(nightProtectionField.getValue(null, { nightProtection: [\"pineapple\"] }), [\n    \"Pineapple\",\n  ])\n})",
+          "callbackBody": "{\n  assert.deepEqual(nightProtectionField.getValue(null, { nightProtection: [\"pineapple\"] }), [\n    \"Pineapple\",\n  ])\n}",
+          "callbackSha256": "29502df0c1a45508c2ec70e68ab447835697c3814bf3c4a3cca1937cb5b41760",
+          "statementSha256": "f7b9bd4216a9992951d053f0f1a4a0c14cbc0858fa76c1b3e13165a83936a54e",
+          "class": "R",
+          "reason": "Nonempty pineapple plan array maps labels; not equivalent to explicit empty or legacy accessory."
+        },
+        {
+          "id": "0:14",
+          "title": "selectPlanProductRows falls back to routine products when legacy rows are empty",
+          "line": 114,
+          "start": 4211,
+          "end": 4396,
+          "statement": "test(\"selectPlanProductRows falls back to routine products when legacy rows are empty\", () => {\n  assert.deepEqual(selectPlanProductRows(0, [samplePlanProduct]), [samplePlanProduct])\n})",
+          "callbackBody": "{\n  assert.deepEqual(selectPlanProductRows(0, [samplePlanProduct]), [samplePlanProduct])\n}",
+          "callbackSha256": "09ff58d27e629e0c59c82e7d88e06b3b0fe68d880c5b6476b1af5b5433a3c7b7",
+          "statementSha256": "dbde0e89207105ace4a07022c273f4328ba1e8c50f946acd6c4a3df780157570",
+          "class": "R",
+          "reason": "Nonempty routine products fall back when legacy row count zero; only success branch."
+        },
+        {
+          "id": "0:15",
+          "title": "selectPlanProductRows stays null when legacy rows exist",
+          "line": 118,
+          "start": 4398,
+          "end": 4540,
+          "statement": "test(\"selectPlanProductRows stays null when legacy rows exist\", () => {\n  assert.equal(selectPlanProductRows(1, [samplePlanProduct]), null)\n})",
+          "callbackBody": "{\n  assert.equal(selectPlanProductRows(1, [samplePlanProduct]), null)\n}",
+          "callbackSha256": "918e37dae7ef3de4008d2a640f0bb9be2fecef6de4333146e37676d0ef8c8607",
+          "statementSha256": "caf4e73ed27122257d97d36654569ccd1605505e3c91c5d4932686da22ad4cad",
+          "class": "R",
+          "reason": "Legacy row count one suppresses nonempty routine fallback; independent precedence."
+        },
+        {
+          "id": "0:16",
+          "title": "selectPlanProductRows stays null without an active routine",
+          "line": 122,
+          "start": 4542,
+          "end": 4672,
+          "statement": "test(\"selectPlanProductRows stays null without an active routine\", () => {\n  assert.equal(selectPlanProductRows(0, null), null)\n})",
+          "callbackBody": "{\n  assert.equal(selectPlanProductRows(0, null), null)\n}",
+          "callbackSha256": "9ead5837850e508007b3513d3b37e14909eb720d1eb39f21a4cef61e4f62b2ba",
+          "statementSha256": "36b5a4bee7b45bd5b14ea4915e176d60c0af32dd1fd14d2031894e6e5667e08a",
+          "class": "R",
+          "reason": "Null routine means no active routine; preserve explicit null input."
+        },
+        {
+          "id": "0:17",
+          "title": "selectPlanProductRows falls through to the empty state for a present-but-empty routine",
+          "line": 126,
+          "start": 4674,
+          "end": 4830,
+          "statement": "test(\"selectPlanProductRows falls through to the empty state for a present-but-empty routine\", () => {\n  assert.equal(selectPlanProductRows(0, []), null)\n})",
+          "callbackBody": "{\n  assert.equal(selectPlanProductRows(0, []), null)\n}",
+          "callbackSha256": "a8f2f3a57e3f863b166d098ebd722a0455256d902d5d5eacd75c36c29e018f1b",
+          "statementSha256": "6552daaed7298feec5695fa008925299745e75bfcf5af1968de7d15c06f505a9",
+          "class": "R",
+          "reason": "Present empty routine array must not show a blank Personal Plan badge; distinct from null input."
+        }
+      ],
+      "cut": {
+        "path": "/tmp/profile-care-cohort-profile-plan-overlay.test.ts",
+        "sha256": "b1cb5a06d5dac4ffc0197efd4b497ae6c0ad649448c814d1fd614a3c191f5c21",
+        "count": 16
+      }
+    },
+    {
+      "file": "tests/profile-section-config.test.ts",
+      "sha256": "c9f38b596e41ed06a4b9d4e38d67f859ee7aa8e9fc4b717d48127dc82379fd6f",
+      "originalText": "import assert from \"node:assert/strict\"\nimport test from \"node:test\"\n\nimport { deriveDesiredVolumeFromGoals } from \"../src/lib/hair-profile/derived\"\nimport { PROFILE_FIELD_CONFIG } from \"../src/lib/profile/section-config\"\nimport type { HairProfile } from \"../src/lib/types\"\n\nfunction makeProfile(overrides: Partial<HairProfile> = {}): HairProfile {\n  return {\n    id: \"hp_test\",\n    user_id: \"user_test\",\n    hair_texture: null,\n    thickness: null,\n    hair_length: null,\n    density: null,\n    concerns: [],\n    products_used: null,\n    shampoo_frequency: null,\n    heat_styling: null,\n    styling_tools: null,\n    goals: [],\n    cuticle_condition: null,\n    protein_moisture_balance: null,\n    scalp_type: null,\n    scalp_condition: null,\n    chemical_treatment: [],\n    desired_volume: null,\n    routine_preference: null,\n    current_routine_products: null,\n    towel_material: null,\n    towel_technique: null,\n    drying_method: null,\n    brush_type: null,\n    night_protection: null,\n    uses_heat_protection: false,\n    additional_notes: null,\n    conversation_memory: null,\n    created_at: \"2026-06-15T00:00:00.000Z\",\n    updated_at: \"2026-06-15T00:00:00.000Z\",\n    ...overrides,\n  }\n}\n\ntest(\"profile shows no towel technique as an answered editable value\", () => {\n  const towelTechniqueField = PROFILE_FIELD_CONFIG.find((field) => field.key === \"towel_technique\")\n\n  assert.ok(towelTechniqueField)\n  assert.deepEqual(towelTechniqueField.editTarget, {\n    kind: \"onboarding\",\n    step: \"towel_technique\",\n  })\n  assert.equal(\n    towelTechniqueField.getValue(\n      makeProfile({\n        towel_material: \"no_towel\",\n        towel_technique: null,\n      }),\n    ),\n    \"Keine Trocknungstechnik\",\n  )\n})\n\ntest(\"profile quiz section includes editable hair length after density\", () => {\n  const quizFields = PROFILE_FIELD_CONFIG.filter((field) => field.sectionKey === \"quiz\")\n  const densityIndex = quizFields.findIndex((field) => field.key === \"density\")\n  const hairLengthField = quizFields[densityIndex + 1]\n\n  assert.notEqual(densityIndex, -1)\n  assert.equal(hairLengthField?.key, \"hair_length\")\n  assert.equal(hairLengthField.label, \"Haarlänge\")\n  assert.deepEqual(hairLengthField.editTarget, { kind: \"quiz\" })\n  assert.equal(hairLengthField.getValue(makeProfile({ hair_length: \"long\" })), \"Lang\")\n})\n\ntest(\"profile routine section shows length tip accessory night protection label\", () => {\n  const nightProtectionField = PROFILE_FIELD_CONFIG.find(\n    (field) => field.key === \"night_protection\",\n  )\n\n  assert.ok(nightProtectionField)\n  assert.deepEqual(\n    nightProtectionField.getValue(makeProfile({ night_protection: [\"length_tip_accessory\"] })),\n    [\"Längen-/Spitzenschutz (z. B. HairHOMIE)\"],\n  )\n})\n\ntest(\"profile routine section distinguishes unanswered brush type from explicit none\", () => {\n  const brushTypeField = PROFILE_FIELD_CONFIG.find((field) => field.key === \"brush_type\")\n\n  assert.ok(brushTypeField)\n  assert.equal(brushTypeField.getValue(makeProfile({ brush_type: null })), null)\n  assert.equal(brushTypeField.getValue(makeProfile({ brush_type: [] })), \"Keine regelmäßige Bürste\")\n  assert.deepEqual(brushTypeField.getValue(makeProfile({ brush_type: [\"paddle\", \"round\"] })), [\n    \"Paddle-Bürste\",\n    \"Rundbürste\",\n  ])\n})\n\ntest(\"goals edit derives persisted desired volume from selected goals\", () => {\n  assert.equal(deriveDesiredVolumeFromGoals([\"volume\"], null), \"more\")\n  assert.equal(deriveDesiredVolumeFromGoals([\"less_volume\"], null), \"less\")\n  assert.equal(deriveDesiredVolumeFromGoals([\"shine\"], null), null)\n  assert.equal(deriveDesiredVolumeFromGoals([], null), null)\n})\n",
+      "declarations": [
+        {
+          "id": "1:0",
+          "title": "profile shows no towel technique as an answered editable value",
+          "line": 44,
+          "start": 1195,
+          "end": 1710,
+          "statement": "test(\"profile shows no towel technique as an answered editable value\", () => {\n  const towelTechniqueField = PROFILE_FIELD_CONFIG.find((field) => field.key === \"towel_technique\")\n\n  assert.ok(towelTechniqueField)\n  assert.deepEqual(towelTechniqueField.editTarget, {\n    kind: \"onboarding\",\n    step: \"towel_technique\",\n  })\n  assert.equal(\n    towelTechniqueField.getValue(\n      makeProfile({\n        towel_material: \"no_towel\",\n        towel_technique: null,\n      }),\n    ),\n    \"Keine Trocknungstechnik\",\n  )\n})",
+          "callbackBody": "{\n  const towelTechniqueField = PROFILE_FIELD_CONFIG.find((field) => field.key === \"towel_technique\")\n\n  assert.ok(towelTechniqueField)\n  assert.deepEqual(towelTechniqueField.editTarget, {\n    kind: \"onboarding\",\n    step: \"towel_technique\",\n  })\n  assert.equal(\n    towelTechniqueField.getValue(\n      makeProfile({\n        towel_material: \"no_towel\",\n        towel_technique: null,\n      }),\n    ),\n    \"Keine Trocknungstechnik\",\n  )\n}",
+          "callbackSha256": "9b75ee13ce6fb11f6578d4e1ad5690a2167b5cf21736e14589ba2db23d71fb9e",
+          "statementSha256": "580a3434deae86ddd444999e0ca9bce45e5f8d43029647758ccf3a6b2964b057",
+          "class": "R",
+          "reason": "Legacy no_towel profile has an editable target and implicit technique; keep separate from null-profile plan overlay."
+        },
+        {
+          "id": "1:1",
+          "title": "profile quiz section includes editable hair length after density",
+          "line": 63,
+          "start": 1712,
+          "end": 2311,
+          "statement": "test(\"profile quiz section includes editable hair length after density\", () => {\n  const quizFields = PROFILE_FIELD_CONFIG.filter((field) => field.sectionKey === \"quiz\")\n  const densityIndex = quizFields.findIndex((field) => field.key === \"density\")\n  const hairLengthField = quizFields[densityIndex + 1]\n\n  assert.notEqual(densityIndex, -1)\n  assert.equal(hairLengthField?.key, \"hair_length\")\n  assert.equal(hairLengthField.label, \"Haarlänge\")\n  assert.deepEqual(hairLengthField.editTarget, { kind: \"quiz\" })\n  assert.equal(hairLengthField.getValue(makeProfile({ hair_length: \"long\" })), \"Lang\")\n})",
+          "callbackBody": "{\n  const quizFields = PROFILE_FIELD_CONFIG.filter((field) => field.sectionKey === \"quiz\")\n  const densityIndex = quizFields.findIndex((field) => field.key === \"density\")\n  const hairLengthField = quizFields[densityIndex + 1]\n\n  assert.notEqual(densityIndex, -1)\n  assert.equal(hairLengthField?.key, \"hair_length\")\n  assert.equal(hairLengthField.label, \"Haarlänge\")\n  assert.deepEqual(hairLengthField.editTarget, { kind: \"quiz\" })\n  assert.equal(hairLengthField.getValue(makeProfile({ hair_length: \"long\" })), \"Lang\")\n}",
+          "callbackSha256": "c3fb0cf05c0457e4d68e67a2962aeddc2644750271275cae0fcad6a2f4646552",
+          "statementSha256": "e67ef5c6c31fd83aac6aec5f4331f44dae7fadd7dcb23c3b67aa84ae0b963815",
+          "class": "R",
+          "reason": "Quiz field position, exact label, edit target and legacy long-length label are independent display contracts."
+        },
+        {
+          "id": "1:2",
+          "title": "profile routine section shows length tip accessory night protection label",
+          "line": 75,
+          "start": 2313,
+          "end": 2720,
+          "statement": "test(\"profile routine section shows length tip accessory night protection label\", () => {\n  const nightProtectionField = PROFILE_FIELD_CONFIG.find(\n    (field) => field.key === \"night_protection\",\n  )\n\n  assert.ok(nightProtectionField)\n  assert.deepEqual(\n    nightProtectionField.getValue(makeProfile({ night_protection: [\"length_tip_accessory\"] })),\n    [\"Längen-/Spitzenschutz (z. B. HairHOMIE)\"],\n  )\n})",
+          "callbackBody": "{\n  const nightProtectionField = PROFILE_FIELD_CONFIG.find(\n    (field) => field.key === \"night_protection\",\n  )\n\n  assert.ok(nightProtectionField)\n  assert.deepEqual(\n    nightProtectionField.getValue(makeProfile({ night_protection: [\"length_tip_accessory\"] })),\n    [\"Längen-/Spitzenschutz (z. B. HairHOMIE)\"],\n  )\n}",
+          "callbackSha256": "157b2ee8d1490267ae3cea30b6c0df6620d19f83b10d6ae8773f709e14c0caf5",
+          "statementSha256": "4109efc033f62c4791370d900915df4472a5e7ac00013592740ceab70a96bb11",
+          "class": "R",
+          "reason": "Legacy profile length_tip_accessory projects to user-facing label; not just vocabulary constant identity."
+        },
+        {
+          "id": "1:3",
+          "title": "profile routine section distinguishes unanswered brush type from explicit none",
+          "line": 87,
+          "start": 2722,
+          "end": 3260,
+          "statement": "test(\"profile routine section distinguishes unanswered brush type from explicit none\", () => {\n  const brushTypeField = PROFILE_FIELD_CONFIG.find((field) => field.key === \"brush_type\")\n\n  assert.ok(brushTypeField)\n  assert.equal(brushTypeField.getValue(makeProfile({ brush_type: null })), null)\n  assert.equal(brushTypeField.getValue(makeProfile({ brush_type: [] })), \"Keine regelmäßige Bürste\")\n  assert.deepEqual(brushTypeField.getValue(makeProfile({ brush_type: [\"paddle\", \"round\"] })), [\n    \"Paddle-Bürste\",\n    \"Rundbürste\",\n  ])\n})",
+          "callbackBody": "{\n  const brushTypeField = PROFILE_FIELD_CONFIG.find((field) => field.key === \"brush_type\")\n\n  assert.ok(brushTypeField)\n  assert.equal(brushTypeField.getValue(makeProfile({ brush_type: null })), null)\n  assert.equal(brushTypeField.getValue(makeProfile({ brush_type: [] })), \"Keine regelmäßige Bürste\")\n  assert.deepEqual(brushTypeField.getValue(makeProfile({ brush_type: [\"paddle\", \"round\"] })), [\n    \"Paddle-Bürste\",\n    \"Rundbürste\",\n  ])\n}",
+          "callbackSha256": "a91c332a13b5e4cac51ead6028d4e7bab282222d5f5acbcc9016446e565cdd20",
+          "statementSha256": "bda247e93dd2904eb8fcd57da7be7aef34c1d825099c02d4c5644138b69cb0a3",
+          "class": "R",
+          "reason": "Legacy brush null, explicit empty, and multi-value arrays have independent null/none/list semantics."
+        },
+        {
+          "id": "1:4",
+          "title": "goals edit derives persisted desired volume from selected goals",
+          "line": 99,
+          "start": 3262,
+          "end": 3620,
+          "statement": "test(\"goals edit derives persisted desired volume from selected goals\", () => {\n  assert.equal(deriveDesiredVolumeFromGoals([\"volume\"], null), \"more\")\n  assert.equal(deriveDesiredVolumeFromGoals([\"less_volume\"], null), \"less\")\n  assert.equal(deriveDesiredVolumeFromGoals([\"shine\"], null), null)\n  assert.equal(deriveDesiredVolumeFromGoals([], null), null)\n})",
+          "callbackBody": "{\n  assert.equal(deriveDesiredVolumeFromGoals([\"volume\"], null), \"more\")\n  assert.equal(deriveDesiredVolumeFromGoals([\"less_volume\"], null), \"less\")\n  assert.equal(deriveDesiredVolumeFromGoals([\"shine\"], null), null)\n  assert.equal(deriveDesiredVolumeFromGoals([], null), null)\n}",
+          "callbackSha256": "0e3b78aa81145306f9929528d05f6e13d9e0528cd038bf90e254229374d5379b",
+          "statementSha256": "17a7f0f38acb6d6c002e907af0dc2cb382b8ece5c312f5464326e27eea5c4835",
+          "class": "R",
+          "reason": "Persisted desired-volume projection for more/less/unrelated/empty goals calls actual derived helper."
+        }
+      ],
+      "cut": {
+        "path": "/tmp/profile-care-cohort-profile-section-config.test.ts",
+        "sha256": "c9f38b596e41ed06a4b9d4e38d67f859ee7aa8e9fc4b717d48127dc82379fd6f",
+        "count": 5
+      }
+    },
+    {
+      "file": "tests/onboarding-care-vocabulary.test.ts",
+      "sha256": "a18fcfa8554004bb8bd05fc9b6fdfdca4f2f112a3ab53189cd81b2e6b1a166f0",
+      "originalText": "import assert from \"node:assert/strict\"\nimport test from \"node:test\"\nimport {\n  NIGHT_PROTECTION_LABELS,\n  NIGHT_PROTECTIONS,\n  TOWEL_MATERIAL_LABELS,\n  TOWEL_MATERIALS,\n  TOWEL_TECHNIQUES,\n  normalizeNightProtectionValues,\n  normalizeTowelTechniqueValue,\n} from \"../src/lib/vocabulary/onboarding-care\"\nimport { TOWEL_MATERIAL_ICONS } from \"../src/components/onboarding/onboarding-display-config\"\n\ntest(\"towel technique canonicalizes legacy German values\", () => {\n  assert.equal(normalizeTowelTechniqueValue(\"rubbeln\"), \"rough_rubbing\")\n  assert.equal(normalizeTowelTechniqueValue(\"tupfen\"), \"gentle_press\")\n})\n\ntest(\"towel technique options expose language-independent data keys\", () => {\n  assert.deepEqual(TOWEL_TECHNIQUES, [\"rough_rubbing\", \"gentle_press\"])\n})\n\ntest(\"towel material options include no towel as the final explicit option\", () => {\n  assert.deepEqual(TOWEL_MATERIALS, [\n    \"frottee\",\n    \"mikrofaser\",\n    \"tshirt\",\n    \"turban_mikrofaser\",\n    \"no_towel\",\n  ])\n  assert.equal(\n    TOWEL_MATERIAL_LABELS.no_towel,\n    \"Kein Handtuch: Ich lasse meine Haare tropfnass trocknen\",\n  )\n  assert.equal(TOWEL_MATERIAL_ICONS.no_towel, \"drying-air\")\n})\n\ntest(\"night protection canonicalizes legacy loose braid and bun values\", () => {\n  assert.deepEqual(normalizeNightProtectionValues([\"loose_braid\"]), [\"loose_tied\"])\n  assert.deepEqual(normalizeNightProtectionValues([\"loose_bun\"]), [\"loose_tied\"])\n  assert.deepEqual(normalizeNightProtectionValues([\"loose_braid\", \"loose_bun\"]), [\"loose_tied\"])\n})\n\ntest(\"night protection options expose only the canonical loose tied value\", () => {\n  assert.ok(NIGHT_PROTECTIONS.includes(\"loose_tied\"))\n  assert.ok(!NIGHT_PROTECTIONS.includes(\"loose_braid\" as never))\n  assert.ok(!NIGHT_PROTECTIONS.includes(\"loose_bun\" as never))\n})\n\ntest(\"night protection options include length tip accessory and remove tight hairstyles\", () => {\n  assert.deepEqual(NIGHT_PROTECTIONS, [\n    \"silk_satin_pillow\",\n    \"silk_satin_bonnet\",\n    \"loose_tied\",\n    \"pineapple\",\n    \"length_tip_accessory\",\n  ])\n  assert.equal(\n    NIGHT_PROTECTION_LABELS.length_tip_accessory,\n    \"Längen-/Spitzenschutz (z. B. HairHOMIE)\",\n  )\n  assert.equal(NIGHT_PROTECTION_LABELS.silk_satin_bonnet, \"Bonnet / Schlafhaube\")\n  assert.equal(NIGHT_PROTECTION_LABELS.pineapple, \"Pineapple\")\n  assert.ok(!NIGHT_PROTECTIONS.includes(\"tight_hairstyles\" as never))\n})\n\ntest(\"night protection normalization drops legacy tight hairstyles\", () => {\n  assert.deepEqual(normalizeNightProtectionValues([\"tight_hairstyles\"]), [])\n  assert.deepEqual(normalizeNightProtectionValues([\"silk_satin_pillow\", \"tight_hairstyles\"]), [\n    \"silk_satin_pillow\",\n  ])\n})\n",
+      "declarations": [
+        {
+          "id": "2:0",
+          "title": "towel technique canonicalizes legacy German values",
+          "line": 14,
+          "start": 398,
+          "end": 611,
+          "statement": "test(\"towel technique canonicalizes legacy German values\", () => {\n  assert.equal(normalizeTowelTechniqueValue(\"rubbeln\"), \"rough_rubbing\")\n  assert.equal(normalizeTowelTechniqueValue(\"tupfen\"), \"gentle_press\")\n})",
+          "callbackBody": "{\n  assert.equal(normalizeTowelTechniqueValue(\"rubbeln\"), \"rough_rubbing\")\n  assert.equal(normalizeTowelTechniqueValue(\"tupfen\"), \"gentle_press\")\n}",
+          "callbackSha256": "543bd4682fc04acc1a53696747a5fffda33d95c73fd28c42929b1ae96db02db6",
+          "statementSha256": "d54f5aa4661f1a39ce6002d606c23e7017ed1d0798d7a0494a16d2611f25d47c",
+          "class": "R",
+          "reason": "Legacy German towel values normalize to canonical keys; real hydration and save callers remain."
+        },
+        {
+          "id": "2:1",
+          "title": "towel technique options expose language-independent data keys",
+          "line": 19,
+          "start": 613,
+          "end": 765,
+          "statement": "test(\"towel technique options expose language-independent data keys\", () => {\n  assert.deepEqual(TOWEL_TECHNIQUES, [\"rough_rubbing\", \"gentle_press\"])\n})",
+          "callbackBody": "{\n  assert.deepEqual(TOWEL_TECHNIQUES, [\"rough_rubbing\", \"gentle_press\"])\n}",
+          "callbackSha256": "be39d4d580b72ab4a8ea74f7363042e5797e23f10a0fba8362cf17a9a0a5ad46",
+          "statementSha256": "c70130771e287ccc7ba76282f3866a966b95d443fa3d4b76ef393e5aae4217c9",
+          "class": "R",
+          "reason": "Exact canonical towel technique option list is not implied by mapping two legacy inputs."
+        },
+        {
+          "id": "2:2",
+          "title": "towel material options include no towel as the final explicit option",
+          "line": 23,
+          "start": 767,
+          "end": 1164,
+          "statement": "test(\"towel material options include no towel as the final explicit option\", () => {\n  assert.deepEqual(TOWEL_MATERIALS, [\n    \"frottee\",\n    \"mikrofaser\",\n    \"tshirt\",\n    \"turban_mikrofaser\",\n    \"no_towel\",\n  ])\n  assert.equal(\n    TOWEL_MATERIAL_LABELS.no_towel,\n    \"Kein Handtuch: Ich lasse meine Haare tropfnass trocknen\",\n  )\n  assert.equal(TOWEL_MATERIAL_ICONS.no_towel, \"drying-air\")\n})",
+          "callbackBody": "{\n  assert.deepEqual(TOWEL_MATERIALS, [\n    \"frottee\",\n    \"mikrofaser\",\n    \"tshirt\",\n    \"turban_mikrofaser\",\n    \"no_towel\",\n  ])\n  assert.equal(\n    TOWEL_MATERIAL_LABELS.no_towel,\n    \"Kein Handtuch: Ich lasse meine Haare tropfnass trocknen\",\n  )\n  assert.equal(TOWEL_MATERIAL_ICONS.no_towel, \"drying-air\")\n}",
+          "callbackSha256": "5fbc6484ef53a05e5f78966f17543743cde1ec5eb56916cc84247fec1c1b4aa3",
+          "statementSha256": "77af9ce0b4f17dda80a142594bd00eedb344fb4021b7caf874309ffb4f5dc8af",
+          "class": "R",
+          "reason": "Exact towel material options, no-towel label and drying-air icon combine distinct data owners."
+        },
+        {
+          "id": "2:3",
+          "title": "night protection canonicalizes legacy loose braid and bun values",
+          "line": 38,
+          "start": 1166,
+          "end": 1512,
+          "statement": "test(\"night protection canonicalizes legacy loose braid and bun values\", () => {\n  assert.deepEqual(normalizeNightProtectionValues([\"loose_braid\"]), [\"loose_tied\"])\n  assert.deepEqual(normalizeNightProtectionValues([\"loose_bun\"]), [\"loose_tied\"])\n  assert.deepEqual(normalizeNightProtectionValues([\"loose_braid\", \"loose_bun\"]), [\"loose_tied\"])\n})",
+          "callbackBody": "{\n  assert.deepEqual(normalizeNightProtectionValues([\"loose_braid\"]), [\"loose_tied\"])\n  assert.deepEqual(normalizeNightProtectionValues([\"loose_bun\"]), [\"loose_tied\"])\n  assert.deepEqual(normalizeNightProtectionValues([\"loose_braid\", \"loose_bun\"]), [\"loose_tied\"])\n}",
+          "callbackSha256": "ede34e77009ab14e6116a760f097dfb7c48109c7eb364d9c7f59de3769205898",
+          "statementSha256": "ccc87e2710d415dfde1c5082ad51c6e12b724b919dbbd9ff694c54556a0b1a56",
+          "class": "R",
+          "reason": "Legacy braid and bun individually map and combined input deduplicates; real persisted callers remain."
+        },
+        {
+          "id": "D3",
+          "title": "night protection options expose only the canonical loose tied value",
+          "line": 44,
+          "start": 1514,
+          "end": 1782,
+          "statement": "test(\"night protection options expose only the canonical loose tied value\", () => {\n  assert.ok(NIGHT_PROTECTIONS.includes(\"loose_tied\"))\n  assert.ok(!NIGHT_PROTECTIONS.includes(\"loose_braid\" as never))\n  assert.ok(!NIGHT_PROTECTIONS.includes(\"loose_bun\" as never))\n})",
+          "callbackBody": "{\n  assert.ok(NIGHT_PROTECTIONS.includes(\"loose_tied\"))\n  assert.ok(!NIGHT_PROTECTIONS.includes(\"loose_braid\" as never))\n  assert.ok(!NIGHT_PROTECTIONS.includes(\"loose_bun\" as never))\n}",
+          "callbackSha256": "990c068368b078e5183f635bd55a48da11f618b39033c2fb5d6ce8c8b59a16a7",
+          "statementSha256": "cda64727f5262f33ce0886b496160b0a2628e315331f8929c67116a491932997",
+          "class": "D",
+          "reason": "D3: Keeper callback 6 asserts exact same plain array equals [silk_satin_pillow,silk_satin_bonnet,loose_tied,pineapple,length_tip_accessory], implying all three membership assertions.",
+          "keeper": "2:5"
+        },
+        {
+          "id": "2:5",
+          "title": "night protection options include length tip accessory and remove tight hairstyles",
+          "line": 50,
+          "start": 1784,
+          "end": 2374,
+          "statement": "test(\"night protection options include length tip accessory and remove tight hairstyles\", () => {\n  assert.deepEqual(NIGHT_PROTECTIONS, [\n    \"silk_satin_pillow\",\n    \"silk_satin_bonnet\",\n    \"loose_tied\",\n    \"pineapple\",\n    \"length_tip_accessory\",\n  ])\n  assert.equal(\n    NIGHT_PROTECTION_LABELS.length_tip_accessory,\n    \"Längen-/Spitzenschutz (z. B. HairHOMIE)\",\n  )\n  assert.equal(NIGHT_PROTECTION_LABELS.silk_satin_bonnet, \"Bonnet / Schlafhaube\")\n  assert.equal(NIGHT_PROTECTION_LABELS.pineapple, \"Pineapple\")\n  assert.ok(!NIGHT_PROTECTIONS.includes(\"tight_hairstyles\" as never))\n})",
+          "callbackBody": "{\n  assert.deepEqual(NIGHT_PROTECTIONS, [\n    \"silk_satin_pillow\",\n    \"silk_satin_bonnet\",\n    \"loose_tied\",\n    \"pineapple\",\n    \"length_tip_accessory\",\n  ])\n  assert.equal(\n    NIGHT_PROTECTION_LABELS.length_tip_accessory,\n    \"Längen-/Spitzenschutz (z. B. HairHOMIE)\",\n  )\n  assert.equal(NIGHT_PROTECTION_LABELS.silk_satin_bonnet, \"Bonnet / Schlafhaube\")\n  assert.equal(NIGHT_PROTECTION_LABELS.pineapple, \"Pineapple\")\n  assert.ok(!NIGHT_PROTECTIONS.includes(\"tight_hairstyles\" as never))\n}",
+          "callbackSha256": "2a5decccf59df87e122e9f0c56620cb4897ba38b517726a5696324a7c11fa962",
+          "statementSha256": "a0ea86be1837526525d9c564bb80e2132bbf0daa6e20e33461e72640a9c2c493",
+          "class": "R",
+          "reason": "Keeper D3; full canonical array plus accessory/bonnet/pineapple labels and exclusion of tight styles."
+        },
+        {
+          "id": "2:6",
+          "title": "night protection normalization drops legacy tight hairstyles",
+          "line": 67,
+          "start": 2376,
+          "end": 2658,
+          "statement": "test(\"night protection normalization drops legacy tight hairstyles\", () => {\n  assert.deepEqual(normalizeNightProtectionValues([\"tight_hairstyles\"]), [])\n  assert.deepEqual(normalizeNightProtectionValues([\"silk_satin_pillow\", \"tight_hairstyles\"]), [\n    \"silk_satin_pillow\",\n  ])\n})",
+          "callbackBody": "{\n  assert.deepEqual(normalizeNightProtectionValues([\"tight_hairstyles\"]), [])\n  assert.deepEqual(normalizeNightProtectionValues([\"silk_satin_pillow\", \"tight_hairstyles\"]), [\n    \"silk_satin_pillow\",\n  ])\n}",
+          "callbackSha256": "aee3398e6e33c96ddf52a9c710e58ce16ca32081fd62efa57a7c876b814e1f81",
+          "statementSha256": "c2de7a9b1ab55cac7db6e81f5bd90440568cf7ec063012ae785eceb4d3c90d30",
+          "class": "R",
+          "reason": "Legacy tight styles dropped alone and when mixed with canonical input; real persisted consumers remain."
+        }
+      ],
+      "cut": {
+        "path": "/tmp/profile-care-cohort-onboarding-care-vocabulary.test.ts",
+        "sha256": "6d80153de4c8e144c074bfc68e7ba503702a221bbd6b1c9c6dbceea66eeb0d14",
+        "count": 6
+      }
+    }
+  ],
+  "faults": [
+    {
+      "id": "D1-missing-drying-answer",
+      "candidate": "D1",
+      "file": "src/lib/profile/section-config.ts",
+      "before": "      if (plan?.dryingRoutes) {\n        if (plan.dryingRoutes.length === 0) return \"Nichts davon\"\n        return plan.dryingRoutes.map((route) => PLAN_DRYING_ROUTE_LABELS[route] ?? route).join(\", \")\n      }\n\n      return null",
+      "after": "      if (plan?.dryingRoutes) {\n        if (plan.dryingRoutes.length === 0) return \"Nichts davon\"\n        return plan.dryingRoutes.map((route) => PLAN_DRYING_ROUTE_LABELS[route] ?? route).join(\", \")\n      }\n\n      return \"Nichts davon\"",
+      "keeper": "0:7",
+      "expectedAssertion": "assert.equal(dryingMethodField.getValue(null, {}), null)",
+      "regression": "Unanswered drying method incorrectly displayed as answered none.",
+      "originalOwnerSha256": "32801fdf7049e318cb6190eeda67eb75acd07704c03eae384f1e28add37be74a",
+      "prospectiveSourceSha256": "5d292ad2f5d0ee143c7515058cefe9af0dbca35d71566a9d3b873a96f44a2b4e",
+      "keeperFile": "tests/profile-plan-overlay.test.ts",
+      "keeperTitle": "unanswered plan leaves value null",
+      "keeperBody": "{\n  assert.equal(towelMaterialField.getValue(null, null), null)\n  assert.equal(towelMaterialField.getValue(null, {}), null)\n  assert.equal(stylingToolsField.getValue(null, {}), null)\n  assert.equal(nightProtectionField.getValue(null, {}), null)\n  assert.equal(dryingMethodField.getValue(null, {}), null)\n}",
+      "status": "Static-parse-only, not executed"
+    },
+    {
+      "id": "D2-no-towel-technique",
+      "candidate": "D2",
+      "file": "src/lib/profile/section-config.ts",
+      "before": "      : planMaterial === \"no_towel\"\n        ? \"Keine Trocknungstechnik\"\n        : null,",
+      "after": "      : planMaterial === \"no_towel\"\n        ? null\n        : null,",
+      "keeper": "0:10",
+      "expectedAssertion": "assert.equal(towelTechniqueField.getValue(null, plan), \"Keine Trocknungstechnik\")",
+      "regression": "Plan no_towel incorrectly rendered with missing technique.",
+      "originalOwnerSha256": "32801fdf7049e318cb6190eeda67eb75acd07704c03eae384f1e28add37be74a",
+      "prospectiveSourceSha256": "5b05925699989da268e84fafe9c2c226df742d9bcb6e36788fe4973bd4c24ac6",
+      "keeperFile": "tests/profile-plan-overlay.test.ts",
+      "keeperTitle": "towel material and technique resolve as a unit — pure plan no_towel",
+      "keeperBody": "{\n  const plan = { towel: { material: \"no_towel\" as const } }\n\n  assert.equal(\n    towelMaterialField.getValue(null, plan),\n    \"Kein Handtuch: Ich lasse meine Haare tropfnass trocknen\",\n  )\n  assert.equal(towelTechniqueField.getValue(null, plan), \"Keine Trocknungstechnik\")\n}",
+      "status": "Static-parse-only, not executed"
+    },
+    {
+      "id": "D3-omit-loose_tied",
+      "candidate": "D3",
+      "file": "src/lib/vocabulary/onboarding-care.ts",
+      "before": "export const NIGHT_PROTECTIONS = [\n  \"silk_satin_pillow\",\n  \"silk_satin_bonnet\",\n  \"loose_tied\",\n  \"pineapple\",\n  \"length_tip_accessory\",\n] as const",
+      "after": "export const NIGHT_PROTECTIONS = [\n  \"silk_satin_pillow\",\n  \"silk_satin_bonnet\",\n  \"pineapple\",\n  \"length_tip_accessory\",\n] as const",
+      "keeper": "2:5",
+      "expectedAssertion": "assert.deepEqual(NIGHT_PROTECTIONS, [...five original literal keys...])",
+      "regression": "Canonical loose-tied option disappears.",
+      "originalOwnerSha256": "e5f92f3ec2571da3d821d7b9df75db34939a103d4cb1de7ce972bf54d0a8e547",
+      "prospectiveSourceSha256": "195677f1d765bb992bd8e9d11cb96690e359d98511f2dc645e1a6b78369c43db",
+      "keeperFile": "tests/onboarding-care-vocabulary.test.ts",
+      "keeperTitle": "night protection options include length tip accessory and remove tight hairstyles",
+      "keeperBody": "{\n  assert.deepEqual(NIGHT_PROTECTIONS, [\n    \"silk_satin_pillow\",\n    \"silk_satin_bonnet\",\n    \"loose_tied\",\n    \"pineapple\",\n    \"length_tip_accessory\",\n  ])\n  assert.equal(\n    NIGHT_PROTECTION_LABELS.length_tip_accessory,\n    \"Längen-/Spitzenschutz (z. B. HairHOMIE)\",\n  )\n  assert.equal(NIGHT_PROTECTION_LABELS.silk_satin_bonnet, \"Bonnet / Schlafhaube\")\n  assert.equal(NIGHT_PROTECTION_LABELS.pineapple, \"Pineapple\")\n  assert.ok(!NIGHT_PROTECTIONS.includes(\"tight_hairstyles\" as never))\n}",
+      "status": "Static-parse-only, not executed"
+    },
+    {
+      "id": "D3-allow-loose_braid",
+      "candidate": "D3",
+      "file": "src/lib/vocabulary/onboarding-care.ts",
+      "before": "export const NIGHT_PROTECTIONS = [\n  \"silk_satin_pillow\",\n  \"silk_satin_bonnet\",\n  \"loose_tied\",\n  \"pineapple\",\n  \"length_tip_accessory\",\n] as const",
+      "after": "export const NIGHT_PROTECTIONS = [\n  \"silk_satin_pillow\",\n  \"silk_satin_bonnet\",\n  \"loose_tied\",\n  \"pineapple\",\n  \"length_tip_accessory\",\n  \"loose_braid\",\n] as const",
+      "keeper": "2:5",
+      "expectedAssertion": "assert.deepEqual(NIGHT_PROTECTIONS, [...five original literal keys...])",
+      "regression": "Legacy value becomes offered canonical option.",
+      "originalOwnerSha256": "e5f92f3ec2571da3d821d7b9df75db34939a103d4cb1de7ce972bf54d0a8e547",
+      "prospectiveSourceSha256": "c1381d8a2479bb3d00bde0a8eb559747556961bd15c35064cb9d91449ab45800",
+      "keeperFile": "tests/onboarding-care-vocabulary.test.ts",
+      "keeperTitle": "night protection options include length tip accessory and remove tight hairstyles",
+      "keeperBody": "{\n  assert.deepEqual(NIGHT_PROTECTIONS, [\n    \"silk_satin_pillow\",\n    \"silk_satin_bonnet\",\n    \"loose_tied\",\n    \"pineapple\",\n    \"length_tip_accessory\",\n  ])\n  assert.equal(\n    NIGHT_PROTECTION_LABELS.length_tip_accessory,\n    \"Längen-/Spitzenschutz (z. B. HairHOMIE)\",\n  )\n  assert.equal(NIGHT_PROTECTION_LABELS.silk_satin_bonnet, \"Bonnet / Schlafhaube\")\n  assert.equal(NIGHT_PROTECTION_LABELS.pineapple, \"Pineapple\")\n  assert.ok(!NIGHT_PROTECTIONS.includes(\"tight_hairstyles\" as never))\n}",
+      "status": "Static-parse-only, not executed"
+    },
+    {
+      "id": "D3-allow-loose_bun",
+      "candidate": "D3",
+      "file": "src/lib/vocabulary/onboarding-care.ts",
+      "before": "export const NIGHT_PROTECTIONS = [\n  \"silk_satin_pillow\",\n  \"silk_satin_bonnet\",\n  \"loose_tied\",\n  \"pineapple\",\n  \"length_tip_accessory\",\n] as const",
+      "after": "export const NIGHT_PROTECTIONS = [\n  \"silk_satin_pillow\",\n  \"silk_satin_bonnet\",\n  \"loose_tied\",\n  \"pineapple\",\n  \"length_tip_accessory\",\n  \"loose_bun\",\n] as const",
+      "keeper": "2:5",
+      "expectedAssertion": "assert.deepEqual(NIGHT_PROTECTIONS, [...five original literal keys...])",
+      "regression": "Legacy value becomes offered canonical option.",
+      "originalOwnerSha256": "e5f92f3ec2571da3d821d7b9df75db34939a103d4cb1de7ce972bf54d0a8e547",
+      "prospectiveSourceSha256": "c62f83d021cb8d8144ba0117c820af21080eefc3740cc1822cb0216aebdacb6d",
+      "keeperFile": "tests/onboarding-care-vocabulary.test.ts",
+      "keeperTitle": "night protection options include length tip accessory and remove tight hairstyles",
+      "keeperBody": "{\n  assert.deepEqual(NIGHT_PROTECTIONS, [\n    \"silk_satin_pillow\",\n    \"silk_satin_bonnet\",\n    \"loose_tied\",\n    \"pineapple\",\n    \"length_tip_accessory\",\n  ])\n  assert.equal(\n    NIGHT_PROTECTION_LABELS.length_tip_accessory,\n    \"Längen-/Spitzenschutz (z. B. HairHOMIE)\",\n  )\n  assert.equal(NIGHT_PROTECTION_LABELS.silk_satin_bonnet, \"Bonnet / Schlafhaube\")\n  assert.equal(NIGHT_PROTECTION_LABELS.pineapple, \"Pineapple\")\n  assert.ok(!NIGHT_PROTECTIONS.includes(\"tight_hairstyles\" as never))\n}",
+      "status": "Static-parse-only, not executed"
+    }
+  ],
+  "readset": [
+    {
+      "file": "src/lib/profile/section-config.ts",
+      "sha256": "32801fdf7049e318cb6190eeda67eb75acd07704c03eae384f1e28add37be74a"
+    },
+    {
+      "file": "src/lib/vocabulary/onboarding-care.ts",
+      "sha256": "e5f92f3ec2571da3d821d7b9df75db34939a103d4cb1de7ce972bf54d0a8e547"
+    },
+    {
+      "file": "src/lib/vocabulary/index.ts",
+      "sha256": "5e011545b7a6a94b96720af7b225dc12c025dbf0509f8b20cdd352bbcfa3109b"
+    },
+    {
+      "file": "src/components/onboarding/onboarding-display-config.ts",
+      "sha256": "8ddf4af7ad109fe70a1c0211dd50800f5f02e7ce4e9bac0abd2988415817ea2e"
+    },
+    {
+      "file": "src/lib/hair-profile/derived.ts",
+      "sha256": "407f9e87c1196cd8347c04aeded6ac2e897fd39e1b249321fff9adea667e9971"
+    },
+    {
+      "file": "src/app/profile/page.tsx",
+      "sha256": "c1c8140e4e6510e26b12a502245ea0ec296600cd8585a2380194ffd8b5676426"
+    },
+    {
+      "file": "src/components/onboarding/onboarding-flow.tsx",
+      "sha256": "6588de7ab1775c43bfb57aa7f5fb2f117f179d63bb8d98b3501f50bff3d19a41"
+    },
+    {
+      "file": "src/lib/personal-plan/legacy-prefill.ts",
+      "sha256": "309514fe296a23f6b0ee4943874bf7af4beef3ce9b857b665ccd7aae3ec262ce"
+    },
+    {
+      "file": "src/lib/recommendation-engine/adapters/from-persistence.ts",
+      "sha256": "a65f81e45a0cc1576b64f4f20d7806cfe0fcfaddf2ac21df49459157ff34bb1e"
+    },
+    {
+      "file": "src/lib/recommendation-engine/normalize.ts",
+      "sha256": "c4fe06f4325887972a8b2fee1f12680930d43eeef48a45c0c7de2aad5ba4e0a7"
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    }
+  ],
+  "status": "Read-only evidence and static parsing. No native test, mutation control or coverage run."
+}

@@ -1,0 +1,240 @@
+TAP version 13
+# Subtest: shared hair-length card keeps the complete decorative portrait composition inside one fixed media frame
+ok 1 - shared hair-length card keeps the complete decorative portrait composition inside one fixed media frame
+  ---
+  duration_ms: 12.763958
+  ...
+# Subtest: shared portrait figure keeps very-short own-body assets self-contained
+ok 2 - shared portrait figure keeps very-short own-body assets self-contained
+  ---
+  duration_ms: 0.479875
+  ...
+# Subtest: shared hair-length card preserves the Personal Plan selected treatment
+ok 3 - shared hair-length card preserves the Personal Plan selected treatment
+  ---
+  duration_ms: 0.954833
+  ...
+# Subtest: portrait manifest resolves every texture and length to its exact runtime filename
+ok 4 - portrait manifest resolves every texture and length to its exact runtime filename
+  ---
+  duration_ms: 0.241458
+  ...
+# Subtest: portrait manifest has exactly the 20 personalized assets and the 21 runtime WebPs
+ok 5 - portrait manifest has exactly the 20 personalized assets and the 21 runtime WebPs
+  ---
+  duration_ms: 1.078958
+  ...
+# Subtest: only the three approved pixies own their body line
+ok 6 - only the three approved pixies own their body line
+  ---
+  duration_ms: 0.086083
+  ...
+# Subtest: every portrait entry has exactly three mobile-safe marker button centres
+ok 7 - every portrait entry has exactly three mobile-safe marker button centres
+  ---
+  duration_ms: 0.349375
+  ...
+# Subtest: resolver uses the config's already-normalized treated pattern and generic fallback
+ok 8 - resolver uses the config's already-normalized treated pattern and generic fallback
+  ---
+  duration_ms: 0.072042
+  ...
+# Subtest: portrait lab keeps the development and Preview guard at the route boundary
+ok 9 - portrait lab keeps the development and Preview guard at the route boundary
+  ---
+  duration_ms: 0.675042
+  ...
+# Subtest: portrait gallery runs all 20 personalized states plus generic through HairPortrait
+ok 10 - portrait gallery runs all 20 personalized states plus generic through HairPortrait
+  ---
+  duration_ms: 15.440333
+  ...
+# Subtest: all canonical portrait rows follow the approved uniform length ladder
+ok 11 - all canonical portrait rows follow the approved uniform length ladder
+  ---
+  duration_ms: 135.856584
+  ...
+# Subtest: HairPortrait renders the selected generated portrait as a decorative priority image
+ok 12 - HairPortrait renders the selected generated portrait as a decorative priority image
+  ---
+  duration_ms: 1.418958
+  ...
+# Subtest: HairPortrait composes the exact visual layers around hair-only assets
+ok 13 - HairPortrait composes the exact visual layers around hair-only assets
+  ---
+  duration_ms: 0.776334
+  ...
+# Subtest: HairPortrait does not draw the shared body for approved ownBody pixie assets
+ok 14 - HairPortrait does not draw the shared body for approved ownBody pixie assets
+  ---
+  duration_ms: 0.664417
+  ...
+# Subtest: HairPortrait renders three native marker buttons with accessible selected state
+ok 15 - HairPortrait renders three native marker buttons with accessible selected state
+  ---
+  duration_ms: 0.689084
+  ...
+# Subtest: HairPortrait exposes potential labels and percentages in each marker's accessible name
+ok 16 - HairPortrait exposes potential labels and percentages in each marker's accessible name
+  ---
+  duration_ms: 1.313208
+  ...
+# Subtest: HairPortrait keeps generic copy unspecific when portrait axes are incomplete
+ok 17 - HairPortrait keeps generic copy unspecific when portrait axes are incomplete
+  ---
+  duration_ms: 0.751959
+  ...
+# Subtest: HairPortrait uses neutral visible labels for legacy fallback markers
+ok 18 - HairPortrait uses neutral visible labels for legacy fallback markers
+  ---
+  duration_ms: 0.6425
+  ...
+# Subtest: HairPortrait image fallback accepts absolute selected failures for the same path only
+ok 19 - HairPortrait image fallback accepts absolute selected failures for the same path only
+  ---
+  duration_ms: 0.133375
+  ...
+# Subtest: HairPortrait image fallback ignores duplicate or stale selected failures after generic renders
+ok 20 - HairPortrait image fallback ignores duplicate or stale selected failures after generic renders
+  ---
+  duration_ms: 0.159709
+  ...
+# Subtest: HairPortrait image fallback hides only after the rendered generic image fails
+ok 21 - HairPortrait image fallback hides only after the rendered generic image fails
+  ---
+  duration_ms: 0.038167
+  ...
+# Subtest: HairPortrait image fallback hides immediately when the selected asset is already generic
+ok 22 - HairPortrait image fallback hides immediately when the selected asset is already generic
+  ---
+  duration_ms: 0.030541
+  ...
+# Subtest: HairPortrait density does not change the selected asset or visual copy
+ok 23 - HairPortrait density does not change the selected asset or visual copy
+  ---
+  duration_ms: 1.19825
+  ...
+# Subtest: standard personal-plan option cards reserve a full-width row for the trailing selector
+ok 24 - standard personal-plan option cards reserve a full-width row for the trailing selector
+  ---
+  duration_ms: 0.037833
+  ...
+# Subtest: both personal-plan option-card branches share press and selected-check motion hooks
+ok 25 - both personal-plan option-card branches share press and selected-check motion hooks
+  ---
+  duration_ms: 0.036917
+  ...
+# Subtest: derivePortraitConfig covers every required length, structure, and density axis
+ok 26 - derivePortraitConfig covers every required length, structure, and density axis
+  ---
+  duration_ms: 0.229667
+  ...
+# Subtest: shape-changing treatments alter treated lengths while natural roots stay natural
+ok 27 - shape-changing treatments alter treated lengths while natural roots stay natural
+  ---
+  duration_ms: 0.036917
+  ...
+# Subtest: contradictory perm and straightening use the natural fallback instead of generic
+ok 28 - contradictory perm and straightening use the natural fallback instead of generic
+  ---
+  duration_ms: 0.029292
+  ...
+# Subtest: colour and bleach treatments are visually ignored
+ok 29 - colour and bleach treatments are visually ignored
+  ---
+  duration_ms: 0.044875
+  ...
+# Subtest: missing or invalid required portrait axes return the explicit generic config
+ok 30 - missing or invalid required portrait axes return the explicit generic config
+  ---
+  duration_ms: 0.069416
+  ...
+# Subtest: ignored quiz inputs leave the portrait config equal
+ok 31 - ignored quiz inputs leave the portrait config equal
+  ---
+  duration_ms: 0.054667
+  ...
+# Subtest: src/components/quiz/quiz-question.tsx: single-tap advance uses MOTION_MS.settle, no private delay
+ok 32 - src/components/quiz/quiz-question.tsx: single-tap advance uses MOTION_MS.settle, no private delay
+  ---
+  duration_ms: 0.556875
+  ...
+# Subtest: src/components/quiz/quiz-scalp-question.tsx: single-tap advance uses MOTION_MS.settle, no private delay
+ok 33 - src/components/quiz/quiz-scalp-question.tsx: single-tap advance uses MOTION_MS.settle, no private delay
+  ---
+  duration_ms: 0.279416
+  ...
+# Subtest: src/components/personal-plan-quiz/personal-plan-quiz.tsx: single-tap advance uses MOTION_MS.settle, no private delay
+ok 34 - src/components/personal-plan-quiz/personal-plan-quiz.tsx: single-tap advance uses MOTION_MS.settle, no private delay
+  ---
+  duration_ms: 0.296459
+  ...
+# Subtest: src/components/quiz/quiz-main-problem-sheet.tsx: single-tap advance uses MOTION_MS.settle, no private delay
+ok 35 - src/components/quiz/quiz-main-problem-sheet.tsx: single-tap advance uses MOTION_MS.settle, no private delay
+  ---
+  duration_ms: 0.214292
+  ...
+# Subtest: both quiz shells keep the outgoing step until the incoming one has entered
+ok 36 - both quiz shells keep the outgoing step until the incoming one has entered
+  ---
+  duration_ms: 0.585
+  ...
+# Subtest: the quiz step classes run on the motion tokens
+ok 37 - the quiz step classes run on the motion tokens
+  ---
+  duration_ms: 0.823667
+  ...
+# Subtest: quiz option card keeps trailing info outside the selectable card button
+ok 38 - quiz option card keeps trailing info outside the selectable card button
+  ---
+  duration_ms: 3.618375
+  ...
+# Subtest: grid image cards use the compact mobile footer while keeping their description accessible
+ok 39 - grid image cards use the compact mobile footer while keeping their description accessible
+  ---
+  duration_ms: 0.936042
+  ...
+# Subtest: grid portrait cards fit the complete silhouette to the fixed media height
+ok 40 - grid portrait cards fit the complete silhouette to the fixed media height
+  ---
+  duration_ms: 0.577959
+  ...
+# Subtest: thumbnail image cards keep their explanatory description visible on mobile
+ok 41 - thumbnail image cards keep their explanatory description visible on mobile
+  ---
+  duration_ms: 0.46375
+  ...
+# Subtest: single-select screen syncs prop changes and cancels delayed selection on back
+ok 42 - single-select screen syncs prop changes and cancels delayed selection on back
+  ---
+  duration_ms: 0.565292
+  ...
+# Subtest: tool image grid cards keep their description visible on mobile and fill the row height
+ok 43 - tool image grid cards keep their description visible on mobile and fill the row height
+  ---
+  duration_ms: 0.494583
+  ...
+# Subtest: tool grid options without an image fall back to the icon row card
+ok 44 - tool grid options without an image fall back to the icon row card
+  ---
+  duration_ms: 0.497875
+  ...
+# Subtest: batch 8: the card's own fade-in is on by default and can be switched off
+ok 45 - batch 8: the card's own fade-in is on by default and can be switched off
+  ---
+  duration_ms: 0.289
+  ...
+# Subtest: batch 8: a pending parent keeps the selected card clearly selected and not dimmed
+ok 46 - batch 8: a pending parent keeps the selected card clearly selected and not dimmed
+  ---
+  duration_ms: 0.269208
+  ...
+1..46
+# tests 46
+# suites 0
+# pass 46
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 833.361791

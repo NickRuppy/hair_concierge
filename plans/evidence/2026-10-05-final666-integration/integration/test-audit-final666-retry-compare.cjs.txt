@@ -1,0 +1,47 @@
+const fs = require('node:fs');
+const read = p => JSON.parse(fs.readFileSync(p, 'utf8'));
+const before = read('/tmp/test-audit-baseline/coverage-summary.json');
+const after = read('/tmp/test-audit-retirement-final666-retry-proof/coverage-summary.json');
+const metrics = ['lines', 'statements', 'functions', 'branches'];
+const pct = x => x.total === 0 ? 100 : x.covered / x.total * 100;
+const paths = Object.keys(before).filter(p => p !== 'total').sort();
+const afterPaths = Object.keys(after).filter(p => p !== 'total').sort();
+const root='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/';
+const cp=require('node:child_process');
+const deleted=new Set(cp.execFileSync('git',['diff','--name-only','--diff-filter=D'],{cwd:root,encoding:'utf8'}).trim().split('\n').map(p=>root+p));
+const removed=paths.filter(p=>!after[p]);
+if(removed.some(p=>!deleted.has(p)) || afterPaths.some(p=>!before[p])) throw Error('unexpected source set change');
+const declines = [];
+let changedEntries = 0;
+for (const p of paths.filter(p=>after[p])) {
+  if (JSON.stringify(before[p]) !== JSON.stringify(after[p])) changedEntries++;
+  for (const metric of metrics) {
+    const delta = pct(after[p][metric]) - pct(before[p][metric]);
+    if (delta < 0) declines.push({path: p, metric, before: before[p][metric], after: after[p][metric], deltaPercentagePoints: delta});
+  }
+}
+declines.sort((a,b) => a.deltaPercentagePoints - b.deltaPercentagePoints);
+const global = Object.fromEntries(metrics.map(metric => [metric, {
+  before: before.total[metric], after: after.total[metric],
+  deltaPercentagePoints: pct(after.total[metric]) - pct(before.total[metric]),
+  relativeLossPercent: (pct(before.total[metric]) - pct(after.total[metric])) / pct(before.total[metric]) * 100,
+}]));
+const conservative=Object.fromEntries(metrics.map(metric=>{
+const missingTotal=removed.reduce((n,p)=>n+before[p][metric].total,0);
+const normalizedTotal=paths.reduce((n,p)=>n+Math.max(before[p][metric].total,after[p]?.[metric].total??0),0);
+const missingCovered=removed.reduce((n,p)=>n+before[p][metric].covered,0);
+const corrected={total:normalizedTotal,covered:after.total[metric].covered};
+return [metric,{before:before.total[metric],actual:after.total[metric],conservative:corrected,
+retiredTotal:missingTotal,retiredCovered:missingCovered,
+deltaPercentagePoints:pct(corrected)-pct(before.total[metric])}];
+}));
+const failed = p => fs.readFileSync(p,'utf8').split('\n').filter(l => /^not ok \d+ - /.test(l)).map(l => l.replace(/^not ok \d+ - /, '')).sort();
+const baselineFailures=failed('/tmp/test-audit-baseline/tests.tap');
+const finalFailures=failed('/tmp/test-audit-retirement-final666-retry-proof/tests.tap');
+const result={baselineFiles:paths.length,finalFiles:afterPaths.length,removed:removed.map(p=>p.slice(root.length)),global,conservative,changedEntries,declines,
+globalCoverageDropsWithin2pp:Object.values(global).every(x=>x.deltaPercentagePoints>=-2),
+conservativeOriginalDenominatorWithin2pp:Object.values(conservative).every(x=>x.deltaPercentagePoints>=-2),
+rawPerFileDiagnosticWithin2pp:declines.every(x=>x.deltaPercentagePoints>=-2),
+sameFailures:JSON.stringify(baselineFailures)===JSON.stringify(finalFailures),baselineFailures,finalFailures};
+fs.writeFileSync('/tmp/test-audit-retirement-final666-retry-comparison.json',JSON.stringify(result,null,2));
+console.log(JSON.stringify({actualGlobal:result.globalCoverageDropsWithin2pp,conservativeGlobal:result.conservativeOriginalDenominatorWithin2pp,rawPerFileDiagnostic:result.rawPerFileDiagnosticWithin2pp,sameFailures:result.sameFailures,failures:result.finalFailures.length,coverage:result.global,conservative:result.conservative},null,2));

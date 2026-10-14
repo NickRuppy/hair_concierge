@@ -45,10 +45,6 @@ export type HairPortraitProps = HairPortraitConfigSource & {
   onSelect: (index: 0 | 1 | 2) => void
 }
 
-export type HairPortraitArtworkProps = HairPortraitConfigSource & {
-  className?: string
-}
-
 const LENGTH_LABELS = {
   very_short: "sehr kurzes",
   short: "kurzes",
@@ -82,11 +78,6 @@ export type PortraitImageFailure = {
   state: PortraitImageState
 }
 
-export function getNextPortraitImageState(currentState: PortraitImageState): PortraitImageState {
-  if (currentState === "selected") return "generic"
-  return "hidden"
-}
-
 function getImageStateForSelected(
   currentFailure: PortraitImageFailure,
   selectedSrc: string,
@@ -103,7 +94,7 @@ function getCurrentPortraitImageSrc(
   return selectedSrc
 }
 
-export function normalizePortraitImageSrcForComparison(
+function normalizePortraitImageSrcForComparison(
   src: string,
   currentOrigin = typeof window === "undefined" ? "" : window.location.origin,
 ): string {
@@ -155,7 +146,7 @@ export function getNextPortraitImageFailure(
 
   return {
     selectedSrc: params.selectedSrc,
-    state: getNextPortraitImageState(currentState),
+    state: "generic",
   }
 }
 
@@ -323,12 +314,6 @@ function PortraitArtworkComposition({
 
       {afterArtwork}
     </section>
-  )
-}
-
-export function HairPortraitArtwork(props: HairPortraitArtworkProps) {
-  return (
-    <PortraitArtworkComposition className={props.className} config={getPortraitConfig(props)} />
   )
 }
 

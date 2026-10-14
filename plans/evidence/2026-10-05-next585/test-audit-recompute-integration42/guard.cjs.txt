@@ -1,0 +1,153 @@
+'use strict';
+// Static checks never import owners or spawn children. Mutating helpers are explicit exports.
+const fs = require('node:fs'), path = require('node:path'), crypto = require('node:crypto');
+const DIR = '/tmp/test-audit-recompute-integration42';
+const PIN_SHA = 'd046b8fe55f68203328488215af4648519fdbd227074691938b1ddcd72cd931b';
+const hash = b => crypto.createHash('sha256').update(b).digest('hex');
+const must = (ok, why) => { if (!ok) throw Error(why); };
+const read = f => fs.readFileSync(f);
+const text = f => read(f).toString('utf8');
+must(hash(read(path.join(DIR, 'tool-pins.json'))) === PIN_SHA, 'tool pins changed');
+const pins = JSON.parse(text(path.join(DIR, 'tool-pins.json'))), ROOT = pins.root;
+const abs = f => path.join(ROOT, f);
+function identity() {
+  must(process.cwd() === ROOT && fs.realpathSync(process.cwd()) === ROOT, 'run from exact pinned worktree root');
+  must(fs.realpathSync(ROOT) === ROOT, 'root realpath changed');
+  must(text(abs('.git')).trim() === 'gitdir: ' + pins.gitdir, 'gitdir changed');
+  must(path.resolve(pins.gitdir, text(path.join(pins.gitdir, 'commondir')).trim()) === pins.common, 'common dir changed');
+  must(text(path.join(pins.gitdir, 'HEAD')).trim() === 'ref: ' + pins.branch, 'branch changed');
+  const ref = path.join(pins.common, pins.branch);
+  let head;
+  if (fs.existsSync(ref)) head = text(ref).trim();
+  else head = text(path.join(pins.common, 'packed-refs')).split('\n').find(x => x.endsWith(' ' + pins.branch))?.split(' ')[0];
+  must(head === pins.head, 'HEAD changed');
+  must(hash(read(path.join(pins.common, 'config'))) === pins.gitConfigSha256, 'git config changed');
+  must(process.version === pins.nodeVersion && process.execPath === pins.nodePath, 'Node identity changed');
+  must(hash(read(process.execPath)) === pins.nodeSha256, 'Node binary changed');
+}
+function artifactGuards(overrides={}) {
+  for (const [f,h] of Object.entries(pins.artifacts)) must(hash(read(path.join(DIR,f))) === h, 'artifact changed: '+f);
+  for (const [f,h] of Object.entries(pins.dependencies)) must(hash(read(abs(f))) === (overrides[f] || h), 'dependency changed: '+f);
+}
+identity(); artifactGuards();
+// Only the syntax parser is loaded; no test, project owner, tsx hook, or PGlite module is loaded.
+const ts = require(abs('node_modules/typescript/lib/typescript.js'));
+const manifest = JSON.parse(text(path.join(DIR,'manifest.json')));
+const candidates = JSON.parse(text(path.join(DIR,'candidates.json')));
+const controls = JSON.parse(text(path.join(DIR,'controls-normalized.json')));
+const originalSites = JSON.parse(text(path.join(DIR,'sites.json')));
+const files = Object.keys(manifest.phases.before);
+const snapshots = {};
+function sites(file, source) {
+  const sf = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true);
+  must(!sf.parseDiagnostics.length,'syntax error: '+file);
+  const found = [];
+  function walk(n) {
+    if (ts.isCallExpression(n) && n.expression.getText(sf)==='test' && ts.isStringLiteral(n.arguments[0])) {
+      const stmt=n.parent;
+      found.push({name:n.arguments[0].text,body:stmt.getText(sf),start:stmt.getStart(sf),end:stmt.end});
+    }
+    ts.forEachChild(n,walk);
+  }
+  walk(sf); return found;
+}
+function staticProposal() {
+  for (const phase of ['before','transfer','cut']) {
+    snapshots[phase]={}; let total=0;
+    for(const f of files) {
+      const s=text(path.join(DIR,'snapshots',phase,f));
+      must(hash(s)===manifest.phases[phase][f],'snapshot hash '+phase+' '+f);
+      snapshots[phase][f]=s; total+=sites(f,s).length;
+    }
+    must(total===manifest.proofCohortCounts[phase],'phase count '+phase);
+  }
+  const transfer={...snapshots.before}; const c3=candidates.find(c=>c.id==='C3');
+  must(transfer[c3.keeper.file].split(c3.keeper.body).length===2,'keeper body uniqueness');
+  transfer[c3.keeper.file]=transfer[c3.keeper.file].replace(c3.keeper.body,c3.keeperAfter.body);
+  const cut={...transfer};
+  for(const c of [...candidates].sort((a,b)=>b.donor.start-a.donor.start)) {
+    const d=c.donor;
+    must(cut[d.file].slice(d.start,d.end)===d.body,'donor exact coordinates '+c.id);
+    cut[d.file]=cut[d.file].slice(0,d.start)+cut[d.file].slice(d.end);
+  }
+  for(const f of files) {
+    must(transfer[f]===snapshots.transfer[f], 'unapproved transfer bytes '+f);
+    must(cut[f]===snapshots.cut[f], 'unapproved cut bytes '+f);
+  }
+  const allowed = new Set(candidates.map(c=>c.donor.file+'|'+c.donor.name));
+  allowed.add(c3.keeper.file+'|'+c3.keeper.name);
+  let untouched=0;
+  for(const f of files) {
+    const bs=sites(f,snapshots.before[f]);
+    must(bs.length===originalSites[f].length,'before inventory count');
+    for(const [i,b] of bs.entries()) {
+      must(b.body===originalSites[f][i].body && hash(b.body)===originalSites[f][i].sha256,'before callback changed');
+      if(allowed.has(f+'|'+b.name)) continue;
+      for(const phase of ['transfer','cut']) must(sites(f,snapshots[phase][f]).find(x=>x.name===b.name)?.body===b.body,'unrelated callback changed '+b.name);
+      untouched++;
+    }
+  }
+  must(untouched===53,'unrelated count');
+  must(controls.length===7,'control count');
+  const selectors=[];
+  for(const c of controls) {
+    const s=text(abs(c.file));
+    must(hash(s)===c.sourceSha256,'control owner changed '+c.id);
+    must(s.split(c.from).length===2,'nonunique source anchor '+c.id);
+    const mutant=s.replace(c.from,c.to);
+    must(hash(mutant)===c.mutantSha256,'mutant bytes changed '+c.id);
+    if(c.file.endsWith('.ts')) sites(c.file,mutant);
+    const pattern=c.command.find(x=>x.startsWith('--test-name-pattern=')).slice('--test-name-pattern='.length);
+    must(JSON.stringify(c.command)===JSON.stringify(['--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-reporter=tap','--test-name-pattern='+pattern,c.testFile]),'unapproved command argv '+c.id);
+    must(files.includes(c.testFile),'unapproved test path');
+    must(new RegExp(pattern).test(c.testName),'invalid exact selector '+c.id);
+    must(!new RegExp(pattern).test('prefix '+c.testName),'unanchored selector');
+    for(const phase of ['before','transfer','cut']) {
+      const selectedFiles=c.command.filter(x=>files.includes(x));
+      must(selectedFiles.length===1 && selectedFiles[0]===c.testFile,'command file selector changed');
+      const all=files.flatMap(f=>sites(f,snapshots[phase][f]).map(row=>({file:f,...row})));
+      const selected=all.filter(row=>selectedFiles.includes(row.file) && new RegExp(pattern).test(row.name));
+      selectors.push({id:c.id,phase,selected: selected.length,rawGlobalTitleMatches:all.filter(row=>new RegExp(pattern).test(row.name)).length});
+      must(selected.length===1 && selected[0].name===c.testName,'native selector does not select exactly one phase callback '+c.id+' '+phase);
+      const oracle=c.oracles[phase]; if(!oracle) continue;
+      const s=snapshots[phase][c.testFile]; const keeper=sites(c.testFile,s).filter(x=>x.name===c.testName);
+      must(keeper.length===1 && keeper[0].body.includes(oracle.text),'oracle not in selected keeper '+c.id);
+      must(s.split('\n').slice(oracle.line-1).join('\n').startsWith('  '+oracle.text),'oracle line mismatch '+c.id+' '+phase);
+    }
+  }
+  return {proofCounts:manifest.proofCohortCounts,targetCounts:manifest.targetCounts,untouchedCallbacks:untouched,snapshots:21,controls:7,sqlControlsNotExecuted:5,selectors};
+}
+const proposal=staticProposal();
+function live(phase, overrides={}) {
+  identity(); artifactGuards(overrides);
+  const expected={...manifest.readset,...manifest.phases[phase],...overrides};
+  for(const [f,h] of Object.entries(expected)) must(hash(read(abs(f)))===h,'live guard changed: '+f);
+  return expected;
+}
+function phase() {
+  const matches=Object.keys(manifest.phases).filter(p=>files.every(f=>hash(read(abs(f)))===manifest.phases[p][f]));
+  must(matches.length===1,'live tree is not one complete pinned phase'); live(matches[0]);return matches[0];
+}
+const lockPath='/tmp/test-audit-pruning-operator-lock';
+function lock(kind) {
+  const token=crypto.randomUUID();fs.mkdirSync(lockPath);
+  try {fs.writeFileSync(path.join(lockPath,'owner.json'),JSON.stringify({token,pid:process.pid,root:ROOT,operator:DIR,kind})+'\n',{flag:'wx',mode:0o600});}
+  catch(error){throw Error('New lock could not record ownership; preserve lock: '+error);}
+  return ()=>{const l=JSON.parse(text(path.join(lockPath,'owner.json')));must(l.token===token,'lock token ownership lost');fs.unlinkSync(path.join(lockPath,'owner.json'));fs.rmdirSync(lockPath);};
+}
+function cas(file, expected, next) {
+  const dest=abs(file); must(hash(read(dest))===expected,'CAS precondition '+file);
+  const temp=dest+'.recompute-audit-'+crypto.randomUUID();
+  try {
+    fs.writeFileSync(temp,next,{flag:'wx',mode:fs.statSync(dest).mode});
+    must(hash(read(dest))===expected,'CAS recheck '+file);
+    fs.renameSync(temp,dest);
+    must(hash(read(dest))===hash(next),'CAS postcondition '+file);
+  } finally { if(fs.existsSync(temp)) fs.unlinkSync(temp); }
+}
+function backup(kind, data) {
+  const dir=fs.mkdtempSync(path.join(DIR,kind+'-'));
+  const map={};for(const [f,b]of Object.entries(data)) { const p=path.join(dir,'originals',f);fs.mkdirSync(path.dirname(p),{recursive:true});fs.writeFileSync(p,b,{flag:'wx',mode:0o400});map[f]=hash(b); }
+  fs.writeFileSync(path.join(dir,'original-hashes.json'),JSON.stringify(map,null,2)+'\n',{flag:'wx',mode:0o400});return dir;
+}
+module.exports={DIR,ROOT,pins,manifest,candidates,controls,files,snapshots,proposal,hash,must,read,text,abs,sites,live,phase,lock,cas,backup};

@@ -1,0 +1,3334 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "defaultCuts": 4,
+  "conditionalPPNotIncluded": true,
+  "phases": {
+    "before": {
+      "files": [
+        {
+          "file": "tests/customerio-funnel-attribution.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/before/tests/customerio-funnel-attribution.test.ts",
+          "sha256": "6ed39b86b29f805839b312a4b3ba8264fdab27736bbe8e5a93b43ef2ae854442",
+          "bytes": 2538,
+          "sites": [
+            {
+              "name": "Customer.io enriches cold funnel events and isolates queued dispatch failures",
+              "line": 11,
+              "callbackSha256": "7b0f00d38085d55cea69add47a524b2cbdaa74bb023a13899b81dbe5e91e7429"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-page-view.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/before/tests/customerio-page-view.test.ts",
+          "sha256": "27174c87f727c38270019127b648b9ec9f159d80fbccaf75d5d84d7b0beec3a8",
+          "bytes": 3475,
+          "sites": [
+            {
+              "name": "Customer.io page paths preserve the canonical result identifier and entry context",
+              "line": 11,
+              "callbackSha256": "48a8e9cfe88764fb34216b9865dbd8cdf88c2e25618b8bd4a8de798b1073629f"
+            },
+            {
+              "name": "Customer.io page paths omit a trailing question mark without query parameters",
+              "line": 24,
+              "callbackSha256": "f3f1766601e1e813cee4b10ff38a09b9189f3f0e9213c892d2494068654e39cb"
+            },
+            {
+              "name": "Customer.io page paths remove credentials, identifiers, and nested return URLs",
+              "line": 29,
+              "callbackSha256": "ad64bf2b07a8bafaf25ab70a0ee5c7b1a6c828ffe08f23c0c16ca677b21883f3"
+            },
+            {
+              "name": "Customer.io page paths reject arbitrary values under otherwise safe keys",
+              "line": 47,
+              "callbackSha256": "a677cda2b1468268484615b9d5901334e07861fd6c5eade834b14ea59e53723a"
+            },
+            {
+              "name": "shared analytics URL sanitization removes sensitive queries and fragments",
+              "line": 56,
+              "callbackSha256": "d38f39604551761666b8bd76deb4fbe2ad20d183b5e1714de95d45d8391fc846"
+            },
+            {
+              "name": "Meta page tracking recognizes credential-bearing browser locations",
+              "line": 71,
+              "callbackSha256": "76441310207c242a6738c5c7f1ec749ea247170ff7f113ea2db63490dd52a034"
+            },
+            {
+              "name": "Meta offer CAPI uses a verified aggregate URL without the lead identifier",
+              "line": 92,
+              "callbackSha256": "3305e3378f948e5cb89218ca7b4cca76bc824efa97e584517c39ee2cd0260249"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-quiz-traits.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/before/tests/customerio-quiz-traits.test.ts",
+          "sha256": "031ea416261df983bb005af146801cf791a3c6136947bcf8dba638f80858d5ed",
+          "bytes": 6733,
+          "sites": [
+            {
+              "name": "builds rich Customer.io quiz traits with labels when consent is true",
+              "line": 6,
+              "callbackSha256": "66a568fd469fe644c96ece0a5d28c1e2133d5b078cdf82fabfb2364162bbd54e"
+            },
+            {
+              "name": "keeps inherited consent time separate from the fresh quiz completion",
+              "line": 74,
+              "callbackSha256": "5c97f933247415205150fd21eb0aeccfde3a34535aadf37659d12edf530c52cd"
+            },
+            {
+              "name": "builds rich Customer.io quiz traits when marketing consent is false",
+              "line": 101,
+              "callbackSha256": "b2ab744471393e341d161666602564d8de0aedf2eec752b1e4faa3e2b4944a40"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-server.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/before/tests/customerio-server.test.ts",
+          "sha256": "5b1d7dc366ad6a9bfea5d04938d78298c6e20e33a163931e47b9919edbdbb4f8",
+          "bytes": 3049,
+          "sites": [
+            {
+              "name": "server identify uses Customer.io EU Pipelines strict mode",
+              "line": 20,
+              "callbackSha256": "a481c36993551ba4833f3c8d582d3dfc16145a01ef08598f782b4c80c3a3c71f"
+            },
+            {
+              "name": "server track returns a failed result instead of throwing",
+              "line": 56,
+              "callbackSha256": "bd0e686125bb1a336d01ef7ea1127e797bdaf92155035ec80cd6b6e1853fed43"
+            },
+            {
+              "name": "server helper no-ops when CUSTOMERIO_SERVER_WRITE_KEY is missing",
+              "line": 76,
+              "callbackSha256": "affd0e2544eb718c741cc42d0c897086df629e952cc722b9a415b19ab07c8176"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-stripe-lifecycle.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/before/tests/customerio-stripe-lifecycle.test.ts",
+          "sha256": "be1850ffe3258d8117806fbf4b5fc0c9c783e15577934fe7353dde13ec7cff88",
+          "bytes": 4289,
+          "sites": [
+            {
+              "name": "builds purchase and subscription events from a completed checkout",
+              "line": 10,
+              "callbackSha256": "8830b978c35eff27b7389a67218475d97ca04c9bb53b6ae9e5f7dcae513c78bf"
+            },
+            {
+              "name": "does not build paid Customer.io lifecycle events for a verified trial",
+              "line": 48,
+              "callbackSha256": "d4edd198bc0ac8b749b719ec31771f24b90ecf78590cbcfd4a6f55714dd80995"
+            },
+            {
+              "name": "builds payment_failed from an invoice",
+              "line": 73,
+              "callbackSha256": "c76a39762ef2937eff3329fe0f439c9729719b8f3b511197a123bdf23e82b91b"
+            },
+            {
+              "name": "builds subscription cancellation with event-id-scoped dedupe",
+              "line": 98,
+              "callbackSha256": "b65dc3df2e192f697ab1bb16584098ce20653f15db5b343aae415a97dbb0104b"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-transactional.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/before/tests/customerio-transactional.test.ts",
+          "sha256": "e63066b69234b91eb7631d8c84eb3ede31c110e8855293f0c0b17f0c31d7c623",
+          "bytes": 6694,
+          "sites": [
+            {
+              "name": "builds Customer.io App API transactional request with privacy flags",
+              "line": 13,
+              "callbackSha256": "306caae3d2be91e984fb4384c6581ec740343aa9e95df115bec5ff48505c570f"
+            },
+            {
+              "name": "sends Customer.io transactional email through the App API",
+              "line": 31,
+              "callbackSha256": "c2c864e2d499f30d000fa44bb9bc9c468fb6963f8904a1a6341b0613acff72b8"
+            },
+            {
+              "name": "throws with status and response text for non-ok responses",
+              "line": 65,
+              "callbackSha256": "30190ce4c0a50274ef0d0102e5544fd419180555ce86ce3f4d9da42eba035052"
+            },
+            {
+              "name": "returns the documented Customer.io delivery receipt",
+              "line": 81,
+              "callbackSha256": "c2ec387e1624f492579722cd14383125995f32e85c0f8d8065c6ee6a3c07ce99"
+            },
+            {
+              "name": "classifies non-2xx responses as definitive HTTP failures",
+              "line": 101,
+              "callbackSha256": "da176b800e1039d9e74483686c0e857db7b32dcbb022d00fbbd83e118c0ea286"
+            },
+            {
+              "name": "treats network failures and malformed success receipts as ambiguous",
+              "line": 117,
+              "callbackSha256": "2d5a3c386387814b884ecd53c953f1457a607994ba6d4737e2c1da7ea6dfc19d"
+            },
+            {
+              "name": "inline required receipts preserve safe flags and provide complete per-send content without altering old callers",
+              "line": 143,
+              "callbackSha256": "f603849678afbce9a21ebb08d87047494792cebe1fe33e803dce338fef05a36e"
+            },
+            {
+              "name": "sends the attachment dictionary alongside content and rejects oversized attachments before fetch",
+              "line": 167,
+              "callbackSha256": "6b3886c1c18f4863b0b4a8a716505eed867fcc34ff27051cab56231931c309f2"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-trial-reminder.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/before/tests/customerio-trial-reminder.test.ts",
+          "sha256": "dc2b1e4802c38ffbafa95bcedb8ea60f57bdb6aaea6fe744792a388c36201969",
+          "bytes": 3579,
+          "sites": [
+            {
+              "name": "builds the stored Customer.io transactional message with privacy-preserving flags",
+              "line": 29,
+              "callbackSha256": "347bfe8cdb59b83b50daf5d5b8754bda695e7cb555ab1cbe56e24f6d580d6b91"
+            },
+            {
+              "name": "rejects CRLF injection at the transport boundary",
+              "line": 71,
+              "callbackSha256": "2688e4b116c218a51878724d00d306751b313f655d58a6f4e69de7705bd86b30"
+            }
+          ]
+        },
+        {
+          "file": "tests/email-deliverability.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/before/tests/email-deliverability.test.ts",
+          "sha256": "6ee6acc729fd572b5f632356382511100d628cb93b7e07018f01e08e4a5ee714",
+          "bytes": 9622,
+          "sites": [
+            {
+              "name": "korrigiert belegte Provider-Tippfehler aus den Bounce-Logs",
+              "line": 51,
+              "callbackSha256": "becff278f2b00a6e6072e9ab6cde2abd497c43c1070586bd4636e51847d98b79"
+            },
+            {
+              "name": "schlaegt nichts vor bei real existierenden Domains",
+              "line": 59,
+              "callbackSha256": "df792074bf8a4cd50ec3554a4ec3bf7e0f753b4dca1cddd1911235c39dddd70b"
+            },
+            {
+              "name": "verkraftet unvollstaendige Eingaben ohne zu werfen",
+              "line": 71,
+              "callbackSha256": "2ba53f1ff6404068a079e3e8c4d134bdbe8341da8a6a2e2cf1d9a8484ea0ec43"
+            },
+            {
+              "name": "nimmt Grossanbieter ohne DNS-Abfrage an",
+              "line": 80,
+              "callbackSha256": "96502ba29a059017038ad956b4b4c824b0a1dae2de1166cdf4ce86b2d21723c8"
+            },
+            {
+              "name": "nimmt Domains mit gueltigem MX an",
+              "line": 96,
+              "callbackSha256": "b8106cfbf502c5b575cec211adfdda28ba3a4f0c1745fcf883f3932fd6ca860d"
+            },
+            {
+              "name": "lehnt Null MX nach RFC 7505 ab",
+              "line": 103,
+              "callbackSha256": "1f0d0a78d6dc3539185c844b468b82ab1f7e7eef1a7a18e84d9d45a77b86a471"
+            },
+            {
+              "name": "nimmt Domains ohne MX an, wenn ein A-Eintrag existiert (RFC 5321)",
+              "line": 112,
+              "callbackSha256": "c96806a309f0dc5dfac4360eb29927546552a70b96b9c68e3561afaa80af6181"
+            },
+            {
+              "name": "nimmt Domains ohne MX an, wenn ein AAAA-Eintrag existiert",
+              "line": 119,
+              "callbackSha256": "76630d475b38987a7637997e96acb8ea91afa637b9b5184f5f5348c57c48ef20"
+            },
+            {
+              "name": "nimmt einen gueltigen A-Eintrag trotz transientem AAAA-Fehler als impliziten MX an",
+              "line": 125,
+              "callbackSha256": "5597bcd0990bb599c10c05df1580ae733a36db21b752cbab9cc477176f3e79ad"
+            },
+            {
+              "name": "lehnt Domains ohne MX und ohne A/AAAA ab und liefert den Vorschlag mit",
+              "line": 141,
+              "callbackSha256": "42dce8e15e1b3caca5f8da1433e810ff91d3f3ea247bf2108e9beb20adc6a1c3"
+            },
+            {
+              "name": "lehnt ungueltiges Format ab, ohne DNS zu fragen",
+              "line": 165,
+              "callbackSha256": "cd72b02826e39a4341734d41c91aa9d781f0b7336bac92c4246bc94e97d6c034"
+            },
+            {
+              "name": "laesst bei DNS-Zeitueberschreitung durch",
+              "line": 183,
+              "callbackSha256": "5dadfa6aa077eb72fb7660565361b1b370c9f2f13b92d67600278a4168954379"
+            },
+            {
+              "name": "laesst bei unerwartetem Resolver-Fehler durch",
+              "line": 197,
+              "callbackSha256": "95656ee01adfd146ace319a8c7b3996a5e4eb476ab171910f132018cdb95e1f3"
+            },
+            {
+              "name": "laesst durch, wenn der A/AAAA-Fallback in einen Timeout laeuft",
+              "line": 206,
+              "callbackSha256": "fc39505c2c5a7b9e6c63a0db5a089d403ee8345649457cf615162e5437660228"
+            },
+            {
+              "name": "teilt ein einziges Zeitbudget zwischen MX und A/AAAA",
+              "line": 219,
+              "callbackSha256": "59490b6c9dec930315320b49fc111582e5e50a9968fc870e4fb3b5a1ff235f1a"
+            },
+            {
+              "name": "raeumt den Timeout nach erfolgreichem Lookup ab",
+              "line": 253,
+              "callbackSha256": "9142341b9908af6108999db8b6feda7658b1f6bd5b394c45f017d5b52d655edd"
+            },
+            {
+              "name": "normalisiert die Adresse auf Kleinschreibung ohne Leerzeichen",
+              "line": 263,
+              "callbackSha256": "2e8ff9822ff0b663db19760478f0f9d6c0eee44fe2b450281d635ee80017e440"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-backfill.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/before/tests/personal-plan-customerio-backfill.test.ts",
+          "sha256": "be9bca9cb831d5865066086902c00a8072a891922c04ed646b792976f5ffaec0",
+          "bytes": 4480,
+          "sites": [
+            {
+              "name": "live backfill requires an explicit campaign-safety preflight",
+              "line": 55,
+              "callbackSha256": "dab0d996be144679175933560d27a07d52a9bacd98ebf6217f60f35e56d91f1a"
+            },
+            {
+              "name": "historical backfill explicitly requests profile-only work",
+              "line": 68,
+              "callbackSha256": "3a496fa7571653e8d03fe0e89bc472e0415412788e8ab8d5be9489ac63eea45b"
+            },
+            {
+              "name": "dry-run backfill performs no database writes or Customer.io dispatch",
+              "line": 92,
+              "callbackSha256": "febd625492b5478e3316c566971b9a591398b5bd7991bcfb30aa2262ab27f460"
+            },
+            {
+              "name": "backfill reports queued retries separately from delivered profiles",
+              "line": 111,
+              "callbackSha256": "0a765e1d6906be8af05abf9790fc1d775d767cbabc3b6fac2c313795e6102ac8"
+            },
+            {
+              "name": "backfill continues when immediate dispatch throws because the durable row already exists",
+              "line": 124,
+              "callbackSha256": "33823987847d76a3d5933fa1445291d3ef7636df765bba4babbeef9cac491d8c"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-outbox-migration.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/before/tests/personal-plan-customerio-outbox-migration.test.ts",
+          "sha256": "64942258052b2070bb6e9f3fe3ad43ee527807634ffcfa5d2e94c0510f8230ab",
+          "bytes": 2579,
+          "sites": [
+            {
+              "name": "Customer.io profile outbox migration keeps payload in source tables and private delivery state",
+              "line": 7,
+              "callbackSha256": "fa69d99e1dbe7858f21a3cf65e4cf7419e30f38b31d715f5d6f89a8ad7b93c55"
+            },
+            {
+              "name": "Customer.io profile outbox makes only newly inserted consented leads event eligible",
+              "line": 22,
+              "callbackSha256": "aa58fb9fc8713184b3fbd7a60e222f07ba3f2bc4fcf96b5fef9b34997ceb95f3"
+            },
+            {
+              "name": "profile-only backfill request cannot create or downgrade event eligibility",
+              "line": 40,
+              "callbackSha256": "9c0c1f5ca52e4d8763a881c80daa8f1a52d0c42b85d3cc712a70f40bcd8dd9b7"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-outbox.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/before/tests/personal-plan-customerio-outbox.test.ts",
+          "sha256": "b5383f7bbf478b7ce0d28cc14dada85fcd307f7bb560a44e700c051ba2735522",
+          "bytes": 6775,
+          "sites": [
+            {
+              "name": "new lead delivery identifies current Supabase truth before the completion event",
+              "line": 119,
+              "callbackSha256": "d1ed7fd025db87933c5711b6b133d0422e33f2151a7f360682eefce88d92825a"
+            },
+            {
+              "name": "historical profile-only outbox row can never request the completion event",
+              "line": 134,
+              "callbackSha256": "57126f27d326e357de1c1602a9465beb186ce48489d700350cf360feea7b9cde"
+            },
+            {
+              "name": "field-test profile sync never emits the commercial completion event",
+              "line": 145,
+              "callbackSha256": "fa0c6cd6828756f816e982c22f9c15fb7d115551efd9efa1382ee7d07d6c3d40"
+            },
+            {
+              "name": "moderator lead remains non-commercial after its funnel moves to a newer result",
+              "line": 157,
+              "callbackSha256": "a35421399d7b6fd82fa5852395ed79660dbead762e9598d403f5f09863a18d95"
+            },
+            {
+              "name": "profile updates do not resend an already delivered completion event",
+              "line": 175,
+              "callbackSha256": "76b8d72aa854bd34aa4d160089ded23e21d8bee7ba0dbf31bb7228714abb0272"
+            },
+            {
+              "name": "transient Customer.io failures are recorded for retry instead of reported as delivered",
+              "line": 187,
+              "callbackSha256": "0bf21ef1e4ed495012062c42001c0f1960715f938fd482f96232e470355bf96f"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-reconcile-route.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/before/tests/personal-plan-customerio-reconcile-route.test.ts",
+          "sha256": "c9f0b471be35d72524a78fb6901c68e4e17872af798fed24eb84306311afae4d",
+          "bytes": 1927,
+          "sites": [
+            {
+              "name": "Customer.io fallback retry uses a Vercel Hobby-compatible daily schedule",
+              "line": 15,
+              "callbackSha256": "2a00686a005bf6190a51f70cbcc1b085e9e6a85df21b7bd5f0a208536335c62b"
+            },
+            {
+              "name": "Customer.io profile reconcile is bounded and authenticates before retry work",
+              "line": 29,
+              "callbackSha256": "9140055391a0731b031e2d4fe56b4909d8b9d5055c32d086b1ecd97b32d38b0a"
+            },
+            {
+              "name": "Customer.io profile reconcile drains a bounded retry batch",
+              "line": 46,
+              "callbackSha256": "116d5302599798acfe692966b9cfd9d37ed5d9222773d7b8d2382c555ebf60ab"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-sync.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/before/tests/personal-plan-customerio-sync.test.ts",
+          "sha256": "ebfe19864a6d6104aa15772ab7735689dfe2bb09cb4cd982dba8def74dd52f3c",
+          "bytes": 9715,
+          "sites": [
+            {
+              "name": "historical profile parsing is total over malformed v2 concern data",
+              "line": 41,
+              "callbackSha256": "3480dfe26e13b718b54e83d6e8ce3bf39a3d874a395aee2c380b03d4a4f5b5db"
+            },
+            {
+              "name": "historical profile parsing preserves the exact v2 concern vocabulary and labels",
+              "line": 59,
+              "callbackSha256": "0c0eaab20e8ec4509f5f45b03a521207dee5f57624355074235a8d23d3d221a5"
+            },
+            {
+              "name": "personal-plan traits keep shared primitives canonical and namespace divergent answers",
+              "line": 95,
+              "callbackSha256": "60b649fd119338f4cb6650e8b7df8f4de94d11f155a58b10d068e9a39174a92a"
+            },
+            {
+              "name": "every structured Personal Plan concern has a readable Customer.io label",
+              "line": 144,
+              "callbackSha256": "858f90f2a5b2fe79a061d4a848df57fa5f02daffeeb4bd18844c3046ced237b4"
+            },
+            {
+              "name": "personal-plan live sync identifies first and emits one dedicated stable completion event",
+              "line": 168,
+              "callbackSha256": "f461d10d08fc1cf06f1826b22ef2ca06b7d06b71c9d8c326fe962931bf528c5f"
+            },
+            {
+              "name": "personal-plan profile-only sync cannot emit a completion event",
+              "line": 216,
+              "callbackSha256": "ca34ca967b823b0c1d16d7bf76b696c9d2f42f3e14e2748db0a8464288d95e59"
+            },
+            {
+              "name": "personal-plan sync does not emit the completion event when identify failed",
+              "line": 247,
+              "callbackSha256": "fa07f03d8abd2a6aae462a68c2680f90cb4d377eba4b252f940bd8151fb68891"
+            }
+          ]
+        },
+        {
+          "file": "tests/trial-reminders-delivery.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/before/tests/trial-reminders-delivery.test.ts",
+          "sha256": "4d038a49993c52a0e3b05d97eb2b3ef0e58f6a38051ef344c184944c6b539883",
+          "bytes": 5586,
+          "sites": [
+            {
+              "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner",
+              "line": 69,
+              "callbackSha256": "2d87109bbfa23979f12033eb5defaf91a2690c1cbcf530f0d4341d2e88a4a8c8"
+            },
+            {
+              "name": "off switch and missing configuration cannot enqueue, claim or send",
+              "line": 78,
+              "callbackSha256": "b3e23609b89d4a27d2824b0b69c173b1018f6c6a8f11ea61b768b31fbfb776ed"
+            },
+            {
+              "name": "cancellation or expiry after claim suppresses send at the fresh database gate",
+              "line": 94,
+              "callbackSha256": "1169f3f6b12a4354dc958f4b3dd75d366cf560da1614f593f16ecbfb9205ed3f"
+            },
+            {
+              "name": "fresh current terms are rendered, not stale terms claimed earlier",
+              "line": 101,
+              "callbackSha256": "1e615bcedaf4c23d99c2d9c6f93d9fdf8ed5c180c89ab5d46f8518fb07aa1ca6"
+            },
+            {
+              "name": "missing verified owner and malformed or swapped fresh claims send nothing",
+              "line": 120,
+              "callbackSha256": "58e22a0c179aa7d8fe922b720e43a7292faa2f52d017caca1bcfd0a81abb8c16"
+            },
+            {
+              "name": "ambiguous delivery, malformed ACK and HTTP rejection park with no retry",
+              "line": 132,
+              "callbackSha256": "338efdb5717f6a6582ec2c0b5acebc4d3f6a67f38205c74a01b5c702c595041b"
+            },
+            {
+              "name": "post-send settlement failure propagates and never repeats provider send",
+              "line": 159,
+              "callbackSha256": "84b978a9b9724abf4bd5c16bbd37100a710516cc88ebf0ba8b53e49acd725cd0"
+            }
+          ]
+        },
+        {
+          "file": "tests/trial-reminders-route.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/before/tests/trial-reminders-route.test.ts",
+          "sha256": "fe5a7895bb32c56ecab2ec5d5c318d4ad31df4a515f05288b5b60ce04b186a5b",
+          "bytes": 2853,
+          "sites": [
+            {
+              "name": "reminder cron authenticates before all work and exposes aggregate state only",
+              "line": 19,
+              "callbackSha256": "44aad0862dbf23fe6e10ae52b939f849b465b0b0054ccfe30098adcf6574f094"
+            },
+            {
+              "name": "configured five-minute cron reaches server-auth handler without browser login",
+              "line": 58,
+              "callbackSha256": "f010d1e065c232234ba2bd3c04b0115c18a7be8d2d8aaec5b813c385a91980c5"
+            }
+          ]
+        },
+        {
+          "file": "tests/trial-reminders-sql.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/before/tests/trial-reminders-sql.test.ts",
+          "sha256": "7bd9f68677a43c8537fab8b8a3448affccbce179c4a01264d91a4995fd5dc540",
+          "bytes": 14852,
+          "sites": [
+            {
+              "name": "queues each eligible Stripe and PayPal new trial exactly once using the frozen required-notice contract shape",
+              "line": 70,
+              "callbackSha256": "9368d1cee78440e93475a625618ca78e63387898c2a461a3d93109a2389dd0f0"
+            },
+            {
+              "name": "does not queue before the immutable trial end is within 48 hours",
+              "line": 93,
+              "callbackSha256": "900f9da65c9d67088ee545f19bf9dca6efe75ceba9f48309c53db8d9dc1ec1e8"
+            },
+            {
+              "name": "rollout cutoff excludes earlier trials and cancellation suppresses an already queued reminder",
+              "line": 107,
+              "callbackSha256": "c0da61bcb8bffed7f65d6defcbf12fcfe938662b32f2f10613a02274c5defa7e"
+            },
+            {
+              "name": "paid, revoked, expired, and provider-unresolved trials never queue",
+              "line": 128,
+              "callbackSha256": "cb2d0753ccd68441dc5e11d57be811111ec85018a046e39ed454b60b46b871a5"
+            },
+            {
+              "name": "fresh prepare fences cancellation and repeated workers before a provider call",
+              "line": 145,
+              "callbackSha256": "8a76f4f9f2da3f579d7c919e845e7e719ea327d72dd519a9533e35c9997dedf7"
+            },
+            {
+              "name": "cancellation after claim is a fresh no-send fence, while an undispatched failure can be parked",
+              "line": 187,
+              "callbackSha256": "f8f18787d7f79841424bfe4feceb12641a76533792bdcbbcc1a65a9fe5bfb56a"
+            },
+            {
+              "name": "a temporary management change holds a claimed reminder and releases it after reconciliation",
+              "line": 236,
+              "callbackSha256": "b4f5f1a617cb1ea9e6186e79e4593ae9ce5418c170a99572dadead99be1344f7"
+            },
+            {
+              "name": "expired leases park for support and stale completion cannot overwrite the outcome",
+              "line": 296,
+              "callbackSha256": "354c4033067c25a1b11ab4d157c74cd3392aa8268d40c43df93c171924663374"
+            },
+            {
+              "name": "private rows and RPCs remain service-only",
+              "line": 331,
+              "callbackSha256": "ffb23bed1e619e751e3605aba900080e4382a540a8923a1ad021fff4a589a06e"
+            },
+            {
+              "name": "the dispatcher consumes the actual SQL RPC shape and records a fake Customer.io acknowledgement",
+              "line": 344,
+              "callbackSha256": "3c826044eec6bbec400258953b30d176e366c68b9b65c6b40e5a3f29125e6867"
+            }
+          ]
+        },
+        {
+          "file": "tests/trial-reminders.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/before/tests/trial-reminders.test.ts",
+          "sha256": "29a94585fc005d32f45742d6abfb6ab406108f9d8206ea61d1476cc439198f10",
+          "bytes": 4227,
+          "sites": [
+            {
+              "name": "builds a concise, truthful annual reminder using accepted contract facts",
+              "line": 20,
+              "callbackSha256": "a14b5837ffbe749919caaac73cdd6c6f25ca5326809dcd3e16bcf9ca53eef9b9"
+            },
+            {
+              "name": "supports the accepted monthly and annual price contracts without inventing amounts",
+              "line": 37,
+              "callbackSha256": "e8c8ed54c44b77aa7f66ddea916695bbdac6725a8c54f9419931b99908cf9a45"
+            },
+            {
+              "name": "rejects malformed accepted terms rather than creating a reminder with fallback billing facts",
+              "line": 54,
+              "callbackSha256": "6ce5ba3a676d4e03cfacaf44e8f86d172f34076afddb3743b6ea1b46bc8f3dc4"
+            },
+            {
+              "name": "escapes all rendered data and keeps its trusted links fixed",
+              "line": 65,
+              "callbackSha256": "44e6ae08b3ca18ea8515e42ebef1ac27cafd882e10aa7bedf158f32d89cad590"
+            },
+            {
+              "name": "PayPal reminder states the day-after first-charge date while the trial end stays exact",
+              "line": 85,
+              "callbackSha256": "f6e67769d28ef499b4da3627c7ae82c6fae129b1f97fdf2f05440d07866af221"
+            },
+            {
+              "name": "Stripe reminder keeps the trial-end date as the first-charge date",
+              "line": 92,
+              "callbackSha256": "4e711dba6e7c03a9bb521a686571ebf887fa97caafa1846db4af1de5c592d842"
+            }
+          ]
+        }
+      ],
+      "sites": 94
+    },
+    "transfer": {
+      "files": [
+        {
+          "file": "tests/customerio-funnel-attribution.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/transfer/tests/customerio-funnel-attribution.test.ts",
+          "sha256": "6ed39b86b29f805839b312a4b3ba8264fdab27736bbe8e5a93b43ef2ae854442",
+          "bytes": 2538,
+          "sites": [
+            {
+              "name": "Customer.io enriches cold funnel events and isolates queued dispatch failures",
+              "line": 11,
+              "callbackSha256": "7b0f00d38085d55cea69add47a524b2cbdaa74bb023a13899b81dbe5e91e7429"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-page-view.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/transfer/tests/customerio-page-view.test.ts",
+          "sha256": "27174c87f727c38270019127b648b9ec9f159d80fbccaf75d5d84d7b0beec3a8",
+          "bytes": 3475,
+          "sites": [
+            {
+              "name": "Customer.io page paths preserve the canonical result identifier and entry context",
+              "line": 11,
+              "callbackSha256": "48a8e9cfe88764fb34216b9865dbd8cdf88c2e25618b8bd4a8de798b1073629f"
+            },
+            {
+              "name": "Customer.io page paths omit a trailing question mark without query parameters",
+              "line": 24,
+              "callbackSha256": "f3f1766601e1e813cee4b10ff38a09b9189f3f0e9213c892d2494068654e39cb"
+            },
+            {
+              "name": "Customer.io page paths remove credentials, identifiers, and nested return URLs",
+              "line": 29,
+              "callbackSha256": "ad64bf2b07a8bafaf25ab70a0ee5c7b1a6c828ffe08f23c0c16ca677b21883f3"
+            },
+            {
+              "name": "Customer.io page paths reject arbitrary values under otherwise safe keys",
+              "line": 47,
+              "callbackSha256": "a677cda2b1468268484615b9d5901334e07861fd6c5eade834b14ea59e53723a"
+            },
+            {
+              "name": "shared analytics URL sanitization removes sensitive queries and fragments",
+              "line": 56,
+              "callbackSha256": "d38f39604551761666b8bd76deb4fbe2ad20d183b5e1714de95d45d8391fc846"
+            },
+            {
+              "name": "Meta page tracking recognizes credential-bearing browser locations",
+              "line": 71,
+              "callbackSha256": "76441310207c242a6738c5c7f1ec749ea247170ff7f113ea2db63490dd52a034"
+            },
+            {
+              "name": "Meta offer CAPI uses a verified aggregate URL without the lead identifier",
+              "line": 92,
+              "callbackSha256": "3305e3378f948e5cb89218ca7b4cca76bc824efa97e584517c39ee2cd0260249"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-quiz-traits.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/transfer/tests/customerio-quiz-traits.test.ts",
+          "sha256": "031ea416261df983bb005af146801cf791a3c6136947bcf8dba638f80858d5ed",
+          "bytes": 6733,
+          "sites": [
+            {
+              "name": "builds rich Customer.io quiz traits with labels when consent is true",
+              "line": 6,
+              "callbackSha256": "66a568fd469fe644c96ece0a5d28c1e2133d5b078cdf82fabfb2364162bbd54e"
+            },
+            {
+              "name": "keeps inherited consent time separate from the fresh quiz completion",
+              "line": 74,
+              "callbackSha256": "5c97f933247415205150fd21eb0aeccfde3a34535aadf37659d12edf530c52cd"
+            },
+            {
+              "name": "builds rich Customer.io quiz traits when marketing consent is false",
+              "line": 101,
+              "callbackSha256": "b2ab744471393e341d161666602564d8de0aedf2eec752b1e4faa3e2b4944a40"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-server.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/transfer/tests/customerio-server.test.ts",
+          "sha256": "5b1d7dc366ad6a9bfea5d04938d78298c6e20e33a163931e47b9919edbdbb4f8",
+          "bytes": 3049,
+          "sites": [
+            {
+              "name": "server identify uses Customer.io EU Pipelines strict mode",
+              "line": 20,
+              "callbackSha256": "a481c36993551ba4833f3c8d582d3dfc16145a01ef08598f782b4c80c3a3c71f"
+            },
+            {
+              "name": "server track returns a failed result instead of throwing",
+              "line": 56,
+              "callbackSha256": "bd0e686125bb1a336d01ef7ea1127e797bdaf92155035ec80cd6b6e1853fed43"
+            },
+            {
+              "name": "server helper no-ops when CUSTOMERIO_SERVER_WRITE_KEY is missing",
+              "line": 76,
+              "callbackSha256": "affd0e2544eb718c741cc42d0c897086df629e952cc722b9a415b19ab07c8176"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-stripe-lifecycle.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/transfer/tests/customerio-stripe-lifecycle.test.ts",
+          "sha256": "be1850ffe3258d8117806fbf4b5fc0c9c783e15577934fe7353dde13ec7cff88",
+          "bytes": 4289,
+          "sites": [
+            {
+              "name": "builds purchase and subscription events from a completed checkout",
+              "line": 10,
+              "callbackSha256": "8830b978c35eff27b7389a67218475d97ca04c9bb53b6ae9e5f7dcae513c78bf"
+            },
+            {
+              "name": "does not build paid Customer.io lifecycle events for a verified trial",
+              "line": 48,
+              "callbackSha256": "d4edd198bc0ac8b749b719ec31771f24b90ecf78590cbcfd4a6f55714dd80995"
+            },
+            {
+              "name": "builds payment_failed from an invoice",
+              "line": 73,
+              "callbackSha256": "c76a39762ef2937eff3329fe0f439c9729719b8f3b511197a123bdf23e82b91b"
+            },
+            {
+              "name": "builds subscription cancellation with event-id-scoped dedupe",
+              "line": 98,
+              "callbackSha256": "b65dc3df2e192f697ab1bb16584098ce20653f15db5b343aae415a97dbb0104b"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-transactional.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/transfer/tests/customerio-transactional.test.ts",
+          "sha256": "e63066b69234b91eb7631d8c84eb3ede31c110e8855293f0c0b17f0c31d7c623",
+          "bytes": 6694,
+          "sites": [
+            {
+              "name": "builds Customer.io App API transactional request with privacy flags",
+              "line": 13,
+              "callbackSha256": "306caae3d2be91e984fb4384c6581ec740343aa9e95df115bec5ff48505c570f"
+            },
+            {
+              "name": "sends Customer.io transactional email through the App API",
+              "line": 31,
+              "callbackSha256": "c2c864e2d499f30d000fa44bb9bc9c468fb6963f8904a1a6341b0613acff72b8"
+            },
+            {
+              "name": "throws with status and response text for non-ok responses",
+              "line": 65,
+              "callbackSha256": "30190ce4c0a50274ef0d0102e5544fd419180555ce86ce3f4d9da42eba035052"
+            },
+            {
+              "name": "returns the documented Customer.io delivery receipt",
+              "line": 81,
+              "callbackSha256": "c2ec387e1624f492579722cd14383125995f32e85c0f8d8065c6ee6a3c07ce99"
+            },
+            {
+              "name": "classifies non-2xx responses as definitive HTTP failures",
+              "line": 101,
+              "callbackSha256": "da176b800e1039d9e74483686c0e857db7b32dcbb022d00fbbd83e118c0ea286"
+            },
+            {
+              "name": "treats network failures and malformed success receipts as ambiguous",
+              "line": 117,
+              "callbackSha256": "2d5a3c386387814b884ecd53c953f1457a607994ba6d4737e2c1da7ea6dfc19d"
+            },
+            {
+              "name": "inline required receipts preserve safe flags and provide complete per-send content without altering old callers",
+              "line": 143,
+              "callbackSha256": "f603849678afbce9a21ebb08d87047494792cebe1fe33e803dce338fef05a36e"
+            },
+            {
+              "name": "sends the attachment dictionary alongside content and rejects oversized attachments before fetch",
+              "line": 167,
+              "callbackSha256": "6b3886c1c18f4863b0b4a8a716505eed867fcc34ff27051cab56231931c309f2"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-trial-reminder.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/transfer/tests/customerio-trial-reminder.test.ts",
+          "sha256": "dc2b1e4802c38ffbafa95bcedb8ea60f57bdb6aaea6fe744792a388c36201969",
+          "bytes": 3579,
+          "sites": [
+            {
+              "name": "builds the stored Customer.io transactional message with privacy-preserving flags",
+              "line": 29,
+              "callbackSha256": "347bfe8cdb59b83b50daf5d5b8754bda695e7cb555ab1cbe56e24f6d580d6b91"
+            },
+            {
+              "name": "rejects CRLF injection at the transport boundary",
+              "line": 71,
+              "callbackSha256": "2688e4b116c218a51878724d00d306751b313f655d58a6f4e69de7705bd86b30"
+            }
+          ]
+        },
+        {
+          "file": "tests/email-deliverability.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/transfer/tests/email-deliverability.test.ts",
+          "sha256": "6ee6acc729fd572b5f632356382511100d628cb93b7e07018f01e08e4a5ee714",
+          "bytes": 9622,
+          "sites": [
+            {
+              "name": "korrigiert belegte Provider-Tippfehler aus den Bounce-Logs",
+              "line": 51,
+              "callbackSha256": "becff278f2b00a6e6072e9ab6cde2abd497c43c1070586bd4636e51847d98b79"
+            },
+            {
+              "name": "schlaegt nichts vor bei real existierenden Domains",
+              "line": 59,
+              "callbackSha256": "df792074bf8a4cd50ec3554a4ec3bf7e0f753b4dca1cddd1911235c39dddd70b"
+            },
+            {
+              "name": "verkraftet unvollstaendige Eingaben ohne zu werfen",
+              "line": 71,
+              "callbackSha256": "2ba53f1ff6404068a079e3e8c4d134bdbe8341da8a6a2e2cf1d9a8484ea0ec43"
+            },
+            {
+              "name": "nimmt Grossanbieter ohne DNS-Abfrage an",
+              "line": 80,
+              "callbackSha256": "96502ba29a059017038ad956b4b4c824b0a1dae2de1166cdf4ce86b2d21723c8"
+            },
+            {
+              "name": "nimmt Domains mit gueltigem MX an",
+              "line": 96,
+              "callbackSha256": "b8106cfbf502c5b575cec211adfdda28ba3a4f0c1745fcf883f3932fd6ca860d"
+            },
+            {
+              "name": "lehnt Null MX nach RFC 7505 ab",
+              "line": 103,
+              "callbackSha256": "1f0d0a78d6dc3539185c844b468b82ab1f7e7eef1a7a18e84d9d45a77b86a471"
+            },
+            {
+              "name": "nimmt Domains ohne MX an, wenn ein A-Eintrag existiert (RFC 5321)",
+              "line": 112,
+              "callbackSha256": "c96806a309f0dc5dfac4360eb29927546552a70b96b9c68e3561afaa80af6181"
+            },
+            {
+              "name": "nimmt Domains ohne MX an, wenn ein AAAA-Eintrag existiert",
+              "line": 119,
+              "callbackSha256": "76630d475b38987a7637997e96acb8ea91afa637b9b5184f5f5348c57c48ef20"
+            },
+            {
+              "name": "nimmt einen gueltigen A-Eintrag trotz transientem AAAA-Fehler als impliziten MX an",
+              "line": 125,
+              "callbackSha256": "5597bcd0990bb599c10c05df1580ae733a36db21b752cbab9cc477176f3e79ad"
+            },
+            {
+              "name": "lehnt Domains ohne MX und ohne A/AAAA ab und liefert den Vorschlag mit",
+              "line": 141,
+              "callbackSha256": "42dce8e15e1b3caca5f8da1433e810ff91d3f3ea247bf2108e9beb20adc6a1c3"
+            },
+            {
+              "name": "lehnt ungueltiges Format ab, ohne DNS zu fragen",
+              "line": 165,
+              "callbackSha256": "cd72b02826e39a4341734d41c91aa9d781f0b7336bac92c4246bc94e97d6c034"
+            },
+            {
+              "name": "laesst bei DNS-Zeitueberschreitung durch",
+              "line": 183,
+              "callbackSha256": "5dadfa6aa077eb72fb7660565361b1b370c9f2f13b92d67600278a4168954379"
+            },
+            {
+              "name": "laesst bei unerwartetem Resolver-Fehler durch",
+              "line": 197,
+              "callbackSha256": "95656ee01adfd146ace319a8c7b3996a5e4eb476ab171910f132018cdb95e1f3"
+            },
+            {
+              "name": "laesst durch, wenn der A/AAAA-Fallback in einen Timeout laeuft",
+              "line": 206,
+              "callbackSha256": "fc39505c2c5a7b9e6c63a0db5a089d403ee8345649457cf615162e5437660228"
+            },
+            {
+              "name": "teilt ein einziges Zeitbudget zwischen MX und A/AAAA",
+              "line": 219,
+              "callbackSha256": "59490b6c9dec930315320b49fc111582e5e50a9968fc870e4fb3b5a1ff235f1a"
+            },
+            {
+              "name": "raeumt den Timeout nach erfolgreichem Lookup ab",
+              "line": 253,
+              "callbackSha256": "9142341b9908af6108999db8b6feda7658b1f6bd5b394c45f017d5b52d655edd"
+            },
+            {
+              "name": "normalisiert die Adresse auf Kleinschreibung ohne Leerzeichen",
+              "line": 263,
+              "callbackSha256": "2e8ff9822ff0b663db19760478f0f9d6c0eee44fe2b450281d635ee80017e440"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-backfill.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/transfer/tests/personal-plan-customerio-backfill.test.ts",
+          "sha256": "be9bca9cb831d5865066086902c00a8072a891922c04ed646b792976f5ffaec0",
+          "bytes": 4480,
+          "sites": [
+            {
+              "name": "live backfill requires an explicit campaign-safety preflight",
+              "line": 55,
+              "callbackSha256": "dab0d996be144679175933560d27a07d52a9bacd98ebf6217f60f35e56d91f1a"
+            },
+            {
+              "name": "historical backfill explicitly requests profile-only work",
+              "line": 68,
+              "callbackSha256": "3a496fa7571653e8d03fe0e89bc472e0415412788e8ab8d5be9489ac63eea45b"
+            },
+            {
+              "name": "dry-run backfill performs no database writes or Customer.io dispatch",
+              "line": 92,
+              "callbackSha256": "febd625492b5478e3316c566971b9a591398b5bd7991bcfb30aa2262ab27f460"
+            },
+            {
+              "name": "backfill reports queued retries separately from delivered profiles",
+              "line": 111,
+              "callbackSha256": "0a765e1d6906be8af05abf9790fc1d775d767cbabc3b6fac2c313795e6102ac8"
+            },
+            {
+              "name": "backfill continues when immediate dispatch throws because the durable row already exists",
+              "line": 124,
+              "callbackSha256": "33823987847d76a3d5933fa1445291d3ef7636df765bba4babbeef9cac491d8c"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-outbox-migration.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/transfer/tests/personal-plan-customerio-outbox-migration.test.ts",
+          "sha256": "64942258052b2070bb6e9f3fe3ad43ee527807634ffcfa5d2e94c0510f8230ab",
+          "bytes": 2579,
+          "sites": [
+            {
+              "name": "Customer.io profile outbox migration keeps payload in source tables and private delivery state",
+              "line": 7,
+              "callbackSha256": "fa69d99e1dbe7858f21a3cf65e4cf7419e30f38b31d715f5d6f89a8ad7b93c55"
+            },
+            {
+              "name": "Customer.io profile outbox makes only newly inserted consented leads event eligible",
+              "line": 22,
+              "callbackSha256": "aa58fb9fc8713184b3fbd7a60e222f07ba3f2bc4fcf96b5fef9b34997ceb95f3"
+            },
+            {
+              "name": "profile-only backfill request cannot create or downgrade event eligibility",
+              "line": 40,
+              "callbackSha256": "9c0c1f5ca52e4d8763a881c80daa8f1a52d0c42b85d3cc712a70f40bcd8dd9b7"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-outbox.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/transfer/tests/personal-plan-customerio-outbox.test.ts",
+          "sha256": "b5383f7bbf478b7ce0d28cc14dada85fcd307f7bb560a44e700c051ba2735522",
+          "bytes": 6775,
+          "sites": [
+            {
+              "name": "new lead delivery identifies current Supabase truth before the completion event",
+              "line": 119,
+              "callbackSha256": "d1ed7fd025db87933c5711b6b133d0422e33f2151a7f360682eefce88d92825a"
+            },
+            {
+              "name": "historical profile-only outbox row can never request the completion event",
+              "line": 134,
+              "callbackSha256": "57126f27d326e357de1c1602a9465beb186ce48489d700350cf360feea7b9cde"
+            },
+            {
+              "name": "field-test profile sync never emits the commercial completion event",
+              "line": 145,
+              "callbackSha256": "fa0c6cd6828756f816e982c22f9c15fb7d115551efd9efa1382ee7d07d6c3d40"
+            },
+            {
+              "name": "moderator lead remains non-commercial after its funnel moves to a newer result",
+              "line": 157,
+              "callbackSha256": "a35421399d7b6fd82fa5852395ed79660dbead762e9598d403f5f09863a18d95"
+            },
+            {
+              "name": "profile updates do not resend an already delivered completion event",
+              "line": 175,
+              "callbackSha256": "76b8d72aa854bd34aa4d160089ded23e21d8bee7ba0dbf31bb7228714abb0272"
+            },
+            {
+              "name": "transient Customer.io failures are recorded for retry instead of reported as delivered",
+              "line": 187,
+              "callbackSha256": "0bf21ef1e4ed495012062c42001c0f1960715f938fd482f96232e470355bf96f"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-reconcile-route.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/transfer/tests/personal-plan-customerio-reconcile-route.test.ts",
+          "sha256": "c9f0b471be35d72524a78fb6901c68e4e17872af798fed24eb84306311afae4d",
+          "bytes": 1927,
+          "sites": [
+            {
+              "name": "Customer.io fallback retry uses a Vercel Hobby-compatible daily schedule",
+              "line": 15,
+              "callbackSha256": "2a00686a005bf6190a51f70cbcc1b085e9e6a85df21b7bd5f0a208536335c62b"
+            },
+            {
+              "name": "Customer.io profile reconcile is bounded and authenticates before retry work",
+              "line": 29,
+              "callbackSha256": "9140055391a0731b031e2d4fe56b4909d8b9d5055c32d086b1ecd97b32d38b0a"
+            },
+            {
+              "name": "Customer.io profile reconcile drains a bounded retry batch",
+              "line": 46,
+              "callbackSha256": "116d5302599798acfe692966b9cfd9d37ed5d9222773d7b8d2382c555ebf60ab"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-sync.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/transfer/tests/personal-plan-customerio-sync.test.ts",
+          "sha256": "ebfe19864a6d6104aa15772ab7735689dfe2bb09cb4cd982dba8def74dd52f3c",
+          "bytes": 9715,
+          "sites": [
+            {
+              "name": "historical profile parsing is total over malformed v2 concern data",
+              "line": 41,
+              "callbackSha256": "3480dfe26e13b718b54e83d6e8ce3bf39a3d874a395aee2c380b03d4a4f5b5db"
+            },
+            {
+              "name": "historical profile parsing preserves the exact v2 concern vocabulary and labels",
+              "line": 59,
+              "callbackSha256": "0c0eaab20e8ec4509f5f45b03a521207dee5f57624355074235a8d23d3d221a5"
+            },
+            {
+              "name": "personal-plan traits keep shared primitives canonical and namespace divergent answers",
+              "line": 95,
+              "callbackSha256": "60b649fd119338f4cb6650e8b7df8f4de94d11f155a58b10d068e9a39174a92a"
+            },
+            {
+              "name": "every structured Personal Plan concern has a readable Customer.io label",
+              "line": 144,
+              "callbackSha256": "858f90f2a5b2fe79a061d4a848df57fa5f02daffeeb4bd18844c3046ced237b4"
+            },
+            {
+              "name": "personal-plan live sync identifies first and emits one dedicated stable completion event",
+              "line": 168,
+              "callbackSha256": "f461d10d08fc1cf06f1826b22ef2ca06b7d06b71c9d8c326fe962931bf528c5f"
+            },
+            {
+              "name": "personal-plan profile-only sync cannot emit a completion event",
+              "line": 216,
+              "callbackSha256": "ca34ca967b823b0c1d16d7bf76b696c9d2f42f3e14e2748db0a8464288d95e59"
+            },
+            {
+              "name": "personal-plan sync does not emit the completion event when identify failed",
+              "line": 247,
+              "callbackSha256": "fa07f03d8abd2a6aae462a68c2680f90cb4d377eba4b252f940bd8151fb68891"
+            }
+          ]
+        },
+        {
+          "file": "tests/trial-reminders-delivery.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/transfer/tests/trial-reminders-delivery.test.ts",
+          "sha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf",
+          "bytes": 7535,
+          "sites": [
+            {
+              "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner",
+              "line": 70,
+              "callbackSha256": "51a7c39f4644407213095c0c5b4c69371cd990f241618ceba0463a1d48863d30"
+            },
+            {
+              "name": "off switch and missing configuration cannot enqueue, claim or send",
+              "line": 116,
+              "callbackSha256": "b3e23609b89d4a27d2824b0b69c173b1018f6c6a8f11ea61b768b31fbfb776ed"
+            },
+            {
+              "name": "cancellation or expiry after claim suppresses send at the fresh database gate",
+              "line": 132,
+              "callbackSha256": "1169f3f6b12a4354dc958f4b3dd75d366cf560da1614f593f16ecbfb9205ed3f"
+            },
+            {
+              "name": "fresh current terms are rendered, not stale terms claimed earlier",
+              "line": 139,
+              "callbackSha256": "1e615bcedaf4c23d99c2d9c6f93d9fdf8ed5c180c89ab5d46f8518fb07aa1ca6"
+            },
+            {
+              "name": "missing verified owner and malformed or swapped fresh claims send nothing",
+              "line": 158,
+              "callbackSha256": "58e22a0c179aa7d8fe922b720e43a7292faa2f52d017caca1bcfd0a81abb8c16"
+            },
+            {
+              "name": "ambiguous delivery, malformed ACK and HTTP rejection park with no retry",
+              "line": 170,
+              "callbackSha256": "338efdb5717f6a6582ec2c0b5acebc4d3f6a67f38205c74a01b5c702c595041b"
+            },
+            {
+              "name": "post-send settlement failure propagates and never repeats provider send",
+              "line": 197,
+              "callbackSha256": "84b978a9b9724abf4bd5c16bbd37100a710516cc88ebf0ba8b53e49acd725cd0"
+            }
+          ]
+        },
+        {
+          "file": "tests/trial-reminders-route.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/transfer/tests/trial-reminders-route.test.ts",
+          "sha256": "fe5a7895bb32c56ecab2ec5d5c318d4ad31df4a515f05288b5b60ce04b186a5b",
+          "bytes": 2853,
+          "sites": [
+            {
+              "name": "reminder cron authenticates before all work and exposes aggregate state only",
+              "line": 19,
+              "callbackSha256": "44aad0862dbf23fe6e10ae52b939f849b465b0b0054ccfe30098adcf6574f094"
+            },
+            {
+              "name": "configured five-minute cron reaches server-auth handler without browser login",
+              "line": 58,
+              "callbackSha256": "f010d1e065c232234ba2bd3c04b0115c18a7be8d2d8aaec5b813c385a91980c5"
+            }
+          ]
+        },
+        {
+          "file": "tests/trial-reminders-sql.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/transfer/tests/trial-reminders-sql.test.ts",
+          "sha256": "7bd9f68677a43c8537fab8b8a3448affccbce179c4a01264d91a4995fd5dc540",
+          "bytes": 14852,
+          "sites": [
+            {
+              "name": "queues each eligible Stripe and PayPal new trial exactly once using the frozen required-notice contract shape",
+              "line": 70,
+              "callbackSha256": "9368d1cee78440e93475a625618ca78e63387898c2a461a3d93109a2389dd0f0"
+            },
+            {
+              "name": "does not queue before the immutable trial end is within 48 hours",
+              "line": 93,
+              "callbackSha256": "900f9da65c9d67088ee545f19bf9dca6efe75ceba9f48309c53db8d9dc1ec1e8"
+            },
+            {
+              "name": "rollout cutoff excludes earlier trials and cancellation suppresses an already queued reminder",
+              "line": 107,
+              "callbackSha256": "c0da61bcb8bffed7f65d6defcbf12fcfe938662b32f2f10613a02274c5defa7e"
+            },
+            {
+              "name": "paid, revoked, expired, and provider-unresolved trials never queue",
+              "line": 128,
+              "callbackSha256": "cb2d0753ccd68441dc5e11d57be811111ec85018a046e39ed454b60b46b871a5"
+            },
+            {
+              "name": "fresh prepare fences cancellation and repeated workers before a provider call",
+              "line": 145,
+              "callbackSha256": "8a76f4f9f2da3f579d7c919e845e7e719ea327d72dd519a9533e35c9997dedf7"
+            },
+            {
+              "name": "cancellation after claim is a fresh no-send fence, while an undispatched failure can be parked",
+              "line": 187,
+              "callbackSha256": "f8f18787d7f79841424bfe4feceb12641a76533792bdcbbcc1a65a9fe5bfb56a"
+            },
+            {
+              "name": "a temporary management change holds a claimed reminder and releases it after reconciliation",
+              "line": 236,
+              "callbackSha256": "b4f5f1a617cb1ea9e6186e79e4593ae9ce5418c170a99572dadead99be1344f7"
+            },
+            {
+              "name": "expired leases park for support and stale completion cannot overwrite the outcome",
+              "line": 296,
+              "callbackSha256": "354c4033067c25a1b11ab4d157c74cd3392aa8268d40c43df93c171924663374"
+            },
+            {
+              "name": "private rows and RPCs remain service-only",
+              "line": 331,
+              "callbackSha256": "ffb23bed1e619e751e3605aba900080e4382a540a8923a1ad021fff4a589a06e"
+            },
+            {
+              "name": "the dispatcher consumes the actual SQL RPC shape and records a fake Customer.io acknowledgement",
+              "line": 344,
+              "callbackSha256": "3c826044eec6bbec400258953b30d176e366c68b9b65c6b40e5a3f29125e6867"
+            }
+          ]
+        },
+        {
+          "file": "tests/trial-reminders.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/transfer/tests/trial-reminders.test.ts",
+          "sha256": "29a94585fc005d32f45742d6abfb6ab406108f9d8206ea61d1476cc439198f10",
+          "bytes": 4227,
+          "sites": [
+            {
+              "name": "builds a concise, truthful annual reminder using accepted contract facts",
+              "line": 20,
+              "callbackSha256": "a14b5837ffbe749919caaac73cdd6c6f25ca5326809dcd3e16bcf9ca53eef9b9"
+            },
+            {
+              "name": "supports the accepted monthly and annual price contracts without inventing amounts",
+              "line": 37,
+              "callbackSha256": "e8c8ed54c44b77aa7f66ddea916695bbdac6725a8c54f9419931b99908cf9a45"
+            },
+            {
+              "name": "rejects malformed accepted terms rather than creating a reminder with fallback billing facts",
+              "line": 54,
+              "callbackSha256": "6ce5ba3a676d4e03cfacaf44e8f86d172f34076afddb3743b6ea1b46bc8f3dc4"
+            },
+            {
+              "name": "escapes all rendered data and keeps its trusted links fixed",
+              "line": 65,
+              "callbackSha256": "44e6ae08b3ca18ea8515e42ebef1ac27cafd882e10aa7bedf158f32d89cad590"
+            },
+            {
+              "name": "PayPal reminder states the day-after first-charge date while the trial end stays exact",
+              "line": 85,
+              "callbackSha256": "f6e67769d28ef499b4da3627c7ae82c6fae129b1f97fdf2f05440d07866af221"
+            },
+            {
+              "name": "Stripe reminder keeps the trial-end date as the first-charge date",
+              "line": 92,
+              "callbackSha256": "4e711dba6e7c03a9bb521a686571ebf887fa97caafa1846db4af1de5c592d842"
+            }
+          ]
+        }
+      ],
+      "sites": 94
+    },
+    "cut": {
+      "files": [
+        {
+          "file": "tests/customerio-funnel-attribution.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/cut/tests/customerio-funnel-attribution.test.ts",
+          "sha256": "6ed39b86b29f805839b312a4b3ba8264fdab27736bbe8e5a93b43ef2ae854442",
+          "bytes": 2538,
+          "sites": [
+            {
+              "name": "Customer.io enriches cold funnel events and isolates queued dispatch failures",
+              "line": 11,
+              "callbackSha256": "7b0f00d38085d55cea69add47a524b2cbdaa74bb023a13899b81dbe5e91e7429"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-page-view.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/cut/tests/customerio-page-view.test.ts",
+          "sha256": "f7cbeff8443b65be033cb5d39ae83a227dea8e9602ff23bfc57bf42601caeffe",
+          "bytes": 3204,
+          "sites": [
+            {
+              "name": "Customer.io page paths preserve the canonical result identifier and entry context",
+              "line": 10,
+              "callbackSha256": "48a8e9cfe88764fb34216b9865dbd8cdf88c2e25618b8bd4a8de798b1073629f"
+            },
+            {
+              "name": "Customer.io page paths omit a trailing question mark without query parameters",
+              "line": 23,
+              "callbackSha256": "f3f1766601e1e813cee4b10ff38a09b9189f3f0e9213c892d2494068654e39cb"
+            },
+            {
+              "name": "Customer.io page paths remove credentials, identifiers, and nested return URLs",
+              "line": 28,
+              "callbackSha256": "ad64bf2b07a8bafaf25ab70a0ee5c7b1a6c828ffe08f23c0c16ca677b21883f3"
+            },
+            {
+              "name": "Customer.io page paths reject arbitrary values under otherwise safe keys",
+              "line": 46,
+              "callbackSha256": "a677cda2b1468268484615b9d5901334e07861fd6c5eade834b14ea59e53723a"
+            },
+            {
+              "name": "shared analytics URL sanitization removes sensitive queries and fragments",
+              "line": 55,
+              "callbackSha256": "d38f39604551761666b8bd76deb4fbe2ad20d183b5e1714de95d45d8391fc846"
+            },
+            {
+              "name": "Meta page tracking recognizes credential-bearing browser locations",
+              "line": 70,
+              "callbackSha256": "76441310207c242a6738c5c7f1ec749ea247170ff7f113ea2db63490dd52a034"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-quiz-traits.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/cut/tests/customerio-quiz-traits.test.ts",
+          "sha256": "031ea416261df983bb005af146801cf791a3c6136947bcf8dba638f80858d5ed",
+          "bytes": 6733,
+          "sites": [
+            {
+              "name": "builds rich Customer.io quiz traits with labels when consent is true",
+              "line": 6,
+              "callbackSha256": "66a568fd469fe644c96ece0a5d28c1e2133d5b078cdf82fabfb2364162bbd54e"
+            },
+            {
+              "name": "keeps inherited consent time separate from the fresh quiz completion",
+              "line": 74,
+              "callbackSha256": "5c97f933247415205150fd21eb0aeccfde3a34535aadf37659d12edf530c52cd"
+            },
+            {
+              "name": "builds rich Customer.io quiz traits when marketing consent is false",
+              "line": 101,
+              "callbackSha256": "b2ab744471393e341d161666602564d8de0aedf2eec752b1e4faa3e2b4944a40"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-server.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/cut/tests/customerio-server.test.ts",
+          "sha256": "5b1d7dc366ad6a9bfea5d04938d78298c6e20e33a163931e47b9919edbdbb4f8",
+          "bytes": 3049,
+          "sites": [
+            {
+              "name": "server identify uses Customer.io EU Pipelines strict mode",
+              "line": 20,
+              "callbackSha256": "a481c36993551ba4833f3c8d582d3dfc16145a01ef08598f782b4c80c3a3c71f"
+            },
+            {
+              "name": "server track returns a failed result instead of throwing",
+              "line": 56,
+              "callbackSha256": "bd0e686125bb1a336d01ef7ea1127e797bdaf92155035ec80cd6b6e1853fed43"
+            },
+            {
+              "name": "server helper no-ops when CUSTOMERIO_SERVER_WRITE_KEY is missing",
+              "line": 76,
+              "callbackSha256": "affd0e2544eb718c741cc42d0c897086df629e952cc722b9a415b19ab07c8176"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-stripe-lifecycle.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/cut/tests/customerio-stripe-lifecycle.test.ts",
+          "sha256": "be1850ffe3258d8117806fbf4b5fc0c9c783e15577934fe7353dde13ec7cff88",
+          "bytes": 4289,
+          "sites": [
+            {
+              "name": "builds purchase and subscription events from a completed checkout",
+              "line": 10,
+              "callbackSha256": "8830b978c35eff27b7389a67218475d97ca04c9bb53b6ae9e5f7dcae513c78bf"
+            },
+            {
+              "name": "does not build paid Customer.io lifecycle events for a verified trial",
+              "line": 48,
+              "callbackSha256": "d4edd198bc0ac8b749b719ec31771f24b90ecf78590cbcfd4a6f55714dd80995"
+            },
+            {
+              "name": "builds payment_failed from an invoice",
+              "line": 73,
+              "callbackSha256": "c76a39762ef2937eff3329fe0f439c9729719b8f3b511197a123bdf23e82b91b"
+            },
+            {
+              "name": "builds subscription cancellation with event-id-scoped dedupe",
+              "line": 98,
+              "callbackSha256": "b65dc3df2e192f697ab1bb16584098ce20653f15db5b343aae415a97dbb0104b"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-transactional.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/cut/tests/customerio-transactional.test.ts",
+          "sha256": "e63066b69234b91eb7631d8c84eb3ede31c110e8855293f0c0b17f0c31d7c623",
+          "bytes": 6694,
+          "sites": [
+            {
+              "name": "builds Customer.io App API transactional request with privacy flags",
+              "line": 13,
+              "callbackSha256": "306caae3d2be91e984fb4384c6581ec740343aa9e95df115bec5ff48505c570f"
+            },
+            {
+              "name": "sends Customer.io transactional email through the App API",
+              "line": 31,
+              "callbackSha256": "c2c864e2d499f30d000fa44bb9bc9c468fb6963f8904a1a6341b0613acff72b8"
+            },
+            {
+              "name": "throws with status and response text for non-ok responses",
+              "line": 65,
+              "callbackSha256": "30190ce4c0a50274ef0d0102e5544fd419180555ce86ce3f4d9da42eba035052"
+            },
+            {
+              "name": "returns the documented Customer.io delivery receipt",
+              "line": 81,
+              "callbackSha256": "c2ec387e1624f492579722cd14383125995f32e85c0f8d8065c6ee6a3c07ce99"
+            },
+            {
+              "name": "classifies non-2xx responses as definitive HTTP failures",
+              "line": 101,
+              "callbackSha256": "da176b800e1039d9e74483686c0e857db7b32dcbb022d00fbbd83e118c0ea286"
+            },
+            {
+              "name": "treats network failures and malformed success receipts as ambiguous",
+              "line": 117,
+              "callbackSha256": "2d5a3c386387814b884ecd53c953f1457a607994ba6d4737e2c1da7ea6dfc19d"
+            },
+            {
+              "name": "inline required receipts preserve safe flags and provide complete per-send content without altering old callers",
+              "line": 143,
+              "callbackSha256": "f603849678afbce9a21ebb08d87047494792cebe1fe33e803dce338fef05a36e"
+            },
+            {
+              "name": "sends the attachment dictionary alongside content and rejects oversized attachments before fetch",
+              "line": 167,
+              "callbackSha256": "6b3886c1c18f4863b0b4a8a716505eed867fcc34ff27051cab56231931c309f2"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-trial-reminder.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/cut/tests/customerio-trial-reminder.test.ts",
+          "sha256": "dc2b1e4802c38ffbafa95bcedb8ea60f57bdb6aaea6fe744792a388c36201969",
+          "bytes": 3579,
+          "sites": [
+            {
+              "name": "builds the stored Customer.io transactional message with privacy-preserving flags",
+              "line": 29,
+              "callbackSha256": "347bfe8cdb59b83b50daf5d5b8754bda695e7cb555ab1cbe56e24f6d580d6b91"
+            },
+            {
+              "name": "rejects CRLF injection at the transport boundary",
+              "line": 71,
+              "callbackSha256": "2688e4b116c218a51878724d00d306751b313f655d58a6f4e69de7705bd86b30"
+            }
+          ]
+        },
+        {
+          "file": "tests/email-deliverability.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/cut/tests/email-deliverability.test.ts",
+          "sha256": "6ee6acc729fd572b5f632356382511100d628cb93b7e07018f01e08e4a5ee714",
+          "bytes": 9622,
+          "sites": [
+            {
+              "name": "korrigiert belegte Provider-Tippfehler aus den Bounce-Logs",
+              "line": 51,
+              "callbackSha256": "becff278f2b00a6e6072e9ab6cde2abd497c43c1070586bd4636e51847d98b79"
+            },
+            {
+              "name": "schlaegt nichts vor bei real existierenden Domains",
+              "line": 59,
+              "callbackSha256": "df792074bf8a4cd50ec3554a4ec3bf7e0f753b4dca1cddd1911235c39dddd70b"
+            },
+            {
+              "name": "verkraftet unvollstaendige Eingaben ohne zu werfen",
+              "line": 71,
+              "callbackSha256": "2ba53f1ff6404068a079e3e8c4d134bdbe8341da8a6a2e2cf1d9a8484ea0ec43"
+            },
+            {
+              "name": "nimmt Grossanbieter ohne DNS-Abfrage an",
+              "line": 80,
+              "callbackSha256": "96502ba29a059017038ad956b4b4c824b0a1dae2de1166cdf4ce86b2d21723c8"
+            },
+            {
+              "name": "nimmt Domains mit gueltigem MX an",
+              "line": 96,
+              "callbackSha256": "b8106cfbf502c5b575cec211adfdda28ba3a4f0c1745fcf883f3932fd6ca860d"
+            },
+            {
+              "name": "lehnt Null MX nach RFC 7505 ab",
+              "line": 103,
+              "callbackSha256": "1f0d0a78d6dc3539185c844b468b82ab1f7e7eef1a7a18e84d9d45a77b86a471"
+            },
+            {
+              "name": "nimmt Domains ohne MX an, wenn ein A-Eintrag existiert (RFC 5321)",
+              "line": 112,
+              "callbackSha256": "c96806a309f0dc5dfac4360eb29927546552a70b96b9c68e3561afaa80af6181"
+            },
+            {
+              "name": "nimmt Domains ohne MX an, wenn ein AAAA-Eintrag existiert",
+              "line": 119,
+              "callbackSha256": "76630d475b38987a7637997e96acb8ea91afa637b9b5184f5f5348c57c48ef20"
+            },
+            {
+              "name": "nimmt einen gueltigen A-Eintrag trotz transientem AAAA-Fehler als impliziten MX an",
+              "line": 125,
+              "callbackSha256": "5597bcd0990bb599c10c05df1580ae733a36db21b752cbab9cc477176f3e79ad"
+            },
+            {
+              "name": "lehnt Domains ohne MX und ohne A/AAAA ab und liefert den Vorschlag mit",
+              "line": 141,
+              "callbackSha256": "42dce8e15e1b3caca5f8da1433e810ff91d3f3ea247bf2108e9beb20adc6a1c3"
+            },
+            {
+              "name": "lehnt ungueltiges Format ab, ohne DNS zu fragen",
+              "line": 165,
+              "callbackSha256": "cd72b02826e39a4341734d41c91aa9d781f0b7336bac92c4246bc94e97d6c034"
+            },
+            {
+              "name": "laesst bei DNS-Zeitueberschreitung durch",
+              "line": 183,
+              "callbackSha256": "5dadfa6aa077eb72fb7660565361b1b370c9f2f13b92d67600278a4168954379"
+            },
+            {
+              "name": "laesst bei unerwartetem Resolver-Fehler durch",
+              "line": 197,
+              "callbackSha256": "95656ee01adfd146ace319a8c7b3996a5e4eb476ab171910f132018cdb95e1f3"
+            },
+            {
+              "name": "laesst durch, wenn der A/AAAA-Fallback in einen Timeout laeuft",
+              "line": 206,
+              "callbackSha256": "fc39505c2c5a7b9e6c63a0db5a089d403ee8345649457cf615162e5437660228"
+            },
+            {
+              "name": "teilt ein einziges Zeitbudget zwischen MX und A/AAAA",
+              "line": 219,
+              "callbackSha256": "59490b6c9dec930315320b49fc111582e5e50a9968fc870e4fb3b5a1ff235f1a"
+            },
+            {
+              "name": "raeumt den Timeout nach erfolgreichem Lookup ab",
+              "line": 253,
+              "callbackSha256": "9142341b9908af6108999db8b6feda7658b1f6bd5b394c45f017d5b52d655edd"
+            },
+            {
+              "name": "normalisiert die Adresse auf Kleinschreibung ohne Leerzeichen",
+              "line": 263,
+              "callbackSha256": "2e8ff9822ff0b663db19760478f0f9d6c0eee44fe2b450281d635ee80017e440"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-backfill.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/cut/tests/personal-plan-customerio-backfill.test.ts",
+          "sha256": "be9bca9cb831d5865066086902c00a8072a891922c04ed646b792976f5ffaec0",
+          "bytes": 4480,
+          "sites": [
+            {
+              "name": "live backfill requires an explicit campaign-safety preflight",
+              "line": 55,
+              "callbackSha256": "dab0d996be144679175933560d27a07d52a9bacd98ebf6217f60f35e56d91f1a"
+            },
+            {
+              "name": "historical backfill explicitly requests profile-only work",
+              "line": 68,
+              "callbackSha256": "3a496fa7571653e8d03fe0e89bc472e0415412788e8ab8d5be9489ac63eea45b"
+            },
+            {
+              "name": "dry-run backfill performs no database writes or Customer.io dispatch",
+              "line": 92,
+              "callbackSha256": "febd625492b5478e3316c566971b9a591398b5bd7991bcfb30aa2262ab27f460"
+            },
+            {
+              "name": "backfill reports queued retries separately from delivered profiles",
+              "line": 111,
+              "callbackSha256": "0a765e1d6906be8af05abf9790fc1d775d767cbabc3b6fac2c313795e6102ac8"
+            },
+            {
+              "name": "backfill continues when immediate dispatch throws because the durable row already exists",
+              "line": 124,
+              "callbackSha256": "33823987847d76a3d5933fa1445291d3ef7636df765bba4babbeef9cac491d8c"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-outbox-migration.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/cut/tests/personal-plan-customerio-outbox-migration.test.ts",
+          "sha256": "64942258052b2070bb6e9f3fe3ad43ee527807634ffcfa5d2e94c0510f8230ab",
+          "bytes": 2579,
+          "sites": [
+            {
+              "name": "Customer.io profile outbox migration keeps payload in source tables and private delivery state",
+              "line": 7,
+              "callbackSha256": "fa69d99e1dbe7858f21a3cf65e4cf7419e30f38b31d715f5d6f89a8ad7b93c55"
+            },
+            {
+              "name": "Customer.io profile outbox makes only newly inserted consented leads event eligible",
+              "line": 22,
+              "callbackSha256": "aa58fb9fc8713184b3fbd7a60e222f07ba3f2bc4fcf96b5fef9b34997ceb95f3"
+            },
+            {
+              "name": "profile-only backfill request cannot create or downgrade event eligibility",
+              "line": 40,
+              "callbackSha256": "9c0c1f5ca52e4d8763a881c80daa8f1a52d0c42b85d3cc712a70f40bcd8dd9b7"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-outbox.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/cut/tests/personal-plan-customerio-outbox.test.ts",
+          "sha256": "b5383f7bbf478b7ce0d28cc14dada85fcd307f7bb560a44e700c051ba2735522",
+          "bytes": 6775,
+          "sites": [
+            {
+              "name": "new lead delivery identifies current Supabase truth before the completion event",
+              "line": 119,
+              "callbackSha256": "d1ed7fd025db87933c5711b6b133d0422e33f2151a7f360682eefce88d92825a"
+            },
+            {
+              "name": "historical profile-only outbox row can never request the completion event",
+              "line": 134,
+              "callbackSha256": "57126f27d326e357de1c1602a9465beb186ce48489d700350cf360feea7b9cde"
+            },
+            {
+              "name": "field-test profile sync never emits the commercial completion event",
+              "line": 145,
+              "callbackSha256": "fa0c6cd6828756f816e982c22f9c15fb7d115551efd9efa1382ee7d07d6c3d40"
+            },
+            {
+              "name": "moderator lead remains non-commercial after its funnel moves to a newer result",
+              "line": 157,
+              "callbackSha256": "a35421399d7b6fd82fa5852395ed79660dbead762e9598d403f5f09863a18d95"
+            },
+            {
+              "name": "profile updates do not resend an already delivered completion event",
+              "line": 175,
+              "callbackSha256": "76b8d72aa854bd34aa4d160089ded23e21d8bee7ba0dbf31bb7228714abb0272"
+            },
+            {
+              "name": "transient Customer.io failures are recorded for retry instead of reported as delivered",
+              "line": 187,
+              "callbackSha256": "0bf21ef1e4ed495012062c42001c0f1960715f938fd482f96232e470355bf96f"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-reconcile-route.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/cut/tests/personal-plan-customerio-reconcile-route.test.ts",
+          "sha256": "c9f0b471be35d72524a78fb6901c68e4e17872af798fed24eb84306311afae4d",
+          "bytes": 1927,
+          "sites": [
+            {
+              "name": "Customer.io fallback retry uses a Vercel Hobby-compatible daily schedule",
+              "line": 15,
+              "callbackSha256": "2a00686a005bf6190a51f70cbcc1b085e9e6a85df21b7bd5f0a208536335c62b"
+            },
+            {
+              "name": "Customer.io profile reconcile is bounded and authenticates before retry work",
+              "line": 29,
+              "callbackSha256": "9140055391a0731b031e2d4fe56b4909d8b9d5055c32d086b1ecd97b32d38b0a"
+            },
+            {
+              "name": "Customer.io profile reconcile drains a bounded retry batch",
+              "line": 46,
+              "callbackSha256": "116d5302599798acfe692966b9cfd9d37ed5d9222773d7b8d2382c555ebf60ab"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-sync.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/cut/tests/personal-plan-customerio-sync.test.ts",
+          "sha256": "ebfe19864a6d6104aa15772ab7735689dfe2bb09cb4cd982dba8def74dd52f3c",
+          "bytes": 9715,
+          "sites": [
+            {
+              "name": "historical profile parsing is total over malformed v2 concern data",
+              "line": 41,
+              "callbackSha256": "3480dfe26e13b718b54e83d6e8ce3bf39a3d874a395aee2c380b03d4a4f5b5db"
+            },
+            {
+              "name": "historical profile parsing preserves the exact v2 concern vocabulary and labels",
+              "line": 59,
+              "callbackSha256": "0c0eaab20e8ec4509f5f45b03a521207dee5f57624355074235a8d23d3d221a5"
+            },
+            {
+              "name": "personal-plan traits keep shared primitives canonical and namespace divergent answers",
+              "line": 95,
+              "callbackSha256": "60b649fd119338f4cb6650e8b7df8f4de94d11f155a58b10d068e9a39174a92a"
+            },
+            {
+              "name": "every structured Personal Plan concern has a readable Customer.io label",
+              "line": 144,
+              "callbackSha256": "858f90f2a5b2fe79a061d4a848df57fa5f02daffeeb4bd18844c3046ced237b4"
+            },
+            {
+              "name": "personal-plan live sync identifies first and emits one dedicated stable completion event",
+              "line": 168,
+              "callbackSha256": "f461d10d08fc1cf06f1826b22ef2ca06b7d06b71c9d8c326fe962931bf528c5f"
+            },
+            {
+              "name": "personal-plan profile-only sync cannot emit a completion event",
+              "line": 216,
+              "callbackSha256": "ca34ca967b823b0c1d16d7bf76b696c9d2f42f3e14e2748db0a8464288d95e59"
+            },
+            {
+              "name": "personal-plan sync does not emit the completion event when identify failed",
+              "line": 247,
+              "callbackSha256": "fa07f03d8abd2a6aae462a68c2680f90cb4d377eba4b252f940bd8151fb68891"
+            }
+          ]
+        },
+        {
+          "file": "tests/trial-reminders-delivery.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/cut/tests/trial-reminders-delivery.test.ts",
+          "sha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf",
+          "bytes": 7535,
+          "sites": [
+            {
+              "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner",
+              "line": 70,
+              "callbackSha256": "51a7c39f4644407213095c0c5b4c69371cd990f241618ceba0463a1d48863d30"
+            },
+            {
+              "name": "off switch and missing configuration cannot enqueue, claim or send",
+              "line": 116,
+              "callbackSha256": "b3e23609b89d4a27d2824b0b69c173b1018f6c6a8f11ea61b768b31fbfb776ed"
+            },
+            {
+              "name": "cancellation or expiry after claim suppresses send at the fresh database gate",
+              "line": 132,
+              "callbackSha256": "1169f3f6b12a4354dc958f4b3dd75d366cf560da1614f593f16ecbfb9205ed3f"
+            },
+            {
+              "name": "fresh current terms are rendered, not stale terms claimed earlier",
+              "line": 139,
+              "callbackSha256": "1e615bcedaf4c23d99c2d9c6f93d9fdf8ed5c180c89ab5d46f8518fb07aa1ca6"
+            },
+            {
+              "name": "missing verified owner and malformed or swapped fresh claims send nothing",
+              "line": 158,
+              "callbackSha256": "58e22a0c179aa7d8fe922b720e43a7292faa2f52d017caca1bcfd0a81abb8c16"
+            },
+            {
+              "name": "ambiguous delivery, malformed ACK and HTTP rejection park with no retry",
+              "line": 170,
+              "callbackSha256": "338efdb5717f6a6582ec2c0b5acebc4d3f6a67f38205c74a01b5c702c595041b"
+            },
+            {
+              "name": "post-send settlement failure propagates and never repeats provider send",
+              "line": 197,
+              "callbackSha256": "84b978a9b9724abf4bd5c16bbd37100a710516cc88ebf0ba8b53e49acd725cd0"
+            }
+          ]
+        },
+        {
+          "file": "tests/trial-reminders-route.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/cut/tests/trial-reminders-route.test.ts",
+          "sha256": "fe5a7895bb32c56ecab2ec5d5c318d4ad31df4a515f05288b5b60ce04b186a5b",
+          "bytes": 2853,
+          "sites": [
+            {
+              "name": "reminder cron authenticates before all work and exposes aggregate state only",
+              "line": 19,
+              "callbackSha256": "44aad0862dbf23fe6e10ae52b939f849b465b0b0054ccfe30098adcf6574f094"
+            },
+            {
+              "name": "configured five-minute cron reaches server-auth handler without browser login",
+              "line": 58,
+              "callbackSha256": "f010d1e065c232234ba2bd3c04b0115c18a7be8d2d8aaec5b813c385a91980c5"
+            }
+          ]
+        },
+        {
+          "file": "tests/trial-reminders-sql.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/cut/tests/trial-reminders-sql.test.ts",
+          "sha256": "7bd9f68677a43c8537fab8b8a3448affccbce179c4a01264d91a4995fd5dc540",
+          "bytes": 14852,
+          "sites": [
+            {
+              "name": "queues each eligible Stripe and PayPal new trial exactly once using the frozen required-notice contract shape",
+              "line": 70,
+              "callbackSha256": "9368d1cee78440e93475a625618ca78e63387898c2a461a3d93109a2389dd0f0"
+            },
+            {
+              "name": "does not queue before the immutable trial end is within 48 hours",
+              "line": 93,
+              "callbackSha256": "900f9da65c9d67088ee545f19bf9dca6efe75ceba9f48309c53db8d9dc1ec1e8"
+            },
+            {
+              "name": "rollout cutoff excludes earlier trials and cancellation suppresses an already queued reminder",
+              "line": 107,
+              "callbackSha256": "c0da61bcb8bffed7f65d6defcbf12fcfe938662b32f2f10613a02274c5defa7e"
+            },
+            {
+              "name": "paid, revoked, expired, and provider-unresolved trials never queue",
+              "line": 128,
+              "callbackSha256": "cb2d0753ccd68441dc5e11d57be811111ec85018a046e39ed454b60b46b871a5"
+            },
+            {
+              "name": "fresh prepare fences cancellation and repeated workers before a provider call",
+              "line": 145,
+              "callbackSha256": "8a76f4f9f2da3f579d7c919e845e7e719ea327d72dd519a9533e35c9997dedf7"
+            },
+            {
+              "name": "cancellation after claim is a fresh no-send fence, while an undispatched failure can be parked",
+              "line": 187,
+              "callbackSha256": "f8f18787d7f79841424bfe4feceb12641a76533792bdcbbcc1a65a9fe5bfb56a"
+            },
+            {
+              "name": "a temporary management change holds a claimed reminder and releases it after reconciliation",
+              "line": 236,
+              "callbackSha256": "b4f5f1a617cb1ea9e6186e79e4593ae9ce5418c170a99572dadead99be1344f7"
+            },
+            {
+              "name": "expired leases park for support and stale completion cannot overwrite the outcome",
+              "line": 296,
+              "callbackSha256": "354c4033067c25a1b11ab4d157c74cd3392aa8268d40c43df93c171924663374"
+            },
+            {
+              "name": "private rows and RPCs remain service-only",
+              "line": 331,
+              "callbackSha256": "ffb23bed1e619e751e3605aba900080e4382a540a8923a1ad021fff4a589a06e"
+            },
+            {
+              "name": "the dispatcher consumes the actual SQL RPC shape and records a fake Customer.io acknowledgement",
+              "line": 344,
+              "callbackSha256": "3c826044eec6bbec400258953b30d176e366c68b9b65c6b40e5a3f29125e6867"
+            }
+          ]
+        },
+        {
+          "file": "tests/trial-reminders.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/cut/tests/trial-reminders.test.ts",
+          "sha256": "f74cf7c1a16d2bbdb6d13c152f3a13b626bc5bb579ad7c70750a107a2a0a0c2f",
+          "bytes": 2094,
+          "sites": [
+            {
+              "name": "supports the accepted monthly and annual price contracts without inventing amounts",
+              "line": 20,
+              "callbackSha256": "e8c8ed54c44b77aa7f66ddea916695bbdac6725a8c54f9419931b99908cf9a45"
+            },
+            {
+              "name": "rejects malformed accepted terms rather than creating a reminder with fallback billing facts",
+              "line": 37,
+              "callbackSha256": "6ce5ba3a676d4e03cfacaf44e8f86d172f34076afddb3743b6ea1b46bc8f3dc4"
+            },
+            {
+              "name": "PayPal reminder states the day-after first-charge date while the trial end stays exact",
+              "line": 48,
+              "callbackSha256": "f6e67769d28ef499b4da3627c7ae82c6fae129b1f97fdf2f05440d07866af221"
+            }
+          ]
+        }
+      ],
+      "sites": 90
+    },
+    "conditional-pp-transfer": {
+      "files": [
+        {
+          "file": "tests/customerio-funnel-attribution.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/customerio-funnel-attribution.test.ts",
+          "sha256": "6ed39b86b29f805839b312a4b3ba8264fdab27736bbe8e5a93b43ef2ae854442",
+          "bytes": 2538,
+          "sites": [
+            {
+              "name": "Customer.io enriches cold funnel events and isolates queued dispatch failures",
+              "line": 11,
+              "callbackSha256": "7b0f00d38085d55cea69add47a524b2cbdaa74bb023a13899b81dbe5e91e7429"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-page-view.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/customerio-page-view.test.ts",
+          "sha256": "27174c87f727c38270019127b648b9ec9f159d80fbccaf75d5d84d7b0beec3a8",
+          "bytes": 3475,
+          "sites": [
+            {
+              "name": "Customer.io page paths preserve the canonical result identifier and entry context",
+              "line": 11,
+              "callbackSha256": "48a8e9cfe88764fb34216b9865dbd8cdf88c2e25618b8bd4a8de798b1073629f"
+            },
+            {
+              "name": "Customer.io page paths omit a trailing question mark without query parameters",
+              "line": 24,
+              "callbackSha256": "f3f1766601e1e813cee4b10ff38a09b9189f3f0e9213c892d2494068654e39cb"
+            },
+            {
+              "name": "Customer.io page paths remove credentials, identifiers, and nested return URLs",
+              "line": 29,
+              "callbackSha256": "ad64bf2b07a8bafaf25ab70a0ee5c7b1a6c828ffe08f23c0c16ca677b21883f3"
+            },
+            {
+              "name": "Customer.io page paths reject arbitrary values under otherwise safe keys",
+              "line": 47,
+              "callbackSha256": "a677cda2b1468268484615b9d5901334e07861fd6c5eade834b14ea59e53723a"
+            },
+            {
+              "name": "shared analytics URL sanitization removes sensitive queries and fragments",
+              "line": 56,
+              "callbackSha256": "d38f39604551761666b8bd76deb4fbe2ad20d183b5e1714de95d45d8391fc846"
+            },
+            {
+              "name": "Meta page tracking recognizes credential-bearing browser locations",
+              "line": 71,
+              "callbackSha256": "76441310207c242a6738c5c7f1ec749ea247170ff7f113ea2db63490dd52a034"
+            },
+            {
+              "name": "Meta offer CAPI uses a verified aggregate URL without the lead identifier",
+              "line": 92,
+              "callbackSha256": "3305e3378f948e5cb89218ca7b4cca76bc824efa97e584517c39ee2cd0260249"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-quiz-traits.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/customerio-quiz-traits.test.ts",
+          "sha256": "031ea416261df983bb005af146801cf791a3c6136947bcf8dba638f80858d5ed",
+          "bytes": 6733,
+          "sites": [
+            {
+              "name": "builds rich Customer.io quiz traits with labels when consent is true",
+              "line": 6,
+              "callbackSha256": "66a568fd469fe644c96ece0a5d28c1e2133d5b078cdf82fabfb2364162bbd54e"
+            },
+            {
+              "name": "keeps inherited consent time separate from the fresh quiz completion",
+              "line": 74,
+              "callbackSha256": "5c97f933247415205150fd21eb0aeccfde3a34535aadf37659d12edf530c52cd"
+            },
+            {
+              "name": "builds rich Customer.io quiz traits when marketing consent is false",
+              "line": 101,
+              "callbackSha256": "b2ab744471393e341d161666602564d8de0aedf2eec752b1e4faa3e2b4944a40"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-server.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/customerio-server.test.ts",
+          "sha256": "5b1d7dc366ad6a9bfea5d04938d78298c6e20e33a163931e47b9919edbdbb4f8",
+          "bytes": 3049,
+          "sites": [
+            {
+              "name": "server identify uses Customer.io EU Pipelines strict mode",
+              "line": 20,
+              "callbackSha256": "a481c36993551ba4833f3c8d582d3dfc16145a01ef08598f782b4c80c3a3c71f"
+            },
+            {
+              "name": "server track returns a failed result instead of throwing",
+              "line": 56,
+              "callbackSha256": "bd0e686125bb1a336d01ef7ea1127e797bdaf92155035ec80cd6b6e1853fed43"
+            },
+            {
+              "name": "server helper no-ops when CUSTOMERIO_SERVER_WRITE_KEY is missing",
+              "line": 76,
+              "callbackSha256": "affd0e2544eb718c741cc42d0c897086df629e952cc722b9a415b19ab07c8176"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-stripe-lifecycle.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/customerio-stripe-lifecycle.test.ts",
+          "sha256": "be1850ffe3258d8117806fbf4b5fc0c9c783e15577934fe7353dde13ec7cff88",
+          "bytes": 4289,
+          "sites": [
+            {
+              "name": "builds purchase and subscription events from a completed checkout",
+              "line": 10,
+              "callbackSha256": "8830b978c35eff27b7389a67218475d97ca04c9bb53b6ae9e5f7dcae513c78bf"
+            },
+            {
+              "name": "does not build paid Customer.io lifecycle events for a verified trial",
+              "line": 48,
+              "callbackSha256": "d4edd198bc0ac8b749b719ec31771f24b90ecf78590cbcfd4a6f55714dd80995"
+            },
+            {
+              "name": "builds payment_failed from an invoice",
+              "line": 73,
+              "callbackSha256": "c76a39762ef2937eff3329fe0f439c9729719b8f3b511197a123bdf23e82b91b"
+            },
+            {
+              "name": "builds subscription cancellation with event-id-scoped dedupe",
+              "line": 98,
+              "callbackSha256": "b65dc3df2e192f697ab1bb16584098ce20653f15db5b343aae415a97dbb0104b"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-transactional.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/customerio-transactional.test.ts",
+          "sha256": "e63066b69234b91eb7631d8c84eb3ede31c110e8855293f0c0b17f0c31d7c623",
+          "bytes": 6694,
+          "sites": [
+            {
+              "name": "builds Customer.io App API transactional request with privacy flags",
+              "line": 13,
+              "callbackSha256": "306caae3d2be91e984fb4384c6581ec740343aa9e95df115bec5ff48505c570f"
+            },
+            {
+              "name": "sends Customer.io transactional email through the App API",
+              "line": 31,
+              "callbackSha256": "c2c864e2d499f30d000fa44bb9bc9c468fb6963f8904a1a6341b0613acff72b8"
+            },
+            {
+              "name": "throws with status and response text for non-ok responses",
+              "line": 65,
+              "callbackSha256": "30190ce4c0a50274ef0d0102e5544fd419180555ce86ce3f4d9da42eba035052"
+            },
+            {
+              "name": "returns the documented Customer.io delivery receipt",
+              "line": 81,
+              "callbackSha256": "c2ec387e1624f492579722cd14383125995f32e85c0f8d8065c6ee6a3c07ce99"
+            },
+            {
+              "name": "classifies non-2xx responses as definitive HTTP failures",
+              "line": 101,
+              "callbackSha256": "da176b800e1039d9e74483686c0e857db7b32dcbb022d00fbbd83e118c0ea286"
+            },
+            {
+              "name": "treats network failures and malformed success receipts as ambiguous",
+              "line": 117,
+              "callbackSha256": "2d5a3c386387814b884ecd53c953f1457a607994ba6d4737e2c1da7ea6dfc19d"
+            },
+            {
+              "name": "inline required receipts preserve safe flags and provide complete per-send content without altering old callers",
+              "line": 143,
+              "callbackSha256": "f603849678afbce9a21ebb08d87047494792cebe1fe33e803dce338fef05a36e"
+            },
+            {
+              "name": "sends the attachment dictionary alongside content and rejects oversized attachments before fetch",
+              "line": 167,
+              "callbackSha256": "6b3886c1c18f4863b0b4a8a716505eed867fcc34ff27051cab56231931c309f2"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-trial-reminder.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/customerio-trial-reminder.test.ts",
+          "sha256": "dc2b1e4802c38ffbafa95bcedb8ea60f57bdb6aaea6fe744792a388c36201969",
+          "bytes": 3579,
+          "sites": [
+            {
+              "name": "builds the stored Customer.io transactional message with privacy-preserving flags",
+              "line": 29,
+              "callbackSha256": "347bfe8cdb59b83b50daf5d5b8754bda695e7cb555ab1cbe56e24f6d580d6b91"
+            },
+            {
+              "name": "rejects CRLF injection at the transport boundary",
+              "line": 71,
+              "callbackSha256": "2688e4b116c218a51878724d00d306751b313f655d58a6f4e69de7705bd86b30"
+            }
+          ]
+        },
+        {
+          "file": "tests/email-deliverability.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/email-deliverability.test.ts",
+          "sha256": "6ee6acc729fd572b5f632356382511100d628cb93b7e07018f01e08e4a5ee714",
+          "bytes": 9622,
+          "sites": [
+            {
+              "name": "korrigiert belegte Provider-Tippfehler aus den Bounce-Logs",
+              "line": 51,
+              "callbackSha256": "becff278f2b00a6e6072e9ab6cde2abd497c43c1070586bd4636e51847d98b79"
+            },
+            {
+              "name": "schlaegt nichts vor bei real existierenden Domains",
+              "line": 59,
+              "callbackSha256": "df792074bf8a4cd50ec3554a4ec3bf7e0f753b4dca1cddd1911235c39dddd70b"
+            },
+            {
+              "name": "verkraftet unvollstaendige Eingaben ohne zu werfen",
+              "line": 71,
+              "callbackSha256": "2ba53f1ff6404068a079e3e8c4d134bdbe8341da8a6a2e2cf1d9a8484ea0ec43"
+            },
+            {
+              "name": "nimmt Grossanbieter ohne DNS-Abfrage an",
+              "line": 80,
+              "callbackSha256": "96502ba29a059017038ad956b4b4c824b0a1dae2de1166cdf4ce86b2d21723c8"
+            },
+            {
+              "name": "nimmt Domains mit gueltigem MX an",
+              "line": 96,
+              "callbackSha256": "b8106cfbf502c5b575cec211adfdda28ba3a4f0c1745fcf883f3932fd6ca860d"
+            },
+            {
+              "name": "lehnt Null MX nach RFC 7505 ab",
+              "line": 103,
+              "callbackSha256": "1f0d0a78d6dc3539185c844b468b82ab1f7e7eef1a7a18e84d9d45a77b86a471"
+            },
+            {
+              "name": "nimmt Domains ohne MX an, wenn ein A-Eintrag existiert (RFC 5321)",
+              "line": 112,
+              "callbackSha256": "c96806a309f0dc5dfac4360eb29927546552a70b96b9c68e3561afaa80af6181"
+            },
+            {
+              "name": "nimmt Domains ohne MX an, wenn ein AAAA-Eintrag existiert",
+              "line": 119,
+              "callbackSha256": "76630d475b38987a7637997e96acb8ea91afa637b9b5184f5f5348c57c48ef20"
+            },
+            {
+              "name": "nimmt einen gueltigen A-Eintrag trotz transientem AAAA-Fehler als impliziten MX an",
+              "line": 125,
+              "callbackSha256": "5597bcd0990bb599c10c05df1580ae733a36db21b752cbab9cc477176f3e79ad"
+            },
+            {
+              "name": "lehnt Domains ohne MX und ohne A/AAAA ab und liefert den Vorschlag mit",
+              "line": 141,
+              "callbackSha256": "42dce8e15e1b3caca5f8da1433e810ff91d3f3ea247bf2108e9beb20adc6a1c3"
+            },
+            {
+              "name": "lehnt ungueltiges Format ab, ohne DNS zu fragen",
+              "line": 165,
+              "callbackSha256": "cd72b02826e39a4341734d41c91aa9d781f0b7336bac92c4246bc94e97d6c034"
+            },
+            {
+              "name": "laesst bei DNS-Zeitueberschreitung durch",
+              "line": 183,
+              "callbackSha256": "5dadfa6aa077eb72fb7660565361b1b370c9f2f13b92d67600278a4168954379"
+            },
+            {
+              "name": "laesst bei unerwartetem Resolver-Fehler durch",
+              "line": 197,
+              "callbackSha256": "95656ee01adfd146ace319a8c7b3996a5e4eb476ab171910f132018cdb95e1f3"
+            },
+            {
+              "name": "laesst durch, wenn der A/AAAA-Fallback in einen Timeout laeuft",
+              "line": 206,
+              "callbackSha256": "fc39505c2c5a7b9e6c63a0db5a089d403ee8345649457cf615162e5437660228"
+            },
+            {
+              "name": "teilt ein einziges Zeitbudget zwischen MX und A/AAAA",
+              "line": 219,
+              "callbackSha256": "59490b6c9dec930315320b49fc111582e5e50a9968fc870e4fb3b5a1ff235f1a"
+            },
+            {
+              "name": "raeumt den Timeout nach erfolgreichem Lookup ab",
+              "line": 253,
+              "callbackSha256": "9142341b9908af6108999db8b6feda7658b1f6bd5b394c45f017d5b52d655edd"
+            },
+            {
+              "name": "normalisiert die Adresse auf Kleinschreibung ohne Leerzeichen",
+              "line": 263,
+              "callbackSha256": "2e8ff9822ff0b663db19760478f0f9d6c0eee44fe2b450281d635ee80017e440"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-backfill.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/personal-plan-customerio-backfill.test.ts",
+          "sha256": "be9bca9cb831d5865066086902c00a8072a891922c04ed646b792976f5ffaec0",
+          "bytes": 4480,
+          "sites": [
+            {
+              "name": "live backfill requires an explicit campaign-safety preflight",
+              "line": 55,
+              "callbackSha256": "dab0d996be144679175933560d27a07d52a9bacd98ebf6217f60f35e56d91f1a"
+            },
+            {
+              "name": "historical backfill explicitly requests profile-only work",
+              "line": 68,
+              "callbackSha256": "3a496fa7571653e8d03fe0e89bc472e0415412788e8ab8d5be9489ac63eea45b"
+            },
+            {
+              "name": "dry-run backfill performs no database writes or Customer.io dispatch",
+              "line": 92,
+              "callbackSha256": "febd625492b5478e3316c566971b9a591398b5bd7991bcfb30aa2262ab27f460"
+            },
+            {
+              "name": "backfill reports queued retries separately from delivered profiles",
+              "line": 111,
+              "callbackSha256": "0a765e1d6906be8af05abf9790fc1d775d767cbabc3b6fac2c313795e6102ac8"
+            },
+            {
+              "name": "backfill continues when immediate dispatch throws because the durable row already exists",
+              "line": 124,
+              "callbackSha256": "33823987847d76a3d5933fa1445291d3ef7636df765bba4babbeef9cac491d8c"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-outbox-migration.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/personal-plan-customerio-outbox-migration.test.ts",
+          "sha256": "64942258052b2070bb6e9f3fe3ad43ee527807634ffcfa5d2e94c0510f8230ab",
+          "bytes": 2579,
+          "sites": [
+            {
+              "name": "Customer.io profile outbox migration keeps payload in source tables and private delivery state",
+              "line": 7,
+              "callbackSha256": "fa69d99e1dbe7858f21a3cf65e4cf7419e30f38b31d715f5d6f89a8ad7b93c55"
+            },
+            {
+              "name": "Customer.io profile outbox makes only newly inserted consented leads event eligible",
+              "line": 22,
+              "callbackSha256": "aa58fb9fc8713184b3fbd7a60e222f07ba3f2bc4fcf96b5fef9b34997ceb95f3"
+            },
+            {
+              "name": "profile-only backfill request cannot create or downgrade event eligibility",
+              "line": 40,
+              "callbackSha256": "9c0c1f5ca52e4d8763a881c80daa8f1a52d0c42b85d3cc712a70f40bcd8dd9b7"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-outbox.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/personal-plan-customerio-outbox.test.ts",
+          "sha256": "b5383f7bbf478b7ce0d28cc14dada85fcd307f7bb560a44e700c051ba2735522",
+          "bytes": 6775,
+          "sites": [
+            {
+              "name": "new lead delivery identifies current Supabase truth before the completion event",
+              "line": 119,
+              "callbackSha256": "d1ed7fd025db87933c5711b6b133d0422e33f2151a7f360682eefce88d92825a"
+            },
+            {
+              "name": "historical profile-only outbox row can never request the completion event",
+              "line": 134,
+              "callbackSha256": "57126f27d326e357de1c1602a9465beb186ce48489d700350cf360feea7b9cde"
+            },
+            {
+              "name": "field-test profile sync never emits the commercial completion event",
+              "line": 145,
+              "callbackSha256": "fa0c6cd6828756f816e982c22f9c15fb7d115551efd9efa1382ee7d07d6c3d40"
+            },
+            {
+              "name": "moderator lead remains non-commercial after its funnel moves to a newer result",
+              "line": 157,
+              "callbackSha256": "a35421399d7b6fd82fa5852395ed79660dbead762e9598d403f5f09863a18d95"
+            },
+            {
+              "name": "profile updates do not resend an already delivered completion event",
+              "line": 175,
+              "callbackSha256": "76b8d72aa854bd34aa4d160089ded23e21d8bee7ba0dbf31bb7228714abb0272"
+            },
+            {
+              "name": "transient Customer.io failures are recorded for retry instead of reported as delivered",
+              "line": 187,
+              "callbackSha256": "0bf21ef1e4ed495012062c42001c0f1960715f938fd482f96232e470355bf96f"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-reconcile-route.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/personal-plan-customerio-reconcile-route.test.ts",
+          "sha256": "c9f0b471be35d72524a78fb6901c68e4e17872af798fed24eb84306311afae4d",
+          "bytes": 1927,
+          "sites": [
+            {
+              "name": "Customer.io fallback retry uses a Vercel Hobby-compatible daily schedule",
+              "line": 15,
+              "callbackSha256": "2a00686a005bf6190a51f70cbcc1b085e9e6a85df21b7bd5f0a208536335c62b"
+            },
+            {
+              "name": "Customer.io profile reconcile is bounded and authenticates before retry work",
+              "line": 29,
+              "callbackSha256": "9140055391a0731b031e2d4fe56b4909d8b9d5055c32d086b1ecd97b32d38b0a"
+            },
+            {
+              "name": "Customer.io profile reconcile drains a bounded retry batch",
+              "line": 46,
+              "callbackSha256": "116d5302599798acfe692966b9cfd9d37ed5d9222773d7b8d2382c555ebf60ab"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-sync.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/personal-plan-customerio-sync.test.ts",
+          "sha256": "37b875d0de42f2c6a11ee510e73326ee1f5e5b62aadb6ef20b04cdb693a747e7",
+          "bytes": 11485,
+          "sites": [
+            {
+              "name": "historical profile parsing is total over malformed v2 concern data",
+              "line": 41,
+              "callbackSha256": "3480dfe26e13b718b54e83d6e8ce3bf39a3d874a395aee2c380b03d4a4f5b5db"
+            },
+            {
+              "name": "historical profile parsing preserves the exact v2 concern vocabulary and labels",
+              "line": 59,
+              "callbackSha256": "0c0eaab20e8ec4509f5f45b03a521207dee5f57624355074235a8d23d3d221a5"
+            },
+            {
+              "name": "personal-plan traits keep shared primitives canonical and namespace divergent answers",
+              "line": 95,
+              "callbackSha256": "60b649fd119338f4cb6650e8b7df8f4de94d11f155a58b10d068e9a39174a92a"
+            },
+            {
+              "name": "every structured Personal Plan concern has a readable Customer.io label",
+              "line": 144,
+              "callbackSha256": "858f90f2a5b2fe79a061d4a848df57fa5f02daffeeb4bd18844c3046ced237b4"
+            },
+            {
+              "name": "personal-plan live sync identifies first and emits one dedicated stable completion event",
+              "line": 168,
+              "callbackSha256": "c7db202e85660979b108f65bcc011877dcfbd9e43cccc1e70c20eb275026b19d"
+            },
+            {
+              "name": "personal-plan profile-only sync cannot emit a completion event",
+              "line": 254,
+              "callbackSha256": "ca34ca967b823b0c1d16d7bf76b696c9d2f42f3e14e2748db0a8464288d95e59"
+            },
+            {
+              "name": "personal-plan sync does not emit the completion event when identify failed",
+              "line": 285,
+              "callbackSha256": "fa07f03d8abd2a6aae462a68c2680f90cb4d377eba4b252f940bd8151fb68891"
+            }
+          ]
+        },
+        {
+          "file": "tests/trial-reminders-delivery.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/trial-reminders-delivery.test.ts",
+          "sha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf",
+          "bytes": 7535,
+          "sites": [
+            {
+              "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner",
+              "line": 70,
+              "callbackSha256": "51a7c39f4644407213095c0c5b4c69371cd990f241618ceba0463a1d48863d30"
+            },
+            {
+              "name": "off switch and missing configuration cannot enqueue, claim or send",
+              "line": 116,
+              "callbackSha256": "b3e23609b89d4a27d2824b0b69c173b1018f6c6a8f11ea61b768b31fbfb776ed"
+            },
+            {
+              "name": "cancellation or expiry after claim suppresses send at the fresh database gate",
+              "line": 132,
+              "callbackSha256": "1169f3f6b12a4354dc958f4b3dd75d366cf560da1614f593f16ecbfb9205ed3f"
+            },
+            {
+              "name": "fresh current terms are rendered, not stale terms claimed earlier",
+              "line": 139,
+              "callbackSha256": "1e615bcedaf4c23d99c2d9c6f93d9fdf8ed5c180c89ab5d46f8518fb07aa1ca6"
+            },
+            {
+              "name": "missing verified owner and malformed or swapped fresh claims send nothing",
+              "line": 158,
+              "callbackSha256": "58e22a0c179aa7d8fe922b720e43a7292faa2f52d017caca1bcfd0a81abb8c16"
+            },
+            {
+              "name": "ambiguous delivery, malformed ACK and HTTP rejection park with no retry",
+              "line": 170,
+              "callbackSha256": "338efdb5717f6a6582ec2c0b5acebc4d3f6a67f38205c74a01b5c702c595041b"
+            },
+            {
+              "name": "post-send settlement failure propagates and never repeats provider send",
+              "line": 197,
+              "callbackSha256": "84b978a9b9724abf4bd5c16bbd37100a710516cc88ebf0ba8b53e49acd725cd0"
+            }
+          ]
+        },
+        {
+          "file": "tests/trial-reminders-route.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/trial-reminders-route.test.ts",
+          "sha256": "fe5a7895bb32c56ecab2ec5d5c318d4ad31df4a515f05288b5b60ce04b186a5b",
+          "bytes": 2853,
+          "sites": [
+            {
+              "name": "reminder cron authenticates before all work and exposes aggregate state only",
+              "line": 19,
+              "callbackSha256": "44aad0862dbf23fe6e10ae52b939f849b465b0b0054ccfe30098adcf6574f094"
+            },
+            {
+              "name": "configured five-minute cron reaches server-auth handler without browser login",
+              "line": 58,
+              "callbackSha256": "f010d1e065c232234ba2bd3c04b0115c18a7be8d2d8aaec5b813c385a91980c5"
+            }
+          ]
+        },
+        {
+          "file": "tests/trial-reminders-sql.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/trial-reminders-sql.test.ts",
+          "sha256": "7bd9f68677a43c8537fab8b8a3448affccbce179c4a01264d91a4995fd5dc540",
+          "bytes": 14852,
+          "sites": [
+            {
+              "name": "queues each eligible Stripe and PayPal new trial exactly once using the frozen required-notice contract shape",
+              "line": 70,
+              "callbackSha256": "9368d1cee78440e93475a625618ca78e63387898c2a461a3d93109a2389dd0f0"
+            },
+            {
+              "name": "does not queue before the immutable trial end is within 48 hours",
+              "line": 93,
+              "callbackSha256": "900f9da65c9d67088ee545f19bf9dca6efe75ceba9f48309c53db8d9dc1ec1e8"
+            },
+            {
+              "name": "rollout cutoff excludes earlier trials and cancellation suppresses an already queued reminder",
+              "line": 107,
+              "callbackSha256": "c0da61bcb8bffed7f65d6defcbf12fcfe938662b32f2f10613a02274c5defa7e"
+            },
+            {
+              "name": "paid, revoked, expired, and provider-unresolved trials never queue",
+              "line": 128,
+              "callbackSha256": "cb2d0753ccd68441dc5e11d57be811111ec85018a046e39ed454b60b46b871a5"
+            },
+            {
+              "name": "fresh prepare fences cancellation and repeated workers before a provider call",
+              "line": 145,
+              "callbackSha256": "8a76f4f9f2da3f579d7c919e845e7e719ea327d72dd519a9533e35c9997dedf7"
+            },
+            {
+              "name": "cancellation after claim is a fresh no-send fence, while an undispatched failure can be parked",
+              "line": 187,
+              "callbackSha256": "f8f18787d7f79841424bfe4feceb12641a76533792bdcbbcc1a65a9fe5bfb56a"
+            },
+            {
+              "name": "a temporary management change holds a claimed reminder and releases it after reconciliation",
+              "line": 236,
+              "callbackSha256": "b4f5f1a617cb1ea9e6186e79e4593ae9ce5418c170a99572dadead99be1344f7"
+            },
+            {
+              "name": "expired leases park for support and stale completion cannot overwrite the outcome",
+              "line": 296,
+              "callbackSha256": "354c4033067c25a1b11ab4d157c74cd3392aa8268d40c43df93c171924663374"
+            },
+            {
+              "name": "private rows and RPCs remain service-only",
+              "line": 331,
+              "callbackSha256": "ffb23bed1e619e751e3605aba900080e4382a540a8923a1ad021fff4a589a06e"
+            },
+            {
+              "name": "the dispatcher consumes the actual SQL RPC shape and records a fake Customer.io acknowledgement",
+              "line": 344,
+              "callbackSha256": "3c826044eec6bbec400258953b30d176e366c68b9b65c6b40e5a3f29125e6867"
+            }
+          ]
+        },
+        {
+          "file": "tests/trial-reminders.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-transfer/tests/trial-reminders.test.ts",
+          "sha256": "29a94585fc005d32f45742d6abfb6ab406108f9d8206ea61d1476cc439198f10",
+          "bytes": 4227,
+          "sites": [
+            {
+              "name": "builds a concise, truthful annual reminder using accepted contract facts",
+              "line": 20,
+              "callbackSha256": "a14b5837ffbe749919caaac73cdd6c6f25ca5326809dcd3e16bcf9ca53eef9b9"
+            },
+            {
+              "name": "supports the accepted monthly and annual price contracts without inventing amounts",
+              "line": 37,
+              "callbackSha256": "e8c8ed54c44b77aa7f66ddea916695bbdac6725a8c54f9419931b99908cf9a45"
+            },
+            {
+              "name": "rejects malformed accepted terms rather than creating a reminder with fallback billing facts",
+              "line": 54,
+              "callbackSha256": "6ce5ba3a676d4e03cfacaf44e8f86d172f34076afddb3743b6ea1b46bc8f3dc4"
+            },
+            {
+              "name": "escapes all rendered data and keeps its trusted links fixed",
+              "line": 65,
+              "callbackSha256": "44e6ae08b3ca18ea8515e42ebef1ac27cafd882e10aa7bedf158f32d89cad590"
+            },
+            {
+              "name": "PayPal reminder states the day-after first-charge date while the trial end stays exact",
+              "line": 85,
+              "callbackSha256": "f6e67769d28ef499b4da3627c7ae82c6fae129b1f97fdf2f05440d07866af221"
+            },
+            {
+              "name": "Stripe reminder keeps the trial-end date as the first-charge date",
+              "line": 92,
+              "callbackSha256": "4e711dba6e7c03a9bb521a686571ebf887fa97caafa1846db4af1de5c592d842"
+            }
+          ]
+        }
+      ],
+      "sites": 94
+    },
+    "conditional-pp-cut": {
+      "files": [
+        {
+          "file": "tests/customerio-funnel-attribution.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/customerio-funnel-attribution.test.ts",
+          "sha256": "6ed39b86b29f805839b312a4b3ba8264fdab27736bbe8e5a93b43ef2ae854442",
+          "bytes": 2538,
+          "sites": [
+            {
+              "name": "Customer.io enriches cold funnel events and isolates queued dispatch failures",
+              "line": 11,
+              "callbackSha256": "7b0f00d38085d55cea69add47a524b2cbdaa74bb023a13899b81dbe5e91e7429"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-page-view.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/customerio-page-view.test.ts",
+          "sha256": "f7cbeff8443b65be033cb5d39ae83a227dea8e9602ff23bfc57bf42601caeffe",
+          "bytes": 3204,
+          "sites": [
+            {
+              "name": "Customer.io page paths preserve the canonical result identifier and entry context",
+              "line": 10,
+              "callbackSha256": "48a8e9cfe88764fb34216b9865dbd8cdf88c2e25618b8bd4a8de798b1073629f"
+            },
+            {
+              "name": "Customer.io page paths omit a trailing question mark without query parameters",
+              "line": 23,
+              "callbackSha256": "f3f1766601e1e813cee4b10ff38a09b9189f3f0e9213c892d2494068654e39cb"
+            },
+            {
+              "name": "Customer.io page paths remove credentials, identifiers, and nested return URLs",
+              "line": 28,
+              "callbackSha256": "ad64bf2b07a8bafaf25ab70a0ee5c7b1a6c828ffe08f23c0c16ca677b21883f3"
+            },
+            {
+              "name": "Customer.io page paths reject arbitrary values under otherwise safe keys",
+              "line": 46,
+              "callbackSha256": "a677cda2b1468268484615b9d5901334e07861fd6c5eade834b14ea59e53723a"
+            },
+            {
+              "name": "shared analytics URL sanitization removes sensitive queries and fragments",
+              "line": 55,
+              "callbackSha256": "d38f39604551761666b8bd76deb4fbe2ad20d183b5e1714de95d45d8391fc846"
+            },
+            {
+              "name": "Meta page tracking recognizes credential-bearing browser locations",
+              "line": 70,
+              "callbackSha256": "76441310207c242a6738c5c7f1ec749ea247170ff7f113ea2db63490dd52a034"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-quiz-traits.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/customerio-quiz-traits.test.ts",
+          "sha256": "031ea416261df983bb005af146801cf791a3c6136947bcf8dba638f80858d5ed",
+          "bytes": 6733,
+          "sites": [
+            {
+              "name": "builds rich Customer.io quiz traits with labels when consent is true",
+              "line": 6,
+              "callbackSha256": "66a568fd469fe644c96ece0a5d28c1e2133d5b078cdf82fabfb2364162bbd54e"
+            },
+            {
+              "name": "keeps inherited consent time separate from the fresh quiz completion",
+              "line": 74,
+              "callbackSha256": "5c97f933247415205150fd21eb0aeccfde3a34535aadf37659d12edf530c52cd"
+            },
+            {
+              "name": "builds rich Customer.io quiz traits when marketing consent is false",
+              "line": 101,
+              "callbackSha256": "b2ab744471393e341d161666602564d8de0aedf2eec752b1e4faa3e2b4944a40"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-server.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/customerio-server.test.ts",
+          "sha256": "5b1d7dc366ad6a9bfea5d04938d78298c6e20e33a163931e47b9919edbdbb4f8",
+          "bytes": 3049,
+          "sites": [
+            {
+              "name": "server identify uses Customer.io EU Pipelines strict mode",
+              "line": 20,
+              "callbackSha256": "a481c36993551ba4833f3c8d582d3dfc16145a01ef08598f782b4c80c3a3c71f"
+            },
+            {
+              "name": "server track returns a failed result instead of throwing",
+              "line": 56,
+              "callbackSha256": "bd0e686125bb1a336d01ef7ea1127e797bdaf92155035ec80cd6b6e1853fed43"
+            },
+            {
+              "name": "server helper no-ops when CUSTOMERIO_SERVER_WRITE_KEY is missing",
+              "line": 76,
+              "callbackSha256": "affd0e2544eb718c741cc42d0c897086df629e952cc722b9a415b19ab07c8176"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-stripe-lifecycle.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/customerio-stripe-lifecycle.test.ts",
+          "sha256": "be1850ffe3258d8117806fbf4b5fc0c9c783e15577934fe7353dde13ec7cff88",
+          "bytes": 4289,
+          "sites": [
+            {
+              "name": "builds purchase and subscription events from a completed checkout",
+              "line": 10,
+              "callbackSha256": "8830b978c35eff27b7389a67218475d97ca04c9bb53b6ae9e5f7dcae513c78bf"
+            },
+            {
+              "name": "does not build paid Customer.io lifecycle events for a verified trial",
+              "line": 48,
+              "callbackSha256": "d4edd198bc0ac8b749b719ec31771f24b90ecf78590cbcfd4a6f55714dd80995"
+            },
+            {
+              "name": "builds payment_failed from an invoice",
+              "line": 73,
+              "callbackSha256": "c76a39762ef2937eff3329fe0f439c9729719b8f3b511197a123bdf23e82b91b"
+            },
+            {
+              "name": "builds subscription cancellation with event-id-scoped dedupe",
+              "line": 98,
+              "callbackSha256": "b65dc3df2e192f697ab1bb16584098ce20653f15db5b343aae415a97dbb0104b"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-transactional.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/customerio-transactional.test.ts",
+          "sha256": "e63066b69234b91eb7631d8c84eb3ede31c110e8855293f0c0b17f0c31d7c623",
+          "bytes": 6694,
+          "sites": [
+            {
+              "name": "builds Customer.io App API transactional request with privacy flags",
+              "line": 13,
+              "callbackSha256": "306caae3d2be91e984fb4384c6581ec740343aa9e95df115bec5ff48505c570f"
+            },
+            {
+              "name": "sends Customer.io transactional email through the App API",
+              "line": 31,
+              "callbackSha256": "c2c864e2d499f30d000fa44bb9bc9c468fb6963f8904a1a6341b0613acff72b8"
+            },
+            {
+              "name": "throws with status and response text for non-ok responses",
+              "line": 65,
+              "callbackSha256": "30190ce4c0a50274ef0d0102e5544fd419180555ce86ce3f4d9da42eba035052"
+            },
+            {
+              "name": "returns the documented Customer.io delivery receipt",
+              "line": 81,
+              "callbackSha256": "c2ec387e1624f492579722cd14383125995f32e85c0f8d8065c6ee6a3c07ce99"
+            },
+            {
+              "name": "classifies non-2xx responses as definitive HTTP failures",
+              "line": 101,
+              "callbackSha256": "da176b800e1039d9e74483686c0e857db7b32dcbb022d00fbbd83e118c0ea286"
+            },
+            {
+              "name": "treats network failures and malformed success receipts as ambiguous",
+              "line": 117,
+              "callbackSha256": "2d5a3c386387814b884ecd53c953f1457a607994ba6d4737e2c1da7ea6dfc19d"
+            },
+            {
+              "name": "inline required receipts preserve safe flags and provide complete per-send content without altering old callers",
+              "line": 143,
+              "callbackSha256": "f603849678afbce9a21ebb08d87047494792cebe1fe33e803dce338fef05a36e"
+            },
+            {
+              "name": "sends the attachment dictionary alongside content and rejects oversized attachments before fetch",
+              "line": 167,
+              "callbackSha256": "6b3886c1c18f4863b0b4a8a716505eed867fcc34ff27051cab56231931c309f2"
+            }
+          ]
+        },
+        {
+          "file": "tests/customerio-trial-reminder.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/customerio-trial-reminder.test.ts",
+          "sha256": "dc2b1e4802c38ffbafa95bcedb8ea60f57bdb6aaea6fe744792a388c36201969",
+          "bytes": 3579,
+          "sites": [
+            {
+              "name": "builds the stored Customer.io transactional message with privacy-preserving flags",
+              "line": 29,
+              "callbackSha256": "347bfe8cdb59b83b50daf5d5b8754bda695e7cb555ab1cbe56e24f6d580d6b91"
+            },
+            {
+              "name": "rejects CRLF injection at the transport boundary",
+              "line": 71,
+              "callbackSha256": "2688e4b116c218a51878724d00d306751b313f655d58a6f4e69de7705bd86b30"
+            }
+          ]
+        },
+        {
+          "file": "tests/email-deliverability.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/email-deliverability.test.ts",
+          "sha256": "6ee6acc729fd572b5f632356382511100d628cb93b7e07018f01e08e4a5ee714",
+          "bytes": 9622,
+          "sites": [
+            {
+              "name": "korrigiert belegte Provider-Tippfehler aus den Bounce-Logs",
+              "line": 51,
+              "callbackSha256": "becff278f2b00a6e6072e9ab6cde2abd497c43c1070586bd4636e51847d98b79"
+            },
+            {
+              "name": "schlaegt nichts vor bei real existierenden Domains",
+              "line": 59,
+              "callbackSha256": "df792074bf8a4cd50ec3554a4ec3bf7e0f753b4dca1cddd1911235c39dddd70b"
+            },
+            {
+              "name": "verkraftet unvollstaendige Eingaben ohne zu werfen",
+              "line": 71,
+              "callbackSha256": "2ba53f1ff6404068a079e3e8c4d134bdbe8341da8a6a2e2cf1d9a8484ea0ec43"
+            },
+            {
+              "name": "nimmt Grossanbieter ohne DNS-Abfrage an",
+              "line": 80,
+              "callbackSha256": "96502ba29a059017038ad956b4b4c824b0a1dae2de1166cdf4ce86b2d21723c8"
+            },
+            {
+              "name": "nimmt Domains mit gueltigem MX an",
+              "line": 96,
+              "callbackSha256": "b8106cfbf502c5b575cec211adfdda28ba3a4f0c1745fcf883f3932fd6ca860d"
+            },
+            {
+              "name": "lehnt Null MX nach RFC 7505 ab",
+              "line": 103,
+              "callbackSha256": "1f0d0a78d6dc3539185c844b468b82ab1f7e7eef1a7a18e84d9d45a77b86a471"
+            },
+            {
+              "name": "nimmt Domains ohne MX an, wenn ein A-Eintrag existiert (RFC 5321)",
+              "line": 112,
+              "callbackSha256": "c96806a309f0dc5dfac4360eb29927546552a70b96b9c68e3561afaa80af6181"
+            },
+            {
+              "name": "nimmt Domains ohne MX an, wenn ein AAAA-Eintrag existiert",
+              "line": 119,
+              "callbackSha256": "76630d475b38987a7637997e96acb8ea91afa637b9b5184f5f5348c57c48ef20"
+            },
+            {
+              "name": "nimmt einen gueltigen A-Eintrag trotz transientem AAAA-Fehler als impliziten MX an",
+              "line": 125,
+              "callbackSha256": "5597bcd0990bb599c10c05df1580ae733a36db21b752cbab9cc477176f3e79ad"
+            },
+            {
+              "name": "lehnt Domains ohne MX und ohne A/AAAA ab und liefert den Vorschlag mit",
+              "line": 141,
+              "callbackSha256": "42dce8e15e1b3caca5f8da1433e810ff91d3f3ea247bf2108e9beb20adc6a1c3"
+            },
+            {
+              "name": "lehnt ungueltiges Format ab, ohne DNS zu fragen",
+              "line": 165,
+              "callbackSha256": "cd72b02826e39a4341734d41c91aa9d781f0b7336bac92c4246bc94e97d6c034"
+            },
+            {
+              "name": "laesst bei DNS-Zeitueberschreitung durch",
+              "line": 183,
+              "callbackSha256": "5dadfa6aa077eb72fb7660565361b1b370c9f2f13b92d67600278a4168954379"
+            },
+            {
+              "name": "laesst bei unerwartetem Resolver-Fehler durch",
+              "line": 197,
+              "callbackSha256": "95656ee01adfd146ace319a8c7b3996a5e4eb476ab171910f132018cdb95e1f3"
+            },
+            {
+              "name": "laesst durch, wenn der A/AAAA-Fallback in einen Timeout laeuft",
+              "line": 206,
+              "callbackSha256": "fc39505c2c5a7b9e6c63a0db5a089d403ee8345649457cf615162e5437660228"
+            },
+            {
+              "name": "teilt ein einziges Zeitbudget zwischen MX und A/AAAA",
+              "line": 219,
+              "callbackSha256": "59490b6c9dec930315320b49fc111582e5e50a9968fc870e4fb3b5a1ff235f1a"
+            },
+            {
+              "name": "raeumt den Timeout nach erfolgreichem Lookup ab",
+              "line": 253,
+              "callbackSha256": "9142341b9908af6108999db8b6feda7658b1f6bd5b394c45f017d5b52d655edd"
+            },
+            {
+              "name": "normalisiert die Adresse auf Kleinschreibung ohne Leerzeichen",
+              "line": 263,
+              "callbackSha256": "2e8ff9822ff0b663db19760478f0f9d6c0eee44fe2b450281d635ee80017e440"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-backfill.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/personal-plan-customerio-backfill.test.ts",
+          "sha256": "be9bca9cb831d5865066086902c00a8072a891922c04ed646b792976f5ffaec0",
+          "bytes": 4480,
+          "sites": [
+            {
+              "name": "live backfill requires an explicit campaign-safety preflight",
+              "line": 55,
+              "callbackSha256": "dab0d996be144679175933560d27a07d52a9bacd98ebf6217f60f35e56d91f1a"
+            },
+            {
+              "name": "historical backfill explicitly requests profile-only work",
+              "line": 68,
+              "callbackSha256": "3a496fa7571653e8d03fe0e89bc472e0415412788e8ab8d5be9489ac63eea45b"
+            },
+            {
+              "name": "dry-run backfill performs no database writes or Customer.io dispatch",
+              "line": 92,
+              "callbackSha256": "febd625492b5478e3316c566971b9a591398b5bd7991bcfb30aa2262ab27f460"
+            },
+            {
+              "name": "backfill reports queued retries separately from delivered profiles",
+              "line": 111,
+              "callbackSha256": "0a765e1d6906be8af05abf9790fc1d775d767cbabc3b6fac2c313795e6102ac8"
+            },
+            {
+              "name": "backfill continues when immediate dispatch throws because the durable row already exists",
+              "line": 124,
+              "callbackSha256": "33823987847d76a3d5933fa1445291d3ef7636df765bba4babbeef9cac491d8c"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-outbox-migration.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/personal-plan-customerio-outbox-migration.test.ts",
+          "sha256": "64942258052b2070bb6e9f3fe3ad43ee527807634ffcfa5d2e94c0510f8230ab",
+          "bytes": 2579,
+          "sites": [
+            {
+              "name": "Customer.io profile outbox migration keeps payload in source tables and private delivery state",
+              "line": 7,
+              "callbackSha256": "fa69d99e1dbe7858f21a3cf65e4cf7419e30f38b31d715f5d6f89a8ad7b93c55"
+            },
+            {
+              "name": "Customer.io profile outbox makes only newly inserted consented leads event eligible",
+              "line": 22,
+              "callbackSha256": "aa58fb9fc8713184b3fbd7a60e222f07ba3f2bc4fcf96b5fef9b34997ceb95f3"
+            },
+            {
+              "name": "profile-only backfill request cannot create or downgrade event eligibility",
+              "line": 40,
+              "callbackSha256": "9c0c1f5ca52e4d8763a881c80daa8f1a52d0c42b85d3cc712a70f40bcd8dd9b7"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-outbox.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/personal-plan-customerio-outbox.test.ts",
+          "sha256": "b5383f7bbf478b7ce0d28cc14dada85fcd307f7bb560a44e700c051ba2735522",
+          "bytes": 6775,
+          "sites": [
+            {
+              "name": "new lead delivery identifies current Supabase truth before the completion event",
+              "line": 119,
+              "callbackSha256": "d1ed7fd025db87933c5711b6b133d0422e33f2151a7f360682eefce88d92825a"
+            },
+            {
+              "name": "historical profile-only outbox row can never request the completion event",
+              "line": 134,
+              "callbackSha256": "57126f27d326e357de1c1602a9465beb186ce48489d700350cf360feea7b9cde"
+            },
+            {
+              "name": "field-test profile sync never emits the commercial completion event",
+              "line": 145,
+              "callbackSha256": "fa0c6cd6828756f816e982c22f9c15fb7d115551efd9efa1382ee7d07d6c3d40"
+            },
+            {
+              "name": "moderator lead remains non-commercial after its funnel moves to a newer result",
+              "line": 157,
+              "callbackSha256": "a35421399d7b6fd82fa5852395ed79660dbead762e9598d403f5f09863a18d95"
+            },
+            {
+              "name": "profile updates do not resend an already delivered completion event",
+              "line": 175,
+              "callbackSha256": "76b8d72aa854bd34aa4d160089ded23e21d8bee7ba0dbf31bb7228714abb0272"
+            },
+            {
+              "name": "transient Customer.io failures are recorded for retry instead of reported as delivered",
+              "line": 187,
+              "callbackSha256": "0bf21ef1e4ed495012062c42001c0f1960715f938fd482f96232e470355bf96f"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-reconcile-route.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/personal-plan-customerio-reconcile-route.test.ts",
+          "sha256": "c9f0b471be35d72524a78fb6901c68e4e17872af798fed24eb84306311afae4d",
+          "bytes": 1927,
+          "sites": [
+            {
+              "name": "Customer.io fallback retry uses a Vercel Hobby-compatible daily schedule",
+              "line": 15,
+              "callbackSha256": "2a00686a005bf6190a51f70cbcc1b085e9e6a85df21b7bd5f0a208536335c62b"
+            },
+            {
+              "name": "Customer.io profile reconcile is bounded and authenticates before retry work",
+              "line": 29,
+              "callbackSha256": "9140055391a0731b031e2d4fe56b4909d8b9d5055c32d086b1ecd97b32d38b0a"
+            },
+            {
+              "name": "Customer.io profile reconcile drains a bounded retry batch",
+              "line": 46,
+              "callbackSha256": "116d5302599798acfe692966b9cfd9d37ed5d9222773d7b8d2382c555ebf60ab"
+            }
+          ]
+        },
+        {
+          "file": "tests/personal-plan-customerio-sync.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/personal-plan-customerio-sync.test.ts",
+          "sha256": "94cbf3ae1d264c071610c164673790acc1349fd155a1c1d4a8b2f44ef26b0f57",
+          "bytes": 9464,
+          "sites": [
+            {
+              "name": "historical profile parsing is total over malformed v2 concern data",
+              "line": 41,
+              "callbackSha256": "3480dfe26e13b718b54e83d6e8ce3bf39a3d874a395aee2c380b03d4a4f5b5db"
+            },
+            {
+              "name": "historical profile parsing preserves the exact v2 concern vocabulary and labels",
+              "line": 59,
+              "callbackSha256": "0c0eaab20e8ec4509f5f45b03a521207dee5f57624355074235a8d23d3d221a5"
+            },
+            {
+              "name": "every structured Personal Plan concern has a readable Customer.io label",
+              "line": 95,
+              "callbackSha256": "858f90f2a5b2fe79a061d4a848df57fa5f02daffeeb4bd18844c3046ced237b4"
+            },
+            {
+              "name": "personal-plan live sync identifies first and emits one dedicated stable completion event",
+              "line": 119,
+              "callbackSha256": "c7db202e85660979b108f65bcc011877dcfbd9e43cccc1e70c20eb275026b19d"
+            },
+            {
+              "name": "personal-plan profile-only sync cannot emit a completion event",
+              "line": 205,
+              "callbackSha256": "ca34ca967b823b0c1d16d7bf76b696c9d2f42f3e14e2748db0a8464288d95e59"
+            },
+            {
+              "name": "personal-plan sync does not emit the completion event when identify failed",
+              "line": 236,
+              "callbackSha256": "fa07f03d8abd2a6aae462a68c2680f90cb4d377eba4b252f940bd8151fb68891"
+            }
+          ]
+        },
+        {
+          "file": "tests/trial-reminders-delivery.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/trial-reminders-delivery.test.ts",
+          "sha256": "9d07d1ddd412683cb06e9e9e4ba529a76e82d95c0a49e85b901b0177afe654cf",
+          "bytes": 7535,
+          "sites": [
+            {
+              "name": "enabled reminder enqueues cutoff and revalidates just before sending once to verified owner",
+              "line": 70,
+              "callbackSha256": "51a7c39f4644407213095c0c5b4c69371cd990f241618ceba0463a1d48863d30"
+            },
+            {
+              "name": "off switch and missing configuration cannot enqueue, claim or send",
+              "line": 116,
+              "callbackSha256": "b3e23609b89d4a27d2824b0b69c173b1018f6c6a8f11ea61b768b31fbfb776ed"
+            },
+            {
+              "name": "cancellation or expiry after claim suppresses send at the fresh database gate",
+              "line": 132,
+              "callbackSha256": "1169f3f6b12a4354dc958f4b3dd75d366cf560da1614f593f16ecbfb9205ed3f"
+            },
+            {
+              "name": "fresh current terms are rendered, not stale terms claimed earlier",
+              "line": 139,
+              "callbackSha256": "1e615bcedaf4c23d99c2d9c6f93d9fdf8ed5c180c89ab5d46f8518fb07aa1ca6"
+            },
+            {
+              "name": "missing verified owner and malformed or swapped fresh claims send nothing",
+              "line": 158,
+              "callbackSha256": "58e22a0c179aa7d8fe922b720e43a7292faa2f52d017caca1bcfd0a81abb8c16"
+            },
+            {
+              "name": "ambiguous delivery, malformed ACK and HTTP rejection park with no retry",
+              "line": 170,
+              "callbackSha256": "338efdb5717f6a6582ec2c0b5acebc4d3f6a67f38205c74a01b5c702c595041b"
+            },
+            {
+              "name": "post-send settlement failure propagates and never repeats provider send",
+              "line": 197,
+              "callbackSha256": "84b978a9b9724abf4bd5c16bbd37100a710516cc88ebf0ba8b53e49acd725cd0"
+            }
+          ]
+        },
+        {
+          "file": "tests/trial-reminders-route.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/trial-reminders-route.test.ts",
+          "sha256": "fe5a7895bb32c56ecab2ec5d5c318d4ad31df4a515f05288b5b60ce04b186a5b",
+          "bytes": 2853,
+          "sites": [
+            {
+              "name": "reminder cron authenticates before all work and exposes aggregate state only",
+              "line": 19,
+              "callbackSha256": "44aad0862dbf23fe6e10ae52b939f849b465b0b0054ccfe30098adcf6574f094"
+            },
+            {
+              "name": "configured five-minute cron reaches server-auth handler without browser login",
+              "line": 58,
+              "callbackSha256": "f010d1e065c232234ba2bd3c04b0115c18a7be8d2d8aaec5b813c385a91980c5"
+            }
+          ]
+        },
+        {
+          "file": "tests/trial-reminders-sql.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/trial-reminders-sql.test.ts",
+          "sha256": "7bd9f68677a43c8537fab8b8a3448affccbce179c4a01264d91a4995fd5dc540",
+          "bytes": 14852,
+          "sites": [
+            {
+              "name": "queues each eligible Stripe and PayPal new trial exactly once using the frozen required-notice contract shape",
+              "line": 70,
+              "callbackSha256": "9368d1cee78440e93475a625618ca78e63387898c2a461a3d93109a2389dd0f0"
+            },
+            {
+              "name": "does not queue before the immutable trial end is within 48 hours",
+              "line": 93,
+              "callbackSha256": "900f9da65c9d67088ee545f19bf9dca6efe75ceba9f48309c53db8d9dc1ec1e8"
+            },
+            {
+              "name": "rollout cutoff excludes earlier trials and cancellation suppresses an already queued reminder",
+              "line": 107,
+              "callbackSha256": "c0da61bcb8bffed7f65d6defcbf12fcfe938662b32f2f10613a02274c5defa7e"
+            },
+            {
+              "name": "paid, revoked, expired, and provider-unresolved trials never queue",
+              "line": 128,
+              "callbackSha256": "cb2d0753ccd68441dc5e11d57be811111ec85018a046e39ed454b60b46b871a5"
+            },
+            {
+              "name": "fresh prepare fences cancellation and repeated workers before a provider call",
+              "line": 145,
+              "callbackSha256": "8a76f4f9f2da3f579d7c919e845e7e719ea327d72dd519a9533e35c9997dedf7"
+            },
+            {
+              "name": "cancellation after claim is a fresh no-send fence, while an undispatched failure can be parked",
+              "line": 187,
+              "callbackSha256": "f8f18787d7f79841424bfe4feceb12641a76533792bdcbbcc1a65a9fe5bfb56a"
+            },
+            {
+              "name": "a temporary management change holds a claimed reminder and releases it after reconciliation",
+              "line": 236,
+              "callbackSha256": "b4f5f1a617cb1ea9e6186e79e4593ae9ce5418c170a99572dadead99be1344f7"
+            },
+            {
+              "name": "expired leases park for support and stale completion cannot overwrite the outcome",
+              "line": 296,
+              "callbackSha256": "354c4033067c25a1b11ab4d157c74cd3392aa8268d40c43df93c171924663374"
+            },
+            {
+              "name": "private rows and RPCs remain service-only",
+              "line": 331,
+              "callbackSha256": "ffb23bed1e619e751e3605aba900080e4382a540a8923a1ad021fff4a589a06e"
+            },
+            {
+              "name": "the dispatcher consumes the actual SQL RPC shape and records a fake Customer.io acknowledgement",
+              "line": 344,
+              "callbackSha256": "3c826044eec6bbec400258953b30d176e366c68b9b65c6b40e5a3f29125e6867"
+            }
+          ]
+        },
+        {
+          "file": "tests/trial-reminders.test.ts",
+          "path": "/tmp/test-audit-email-delivery94/conditional-pp-cut/tests/trial-reminders.test.ts",
+          "sha256": "f74cf7c1a16d2bbdb6d13c152f3a13b626bc5bb579ad7c70750a107a2a0a0c2f",
+          "bytes": 2094,
+          "sites": [
+            {
+              "name": "supports the accepted monthly and annual price contracts without inventing amounts",
+              "line": 20,
+              "callbackSha256": "e8c8ed54c44b77aa7f66ddea916695bbdac6725a8c54f9419931b99908cf9a45"
+            },
+            {
+              "name": "rejects malformed accepted terms rather than creating a reminder with fallback billing facts",
+              "line": 37,
+              "callbackSha256": "6ce5ba3a676d4e03cfacaf44e8f86d172f34076afddb3743b6ea1b46bc8f3dc4"
+            },
+            {
+              "name": "PayPal reminder states the day-after first-charge date while the trial end stays exact",
+              "line": 48,
+              "callbackSha256": "f6e67769d28ef499b4da3627c7ae82c6fae129b1f97fdf2f05440d07866af221"
+            }
+          ]
+        }
+      ],
+      "sites": 89
+    }
+  },
+  "untouchedCallbacks": 89,
+  "readset": [
+    {
+      "file": "tests/customerio-funnel-attribution.test.ts",
+      "sha256": "6ed39b86b29f805839b312a4b3ba8264fdab27736bbe8e5a93b43ef2ae854442"
+    },
+    {
+      "file": "tests/customerio-page-view.test.ts",
+      "sha256": "27174c87f727c38270019127b648b9ec9f159d80fbccaf75d5d84d7b0beec3a8"
+    },
+    {
+      "file": "tests/customerio-quiz-traits.test.ts",
+      "sha256": "031ea416261df983bb005af146801cf791a3c6136947bcf8dba638f80858d5ed"
+    },
+    {
+      "file": "tests/customerio-server.test.ts",
+      "sha256": "5b1d7dc366ad6a9bfea5d04938d78298c6e20e33a163931e47b9919edbdbb4f8"
+    },
+    {
+      "file": "tests/customerio-stripe-lifecycle.test.ts",
+      "sha256": "be1850ffe3258d8117806fbf4b5fc0c9c783e15577934fe7353dde13ec7cff88"
+    },
+    {
+      "file": "tests/customerio-transactional.test.ts",
+      "sha256": "e63066b69234b91eb7631d8c84eb3ede31c110e8855293f0c0b17f0c31d7c623"
+    },
+    {
+      "file": "tests/customerio-trial-reminder.test.ts",
+      "sha256": "dc2b1e4802c38ffbafa95bcedb8ea60f57bdb6aaea6fe744792a388c36201969"
+    },
+    {
+      "file": "tests/email-deliverability.test.ts",
+      "sha256": "6ee6acc729fd572b5f632356382511100d628cb93b7e07018f01e08e4a5ee714"
+    },
+    {
+      "file": "tests/personal-plan-customerio-backfill.test.ts",
+      "sha256": "be9bca9cb831d5865066086902c00a8072a891922c04ed646b792976f5ffaec0"
+    },
+    {
+      "file": "tests/personal-plan-customerio-outbox-migration.test.ts",
+      "sha256": "64942258052b2070bb6e9f3fe3ad43ee527807634ffcfa5d2e94c0510f8230ab"
+    },
+    {
+      "file": "tests/personal-plan-customerio-outbox.test.ts",
+      "sha256": "b5383f7bbf478b7ce0d28cc14dada85fcd307f7bb560a44e700c051ba2735522"
+    },
+    {
+      "file": "tests/personal-plan-customerio-reconcile-route.test.ts",
+      "sha256": "c9f0b471be35d72524a78fb6901c68e4e17872af798fed24eb84306311afae4d"
+    },
+    {
+      "file": "tests/personal-plan-customerio-sync.test.ts",
+      "sha256": "ebfe19864a6d6104aa15772ab7735689dfe2bb09cb4cd982dba8def74dd52f3c"
+    },
+    {
+      "file": "tests/trial-reminders-delivery.test.ts",
+      "sha256": "4d038a49993c52a0e3b05d97eb2b3ef0e58f6a38051ef344c184944c6b539883"
+    },
+    {
+      "file": "tests/trial-reminders-route.test.ts",
+      "sha256": "fe5a7895bb32c56ecab2ec5d5c318d4ad31df4a515f05288b5b60ce04b186a5b"
+    },
+    {
+      "file": "tests/trial-reminders-sql.test.ts",
+      "sha256": "7bd9f68677a43c8537fab8b8a3448affccbce179c4a01264d91a4995fd5dc540"
+    },
+    {
+      "file": "tests/trial-reminders.test.ts",
+      "sha256": "29a94585fc005d32f45742d6abfb6ab406108f9d8206ea61d1476cc439198f10"
+    },
+    {
+      "file": "src/lib/customerio/transactional.ts",
+      "sha256": "5756d3bda21c0be6cbc1ed8885846a646edd8560f22c8b7fc5ac6601c62b95e2"
+    },
+    {
+      "file": "src/lib/customerio/server.ts",
+      "sha256": "5df6d419fb8cfbed3c302c748eb0742cd6811fe6dda3b4e6736fba4f8a87f23e"
+    },
+    {
+      "file": "src/lib/customerio/quiz-traits.ts",
+      "sha256": "8eb957ee9e24b32554457ed009dd14430e332acf56102220e7d65f1b4ed8b00f"
+    },
+    {
+      "file": "src/lib/customerio/stripe-lifecycle.ts",
+      "sha256": "325bd2eb69e69cb265b973f7e44f7ef98d6defd2dc95d1dd0fa72e30ac07454f"
+    },
+    {
+      "file": "src/lib/customerio/quiz-sync.ts",
+      "sha256": "13db19ec5b21b848d22325eee735ffa99b1c6be07656de035890e7cab4eead55"
+    },
+    {
+      "file": "src/lib/customerio/trial-reminder.ts",
+      "sha256": "bbe1cbd96fc1ece097764e1250786ef1b0551c65e01acea77ca971fbf9c647d6"
+    },
+    {
+      "file": "src/lib/billing/trial-reminders.ts",
+      "sha256": "b16ebe9423d3bf65258ba4fb077bcc350d9aac3d1f351e6cf1cf50d84833fe9c"
+    },
+    {
+      "file": "src/lib/billing/trial-reminders-delivery.ts",
+      "sha256": "16417ecc3d002d9905e93302f8e09208d3e3bebaa3c46578d994e7a6f13eaf0e"
+    },
+    {
+      "file": "src/lib/billing/trial-required-notices.ts",
+      "sha256": "c7b2d3f9b9818a2cd5d72839f6c772c8ceb48b7a5aa4442c0eefdc200837a7fa"
+    },
+    {
+      "file": "src/lib/billing/trial-offer.ts",
+      "sha256": "14083f0eb5677db3063e22ab585ca9779a51fac4e04ab8852ee2e11f087d4725"
+    },
+    {
+      "file": "src/lib/paypal/trial-collection-start.ts",
+      "sha256": "d22659e8282e0f18b69971b8948ba5afc4b284774aa1d2330f434ed3358513bc"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/customerio.ts",
+      "sha256": "fb1a2ed1d913687beb8472949da09a123c439221bfc4779228012b9244bbd6ff"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/customerio-outbox.ts",
+      "sha256": "be501ee02a15bc7305c09012a711521fb6f40405de4298419ad710ee8061faed"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/persistence.ts",
+      "sha256": "9783d531cfaf8ed1b8d91b133b030758fd2bf3c128b5eee10cd4b0e6f5883335"
+    },
+    {
+      "file": "scripts/backfill-personal-plan-customerio.ts",
+      "sha256": "6b8d7cd05a8baa695dbc7856b0578fba5ed0269d9670a762c58bc282a9fc1c85"
+    },
+    {
+      "file": "src/app/api/customerio/profile-sync/reconcile/route.ts",
+      "sha256": "e47fed079e844354b69c4f33e53ff7894e8510e97e3c21f7ce7eb037d1eb4b50"
+    },
+    {
+      "file": "src/app/api/billing/trial-reminders/reconcile/route.ts",
+      "sha256": "45faf78ceff54f56a33794ba99ed498e78388ce85389c07d59abb9068d95611e"
+    },
+    {
+      "file": "src/lib/email-deliverability.ts",
+      "sha256": "f35a1b208f18b3550fd21d26f9cddee290b706761e9ad54c5f24a40c712f337c"
+    },
+    {
+      "file": "src/lib/email-deliverability-shared.ts",
+      "sha256": "97928eee799f71cb6a2fc3b01f9506e410d31b630bcb29f633f7c45e067a2afa"
+    },
+    {
+      "file": "src/providers/customerio-provider.tsx",
+      "sha256": "ddc197887bcec171a241375343f66620349b4831e2930ce2d0eb09eaeb77520e"
+    },
+    {
+      "file": "src/lib/analytics/page-url.ts",
+      "sha256": "1cdde9d294fca5daf861b63bfb178a4458a6b8fd44d14b37b3d30d05a4551428"
+    },
+    {
+      "file": "src/lib/analytics/destinations/customerio.ts",
+      "sha256": "06847f20cd2c8c2e0f11947469c787cbb8d357eefc9b65a241efec5bc4c6543b"
+    },
+    {
+      "file": "src/lib/customerio-tracking.ts",
+      "sha256": "499afed0161ee2fabaae9d89d4b96934bb697258638b01261e91f20b58e0c93a"
+    },
+    {
+      "file": "src/app/api/analytics/meta-offer-view/route.ts",
+      "sha256": "8b2008675f27a002eea4d9ff2ae61d5733dad963185b3d2baf240e287af0f927"
+    },
+    {
+      "file": "tests/helpers/customerio-liquid.ts",
+      "sha256": "8d3d288cc309fed2a4b9d4347db8da6fac37dd5a405aef15a7c426bad72bfb6d"
+    },
+    {
+      "file": "supabase/migrations/20260801100000_customerio_profile_sync_outbox.sql",
+      "sha256": "91a8385f3a6edb1bda31f1b095a15c7aeec67f73a59c500c053b286a8e52bcbb"
+    },
+    {
+      "file": "supabase/migrations/20260915050225_trial_reminders_outbox.sql",
+      "sha256": "02023d1db19fd62394420d4a9e82683806d83b062440711e618c549cecc78ae5"
+    },
+    {
+      "file": "src/lib/quiz/normalization.ts",
+      "sha256": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239"
+    },
+    {
+      "file": "src/lib/personal-plan-quiz/types.ts",
+      "sha256": "19565073dbad675141bcbbb94a796a73da7727569164a01e0622a4e471736c46"
+    },
+    {
+      "file": "src/lib/analytics/runtime/bounded-fifo.ts",
+      "sha256": "43f423d96bb6125c6255d3aa7569053761122cdf304a39805ffdeb5882bcbed4"
+    },
+    {
+      "file": "tests/customerio-quiz-sync.test.ts",
+      "sha256": "835e97a0974ab870361553c28754a55eb78d495d1badd3c9884b992ca3f88b78"
+    },
+    {
+      "file": "src/lib/funnel/client.ts",
+      "sha256": "9c3728cffff3810d829afd198c2406e35cf6edb3d4c68dbfc5a1cfa845e100a8"
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-lead/route.ts",
+      "sha256": "305fda288afd763743b050c9a5f620ad3742286d4397f49ea657bf7939c52595"
+    },
+    {
+      "file": "src/app/api/quiz/lead/route.ts",
+      "sha256": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e"
+    },
+    {
+      "file": "src/app/api/stripe/webhook/route.ts",
+      "sha256": "83c74462ffda261d3a044467d68a918b034febbefca9f6aad4ae131dd84f35ab"
+    },
+    {
+      "file": "supabase/migrations/20260914141036_trial_required_notice_revisions.sql",
+      "sha256": "b2ac556ee86803e31acab647a8303c5aa885ca33300f3a1629867840ff303d94"
+    },
+    {
+      "file": "docs/customerio-data-contract.md",
+      "sha256": "47dcb24a7e0c413f341f509cbfea15d6874496441ad8e21b40a52b8596abb618"
+    },
+    {
+      "file": "docs/trial-notices-and-claims-operations.md",
+      "sha256": "965c7d487f796c49b3b92c65874cccaa583b7340dbd508459d29561b2077ab04"
+    },
+    {
+      "file": "src/providers/tracking-providers.tsx",
+      "sha256": "ec3c299954567436bba370c07d44b7d666898cdc2364e83cfe3b2fc5e14e5444"
+    },
+    {
+      "file": "src/lib/supabase/middleware.ts",
+      "sha256": "b46773cf21b880cb35d2967d4a882be1c5c59c53f2416607b60d3cb8a4c862a7"
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799"
+    },
+    {
+      "file": "vercel.json",
+      "sha256": "cb38b0cd0013dc1dff9a5bc2bafc4a9ccb5e6646bdcf6dcf0bfcebc4b676c55a"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    },
+    {
+      "file": "tsconfig.json",
+      "sha256": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd"
+    },
+    {
+      "file": "tests/meta-offer-view.test.ts",
+      "sha256": "5ca1e19f63335ccc257f8f4c055c54d8dfbc82fb34abad9ee6ddb831e7736ea6"
+    },
+    {
+      "file": "node_modules/typescript/package.json",
+      "sha256": "822ef7ca6452205657b6288b066481ecf508bfbf43455d715cf7d3ec457561e6"
+    },
+    {
+      "file": "node_modules/typescript/lib/typescript.js",
+      "sha256": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675"
+    },
+    {
+      "file": "node_modules/zod/package.json",
+      "sha256": "c630bd10b52dcf71c112a2bf78dbf2734b9db58d62de663b8d86c2ec2c8cda2e"
+    },
+    {
+      "file": "node_modules/zod/v3/types.d.ts",
+      "sha256": "7941f67bd576a61bb48f46cf55c5eb0292c8ee3eb2db621815eb1d02b1aa09fb"
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/package.json",
+      "sha256": "a540c379fd1d820810793681d25fa7ad5dadfcee2b190d14a6553fdb469cfe3c"
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/dist/index.d.ts",
+      "sha256": "cf15756708e9bd904e7982f4423a466786b439f14147c615ed8ec4e59ab83db6"
+    },
+    {
+      "file": "src/lib/quiz/diagnostic-input.ts",
+      "sha256": "964652bf5d3e3d8cd9bc233b18977e59e3cf7264a97ec7de5d5c4ac6cea7149e"
+    },
+    {
+      "file": "src/lib/vocabulary/concerns-goals.ts",
+      "sha256": "f588c309f78685855551f8270f8dec4fc5e046d5c1165d734a63f168315f28e8"
+    },
+    {
+      "file": "src/lib/vocabulary/index.ts",
+      "sha256": "5e011545b7a6a94b96720af7b225dc12c025dbf0509f8b20cdd352bbcfa3109b"
+    },
+    {
+      "file": "src/lib/vocabulary/hair-length.ts",
+      "sha256": "3dd675892cb15b6021d7365203bdc225e86805bfb15beec305cc90e83d74c9e4"
+    },
+    {
+      "file": "node_modules/zod/v3/types.js",
+      "sha256": "2faaeed1150d0d7126f6aa85b01594fabdd06771a0b7cb5df2d13f725e175ef1"
+    },
+    {
+      "file": "node_modules/@electric-sql/pglite/dist/pglite-CntadC_p.d.ts",
+      "sha256": "aa4bc50bc6ba80c59ad64dd2f58112b873b6b2f255e383dae69f3c4abb4a753b"
+    }
+  ],
+  "externalKeeper": {
+    "file": "tests/meta-offer-view.test.ts",
+    "sha256": "5ca1e19f63335ccc257f8f4c055c54d8dfbc82fb34abad9ee6ddb831e7736ea6",
+    "name": "Meta offer delivery requires recent quiz evidence and constructs the canonical event",
+    "callbackSha256": "b6b263ee3208d6e5449640d28c5386f4df354e35d687c843dfde978e52f93e51"
+  },
+  "candidateFile": "candidates.json",
+  "limits": "Static parse/reconstruction only. No product owner imported, native tests/provider/DB/faults run. Source pins are preservation guards not all full-human-read claims."
+}

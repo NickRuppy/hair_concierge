@@ -1,0 +1,773 @@
+[
+  {
+    "id": "C1",
+    "file": "tests/discovery-products-loading.test.tsx",
+    "donor": 1,
+    "keeper": 2,
+    "equivalence": "Both callbacks render the same loading component with no props and the same realEmptyScreen fixture once. Save the already-existing realEmptyScreen output as real and reuse it for text and class assertions; no added render. Both paths are SSR, useEffect and handlers do not execute.",
+    "donorBefore": "test(\"the loading screen reads exactly like the empty products screen\", () => {\n  const loading = renderToStaticMarkup(<DiscoveryChecklistLoading />)\n  assert.deepEqual(textSequence(loading), textSequence(realEmptyScreen()))\n  assert.deepEqual(textSequence(loading).slice(0, 3), [\n    \"Deine Produkte\",\n    \"Produkt suchen\",\n    \"Scannen\",\n  ])\n})",
+    "keeperBefore": "test(\"the loading screen reuses the real screen's layout classes and has no controls\", () => {\n  const loading = renderToStaticMarkup(<DiscoveryChecklistLoading />)\n  const realClasses = new Set(classes(realEmptyScreen()))\n  for (const layoutClass of [\n    \"flex min-h-dvh flex-col bg-[#faf8f6]\",\n    \"flex-1 px-4 pb-8 pt-10\",\n    \"grid grid-cols-2 gap-2.5 [grid-auto-flow:row_dense]\",\n  ]) {\n    assert.ok(realClasses.has(layoutClass), `real screen still uses ${layoutClass}`)\n    assert.ok(classes(loading).includes(layoutClass), `loading uses ${layoutClass}`)\n  }\n  assert.doesNotMatch(loading, /<button|<input/)\n  assert.match(loading, /aria-busy=\"true\"/)\n})",
+    "keeperAfter": "test(\"the loading screen reuses the real screen's layout classes and has no controls\", () => {\n  const loading = renderToStaticMarkup(<DiscoveryChecklistLoading />)\n  const real = realEmptyScreen()\n  assert.deepEqual(textSequence(loading), textSequence(real))\n  assert.deepEqual(textSequence(loading).slice(0, 3), [\n    \"Deine Produkte\",\n    \"Produkt suchen\",\n    \"Scannen\",\n  ])\n  const realClasses = new Set(classes(real))\n  for (const layoutClass of [\n    \"flex min-h-dvh flex-col bg-[#faf8f6]\",\n    \"flex-1 px-4 pb-8 pt-10\",\n    \"grid grid-cols-2 gap-2.5 [grid-auto-flow:row_dense]\",\n  ]) {\n    assert.ok(realClasses.has(layoutClass), `real screen still uses ${layoutClass}`)\n    assert.ok(classes(loading).includes(layoutClass), `loading uses ${layoutClass}`)\n  }\n  assert.doesNotMatch(loading, /<button|<input/)\n  assert.match(loading, /aria-busy=\"true\"/)\n})",
+    "donorSha256": "c89d5a43abc5fc6a06eb0eaaa9bff499cb5e75d5d4d57b78da6148118601a5c3",
+    "keeperBeforeSha256": "9f166b80a4486ad32ba7cf14873c2adfb825edab84df89c0a851f46933162558",
+    "keeperAfterSha256": "f8995924c076a2da2544eeda04aafa4b06109ad100aa2b65972f3a8750a243c2",
+    "donorAssertions": [
+      {
+        "operator": "deepEqual",
+        "line": 3,
+        "text": "assert.deepEqual(textSequence(loading), textSequence(realEmptyScreen()))",
+        "args": [
+          "textSequence(loading)",
+          "textSequence(realEmptyScreen())"
+        ]
+      },
+      {
+        "operator": "deepEqual",
+        "line": 4,
+        "text": "assert.deepEqual(textSequence(loading).slice(0, 3), [\n    \"Deine Produkte\",\n    \"Produkt suchen\",\n    \"Scannen\",\n  ])",
+        "args": [
+          "textSequence(loading).slice(0, 3)",
+          "[\n    \"Deine Produkte\",\n    \"Produkt suchen\",\n    \"Scannen\",\n  ]"
+        ]
+      }
+    ],
+    "keeperOriginalAssertions": [
+      {
+        "operator": "ok",
+        "line": 9,
+        "text": "assert.ok(realClasses.has(layoutClass), `real screen still uses ${layoutClass}`)",
+        "args": [
+          "realClasses.has(layoutClass)",
+          "`real screen still uses ${layoutClass}`"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 10,
+        "text": "assert.ok(classes(loading).includes(layoutClass), `loading uses ${layoutClass}`)",
+        "args": [
+          "classes(loading).includes(layoutClass)",
+          "`loading uses ${layoutClass}`"
+        ]
+      },
+      {
+        "operator": "doesNotMatch",
+        "line": 12,
+        "text": "assert.doesNotMatch(loading, /<button|<input/)",
+        "args": [
+          "loading",
+          "/<button|<input/"
+        ]
+      },
+      {
+        "operator": "match",
+        "line": 13,
+        "text": "assert.match(loading, /aria-busy=\"true\"/)",
+        "args": [
+          "loading",
+          "/aria-busy=\"true\"/"
+        ]
+      }
+    ],
+    "keeperFinalAssertions": [
+      {
+        "operator": "deepEqual",
+        "line": 4,
+        "text": "assert.deepEqual(textSequence(loading), textSequence(real))",
+        "args": [
+          "textSequence(loading)",
+          "textSequence(real)"
+        ]
+      },
+      {
+        "operator": "deepEqual",
+        "line": 5,
+        "text": "assert.deepEqual(textSequence(loading).slice(0, 3), [\n    \"Deine Produkte\",\n    \"Produkt suchen\",\n    \"Scannen\",\n  ])",
+        "args": [
+          "textSequence(loading).slice(0, 3)",
+          "[\n    \"Deine Produkte\",\n    \"Produkt suchen\",\n    \"Scannen\",\n  ]"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 16,
+        "text": "assert.ok(realClasses.has(layoutClass), `real screen still uses ${layoutClass}`)",
+        "args": [
+          "realClasses.has(layoutClass)",
+          "`real screen still uses ${layoutClass}`"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 17,
+        "text": "assert.ok(classes(loading).includes(layoutClass), `loading uses ${layoutClass}`)",
+        "args": [
+          "classes(loading).includes(layoutClass)",
+          "`loading uses ${layoutClass}`"
+        ]
+      },
+      {
+        "operator": "doesNotMatch",
+        "line": 19,
+        "text": "assert.doesNotMatch(loading, /<button|<input/)",
+        "args": [
+          "loading",
+          "/<button|<input/"
+        ]
+      },
+      {
+        "operator": "match",
+        "line": 20,
+        "text": "assert.match(loading, /aria-busy=\"true\"/)",
+        "args": [
+          "loading",
+          "/aria-busy=\"true\"/"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "C2",
+    "file": "tests/discovery-cockpit-complexity-dom.test.tsx",
+    "donor": 6,
+    "keeper": 5,
+    "equivalence": "Both callbacks call renderCockpit() once with identical default props, addSteps(), ROWS and recommendation fixtures and select entryOf(\"Maske\"). Keeper already observes mask; reuse it. Comparison table and labels are read-only DOM queries. No event/fetch or new rendering added.",
+    "donorBefore": "test(\"F1: the recommendation shows „Empfohlenes Produkt | Ziel“ — two columns, no owned column\", () => {\n  renderCockpit()\n  const mask = entryOf(\"Maske\")\n  const table = mask.querySelector(\"[data-comparison]\") as HTMLElement\n  assert.equal(table.getAttribute(\"data-comparison\"), \"compact\")\n  const header = table.firstElementChild?.textContent ?? \"\"\n  assert.ok(header.includes(\"Empfohlenes Produkt\"), header)\n  assert.ok(header.includes(\"Ziel\"), header)\n  assert.ok(!header.includes(\"Alternative\"), header)\n  assert.ok(!header.includes(\"Bisheriges Produkt\"), header)\n  assert.ok(\n    table\n      .querySelector(\"li\")\n      ?.getAttribute(\"aria-label\")\n      ?.includes(\"Empfohlenes Produkt: fettig, Ziel: fettig\"),\n  )\n})",
+    "keeperBefore": "test(\"R28: „Neu dazu“ steps say Essenziell / Optional with the step's benefit, pronoun-free\", () => {\n  renderCockpit()\n  const mask = entryOf(\"Maske\")\n  const oil = entryOf(\"Öl\")\n  assert.ok(within(mask).getByText(\"Essenziell\"))\n  assert.ok(within(mask).getByText(\"Gibt den Längen eine intensive, auswaschbare Pflegeeinheit.\"))\n  assert.ok(within(oil).getByText(\"Optional\"))\n  // The benefit in the cockpit's voice (no „dein\").\n  assert.ok(within(oil).getByText(\"Schützt das Haar vor passender Hitze-Anwendung.\"))\n  // The old lowercase tag is replaced on these entries.\n  assert.ok(!oil.textContent?.includes(\"· optional\"))\n})",
+    "keeperAfter": "test(\"R28: „Neu dazu“ steps say Essenziell / Optional with the step's benefit, pronoun-free\", () => {\n  renderCockpit()\n  const mask = entryOf(\"Maske\")\n  const oil = entryOf(\"Öl\")\n  assert.ok(within(mask).getByText(\"Essenziell\"))\n  assert.ok(within(mask).getByText(\"Gibt den Längen eine intensive, auswaschbare Pflegeeinheit.\"))\n  assert.ok(within(oil).getByText(\"Optional\"))\n  // The benefit in the cockpit's voice (no „dein\").\n  assert.ok(within(oil).getByText(\"Schützt das Haar vor passender Hitze-Anwendung.\"))\n  // The old lowercase tag is replaced on these entries.\n  assert.ok(!oil.textContent?.includes(\"· optional\"))\n  const table = mask.querySelector(\"[data-comparison]\") as HTMLElement\n  assert.equal(table.getAttribute(\"data-comparison\"), \"compact\")\n  const header = table.firstElementChild?.textContent ?? \"\"\n  assert.ok(header.includes(\"Empfohlenes Produkt\"), header)\n  assert.ok(header.includes(\"Ziel\"), header)\n  assert.ok(!header.includes(\"Alternative\"), header)\n  assert.ok(!header.includes(\"Bisheriges Produkt\"), header)\n  assert.ok(\n    table\n      .querySelector(\"li\")\n      ?.getAttribute(\"aria-label\")\n      ?.includes(\"Empfohlenes Produkt: fettig, Ziel: fettig\"),\n    \"recommended comparison row names product and target\",\n  )\n})",
+    "donorSha256": "c38733ab86383dc951190eff3cc38ec0c54024631011a8d7ad6cfa0779086835",
+    "keeperBeforeSha256": "1cca3171fa2e288c053a42a9cc5a8e98e949a4166247bb667063847e82d17d3b",
+    "keeperAfterSha256": "0c8bbdc7cc40d913492b4401d68d14bcd356ad3553e184f84b26e285d7b00116",
+    "donorAssertions": [
+      {
+        "operator": "equal",
+        "line": 5,
+        "text": "assert.equal(table.getAttribute(\"data-comparison\"), \"compact\")",
+        "args": [
+          "table.getAttribute(\"data-comparison\")",
+          "\"compact\""
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 7,
+        "text": "assert.ok(header.includes(\"Empfohlenes Produkt\"), header)",
+        "args": [
+          "header.includes(\"Empfohlenes Produkt\")",
+          "header"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 8,
+        "text": "assert.ok(header.includes(\"Ziel\"), header)",
+        "args": [
+          "header.includes(\"Ziel\")",
+          "header"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 9,
+        "text": "assert.ok(!header.includes(\"Alternative\"), header)",
+        "args": [
+          "!header.includes(\"Alternative\")",
+          "header"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 10,
+        "text": "assert.ok(!header.includes(\"Bisheriges Produkt\"), header)",
+        "args": [
+          "!header.includes(\"Bisheriges Produkt\")",
+          "header"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 11,
+        "text": "assert.ok(\n    table\n      .querySelector(\"li\")\n      ?.getAttribute(\"aria-label\")\n      ?.includes(\"Empfohlenes Produkt: fettig, Ziel: fettig\"),\n  )",
+        "args": [
+          "table\n      .querySelector(\"li\")\n      ?.getAttribute(\"aria-label\")\n      ?.includes(\"Empfohlenes Produkt: fettig, Ziel: fettig\")"
+        ]
+      }
+    ],
+    "keeperOriginalAssertions": [
+      {
+        "operator": "ok",
+        "line": 5,
+        "text": "assert.ok(within(mask).getByText(\"Essenziell\"))",
+        "args": [
+          "within(mask).getByText(\"Essenziell\")"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 6,
+        "text": "assert.ok(within(mask).getByText(\"Gibt den Längen eine intensive, auswaschbare Pflegeeinheit.\"))",
+        "args": [
+          "within(mask).getByText(\"Gibt den Längen eine intensive, auswaschbare Pflegeeinheit.\")"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 7,
+        "text": "assert.ok(within(oil).getByText(\"Optional\"))",
+        "args": [
+          "within(oil).getByText(\"Optional\")"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 9,
+        "text": "assert.ok(within(oil).getByText(\"Schützt das Haar vor passender Hitze-Anwendung.\"))",
+        "args": [
+          "within(oil).getByText(\"Schützt das Haar vor passender Hitze-Anwendung.\")"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 11,
+        "text": "assert.ok(!oil.textContent?.includes(\"· optional\"))",
+        "args": [
+          "!oil.textContent?.includes(\"· optional\")"
+        ]
+      }
+    ],
+    "keeperFinalAssertions": [
+      {
+        "operator": "ok",
+        "line": 5,
+        "text": "assert.ok(within(mask).getByText(\"Essenziell\"))",
+        "args": [
+          "within(mask).getByText(\"Essenziell\")"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 6,
+        "text": "assert.ok(within(mask).getByText(\"Gibt den Längen eine intensive, auswaschbare Pflegeeinheit.\"))",
+        "args": [
+          "within(mask).getByText(\"Gibt den Längen eine intensive, auswaschbare Pflegeeinheit.\")"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 7,
+        "text": "assert.ok(within(oil).getByText(\"Optional\"))",
+        "args": [
+          "within(oil).getByText(\"Optional\")"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 9,
+        "text": "assert.ok(within(oil).getByText(\"Schützt das Haar vor passender Hitze-Anwendung.\"))",
+        "args": [
+          "within(oil).getByText(\"Schützt das Haar vor passender Hitze-Anwendung.\")"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 11,
+        "text": "assert.ok(!oil.textContent?.includes(\"· optional\"))",
+        "args": [
+          "!oil.textContent?.includes(\"· optional\")"
+        ]
+      },
+      {
+        "operator": "equal",
+        "line": 13,
+        "text": "assert.equal(table.getAttribute(\"data-comparison\"), \"compact\")",
+        "args": [
+          "table.getAttribute(\"data-comparison\")",
+          "\"compact\""
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 15,
+        "text": "assert.ok(header.includes(\"Empfohlenes Produkt\"), header)",
+        "args": [
+          "header.includes(\"Empfohlenes Produkt\")",
+          "header"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 16,
+        "text": "assert.ok(header.includes(\"Ziel\"), header)",
+        "args": [
+          "header.includes(\"Ziel\")",
+          "header"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 17,
+        "text": "assert.ok(!header.includes(\"Alternative\"), header)",
+        "args": [
+          "!header.includes(\"Alternative\")",
+          "header"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 18,
+        "text": "assert.ok(!header.includes(\"Bisheriges Produkt\"), header)",
+        "args": [
+          "!header.includes(\"Bisheriges Produkt\")",
+          "header"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 19,
+        "text": "assert.ok(\n    table\n      .querySelector(\"li\")\n      ?.getAttribute(\"aria-label\")\n      ?.includes(\"Empfohlenes Produkt: fettig, Ziel: fettig\"),\n    \"recommended comparison row names product and target\",\n  )",
+        "args": [
+          "table\n      .querySelector(\"li\")\n      ?.getAttribute(\"aria-label\")\n      ?.includes(\"Empfohlenes Produkt: fettig, Ziel: fettig\")",
+          "\"recommended comparison row names product and target\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "C3",
+    "file": "tests/discovery-cockpit-complexity-dom.test.tsx",
+    "donor": 9,
+    "keeper": 2,
+    "equivalence": "Both install deferredFetch and renderCockpit() defaults then fire exactly one Super essenziell click while its fetch is unresolved. Move no-fold assertion before that click and fold assertion after existing optimistic aria assertion, before keeper settles existing refusal. No new fetch/click; keeper additionally verifies its existing rollback. The original un-settled donor request is no longer duplicated.",
+    "donorBefore": "test(\"Iteration 3: choosing „Super essenziell“ folds at once — optimistic, before the save lands\", () => {\n  deferredFetch()\n  renderCockpit()\n  assert.equal(document.getElementById(\"runsheet-complexity-folded\"), null)\n  fireEvent.click(option(\"Super essenziell\"))\n  assert.ok(document.getElementById(\"runsheet-complexity-folded\"))\n})",
+    "keeperBefore": "test(\"R28: a click saves {complexity} to the call sheet at once; a refusal rolls back with a line\", async () => {\n  const request = deferredFetch()\n  renderCockpit()\n  fireEvent.click(option(\"Super essenziell\"))\n\n  assert.deepEqual(request.calls, [\n    {\n      url: \"/api/admin/beratung/enrollment-1/call-sheet\",\n      method: \"PATCH\",\n      body: { complexity: \"essenziell\" },\n    },\n  ])\n  // Optimistic.\n  assert.equal(option(\"Super essenziell\").getAttribute(\"aria-pressed\"), \"true\")\n\n  await act(async () => {\n    request.settle(new Response(JSON.stringify({ code: \"nope\" }), { status: 500 }))\n  })\n  assert.equal(option(\"Super essenziell\").getAttribute(\"aria-pressed\"), \"false\")\n  assert.equal(\n    within(complexityGroup()).getByRole(\"status\").textContent,\n    \"Nicht gespeichert. Bitte noch einmal.\",\n  )\n})",
+    "keeperAfter": "test(\"R28: a click saves {complexity} to the call sheet at once; a refusal rolls back with a line\", async () => {\n  const request = deferredFetch()\n  renderCockpit()\n  assert.equal(document.getElementById(\"runsheet-complexity-folded\"), null)\n  fireEvent.click(option(\"Super essenziell\"))\n\n  assert.deepEqual(request.calls, [\n    {\n      url: \"/api/admin/beratung/enrollment-1/call-sheet\",\n      method: \"PATCH\",\n      body: { complexity: \"essenziell\" },\n    },\n  ])\n  // Optimistic.\n  assert.equal(option(\"Super essenziell\").getAttribute(\"aria-pressed\"), \"true\")\n  assert.ok(document.getElementById(\"runsheet-complexity-folded\"), \"optional steps fold before the save settles\")\n\n  await act(async () => {\n    request.settle(new Response(JSON.stringify({ code: \"nope\" }), { status: 500 }))\n  })\n  assert.equal(option(\"Super essenziell\").getAttribute(\"aria-pressed\"), \"false\")\n  assert.equal(\n    within(complexityGroup()).getByRole(\"status\").textContent,\n    \"Nicht gespeichert. Bitte noch einmal.\",\n  )\n})",
+    "donorSha256": "2ce97c93c16301e80c90f5949008834b7c1283603346d593b215dd4e938326ec",
+    "keeperBeforeSha256": "1198156d318991819c2af8c135240b06f2c8574f3dcdf0a9ef89b05d2a19ae4f",
+    "keeperAfterSha256": "02c3ba200c4db01019196c99476b95d170aa7ec622925c99c66123b40ced78b8",
+    "donorAssertions": [
+      {
+        "operator": "equal",
+        "line": 4,
+        "text": "assert.equal(document.getElementById(\"runsheet-complexity-folded\"), null)",
+        "args": [
+          "document.getElementById(\"runsheet-complexity-folded\")",
+          "null"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 6,
+        "text": "assert.ok(document.getElementById(\"runsheet-complexity-folded\"))",
+        "args": [
+          "document.getElementById(\"runsheet-complexity-folded\")"
+        ]
+      }
+    ],
+    "keeperOriginalAssertions": [
+      {
+        "operator": "deepEqual",
+        "line": 6,
+        "text": "assert.deepEqual(request.calls, [\n    {\n      url: \"/api/admin/beratung/enrollment-1/call-sheet\",\n      method: \"PATCH\",\n      body: { complexity: \"essenziell\" },\n    },\n  ])",
+        "args": [
+          "request.calls",
+          "[\n    {\n      url: \"/api/admin/beratung/enrollment-1/call-sheet\",\n      method: \"PATCH\",\n      body: { complexity: \"essenziell\" },\n    },\n  ]"
+        ]
+      },
+      {
+        "operator": "equal",
+        "line": 14,
+        "text": "assert.equal(option(\"Super essenziell\").getAttribute(\"aria-pressed\"), \"true\")",
+        "args": [
+          "option(\"Super essenziell\").getAttribute(\"aria-pressed\")",
+          "\"true\""
+        ]
+      },
+      {
+        "operator": "equal",
+        "line": 19,
+        "text": "assert.equal(option(\"Super essenziell\").getAttribute(\"aria-pressed\"), \"false\")",
+        "args": [
+          "option(\"Super essenziell\").getAttribute(\"aria-pressed\")",
+          "\"false\""
+        ]
+      },
+      {
+        "operator": "equal",
+        "line": 20,
+        "text": "assert.equal(\n    within(complexityGroup()).getByRole(\"status\").textContent,\n    \"Nicht gespeichert. Bitte noch einmal.\",\n  )",
+        "args": [
+          "within(complexityGroup()).getByRole(\"status\").textContent",
+          "\"Nicht gespeichert. Bitte noch einmal.\""
+        ]
+      }
+    ],
+    "keeperFinalAssertions": [
+      {
+        "operator": "equal",
+        "line": 4,
+        "text": "assert.equal(document.getElementById(\"runsheet-complexity-folded\"), null)",
+        "args": [
+          "document.getElementById(\"runsheet-complexity-folded\")",
+          "null"
+        ]
+      },
+      {
+        "operator": "deepEqual",
+        "line": 7,
+        "text": "assert.deepEqual(request.calls, [\n    {\n      url: \"/api/admin/beratung/enrollment-1/call-sheet\",\n      method: \"PATCH\",\n      body: { complexity: \"essenziell\" },\n    },\n  ])",
+        "args": [
+          "request.calls",
+          "[\n    {\n      url: \"/api/admin/beratung/enrollment-1/call-sheet\",\n      method: \"PATCH\",\n      body: { complexity: \"essenziell\" },\n    },\n  ]"
+        ]
+      },
+      {
+        "operator": "equal",
+        "line": 15,
+        "text": "assert.equal(option(\"Super essenziell\").getAttribute(\"aria-pressed\"), \"true\")",
+        "args": [
+          "option(\"Super essenziell\").getAttribute(\"aria-pressed\")",
+          "\"true\""
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 16,
+        "text": "assert.ok(document.getElementById(\"runsheet-complexity-folded\"), \"optional steps fold before the save settles\")",
+        "args": [
+          "document.getElementById(\"runsheet-complexity-folded\")",
+          "\"optional steps fold before the save settles\""
+        ]
+      },
+      {
+        "operator": "equal",
+        "line": 21,
+        "text": "assert.equal(option(\"Super essenziell\").getAttribute(\"aria-pressed\"), \"false\")",
+        "args": [
+          "option(\"Super essenziell\").getAttribute(\"aria-pressed\")",
+          "\"false\""
+        ]
+      },
+      {
+        "operator": "equal",
+        "line": 22,
+        "text": "assert.equal(\n    within(complexityGroup()).getByRole(\"status\").textContent,\n    \"Nicht gespeichert. Bitte noch einmal.\",\n  )",
+        "args": [
+          "within(complexityGroup()).getByRole(\"status\").textContent",
+          "\"Nicht gespeichert. Bitte noch einmal.\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "C4",
+    "file": "tests/discovery-refined-usage.test.ts",
+    "donor": 3,
+    "keeper": 2,
+    "equivalence": "Both call composeLegacy() with its identical default LEGACY_ITEMS/STEPS/decisions/presentation/recommendation inputs. Every step/unassigned shape assertion and original loop preserved; observations do not mutate routine. Legacy keys have semantic significance despite JSON canonicalization dropping undefined.",
+    "donorBefore": "test(\"F4: the legacy fixture's item objects carry no batch-5 keys at all\", () => {\n  const routine = composeLegacy()\n  for (const entry of routine.steps) {\n    assert.ok(!entry.item || !(\"usageRole\" in entry.item))\n    assert.ok(!entry.item || !(\"productType\" in entry.item))\n    assert.ok(!(\"ownedUsageLabel\" in entry))\n  }\n  for (const entry of routine.unassignedIntakeProducts) assert.ok(!(\"usageLabel\" in entry))\n})",
+    "keeperBefore": "test(\"batch 9: the legacy fixture's third oil joins the first oil step — its hash moves on purpose\", () => {\n  // Two oil steps, three oils: before batch 9 the third was „kein Schritt im Idealplan\" (and\n  // „Brauchst du nicht mehr\" on paper). Now it sits in the first oil step, undecided.\n  const routine = composeLegacy()\n  assert.notEqual(routine.sourceHash, LEGACY_GOLDEN_HASH)\n  const third = routine.steps.find((entry) => entry.item?.id === \"i-oil-3\")\n  assert.equal(third?.step.decisionKey, stage3DecisionKey(\"oil\", \"pre_wash_fibre_treatment\", null))\n  assert.equal(third?.outcome, \"undecided\")\n  assert.ok(!routine.unassignedIntakeProducts.some((entry) => entry.item.id === \"i-oil-3\"))\n})",
+    "keeperAfter": "test(\"batch 9: the legacy fixture's third oil joins the first oil step — its hash moves on purpose\", () => {\n  // Two oil steps, three oils: before batch 9 the third was „kein Schritt im Idealplan\" (and\n  // „Brauchst du nicht mehr\" on paper). Now it sits in the first oil step, undecided.\n  const routine = composeLegacy()\n  assert.notEqual(routine.sourceHash, LEGACY_GOLDEN_HASH)\n  const third = routine.steps.find((entry) => entry.item?.id === \"i-oil-3\")\n  assert.equal(third?.step.decisionKey, stage3DecisionKey(\"oil\", \"pre_wash_fibre_treatment\", null))\n  assert.equal(third?.outcome, \"undecided\")\n  assert.ok(!routine.unassignedIntakeProducts.some((entry) => entry.item.id === \"i-oil-3\"))\n  for (const entry of routine.steps) {\n    assert.ok(!entry.item || !(\"usageRole\" in entry.item), \"legacy item omits usageRole\")\n    assert.ok(!entry.item || !(\"productType\" in entry.item), \"legacy item omits productType\")\n    assert.ok(!(\"ownedUsageLabel\" in entry), \"legacy entry omits ownedUsageLabel\")\n  }\n  for (const entry of routine.unassignedIntakeProducts) assert.ok(!(\"usageLabel\" in entry), \"legacy unassigned entry omits usageLabel\")\n})",
+    "donorSha256": "26db3c7472ce8c2574ad9d1534d949a7be1389115ed92d4b064add63be46d69c",
+    "keeperBeforeSha256": "d739d86eaeb96589576801ee701dbe259abbf0df088c4e35782c66c3cc571e25",
+    "keeperAfterSha256": "0bec8f5cf2d2a501e4d9b5130a83d517923cc3c483f66545aac652823f9cd7ea",
+    "donorAssertions": [
+      {
+        "operator": "ok",
+        "line": 4,
+        "text": "assert.ok(!entry.item || !(\"usageRole\" in entry.item))",
+        "args": [
+          "!entry.item || !(\"usageRole\" in entry.item)"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 5,
+        "text": "assert.ok(!entry.item || !(\"productType\" in entry.item))",
+        "args": [
+          "!entry.item || !(\"productType\" in entry.item)"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 6,
+        "text": "assert.ok(!(\"ownedUsageLabel\" in entry))",
+        "args": [
+          "!(\"ownedUsageLabel\" in entry)"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 8,
+        "text": "assert.ok(!(\"usageLabel\" in entry))",
+        "args": [
+          "!(\"usageLabel\" in entry)"
+        ]
+      }
+    ],
+    "keeperOriginalAssertions": [
+      {
+        "operator": "notEqual",
+        "line": 5,
+        "text": "assert.notEqual(routine.sourceHash, LEGACY_GOLDEN_HASH)",
+        "args": [
+          "routine.sourceHash",
+          "LEGACY_GOLDEN_HASH"
+        ]
+      },
+      {
+        "operator": "equal",
+        "line": 7,
+        "text": "assert.equal(third?.step.decisionKey, stage3DecisionKey(\"oil\", \"pre_wash_fibre_treatment\", null))",
+        "args": [
+          "third?.step.decisionKey",
+          "stage3DecisionKey(\"oil\", \"pre_wash_fibre_treatment\", null)"
+        ]
+      },
+      {
+        "operator": "equal",
+        "line": 8,
+        "text": "assert.equal(third?.outcome, \"undecided\")",
+        "args": [
+          "third?.outcome",
+          "\"undecided\""
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 9,
+        "text": "assert.ok(!routine.unassignedIntakeProducts.some((entry) => entry.item.id === \"i-oil-3\"))",
+        "args": [
+          "!routine.unassignedIntakeProducts.some((entry) => entry.item.id === \"i-oil-3\")"
+        ]
+      }
+    ],
+    "keeperFinalAssertions": [
+      {
+        "operator": "notEqual",
+        "line": 5,
+        "text": "assert.notEqual(routine.sourceHash, LEGACY_GOLDEN_HASH)",
+        "args": [
+          "routine.sourceHash",
+          "LEGACY_GOLDEN_HASH"
+        ]
+      },
+      {
+        "operator": "equal",
+        "line": 7,
+        "text": "assert.equal(third?.step.decisionKey, stage3DecisionKey(\"oil\", \"pre_wash_fibre_treatment\", null))",
+        "args": [
+          "third?.step.decisionKey",
+          "stage3DecisionKey(\"oil\", \"pre_wash_fibre_treatment\", null)"
+        ]
+      },
+      {
+        "operator": "equal",
+        "line": 8,
+        "text": "assert.equal(third?.outcome, \"undecided\")",
+        "args": [
+          "third?.outcome",
+          "\"undecided\""
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 9,
+        "text": "assert.ok(!routine.unassignedIntakeProducts.some((entry) => entry.item.id === \"i-oil-3\"))",
+        "args": [
+          "!routine.unassignedIntakeProducts.some((entry) => entry.item.id === \"i-oil-3\")"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 11,
+        "text": "assert.ok(!entry.item || !(\"usageRole\" in entry.item), \"legacy item omits usageRole\")",
+        "args": [
+          "!entry.item || !(\"usageRole\" in entry.item)",
+          "\"legacy item omits usageRole\""
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 12,
+        "text": "assert.ok(!entry.item || !(\"productType\" in entry.item), \"legacy item omits productType\")",
+        "args": [
+          "!entry.item || !(\"productType\" in entry.item)",
+          "\"legacy item omits productType\""
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 13,
+        "text": "assert.ok(!(\"ownedUsageLabel\" in entry), \"legacy entry omits ownedUsageLabel\")",
+        "args": [
+          "!(\"ownedUsageLabel\" in entry)",
+          "\"legacy entry omits ownedUsageLabel\""
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 15,
+        "text": "assert.ok(!(\"usageLabel\" in entry), \"legacy unassigned entry omits usageLabel\")",
+        "args": [
+          "!(\"usageLabel\" in entry)",
+          "\"legacy unassigned entry omits usageLabel\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "C5",
+    "file": "tests/discovery-unanswered-categories.test.tsx",
+    "donor": 4,
+    "keeper": 3,
+    "equivalence": "Both await the same renderCockpit(\"submitted\") with default items, four ideal steps, ready injected model, allowed admin/flag, null lead and empty fake admin. Actual page/child SSR produces both step and summary text. Default call-sheet read throws on fake {}.from and is caught in both; no live database. Reuse the same markup, without another render or model input.",
+    "donorBefore": "test(\"the summary line names only the unanswered categories no step already names\", async () => {\n  const markup = await renderCockpit(\"submitted\")\n  // Oil is a step that already says she uses nothing for it (consult-runsheet T4 c): the\n  // footer does not repeat it.\n  assert.ok(!markup.includes(\"Öl — nicht benutzt. Keine Entscheidung nötig.\"))\n  // Leave-in and mask are named at their steps; the line carries the six without a step.\n  assert.ok(\n    markup.includes(\n      \"Nicht angegeben: Tiefenreinigung · Conditioner · Bondbuilder · Kopfhautpflege · Hitzeschutz · Trockenshampoo — im Call fragen.\",\n    ),\n  )\n})",
+    "keeperBefore": "test(\"a submitted intake's untouched step says so at the step — never „benutzt nichts“\", async () => {\n  const markup = await renderCockpit(\"submitted\")\n  for (const label of [\"Leave-in\", \"mask\"]) {\n    const block = stepBlock(markup, label)\n    assert.ok(block.includes(UNANSWERED_STEP), `${label}: unanswered wording`)\n    assert.ok(!block.includes(USES_NOTHING), `${label}: no „uses nothing\" claim`)\n    assert.ok(!block.includes(\"Lücke in der Idealroutine\"), `${label}: no gap title`)\n  }\n  // Only the explicit „benutze ich nicht\" earns the gap wording.\n  const oil = stepBlock(markup, \"oil\")\n  assert.ok(oil.includes(\"Lücke in der Idealroutine\"))\n  assert.ok(oil.includes(USES_NOTHING))\n  assert.ok(!oil.includes(UNANSWERED_STEP))\n})",
+    "keeperAfter": "test(\"a submitted intake's untouched step says so at the step — never „benutzt nichts“\", async () => {\n  const markup = await renderCockpit(\"submitted\")\n  for (const label of [\"Leave-in\", \"mask\"]) {\n    const block = stepBlock(markup, label)\n    assert.ok(block.includes(UNANSWERED_STEP), `${label}: unanswered wording`)\n    assert.ok(!block.includes(USES_NOTHING), `${label}: no „uses nothing\" claim`)\n    assert.ok(!block.includes(\"Lücke in der Idealroutine\"), `${label}: no gap title`)\n  }\n  // Only the explicit „benutze ich nicht\" earns the gap wording.\n  const oil = stepBlock(markup, \"oil\")\n  assert.ok(oil.includes(\"Lücke in der Idealroutine\"))\n  assert.ok(oil.includes(USES_NOTHING))\n  assert.ok(!oil.includes(UNANSWERED_STEP))\n  // Oil is a step that already says she uses nothing for it (consult-runsheet T4 c): the\n  // footer does not repeat it.\n  assert.ok(!markup.includes(\"Öl — nicht benutzt. Keine Entscheidung nötig.\"), \"summary omits explicit none already named by a step\")\n  // Leave-in and mask are named at their steps; the line carries the six without a step.\n  assert.ok(\n    markup.includes(\n      \"Nicht angegeben: Tiefenreinigung · Conditioner · Bondbuilder · Kopfhautpflege · Hitzeschutz · Trockenshampoo — im Call fragen.\",\n    ),\n    \"summary names exactly the six unanswered categories without steps\",\n  )\n})",
+    "donorSha256": "9eda2eb69a432043baa8a3a8632392bd6f3a48f50fd8f465947c5dcb20158e48",
+    "keeperBeforeSha256": "35db9f43ef2faf1648553eb3534b0c568da6a4b5c71ffa56d78d6230a5c5fddb",
+    "keeperAfterSha256": "1f1d94e7caaebc72fc8f4815ee7565e7e549ec748dee530cdd6ae28eedc1f29d",
+    "donorAssertions": [
+      {
+        "operator": "ok",
+        "line": 5,
+        "text": "assert.ok(!markup.includes(\"Öl — nicht benutzt. Keine Entscheidung nötig.\"))",
+        "args": [
+          "!markup.includes(\"Öl — nicht benutzt. Keine Entscheidung nötig.\")"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 7,
+        "text": "assert.ok(\n    markup.includes(\n      \"Nicht angegeben: Tiefenreinigung · Conditioner · Bondbuilder · Kopfhautpflege · Hitzeschutz · Trockenshampoo — im Call fragen.\",\n    ),\n  )",
+        "args": [
+          "markup.includes(\n      \"Nicht angegeben: Tiefenreinigung · Conditioner · Bondbuilder · Kopfhautpflege · Hitzeschutz · Trockenshampoo — im Call fragen.\",\n    )"
+        ]
+      }
+    ],
+    "keeperOriginalAssertions": [
+      {
+        "operator": "ok",
+        "line": 5,
+        "text": "assert.ok(block.includes(UNANSWERED_STEP), `${label}: unanswered wording`)",
+        "args": [
+          "block.includes(UNANSWERED_STEP)",
+          "`${label}: unanswered wording`"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 6,
+        "text": "assert.ok(!block.includes(USES_NOTHING), `${label}: no „uses nothing\" claim`)",
+        "args": [
+          "!block.includes(USES_NOTHING)",
+          "`${label}: no „uses nothing\" claim`"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 7,
+        "text": "assert.ok(!block.includes(\"Lücke in der Idealroutine\"), `${label}: no gap title`)",
+        "args": [
+          "!block.includes(\"Lücke in der Idealroutine\")",
+          "`${label}: no gap title`"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 11,
+        "text": "assert.ok(oil.includes(\"Lücke in der Idealroutine\"))",
+        "args": [
+          "oil.includes(\"Lücke in der Idealroutine\")"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 12,
+        "text": "assert.ok(oil.includes(USES_NOTHING))",
+        "args": [
+          "oil.includes(USES_NOTHING)"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 13,
+        "text": "assert.ok(!oil.includes(UNANSWERED_STEP))",
+        "args": [
+          "!oil.includes(UNANSWERED_STEP)"
+        ]
+      }
+    ],
+    "keeperFinalAssertions": [
+      {
+        "operator": "ok",
+        "line": 5,
+        "text": "assert.ok(block.includes(UNANSWERED_STEP), `${label}: unanswered wording`)",
+        "args": [
+          "block.includes(UNANSWERED_STEP)",
+          "`${label}: unanswered wording`"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 6,
+        "text": "assert.ok(!block.includes(USES_NOTHING), `${label}: no „uses nothing\" claim`)",
+        "args": [
+          "!block.includes(USES_NOTHING)",
+          "`${label}: no „uses nothing\" claim`"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 7,
+        "text": "assert.ok(!block.includes(\"Lücke in der Idealroutine\"), `${label}: no gap title`)",
+        "args": [
+          "!block.includes(\"Lücke in der Idealroutine\")",
+          "`${label}: no gap title`"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 11,
+        "text": "assert.ok(oil.includes(\"Lücke in der Idealroutine\"))",
+        "args": [
+          "oil.includes(\"Lücke in der Idealroutine\")"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 12,
+        "text": "assert.ok(oil.includes(USES_NOTHING))",
+        "args": [
+          "oil.includes(USES_NOTHING)"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 13,
+        "text": "assert.ok(!oil.includes(UNANSWERED_STEP))",
+        "args": [
+          "!oil.includes(UNANSWERED_STEP)"
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 16,
+        "text": "assert.ok(!markup.includes(\"Öl — nicht benutzt. Keine Entscheidung nötig.\"), \"summary omits explicit none already named by a step\")",
+        "args": [
+          "!markup.includes(\"Öl — nicht benutzt. Keine Entscheidung nötig.\")",
+          "\"summary omits explicit none already named by a step\""
+        ]
+      },
+      {
+        "operator": "ok",
+        "line": 18,
+        "text": "assert.ok(\n    markup.includes(\n      \"Nicht angegeben: Tiefenreinigung · Conditioner · Bondbuilder · Kopfhautpflege · Hitzeschutz · Trockenshampoo — im Call fragen.\",\n    ),\n    \"summary names exactly the six unanswered categories without steps\",\n  )",
+        "args": [
+          "markup.includes(\n      \"Nicht angegeben: Tiefenreinigung · Conditioner · Bondbuilder · Kopfhautpflege · Hitzeschutz · Trockenshampoo — im Call fragen.\",\n    )",
+          "\"summary names exactly the six unanswered categories without steps\""
+        ]
+      }
+    ]
+  }
+]

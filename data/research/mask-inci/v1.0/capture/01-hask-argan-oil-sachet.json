@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "mask-inci-capture-v1",
+  "productNumber": 1,
+  "role": "primary",
+  "archetypeSlots": ["1 - rich oil/butter, high anchor"],
+  "identity": {
+    "brand": "HASK",
+    "productName": "HASK Haarkur Argan Oil, Sachet, 50 ml (dm.de also lists as \"HASK Kursachet Argan Oil\")",
+    "packSize": "50 ml sachet",
+    "gtinEan": null,
+    "eanSourceNote": "No EAN independently confirmed this pass. dm.de product identifier is the internal article number 71164333068 (used in the dm.de URL slug p71164333068) plus a second alternate dm article id 1474980 seen in a different dm.de URL pattern for what appears to be the same sachet - both are dm-internal IDs, not confirmed as the retail EAN/GTIN barcode. Requires direct barcode confirmation at freeze time.",
+    "market": "DE (dm.de, dm.at)"
+  },
+  "rawInci": "AQUA, CETEARYL ALCOHOL, LANOLIN, CETRIMONIUM CHLORIDE, QUATERNIUM-18, PARFUM, ARGANIA SPINOSA KERNEL OIL, HYDROXYPROPYLTRIMONIUM HYDROLYZED ORYZA SATIVA PROTEIN/SILOXYSILICATE, ORYZA SATIVA EXTRACT, HYDROLYZED COLLAGEN, HYDROLYZED KERATIN, SILK AMINO ACIDS, HYDROLYZED SOY PROTEIN, SODIUM LAUROYL OAT AMINO ACIDS, JUGLANS NIGRA LEAF EXTRACT, LEUCONOSTOC/RADISH ROOT FERMENT FILTRATE, POPULUS TREMULOIDES BARK EXTRACT, CITRIC ACID, GLYCERIN, PANTHENOL, ISOPROPYL PALMITATE, SODIUM PCA, TETRASODIUM EDTA, DMDM HYDANTOIN, BUTYLENE GLYCOL, ETHYLHEXYLGLYCERIN, SODIUM BENZOATE, PHENOXYETHANOL, BENZYL ALCOHOL, POTASSIUM SORBATE, BENZYL BENZOATE, LIMONENE, CARAMEL, CI 19140",
+  "inciSource": {
+    "url": "https://www.hautschutzengel.de/hask-argan-oil-repairing-deep-conditioner-sachet-50-ml-inhaltsstoffe/produkt/215446.html",
+    "accessDate": "2026-09-04",
+    "tier": "hautschutzengel (fallback)",
+    "notes": "dm.de product page (https://www.dm.de/hask-haarkur-argan-oil-sachet-p71164333068.html) is JS-rendered and returned only header/logo markup on fetch, per the known dm.de limitation. This hautschutzengel page is explicitly titled '...Sachet 50 ml' and lists a sachet-specific formula, confirmed DISTINCT from the 355 ml bottle's INCI captured separately in data/research/shampoo-inci (different ingredient set entirely - bottle is a sulfate-conditioner-style formula, sachet is this lanolin/cetrimonium-chloride formula). Per Nick's ruling (approval record item 4), the sachet's own INCI is used, never merged from the bottle."
+  },
+  "directions": {
+    "text": "Nach der Haarwäsche in das handtuchtrockene/nasse Haar einmassieren und bis zu 10 Minuten einwirken lassen, danach gründlich ausspülen. Zur Anwendung 1-2 Mal pro Woche. Ein Sachet (50 ml) reicht für ca. 5-8 Anwendungen (bzw. laut anderer Quelle 2-3 Anwendungen).",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "up to 10 (exact wording varies by source: 'bis zu 10 Minuten')",
+    "source": "Aggregated from dm.de listing copy and secondary retailer/review sites (pinkmelon.de, kaufland.de) via search - NOT independently verified by a direct verbatim fetch of the dm.de product page, since that page is JS-rendered and did not return body content this pass.",
+    "confidence": "moderate - contact time is corroborated across multiple independent retail copy blocks but not confirmed by a single primary-source verbatim fetch"
+  },
+  "claims": [
+    "nährt und revitalisiert trockenes, strapaziertes, geschädigtes Haar",
+    "reich an Antioxidantien, Fettsäuren, Vitamin E (Arganöl)",
+    "verbessert sichtbar die Haarstruktur",
+    "entwirrt und zähmt widerspenstiges Haar"
+  ],
+  "conflicts": [
+    {
+      "type": "identity/EAN",
+      "description": "dm.de shows at least two distinct internal identifiers for what appears to be the same 50ml sachet (URL slug number 71164333068 vs. a separate product-detail ID 1474980 found via a different dm.de URL pattern 'dm.de/p/d/1474980/hask-kursachet-argan-oil'). Neither resolved to a verbatim retail barcode/EAN in this pass. Not treated as two different products, but flagged as an unresolved identifier gap.",
+      "resolution": "unresolved - needs direct barcode scan or dm.de JS-rendered fetch at freeze time"
+    }
+  ],
+  "status": "captured",
+  "statusNotes": "INCI captured verbatim from a sachet-specific source and confirmed independent of the 355ml bottle formula per Nick's ruling. EAN and exact contact-time wording remain moderate-confidence gaps for freeze-time re-check."
+}

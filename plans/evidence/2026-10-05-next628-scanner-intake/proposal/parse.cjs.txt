@@ -1,0 +1,14 @@
+'use strict'
+const fs=require('node:fs'),crypto=require('node:crypto'),ts=require('/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/node_modules/typescript')
+const sha=s=>crypto.createHash('sha256').update(s).digest('hex')
+const rows=[]
+for(const file of process.argv.slice(2)){
+ const text=fs.readFileSync(file,'utf8'),sf=ts.createSourceFile(file,text,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX)
+ if(sf.parseDiagnostics.length)throw Error('Syntax '+file)
+ function walk(n){if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test'){
+ const cb=n.arguments.at(-1),assertions=[],calls=[]
+ function w(x){if(ts.isCallExpression(x)){const c={expression:x.expression.getText(sf),text:x.getText(sf),line:sf.getLineAndCharacterOfPosition(x.getStart(sf)).line+1};calls.push(c);if(c.expression.startsWith('assert.'))assertions.push(c)}ts.forEachChild(x,w)}w(cb)
+ rows.push({file,title:n.arguments[0].text,line:sf.getLineAndCharacterOfPosition(n.getStart(sf)).line+1,start:n.getStart(sf),end:n.end,body:n.getText(sf),callback:cb.getText(sf),callbackSha256:sha(cb.getText(sf)),assertions,calls})
+ }ts.forEachChild(n,walk)}walk(sf)
+}
+console.log(JSON.stringify(rows,null,2))

@@ -1,0 +1,423 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "23 3 * * *"
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder' }}
+  SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'placeholder' }}
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || 'sk-placeholder' }}
+  HAS_LIVE_SUPABASE_SECRETS: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL != '' && secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY != '' && secrets.SUPABASE_SERVICE_ROLE_KEY != '' }}
+  HAS_LIVE_AI_SECRETS: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL != '' && secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY != '' && secrets.SUPABASE_SERVICE_ROLE_KEY != '' && secrets.OPENAI_API_KEY != '' }}
+
+jobs:
+  funnel-contributor-scope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Enforce fork contributor paths
+        env:
+          IS_FORK_PR: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          if [ "$IS_FORK_PR" != "true" ]; then
+            echo "Owner-controlled change; contributor path restriction not required."
+            exit 0
+          fi
+
+          invalid_paths=""
+          while IFS=$'\t' read -r change_status changed_path; do
+            case "$changed_path" in
+              src/funnels/packages.json|src/funnels/landing/registry.generated.ts|src/funnels/offers/registry.generated.ts) ;;
+              src/funnels/quizzes/*)
+                invalid_paths="${invalid_paths}${changed_path} (quiz variants are owner-controlled)\n"
+                ;;
+              src/funnels/landing/*.tsx|src/funnels/offers/*.tsx)
+                if [ "$change_status" != "A" ]; then
+                  invalid_paths="${invalid_paths}${change_status} ${changed_path} (existing variants are owner-controlled)\n"
+                fi
+                ;;
+              public/images/funnels/*|docs/funnel-briefs/*) ;;
+              *) invalid_paths="${invalid_paths}${changed_path}\n" ;;
+            esac
+          done < <(git diff --name-status --no-renames "$BASE_SHA...$HEAD_SHA")
+
+          if [ -n "$invalid_paths" ]; then
+            printf "Fork funnel PRs may only change approved contributor paths:\n%b" "$invalid_paths"
+            exit 1
+          fi
+
+          node <<'NODE'
+          const { execFileSync } = require("node:child_process")
+          const { readFileSync } = require("node:fs")
+
+          const base = JSON.parse(
+            execFileSync("git", ["show", `${process.env.BASE_SHA}:src/funnels/packages.json`], {
+              encoding: "utf8",
+            }),
+          )
+          const proposed = JSON.parse(readFileSync("src/funnels/packages.json", "utf8"))
+          const proposedByKey = new Map(proposed.map((item) => [item.key, item]))
+          const immutableFields = ["key", "slug", "channel", "landingVariant", "quizVariant", "offerVariant"]
+          const errors = []
+
+          for (const existing of base) {
+            const next = proposedByKey.get(existing.key)
+            if (!next) {
+              errors.push(`Existing package removed: ${existing.key}`)
+              continue
+            }
+            for (const field of immutableFields) {
+              if (next[field] !== existing[field]) {
+                errors.push(`Existing package ${existing.key} changed immutable field ${field}`)
+              }
+            }
+          }
+
+          if (errors.length > 0) {
+            console.error(errors.join("\n"))
+            process.exit(1)
+          }
+          NODE
+
+          echo "Fork funnel PR stays within approved contributor paths."
+
+  detect-ci-scope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      chat_eval: ${{ steps.changes.outputs.chat_eval }}
+      retrieval_eval: ${{ steps.changes.outputs.retrieval_eval }}
+      playwright_smoke: ${{ steps.changes.outputs.playwright_smoke }}
+      security_scan: ${{ steps.changes.outputs.security_scan }}
+      personal_plan_journey: ${{ steps.changes.outputs.personal_plan_journey }}
+      full_ci: ${{ steps.changes.outputs.full_ci }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Detect changed paths
+        id: changes
+        env:
+          CI_BASE_REF: ${{ github.event_name == 'push' && github.event.before || '' }}
+          CI_HEAD_REF: ${{ github.sha }}
+          PR_TITLE: ${{ github.event.pull_request.title || '' }}
+          PR_BODY: ${{ github.event.pull_request.body || '' }}
+          FORCE_FULL_CI: ${{ github.event_name == 'schedule' }}
+        run: node scripts/ci/changed-paths.mjs
+
+  quality-static:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Build
+        run: npm run build
+      - name: Check funnel registries
+        run: npm run funnel:check
+
+  quality-node:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Run top-level Node contracts
+        run: npm run test:node
+      - name: Run nested Personal Plan contracts
+        run: npm run test:personal-plan:nested
+      - name: Verify Stage 5 application artifact freshness
+        run: npm run personal-plan:application-audit
+      - name: Run agent contracts
+        run: npm run test:agent
+
+  quality-browser-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run generic Playwright contracts
+        run: npm run test:playwright:contracts
+
+  quality-personal-plan-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [detect-ci-scope]
+    if: needs.detect-ci-scope.outputs.personal_plan_journey == 'true'
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Build Personal Plan browser app
+        run: CI=true CI_PERSONAL_PLAN_STAGE3_LAB_ENABLED=true CI_PERSONAL_PLAN_PRODUCTION_JOURNEY_ENABLED=true PERSONAL_PLAN_APP_V1_ENABLED=true PERSONAL_PLAN_STAGE2_ENABLED=true PERSONAL_PLAN_STAGE3_ENABLED=true npm run build
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run Stage 3 production lab contracts
+        run: npm run test:playwright:personal-plan-stage3:lab
+
+  quality-personal-plan-journey:
+    runs-on: ubuntu-latest
+    # Raised from 10 (M1): this lane runs many Playwright specs in sequence, one of
+    # which (tests/scan-funnel-journey.spec.ts, on the full-CI live run below) writes
+    # real rows to production Supabase and depends on its own afterAll to clean them
+    # up. A job-level timeout that fires mid-run SIGKILLs the whole process before any
+    # afterAll can execute, leaving rows behind — 20 keeps a real margin over this
+    # spec's own 300s test.setTimeout plus every other spec sharing the lane.
+    timeout-minutes: 20
+    needs: [detect-ci-scope]
+    if: needs.detect-ci-scope.outputs.personal_plan_journey == 'true'
+    # tests/scan-funnel-journey.spec.ts drives the scan_v1 package end to end, so
+    # this lane needs the scan route gate, funnel attribution and a signing secret
+    # in the dev server it boots, plus the spec's own live-run opt-in. Job level so
+    # both the Playwright process and that server inherit them; no other lane is
+    # affected.
+    env:
+      SCAN_FUNNEL_ENABLED: "true"
+      FUNNEL_ATTRIBUTION_ENABLED: "true"
+      FUNNEL_COOKIE_SIGNING_SECRET: "ci-scan-funnel-secret"
+      # I1: tests/scan-funnel-journey.spec.ts writes real users/leads/plans to
+      # production Supabase, so its live run is reserved for the same manual
+      # full-CI gate playwright-payment-feedback-v2 uses (full_ci), and only when a
+      # real service-role key is configured — never the ci.yml placeholder default.
+      # Every other spec `test:playwright:personal-plan-stage3:journey` runs is
+      # unaffected and keeps running on every PR; only this one variable changes.
+      PLAYWRIGHT_RUN_SCAN_FUNNEL_LIVE: ${{ (needs.detect-ci-scope.outputs.full_ci == 'true' && secrets.SUPABASE_SERVICE_ROLE_KEY != '') && '1' || '0' }}
+      # scan_v1 runs the LEGACY quiz, so its buyer's lead is a legacy lead. Without
+      # the production legacy-quiz cutover release configuration,
+      # `findPersonalPlanEnrollmentForUser` refuses every legacy lead and
+      # /plan-bereit can never report ready — the scanner hand-over would be
+      # untestable. These two mirror the production release state for this lane only.
+      PERSONAL_PLAN_LEGACY_QUIZ_CUTOVER_ENABLED: "true"
+      PERSONAL_PLAN_APP_V1_NEW_BUYER_CUTOFF: "2020-01-01T00:00:00Z"
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium webkit
+      - name: Run Personal Plan development journeys
+        run: npm run test:playwright:personal-plan-stage3:journey
+      - name: Run scanner refinement journeys
+        run: npm run test:playwright:scanner-refinement
+
+  quality-core:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: ${{ always() }}
+    needs:
+      - detect-ci-scope
+      - quality-static
+      - quality-node
+      - quality-browser-contracts
+      - quality-personal-plan-browser
+      - quality-personal-plan-journey
+    steps:
+      - uses: actions/checkout@v6
+      - name: Require successful quality lanes
+        run: >-
+          node scripts/ci/require-job-results.mjs
+          --allow-skipped=quality-personal-plan-browser
+          --allow-skipped=quality-personal-plan-journey
+          detect-ci-scope=${{ needs.detect-ci-scope.result }}
+          quality-static=${{ needs.quality-static.result }}
+          quality-node=${{ needs.quality-node.result }}
+          quality-browser-contracts=${{ needs.quality-browser-contracts.result }}
+          quality-personal-plan-browser=${{ needs.quality-personal-plan-browser.result }}
+          quality-personal-plan-journey=${{ needs.quality-personal-plan-journey.result }}
+
+  playwright-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [detect-ci-scope]
+    env:
+      CI_OFFER_PAGE_LAB_ENABLED: "true"
+      NEXT_PUBLIC_OFFER_PAYMENT_OVERLAY_ENABLED: "true"
+      NEXT_PUBLIC_PAYPAL_CLIENT_ID: "ci-paypal-client-id"
+      NEXT_PUBLIC_PAYPAL_ENABLED: "true"
+      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: "pk_test_ci_only"
+      NEXT_PUBLIC_STRIPE_EXPRESS_CHECKOUT_ENABLED: "true"
+      PERSONAL_PLAN_QUIZ_V1_ENABLED: "true"
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Explain skip
+        if: needs.detect-ci-scope.outputs.playwright_smoke != 'true' || env.HAS_LIVE_SUPABASE_SECRETS != 'true'
+        run: |
+          echo "Playwright smoke skipped."
+          echo "playwright_smoke=${{ needs.detect-ci-scope.outputs.playwright_smoke }}"
+          echo "HAS_LIVE_SUPABASE_SECRETS=$HAS_LIVE_SUPABASE_SECRETS"
+      - name: Install dependencies
+        if: needs.detect-ci-scope.outputs.playwright_smoke == 'true' && env.HAS_LIVE_SUPABASE_SECRETS == 'true'
+        run: npm ci
+      - name: Build app for smoke server
+        if: needs.detect-ci-scope.outputs.playwright_smoke == 'true' && env.HAS_LIVE_SUPABASE_SECRETS == 'true'
+        run: npm run build
+      - name: Install Playwright browsers
+        if: needs.detect-ci-scope.outputs.playwright_smoke == 'true' && env.HAS_LIVE_SUPABASE_SECRETS == 'true'
+        run: npx playwright install --with-deps chromium
+      - name: Run Playwright smoke tests
+        if: needs.detect-ci-scope.outputs.playwright_smoke == 'true' && env.HAS_LIVE_SUPABASE_SECRETS == 'true'
+        run: npx start-server-and-test 'npm run start' http://localhost:3000 'npx playwright test --grep @ci --project=chromium'
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-smoke-${{ github.run_id }}
+          path: |
+            test-results/
+            tests/results/
+            tests/screenshots/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  playwright-payment-feedback-v2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [detect-ci-scope]
+    if: needs.detect-ci-scope.outputs.full_ci == 'true'
+    env:
+      CI_OFFER_PAGE_LAB_ENABLED: "true"
+      NEXT_PUBLIC_OFFER_PAYMENT_OVERLAY_ENABLED: "true"
+      NEXT_PUBLIC_PAYPAL_CLIENT_ID: "ci-paypal-client-id"
+      NEXT_PUBLIC_PAYPAL_ENABLED: "true"
+      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: "pk_test_ci_only"
+      NEXT_PUBLIC_STRIPE_EXPRESS_CHECKOUT_ENABLED: "true"
+      NEXT_PUBLIC_PAYMENT_FEEDBACK_V2_ENABLED: "true"
+      PERSONAL_PLAN_QUIZ_V1_ENABLED: "true"
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Explain skip
+        if: env.HAS_LIVE_SUPABASE_SECRETS != 'true'
+        run: echo "Payment feedback V2 smoke skipped because live Supabase secrets are unavailable."
+      - name: Install dependencies
+        if: env.HAS_LIVE_SUPABASE_SECRETS == 'true'
+        run: npm ci
+      - name: Build V2 app for smoke server
+        if: env.HAS_LIVE_SUPABASE_SECRETS == 'true'
+        run: npm run build
+      - name: Install Playwright browser
+        if: env.HAS_LIVE_SUPABASE_SECRETS == 'true'
+        run: npx playwright install --with-deps chromium
+      - name: Run payment feedback V2 smoke tests
+        if: env.HAS_LIVE_SUPABASE_SECRETS == 'true'
+        run: npx start-server-and-test 'npm run start' http://localhost:3000 'npx playwright test --grep @payment-feedback-v2 --project=chromium'
+      - name: Upload payment feedback V2 artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-payment-feedback-v2-${{ github.run_id }}
+          path: |
+            test-results/
+            tests/results/
+            tests/screenshots/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  chat-live-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [detect-ci-scope, quality-core]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Explain skip
+        if: needs.detect-ci-scope.outputs.chat_eval != 'true' || env.HAS_LIVE_AI_SECRETS != 'true'
+        run: |
+          echo "Live chat smoke skipped."
+          echo "chat_eval=${{ needs.detect-ci-scope.outputs.chat_eval }}"
+          echo "HAS_LIVE_AI_SECRETS=$HAS_LIVE_AI_SECRETS"
+      - name: Install dependencies
+        if: needs.detect-ci-scope.outputs.chat_eval == 'true' && env.HAS_LIVE_AI_SECRETS == 'true'
+        run: npm ci
+      - name: Build app for smoke server
+        if: needs.detect-ci-scope.outputs.chat_eval == 'true' && env.HAS_LIVE_AI_SECRETS == 'true'
+        run: npm run build
+      - name: Run live chat smoke eval
+        if: needs.detect-ci-scope.outputs.chat_eval == 'true' && env.HAS_LIVE_AI_SECRETS == 'true'
+        run: npx start-server-and-test 'npm run start' http://localhost:3000 'npm run test:chat:ci'
+      - name: Upload chat artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: chat-live-smoke-${{ github.run_id }}
+          path: test-results/chat-eval/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  retrieval-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [detect-ci-scope, quality-core]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Explain skip
+        if: needs.detect-ci-scope.outputs.retrieval_eval != 'true'
+        run: echo "No retrieval/indexing paths changed; retrieval gate skipped."
+      - name: Install dependencies
+        if: needs.detect-ci-scope.outputs.retrieval_eval == 'true'
+        run: npm ci
+      - name: Run retrieval metrics gate
+        if: needs.detect-ci-scope.outputs.retrieval_eval == 'true'
+        run: npm run test:retrieval:ci

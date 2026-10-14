@@ -1,0 +1,2 @@
+2bb16f1064e1c7189ac9186da862abb7250ed435 2026-09-24 feat(beratung): flat product checklist — auto-classified usage, review + confirm, Kategorie offen (#608)
+2a1f3add00dcf5de71be2ba73f0aeaead28ad8c3 2026-09-23 feat(beratung): invite management in admin + optional invite email (#606)

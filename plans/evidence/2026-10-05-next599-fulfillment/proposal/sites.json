@@ -1,0 +1,677 @@
+[
+  {
+    "file": "tests/stripe-one-time-confirmation.test.ts",
+    "line": 251,
+    "name": "canonical Stripe one-time activation sends confirmation, records delivery, and activates access",
+    "start": 8526,
+    "end": 9594,
+    "body": "test(\"canonical Stripe one-time activation sends confirmation, records delivery, and activates access\", async () => {\n  const state = fixture()\n  state.deps.sendOneTimeConfirmation = async () => {\n    state.calls.push(\"send\")\n    return { confirmationReference: \"ref-1\" }\n  }\n  const result = await ensureOneTimeCheckoutAccount(state.session, state.deps)\n  assert.equal(result.state, \"active\")\n  assert.equal(result.stripeCustomerId, undefined)\n  assert.equal(result.paymentIntentId, \"pi_1\")\n  assert.equal(result.chargeId, \"ch_1\")\n  assert.equal(state.purchases.length, 1)\n  assert.equal(state.purchases[0].user_id, \"user-1\")\n  assert.equal(state.purchases[0].paid_at, \"2025-07-31T00:53:54.000Z\")\n  assert.equal(state.consent.confirmation_status, \"sent\")\n  assert.equal(state.consent.delivery_provider, PERSONAL_PLAN_PREPARED_ARTIFACT_DELIVERY_PROVIDER)\n  assert.equal(state.consent.delivery_reference, \"artifact-1\")\n  assert.equal(state.analyticsEvents.length, 1)\n  assert.ok(state.calls.indexOf(\"upsert:billing_one_time_purchases\") < state.calls.indexOf(\"send\"))\n})",
+    "sha256": "696813e3ae9f269151519fd514a30923d06986163cad7486665187463cd6b7bb"
+  },
+  {
+    "file": "tests/stripe-one-time-confirmation.test.ts",
+    "line": 272,
+    "name": "one-time activation links the prepared artifact before finalization even when called with deferred linking",
+    "start": 9596,
+    "end": 10458,
+    "body": "test(\"one-time activation links the prepared artifact before finalization even when called with deferred linking\", async () => {\n  const state = fixture()\n  const deferred: Array<() => void | Promise<void>> = []\n  state.deps.profileLinkMode = \"defer\"\n  state.deps.defer = (work: () => void | Promise<void>) => deferred.push(work)\n  state.deps.sendOneTimeConfirmation = async () => ({ confirmationReference: \"ref-1\" })\n\n  const result = await ensureOneTimeCheckoutAccount(state.session, state.deps)\n\n  assert.equal(result.state, \"active\")\n  assert.equal(state.consent.delivery_provider, PERSONAL_PLAN_PREPARED_ARTIFACT_DELIVERY_PROVIDER)\n  assert.equal(state.artifact.user_id, \"user-1\")\n  // Quiz/profile linking stays synchronous for the artifact bind; only vendor\n  // analytics is deferred after durable outbox rows exist.\n  assert.equal(deferred.length, 1)\n})",
+    "sha256": "15a7cfaee89b32f542469efa4bfbb5092ddd25b2162f3c9e6c542095a4550e70"
+  },
+  {
+    "file": "tests/stripe-one-time-confirmation.test.ts",
+    "line": 289,
+    "name": "Stripe finalization binds the prepared artifact when generic profile linking no-ops",
+    "start": 10460,
+    "end": 11180,
+    "body": "test(\"Stripe finalization binds the prepared artifact when generic profile linking no-ops\", async () => {\n  const state = fixture()\n  state.deps.linkQuizToProfile = async () => {\n    state.calls.push(\"link-quiz-noop\")\n  }\n  state.deps.sendOneTimeConfirmation = async () => ({ confirmationReference: \"ref-1\" })\n\n  const result = await ensureOneTimeCheckoutAccount(state.session, state.deps)\n\n  assert.equal(result.state, \"active\")\n  assert.equal(state.artifact.user_id, \"user-1\")\n  assert.equal(state.consent.delivery_provider, PERSONAL_PLAN_PREPARED_ARTIFACT_DELIVERY_PROVIDER)\n  assert.equal(state.consent.delivery_reference, \"artifact-1\")\n  assert.ok(state.calls.includes(\"rpc:link_personal_plan_artifact_to_user\"))\n})",
+    "sha256": "79cef6727dab05d3d72790216eb5bbe0a5a912c6f7b9ce29c7de1fac83e52f87"
+  },
+  {
+    "file": "tests/stripe-one-time-confirmation.test.ts",
+    "line": 305,
+    "name": "confirmation failure leaves the captured Stripe purchase in paid pending for retry",
+    "start": 11182,
+    "end": 11727,
+    "body": "test(\"confirmation failure leaves the captured Stripe purchase in paid pending for retry\", async () => {\n  const state = fixture()\n  state.deps.sendOneTimeConfirmation = async () => {\n    throw new Error(\"down\")\n  }\n  const result = await ensureOneTimeCheckoutAccount(state.session, state.deps)\n  assert.equal(result.state, \"paid_pending\")\n  assert.equal(state.purchases.length, 1)\n  assert.equal(state.purchases[0].user_id, \"user-1\")\n  assert.equal(state.consent.confirmation_status, \"pending\")\n  assert.equal(state.jobs[0].status, \"failed\")\n})",
+    "sha256": "7df241097c870c03cdffbdb6e33d686c62a49accc50b327633d563306c410f34"
+  },
+  {
+    "file": "tests/stripe-one-time-confirmation.test.ts",
+    "line": 318,
+    "name": "missing prepared locked plan leaves the captured Stripe purchase in paid pending",
+    "start": 11729,
+    "end": 12307,
+    "body": "test(\"missing prepared locked plan leaves the captured Stripe purchase in paid pending\", async () => {\n  const state = fixture()\n  state.artifact.status = \"superseded\"\n  state.deps.sendOneTimeConfirmation = async () => ({ confirmationReference: \"ref-1\" })\n  const result = await ensureOneTimeCheckoutAccount(state.session, state.deps)\n  assert.equal(result.state, \"paid_pending\")\n  assert.equal(state.purchases.length, 1)\n  assert.equal(state.consent.confirmation_status, \"sent\")\n  assert.equal(state.consent.delivered_at, null)\n  assert.equal(state.jobs[0].status, \"failed\")\n})",
+    "sha256": "057ec4e371e5ccda82a8bbe084b288157e28570697f35e55be4fb8928912ea85"
+  },
+  {
+    "file": "tests/stripe-one-time-confirmation.test.ts",
+    "line": 330,
+    "name": "a null prepared locked plan leaves the captured Stripe purchase undelivered",
+    "start": 12309,
+    "end": 12843,
+    "body": "test(\"a null prepared locked plan leaves the captured Stripe purchase undelivered\", async () => {\n  const state = fixture()\n  state.artifact.locked_plan = null\n  state.deps.sendOneTimeConfirmation = async () => ({ confirmationReference: \"ref-1\" })\n\n  const result = await ensureOneTimeCheckoutAccount(state.session, state.deps)\n\n  assert.equal(result.state, \"paid_pending\")\n  assert.equal(state.consent.delivered_at, null)\n  assert.equal(state.consent.delivery_provider ?? null, null)\n  assert.equal(state.jobs[0].status, \"failed\")\n})",
+    "sha256": "71d19507a94dc2fffd65728721b8703e0f00fee79acc6d79d8fa2895c77be460"
+  },
+  {
+    "file": "tests/stripe-one-time-confirmation.test.ts",
+    "line": 343,
+    "name": "a Stripe one-time session cannot activate a different stored consent",
+    "start": 12845,
+    "end": 13275,
+    "body": "test(\"a Stripe one-time session cannot activate a different stored consent\", async () => {\n  const state = fixture()\n  state.consent.stripe_checkout_session_id = \"cs_other\"\n  await assert.rejects(\n    () => ensureOneTimeCheckoutAccount(state.session, state.deps),\n    (error: unknown) =>\n      error instanceof CheckoutActivationError && error.code === \"checkout_one_time_invalid\",\n  )\n  assert.equal(state.purchases.length, 0)\n})",
+    "sha256": "faaa1786e296f143a95c3d64eafd909e2a396dec0f36b58d78d9be2a64cd7a3f"
+  },
+  {
+    "file": "tests/stripe-one-time-confirmation.test.ts",
+    "line": 354,
+    "name": "a Stripe one-time session cannot activate consent with different lead or funnel metadata",
+    "start": 13277,
+    "end": 13755,
+    "body": "test(\"a Stripe one-time session cannot activate consent with different lead or funnel metadata\", async () => {\n  const state = fixture()\n  state.session.metadata.funnel_session_id = \"33333333-3333-4333-8333-333333333333\"\n  await assert.rejects(\n    () => ensureOneTimeCheckoutAccount(state.session, state.deps),\n    (error: unknown) =>\n      error instanceof CheckoutActivationError && error.code === \"checkout_one_time_invalid\",\n  )\n  assert.equal(state.purchases.length, 0)\n})",
+    "sha256": "98d2e233b791dee242905c471998d3c6a24430bf72a039c23b7bc6b09b2ea9e9"
+  },
+  {
+    "file": "tests/stripe-one-time-confirmation.test.ts",
+    "line": 365,
+    "name": "missing historical Stripe one-time lead and funnel metadata resolves from bound consent",
+    "start": 13757,
+    "end": 14624,
+    "body": "test(\"missing historical Stripe one-time lead and funnel metadata resolves from bound consent\", async () => {\n  const state = fixture()\n  delete state.session.metadata.lead_id\n  delete state.session.metadata.funnel_session_id\n  state.deps.sendOneTimeConfirmation = async () => ({ confirmationReference: \"ref-1\" })\n\n  const verification = await verifyStripeOneTimePaymentForRecovery(\n    \"cs_once\",\n    state.deps.stripe,\n    state.deps.supabase,\n  )\n  assert.equal(verification.refs.leadId, leadId)\n  assert.equal(verification.refs.funnelSessionId, funnelSessionId)\n\n  const result = await ensureOneTimeCheckoutAccount(state.session, state.deps)\n\n  assert.equal(result.state, \"active\")\n  assert.equal(result.leadId, leadId)\n  assert.deepEqual(state.linkedLeadIds, [leadId])\n  assert.equal(state.purchases.length, 1)\n  assert.equal(state.artifact.user_id, \"user-1\")\n})",
+    "sha256": "e5945abce5a2fec5f7341a474cb7448c83efeac4d1bfd1f6f8b3e0792572e01c"
+  },
+  {
+    "file": "tests/stripe-one-time-confirmation.test.ts",
+    "line": 388,
+    "name": "present Stripe one-time offer metadata must match the bound consent",
+    "start": 14626,
+    "end": 15055,
+    "body": "test(\"present Stripe one-time offer metadata must match the bound consent\", async () => {\n  const state = fixture()\n  state.session.metadata.offer_variant = \"other-offer\"\n\n  await assert.rejects(\n    () => ensureOneTimeCheckoutAccount(state.session, state.deps),\n    (error: unknown) =>\n      error instanceof CheckoutActivationError && error.code === \"checkout_one_time_invalid\",\n  )\n  assert.equal(state.purchases.length, 0)\n})",
+    "sha256": "df92620966f32ed77066c2bb8e7088b5c737d70df772cd1d37893a19feae4098"
+  },
+  {
+    "file": "tests/stripe-one-time-confirmation.test.ts",
+    "line": 400,
+    "name": "a fully refunded latest Stripe charge is rejected before one-time fulfillment",
+    "start": 15057,
+    "end": 15959,
+    "body": "test(\"a fully refunded latest Stripe charge is rejected before one-time fulfillment\", async () => {\n  const state = fixture()\n  state.session.payment_intent.latest_charge = {\n    ...state.session.payment_intent.latest_charge,\n    amount: 2999,\n    amount_refunded: 2999,\n    refunded: true,\n  }\n  state.deps.sendOneTimeConfirmation = async () => {\n    state.calls.push(\"send\")\n    return { confirmationReference: \"unexpected\" }\n  }\n\n  await assert.rejects(\n    () => ensureOneTimeCheckoutAccount(state.session, state.deps),\n    (error: unknown) =>\n      error instanceof CheckoutActivationError && error.code === \"checkout_one_time_charge_revoked\",\n  )\n\n  assert.equal(state.purchases.length, 0)\n  assert.equal(state.analyticsEvents.length, 0)\n  assert.equal(state.calls.includes(\"create-user\"), false)\n  assert.equal(state.calls.includes(\"send\"), false)\n  assert.equal(state.artifact.user_id, null)\n})",
+    "sha256": "98922b2b3cc07393c4002a5b153f8295191622beaad6ffe5950bc7ca50d81bf3"
+  },
+  {
+    "file": "tests/stripe-one-time-confirmation.test.ts",
+    "line": 426,
+    "name": "a disputed latest Stripe charge is rejected before one-time fulfillment",
+    "start": 15961,
+    "end": 16812,
+    "body": "test(\"a disputed latest Stripe charge is rejected before one-time fulfillment\", async () => {\n  const state = fixture()\n  state.session.payment_intent.latest_charge = {\n    ...state.session.payment_intent.latest_charge,\n    disputed: true,\n  }\n  state.deps.sendOneTimeConfirmation = async () => {\n    state.calls.push(\"send\")\n    return { confirmationReference: \"unexpected\" }\n  }\n\n  await assert.rejects(\n    () => ensureOneTimeCheckoutAccount(state.session, state.deps),\n    (error: unknown) =>\n      error instanceof CheckoutActivationError && error.code === \"checkout_one_time_charge_revoked\",\n  )\n\n  assert.equal(state.purchases.length, 0)\n  assert.equal(state.analyticsEvents.length, 0)\n  assert.equal(state.calls.includes(\"create-user\"), false)\n  assert.equal(state.calls.includes(\"send\"), false)\n  assert.equal(state.artifact.user_id, null)\n})",
+    "sha256": "0b09edaac7427a07580bf9845cde59648e80f77fa76a23c65400e3bdc8809e79"
+  },
+  {
+    "file": "tests/stripe-one-time-confirmation.test.ts",
+    "line": 450,
+    "name": "user-bound prepared artifact is required before one-time finalization",
+    "start": 16814,
+    "end": 17422,
+    "body": "test(\"user-bound prepared artifact is required before one-time finalization\", async () => {\n  const state = fixture()\n  state.deps.linkQuizToProfile = async () => {\n    state.calls.push(\"link-quiz-wrong-user\")\n    state.artifact.user_id = \"other-user\"\n  }\n  state.deps.sendOneTimeConfirmation = async () => ({ confirmationReference: \"ref-1\" })\n  const result = await ensureOneTimeCheckoutAccount(state.session, state.deps)\n  assert.equal(result.state, \"paid_pending\")\n  assert.equal(state.purchases.length, 1)\n  assert.equal(state.jobs[0].status, \"failed\")\n  assert.equal(state.consent.delivered_at, null)\n})",
+    "sha256": "c7acbe3ecc0db7b527c2fa89a6b6e44a5ab3d3b163e65f0b25cad636a83e2250"
+  },
+  {
+    "file": "tests/stripe-one-time-confirmation.test.ts",
+    "line": 464,
+    "name": "Stripe one-time recovery verification is read-only and omits email from refs",
+    "start": 17424,
+    "end": 18055,
+    "body": "test(\"Stripe one-time recovery verification is read-only and omits email from refs\", async () => {\n  const state = fixture()\n  const verification = await verifyStripeOneTimePaymentForRecovery(\n    \"cs_once\",\n    state.deps.stripe,\n    state.deps.supabase,\n  )\n  assert.equal(verification.payment.email, \"paid@example.com\")\n  assert.equal(verification.refs.checkoutSessionId, \"cs_once\")\n  assert.equal(verification.refs.paymentIntentId, \"pi_1\")\n  assert.equal(verification.refs.consentId, consentId)\n  assert.equal(\"email\" in verification.refs, false)\n  assert.deepEqual(state.calls, [])\n  assert.equal(state.purchases.length, 0)\n})",
+    "sha256": "d92ad57d4487d020c4b4505cc71667954c39ff56552313fd4b3b27d044bd64f1"
+  },
+  {
+    "file": "tests/stripe-one-time-confirmation.test.ts",
+    "line": 480,
+    "name": "Stripe fulfillment job retry reuses stored Checkout Session validation",
+    "start": 18057,
+    "end": 19694,
+    "body": "test(\"Stripe fulfillment job retry reuses stored Checkout Session validation\", async () => {\n  const state = fixture()\n  state.purchases.push({\n    id: \"purchase-1\",\n    user_id: null,\n    consent_id: consentId,\n    provider: \"stripe\",\n    product_kind: \"personal_plan_once\",\n    provider_transaction_id: \"pi_1\",\n    provider_customer_id: null,\n    provider_order_id: \"cs_once\",\n    amount_minor: 2999,\n    currency: \"eur\",\n    refunded_amount_minor: 0,\n    status: \"paid\",\n    paid_at: \"2025-07-31T00:53:54.000Z\",\n    refunded_at: null,\n    metadata: {},\n    created_at: \"2026-07-31T00:00:00.000Z\",\n    updated_at: \"2026-07-31T00:00:00.000Z\",\n  })\n  const job = {\n    id: \"job-1\",\n    purchase_id: \"purchase-1\",\n    consent_id: consentId,\n    status: \"processing\",\n    attempts: 1,\n    next_attempt_at: null,\n    processing_started_at: \"2026-07-31T00:00:00.000Z\",\n    last_error: null,\n    delivery_provider: null,\n    delivery_reference: null,\n    canonical_content_sha256: null,\n    delivered_at: null,\n    created_at: \"2026-07-31T00:00:00.000Z\",\n    updated_at: \"2026-07-31T00:00:00.000Z\",\n  }\n  state.jobs.push(job)\n  delete state.session.metadata.lead_id\n  delete state.session.metadata.funnel_session_id\n  state.deps.sendOneTimeConfirmation = async () => ({ confirmationReference: \"ref-1\" })\n  const result = await processStripeOneTimeFulfillmentJob(job as any, state.deps)\n  assert.equal(result.state, \"active\")\n  assert.equal(state.purchases[0].user_id, \"user-1\")\n  assert.equal(state.artifact.user_id, \"user-1\")\n  assert.equal(state.consent.delivery_reference, \"artifact-1\")\n  assert.deepEqual(state.linkedLeadIds, [leadId])\n})",
+    "sha256": "6d38380a50730f2b49c1d6841c0e88c44ec67a70749b67d492d8467ea1195933"
+  },
+  {
+    "file": "tests/stripe-one-time-confirmation.test.ts",
+    "line": 529,
+    "name": "Stripe fulfillment retry marks deterministic provider identity mismatch permanent",
+    "start": 19696,
+    "end": 21286,
+    "body": "test(\"Stripe fulfillment retry marks deterministic provider identity mismatch permanent\", async () => {\n  const state = fixture()\n  state.purchases.push({\n    id: \"purchase-1\",\n    user_id: null,\n    consent_id: consentId,\n    provider: \"stripe\",\n    product_kind: \"personal_plan_once\",\n    provider_transaction_id: \"pi_stored\",\n    provider_customer_id: null,\n    provider_order_id: \"cs_once\",\n    amount_minor: 2999,\n    currency: \"eur\",\n    refunded_amount_minor: 0,\n    status: \"paid\",\n    paid_at: \"2025-07-31T00:53:54.000Z\",\n    refunded_at: null,\n    metadata: {},\n    created_at: \"2026-07-31T00:00:00.000Z\",\n    updated_at: \"2026-07-31T00:00:00.000Z\",\n  })\n  const job = {\n    id: \"job-1\",\n    purchase_id: \"purchase-1\",\n    consent_id: consentId,\n    status: \"processing\",\n    attempts: 1,\n    next_attempt_at: null,\n    processing_started_at: \"2026-07-31T00:00:00.000Z\",\n    last_error: null,\n    delivery_provider: null,\n    delivery_reference: null,\n    canonical_content_sha256: null,\n    delivered_at: null,\n    created_at: \"2026-07-31T00:00:00.000Z\",\n    updated_at: \"2026-07-31T00:00:00.000Z\",\n  }\n  state.jobs.push(job)\n\n  const result = await processStripeOneTimeFulfillmentJob(job as any, state.deps)\n\n  assert.equal(result.state, \"paid_pending\")\n  assert.equal(result.job?.status, \"failed_permanent\")\n  assert.equal(result.job?.attempts, 2)\n  assert.equal(result.job?.next_attempt_at, null)\n  assert.match(result.job?.last_error ?? \"\", /fulfillment job purchase/)\n  assert.equal(state.calls.includes(\"create-user\"), false)\n  assert.equal(state.artifact.user_id, null)\n})",
+    "sha256": "cd1602646a822da7d7e1d3f89f6da59fbb94c5edd8dc934b8d6fc0d8fa994062"
+  },
+  {
+    "file": "tests/stripe-one-time-confirmation.test.ts",
+    "line": 579,
+    "name": "Stripe fulfillment retry keeps provider outages retryable",
+    "start": 21288,
+    "end": 22973,
+    "body": "test(\"Stripe fulfillment retry keeps provider outages retryable\", async () => {\n  const state = fixture()\n  state.deps.now = () => new Date(\"2026-07-31T10:00:00.000Z\")\n  state.deps.stripe.checkout.sessions.retrieve = async () => {\n    throw new Error(\"Stripe API 503\")\n  }\n  state.purchases.push({\n    id: \"purchase-1\",\n    user_id: null,\n    consent_id: consentId,\n    provider: \"stripe\",\n    product_kind: \"personal_plan_once\",\n    provider_transaction_id: \"pi_1\",\n    provider_customer_id: null,\n    provider_order_id: \"cs_once\",\n    amount_minor: 2999,\n    currency: \"eur\",\n    refunded_amount_minor: 0,\n    status: \"paid\",\n    paid_at: \"2025-07-31T00:53:54.000Z\",\n    refunded_at: null,\n    metadata: {},\n    created_at: \"2026-07-31T00:00:00.000Z\",\n    updated_at: \"2026-07-31T00:00:00.000Z\",\n  })\n  const job = {\n    id: \"job-1\",\n    purchase_id: \"purchase-1\",\n    consent_id: consentId,\n    status: \"processing\",\n    attempts: 1,\n    next_attempt_at: null,\n    processing_started_at: \"2026-07-31T00:00:00.000Z\",\n    last_error: null,\n    delivery_provider: null,\n    delivery_reference: null,\n    canonical_content_sha256: null,\n    delivered_at: null,\n    created_at: \"2026-07-31T00:00:00.000Z\",\n    updated_at: \"2026-07-31T00:00:00.000Z\",\n  }\n  state.jobs.push(job)\n\n  const result = await processStripeOneTimeFulfillmentJob(job as any, state.deps)\n\n  assert.equal(result.state, \"paid_pending\")\n  assert.equal(result.job?.status, \"failed\")\n  assert.equal(result.job?.attempts, 2)\n  assert.equal(result.job?.next_attempt_at, \"2026-07-31T10:04:00.000Z\")\n  assert.match(result.job?.last_error ?? \"\", /Stripe API 503/)\n  assert.equal(state.calls.includes(\"create-user\"), false)\n})",
+    "sha256": "118231cd566665738ef620eb60f8ff5e64fafef4b7d07bbccf571268eaa02232"
+  },
+  {
+    "file": "tests/stripe-one-time-confirmation.test.ts",
+    "line": 632,
+    "name": "a sent and delivered activation is idempotent during Stripe replay",
+    "start": 22975,
+    "end": 24096,
+    "body": "test(\"a sent and delivered activation is idempotent during Stripe replay\", async () => {\n  const state = fixture()\n  state.consent.confirmation_status = \"sent\"\n  state.consent.generated_content_sha256 =\n    \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"\n  state.consent.generation_started_at = \"2026-07-31T00:00:00.000Z\"\n  state.consent.generation_completed_at = \"2026-07-31T00:00:01.000Z\"\n  state.consent.delivery_provider = PERSONAL_PLAN_PREPARED_ARTIFACT_DELIVERY_PROVIDER\n  state.consent.delivery_reference = \"artifact-1\"\n  state.consent.delivered_at = \"2026-07-31T00:00:01.000Z\"\n  state.deps.sendOneTimeConfirmation = async () => {\n    throw new Error(\"must not send\")\n  }\n  const first = await ensureOneTimeCheckoutAccount(state.session, state.deps)\n  const second = await ensureOneTimeCheckoutAccount(state.session, state.deps)\n  if (first.state !== \"active\" || second.state !== \"active\") {\n    throw new Error(\"expected active replay results\")\n  }\n  assert.equal(first.canSetInitialPassword, true)\n  assert.equal(second.canSetInitialPassword, true)\n  assert.equal(state.purchases.length, 1)\n})",
+    "sha256": "9f53c855b25f812924e65f247596a17a7eb3d306805bca9cc1b5ba90c1e6b159"
+  },
+  {
+    "file": "tests/stripe-one-time-confirmation.test.ts",
+    "line": 655,
+    "name": "an unclaimed prepared one-time session is rejected before account creation",
+    "start": 24098,
+    "end": 24679,
+    "body": "test(\"an unclaimed prepared one-time session is rejected before account creation\", async () => {\n  const state = fixture()\n  state.session.metadata = {\n    ...state.session.metadata,\n    checkout_preparation_id: \"c2a89c81-7e93-4d81-98d1-c7cfd7047721\",\n    checkout_preparation_status: \"prepared\",\n  }\n\n  await assert.rejects(\n    () => ensureOneTimeCheckoutAccount(state.session, state.deps),\n    (error: unknown) =>\n      error instanceof CheckoutActivationError && error.code === \"checkout_preparation_unclaimed\",\n  )\n  assert.equal(state.calls.includes(\"create-user\"), false)\n})",
+    "sha256": "a5b581bf49ae65ba43009b2a4b7bc4ffbfb8580a98aa99f74f25a102cecb26af"
+  },
+  {
+    "file": "tests/one-time-recovery-command.test.ts",
+    "line": 122,
+    "name": "defaults to dry-run and performs no activation writes",
+    "start": 3139,
+    "end": 3594,
+    "body": "test(\"defaults to dry-run and performs no activation writes\", async () => {\n  const { deps, calls } = fakeDeps()\n  const receipt = await runOneTimeRecoveryCommand(\n    parseOneTimeRecoveryArgs([\"--provider=stripe\", `--stripe-session=${sensitive.stripeSession}`]),\n    deps,\n  )\n\n  assert.equal(receipt.mode, \"dry-run\")\n  assert.equal(receipt.applyGuardSatisfied, false)\n  assert.deepEqual(calls, [\"verifyStripe:stripe_checkout_session\", \"readReceipt\"])\n})",
+    "sha256": "7f8acda9261d9c2856fdc988236fe78875ef0e34d9275eb00086b936f645dae8"
+  },
+  {
+    "file": "tests/one-time-recovery-command.test.ts",
+    "line": 134,
+    "name": "expired PayPal reset is dry-run by default and reads the provider before local eligibility",
+    "start": 3596,
+    "end": 4777,
+    "body": "test(\"expired PayPal reset is dry-run by default and reads the provider before local eligibility\", async () => {\n  const calls: string[] = []\n  const receipt = await runPayPalExpiredOrderResetCommand(\n    parsePayPalExpiredOrderResetArgs([\n      \"--reset-expired-paypal-order\",\n      `--paypal-order=${sensitive.paypalOrder}`,\n    ]),\n    {\n      expectedMerchantId: \"MERCHANT-1\",\n      retrieveOrder: async () => {\n        calls.push(\"provider-get\")\n        return {\n          id: sensitive.paypalOrder,\n          status: \"VOIDED\",\n          purchase_units: [{ payee: { merchant_id: \"MERCHANT-1\" }, payments: { captures: [] } }],\n        }\n      },\n      inspectEligibility: async () => {\n        calls.push(\"local-eligibility\")\n        return { eligible: true }\n      },\n      applyReset: async () => {\n        calls.push(\"apply\")\n      },\n    },\n  )\n\n  assert.deepEqual(calls, [\"provider-get\", \"local-eligibility\"])\n  assert.deepEqual(receipt, {\n    ok: true,\n    mode: \"dry-run\",\n    reset: \"paypal_expired_uncaptured_order\",\n    providerState: \"voided\",\n    applyGuardSatisfied: false,\n  })\n  assert.doesNotMatch(JSON.stringify(receipt), /ORDER-SECRET|paypal-token-secret/)\n})",
+    "sha256": "394f27ed8dac88ac597c3e4e4531a674e1687a65089afdd6699fd524859a5f1b"
+  },
+  {
+    "file": "tests/one-time-recovery-command.test.ts",
+    "line": 172,
+    "name": "expired PayPal reset requires an exact order confirmation before any provider lookup",
+    "start": 4779,
+    "end": 5798,
+    "body": "test(\"expired PayPal reset requires an exact order confirmation before any provider lookup\", async () => {\n  const calls: string[] = []\n  await assert.rejects(\n    runPayPalExpiredOrderResetCommand(\n      parsePayPalExpiredOrderResetArgs([\n        \"--reset-expired-paypal-order\",\n        `--paypal-order=${sensitive.paypalOrder}`,\n        \"--apply\",\n        \"--confirm-paypal-order=other-order\",\n      ]),\n      {\n        expectedMerchantId: \"MERCHANT-1\",\n        retrieveOrder: async () => {\n          calls.push(\"provider-get\")\n          return {\n            id: sensitive.paypalOrder,\n            status: \"VOIDED\",\n            purchase_units: [{ payee: { merchant_id: \"MERCHANT-1\" }, payments: { captures: [] } }],\n          }\n        },\n        inspectEligibility: async () => ({ eligible: true }),\n        applyReset: async () => undefined,\n      },\n    ),\n    (error: unknown) =>\n      error instanceof Error && \"code\" in error && error.code === \"apply_confirmation_mismatch\",\n  )\n  assert.deepEqual(calls, [])\n})",
+    "sha256": "d07be586721f4e39de532b3c375b9a3c84e328f0fcab1b9cad3a5fa6a9e4d300"
+  },
+  {
+    "file": "tests/one-time-recovery-command.test.ts",
+    "line": 202,
+    "name": "expired PayPal reset rejects any provider state or capture other than voided with no captures",
+    "start": 5800,
+    "end": 6916,
+    "body": "test(\"expired PayPal reset rejects any provider state or capture other than voided with no captures\", async () => {\n  for (const order of [\n    { id: sensitive.paypalOrder, status: \"CREATED\", purchase_units: [] },\n    {\n      id: sensitive.paypalOrder,\n      status: \"VOIDED\",\n      purchase_units: [{ payments: { captures: [{ id: \"capture\" }] } }],\n    },\n    { id: \"another-order\", status: \"VOIDED\", purchase_units: [{ payments: { captures: [] } }] },\n    { id: sensitive.paypalOrder, status: \"VOIDED\" },\n  ]) {\n    await assert.rejects(\n      runPayPalExpiredOrderResetCommand(\n        parsePayPalExpiredOrderResetArgs([\n          \"--reset-expired-paypal-order\",\n          `--paypal-order=${sensitive.paypalOrder}`,\n        ]),\n        {\n          expectedMerchantId: \"MERCHANT-1\",\n          retrieveOrder: async () => order,\n          inspectEligibility: async () => ({ eligible: true }),\n          applyReset: async () => undefined,\n        },\n      ),\n      (error: unknown) =>\n        error instanceof Error &&\n        \"code\" in error &&\n        error.code === \"paypal_order_not_provably_voided\",\n    )\n  }\n})",
+    "sha256": "39f2f4e84ef331b6962d05f55532e463ba765daaddbef985fc83f4d4db86c00d"
+  },
+  {
+    "file": "tests/one-time-recovery-command.test.ts",
+    "line": 234,
+    "name": "expired PayPal reset rejects 404 before local eligibility because provider environment is unproven",
+    "start": 6918,
+    "end": 8038,
+    "body": "test(\"expired PayPal reset rejects 404 before local eligibility because provider environment is unproven\", async () => {\n  const calls: string[] = []\n  await assert.rejects(\n    runPayPalExpiredOrderResetCommand(\n      parsePayPalExpiredOrderResetArgs([\n        \"--reset-expired-paypal-order\",\n        `--paypal-order=${sensitive.paypalOrder}`,\n        \"--apply\",\n        `--confirm-paypal-order=${sensitive.paypalOrder}`,\n      ]),\n      {\n        expectedMerchantId: \"MERCHANT-1\",\n        retrieveOrder: async () => {\n          calls.push(\"provider-get\")\n          const error = new Error(\"not found\") as Error & { status?: number }\n          error.status = 404\n          throw error\n        },\n        inspectEligibility: async () => {\n          calls.push(\"local-eligibility\")\n          return { eligible: true }\n        },\n        applyReset: async () => {\n          calls.push(\"apply\")\n        },\n      },\n    ),\n    (error: unknown) =>\n      error instanceof Error &&\n      \"code\" in error &&\n      error.code === \"paypal_order_not_found_unverified_environment\",\n  )\n  assert.deepEqual(calls, [\"provider-get\"])\n})",
+    "sha256": "c30f313e1feba17b41e45553c8f47adb9dde1c4462952f4967f3800d5a125264"
+  },
+  {
+    "file": "tests/one-time-recovery-command.test.ts",
+    "line": 269,
+    "name": "refuses all recovery modes before provider or database seams while the experiment is enabled",
+    "start": 8040,
+    "end": 8897,
+    "body": "test(\"refuses all recovery modes before provider or database seams while the experiment is enabled\", async () => {\n  const original = process.env.PERSONAL_PLAN_PRICING_EXPERIMENT_ENABLED\n  process.env.PERSONAL_PLAN_PRICING_EXPERIMENT_ENABLED = \"true\"\n  try {\n    const { deps, calls } = fakeDeps()\n    await assert.rejects(\n      runOneTimeRecoveryCommand(\n        parseOneTimeRecoveryArgs([\"--provider=paypal\", `--paypal-token=${sensitive.paypalToken}`]),\n        deps,\n      ),\n      (error: unknown) =>\n        error instanceof Error &&\n        \"code\" in error &&\n        error.code === \"personal_plan_pricing_experiment_enabled\",\n    )\n    assert.deepEqual(calls, [])\n  } finally {\n    if (original === undefined) delete process.env.PERSONAL_PLAN_PRICING_EXPERIMENT_ENABLED\n    else process.env.PERSONAL_PLAN_PRICING_EXPERIMENT_ENABLED = original\n  }\n})",
+    "sha256": "3383f61bce21101df32981f3fad726fd117934d26534cc0ca3bcef09c9701fd1"
+  },
+  {
+    "file": "tests/one-time-recovery-command.test.ts",
+    "line": 291,
+    "name": "receipt preserves the verifier's computed canonical-consent proof",
+    "start": 8899,
+    "end": 9325,
+    "body": "test(\"receipt preserves the verifier's computed canonical-consent proof\", async () => {\n  const { deps } = fakeDeps({\n    stripeVerification: { ...stripeVerification(), canonicalConsentMatch: false },\n  })\n  const receipt = await runOneTimeRecoveryCommand(\n    parseOneTimeRecoveryArgs([\"--provider=stripe\", `--stripe-session=${sensitive.stripeSession}`]),\n    deps,\n  )\n  assert.equal(receipt.canonicalConsentMatch, false)\n})",
+    "sha256": "ba51b98bd17e2f201e3f399ede86676e84c3df2ff4d0270607836076e3b9b5ca"
+  },
+  {
+    "file": "tests/one-time-recovery-command.test.ts",
+    "line": 302,
+    "name": "requires both --apply and exact --confirm-session before applying",
+    "start": 9327,
+    "end": 10019,
+    "body": "test(\"requires both --apply and exact --confirm-session before applying\", async () => {\n  const { deps } = fakeDeps()\n  await assert.rejects(\n    runOneTimeRecoveryCommand(\n      parseOneTimeRecoveryArgs([\n        \"--provider=stripe\",\n        `--stripe-session=${sensitive.stripeSession}`,\n        \"--apply\",\n      ]),\n      deps,\n    ),\n    /Apply requires --confirm-session/,\n  )\n\n  await assert.rejects(\n    runOneTimeRecoveryCommand(\n      parseOneTimeRecoveryArgs([\n        \"--provider=stripe\",\n        `--stripe-session=${sensitive.stripeSession}`,\n        \"--apply\",\n        \"--confirm-session=other-session\",\n      ]),\n      deps,\n    ),\n    /Apply requires --confirm-session/,\n  )\n})",
+    "sha256": "e82f574bde21a32b429acda473df670223ffb941983f29b8ded01dec6d6c9925"
+  },
+  {
+    "file": "tests/one-time-recovery-command.test.ts",
+    "line": 330,
+    "name": "applies only when confirmation exactly matches the target",
+    "start": 10021,
+    "end": 10626,
+    "body": "test(\"applies only when confirmation exactly matches the target\", async () => {\n  const { deps, calls } = fakeDeps()\n  const receipt = await runOneTimeRecoveryCommand(\n    parseOneTimeRecoveryArgs([\n      \"--provider=stripe\",\n      `--stripe-session=${sensitive.stripeSession}`,\n      \"--apply\",\n      `--confirm-session=${sensitive.stripeSession}`,\n    ]),\n    deps,\n  )\n\n  assert.equal(receipt.mode, \"apply\")\n  assert.equal(receipt.applyGuardSatisfied, true)\n  assert.deepEqual(calls, [\n    \"verifyStripe:stripe_checkout_session\",\n    \"activateStripe:stripe_checkout_session\",\n    \"readReceipt\",\n  ])\n})",
+    "sha256": "ea56a91aecdaf4319e915930a031ed7a157dda048f12255576b853690fa20c42"
+  },
+  {
+    "file": "tests/one-time-recovery-command.test.ts",
+    "line": 351,
+    "name": "delegates PayPal token verification to provider seam without activating on dry-run",
+    "start": 10628,
+    "end": 11152,
+    "body": "test(\"delegates PayPal token verification to provider seam without activating on dry-run\", async () => {\n  const { deps, calls } = fakeDeps()\n  const receipt = await runOneTimeRecoveryCommand(\n    parseOneTimeRecoveryArgs([\"--provider=paypal\", `--paypal-token=${sensitive.paypalToken}`]),\n    deps,\n  )\n\n  assert.equal(receipt.provider, \"paypal\")\n  assert.equal(receipt.targetKind, \"paypal_token\")\n  assert.equal(receipt.existingPurchaseFound, true)\n  assert.deepEqual(calls, [\"verifyPayPal:paypal_token\", \"readReceipt\"])\n})",
+    "sha256": "92c2852dc3fd000637b9394b101cdba823279d51c43a6970a8b3573e6f6a1f73"
+  },
+  {
+    "file": "tests/one-time-recovery-command.test.ts",
+    "line": 364,
+    "name": "keeps apply idempotent by delegating repeated apply to canonical activation",
+    "start": 11154,
+    "end": 11816,
+    "body": "test(\"keeps apply idempotent by delegating repeated apply to canonical activation\", async () => {\n  const { deps, calls } = fakeDeps()\n  const request = parseOneTimeRecoveryArgs([\n    \"--provider=paypal\",\n    `--paypal-order=${sensitive.paypalOrder}`,\n    `--paypal-capture=${sensitive.paypalCapture}`,\n    \"--apply\",\n    `--confirm-session=${sensitive.paypalOrder}:${sensitive.paypalCapture}`,\n  ])\n\n  const first = await runOneTimeRecoveryCommand(request, deps)\n  const second = await runOneTimeRecoveryCommand(request, deps)\n\n  assert.deepEqual(first, second)\n  assert.equal(calls.filter((call) => call === \"activatePayPal:paypal_order_capture\").length, 2)\n})",
+    "sha256": "1c55dcc4e81b45bd9639220493d8fffa1550650009a8e43f26d1615a4d34dbc2"
+  },
+  {
+    "file": "tests/one-time-recovery-command.test.ts",
+    "line": 381,
+    "name": "PayPal apply persists a verified capture before canonical activation",
+    "start": 11818,
+    "end": 12279,
+    "body": "test(\"PayPal apply persists a verified capture before canonical activation\", async () => {\n  const source = await import(\"node:fs/promises\").then(({ readFile }) =>\n    readFile(new URL(\"../scripts/billing/one-time-recover.ts\", import.meta.url), \"utf8\"),\n  )\n  const apply = source.slice(source.indexOf(\"activatePayPal: async\"))\n  assert.ok(\n    apply.indexOf(\"tryMarkPayPalOrderIntentCaptured\") <\n      apply.indexOf(\"activateVerifiedPayPalOrderIntent\"),\n  )\n})",
+    "sha256": "845d41ba3af392deee9aa25cc1a2a1dac0bfbd4a7d78fbf0fb06e3b689627b3d"
+  },
+  {
+    "file": "tests/one-time-recovery-command.test.ts",
+    "line": 392,
+    "name": "Stripe receipt uses the Checkout Session canonical event key and counts deliveries",
+    "start": 12281,
+    "end": 12895,
+    "body": "test(\"Stripe receipt uses the Checkout Session canonical event key and counts deliveries\", async () => {\n  const { supabase, queries } = receiptSupabaseWithDeliveries([\n    { status: \"delivered\" },\n    { status: \"processing\" },\n  ])\n\n  const receipt = await readOneTimeRecoveryReceipt(supabase as never, stripeVerification().payment)\n\n  assert.deepEqual(outboxEventKeys(queries), [\n    `stripe:purchase_completed:${sensitive.stripeSession}`,\n  ])\n  assert.deepEqual(receipt.analyticsDeliveryCounts, {\n    total: 2,\n    pending: 0,\n    processing: 1,\n    delivered: 1,\n    failed: 0,\n    failedPermanent: 0,\n  })\n})",
+    "sha256": "0dd47c44175bc8d498250dfadd4e95f8ff850fb12444a0bbf7787a633a8bd5c2"
+  },
+  {
+    "file": "tests/one-time-recovery-command.test.ts",
+    "line": 413,
+    "name": "PayPal receipt uses the capture canonical event key and counts deliveries",
+    "start": 12897,
+    "end": 13506,
+    "body": "test(\"PayPal receipt uses the capture canonical event key and counts deliveries\", async () => {\n  const { supabase, queries } = receiptSupabaseWithDeliveries([\n    { status: \"pending\" },\n    { status: \"failed_permanent\" },\n  ])\n\n  const receipt = await readOneTimeRecoveryReceipt(supabase as never, paypalVerification().payment)\n\n  assert.deepEqual(outboxEventKeys(queries), [\n    `paypal:purchase_completed:${sensitive.paypalCapture}`,\n  ])\n  assert.deepEqual(receipt.analyticsDeliveryCounts, {\n    total: 2,\n    pending: 1,\n    processing: 0,\n    delivered: 0,\n    failed: 0,\n    failedPermanent: 1,\n  })\n})",
+    "sha256": "84bc25d3d39999e753a2c058cf338d9974db57aec0a23cd3fca8dec3615f7dc4"
+  },
+  {
+    "file": "tests/one-time-recovery-command.test.ts",
+    "line": 434,
+    "name": "rejects missing, mismatched, and ambiguous target identifiers",
+    "start": 13508,
+    "end": 14483,
+    "body": "test(\"rejects missing, mismatched, and ambiguous target identifiers\", () => {\n  assert.throws(\n    () => normalizeRecoveryTarget({ provider: \"stripe\", apply: false }),\n    /Stripe recovery requires --stripe-session/,\n  )\n  assert.throws(\n    () =>\n      normalizeRecoveryTarget({\n        provider: \"paypal\",\n        apply: false,\n        paypalOrderId: sensitive.paypalOrder,\n      }),\n    /PayPal recovery requires/,\n  )\n  assert.throws(\n    () =>\n      normalizeRecoveryTarget({\n        provider: \"paypal\",\n        apply: false,\n        paypalToken: sensitive.paypalToken,\n        paypalOrderId: sensitive.paypalOrder,\n        paypalCaptureId: sensitive.paypalCapture,\n      }),\n    /either token or order plus capture/,\n  )\n  assert.throws(\n    () =>\n      normalizeRecoveryTarget({\n        provider: \"stripe\",\n        apply: false,\n        stripeSessionId: sensitive.stripeSession,\n        paypalToken: sensitive.paypalToken,\n      }),\n    /cannot include PayPal/,\n  )\n})",
+    "sha256": "e30bc50a9ce04cd8265ef82d79fb1c9d87e86af93d1d6e10d141951cab618cdf"
+  },
+  {
+    "file": "tests/one-time-recovery-command.test.ts",
+    "line": 471,
+    "name": "redacts provider, user, lead, consent, token, session, and email values from output",
+    "start": 14485,
+    "end": 15133,
+    "body": "test(\"redacts provider, user, lead, consent, token, session, and email values from output\", async () => {\n  const { deps } = fakeDeps()\n  const receipt = await runOneTimeRecoveryCommand(\n    parseOneTimeRecoveryArgs([\n      \"--provider=stripe\",\n      `--stripe-session=${sensitive.stripeSession}`,\n      \"--apply\",\n      `--confirm-session=${sensitive.stripeSession}`,\n    ]),\n    deps,\n  )\n  const output = JSON.stringify(receipt)\n\n  for (const value of Object.values(sensitive)) {\n    assert.equal(output.includes(value), false, `leaked ${value}`)\n  }\n  assert.equal(output.includes(\"29.99\"), true)\n  assert.equal(output.includes(\"EUR\"), true)\n})",
+    "sha256": "5cd3dab57321e50cee69c8951b3fd96660622ee8a159e223364c320a19ac9e26"
+  },
+  {
+    "file": "tests/billing-one-time-fulfillment-reconcile.test.ts",
+    "line": 16,
+    "name": "one-time fulfillment retry claims at most five due jobs and dispatches by stored provider",
+    "start": 546,
+    "end": 2469,
+    "body": "test(\"one-time fulfillment retry claims at most five due jobs and dispatches by stored provider\", async () => {\n  const jobs = [\n    fulfillmentJob({ id: \"job-active\", purchase_id: \"purchase-stripe-active\" }),\n    fulfillmentJob({ id: \"job-pending\", purchase_id: \"purchase-paypal-pending\" }),\n    fulfillmentJob({ id: \"job-failed\", purchase_id: \"purchase-stripe-failed\" }),\n  ]\n  const calls: Array<{ provider: BillingProvider; jobId: string }> = []\n  let claimedLimit = 0\n\n  const stats = await reconcilePersonalPlanOneTimeFulfillmentRetries({\n    supabase: supabaseWithProviders({\n      \"purchase-stripe-active\": \"stripe\",\n      \"purchase-paypal-pending\": \"paypal\",\n      \"purchase-stripe-failed\": \"stripe\",\n    }) as never,\n    claimDueJobs: async (_supabase, options = {}) => {\n      claimedLimit = options.limit ?? 0\n      return jobs\n    },\n    dispatchers: {\n      stripe: async (job) => {\n        calls.push({ provider: \"stripe\", jobId: job.id })\n        return activationResult(\n          job.purchase_id === \"purchase-stripe-failed\" ? \"failed\" : \"active\",\n          {\n            provider: \"stripe\",\n            job,\n          },\n        )\n      },\n      paypal: async (job) => {\n        calls.push({ provider: \"paypal\", jobId: job.id })\n        return activationResult(\"paid_pending\", { provider: \"paypal\", job })\n      },\n    },\n  })\n\n  assert.equal(claimedLimit, PERSONAL_PLAN_ONE_TIME_FULFILLMENT_RECONCILE_LIMIT)\n  assert.deepEqual(calls, [\n    { provider: \"stripe\", jobId: \"job-active\" },\n    { provider: \"paypal\", jobId: \"job-pending\" },\n    { provider: \"stripe\", jobId: \"job-failed\" },\n  ])\n  assert.deepEqual(stats, {\n    claimed: 3,\n    active: { total: 1, stripe: 1, paypal: 0, unknown: 0 },\n    paidPending: { total: 1, stripe: 0, paypal: 1, unknown: 0 },\n    failedRetryable: { total: 1, stripe: 1, paypal: 0, unknown: 0 },\n    failedPermanent: { total: 0, stripe: 0, paypal: 0, unknown: 0 },\n  })\n})",
+    "sha256": "4977a58f23749a98489c0bf25708f9c39425523085c939252f638e8e862449e7"
+  },
+  {
+    "file": "tests/billing-one-time-fulfillment-reconcile.test.ts",
+    "line": 68,
+    "name": "a returned failed job is counted and reported before an otherwise active result",
+    "start": 2471,
+    "end": 3685,
+    "body": "test(\"a returned failed job is counted and reported before an otherwise active result\", async () => {\n  const job = fulfillmentJob({ id: \"job-after-delivery\", purchase_id: \"purchase-after-delivery\" })\n  const captured: Array<{ error: unknown; details: unknown }> = []\n\n  const stats = await reconcilePersonalPlanOneTimeFulfillmentRetries({\n    supabase: supabaseWithProviders({ \"purchase-after-delivery\": \"stripe\" }) as never,\n    claimDueJobs: async () => [job],\n    dispatchers: {\n      stripe: async () =>\n        activationResult(\"active\", {\n          provider: \"stripe\",\n          job: fulfillmentJob({ status: \"failed\", attempts: 2 }),\n        }),\n    },\n    captureException: (error, details) => captured.push({ error, details }),\n  })\n\n  assert.deepEqual(stats.active, { total: 0, stripe: 0, paypal: 0, unknown: 0 })\n  assert.deepEqual(stats.failedRetryable, { total: 1, stripe: 1, paypal: 0, unknown: 0 })\n  assert.equal(captured.length, 1)\n  assert.deepEqual(captured[0]?.details, {\n    provider: \"stripe\",\n    stage: \"provider_dispatch\",\n    jobStatus: \"failed\",\n    attempts: 2,\n    reason: \"failed\",\n  })\n  assert.doesNotMatch(JSON.stringify(captured), /job-after-delivery|purchase-after-delivery/)\n})",
+    "sha256": "d6493ad82cd4a866e7308caa11191b060543512ab78a746e7297fa5ccd47e697"
+  },
+  {
+    "file": "tests/billing-one-time-fulfillment-reconcile.test.ts",
+    "line": 98,
+    "name": "a returned permanent failure is not counted active after delivery",
+    "start": 3687,
+    "end": 4768,
+    "body": "test(\"a returned permanent failure is not counted active after delivery\", async () => {\n  const job = fulfillmentJob({ id: \"job-terminal\", purchase_id: \"purchase-terminal\" })\n  const captured: Array<{ error: unknown; details: unknown }> = []\n\n  const stats = await reconcilePersonalPlanOneTimeFulfillmentRetries({\n    supabase: supabaseWithProviders({ \"purchase-terminal\": \"paypal\" }) as never,\n    claimDueJobs: async () => [job],\n    dispatchers: {\n      paypal: async () =>\n        activationResult(\"active\", {\n          provider: \"paypal\",\n          job: fulfillmentJob({ status: \"failed_permanent\", attempts: 5 }),\n        }),\n    },\n    captureException: (error, details) => captured.push({ error, details }),\n  })\n\n  assert.deepEqual(stats.active, { total: 0, stripe: 0, paypal: 0, unknown: 0 })\n  assert.deepEqual(stats.failedPermanent, { total: 1, stripe: 0, paypal: 1, unknown: 0 })\n  assert.deepEqual(captured[0]?.details, {\n    provider: \"paypal\",\n    stage: \"retry_exhausted\",\n    jobStatus: \"failed_permanent\",\n    attempts: 5,\n    reason: \"failed_permanent\",\n  })\n})",
+    "sha256": "fd12460865dac80aa2b6d8f466226df8dd792c3fb3f7870a09c9d2dc78d1f156"
+  },
+  {
+    "file": "tests/billing-one-time-fulfillment-reconcile.test.ts",
+    "line": 126,
+    "name": "one-time fulfillment retry isolates provider failures and reports count-only stats",
+    "start": 4770,
+    "end": 6468,
+    "body": "test(\"one-time fulfillment retry isolates provider failures and reports count-only stats\", async () => {\n  const captured: unknown[] = []\n  const job = fulfillmentJob({\n    id: \"job-secret\",\n    purchase_id: \"purchase-secret\",\n    consent_id: \"consent-secret\",\n    status: \"processing\",\n  })\n\n  const stats = await reconcilePersonalPlanOneTimeFulfillmentRetries({\n    supabase: supabaseWithProviders({ \"purchase-secret\": \"stripe\" }, { jobs: [job] }) as never,\n    claimDueJobs: async () => [job],\n    dispatchers: {\n      stripe: async () => {\n        const error = new Error(\"failed for buyer@example.com and pi_secret_123\")\n        const codedError = error as Error & { code: string }\n        codedError.code = \"checkout_one_time_invalid\"\n        throw error\n      },\n    },\n    captureException: (error, details) => {\n      captured.push({ error, details })\n    },\n  })\n\n  assert.deepEqual(stats, {\n    claimed: 1,\n    active: { total: 0, stripe: 0, paypal: 0, unknown: 0 },\n    paidPending: { total: 0, stripe: 0, paypal: 0, unknown: 0 },\n    failedRetryable: { total: 0, stripe: 0, paypal: 0, unknown: 0 },\n    failedPermanent: { total: 1, stripe: 1, paypal: 0, unknown: 0 },\n  })\n  assert.equal(captured.length, 1)\n  assert.equal(typeof (captured[0] as { error?: unknown }).error, \"object\")\n  assert.deepEqual((captured[0] as { details?: unknown }).details, {\n    provider: \"stripe\",\n    stage: \"permanent_mismatch\",\n    jobStatus: \"failed_permanent\",\n    attempts: 1,\n    reason: \"checkout_one_time_invalid\",\n  })\n  assert.doesNotMatch(JSON.stringify(stats), /secret|buyer@example\\.com|pi_secret_123/)\n  assert.doesNotMatch(JSON.stringify(captured[0]), /buyer@example\\.com|pi_secret_123/)\n})",
+    "sha256": "f0c44cc37f6af61199ae64a936ab17a5e28e40446e052d63deb5174eea390409"
+  },
+  {
+    "file": "tests/billing-one-time-fulfillment-reconcile.test.ts",
+    "line": 171,
+    "name": "one-time fulfillment retry records provider-vs-database gaps without dispatching",
+    "start": 6470,
+    "end": 7496,
+    "body": "test(\"one-time fulfillment retry records provider-vs-database gaps without dispatching\", async () => {\n  let dispatched = false\n  const sentryDetails: unknown[] = []\n  const job = fulfillmentJob({ purchase_id: \"missing-purchase\", status: \"processing\" })\n\n  const stats = await reconcilePersonalPlanOneTimeFulfillmentRetries({\n    supabase: supabaseWithProviders({}, { jobs: [job] }) as never,\n    claimDueJobs: async () => [job],\n    dispatchers: {\n      stripe: async () => {\n        dispatched = true\n        throw new Error(\"should not dispatch\")\n      },\n    },\n    captureException: (_error, details) => {\n      sentryDetails.push(details)\n    },\n  })\n\n  assert.equal(dispatched, false)\n  assert.deepEqual(stats.failedPermanent, { total: 1, stripe: 0, paypal: 0, unknown: 1 })\n  assert.deepEqual(sentryDetails, [\n    {\n      provider: \"unknown\",\n      stage: \"purchase_provider_lookup\",\n      jobStatus: \"failed_permanent\",\n      attempts: 1,\n      reason: \"one_time_fulfillment_purchase_provider_missing\",\n    },\n  ])\n})",
+    "sha256": "21c94529b731f52968ff9df67ce935993944ad2352b3f83ef818c22d9f2e20dd"
+  },
+  {
+    "file": "tests/billing-one-time-fulfillment-reconcile.test.ts",
+    "line": 203,
+    "name": "a throwing provider dispatcher releases a genuinely unhandled processing claim for retry",
+    "start": 7498,
+    "end": 8683,
+    "body": "test(\"a throwing provider dispatcher releases a genuinely unhandled processing claim for retry\", async () => {\n  const job = fulfillmentJob({\n    id: \"job-retryable\",\n    purchase_id: \"purchase-stripe-retryable\",\n    status: \"processing\",\n    processing_started_at: \"2026-07-31T10:00:00.000Z\",\n  })\n  const captured: unknown[] = []\n  const stats = await reconcilePersonalPlanOneTimeFulfillmentRetries({\n    supabase: supabaseWithProviders(\n      { \"purchase-stripe-retryable\": \"stripe\" },\n      { jobs: [job] },\n    ) as never,\n    claimDueJobs: async () => [job],\n    dispatchers: {\n      stripe: async () => {\n        throw new Error(\"provider GET timed out\")\n      },\n    },\n    captureException: (_error, details) => {\n      captured.push(details)\n    },\n  })\n\n  assert.deepEqual(stats.failedRetryable, { total: 1, stripe: 1, paypal: 0, unknown: 0 })\n  assert.equal(job.status, \"failed\")\n  assert.equal(job.attempts, 1)\n  assert.equal(job.processing_started_at, null)\n  assert.ok(job.next_attempt_at)\n  assert.deepEqual(captured, [\n    {\n      provider: \"stripe\",\n      stage: \"provider_dispatch\",\n      jobStatus: \"failed\",\n      attempts: 1,\n      reason: \"Error\",\n    },\n  ])\n})",
+    "sha256": "60b8161509def881f93c1e3c5284433aa2b131b5963d9c7743511fab0b2c8c64"
+  },
+  {
+    "file": "tests/billing-one-time-fulfillment-reconcile.test.ts",
+    "line": 243,
+    "name": "a stale outer dispatcher release does not overwrite a newer processing lease",
+    "start": 8685,
+    "end": 10077,
+    "body": "test(\"a stale outer dispatcher release does not overwrite a newer processing lease\", async () => {\n  const claimedJob = fulfillmentJob({\n    id: \"job-stale-release\",\n    purchase_id: \"purchase-stale-release\",\n    status: \"processing\",\n    processing_started_at: \"2026-07-31T10:00:00.000Z\",\n  })\n  const renewedJob = fulfillmentJob({\n    ...claimedJob,\n    processing_started_at: \"2026-07-31T10:15:00.000Z\",\n  })\n  const captured: unknown[] = []\n\n  const stats = await reconcilePersonalPlanOneTimeFulfillmentRetries({\n    supabase: supabaseWithProviders(\n      { \"purchase-stale-release\": \"stripe\" },\n      { jobs: [renewedJob] },\n    ) as never,\n    claimDueJobs: async () => [claimedJob],\n    dispatchers: {\n      stripe: async () => {\n        throw new Error(\"worker A timed out after worker B renewed the lease\")\n      },\n    },\n    captureException: (_error, details) => captured.push(details),\n  })\n\n  assert.deepEqual(stats.failedRetryable, { total: 1, stripe: 1, paypal: 0, unknown: 0 })\n  assert.equal(renewedJob.status, \"processing\")\n  assert.equal(renewedJob.attempts, 0)\n  assert.equal(renewedJob.processing_started_at, \"2026-07-31T10:15:00.000Z\")\n  assert.equal(renewedJob.next_attempt_at, null)\n  assert.deepEqual(captured, [\n    {\n      provider: \"stripe\",\n      stage: \"provider_dispatch\",\n      jobStatus: \"processing\",\n      attempts: 0,\n      reason: \"Error\",\n    },\n  ])\n})",
+    "sha256": "473d9c8019329eff68b8ea81b421ba2d4886ba11f2e3920b1ad2652149bf27b1"
+  },
+  {
+    "file": "tests/billing-one-time-fulfillment-reconcile.test.ts",
+    "line": 286,
+    "name": "a processor-persisted permanent failure survives an outer dispatcher error",
+    "start": 10079,
+    "end": 11692,
+    "body": "test(\"a processor-persisted permanent failure survives an outer dispatcher error\", async () => {\n  const claimedJob = fulfillmentJob({\n    id: \"job-processor-terminal\",\n    purchase_id: \"purchase-processor-terminal\",\n    status: \"processing\",\n    attempts: 1,\n    processing_started_at: \"2026-07-31T10:00:00.000Z\",\n  })\n  const persistedJob = fulfillmentJob({ ...claimedJob })\n  const captured: unknown[] = []\n\n  const stats = await reconcilePersonalPlanOneTimeFulfillmentRetries({\n    supabase: supabaseWithProviders(\n      { \"purchase-processor-terminal\": \"stripe\" },\n      { jobs: [persistedJob] },\n    ) as never,\n    claimDueJobs: async () => [claimedJob],\n    dispatchers: {\n      stripe: async () => {\n        Object.assign(persistedJob, {\n          status: \"failed_permanent\",\n          attempts: 2,\n          processing_started_at: null,\n          next_attempt_at: null,\n          last_error: \"one_time_fulfillment_consent_missing\",\n        })\n        throw new Error(\"processor rethrew after persisting its terminal verdict\")\n      },\n    },\n    captureException: (_error, details) => captured.push(details),\n  })\n\n  assert.deepEqual(stats.failedPermanent, { total: 1, stripe: 1, paypal: 0, unknown: 0 })\n  assert.equal(persistedJob.status, \"failed_permanent\")\n  assert.equal(persistedJob.attempts, 2)\n  assert.equal(persistedJob.last_error, \"one_time_fulfillment_consent_missing\")\n  assert.deepEqual(captured, [\n    {\n      provider: \"stripe\",\n      stage: \"provider_dispatch\",\n      jobStatus: \"failed_permanent\",\n      attempts: 2,\n      reason: \"one_time_fulfillment_consent_missing\",\n    },\n  ])\n})",
+    "sha256": "f6f3d3d25ecd5459e67fc05ef32b1d7965433b70cf44057686ae5c8ae21f1a86"
+  },
+  {
+    "file": "tests/billing-one-time-fulfillment-reconcile.test.ts",
+    "line": 333,
+    "name": "a processor-persisted retryable verification failure stays retryable",
+    "start": 11694,
+    "end": 12921,
+    "body": "test(\"a processor-persisted retryable verification failure stays retryable\", async () => {\n  const claimedJob = fulfillmentJob({\n    id: \"job-processor-retryable\",\n    purchase_id: \"purchase-processor-retryable\",\n    status: \"processing\",\n    attempts: 1,\n  })\n  const persistedJob = fulfillmentJob({ ...claimedJob })\n\n  const stats = await reconcilePersonalPlanOneTimeFulfillmentRetries({\n    supabase: supabaseWithProviders(\n      { \"purchase-processor-retryable\": \"stripe\" },\n      { jobs: [persistedJob] },\n    ) as never,\n    claimDueJobs: async () => [claimedJob],\n    dispatchers: {\n      stripe: async () => {\n        Object.assign(persistedJob, {\n          status: \"failed\",\n          attempts: 2,\n          processing_started_at: null,\n          last_error: \"checkout_session_incomplete\",\n        })\n        throw Object.assign(new Error(\"checkout session is not complete\"), {\n          code: \"checkout_session_incomplete\",\n        })\n      },\n    },\n    captureException: () => {},\n  })\n\n  assert.deepEqual(stats.failedRetryable, { total: 1, stripe: 1, paypal: 0, unknown: 0 })\n  assert.deepEqual(stats.failedPermanent, { total: 0, stripe: 0, paypal: 0, unknown: 0 })\n  assert.equal(persistedJob.status, \"failed\")\n})",
+    "sha256": "37ad0a4b43006c1647ef628c1d1382cdcc4834c73122ba3a3a454c7a15be4f64"
+  },
+  {
+    "file": "tests/billing-one-time-fulfillment-reconcile.test.ts",
+    "line": 369,
+    "name": "a throwing purchase lookup immediately releases the claim for retry",
+    "start": 12923,
+    "end": 13985,
+    "body": "test(\"a throwing purchase lookup immediately releases the claim for retry\", async () => {\n  const job = fulfillmentJob({\n    id: \"job-lookup\",\n    purchase_id: \"purchase-lookup\",\n    status: \"processing\",\n    processing_started_at: \"2026-07-31T10:00:00.000Z\",\n  })\n  const captured: unknown[] = []\n  const stats = await reconcilePersonalPlanOneTimeFulfillmentRetries({\n    supabase: supabaseWithProviders(\n      {},\n      { jobs: [job], lookupError: new Error(\"database down\") },\n    ) as never,\n    claimDueJobs: async () => [job],\n    dispatchers: {},\n    captureException: (_error, details) => {\n      captured.push(details)\n    },\n  })\n\n  assert.deepEqual(stats.failedRetryable, { total: 1, stripe: 0, paypal: 0, unknown: 1 })\n  assert.equal(job.status, \"failed\")\n  assert.equal(job.attempts, 1)\n  assert.equal(job.processing_started_at, null)\n  assert.ok(job.next_attempt_at)\n  assert.deepEqual(captured, [\n    {\n      provider: \"unknown\",\n      stage: \"provider_dispatch\",\n      jobStatus: \"failed\",\n      attempts: 1,\n      reason: \"Error\",\n    },\n  ])\n})",
+    "sha256": "a97e8e8c65017c51771759bf838dcf2f69656a309fe73bcb3202e2e5c00e946b"
+  },
+  {
+    "file": "tests/billing-one-time-fulfillment-reconcile.test.ts",
+    "line": 405,
+    "name": "one-time fulfillment retry Sentry payload has stable fingerprints and no raw identifiers",
+    "start": 13987,
+    "end": 14626,
+    "body": "test(\"one-time fulfillment retry Sentry payload has stable fingerprints and no raw identifiers\", () => {\n  const payload = buildOneTimeFulfillmentReconcileSentryPayload({\n    provider: \"paypal\",\n    stage: \"retry_exhausted\",\n    jobStatus: \"failed_permanent\",\n    attempts: 5,\n    reason: \"failed_permanent\",\n  })\n\n  assert.deepEqual(payload.fingerprint, [\"one-time-fulfillment-retry_exhausted\"])\n  assert.equal(payload.tags[\"one_time_fulfillment.provider\"], \"paypal\")\n  assert.equal(payload.tags[\"one_time_fulfillment.stage\"], \"retry_exhausted\")\n  assert.doesNotMatch(JSON.stringify(payload), /job-|purchase-|consent-|@|pi_|cs_|token/)\n})",
+    "sha256": "4ae04207b65870ea3ce0554d2c0868fb5d4dc87c59fbfeb86894f5820166ce16"
+  },
+  {
+    "file": "tests/billing-one-time-fulfillment-reconcile.test.ts",
+    "line": 420,
+    "name": "one-time fulfillment retry captures sanitized Sentry errors",
+    "start": 14628,
+    "end": 15594,
+    "body": "test(\"one-time fulfillment retry captures sanitized Sentry errors\", () => {\n  const captured: unknown[] = []\n  const fingerprints: unknown[] = []\n  captureOneTimeFulfillmentReconcileException(\n    Object.assign(new Error(\"buyer@example.com pi_secret_raw\"), {\n      code: \"checkout_one_time_invalid\",\n    }),\n    { provider: \"stripe\", stage: \"permanent_mismatch\", reason: \"checkout_one_time_invalid\" },\n    {\n      captureException(error) {\n        captured.push(error)\n      },\n      withScope(callback) {\n        callback({\n          setContext() {},\n          setFingerprint(value) {\n            fingerprints.push(value)\n          },\n          setLevel() {},\n          setTag() {},\n        })\n      },\n    },\n  )\n\n  assert.deepEqual(fingerprints, [[\"one-time-fulfillment-permanent_mismatch\"]])\n  assert.match(String((captured[0] as Error).message), /checkout_one_time_invalid/)\n  assert.doesNotMatch(JSON.stringify(captured), /buyer@example\\.com|pi_secret_raw/)\n})",
+    "sha256": "e2751fbccfbd734bf2eb9cd18778da80558d94a7de7db58b985c13db30355fac"
+  },
+  {
+    "file": "tests/one-time-activation-status-route.test.ts",
+    "line": 29,
+    "name": "one-time activation status rejects mixed provider identifiers without caching",
+    "start": 859,
+    "end": 1316,
+    "body": "test(\"one-time activation status rejects mixed provider identifiers without caching\", async () => {\n  const response = await handleOneTimeActivationStatus(\n    request(\"/api/billing/one-time-activation-status?provider=stripe&session_id=cs_test&token=bad\"),\n    baseDeps(),\n  )\n\n  assert.equal(response.status, 400)\n  assert.equal(response.headers.get(\"cache-control\"), \"no-store\")\n  assert.deepEqual(await response.json(), { status: \"failed_permanent\" })\n})",
+    "sha256": "a6d105e628d6c679b2ad04c657d37c084116e7ed2ae509f29f4058944e13a4b8"
+  },
+  {
+    "file": "tests/one-time-activation-status-route.test.ts",
+    "line": 40,
+    "name": "one-time activation status maps Stripe paid-pending without returning identifiers",
+    "start": 1318,
+    "end": 2490,
+    "body": "test(\"one-time activation status maps Stripe paid-pending without returning identifiers\", async () => {\n  const calls: string[] = []\n  const response = await handleOneTimeActivationStatus(\n    request(\"/api/billing/one-time-activation-status?provider=stripe&session_id=cs_test\"),\n    baseDeps({\n      verifyCheckoutSessionForActivation: async (sessionId) => {\n        calls.push(`verify:${sessionId}`)\n        return { id: sessionId, metadata: { product_kind: \"personal_plan_once\" } } as any\n      },\n      ensureOneTimeCheckoutAccount: async () => {\n        calls.push(\"ensure\")\n        return {\n          userId: \"user-once\",\n          email: \"buyer@example.com\",\n          canSetInitialPassword: true,\n          state: \"paid_pending\",\n          paymentIntentId: \"pi_test\",\n          purchaseId: \"purchase-test\",\n        }\n      },\n    }),\n  )\n\n  assert.equal(response.status, 200)\n  assert.equal(response.headers.get(\"cache-control\"), \"no-store\")\n  const body = await response.json()\n  assert.deepEqual(body, { status: \"paid_pending\" })\n  assert.equal(JSON.stringify(body).includes(\"buyer@example.com\"), false)\n  assert.deepEqual(calls, [\"verify:cs_test\", \"ensure\"])\n})",
+    "sha256": "c57399503ecd51cd4f7050b91431f6c0e5a4aeb6e0def9fe5eb0b5c5930c73ba"
+  },
+  {
+    "file": "tests/one-time-activation-status-route.test.ts",
+    "line": 71,
+    "name": "one-time activation status preserves a revoked Stripe purchase",
+    "start": 2492,
+    "end": 3226,
+    "body": "test(\"one-time activation status preserves a revoked Stripe purchase\", async () => {\n  const response = await handleOneTimeActivationStatus(\n    request(\"/api/billing/one-time-activation-status?provider=stripe&session_id=cs_test\"),\n    baseDeps({\n      verifyCheckoutSessionForActivation: async (sessionId) =>\n        ({ id: sessionId, metadata: { product_kind: \"personal_plan_once\" } }) as any,\n      ensureOneTimeCheckoutAccount: async () =>\n        ({\n          email: \"buyer@example.com\",\n          paymentIntentId: \"pi_test\",\n          purchaseId: \"purchase-test\",\n          state: \"revoked\",\n        }) as any,\n    }),\n  )\n\n  assert.equal(response.status, 200)\n  assert.deepEqual(await response.json(), { status: \"revoked\" })\n})",
+    "sha256": "7985e54e822f0a72ece27e3040d6b27a84a0a2e8ef9e23fae41343ccaaeeb9d9"
+  },
+  {
+    "file": "tests/one-time-activation-status-route.test.ts",
+    "line": 91,
+    "name": "one-time activation status retrieves an already-captured PayPal order without capture or recovery",
+    "start": 3228,
+    "end": 5419,
+    "body": "test(\"one-time activation status retrieves an already-captured PayPal order without capture or recovery\", async () => {\n  let verifiedToken: string | undefined\n  let markedCapture: { token: string; orderId: string; captureId: string } | undefined\n  let activationCalls = 0\n  const response = await handleOneTimeActivationStatus(\n    request(\"/api/billing/one-time-activation-status?provider=paypal&token=I-test\"),\n    baseDeps({\n      verifyPayPalOneTimePaymentForRecovery: async ({ token }) => {\n        verifiedToken = token ?? undefined\n        return {\n          payment: {\n            provider: \"paypal\",\n            providerTransactionId: \"capture-test\",\n            providerOrderId: \"order-test\",\n            consentId: \"consent-test\",\n            email: \"paypal@example.com\",\n            amountMinor: 2999,\n            currency: \"eur\",\n            paidAt: \"2026-07-31T12:00:00.000Z\",\n          },\n          intent: { provider_capture_id: null } as any,\n          consent: {} as any,\n          existingPurchase: null,\n          accountContext: {} as any,\n        }\n      },\n      tryMarkPayPalOrderIntentCaptured: async (_supabase, token, orderId, captureId) => {\n        markedCapture = { token, orderId, captureId }\n        return { provider_capture_id: captureId } as any\n      },\n      activateVerifiedPayPalOrderIntent: async (intent) => {\n        activationCalls += 1\n        assert.equal(intent.provider_capture_id, \"capture-test\")\n        return {\n          status: \"active\",\n          state: \"active\",\n          intent: {} as any,\n          account: {} as any,\n        }\n      },\n    }),\n  )\n\n  assert.equal(response.status, 200)\n  assert.equal(response.headers.get(\"cache-control\"), \"no-store\")\n  assert.deepEqual(await response.json(), { status: \"active\" })\n  assert.equal(verifiedToken, \"I-test\")\n  assert.deepEqual(markedCapture, {\n    token: \"I-test\",\n    orderId: \"order-test\",\n    captureId: \"capture-test\",\n  })\n  assert.equal(activationCalls, 1)\n  assert.doesNotMatch(statusRouteSource, /recoverPayPalOrderActivation/)\n  assert.doesNotMatch(statusRouteSource, /captureProviderPayPalOrder/)\n  assert.doesNotMatch(statusRouteSource, /captureAndActivatePayPalOrder/)\n})",
+    "sha256": "ccd45b907fc4719640e046bb7ee8effdf30b310de613e582c1fca1e5e80ea294"
+  },
+  {
+    "file": "tests/one-time-activation-status-route.test.ts",
+    "line": 149,
+    "name": "one-time activation status reuses an already-persisted PayPal capture",
+    "start": 5421,
+    "end": 6765,
+    "body": "test(\"one-time activation status reuses an already-persisted PayPal capture\", async () => {\n  let markerCalls = 0\n  const response = await handleOneTimeActivationStatus(\n    request(\"/api/billing/one-time-activation-status?provider=paypal&token=I-test\"),\n    baseDeps({\n      verifyPayPalOneTimePaymentForRecovery: async () => ({\n        payment: {\n          provider: \"paypal\",\n          providerTransactionId: \"capture-test\",\n          providerOrderId: \"order-test\",\n          consentId: \"consent-test\",\n          email: \"paypal@example.com\",\n          amountMinor: 2999,\n          currency: \"eur\",\n          paidAt: \"2026-07-31T12:00:00.000Z\",\n        },\n        intent: { provider_capture_id: \"capture-test\" } as any,\n        consent: {} as any,\n        existingPurchase: null,\n        accountContext: {} as any,\n      }),\n      tryMarkPayPalOrderIntentCaptured: async () => {\n        markerCalls += 1\n        throw new Error(\"must not rewrite an already-persisted capture\")\n      },\n      activateVerifiedPayPalOrderIntent: async () => ({\n        status: \"active\",\n        state: \"active\",\n        intent: { provider_capture_id: \"capture-test\" } as any,\n        account: {} as any,\n      }),\n    }),\n  )\n\n  assert.equal(response.status, 200)\n  assert.deepEqual(await response.json(), { status: \"active\" })\n  assert.equal(markerCalls, 0)\n})",
+    "sha256": "1da182527e63b11ab2eb48d9924bc388b1bd442e283fac56c13c3fbb5cfae361"
+  },
+  {
+    "file": "tests/one-time-activation-status-route.test.ts",
+    "line": 188,
+    "name": "one-time activation status keeps an uncaptured PayPal order pending without activation",
+    "start": 6767,
+    "end": 7538,
+    "body": "test(\"one-time activation status keeps an uncaptured PayPal order pending without activation\", async () => {\n  let activationCalls = 0\n  const response = await handleOneTimeActivationStatus(\n    request(\"/api/billing/one-time-activation-status?provider=paypal&token=I-test\"),\n    baseDeps({\n      verifyPayPalOneTimePaymentForRecovery: async () => {\n        throw new PayPalCheckoutActivationError(\"paypal_order_capture_pending\", \"not captured yet\")\n      },\n      activateVerifiedPayPalOrderIntent: async () => {\n        activationCalls += 1\n        throw new Error(\"must not activate an uncaptured payment\")\n      },\n    }),\n  )\n\n  assert.equal(response.status, 200)\n  assert.deepEqual(await response.json(), { status: \"pending\" })\n  assert.equal(activationCalls, 0)\n})",
+    "sha256": "b1ffc0a475742ca82379411c1a6e4f7e4dbc3d4837ca04988093a8e600075989"
+  },
+  {
+    "file": "tests/one-time-activation-status-route.test.ts",
+    "line": 208,
+    "name": "one-time activation status keeps a transient PayPal user race pending",
+    "start": 7540,
+    "end": 8668,
+    "body": "test(\"one-time activation status keeps a transient PayPal user race pending\", async () => {\n  const response = await handleOneTimeActivationStatus(\n    request(\"/api/billing/one-time-activation-status?provider=paypal&token=I-test\"),\n    baseDeps({\n      verifyPayPalOneTimePaymentForRecovery: async () => ({\n        payment: {\n          provider: \"paypal\",\n          providerTransactionId: \"capture-test\",\n          providerOrderId: \"order-test\",\n          consentId: \"consent-test\",\n          email: \"paypal@example.com\",\n          amountMinor: 2999,\n          currency: \"eur\",\n          paidAt: \"2026-07-31T12:00:00.000Z\",\n        },\n        intent: { provider_capture_id: \"capture-test\" } as any,\n        consent: {} as any,\n        existingPurchase: null,\n        accountContext: {} as any,\n      }),\n      activateVerifiedPayPalOrderIntent: async () => {\n        throw new PayPalCheckoutActivationError(\n          \"paypal_user_race_unresolved\",\n          \"auth user is not visible yet\",\n        )\n      },\n    }),\n  )\n\n  assert.equal(response.status, 200)\n  assert.deepEqual(await response.json(), { status: \"pending\" })\n})",
+    "sha256": "e7847653378be40cff41a569a9b709f6dd813ed7971b02665c26d7eff61eb540"
+  },
+  {
+    "file": "tests/one-time-activation-status-route.test.ts",
+    "line": 241,
+    "name": "one-time activation status keeps a missing PayPal intent terminal",
+    "start": 8670,
+    "end": 9245,
+    "body": "test(\"one-time activation status keeps a missing PayPal intent terminal\", async () => {\n  const response = await handleOneTimeActivationStatus(\n    request(\"/api/billing/one-time-activation-status?provider=paypal&token=I-test\"),\n    baseDeps({\n      verifyPayPalOneTimePaymentForRecovery: async () => {\n        throw new PayPalCheckoutActivationError(\n          \"paypal_order_intent_missing\",\n          \"order intent is missing\",\n        )\n      },\n    }),\n  )\n\n  assert.equal(response.status, 400)\n  assert.deepEqual(await response.json(), { status: \"failed_permanent\" })\n})",
+    "sha256": "45c64a0203888cf83f08e942b701e21dc5f49829809432f9547e447d22260e95"
+  },
+  {
+    "file": "tests/one-time-activation-status-route.test.ts",
+    "line": 258,
+    "name": "one-time activation status preserves a revoked PayPal purchase",
+    "start": 9247,
+    "end": 10331,
+    "body": "test(\"one-time activation status preserves a revoked PayPal purchase\", async () => {\n  const response = await handleOneTimeActivationStatus(\n    request(\"/api/billing/one-time-activation-status?provider=paypal&token=I-test\"),\n    baseDeps({\n      verifyPayPalOneTimePaymentForRecovery: async () => ({\n        payment: {\n          provider: \"paypal\",\n          providerTransactionId: \"capture-test\",\n          providerOrderId: \"order-test\",\n          consentId: \"consent-test\",\n          email: \"paypal@example.com\",\n          amountMinor: 2999,\n          currency: \"eur\",\n          paidAt: \"2026-07-31T12:00:00.000Z\",\n        },\n        intent: { provider_capture_id: \"capture-test\" } as any,\n        consent: {} as any,\n        existingPurchase: null,\n        accountContext: {} as any,\n      }),\n      activateVerifiedPayPalOrderIntent: async () => ({\n        status: \"revoked\",\n        state: \"revoked\",\n        intent: {} as any,\n        account: null,\n      }),\n    }),\n  )\n\n  assert.equal(response.status, 200)\n  assert.deepEqual(await response.json(), { status: \"revoked\" })\n})",
+    "sha256": "f82e3ba60a9bb08938f1205a64fb7f5f3475024d0fa7741c7607242d4bbc173e"
+  },
+  {
+    "file": "tests/one-time-activation-status-route.test.ts",
+    "line": 291,
+    "name": "one-time activation status allows the normal fifteen pending polls",
+    "start": 10333,
+    "end": 11502,
+    "body": "test(\"one-time activation status allows the normal fifteen pending polls\", async () => {\n  let rateLimitCalls = 0\n  let providerCalls = 0\n  const deps = baseDeps({\n    checkRateLimit: async (_identifier, config) => {\n      rateLimitCalls += 1\n      assert.deepEqual(config, ONE_TIME_ACTIVATION_STATUS_RATE_LIMIT)\n      return { allowed: true }\n    },\n    verifyCheckoutSessionForActivation: async (sessionId) => {\n      providerCalls += 1\n      return { id: sessionId, metadata: { product_kind: \"personal_plan_once\" } } as any\n    },\n    ensureOneTimeCheckoutAccount: async () =>\n      ({\n        email: \"buyer@example.com\",\n        paymentIntentId: \"pi_test\",\n        purchaseId: \"purchase-test\",\n        state: \"paid_pending\",\n      }) as any,\n  })\n\n  for (let attempt = 0; attempt < 15; attempt += 1) {\n    const response = await handleOneTimeActivationStatus(\n      request(\"/api/billing/one-time-activation-status?provider=stripe&session_id=cs_normal_poll\"),\n      deps,\n    )\n    assert.equal(response.status, 200)\n  }\n\n  assert.equal(ONE_TIME_ACTIVATION_STATUS_RATE_LIMIT.limit >= 15, true)\n  assert.equal(rateLimitCalls, 15)\n  assert.equal(providerCalls, 15)\n})",
+    "sha256": "283de948e3c89e817f0542c319b70196fc115e412646eccc99e19ba69eccadc7"
+  },
+  {
+    "file": "tests/one-time-activation-status-route.test.ts",
+    "line": 326,
+    "name": "one-time activation status rejects abuse before Stripe or PayPal provider work",
+    "start": 11504,
+    "end": 12700,
+    "body": "test(\"one-time activation status rejects abuse before Stripe or PayPal provider work\", async () => {\n  let stripeCalls = 0\n  let paypalCalls = 0\n  const checkRateLimit = async () => ({ allowed: false })\n  const stripeResponse = await handleOneTimeActivationStatus(\n    request(\"/api/billing/one-time-activation-status?provider=stripe&session_id=cs_abuse\"),\n    baseDeps({\n      checkRateLimit,\n      verifyCheckoutSessionForActivation: async () => {\n        stripeCalls += 1\n        throw new Error(\"Stripe must not be called\")\n      },\n    }),\n  )\n  const paypalResponse = await handleOneTimeActivationStatus(\n    request(\"/api/billing/one-time-activation-status?provider=paypal&token=I-abuse\"),\n    baseDeps({\n      checkRateLimit,\n      verifyPayPalOneTimePaymentForRecovery: async () => {\n        paypalCalls += 1\n        throw new Error(\"PayPal must not be called\")\n      },\n    }),\n  )\n\n  for (const response of [stripeResponse, paypalResponse]) {\n    assert.equal(response.status, 429)\n    assert.equal(response.headers.get(\"cache-control\"), \"no-store\")\n    assert.deepEqual(await response.json(), { status: \"pending\" })\n  }\n  assert.equal(stripeCalls, 0)\n  assert.equal(paypalCalls, 0)\n})",
+    "sha256": "811be4509f050d8279cfca2d8058e583a2a9b5a84e5c36649fc1960dac6c7696"
+  },
+  {
+    "file": "tests/one-time-activation-status-route.test.ts",
+    "line": 360,
+    "name": "one-time activation status rate-limit keys hash Stripe and PayPal references with request context",
+    "start": 12702,
+    "end": 14004,
+    "body": "test(\"one-time activation status rate-limit keys hash Stripe and PayPal references with request context\", async () => {\n  const identifiers: string[] = []\n  const checkRateLimit = async (identifier: string) => {\n    identifiers.push(identifier)\n    return { allowed: false }\n  }\n\n  await handleOneTimeActivationStatus(\n    new Request(\n      \"https://hair.example/api/billing/one-time-activation-status?provider=stripe&session_id=cs_private_reference\",\n      { headers: { \"x-forwarded-for\": \"203.0.113.1\" } },\n    ),\n    baseDeps({ checkRateLimit }),\n  )\n  await handleOneTimeActivationStatus(\n    new Request(\n      \"https://hair.example/api/billing/one-time-activation-status?provider=paypal&token=I-private-reference\",\n      { headers: { \"x-forwarded-for\": \"203.0.113.2\" } },\n    ),\n    baseDeps({ checkRateLimit }),\n  )\n\n  assert.equal(identifiers.length, 2)\n  assert.match(identifiers[0]!, /^[a-f0-9]{64}$/)\n  assert.match(identifiers[1]!, /^[a-f0-9]{64}$/)\n  assert.notEqual(identifiers[0], identifiers[1])\n  assert.equal(\n    identifiers.some((key) => key.includes(\"cs_private_reference\")),\n    false,\n  )\n  assert.equal(\n    identifiers.some((key) => key.includes(\"I-private-reference\")),\n    false,\n  )\n  assert.doesNotMatch(statusRouteSource, /console\\.(?:log|warn|error)\\([^\\n]*parsed\\./)\n})",
+    "sha256": "fcca913700bd56b87b9a9e03d6e4c486c5d910523266635b633b8610790585c1"
+  },
+  {
+    "file": "tests/personal-plan-one-time-confirmation.test.ts",
+    "line": 26,
+    "name": "builds the new one-time confirmation payload without labeling context as acceptance",
+    "start": 900,
+    "end": 2212,
+    "body": "test(\"builds the new one-time confirmation payload without labeling context as acceptance\", () => {\n  const exactContextText = `${input.contractSnapshot.text}\\n`\n  const payload = buildPersonalPlanOneTimeConfirmationPayload({\n    ...input,\n    contractSnapshot: { ...input.contractSnapshot, text: exactContextText },\n  })\n\n  assert.equal(payload.to, \"lea@example.com\")\n  assert.equal(payload.transactionalMessageId, PERSONAL_PLAN_ONE_TIME_CONFIRMATION_MESSAGE_ID)\n  assert.deepEqual(payload.messageData, {\n    product_name: \"Persönlicher Haarplan\",\n    amount_eur: \"29.99\",\n    currency: \"EUR\",\n    is_subscription: false,\n    subscription_text: \"Kein Abo. Es handelt sich um eine einmalige Zahlung.\",\n    purchase_context_text: exactContextText,\n    purchase_context_version: \"purchase_context_refund_v1\",\n    purchase_context_created_at: \"2026-08-03T10:15:00.000Z\",\n    payment_provider: \"Stripe\",\n    payment_reference: \"cs_test_123\",\n    support_contact_url: input.supportUrl,\n    withdrawal_url: input.withdrawalUrl,\n    result_url: input.resultUrl,\n  })\n  assert.equal(\"quiz_answers\" in payload.messageData, false)\n  assert.equal(\"diagnostics\" in payload.messageData, false)\n  assert.equal(\"consent_text\" in payload.messageData, false)\n  assert.equal(\"consent_accepted_at\" in payload.messageData, false)\n})",
+    "sha256": "ff8b103ea328b21931c95fb8c4e3a397c8965dfcf97e3329e7eda70860f2179d"
+  },
+  {
+    "file": "tests/personal-plan-one-time-confirmation.test.ts",
+    "line": 56,
+    "name": "historical waiver rows retain their explicit-consent confirmation fields",
+    "start": 2214,
+    "end": 2838,
+    "body": "test(\"historical waiver rows retain their explicit-consent confirmation fields\", () => {\n  const payload = buildPersonalPlanOneTimeConfirmationPayload({\n    ...input,\n    contractSnapshot: {\n      kind: \"historical_consent\",\n      text: \"Ich verlange ausdrücklich die sofortige Erstellung meines Haarplans.\",\n      version: \"2026-07-31\",\n      acceptedAt: \"2026-07-31T10:15:00.000Z\",\n    },\n  })\n  assert.equal(payload.messageData.consent_version, \"2026-07-31\")\n  assert.equal(payload.messageData.consent_accepted_at, \"2026-07-31T10:15:00.000Z\")\n  assert.equal(\"purchase_context_created_at\" in payload.messageData, false)\n})",
+    "sha256": "15345a1599188a1b0602aa784352f39a71f1674534a7bd2705630d1bd78852f5"
+  },
+  {
+    "file": "tests/personal-plan-one-time-confirmation.test.ts",
+    "line": 71,
+    "name": "uses the configured transactional message ID and trims it",
+    "start": 2840,
+    "end": 3383,
+    "body": "test(\"uses the configured transactional message ID and trims it\", () => {\n  assert.equal(\n    getPersonalPlanOneTimeConfirmationMessageId({\n      [PERSONAL_PLAN_ONE_TIME_CONFIRMATION_MESSAGE_ID_ENV]: \" 42 \",\n    }),\n    42,\n  )\n  assert.equal(\n    getPersonalPlanOneTimeConfirmationMessageId({\n      [PERSONAL_PLAN_ONE_TIME_CONFIRMATION_MESSAGE_ID_ENV]: \" personal_plan_paid \",\n    }),\n    \"personal_plan_paid\",\n  )\n  assert.equal(\n    getPersonalPlanOneTimeConfirmationMessageId({}),\n    PERSONAL_PLAN_ONE_TIME_CONFIRMATION_MESSAGE_ID,\n  )\n})",
+    "sha256": "ed7bb0afac6f3e0d5f14d51d3f0662be810c2dc09d8c0df718ed394fff7a4c8a"
+  },
+  {
+    "file": "tests/personal-plan-one-time-confirmation.test.ts",
+    "line": 90,
+    "name": "fails closed for malformed confirmation input",
+    "start": 3385,
+    "end": 3762,
+    "body": "test(\"fails closed for malformed confirmation input\", () => {\n  assert.throws(\n    () => buildPersonalPlanOneTimeConfirmationPayload({ ...input, email: \"not-an-email\" }),\n    /email/,\n  )\n  assert.throws(\n    () =>\n      buildPersonalPlanOneTimeConfirmationPayload({\n        ...input,\n        payment: { provider: \"stripe\", reference: \"   \" },\n      }),\n    /Too small/,\n  )\n})",
+    "sha256": "1d8ea49191f574004b49ed762cc4248a6dcd586e97707d9d74d85429799e9204"
+  },
+  {
+    "file": "tests/personal-plan-one-time-confirmation.test.ts",
+    "line": 105,
+    "name": "returns a stable sent reference only after Customer.io accepts the request",
+    "start": 3764,
+    "end": 4189,
+    "body": "test(\"returns a stable sent reference only after Customer.io accepts the request\", async () => {\n  const sent = [] as unknown[]\n  const result = await sendPersonalPlanOneTimeConfirmation(input, {\n    send: async (payload) => {\n      sent.push(payload)\n    },\n  })\n\n  assert.equal(sent.length, 1)\n  assert.equal(\n    result.confirmationReference,\n    \"customerio:personal_plan_one_time_confirmation:stripe:cs_test_123\",\n  )\n})",
+    "sha256": "869d2c20eb6fb8903bc9c049087de161b8f406b3f72104df4922f6a9aacd99db"
+  },
+  {
+    "file": "tests/personal-plan-one-time-confirmation.test.ts",
+    "line": 120,
+    "name": "propagates Customer.io failures without returning a sent reference",
+    "start": 4191,
+    "end": 4484,
+    "body": "test(\"propagates Customer.io failures without returning a sent reference\", async () => {\n  await assert.rejects(\n    sendPersonalPlanOneTimeConfirmation(input, {\n      send: async () => {\n        throw new Error(\"Customer.io unavailable\")\n      },\n    }),\n    /Customer.io unavailable/,\n  )\n})",
+    "sha256": "537b72580846a47d8b4b1a43c5af86c8de13777cdcb76fc6cdc7fc8486b6056c"
+  },
+  {
+    "file": "tests/one-time-paid-pending-ux.test.ts",
+    "line": 17,
+    "name": "plan-bereit resolves the canonical source from the owned enrollment or pending entitlement",
+    "start": 421,
+    "end": 1105,
+    "body": "test(\"plan-bereit resolves the canonical source from the owned enrollment or pending entitlement\", () => {\n  assert.match(readyPageSource, /findOneTimePurchaseEntitlementForUser/)\n  assert.match(readyPageSource, /findPersonalPlanEnrollmentForUser\\(admin, user\\.id\\)/)\n  assert.match(\n    readyPageSource,\n    /const entitlement = await findOneTimePurchaseEntitlementForUser\\(admin, user\\.id\\)/,\n  )\n  assert.match(readyPageSource, /canonicalLeadId = entitlement\\?\\.consent\\?\\.lead_id \\?\\? null/)\n  assert.match(\n    readyPageSource,\n    /canonicalLeadId = enrollmentResult\\.enrollment\\?\\.artifactLeadId \\?\\? null/,\n  )\n  assert.doesNotMatch(readyPageSource, /findPersonalPlanLead/)\n})",
+    "sha256": "546a2f215a1b01d74dad2bba4bc7545521f727b2503ab54da6b16c2c1db26dcd"
+  },
+  {
+    "file": "tests/one-time-paid-pending-ux.test.ts",
+    "line": 32,
+    "name": "paid-pending plan-bereit stays on recovery instead of looping to onboarding or pricing",
+    "start": 1107,
+    "end": 2062,
+    "body": "test(\"paid-pending plan-bereit stays on recovery instead of looping to onboarding or pricing\", () => {\n  const paidPendingBranchStart = readyPageSource.indexOf('case \"paid_pending_recovery\"')\n  const onboardingBranchStart = readyPageSource.indexOf('case \"onboarding\"', paidPendingBranchStart)\n  const paidPendingBranch = readyPageSource.slice(paidPendingBranchStart, onboardingBranchStart)\n\n  assert.ok(paidPendingBranchStart >= 0)\n  assert.ok(onboardingBranchStart > paidPendingBranchStart)\n  assert.match(paidPendingBranch, /return <PersonalPlanPaidPendingRecovery/)\n  assert.doesNotMatch(paidPendingBranch, /redirect\\(\"\\/onboarding\"\\)/)\n  assert.doesNotMatch(paidPendingBranch, /redirect\\(\"\\/pricing\"\\)/)\n  assert.match(readyPageSource, /Deine Zahlung ist sicher erfasst/)\n  assert.match(readyPageSource, /Du musst nichts erneut kaufen/)\n  assert.match(readyPageSource, /Status erneut prüfen/)\n  assert.match(readyPageSource, /Support kontaktieren/)\n})",
+    "sha256": "c9ee8e4474ebd9cd0d6f54668635a33a1563c4eeea51e95733e3ef2f498dfe9f"
+  },
+  {
+    "file": "tests/one-time-paid-pending-ux.test.ts",
+    "line": 48,
+    "name": "paid-pending access chooses recovery before the normal ready client",
+    "start": 2064,
+    "end": 2908,
+    "body": "test(\"paid-pending access chooses recovery before the normal ready client\", () => {\n  assert.equal(\n    resolvePlanBereitAccessSurface({\n      active: false,\n      oneTimeAccessState: \"paid_pending\",\n      hasLead: true,\n    }),\n    \"paid_pending_recovery\",\n  )\n  assert.equal(\n    resolvePlanBereitAccessSurface({\n      active: false,\n      oneTimeAccessState: \"paid_pending\",\n      hasLead: false,\n    }),\n    \"paid_pending_recovery\",\n  )\n  assert.equal(\n    resolvePlanBereitAccessSurface({ active: false, oneTimeAccessState: \"none\", hasLead: true }),\n    \"pricing\",\n  )\n  assert.equal(\n    resolvePlanBereitAccessSurface({ active: true, oneTimeAccessState: \"none\", hasLead: false }),\n    \"onboarding\",\n  )\n  assert.equal(\n    resolvePlanBereitAccessSurface({ active: true, oneTimeAccessState: \"active\", hasLead: true }),\n    \"ready\",\n  )\n})",
+    "sha256": "2bca91510bae3e6a998793a0d885150a97f024567b36f1a84aa1f90a45caf39a"
+  },
+  {
+    "file": "tests/one-time-paid-pending-ux.test.ts",
+    "line": 79,
+    "name": "paid-pending recovery renders no onboarding, pricing, or duplicate-purchase CTA",
+    "start": 2910,
+    "end": 3623,
+    "body": "test(\"paid-pending recovery renders no onboarding, pricing, or duplicate-purchase CTA\", () => {\n  const html = renderToStaticMarkup(\n    React.createElement(PersonalPlanPaidPendingRecovery, {\n      canonicalLeadId: \"11111111-1111-4111-8111-111111111111\",\n    }),\n  )\n\n  assert.match(html, /Zahlung bestätigt/)\n  assert.match(html, /Wir verknüpfen deinen Haarplan/)\n  assert.match(html, /Du musst nichts erneut kaufen/)\n  assert.match(html, /href=\"\\/plan-bereit\\?lead=11111111-1111-4111-8111-111111111111\"/)\n  assert.doesNotMatch(html, /href=\"\\/pricing\"/)\n  assert.doesNotMatch(html, /href=\"\\/onboarding\"/)\n  assert.doesNotMatch(html, /Plan mit Produkten verfeinern/)\n  assert.doesNotMatch(html, /Jetzt kaufen/)\n})",
+    "sha256": "c67807df45b87aabc7f6d92536cb414e708af233cafb01cc1b48c592297f45eb"
+  },
+  {
+    "file": "tests/one-time-payment-recovery-migration.test.ts",
+    "line": 14,
+    "name": "migration backfills only incomplete paid purchases into the private fulfillment queue",
+    "start": 531,
+    "end": 1814,
+    "body": "test(\"migration backfills only incomplete paid purchases into the private fulfillment queue\", () => {\n  const table = migration.indexOf(\"create table public.personal_plan_one_time_fulfillment_jobs\")\n  const backfill = migration.indexOf(\"insert into public.personal_plan_one_time_fulfillment_jobs\")\n\n  assert.ok(table >= 0, \"fulfillment queue table is missing\")\n  assert.ok(backfill > table, \"legacy backfill must run after creating the fulfillment queue\")\n  assert.match(\n    migration,\n    /insert into public\\.personal_plan_one_time_fulfillment_jobs \\(purchase_id, consent_id, status\\) select purchase\\.id, consent\\.id, 'pending'/,\n  )\n  assert.match(migration, /purchase\\.product_kind = 'personal_plan_once'/)\n  assert.match(migration, /purchase\\.status = 'paid'/)\n  assert.match(migration, /consent\\.confirmation_status in \\('sent', 'delivered'\\)/)\n  for (const field of [\n    \"generation_started_at\",\n    \"generation_completed_at\",\n    \"generated_content_sha256\",\n    \"delivery_provider\",\n    \"delivery_reference\",\n    \"delivered_at\",\n  ]) {\n    assert.match(migration, new RegExp(`consent\\\\.${field} is not null`))\n  }\n  assert.match(migration, /on conflict \\(purchase_id\\) do nothing/)\n  assert.doesNotMatch(migration.slice(backfill), /purchase\\.status in \\([^)]*refunded/)\n})",
+    "sha256": "5ef00fed4df5931d52622f379916dd79aa6f137bce81e3323da03c47d503e051"
+  },
+  {
+    "file": "tests/one-time-payment-recovery-migration.test.ts",
+    "line": 41,
+    "name": "migration keeps fulfillment jobs service-only",
+    "start": 1816,
+    "end": 2268,
+    "body": "test(\"migration keeps fulfillment jobs service-only\", () => {\n  assert.match(\n    migration,\n    /alter table public\\.personal_plan_one_time_fulfillment_jobs enable row level security/,\n  )\n  assert.match(\n    migration,\n    /revoke all on table public\\.personal_plan_one_time_fulfillment_jobs from anon, authenticated/,\n  )\n  assert.match(\n    migration,\n    /grant all on table public\\.personal_plan_one_time_fulfillment_jobs to service_role/,\n  )\n})",
+    "sha256": "3a8feb21d2c7dac8d6304fca643119ce9454aba01409b98032c570390e9e550f"
+  },
+  {
+    "file": "tests/one-time-payment-recovery-migration.test.ts",
+    "line": 56,
+    "name": "runbook records read-only counts before migration and verifies pending jobs afterward",
+    "start": 2270,
+    "end": 3052,
+    "body": "test(\"runbook records read-only counts before migration and verifies pending jobs afterward\", () => {\n  assert.match(\n    runbook,\n    /authorizes neither a production migration, deployment, provider write, nor recovery apply/,\n  )\n  assert.match(runbook, /paid_purchases_requiring_fulfillment_backfill/)\n  assert.match(runbook, /purchase\\.status = 'paid'/)\n  assert.match(\n    runbook,\n    /refunded, reversed, and disputed purchases are intentionally excluded and must not be queued/,\n  )\n  assert.match(runbook, /queued_pending_jobs/)\n  assert.match(runbook, /missing_jobs = 0/)\n  assert.match(runbook, /non_pending_jobs = 0/)\n  assert.match(runbook, /unexpected_fulfillment_jobs/)\n  assert.match(runbook, /do not run a worker, recovery, or provider action from this runbook/)\n})",
+    "sha256": "d419f21d6a61159fa3cd276fd840d6b125103ba60af501c85d43dcc2068c2b3b"
+  },
+  {
+    "file": "tests/personal-plan-one-time-first-access.test.ts",
+    "line": 155,
+    "name": "records matching active one-time plan access once",
+    "start": 5070,
+    "end": 5621,
+    "body": "test(\"records matching active one-time plan access once\", async () => {\n  const fixture = supabaseFor({ purchases: [purchase()], consents: [consent()] })\n  const input = { userId: \"user-1\", leadId: \"lead-1\", at: \"2026-07-31T12:00:00.000Z\" }\n\n  assert.equal(await recordPersonalPlanOneTimeFirstAccess(fixture.client as never, input), true)\n  assert.equal(await recordPersonalPlanOneTimeFirstAccess(fixture.client as never, input), false)\n  assert.deepEqual(fixture.writes, [\n    { id: \"consent-1\", firstAccessedAt: \"2026-07-31T12:00:00.000Z\" },\n  ])\n})",
+    "sha256": "888cde4750279aaaa1e2b6606fdd03006136923f4ac1dbeaf2f5994f3dc54972"
+  },
+  {
+    "file": "tests/personal-plan-one-time-first-access.test.ts",
+    "line": 172,
+    "name": "`does not record first access for ${name}`",
+    "start": 5966,
+    "end": 6462,
+    "body": "test(`does not record first access for ${name}`, async () => {\n    const fixture = supabaseFor({\n      purchases: [purchase(purchaseOverrides as Partial<BillingOneTimePurchaseRow>)],\n      consents: [consent(consentOverrides)],\n    })\n\n    assert.equal(\n      await recordPersonalPlanOneTimeFirstAccess(fixture.client as never, {\n        userId: \"user-1\",\n        leadId: \"lead-1\",\n        at: \"2026-07-31T12:00:00.000Z\",\n      }),\n      false,\n    )\n    assert.deepEqual(fixture.writes, [])\n  })",
+    "sha256": "3276672ad3148e2fce50be3e2580d64903a9378393d613e66acd5583eeaf4f81"
+  },
+  {
+    "file": "tests/personal-plan-one-time-first-access.test.ts",
+    "line": 190,
+    "name": "result rendering keeps the existing client surface while the evidence write is best effort",
+    "start": 6466,
+    "end": 6948,
+    "body": "test(\"result rendering keeps the existing client surface while the evidence write is best effort\", () => {\n  const source = readFileSync(\n    new URL(\"../src/app/result/[leadId]/page.tsx\", import.meta.url),\n    \"utf8\",\n  )\n  assert.match(source, /recordPersonalPlanOneTimeFirstAccess\\(createAdminClient\\(\\),/)\n  assert.match(source, /\\.catch\\(\\(\\) => \\{[\\s\\S]*failed to record one-time plan first access/)\n  assert.match(source, /<ResultPageClient[\\s\\S]*hasAccess=\\{hasAccess\\}/)\n})",
+    "sha256": "329a9c77ed67690c369f8b8397ae4ea8412d4e5305462648ab15909892dfa9f9"
+  }
+]

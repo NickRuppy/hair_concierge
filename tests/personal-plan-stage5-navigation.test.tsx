@@ -102,13 +102,6 @@ test("an unavailable nav-visited read (pre-migration) renders zero dots, never a
   assert.deepEqual([...navigation.unvisitedNavSurfaces], [])
 })
 
-test("omitting the nav-visited state entirely also renders zero dots (safe default)", () => {
-  const navigation = toAuthenticatedAppNavigationAccess(personalPlanAccess(true, true))
-  assert.equal(navigation.kind, "personal_plan")
-  if (navigation.kind !== "personal_plan") return
-  assert.deepEqual([...navigation.unvisitedNavSurfaces], [])
-})
-
 test("resolveAuthenticatedAppNavigationAccess wires the nav-visited read through for a Personal Plan destination", async () => {
   let loadNavVisitedStateCalls = 0
   const navigation = await resolveAuthenticatedAppNavigationAccess({
@@ -249,17 +242,6 @@ test("fix round 1: the active tab never dots even when it's still in unvisitedNa
   }
 })
 
-test("with no unvisited surfaces, no dot renders at all", () => {
-  const navigation = toAuthenticatedAppNavigationAccess(personalPlanAccess(true, true))
-  assert.equal(navigation.kind, "personal_plan")
-  if (navigation.kind !== "personal_plan") return
-
-  const html = renderToStaticMarkup(
-    createElement(PersonalPlanNavigationView, { items: navigation.items, pathname: "/chat" }),
-  )
-  assert.doesNotMatch(html, /data-nav-unvisited-dot/)
-})
-
 test("hasPersonalPlan is true only when a personal_plans row exists, not for a buyer still at plan start", () => {
   assert.equal(
     hasPersonalPlanRecord(toAuthenticatedAppNavigationAccess(personalPlanAccess(false, false))),
@@ -354,6 +336,9 @@ test("the signed navigation marks the current destination and the shell owns its
   assert.match(shellHtml, /pb-\[var\(--personal-plan-shell-bottom-padding\)\] md:pb-0/)
   assert.doesNotMatch(shellHtml, /md:\[--personal-plan-shell-bottom-padding/)
   assert.doesNotMatch(shellHtml, /Legacy/)
+
+  assert.doesNotMatch(navHtml, /data-nav-unvisited-dot/)
+  assert.doesNotMatch(navHtml, /data-nav-lock-badge/)
 })
 
 test("the server shell owns Header presentation without changing the shared Header", () => {
@@ -380,6 +365,10 @@ test("the server shell owns Header presentation without changing the shared Head
     const source = readFileSync(file, "utf8")
     assert.doesNotMatch(source, /<Header\b/)
     assert.doesNotMatch(source, /components\/layout\/header/)
+    if (file === "src/app/anwendung/loading.tsx") {
+      assert.doesNotMatch(source, /<Header/)
+      assert.doesNotMatch(source, /PersonalPlanNavigation/)
+    }
   }
 })
 
@@ -632,25 +621,26 @@ test("flag on, a real Personal Plan journey: tier is always premium and the paid
   })
 })
 
-test("premium tier renders zero lock markers", () => {
+test("the shell picks the five-tab nav (with locks) for a free-tier navigation object, exactly like a real Personal Plan owner", () => {
+  const freeTierNavigation: AuthenticatedAppNavigationAccess = {
+    kind: "personal_plan",
+    items: freeTierFixedItems as PersonalPlanNavigationItem[],
+    hasPendingRoutineProposal: false,
+    hasRoutineAccess: false,
+    hasPersonalPlan: false,
+    unvisitedNavSurfaces: new Set(),
+    tier: "free",
+  }
   const html = renderToStaticMarkup(
-    createElement(PersonalPlanNavigationView, {
-      items: freeTierFixedItems as PersonalPlanNavigationItem[],
-      pathname: "/scan",
-      tier: "premium",
+    createElement(AuthenticatedAppShell, {
+      navigation: freeTierNavigation,
+      legacyHeader: createElement("header", { "data-legacy-header": true }, "Legacy"),
+      children: createElement("main", null, "Inhalt"),
     }),
   )
-  assert.doesNotMatch(html, /data-nav-lock-badge/)
-})
-
-test("free tier renders the lock marker on exactly chat, routine, and anwendung — never scan or profile, and never on the desktop nav (no icons there)", () => {
-  const html = renderToStaticMarkup(
-    createElement(PersonalPlanNavigationView, {
-      items: freeTierFixedItems as PersonalPlanNavigationItem[],
-      pathname: "/scan",
-      tier: "free",
-    }),
-  )
+  assert.doesNotMatch(html, /data-legacy-header/)
+  assert.match(html, /aria-label="Personal-Plan-Navigation \(mobil\)"/)
+  assert.equal((html.match(/data-nav-lock-badge="true"/g) ?? []).length, 3)
 
   const headerNav = html.match(
     /<nav aria-label="Personal-Plan-Navigation"[^>]*>[\s\S]*?<\/nav>/,
@@ -677,28 +667,6 @@ test("free tier renders the lock marker on exactly chat, routine, and anwendung 
     assert.ok(link, `expected a nav link for ${href}`)
     assert.doesNotMatch(link!, /data-nav-lock-badge/)
   }
-})
-
-test("the shell picks the five-tab nav (with locks) for a free-tier navigation object, exactly like a real Personal Plan owner", () => {
-  const freeTierNavigation: AuthenticatedAppNavigationAccess = {
-    kind: "personal_plan",
-    items: freeTierFixedItems as PersonalPlanNavigationItem[],
-    hasPendingRoutineProposal: false,
-    hasRoutineAccess: false,
-    hasPersonalPlan: false,
-    unvisitedNavSurfaces: new Set(),
-    tier: "free",
-  }
-  const html = renderToStaticMarkup(
-    createElement(AuthenticatedAppShell, {
-      navigation: freeTierNavigation,
-      legacyHeader: createElement("header", { "data-legacy-header": true }, "Legacy"),
-      children: createElement("main", null, "Inhalt"),
-    }),
-  )
-  assert.doesNotMatch(html, /data-legacy-header/)
-  assert.match(html, /aria-label="Personal-Plan-Navigation \(mobil\)"/)
-  assert.equal((html.match(/data-nav-lock-badge="true"/g) ?? []).length, 3)
 })
 
 // --- W05: the profile layout's "this save recomputes your plan" fact, tier-independent ---

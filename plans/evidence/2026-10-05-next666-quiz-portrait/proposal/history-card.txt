@@ -1,0 +1,37 @@
+c868cdc6e8d80d57d8d18a580f89ab9f6f1a5fae
+Fix hair-length portrait fit across both quizzes (#483)
+
+## Why
+
+The longer hair-length silhouettes were cropped or pressed against the
+label area in both the regular quiz and Personal Plan quiz.
+
+## What changed
+
+- Use one shared full hair-length option card in both quiz flows.
+- Scale the complete portrait composition to 90% inside a fixed
+responsive media frame, keeping the hair and shoulder outline together.
+- Preserve each flow selected-state treatment and existing answer
+behavior.
+- Reuse the low-level portrait renderer for the Personal Plan midpoint
+without changing its card sizing.
+- Add focused coverage for shared-body and very-short own-body portrait
+assets.
+
+## Verification
+
+- Focused portrait and integration tests: 42/42
+- Node tests: 4,833/4,833
+- Personal Plan tests: 2,273/2,273
+- Typecheck, lint, production build, and diff checks passed
+- Browser verification across both flows, four textures, five viewport
+sizes, Chromium, and WebKit
+- Read-only Explorer review reconciled; Claude review found no hard
+defects
+
+## Risk and scope
+
+No migrations, tracking, recommendation logic, answer persistence,
+routes, or midpoint card geometry changed. The responsive result was
+visually checked with particular attention to long and very-long
+silhouettes.

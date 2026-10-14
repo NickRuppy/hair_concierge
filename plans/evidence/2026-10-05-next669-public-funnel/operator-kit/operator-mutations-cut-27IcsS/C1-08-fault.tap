@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: renders the frame, the Beispiel band, the benefit line and exactly one CTA
+not ok 1 - renders the frame, the Beispiel band, the benefit line and exactly one CTA
+  ---
+  duration_ms: 2.925917
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/gated-preview-component.test.tsx:2:3415'
+  failureType: 'testCodeFailure'
+  error: |-
+    children render inside the scroll container, not beside it
+    
+    0 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/gated-preview-component.test.tsx:156:10)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 896.303459

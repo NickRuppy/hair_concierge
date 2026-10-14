@@ -1,0 +1,11 @@
+from pathlib import Path
+import sys,json,hashlib
+R=Path('/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning');D=Path(__file__).parent
+q=D/'read-pins.json';pins=json.loads(q.read_text()) if q.exists() else {}
+for f in sys.argv[1:]:
+ p=R/f;b=p.read_bytes();h=hashlib.sha256(b).hexdigest()
+ if f in pins:assert pins[f]['sha256']==h, 'DRIFT '+f
+ else:
+  s=D/'read-snapshots'/f;s.parent.mkdir(parents=True,exist_ok=True);s.write_bytes(b);pins[f]={'sha256':h,'lines':len(b.splitlines()),'bytes':len(b)}
+ print('\nFILE '+f+'\n'+''.join(f'{i}: {l}\n' for i,l in enumerate(b.decode().splitlines(),1)))
+q.write_text(json.dumps(pins,indent=2)+'\n')

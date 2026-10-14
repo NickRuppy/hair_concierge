@@ -15,7 +15,7 @@
   },
   "verdict": "mismatch",
   "verdictLabel": "Passt nicht",
-  "verdictTitle": "Passt nicht zu deinem Haar",
+  "verdictTitle": "Passt nicht",
   "subtitle": "Pflegegewicht: mittel statt leicht · Pflegerichtung: Protein statt Feuchtigkeit",
   "mismatchSummary": "Pflegegewicht: mittel statt leicht · Pflegerichtung: Protein statt Feuchtigkeit",
   "categoryFit": "Dein Conditioner-Ziel richtet sich nach deinem Haar.",
@@ -219,7 +219,7 @@
           ]
         }
       ],
-      "verdictTitle": "Passt zu deinem Haar",
+      "verdictTitle": "Passt",
       "mismatchSummary": "Alles im Ziel."
     }
   ]

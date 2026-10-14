@@ -85,15 +85,6 @@ test("hasUsedFreeReveal: false when no row exists for the user", async () => {
   assert.equal(result, false)
 })
 
-test("hasUsedFreeReveal: true once a reveal has been consumed", async () => {
-  const { client } = createFakeFreeRevealClient()
-
-  await consumeFreeReveal(client as never, { userId: "user-1", productId: "product-a" })
-  const result = await hasUsedFreeReveal(client as never, "user-1")
-
-  assert.equal(result, true)
-})
-
 test("hasUsedFreeReveal: does not leak across users", async () => {
   const { client } = createFakeFreeRevealClient()
 
@@ -103,25 +94,15 @@ test("hasUsedFreeReveal: does not leak across users", async () => {
   assert.equal(await hasUsedFreeReveal(client as never, "user-2"), false)
 })
 
-test("consumeFreeReveal: first consume for a user returns consumed", async () => {
-  const { client, rows } = createFakeFreeRevealClient()
-
-  const result = await consumeFreeReveal(client as never, {
-    userId: "user-1",
-    productId: "product-a",
-  })
-
-  assert.equal(result, "consumed")
-  assert.deepEqual(rows.get("user-1"), { user_id: "user-1", product_id: "product-a" })
-})
-
 test("consumeFreeReveal: second consume for the same user returns already_used", async () => {
-  const { client, rows } = createFakeFreeRevealClient()
+  const fake = createFakeFreeRevealClient()
+  const { client, rows } = fake
 
   const first = await consumeFreeReveal(client as never, {
     userId: "user-1",
     productId: "product-a",
   })
+  assert.deepEqual(rows.get("user-1"), { user_id: "user-1", product_id: "product-a" })
   const second = await consumeFreeReveal(client as never, {
     userId: "user-1",
     productId: "product-b",
@@ -132,13 +113,6 @@ test("consumeFreeReveal: second consume for the same user returns already_used",
   // The original row stands -- a second consume never overwrites what the
   // credit was spent on.
   assert.deepEqual(rows.get("user-1"), { user_id: "user-1", product_id: "product-a" })
-})
-
-test("consumeFreeReveal: relies on the insert's own PK conflict, never reads first", async () => {
-  const fake = createFakeFreeRevealClient()
-
-  await consumeFreeReveal(fake.client as never, { userId: "user-1", productId: "product-a" })
-  await consumeFreeReveal(fake.client as never, { userId: "user-1", productId: "product-b" })
 
   assert.equal(fake.insertCalls, 2)
   assert.equal(fake.selectCalls, 0)
@@ -183,15 +157,6 @@ test("loadFreeRevealRecord: null when no row exists for the user", async () => {
   const result = await loadFreeRevealRecord(client as never, "user-1")
 
   assert.equal(result, null)
-})
-
-test("loadFreeRevealRecord: returns the ledgered productId once a reveal has been consumed", async () => {
-  const { client } = createFakeFreeRevealClient()
-
-  await consumeFreeReveal(client as never, { userId: "user-1", productId: "product-a" })
-  const result = await loadFreeRevealRecord(client as never, "user-1")
-
-  assert.deepEqual(result, { productId: "product-a" })
 })
 
 test("loadFreeRevealRecord: does not leak across users", async () => {

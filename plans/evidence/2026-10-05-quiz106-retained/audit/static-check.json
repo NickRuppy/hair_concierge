@@ -1,0 +1,52 @@
+{
+  "status": "PASS_STATIC_ONLY",
+  "original32PinsUnchanged": true,
+  "wholePhaseFiles": 33,
+  "sameBytesBeforeTransferCut": [
+    "tests/quiz-normalization.test.ts",
+    "tests/quiz-primary-concern.test.ts",
+    "tests/quiz-validators.test.ts",
+    "tests/quiz-draft.test.ts",
+    "tests/quiz-screen-order.test.ts",
+    "tests/quiz-preparation.test.ts",
+    "tests/quiz-need-lane.test.ts",
+    "tests/quiz-result-routing.test.ts",
+    "tests/quiz-email-return-selection.test.ts",
+    "tests/quiz-email-return-choice.test.ts",
+    "tests/quiz-email-return-edit.test.ts"
+  ],
+  "declarations": [
+    106,
+    106,
+    106
+  ],
+  "classifications": {
+    "R": 101,
+    "F": 5
+  },
+  "expectedRuntime": [
+    135,
+    135,
+    135
+  ],
+  "removedCallbacks": 0,
+  "modifiedCallbacks": 0,
+  "unchangedCallbacks": 106,
+  "newCalls": 0,
+  "newInputs": 0,
+  "newTableRows": 0,
+  "skipCancelTodoChanges": 0,
+  "productionLOCChange": 0,
+  "testLOCChange": 0,
+  "testsExecuted": false,
+  "sourceFaultsExecuted": false,
+  "repositoryWrites": 0,
+  "childTestRunners": 0,
+  "ownerImports": 0,
+  "providerNetworkDatabaseOperations": 0,
+  "note": "Artifact script and TypeScript parsing only. This receipt does not attest native test success or runtime closure.",
+  "final87ReadsetHashesMatch": true,
+  "fullReads": 66,
+  "sliceReads": 17,
+  "mechanicalOnlyPins": 4
+}

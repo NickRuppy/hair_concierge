@@ -1,0 +1,27 @@
+{
+  "mode": "transfer",
+  "from": "before",
+  "phase": "transfer",
+  "counts": {
+    "before": 102,
+    "transfer": 102,
+    "cut": 101
+  },
+  "pinsSHA": "67f792bcbb94f1a2f6f807cddd4403c08da414aeec3748c71ad49d5bd28ccb89",
+  "prerequisite": null,
+  "changed": [
+    "tests/personal-plan-routine-candidate-compiler.test.ts"
+  ],
+  "allTestHashes": {
+    "tests/recommendation-engine-shampoo-cadence.test.ts": "ecd07f7f11e9beccea659305888ed8cb87c2224ac058f5193f0d45a2173eb432",
+    "tests/care-balance-frequency-targets.test.ts": "e6fd7fb6fde941a2677597b8115866fe8b58346a3ac424bcdb9b5d13466dff4a",
+    "tests/personal-plan-routine-candidate-compiler.test.ts": "2204f56538470d8f26aa3b20adef0aedf4be75061b7509abeac68f097362d7a3",
+    "tests/personal-plan-routine-cadence.test.ts": "faf7610672fd7fbd0e2c56d9e2f645a1b34b870a82732d2445038bab914e2729",
+    "tests/personal-plan/product-previews.test.ts": "f622fe85d64116aa02919b49e97243d43c459e6f10c00eacf3668371e62de1f7",
+    "tests/personal-plan-exact-catalog-bundle.test.ts": "8c555106cc39f984c37f1b64a6e766d67e6b0b78022339c4aa4ba8d4a61e6a65",
+    "tests/personal-plan-stage3-contracts.test.ts": "9d2253501c5b17502a56c123e2adea9ef1f19d135e34593cedf441f774de0bc4"
+  },
+  "sourceWrites": 0,
+  "testsRun": 0,
+  "originals": "/tmp/test-audit-care102-tools-fz8_q695/operator-apply-transfer-DOMRTb/originals"
+}

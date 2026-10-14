@@ -162,30 +162,6 @@ test("legacy quiz drafts after density resume at hair length when hair length is
   }
 })
 
-test("quiz drafts after hair length keep their original step when hair length is present", () => {
-  const storage = new MemoryStorage()
-
-  storage.setItem(
-    QUIZ_DRAFT_STORAGE_KEY,
-    JSON.stringify({
-      version: 1,
-      savedAt: Date.now(),
-      step: 4,
-      answers: {
-        structure: "wavy",
-        thickness: "normal",
-        density: "medium",
-        hair_length: "medium",
-      },
-    }),
-  )
-
-  const draft = loadQuizDraft(storage)
-
-  assert.equal(draft?.step, 4)
-  assert.equal(draft?.answers.hair_length, "medium")
-})
-
 test("stored quiz draft answers are normalized before restore", () => {
   const storage = new MemoryStorage()
 
@@ -277,6 +253,7 @@ test("quiz store saves the completed page draft when advancing", async () => {
 
   const draft = loadQuizDraft(storage)
   assert.equal(draft?.step, 3)
+  assert.equal(draft?.funnelPackageKey, null)
   assert.deepEqual(draft?.answers, { structure: "wavy" })
 
   const raw = storage.getItem(QUIZ_DRAFT_STORAGE_KEY) ?? ""
@@ -337,14 +314,6 @@ test("quiz drafts record the funnel package the progress belongs to", () => {
   const draft = loadQuizDraft(storage)
   assert.equal(draft?.step, 16)
   assert.equal(draft?.funnelPackageKey, "scan_v1")
-})
-
-test("an organic quiz draft carries no funnel package", () => {
-  const storage = new MemoryStorage()
-
-  saveQuizDraft({ step: 3, answers: { structure: "wavy" } }, storage)
-
-  assert.equal(loadQuizDraft(storage)?.funnelPackageKey, null)
 })
 
 test("legacy version 1 quiz drafts still restore", () => {

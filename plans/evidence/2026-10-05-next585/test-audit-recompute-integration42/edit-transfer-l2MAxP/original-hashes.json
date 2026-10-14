@@ -1,0 +1,9 @@
+{
+  "tests/personal-plan/refinement-recompute/routine-reactivation.test.ts": "fcd9e75768a52ea0ea64330cb7b3e10fc749bb42b8221ce946948beb09be9770",
+  "tests/personal-plan-refinement-recompute-activation.test.ts": "d74930b61b7e29279c75d30fc9bdd11a6b206eb285eb1ac77cad576b24c970be",
+  "tests/personal-plan/refinement-recompute/module-driven-classification.test.ts": "55c09128072e96daaacd755fd8dc37697402a30534bc763e2bc34ab0967fdd95",
+  "tests/personal-plan/refinement-recompute/production-deps.test.ts": "e95e7ad217ef60d1a0163391b05ccf15723b52e6a86d74c546b4e724a9f12a86",
+  "tests/personal-plan/refinement-recompute/production-lane.test.ts": "39e9ab0c2f55317e89829e5c6a900499344da9763787b519573cb01a3c9433de",
+  "tests/personal-plan-refinement-recompute-activation-migration.test.ts": "d0bf8a258e7c55764210ebda7ecea86a34c8f514807afd16cbddab7753ea3666",
+  "tests/personal-plan/persistence/routine-proposal-stager.test.ts": "a7eae65245e6ae21693f5dafa4fd5abd1d781a5f008de7df8d8989d762bf1f5e"
+}

@@ -1,0 +1,32 @@
+{
+  "blindId": "W305",
+  "packSize": "300 ml",
+  "canonicalInci": [
+    "AQUA / WATER",
+    "AMMONIUM LAURYL SULFATE",
+    "SODIUM CHLORIDE",
+    "COCAMIDOPROPYL BETAINE",
+    "NIGELLA SATIVA SEED OIL",
+    "TRIETHYL CITRATE",
+    "SODIUM HYDROXIDE",
+    "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+    "CHARCOAL POWDER",
+    "CITRIC ACID",
+    "POLYGLYCERIN-10",
+    "POLYGLYCERYL-10 MYRISTATE",
+    "POLYGLYCERYL-10 STEARATE",
+    "SODIUM BENZOATE",
+    "SODIUM DEHYDROACETATE",
+    "BENZOIC ACID",
+    "CARAMEL",
+    "LINALOOL",
+    "LIMONENE",
+    "BENZYL ALCOHOL",
+    "PARFUM / FRAGRANCE"
+  ],
+  "inciFingerprintSha256": "4d21bc975505079b916aa495f148440be891511f6de5cfb207eb9bfeb79bd9a0",
+  "normalization": "Runbook step 2: canonical list items lower-cased, trimmed, whitespace collapsed, joined with '|', SHA-256; split synonym entries (e.g. 'Aqua (Water, Eau)') merged before numbering.",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "moderate"
+}

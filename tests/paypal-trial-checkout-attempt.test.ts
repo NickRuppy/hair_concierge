@@ -4,7 +4,7 @@ import test from "node:test"
 import { PGlite } from "@electric-sql/pglite"
 
 import { createTrialOfferSnapshot } from "../src/lib/billing/trial-offer"
-import { buildPayPalDeferredTrialPlanRequest } from "../src/lib/paypal/trial-plan-shape"
+import { paypalTrialProviderPlanFixture } from "./paypal-trial-plan.fixtures"
 import { createDurablePayPalTrialCheckout } from "../src/lib/paypal/trial-checkout"
 
 const ROOT = new URL("../", import.meta.url)
@@ -332,7 +332,7 @@ test("service attests each provider interaction, freezes accepted terms, and ver
       return attestedApp
     },
     getPlan: async (id: string) =>
-      buildPayPalDeferredTrialPlanRequest({
+      paypalTrialProviderPlanFixture({
         interval: id === "P-year" ? "year" : "month",
         productId: "PROD-owned",
       }),

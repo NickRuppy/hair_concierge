@@ -1,0 +1,86 @@
+[
+  {
+    "id": "C1-no-coral",
+    "source": "src/app/beratung/einladung/discovery-invitation-client.tsx",
+    "sourceHash": "4e19b7d712515d1abd2d04c8008526843c203cdc5fa15f92fbbccde531013edc",
+    "from": "<Button className=\"mt-6\" disabled={mode === \"claiming\"} type=\"submit\" variant=\"funnelCta\">",
+    "to": "<Button className=\"mt-6\" disabled={mode === \"claiming\"} type=\"submit\" variant=\"unstyled\">",
+    "keeperFile": "tests/discovery-invitation-card.test.tsx",
+    "keeperTitle": "the invite always shows an editable e-mail field, prefilled when the admin entered one",
+    "intended": "prefilled.includes(\"bg-[var(--brand-coral)]\")",
+    "restriction": "descriptor only, no mutation or runtime performed; serial actual-source fault requires original restoration and exact selected assertion failure",
+    "scope": {
+      "kind": "function",
+      "name": "InvitationForm"
+    },
+    "mutantSha": "4ca142c450f292eaf081e5c772cb33ff90d7d858ee70a3bbf4ec8150a2239af2",
+    "oracles": {
+      "transfer": {
+        "line": 68,
+        "text": "assert.ok(prefilled.includes(\"bg-[var(--brand-coral)]\"), \"positive coral CTA absent\")",
+        "message": "positive coral CTA absent"
+      },
+      "cut": {
+        "line": 60,
+        "text": "assert.ok(prefilled.includes(\"bg-[var(--brand-coral)]\"), \"positive coral CTA absent\")",
+        "message": "positive coral CTA absent"
+      }
+    }
+  },
+  {
+    "id": "C1-extra-plum",
+    "source": "src/app/beratung/einladung/discovery-invitation-client.tsx",
+    "sourceHash": "4e19b7d712515d1abd2d04c8008526843c203cdc5fa15f92fbbccde531013edc",
+    "from": "<Button className=\"mt-6\" disabled={mode === \"claiming\"} type=\"submit\" variant=\"funnelCta\">",
+    "to": "<Button className=\"mt-6 before:bg-[var(--brand-plum)]\" disabled={mode === \"claiming\"} type=\"submit\" variant=\"funnelCta\">",
+    "keeperFile": "tests/discovery-invitation-card.test.tsx",
+    "keeperTitle": "the invite always shows an editable e-mail field, prefilled when the admin entered one",
+    "intended": "!prefilled.includes(\"bg-[var(--brand-plum)]\")",
+    "restriction": "descriptor only, no mutation or runtime performed; serial actual-source fault requires original restoration and exact selected assertion failure",
+    "scope": {
+      "kind": "function",
+      "name": "InvitationForm"
+    },
+    "mutantSha": "c18c8cb4b83aee0715c2f4384194b99cd42540460bbd38d99e0b1d0bc1d52e7b",
+    "oracles": {
+      "transfer": {
+        "line": 69,
+        "text": "assert.ok(!prefilled.includes(\"bg-[var(--brand-plum)]\"), \"negative plum token present\")",
+        "message": "negative plum token present"
+      },
+      "cut": {
+        "line": 61,
+        "text": "assert.ok(!prefilled.includes(\"bg-[var(--brand-plum)]\"), \"negative plum token present\")",
+        "message": "negative plum token present"
+      }
+    }
+  },
+  {
+    "id": "C2-no-fade",
+    "source": "src/app/beratung/einladung/discovery-invitation-client.tsx",
+    "sourceHash": "4e19b7d712515d1abd2d04c8008526843c203cdc5fa15f92fbbccde531013edc",
+    "from": "\"motion-safe:animate-[personalPlanStageTargetFade_var(--motion-screen)_var(--motion-ease-enter)_both]\"",
+    "to": "\"\"",
+    "keeperFile": "tests/discovery-invitation-card.test.tsx",
+    "keeperTitle": "the invite always shows an editable e-mail field, prefilled when the admin entered one",
+    "intended": "assert.match(empty, /motion-safe:animate-",
+    "restriction": "descriptor only, no mutation or runtime performed; serial actual-source fault requires original restoration and exact selected assertion failure",
+    "scope": {
+      "kind": "variable",
+      "name": "CONTENT_FADE_IN"
+    },
+    "mutantSha": "554343c68a8da1ea46685b2ae8982cde53fe3ecdbe369684c4a495ec9c16810d",
+    "oracles": {
+      "transfer": {
+        "line": 78,
+        "text": "assert.match(empty, /motion-safe:animate-\\[personalPlanStageTargetFade_var\\(--motion-screen\\)/)",
+        "message": null
+      },
+      "cut": {
+        "line": 70,
+        "text": "assert.match(empty, /motion-safe:animate-\\[personalPlanStageTargetFade_var\\(--motion-screen\\)/)",
+        "message": null
+      }
+    }
+  }
+]

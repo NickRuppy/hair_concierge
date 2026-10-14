@@ -1,0 +1,397 @@
+{
+  "src/lib/funnel/api.ts": {
+    "sha256": "b1180f5324e78983f63b1a73b1f98f7cd02aabacba1271165446588370356679",
+    "lines": 53,
+    "bytes": 1843
+  },
+  "src/lib/funnel/client.ts": {
+    "sha256": "9c3728cffff3810d829afd198c2406e35cf6edb3d4c68dbfc5a1cfa845e100a8",
+    "lines": 213,
+    "bytes": 7950
+  },
+  "src/lib/funnel/cookie.ts": {
+    "sha256": "522741b96f60560c02f92a5445428380de02231b2b3724b4143dfc6da14f7b48",
+    "lines": 165,
+    "bytes": 4798
+  },
+  "src/app/api/funnel/session/route.ts": {
+    "sha256": "da657d3e0ab9db46f2c569ae06c08d4a10d98ca64e7dcb8eb336d3513f11ea3d",
+    "lines": 78,
+    "bytes": 3149
+  },
+  "src/lib/funnel/server.ts": {
+    "sha256": "775feb24b57ae2c7d71c4dec2f5ef4a8781fefaf355699331718fc44f92380dd",
+    "lines": 632,
+    "bytes": 21865
+  },
+  "src/lib/funnel/packages.ts": {
+    "sha256": "66cab34518f29604a37c7a32721f74ca5c930f82a12dcf293db69e3b90a080be",
+    "lines": 94,
+    "bytes": 3650
+  },
+  "src/lib/funnel/flags.ts": {
+    "sha256": "981bd9436dae7c1fc7cbd8d6dc60e3d6bbaa9dc3bea994e0a33fac525f02528d",
+    "lines": 75,
+    "bytes": 2498
+  },
+  "src/lib/funnel/journey-kind.ts": {
+    "sha256": "6088e7e2554b37b0d2da5231dd5361fdeed8cd2ebf1dae5286e107d7543efe88",
+    "lines": 9,
+    "bytes": 295
+  },
+  "src/lib/rate-limit.ts": {
+    "sha256": "bd094c1ed6a7f9e9879e872168740b0419fb2fafad0a1b2dccf724c2a5d9cf08",
+    "lines": 176,
+    "bytes": 5577
+  },
+  "src/components/gated-preview/gated-preview.tsx": {
+    "sha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "lines": 118,
+    "bytes": 5331
+  },
+  "src/components/gated-preview/inert-example.tsx": {
+    "sha256": "cda657ac78bf346c137cc43b51944d0764f4a71a1b2ec33b15d5624288e805ee",
+    "lines": 62,
+    "bytes": 2644
+  },
+  "src/components/gated-preview/gated-routine-example.tsx": {
+    "sha256": "15342e414e066d4fb72698550324e3003bf1441b958486d9dda81c1590a6d342",
+    "lines": 38,
+    "bytes": 1639
+  },
+  "src/components/gated-preview/gated-anwendung-example.tsx": {
+    "sha256": "faeefb505f1adb7f54ba73f08f0211e1a1bd8c0d01ae767b0f80d0be536d23ae",
+    "lines": 36,
+    "bytes": 1464
+  },
+  "src/components/gated-preview/gated-chat-example.tsx": {
+    "sha256": "5c0b7225c892d458d9319378300fe08eb945bc813c999b3272368b001ac1cdaa",
+    "lines": 58,
+    "bytes": 2558
+  },
+  "src/lib/gated-preview/example-copy.ts": {
+    "sha256": "fc1b9a2002676f39a87bd277f3d570ea5ada45e720d03dcb3d816bd1fe513280",
+    "lines": 42,
+    "bytes": 1442
+  },
+  "src/lib/gated-preview/fixtures/chat-example.ts": {
+    "sha256": "a9f885d12e7a828d68eaafecf8af9365d99d0dfaed6e8577cf905b3f07f692b3",
+    "lines": 65,
+    "bytes": 2446
+  },
+  "src/lib/gated-preview/fixtures/example-products.ts": {
+    "sha256": "458dc1afd9ba6c1b130412c09931b7b2f8f1455311dc2e4caafad82a102dd06b",
+    "lines": 59,
+    "bytes": 3032
+  },
+  "src/lib/gated-preview/fixtures/routine-example.ts": {
+    "sha256": "b5bd102c62e62fa59cf07362dbe7cf2eb80dbbbf8e3006f3b37a06ca79c55cb0",
+    "lines": 145,
+    "bytes": 4503
+  },
+  "src/lib/gated-preview/fixtures/anwendung-example.ts": {
+    "sha256": "5bdc4e724d1010fa3553013ac1d9a2f8274934ce816977723b5436316f08be15",
+    "lines": 161,
+    "bytes": 5372
+  },
+  "src/components/routine/personal-plan/routine-page.tsx": {
+    "sha256": "4f6bf336ce27cb2465568193161021a46582d099e4a0e3aff28cd365b2aae68b",
+    "lines": 328,
+    "bytes": 15157
+  },
+  "src/components/application/application-page.tsx": {
+    "sha256": "df15aabce70ed7ff6d7e5c803e23bbd08ec9860f600ee115d6e9a5b7cb0da1d9",
+    "lines": 207,
+    "bytes": 7907
+  },
+  "src/lib/gated-preview/gate.ts": {
+    "sha256": "26cbca953a542d67d0043b9c9bc87673829cf5e6784831681fd1f6b2c8d54d86",
+    "lines": 34,
+    "bytes": 1350
+  },
+  "src/components/chat/chat-message.tsx": {
+    "sha256": "2fcdfc1d4ab769afeb8e801a6db8c07df34486c70851f2154bcd6476bd87f476",
+    "lines": 401,
+    "bytes": 15021
+  },
+  "src/components/chat/chat-input.tsx": {
+    "sha256": "6bf471ce1c014b48ab7cbe9cc7e75045629024fb52f7e9c3689f02a3a1456b3a",
+    "lines": 72,
+    "bytes": 2349
+  },
+  "src/components/ui/button.tsx": {
+    "sha256": "7328a21e4aa02dad2cb657ae7af61280b71288b16ae4d38c5d31895c9d6535df",
+    "lines": 62,
+    "bytes": 3199
+  },
+  "src/lib/auth/authenticated-app-route-access.ts": {
+    "sha256": "1c29afa7beb170c72e628560261dca22c1ae08c981d4ca0be917cccd79e8c49a",
+    "lines": 227,
+    "bytes": 9768
+  },
+  "src/app/chat/page.tsx": {
+    "sha256": "c3ccc038893d98234ca9fde9b46b898a4908c6d3c40b27a9012317955095d030",
+    "lines": 67,
+    "bytes": 3929
+  },
+  "src/app/chat/[conversationId]/page.tsx": {
+    "sha256": "d6440e82a28a43e4cb6160982721f5156df1d6be28ef583b2db739fa7d7c3090",
+    "lines": 60,
+    "bytes": 3008
+  },
+  "src/components/editorial/editorial-shell.tsx": {
+    "sha256": "26379edae2261383233d362f856ffdecdca4bd64d935cdc197602c50e9530f05",
+    "lines": 26,
+    "bytes": 725
+  },
+  "src/providers/public-funnel-context-bootstrap.tsx": {
+    "sha256": "f7b1177dede682659bdcbd0ee88d81cd5cd5f014efd3c3261856903dc7066b32",
+    "lines": 13,
+    "bytes": 240
+  },
+  "src/app/not-found.tsx": {
+    "sha256": "bfa1409ff8500f138b3cb2cd3955f5e1805d8219977f982b0aa4441093efbfb6",
+    "lines": 46,
+    "bytes": 2155
+  },
+  "src/app/methodik/page.tsx": {
+    "sha256": "0cb407936caf978fdff1caeb433899466a7b127290002afe01b7e848ef70197e",
+    "lines": 221,
+    "bytes": 10171
+  },
+  "supabase/migrations/20260711120000_funnel_attribution.sql": {
+    "sha256": "d7e781615bbe79f8985afdf1005d634905e3cf9bc78989482b8a01a55441176e",
+    "lines": 304,
+    "bytes": 11094
+  },
+  "supabase/migrations/20260730120000_add_funnel_session_quiz_variant.sql": {
+    "sha256": "ff87373fc5aa24c05615dfbc85e8264eeaf3f44aa1f4c86baca32f16f81cf131",
+    "lines": 254,
+    "bytes": 7723
+  },
+  "src/funnels/packages.json": {
+    "sha256": "fd299fc9fd61f06531fcc9b66fd497fd14c25a38214f8db241dab4e3a0131811",
+    "lines": 65,
+    "bytes": 1582
+  },
+  "src/funnels/quizzes/registry.ts": {
+    "sha256": "225fa3638b4406aa711b4afda77ef748e24dd35e6b29bcd46f4d3ac6fe320bbe",
+    "lines": 121,
+    "bytes": 4306
+  },
+  "src/components/premium-sheet/premium-sheet.tsx": {
+    "sha256": "eb63634ecfe51927a408de5d63d2217e0f042078957bdbaa478a6f1529147566",
+    "lines": 731,
+    "bytes": 34867
+  },
+  "src/app/routine/page.tsx": {
+    "sha256": "298522d8399b3638fdd03d1d4605df4e3b74d766e7b2947ea71e01331ca0b8de",
+    "lines": 362,
+    "bytes": 16040
+  },
+  "src/app/anwendung/page.tsx": {
+    "sha256": "020e5be38ea8b1f00652265897430669c44c647f571f57a35a359bfc61c5e1f6",
+    "lines": 333,
+    "bytes": 14583
+  },
+  "src/components/landing/site-footer.tsx": {
+    "sha256": "3bd99615296e036976359c3d712ce345679213537d99d6fc529b61a15672b2b6",
+    "lines": 37,
+    "bytes": 1410
+  },
+  "src/components/landing/landing-header.tsx": {
+    "sha256": "874b56aa42af824ea0d045f1088cc478df7da05ab76decd1b8066e0c6a8c1326",
+    "lines": 34,
+    "bytes": 1511
+  },
+  "src/lib/seo/site-identity.ts": {
+    "sha256": "c7eff1e148b78a41a77f23d9c4f8ae74f49dab1c2485f9f8fd9c0dd819a34c84",
+    "lines": 176,
+    "bytes": 4967
+  },
+  "tests/helpers/browser-storage-shim.ts": {
+    "sha256": "3d7db8f60dc5f144ccd959f7eb1629af1d84f1ac99980daa07174924e166e0b8",
+    "lines": 27,
+    "bytes": 534
+  },
+  "src/providers/funnel-context-bootstrap.tsx": {
+    "sha256": "da6193acc2cd80e9f21e54eae280b18fc24a3a4604d93242716394920bf01f7d",
+    "lines": 15,
+    "bytes": 563
+  },
+  "src/lib/billing/analytics-destinations/funnel.ts": {
+    "sha256": "7c6d71e7eeb0ec6af41020df967b0126e6ced1436c715d9914674e8dda4ef6bb",
+    "lines": 64,
+    "bytes": 2174
+  },
+  "src/proxy.ts": {
+    "sha256": "a309a92a1b3a6f420a3739690babd3bc371beb2daf441aa94da2977f5ee82bfa",
+    "lines": 387,
+    "bytes": 13680
+  },
+  "src/app/agb/page.tsx": {
+    "sha256": "2c9c6db1d8abf2aec9afcaf70d318aec9d58e6c93948c871d7f2fbb2b785c78f",
+    "lines": 227,
+    "bytes": 11847
+  },
+  "src/app/widerruf/page.tsx": {
+    "sha256": "667da42168fe70a3a4485f126290256a3d9975673ebd239308db43fba955a34a",
+    "lines": 124,
+    "bytes": 6061
+  },
+  "src/app/datenschutz/page.tsx": {
+    "sha256": "c9c354d8d421817fc0eb1fade7aa63395dadc17b11f3049ae409d17b89587b2f",
+    "lines": 418,
+    "bytes": 23505
+  },
+  "src/components/ui/bottom-sheet.tsx": {
+    "sha256": "373944ebf90fab3c4347599cba20ef2e162db35c43f722d1f190585817caa625",
+    "lines": 621,
+    "bytes": 22039
+  },
+  "src/components/personal-plan-quiz/personal-plan-quiz-continuation.ts": {
+    "sha256": "c1f1a78eb4812605cd6ae2f3c551ffd02ae13d3d6775706549a6bd0d2e16d1d8",
+    "lines": 51,
+    "bytes": 1830
+  },
+  "instrumentation-client.ts": {
+    "sha256": "eaf8eb5c5435bc522e723c0efb5f7b82376b23bb2a4b7689b5eab43e495cb156",
+    "lines": 91,
+    "bytes": 3190
+  },
+  "src/app/global-error.tsx": {
+    "sha256": "b8f1790b8b2581120172ac526a5a3f500afeccd453987bb41ebbb15cb3cae74b",
+    "lines": 83,
+    "bytes": 2176
+  },
+  "src/components/landing/hero.tsx": {
+    "sha256": "3c7f09162f3d0ef85f97cbe732d327b078aa7de1ff41bb1d33d8a88236ffc7f7",
+    "lines": 61,
+    "bytes": 3158
+  },
+  "src/components/landing/final-cta.tsx": {
+    "sha256": "f2f64d9243c912580a2140c06b10cd767d11456bc37c46b663a8d7e3f62666c7",
+    "lines": 30,
+    "bytes": 1268
+  },
+  "src/components/landing/what-you-get.tsx": {
+    "sha256": "b42830cb6aa72f519d3be10009354f23a95ecff96a64d4359b1ac0b190cff829",
+    "lines": 71,
+    "bytes": 2445
+  },
+  "src/components/landing/faq.tsx": {
+    "sha256": "dd18a099f2d827ef2f053d1114517aa09cac07ec3bcd0a616a4f689b236d791d",
+    "lines": 86,
+    "bytes": 3572
+  },
+  "src/lib/quiz/funnel-copy.ts": {
+    "sha256": "ed098df5602b1f10b6e9820a91b28719b255ed56c2cb626b93ebaf40f9658f2f",
+    "lines": 75,
+    "bytes": 3145
+  },
+  "src/components/checkout/subscription-plan-selector.tsx": {
+    "sha256": "53b16e01ee94ecd3fb44de835cc2e9d191e2345f95efb9eb4443857f6a687783",
+    "lines": 174,
+    "bytes": 7447
+  },
+  "src/app/layout.tsx": {
+    "sha256": "cb59fbca704acc3352087e1dc3057b43690f510f8d40fc7c01319249b9846466",
+    "lines": 61,
+    "bytes": 1817
+  },
+  "src/app/page.tsx": {
+    "sha256": "bf1fd321a0cc3c00920ea5b7b95b58907efc5873ceeedae9665ba4b5eac06b5d",
+    "lines": 18,
+    "bytes": 589
+  },
+  "src/components/quiz/quiz-analysis.tsx": {
+    "sha256": "ed0e7284d9ea231ee17ad03c7096102b51cb2590eda99beb61722e4df4edd1ab",
+    "lines": 230,
+    "bytes": 6838
+  },
+  "src/components/quiz/quiz-results.tsx": {
+    "sha256": "836bf1a4b1e11f09b281f23dd7c045c1d331c07b94edc1d7ab88a0b6b3a9ae3b",
+    "lines": 278,
+    "bytes": 8678
+  },
+  "src/app/lp/[slug]/page.tsx": {
+    "sha256": "c986d0de667d792caf017dd92d97ea9a946d85812340af9006768da532b01cec",
+    "lines": 193,
+    "bytes": 7375
+  },
+  "src/app/opengraph-image.tsx": {
+    "sha256": "c8524d277d23d7acdb4813a3378ea166103d2af437bb4d0c4dce655b3ac94a9c",
+    "lines": 204,
+    "bytes": 5705
+  },
+  "src/components/routine/personal-plan/routine-section.tsx": {
+    "sha256": "5ddfc9757d16494eac2162b89b422e9588f660df22c006b53e4bc481574413a2",
+    "lines": 63,
+    "bytes": 2077
+  },
+  "src/components/routine/personal-plan/routine-item-card.tsx": {
+    "sha256": "6f93d8d0073557e65964661275bc8acb520524d81bc8856a781b95d07c9aadda",
+    "lines": 551,
+    "bytes": 21951
+  },
+  "src/components/application/application-overview.tsx": {
+    "sha256": "eb6da9b0d4a9a7a89f75b8089ab10ca10e4f7d3d1d1e5bd1c32170ee4d2e4d13",
+    "lines": 67,
+    "bytes": 2321
+  },
+  "src/components/checkout/use-plan-selection.ts": {
+    "sha256": "0146c5bbe05892ab2b74305a0530f64c02c2ab0b4ee129f264a7fbb270052884",
+    "lines": 56,
+    "bytes": 2321
+  },
+  "src/lib/premium-sheet/ordered-benefits.ts": {
+    "sha256": "ca43fea17931ebfab41a86a119f18673d8e1b65396f9c799df7dec0ebb4c164a",
+    "lines": 16,
+    "bytes": 771
+  },
+  "src/components/personal-plan-quiz/personal-plan-quiz-entry.tsx": {
+    "sha256": "b37707a35509abb85ab0f44e2d43cd290f36372063cb0ea668e8d16244612bb6",
+    "lines": 288,
+    "bytes": 9535
+  },
+  "src/components/application/application-day-card.tsx": {
+    "sha256": "979c1bab81e4b8a44161cf18cc6413a2a53e152f49c9fb2e3f2747a060699e50",
+    "lines": 356,
+    "bytes": 12092
+  },
+  "src/funnels/landing/default.tsx": {
+    "sha256": "fa7a60d08fe55b493f1e6194a2cc4a47a314d9197c3671c9bd2e103af1d1c338",
+    "lines": 29,
+    "bytes": 944
+  },
+  "src/funnels/landing/registry.ts": {
+    "sha256": "72967737c0d013538f3c9d9e6fd966e482b896f35391f1719abdd42da3b7ed9e",
+    "lines": 9,
+    "bytes": 442
+  },
+  "src/lib/utils.ts": {
+    "sha256": "7c8c3dfc0cdd370d44932828eb067ef771c8fe7996693221d5d4b90af6d54f2d",
+    "lines": 6,
+    "bytes": 166
+  },
+  "src/lib/premium-sheet/purchase-state.ts": {
+    "sha256": "19f77813d0c7e261f02ca3321ab772504dca91a011f55ff54637cf49c707b43e",
+    "lines": 201,
+    "bytes": 10588
+  },
+  "src/lib/premium-sheet/context.ts": {
+    "sha256": "6b42505f8b3e5ad10411d7586f6133b1a1fefba238109948bc7f73622a37a6ae",
+    "lines": 55,
+    "bytes": 1777
+  },
+  "src/lib/supabase/admin.ts": {
+    "sha256": "bd6ec1538d65a01f82b3f55b2839f0ac347d617c6de29d13cea4b0eff737386a",
+    "lines": 14,
+    "bytes": 307
+  },
+  "tests/server-only-register.cjs": {
+    "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+    "lines": 10,
+    "bytes": 391
+  }
+}

@@ -1,0 +1,47 @@
+[
+  {
+    "name": "operator-guard.cjs",
+    "template": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-guard.cjs",
+    "templateSHA256": "b31738faf3e4e1f6d63430079631d85e75209f3e02d2d7d58f007dc866f0130e",
+    "newSHA256": "263f44b7e738dd8a3858e7e55ea7414a94b1fb20f875df049fc5fed35892df8f",
+    "identical": false,
+    "addedLines": 35,
+    "removedLines": 25
+  },
+  {
+    "name": "operator-edit.cjs",
+    "template": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-edit.cjs",
+    "templateSHA256": "e76a94efcf3de91be76a45c45075c11cb4918897f936c4f082d3a13375df59c5",
+    "newSHA256": "d3dd8538694f1ff777fe33c023129880dc986e2f19012927ff4a8b5d437b4d73",
+    "identical": false,
+    "addedLines": 2,
+    "removedLines": 2
+  },
+  {
+    "name": "operator-run-controls.cjs",
+    "template": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-run-controls.cjs",
+    "templateSHA256": "72c3c5ee0a25bda3abfbca7a809be9b2cd5526aa34fd4db00a8c1cfce70b56aa",
+    "newSHA256": "3629217f9b069474302df6ac950aed8caf2f655b7897a94e0c3ec7fa692b9be8",
+    "identical": false,
+    "addedLines": 4,
+    "removedLines": 4
+  },
+  {
+    "name": "operator-proof.cjs",
+    "template": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-proof.cjs",
+    "templateSHA256": "aa6ecbf3e6549bbc5482fb75a39792393784fece06b3448ebc1b133f8fe41594",
+    "newSHA256": "7358f9d79d532f9c7b01a7a31d3f2a4b91d29d4e4d07f5cb7c67ad984eee71d1",
+    "identical": false,
+    "addedLines": 21,
+    "removedLines": 8
+  },
+  {
+    "name": "operator-readonly-preload.cjs",
+    "template": "/tmp/test-audit-offer87-tools-j3gv5ax6/operator-readonly-preload.cjs",
+    "templateSHA256": "47dac6cfe5ba900ca08fed8a9ac7c33915c40f0b533a4cbfa23ace5d442620bd",
+    "newSHA256": "47dac6cfe5ba900ca08fed8a9ac7c33915c40f0b533a4cbfa23ace5d442620bd",
+    "identical": true,
+    "addedLines": 0,
+    "removedLines": 0
+  }
+]

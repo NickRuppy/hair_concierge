@@ -38,6 +38,7 @@ const SPEC_TABLE_COLUMNS: Record<(typeof SPEC_TABLE_ORDER)[number], string[]> = 
     "roles",
     "provides_heat_protection",
     "heat_activation_required",
+    "heat_activation_route",
     "care_benefits",
     "ingredient_flags",
     "application_stage",
@@ -58,7 +59,6 @@ const SPEC_TABLE_COLUMNS: Record<(typeof SPEC_TABLE_ORDER)[number], string[]> = 
     "color_treated_suitability",
   ],
   product_bondbuilder_specs: [
-    "bond_repair_intensity",
     "application_mode",
     "bond_repair_axis",
     "treatment_mode",

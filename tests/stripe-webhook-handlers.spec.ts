@@ -8,7 +8,6 @@ import {
   handleChargeDisputeCreated,
   handleSubscriptionUpdated,
   handleSubscriptionDeleted,
-  handleInvoicePaymentFailed,
   type HandlerDeps,
 } from "../src/lib/stripe/webhook-handlers"
 
@@ -682,12 +681,6 @@ test("subscription.deleted reports no match when a concurrent checkout wins the 
     provider_status: "canceled",
     entitlement_status: "canceled",
   })
-})
-
-test("invoice.payment_failed logs and returns (no throw)", async () => {
-  const invoice = { id: "in_1", customer: "cus_1", attempt_count: 2 } as any
-  await handleInvoicePaymentFailed(invoice)
-  // no assertion beyond no-throw; log-only for MVP
 })
 
 test("checkout.session.async_payment_failed revokes premium access and cancels subscription", async () => {

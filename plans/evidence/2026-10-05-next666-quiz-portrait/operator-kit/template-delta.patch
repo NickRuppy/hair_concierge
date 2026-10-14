@@ -1,0 +1,270 @@
+--- scanner119/operator-guard.cjs
++++ quizportrait43/operator-guard.cjs
+@@ -4,8 +4,8 @@
+ const path = require('node:path')
+ const crypto = require('node:crypto')
+ const ROOT = '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning'
+-const BASE = '/tmp/test-audit-scanner119-tools-e5gg36wq/operator'
+-const PROPOSAL = '/tmp/test-audit-scanner-residual119'
++const BASE = '/tmp/test-audit-quizportrait43-tools-bpihum9l/operator'
++const PROPOSAL = '/tmp/test-audit-quiz-portrait43-ygKLUS'
+ const LOCK = '/tmp/test-audit-pruning-operator-lock'
+ const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex')
+ const fail = message => { throw Error(message) }
+@@ -81,14 +81,17 @@
+   return rows
+ }
+ function nativeRegistrationNames(ts,file,text){
+-  const sf=parse(ts,file,text),names=[];let table=null;
+-  function tableWalk(n){if(ts.isVariableDeclaration(n)&&n.name.getText(sf)==='TYPO_TABLE'){if(!ts.isArrayLiteralExpression(n.initializer))fail('Literal typo table required');table=n.initializer.elements.map(e=>{if(!ts.isObjectLiteralExpression(e))fail('Literal table row');const row={};for(const p of e.properties){if(ts.isPropertyAssignment(p)&&['label','query'].includes(p.name.getText(sf))){if(!ts.isStringLiteralLike(p.initializer))fail('Literal label/query');row[p.name.getText(sf)]=p.initializer.text}}if(Object.keys(row).length!==2)fail('Both literal title fields required');return row})}ts.forEachChild(n,tableWalk)}tableWalk(sf);
+-  function walk(n){if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test'){
+-    const title=n.arguments[0];let loop=null;for(let p=n.parent;p;p=p.parent)if(ts.isForOfStatement(p)){if(loop)fail('Nested registration loop');loop=p}
+-    if(loop){if(file!=='tests/scan-catalog-search-typo.test.ts'||loop.expression.getText(sf)!=='TYPO_TABLE'||!table||table.length!==10||title.getText(sf)!=='`matchCatalogProducts typo table: ${label} ("${query}")`')fail('Unknown registration expansion');for(const r of table)names.push(`matchCatalogProducts typo table: ${r.label} ("${r.query}")`)}
+-    else {if(!ts.isStringLiteralLike(title))fail('Unknown dynamic title');names.push(title.text)}
+-  }ts.forEachChild(n,walk)}walk(sf);return names
+-}
++ const sf=parse(ts,file,text),names=[];let table=null;
++ function visit(n){if(ts.isVariableDeclaration(n)&&n.name.getText(sf)==='SINGLE_TAP_FILES'){
++  if(!ts.isArrayLiteralExpression(n.initializer))fail('Literal motion table required');table=n.initializer.elements.map(e=>{if(!ts.isStringLiteralLike(e))fail('Literal motion row required');return e.text})
++ }ts.forEachChild(n,visit)}visit(sf);
++ function walk(n){if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test'){
++  const title=n.arguments[0];let loop=null;for(let p=n.parent;p;p=p.parent)if(ts.isForOfStatement(p)){if(loop)fail('Nested registration loop');loop=p}
++  if(loop){if(file!=='tests/quiz-motion-tokens.test.ts'||loop.expression.getText(sf)!=='SINGLE_TAP_FILES'||!table||table.length!==4||title.getText(sf)!=='`${path}: single-tap advance uses MOTION_MS.settle, no private delay`')fail('Unknown registration expansion');for(const p of table)names.push(p+': single-tap advance uses MOTION_MS.settle, no private delay')}
++  else{if(!ts.isStringLiteralLike(title))fail('Unknown dynamic title');names.push(title.text)}
++ }ts.forEachChild(n,walk)}walk(sf);return names
++}
++function nonAssertionCalls(ts,file,text){const sf=parse(ts,file,text),calls=[];function walk(n){if(ts.isCallExpression(n)&&!n.expression.getText(sf).startsWith('assert.'))calls.push(n.getText(sf));ts.forEachChild(n,walk)}for(const row of registrations(ts,file,text).values()){const callback=parse(ts,file,'const callback = '+row.callback);function only(n){if(ts.isCallExpression(n)&&!n.expression.getText(callback).startsWith('assert.'))calls.push(n.getText(callback));ts.forEachChild(n,only)}only(callback)}return calls}
+ function replaceOnce(text,from,to,label) {
+   if (text.split(from).length !== 2) fail('Non-unique anchor: ' + label)
+   return text.replace(from,() => to)
+@@ -110,9 +113,9 @@
+   guardArtifactsAndDependencies()
+   const evidence=readJSON(BASE+'-evidence.json'),candidates=readJSON(BASE+'-candidates.json'),controls=readJSON(BASE+'-controls-normalized.json')
+   const ts=require(ROOT+'/node_modules/typescript')
+-  if(evidence.root!==ROOT||evidence.head!==pins.head||evidence.branch!==pins.branch||candidates.length!==14||controls.length!==18||ts.version!==pins.typescriptVersion)fail('Proposal identity/count mismatch')
++  if(evidence.root!==ROOT||evidence.head!==pins.head||evidence.branch!==pins.branch||candidates.length!==1||controls.length!==3||ts.version!==pins.typescriptVersion)fail('Proposal identity/count mismatch')
+   const snapshots={},counts={before:0,transfer:0,cut:0};let unrelated=0,unchangedRetained=0,changedKeepers=0
+-  const keepers=new Map(candidates.map(c=>[c.keeper.file+'\0'+c.keeper.name,c.keeper]));if(keepers.size!==7)fail('Seven unique keepers required')
++  const keepers=new Map(candidates.map(c=>[c.keeper.file+'\0'+c.keeper.name,c.keeper]));if(keepers.size!==1)fail('One unique keeper required')
+   for(const file of Object.keys(evidence.phases.before)){
+     snapshots[file]={}
+     for(const phase of Object.keys(counts)){
+@@ -130,8 +133,8 @@
+         reconstructed=replaceOnce(reconstructed,k.body,k.after,'keeper transfer');changedKeepers++
+       }else if(k.reviewedEdits.length)fail('Unexpected assertion addition')
+     }
+-    if(reconstructed!==transfer.bytes.toString())fail('Transfer changed unrelated bytes')
+-    for(const c of local)reconstructed=replaceOnce(reconstructed,c.donor.body+'\n\n','',c.id)
++    if(reconstructed!==transfer.bytes.toString())fail('Transfer changed unrelated bytes'); if(JSON.stringify(nonAssertionCalls(ts,file,before.bytes.toString()))!==JSON.stringify(nonAssertionCalls(ts,file,transfer.bytes.toString())))fail('Transfer changed owner calls or inputs')
++    for(const c of local)reconstructed=replaceOnce(reconstructed,c.donor.body,'',c.id)
+     for(const edit of evidence.supportEdits.filter(e=>e.file===file))reconstructed=replaceOnce(reconstructed,edit.from,edit.to,'exact unused import removal')
+     if(reconstructed!==cut.bytes.toString())fail('Cut changed unrelated support bytes')
+     for(const [name,row]of before.rows){const t=transfer.rows.get(name),k=cut.rows.get(name)
+@@ -141,12 +144,12 @@
+       if(t?.statement!==row.statement||k?.statement!==row.statement)fail('Retained callback changed');unchangedRetained++;if(!keeper)unrelated++
+     }
+   }
+-  if(Object.keys(snapshots).length!==21||JSON.stringify(counts)!=='{"before":119,"transfer":119,"cut":105}'||unrelated!==98||unchangedRetained!==100||changedKeepers!==5)fail('Phase conservation mismatch')
++  if(Object.keys(snapshots).length!==9||JSON.stringify(counts)!=='{"before":43,"transfer":43,"cut":42}'||unrelated!==41||unchangedRetained!==41||changedKeepers!==1)fail('Phase conservation mismatch')
+   const ledger=readJSON(PROPOSAL+'/ledger.json');if(ledger.filter(j=>j.classification==='F').length!==2)fail('Held F count');
+-  for(const held of ledger.filter(j=>j.classification==='F'))for(const phase of ['before','transfer','cut'])if(sha(snapshots[held.file][phase].rows.get(held.title)?.statement||'')!==held.sha256)fail('Held F changed');
++  for(const held of ledger.filter(j=>j.classification==='F'))for(const phase of ['before','transfer','cut'])if(sha(snapshots[held.file][phase].rows.get(held.title)?.statement||'')!==held.bodySHA256)fail('Held F changed');
+   for(const phase of ['before','transfer','cut']){
+     const names=Object.keys(snapshots).flatMap(file=>nativeRegistrationNames(ts,file,snapshots[file][phase].bytes.toString()));
+-    if(JSON.stringify(names)!==JSON.stringify(evidence.nativeNames[phase])||names.length!==(phase==='cut'?114:128)||new Set(names).size!==names.length)fail('Exact native registration inventory changed');
++    if(JSON.stringify(names)!==JSON.stringify(evidence.nativeNames[phase])||names.length!==(phase==='cut'?45:46)||new Set(names).size!==names.length)fail('Exact native registration inventory changed');
+   }
+   for(const c of candidates){
+     const donor=snapshots[c.file].before.rows.get(c.donor.name)
+@@ -156,7 +159,7 @@
+       if(row?.statement!==c.keeper.after)fail('Keeper union phase mismatch')
+       for(let i=0;i<c.assertionUnion.length;i++){
+         const u=c.assertionUnion[i]
+-        if(u.donorText!==donor.assertions[i].text||u.keeperText!==row.assertions[u.keeperIndex]?.text||!u.basis)fail('Frozen whole assertion union mismatch')
++        if(u.donorText!==donor.assertions[i].text||u.keeperText!==row.assertions[u.keeperIndex]?.text||u.donorText.replace(/\s+/g,'')!==u.keeperText.replace(/\s+/g,'')||!u.basis)fail('Frozen whole assertion union mismatch')
+       }
+     }
+   }
+@@ -179,7 +182,7 @@
+ }
+ function fault(ctx,c) {
+   const escaped=c.test.name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
+-  const exactCommand=['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-concurrency=1','--test-name-pattern=^'+escaped+'$',c.test.file]
++  const exactCommand=['/usr/local/bin/node','--experimental-test-isolation=none','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-reporter=tap','--test-name-pattern','^'+escaped+'$',c.test.file]
+   if(JSON.stringify(c.command)!==JSON.stringify(exactCommand))fail('Control command is not exact pinned keeper')
+   const pattern=new RegExp('^'+escaped+'$')
+   for(const phase of ['before','transfer','cut'])if([...ctx.snapshots[c.test.file][phase].rows.keys()].filter(n=>pattern.test(n)).length!==1)fail('Exactly one keeper must match in every phase')
+--- scanner119/operator-edit.cjs
++++ quizportrait43/operator-edit.cjs
+@@ -2,14 +2,14 @@
+ // Main only. --check is zero-write/no-child; mutation modes are never invoked by worker.
+ const fs=require('node:fs'),path=require('node:path')
+ const g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs')
+-const PIN_SHA='b1619bebc5540a7ee42e2ed0ec18431cc2f9a52c43c471b3cefe9290c1d04d5f'
++const PIN_SHA='PIN_SHA_PLACEHOLDER'
+ const mode=(process.argv[2]||'check').replace(/^--/,'')
+ if(!['check','transfer','cut'].includes(mode)||(mode!=='cut'&&process.argv.length>3)||(mode==='cut'&&process.argv.length!==5))g.fail('Use --check | transfer | cut <transfer-receipt-dir> <completion-sha256>')
+ const context=g.load(PIN_SHA)
+ for(const c of context.controls)g.fault(context,c)
+ const initial=context.current()
+ if(mode==='check'){
+- console.log(JSON.stringify({mode,phase:initial.phase,counts:context.counts,unrelatedCallbacks:context.unrelated,unchangedRetainedCallbacks:context.unchangedRetained,parsedPhaseFiles:63,sourceControlsParsed:18,readsetGuards:context.pins.readset.length,dependencyFiles:context.pins.dependencies.length,repositoryWrites:0,childrenStarted:0},null,2));process.exit(0)
++ console.log(JSON.stringify({mode,phase:initial.phase,counts:context.counts,unrelatedCallbacks:context.unrelated,unchangedRetainedCallbacks:context.unchangedRetained,parsedPhaseFiles:27,sourceControlsParsed:3,readsetGuards:context.pins.readset.length,dependencyFiles:context.pins.dependencies.length,repositoryWrites:0,childrenStarted:0},null,2));process.exit(0)
+ }
+ const from=mode==='transfer'?'before':'transfer'
+ if(initial.phase!==from)g.fail('Expected '+from+', found '+initial.phase)
+--- scanner119/operator-run-controls.cjs
++++ quizportrait43/operator-run-controls.cjs
+@@ -2,7 +2,7 @@
+ // Main-only serial actual-owner faults. --check never starts a child or writes repository bytes.
+ const fs=require('node:fs'),path=require('node:path'),cp=require('node:child_process')
+ const g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs')
+-const PIN_SHA='b1619bebc5540a7ee42e2ed0ec18431cc2f9a52c43c471b3cefe9290c1d04d5f'
++const PIN_SHA='PIN_SHA_PLACEHOLDER'
+ const mode=(process.argv[2]||'check').replace(/^--/,'')
+ const selectedId=process.argv[3]
+ if(!['check','run'].includes(mode)||process.argv.length>4)g.fail('Use --check [control-id] | run [control-id]')
+@@ -10,7 +10,7 @@
+ if(!controls.length)g.fail('Unknown control ID')
+ const prepared=new Map(context.controls.map(c=>[c.id,g.fault(context,c)])),initial=context.current()
+ if(mode==='check'){
+-  console.log(JSON.stringify({mode,phase:initial.phase,controls:controls.length,tsMutantsParsed:16,sqlByteRecipes:2,allControlsPrepared:prepared.size===18,phaseOracles:'exact assertion startLine and text in transfer/cut',selectedTestCount:1,repositoryWrites:0,runtimeRuns:0,childrenStarted:0},null,2));process.exit(0)
++  console.log(JSON.stringify({mode,phase:initial.phase,controls:controls.length,tsMutantsParsed:3,sqlByteRecipes:0,allControlsPrepared:prepared.size===3,phaseOracles:'exact assertion startLine and text in transfer/cut',selectedTestCount:1,repositoryWrites:0,runtimeRuns:0,childrenStarted:0},null,2));process.exit(0)
+ }
+ if(!['transfer','cut'].includes(initial.phase))g.fail('Transfer/cut phase required; no original false-pass claim')
+ for(const key of ['TRIAL_ADMISSION_MUTANT','TRIAL_ACCESS_MUTANT','NODE_OPTIONS','TSX_TSCONFIG_PATH'])if(process.env[key])g.fail('Existing harness mutant is active: '+key)
+@@ -52,7 +52,7 @@
+ ;(async()=>{
+  try{
+   dir=fs.mkdtempSync(g.BASE+'-mutations-'+phase+'-')
+-  // Snapshot ALL21 test originals and ALL unique mutant-owner originals before first child/write.
++  // Snapshot ALL9 test originals and ALL unique mutant-owner originals before first child/write.
+   ensurePhase()
+   const originals=new Map(Object.entries(initial.bytes))
+   for(const control of context.controls)originals.set(control.file,prepared.get(control.id).original)
+@@ -93,6 +93,6 @@
+   const complete={phase,verified:receipts.length,controlIds:receipts.map(r=>r.id),cleanRuns:receipts.length*2,root:g.ROOT,head:context.pins.head,branch:context.pins.branch,pinsSHA:PIN_SHA,receiptSHA256:g.sha(fs.readFileSync(path.join(dir,'receipt.json'))),allTestHashes:Object.fromEntries(Object.entries(final.bytes).map(([f,b])=>[f,g.sha(b)])),sourceGuards:context.pins.readset}
+   const completeBytes=JSON.stringify(complete,null,2)+'\n'
+   fs.writeFileSync(path.join(dir,'complete.json'),completeBytes,{flag:'wx'})
+-  console.log(JSON.stringify({receiptDir:dir,completionSHA256:g.sha(completeBytes),verified:receipts.length,eligibleForCut:phase==='transfer'&&receipts.length===18},null,2))
++  console.log(JSON.stringify({receiptDir:dir,completionSHA256:g.sha(completeBytes),verified:receipts.length,eligibleForCut:phase==='transfer'&&receipts.length===3},null,2))
+  }finally{killOwnedGroup('SIGKILL');process.off('SIGINT',stop);process.off('SIGTERM',stop);unlock()}
+ })().catch(error=>{record();if(dir)fs.writeFileSync(path.join(dir,'failure.json'),JSON.stringify({error:String(error),interrupted},null,2)+'\n',{flag:'wx'});console.error(error);process.exitCode=1})
+--- scanner119/operator-proof.cjs
++++ quizportrait43/operator-proof.cjs
+@@ -21,6 +21,58 @@
+  if(!scalar||/^[>|&*!{[]/.test(scalar))return null
+  return scalar
+ }
++function diagnosticValue(text,key){
++ const lines=text.split('\n'),found=lines.map((v,i)=>v.startsWith('  '+key+':')?i:-1).filter(i=>i>=0);if(found.length!==1)return{ok:false}
++ const i=found[0],tail=lines[i].slice(('  '+key+':').length).trimStart()
++ function scalar(value){
++   const quote=value[0]
++   if(["'",'"','`'].includes(quote)){
++     let out='',i=1,closed=false
++     for(;i<value.length;i++){
++       const char=value[i];if(char===quote){closed=true;i++;break}
++       if(char!=='\\'){out+=char;continue}
++       const e=value[++i],simple={'n':'\n','r':'\r','t':'\t','b':'\b','f':'\f','v':'\v','0':'\0','\\':'\\',"'":"'",'"':'"','`':'`'}
++       if(Object.hasOwn(simple,e)){out+=simple[e];continue}
++       if(e==='x'||e==='u'){const n=e==='x'?2:4,hex=value.slice(i+1,i+1+n);if(hex.length!==n||!/^[a-fA-F0-9]+$/.test(hex))return{ok:false};out+=String.fromCharCode(parseInt(hex,16));i+=n;continue}
++       return{ok:false}
++     }
++     if(!closed)return{ok:false}
++     const suffix=value.slice(i)
++     if(!suffix)return{ok:true,value:out,truncated:false}
++     const truncated=suffix.match(/^\.\.\. ([1-9]\d*) more characters$/)
++     if(truncated&&out.length===10000)return{ok:true,value:out,truncated:true,remainingCharacters:Number(truncated[1])}
++     return{ok:false}
++   }
++   if(value==='true'||value==='false'||value==='null')return{ok:true,value:JSON.parse(value)}
++   if(/^-?(?:0|[1-9]\d*)(?:\.\d+)?$/.test(value))return{ok:true,value:Number(value)}
++   if(value&&!/^[>|&*!{[]/.test(value))return{ok:true,value}
++   return{ok:false}
++ }
++ if(['|-','|','|+'].includes(tail)){const body=[];for(let k=i+1;k<lines.length;k++){if(lines[k].startsWith('    '))body.push(lines[k].slice(4));else if(lines[k]==='')body.push('');else break}return{ok:true,value:body.join('\n')}}
++ if(tail)return scalar(tail)
++ const values=[];for(let k=i+1;k<lines.length&&lines[k].startsWith('    ');k++){const m=lines[k].match(/^    (\d+): (.*)$/);if(!m||Number(m[1])!==values.length)return{ok:false};const v=scalar(m[2]);if(!v.ok)return v;values.push(v.value)}
++ return values.length?{ok:true,value:values}:{ok:true,value:{},emptyObject:true}
++}
++// Quiz-only conjunction. RegExp diagnostics encode expected as an empty object.
++// Reject truncated HTML: absence predicates require the complete actual string.
++function valueProof(control,text){
++ const expected=diagnosticValue(text,'expected'),actual=diagnosticValue(text,'actual'),message=errorMessage(text);
++ const header=control.messageHeader+' Input:\n\n';
++ const actualQuoted=/^  actual: ['"`]/m.test(text), expectedBare=/^  expected:[ \t]*\n(?=  \S)/m.test(text);
++ let accepted=expected.ok&&expected.emptyObject===true&&expectedBare&&actual.ok&&actualQuoted&&typeof actual.value==='string'&&!actual.truncated&&typeof message==='string'&&message.startsWith(header);
++ const html=actual.value;
++ if(accepted){
++  accepted=html.includes('data-hair-length-card="true"')&&html.includes('Taille oder länger.')&&html.includes('data-hair-portrait-media="true"');
++  if(control.id==='C1-fixed-responsive-frame')accepted=accepted&&html.includes('h-[183px]')&&!html.includes('h-[184px]');
++  else if(control.id==='C1-description-association')accepted=accepted&&!html.includes('aria-describedby');
++  else if(control.id==='C1-decorative-body')accepted=accepted&&html.includes('<svg aria-hidden="false"')&&!html.includes('<svg aria-hidden="true"');
++  else accepted=false;
++ }
++ // The outer fields must occur once; nested actual exception fields do not count.
++ const one=key=>[...text.matchAll(new RegExp('^  '+key+':','gm'))].length===1;
++ accepted=accepted&&['error','operator','stack','expected','actual','code'].every(one);
++ return{accepted,expected,actual,exactHeader:header};
++}
+ function intended(control,run,phase){
+  const oracle=control.oracles[phase],stackToken=control.test.file+':'+oracle.startLine+':'
+  const stack=run.text.match(/\n  operator: [^\n]*\n  stack:\s*\|-?\n((?: {4,}[^\n]*\n?)*)/)
+@@ -28,19 +80,22 @@
+  const operator=run.text.match(/^\s{2}operator:\s*['"]([^'"]+)['"]\s*$/m)?.[1]||''
+  const message=errorMessage(run.text)
+  const codes=[...run.text.matchAll(/^\s{2}code:\s*['"]([^'"]+)['"]\s*$/gm)].map(m=>m[1])
++ const decodedValues=valueProof(control,run.text)
++ const esc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
++ const exactFirstFrame=new RegExp('^    (?:at )?TestContext\\.<anonymous> \\((?:file://)?(?:'+esc(g.ROOT+'/')+')?'+esc(stackToken)+'[1-9]\\d*\\)$').test(firstFrame)
+  const messageMatches=typeof message==='string'&&control.errorMessageIncludes.length>=2&&control.errorMessageIncludes.every(t=>message.includes(t))
+- return {accepted:run.status===1&&run.signal===null&&!run.timedOut&&!run.spawnError&&run.tests===1&&run.pass===0&&run.fail===1&&run.skipped===0&&run.cancelled===0&&run.todo===0&&codes.length===1&&codes[0]==='ERR_ASSERTION'&&named(control,run)&&operator===control.expectedOperator&&messageMatches&&firstFrame.includes(stackToken),operator,message,messageMatches,firstFrame,stackToken,expected:oracle}
++ return {accepted:run.status===1&&run.signal===null&&!run.timedOut&&!run.spawnError&&run.tests===1&&run.pass===0&&run.fail===1&&run.skipped===0&&run.cancelled===0&&run.todo===0&&codes.length===1&&codes[0]==='ERR_ASSERTION'&&named(control,run)&&operator===control.expectedOperator&&messageMatches&&firstFrame.includes(stackToken)&&decodedValues.accepted&&exactFirstFrame,exactFirstFrame,decodedValues,operator,message,messageMatches,firstFrame,stackToken,expected:oracle}
+ }
+ function validateTransferReceipt(ctx,pinSHA,dir,completionSHA){
+  if(!dir||!new RegExp('^'+g.BASE.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'-mutations-transfer-[A-Za-z0-9]+$').test(dir)||path.dirname(fs.realpathSync(dir))!==fs.realpathSync(path.dirname(g.BASE)))g.fail('Exact owned transfer receipt directory required')
+  if(!/^[a-f0-9]{64}$/.test(completionSHA||''))g.fail('Main must provide exact completion SHA256')
+  const raw=fs.readFileSync(path.join(dir,'complete.json'));if(g.sha(raw)!==completionSHA)g.fail('Completion receipt hash mismatch')
+  const complete=JSON.parse(raw),receiptBytes=fs.readFileSync(path.join(dir,'receipt.json'))
+- if(complete.pinsSHA!==pinSHA||complete.root!==g.ROOT||complete.head!==ctx.pins.head||complete.branch!==ctx.pins.branch||complete.phase!=='transfer'||complete.verified!==18||complete.cleanRuns!==36||g.sha(receiptBytes)!==complete.receiptSHA256)g.fail('Incomplete/wrong transfer proof')
+- if(JSON.stringify(complete.controlIds)!==JSON.stringify(ctx.controls.map(c=>c.id)))g.fail('Required18 controls absent or out of order')
++ if(complete.pinsSHA!==pinSHA||complete.root!==g.ROOT||complete.head!==ctx.pins.head||complete.branch!==ctx.pins.branch||complete.phase!=='transfer'||complete.verified!==3||complete.cleanRuns!==6||g.sha(receiptBytes)!==complete.receiptSHA256)g.fail('Incomplete/wrong transfer proof')
++ if(JSON.stringify(complete.controlIds)!==JSON.stringify(ctx.controls.map(c=>c.id)))g.fail('Required3 controls absent or out of order')
+  for(const[file,hash]of Object.entries(complete.allTestHashes||{})){if(!ctx.snapshots[file]||hash!==g.sha(ctx.snapshots[file].transfer.bytes))g.fail('Receipt test phase mismatch')}
+- if(Object.keys(complete.allTestHashes||{}).length!==21)g.fail('Full cohort proof missing')
+- const records=JSON.parse(receiptBytes);if(records.length!==18)g.fail('Eighteen records required')
++ if(Object.keys(complete.allTestHashes||{}).length!==9)g.fail('Full cohort proof missing')
++ const records=JSON.parse(receiptBytes);if(records.length!==3)g.fail('Three records required')
+  function reload(record,label,c){
+   const p=path.join(dir,c.id+'-'+label+'.tap')
+   if(record.log!==p||!record.logSHA256||g.sha(fs.readFileSync(p))!==record.logSHA256)g.fail('TAP path/hash drift')
+@@ -55,6 +110,6 @@
+   for(const readset of ctx.pins.readset)if(r.readsetBefore?.[readset.file]!==readset.sha||r.readsetAfter?.[readset.file]!==readset.sha)g.fail('Readset proof mismatch: '+c.id)
+   if(!clean(c,reload(r.before,'before',c))||!intended(c,reload(r.fault,'fault',c),'transfer').accepted||!clean(c,reload(r.after,'after',c)))g.fail('Required clean1/red1/restored clean1 not proved: '+c.id)
+  }
+- return {dir,completionSHA,verified:18,logFiles:54,phase:'transfer'}
++ return {dir,completionSHA,verified:3,logFiles:9,phase:'transfer'}
+ }
+-module.exports={parseTAP,named,clean,errorMessage,intended,validateTransferReceipt}
++module.exports={parseTAP,named,clean,errorMessage,diagnosticValue,valueProof,intended,validateTransferReceipt}
+--- scanner119/operator-native-proof.cjs
++++ quizportrait43/operator-native-proof.cjs
+@@ -1,14 +1,14 @@
+ 'use strict';
+ // Main's read-only full-cohort receipt checker. Does not run native or import tests.
+ const fs=require('node:fs'),path=require('node:path'),g=require('./operator-guard.cjs'),proof=require('./operator-proof.cjs');
+-const PIN_SHA='b1619bebc5540a7ee42e2ed0ec18431cc2f9a52c43c471b3cefe9290c1d04d5f';
++const PIN_SHA='PIN_SHA_PLACEHOLDER';
+ if(process.argv.length!==5)g.fail('Use <before|transfer|cut> <closed-native.tap> <command.json>');
+ const [phase,logPath,commandPath]=process.argv.slice(2),ctx=g.load(PIN_SHA);
+ if(!['before','transfer','cut'].includes(phase)||ctx.current().phase!==phase)g.fail('Exact current native phase required');
+-const expectedCommand={executable:process.execPath,args:['--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-concurrency=1',...ctx.evidence.ownedFiles],cwd:g.ROOT};
++const expectedCommand=JSON.parse(fs.readFileSync(path.join(path.dirname(g.BASE),'full-native-command.json')));
+ const raw=fs.readFileSync(logPath),commandBytes=fs.readFileSync(commandPath),command=JSON.parse(commandBytes);
+ if(JSON.stringify(command)!==JSON.stringify(expectedCommand))g.fail('Exact full cohort command receipt required');
+ const text=raw.toString(),totals=proof.parseTAP(text),names=[...text.matchAll(/^# Subtest: (.+)$/gm)].map(x=>x[1]);
+-const expected=ctx.evidence.nativeNames[phase],n=phase==='cut'?114:128;
++const expected=ctx.evidence.nativeNames[phase],n=phase==='cut'?45:46;
+ if(totals.tests!==n||totals.pass!==n||totals.fail!==0||totals.skipped!==0||totals.cancelled!==0||totals.todo!==0||names.length!==n||new Set(names).size!==n||names.some(name=>!expected.includes(name))||/^not ok /m.test(text))g.fail('Full native names/count/pass proof failed');
+ console.log(JSON.stringify({status:'PASS_RECORDED_FULL_NATIVE_TAP',phase,totals,logPath:path.resolve(logPath),logSHA256:g.sha(raw),commandSHA256:g.sha(commandBytes),pinsSHA:PIN_SHA,counts:ctx.counts,limits:'Main must attest closed process exit 0; text validation cannot prove process status. No runtime launched by this checker.',repositoryWrites:0,children:0,ownerImports:0},null,2));

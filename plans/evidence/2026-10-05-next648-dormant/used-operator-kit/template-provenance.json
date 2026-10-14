@@ -1,0 +1,13 @@
+{
+  "template": "/tmp/test-audit-refinement37-tools-5ce9vx77",
+  "pinsSHA": "ffb6b2428bdceb285246596cafeba5e3b1a6870ec0ce885b875531178b10f0cd",
+  "files": {
+    "operator-guard.cjs": "fc5f27d3c7f0c9f6e226b91e542c6db5d3e3e746af454aeacf2415c20e01f168",
+    "operator-proof.cjs": "6aec16c6468794c9d3b87d69b21b4661e3082a3d48ed44caaaf7c4cf7346eecf",
+    "operator-edit.cjs": "a5a57635cbbef3a27fc3ea9d4abb78e8f99db142ff900979f3942e827187c67c",
+    "operator-run-controls.cjs": "1bc3271bd6a646e60482390708f7571c27b5201d8729d050ef5937a124b2f8fd",
+    "operator-readonly-preload.cjs": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "proof-attestation.cjs": "3a689b380987267a37926c527eee829ce6c4a86c105a818cabf06393a72f782b",
+    "prepare-pins.cjs": "fa00ebe6d04616d0433f8e9007c2d0ba492ba4dcf780486ec804e7e78be0c019"
+  }
+}

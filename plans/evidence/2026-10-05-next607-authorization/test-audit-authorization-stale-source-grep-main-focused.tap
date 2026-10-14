@@ -1,0 +1,320 @@
+TAP version 13
+# Subtest: one-time pricing renders only the approved personal-plan offer
+ok 1 - one-time pricing renders only the approved personal-plan offer
+  ---
+  duration_ms: 0.627542
+  ...
+# Subtest: one-time PayPal records watchdogs, cancellation, and malformed pending capture without changing checkout flow
+ok 2 - one-time PayPal records watchdogs, cancellation, and malformed pending capture without changing checkout flow
+  ---
+  duration_ms: 0.288667
+  ...
+# Subtest: one-time payment methods mount immediately without a visible or client consent gate
+ok 3 - one-time payment methods mount immediately without a visible or client consent gate
+  ---
+  duration_ms: 0.419667
+  ...
+# Subtest: one-time Stripe.js warms while the prepared checkout request is pending
+ok 4 - one-time Stripe.js warms while the prepared checkout request is pending
+  ---
+  duration_ms: 2.166583
+  ...
+# Subtest: one-time Express containment renders PayPal without mounting Stripe
+ok 5 - one-time Express containment renders PayPal without mounting Stripe
+  ---
+  duration_ms: 0.502833
+  ...
+# Subtest: a PayPal-owned checkout stays usable without presenting a generic Stripe failure
+ok 6 - a PayPal-owned checkout stays usable without presenting a generic Stripe failure
+  ---
+  duration_ms: 0.324625
+  ...
+# Subtest: one-time preparation resolves provider ownership before mounting Stripe Elements
+ok 7 - one-time preparation resolves provider ownership before mounting Stripe Elements
+  ---
+  duration_ms: 0.135958
+  ...
+# Subtest: PayPal capture recovery remains available while new order creation is retired
+ok 8 - PayPal capture recovery remains available while new order creation is retired
+  ---
+  duration_ms: 0.100167
+  ...
+# Subtest: one-time Apple Pay does no provider work before the drawer opens
+ok 9 - one-time Apple Pay does no provider work before the drawer opens
+  ---
+  duration_ms: 0.492458
+  ...
+# Subtest: one-time Stripe preparation watchdog reports a late response without changing the request or control recovery
+ok 10 - one-time Stripe preparation watchdog reports a late response without changing the request or control recovery
+  ---
+  duration_ms: 0.525084
+  ...
+# Subtest: one-time controls render from the preparation union without payment-failure reporting
+ok 11 - one-time controls render from the preparation union without payment-failure reporting
+  ---
+  duration_ms: 0.3315
+  ...
+# Subtest: one-time preparation credential is not rotated by first mount or same-attempt hide
+ok 12 - one-time preparation credential is not rotated by first mount or same-attempt hide
+  ---
+  duration_ms: 0.379625
+  ...
+# Subtest: a successful Stripe claim records ownership before provider confirmation continues
+ok 13 - a successful Stripe claim records ownership before provider confirmation continues
+  ---
+  duration_ms: 0.058917
+  ...
+# Subtest: fresh card selection is rendered independently of PayPal availability
+ok 14 - fresh card selection is rendered independently of PayPal availability
+  ---
+  duration_ms: 0.127083
+  ...
+# Subtest: pre-claim Stripe selection keeps PayPal available and exposes a switch-back control
+ok 15 - pre-claim Stripe selection keeps PayPal available and exposes a switch-back control
+  ---
+  duration_ms: 0.086584
+  ...
+# Subtest: Stripe auto-preparation is single-flight for one preparation id and resets on rotation
+ok 16 - Stripe auto-preparation is single-flight for one preparation id and resets on rotation
+  ---
+  duration_ms: 0.620959
+  ...
+# Subtest: an expired prepared Stripe checkout returns the parent union to loading before rotation
+ok 17 - an expired prepared Stripe checkout returns the parent union to loading before rotation
+  ---
+  duration_ms: 0.077167
+  ...
+# Subtest: one-time pricing preserves the offer-to-provider analytics journey
+ok 18 - one-time pricing preserves the offer-to-provider analytics journey
+  ---
+  duration_ms: 0.690709
+  ...
+# Subtest: one-time pricing ignores duplicate visible opens but resumes a hidden attempt
+ok 19 - one-time pricing ignores duplicate visible opens but resumes a hidden attempt
+  ---
+  duration_ms: 0.224459
+  ...
+# Subtest: offer lab can force the personal-plan pricing arm for browser-only verification
+ok 20 - offer lab can force the personal-plan pricing arm for browser-only verification
+  ---
+  duration_ms: 0.055333
+  ...
+# Subtest: personal-plan lab and live offer have no provider-prewarm controls
+ok 21 - personal-plan lab and live offer have no provider-prewarm controls
+  ---
+  duration_ms: 0.16275
+  ...
+# Subtest: provider initialization is recorded only after a usable provider response
+ok 22 - provider initialization is recorded only after a usable provider response
+  ---
+  duration_ms: 0.314083
+  ...
+# Subtest: one-time PayPal reports visible payment failures once and excludes control conflicts
+ok 23 - one-time PayPal reports visible payment failures once and excludes control conflicts
+  ---
+  duration_ms: 0.269375
+  ...
+# Subtest: retired PayPal order endpoint has no acquisition attribution or provider dependencies
+ok 24 - retired PayPal order endpoint has no acquisition attribution or provider dependencies
+  ---
+  duration_ms: 0.064125
+  ...
+# Subtest: one-time checkout marks a real first interaction and routes its nested close through policy
+ok 25 - one-time checkout marks a real first interaction and routes its nested close through policy
+  ---
+  duration_ms: 0.245666
+  ...
+# Subtest: one-time checkout leads with the approved guarantee and ends with privacy and legal routes
+ok 26 - one-time checkout leads with the approved guarantee and ends with privacy and legal routes
+  ---
+  duration_ms: 0.127167
+  ...
+# Subtest: one-time legal pages promise the approved refund treatment without obsolete OS text
+ok 27 - one-time legal pages promise the approved refund treatment without obsolete OS text
+  ---
+  duration_ms: 0.076834
+  ...
+# Subtest: one-time checkout isolates terminal attempts while preserving hidden resumes
+ok 28 - one-time checkout isolates terminal attempts while preserving hidden resumes
+  ---
+  duration_ms: 0.586416
+  ...
+# Subtest: accepts the allowlisted Elements presentation only for quiz-result offers
+ok 29 - accepts the allowlisted Elements presentation only for quiz-result offers
+  ---
+  duration_ms: 1.772917
+  ...
+# Subtest: retired one-time purchase requests stop before account or provider work
+ok 30 - retired one-time purchase requests stop before account or provider work
+  ---
+  duration_ms: 4.194375
+  ...
+# Subtest: accepts only one-time prepare/claim and rejects direct creation or a missing lead
+ok 31 - accepts only one-time prepare/claim and rejects direct creation or a missing lead
+  ---
+  duration_ms: 1.277
+  ...
+# Subtest: unsupported one-time direct creation stops at the request boundary
+ok 32 - unsupported one-time direct creation stops at the request boundary
+  ---
+  duration_ms: 0.774541
+  ...
+# Subtest: quiz-offer membership idempotency is stable within a Session attempt and fresh on retry
+ok 33 - quiz-offer membership idempotency is stable within a Session attempt and fresh on retry
+  ---
+  duration_ms: 0.195292
+  ...
+# Subtest: pinned offer attribution falls back only to the same signed cookie session
+ok 34 - pinned offer attribution falls back only to the same signed cookie session
+  ---
+  duration_ms: 0.087792
+  ...
+# Subtest: Customer.io return trial requires the signed session to be bound to the exact checkout lead
+ok 35 - Customer.io return trial requires the signed session to be bound to the exact checkout lead
+  ---
+  duration_ms: 0.168042
+  ...
+# Subtest: missing exact offer attribution is reported without identifiers or blocking checkout
+ok 36 - missing exact offer attribution is reported without identifiers or blocking checkout
+  ---
+  duration_ms: 0.1755
+  ...
+# Subtest: rejects generic UI modes and non-offer Elements presentation requests
+ok 37 - rejects generic UI modes and non-offer Elements presentation requests
+  ---
+  duration_ms: 0.393125
+  ...
+# Subtest: requires both public checkout flags before accepting an Elements session
+ok 38 - requires both public checkout flags before accepting an Elements session
+  ---
+  duration_ms: 0.293459
+  ...
+# Subtest: preparation never owns a checkout-start funnel event or touch consumption
+ok 39 - preparation never owns a checkout-start funnel event or touch consumption
+  ---
+  duration_ms: 0.057459
+  ...
+# Subtest: one-time checkout reuses only an open Stripe Session with a client secret
+ok 40 - one-time checkout reuses only an open Stripe Session with a client secret
+  ---
+  duration_ms: 0.149291
+  ...
+# Subtest: prepared and recovered one-time Sessions use a capped server-clock application deadline
+ok 41 - prepared and recovered one-time Sessions use a capped server-clock application deadline
+  ---
+  duration_ms: 0.070584
+  ...
+# Subtest: prepared checkout retries keep the provider idempotency proof stable until refresh
+ok 42 - prepared checkout retries keep the provider idempotency proof stable until refresh
+  ---
+  duration_ms: 0.104542
+  ...
+# Subtest: prepared checkout failures use one generic client payload
+ok 43 - prepared checkout failures use one generic client payload
+  ---
+  duration_ms: 0.040583
+  ...
+# Subtest: prepared checkout control outcomes capture a sanitized, correlated degradation signal
+ok 44 - prepared checkout control outcomes capture a sanitized, correlated degradation signal
+  ---
+  duration_ms: 0.567458
+  ...
+# Subtest: prepared checkout control telemetry failure is contained
+ok 45 - prepared checkout control telemetry failure is contained
+  ---
+  duration_ms: 0.148416
+  ...
+# Subtest: prepared checkout control telemetry flush does not delay the recovery response
+ok 46 - prepared checkout control telemetry flush does not delay the recovery response
+  ---
+  duration_ms: 4.057875
+  ...
+# Subtest: prepared checkout control telemetry does not schedule a flush without an event receipt
+ok 47 - prepared checkout control telemetry does not schedule a flush without an event receipt
+  ---
+  duration_ms: 0.092541
+  ...
+# Subtest: checkout initialization failures retain only closed provider causes
+ok 48 - checkout initialization failures retain only closed provider causes
+  ---
+  duration_ms: 0.095875
+  ...
+# Subtest: unexpected checkout initialization failures capture once, flush once, and use live runtime truth
+ok 49 - unexpected checkout initialization failures capture once, flush once, and use live runtime truth
+  ---
+  duration_ms: 0.168084
+  ...
+# Subtest: rejects Elements presentation for membership reactivation inputs
+ok 50 - rejects Elements presentation for membership reactivation inputs
+  ---
+  duration_ms: 0.155291
+  ...
+# Subtest: keeps tightly-scoped subscription preparation only for the documented asset-drain window
+ok 51 - keeps tightly-scoped subscription preparation only for the documented asset-drain window
+  ---
+  duration_ms: 0.160291
+  ...
+# Subtest: requires an opaque token, matching Session reference, and real attempt IDs to claim
+ok 52 - requires an opaque token, matching Session reference, and real attempt IDs to claim
+  ---
+  duration_ms: 0.08625
+  ...
+# Subtest: accepts only the exact preparation token for an open, matching Session
+ok 53 - accepts only the exact preparation token for an open, matching Session
+  ---
+  duration_ms: 0.287542
+  ...
+# Subtest: rejects expired or non-open prepared Sessions
+ok 54 - rejects expired or non-open prepared Sessions
+  ---
+  duration_ms: 0.05475
+  ...
+# Subtest: rejects claim metadata and line-item mismatches
+ok 55 - rejects claim metadata and line-item mismatches
+  ---
+  duration_ms: 0.273333
+  ...
+# Subtest: derives a prepared launch claim from its allowlisted stored Price after flag-off
+ok 56 - derives a prepared launch claim from its allowlisted stored Price after flag-off
+  ---
+  duration_ms: 0.334625
+  ...
+# Subtest: rejects prepared subscription Prices with unknown or mismatched catalog metadata
+ok 57 - rejects prepared subscription Prices with unknown or mismatched catalog metadata
+  ---
+  duration_ms: 0.21975
+  ...
+# Subtest: accepts a pre-deploy standard prepared Session without catalog metadata
+ok 58 - accepts a pre-deploy standard prepared Session without catalog metadata
+  ---
+  duration_ms: 0.074
+  ...
+# Subtest: allows only an idempotent same-attempt claim after a prepared Session is claimed
+ok 59 - allows only an idempotent same-attempt claim after a prepared Session is claimed
+  ---
+  duration_ms: 0.084291
+  ...
+# Subtest: claim updates are serialized by preparation id and only accept returned matching metadata
+ok 60 - claim updates are serialized by preparation id and only accept returned matching metadata
+  ---
+  duration_ms: 0.06575
+  ...
+# Subtest: one-time prepared claims use the accepted consent's funnel session over a later cookie
+ok 61 - one-time prepared claims use the accepted consent's funnel session over a later cookie
+  ---
+  duration_ms: 0.14675
+  ...
+# Subtest: already-complete one-time prepared claims repair only missing canonical consent metadata
+ok 62 - already-complete one-time prepared claims repair only missing canonical consent metadata
+  ---
+  duration_ms: 0.196333
+  ...
+1..62
+# tests 62
+# suites 0
+# pass 62
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1710.456417

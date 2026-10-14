@@ -294,7 +294,7 @@ export type Stage5V2PointerDeltaApplyArgs =
   | { apply: false }
   | { apply: true; reviewedHead: string; expectedFingerprint: string }
 
-/** Same flag contract as `parseStage5V2ApplicationApplyArgs`; dry-run is the default. */
+/** Dry-run by default; apply requires an exact project, reviewed head, and fingerprint. */
 export function parseStage5V2PointerDeltaApplyArgs(
   args: readonly string[],
 ): Stage5V2PointerDeltaApplyArgs {

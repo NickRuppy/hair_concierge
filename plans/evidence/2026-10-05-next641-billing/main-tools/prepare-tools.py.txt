@@ -1,0 +1,44 @@
+from pathlib import Path
+import hashlib,json,difflib
+D=Path(__file__).parent
+T=Path('/tmp/test-audit-refinement37-tools-5ce9vx77')
+P=Path('/tmp/test-audit-billing-operational125')
+sha=lambda b:hashlib.sha256(b).hexdigest()
+assert sha((T/'operator-pins.json').read_bytes())=='ffb6b2428bdceb285246596cafeba5e3b1a6870ec0ce885b875531178b10f0cd'
+assert sha((P/'manifest.json').read_bytes())=='53fbed371f43e577c3049f263ade5fcc920840fa74ed0b9eb56433a46d588b06'
+assert sha((P/'handoff.json').read_bytes())=='a85f60016049990c636e0ea62e1cc63605360a7026e5d6807821b422f2c5947f'
+(D/'template-originals').mkdir()
+names=['operator-guard.cjs','operator-edit.cjs','operator-proof.cjs','operator-readonly-preload.cjs','operator-run-controls.cjs','prepare-pins.cjs','proof-attestation.cjs']
+for n in names:(D/'template-originals'/n).write_bytes((T/n).read_bytes())
+def rep(s,a,b):
+ assert a in s,a
+ return s.replace(a,b)
+for n in names:
+ if n=='prepare-pins.cjs':continue
+ s=(T/n).read_text().replace(str(T),str(D)).replace('/tmp/test-audit-refinement-status37',str(P)).replace("const PIN_SHA='ffb6b2428bdceb285246596cafeba5e3b1a6870ec0ce885b875531178b10f0cd'","const PIN_SHA='PIN_SHA_PLACEHOLDER'")
+ if n=='operator-guard.cjs':
+  s=s.replace('candidates.length!==7||controls.length!==13','candidates.length!==6||controls.length!==5').replace('keepers.size!==7','keepers.size!==5').replace('Seven unique keepers','Five unique keepers')
+  s=rep(s,"Object.keys(snapshots).length!==5||JSON.stringify(counts)!=='{\"before\":37,\"transfer\":37,\"cut\":30}'||unrelated!==23||unchangedRetained!==28||changedKeepers!==2", "Object.keys(snapshots).length!==13||JSON.stringify(counts)!=='{\"before\":125,\"transfer\":125,\"cut\":119}'||unrelated!==114||unchangedRetained!==119||changedKeepers!==0")
+  s=rep(s,"const ledger=readJSON(PROPOSAL+'/ledger.json');if(ledger.filter(j=>j.mark==='F').length!==0)fail('Held F changed')", """const ledger=readJSON(PROPOSAL+'/ledger.json'),held=ledger.filter(j=>j.classification==='F');if(held.length!==5)fail('Held F count changed')
+  for(const f of held)for(const phase of ['before','transfer','cut'])if(sha(snapshots[f.file][phase].rows.get(f.title)?.statement||'')!==f.sha256)fail('Held F bytes changed')
+  const survivors=readJSON(PROPOSAL+'/survivors.json');if(survivors.length!==119)fail('Survivor inventory changed')
+  for(const r of survivors)for(const phase of ['before','transfer','cut'])if(sha(snapshots[r.file][phase].rows.get(r.title)?.statement||'')!==r.sha256)fail('Survivor bytes changed')
+  if(evidence.supportEdits.length!==0)fail('No support edits authorized')
+  for(const file of Object.keys(snapshots))if(!snapshots[file].before.bytes.equals(snapshots[file].transfer.bytes))fail('Before/transfer must be identical')""")
+  s=rep(s,"if(matches.length!==1)fail('Mixed or unknown test phase')\n    return {phase:matches[0],bytes}","""// Exactly two intentional matching phase labels, not a guessed phase or hidden state file.
+    if(JSON.stringify(matches)==='["before","transfer"]')return {phase:'transfer',equivalentPhases:['before','transfer'],bytes}
+    if(JSON.stringify(matches)!=='["cut"]')fail('Mixed or unknown test phase')
+    return {phase:'cut',equivalentPhases:['cut'],bytes}""")
+ if n=='operator-edit.cjs':
+  s=s.replace('parsedPhaseFiles:15,sourceControlsParsed:13','parsedPhaseFiles:39,sourceControlsParsed:5').replace("phase:initial.phase,counts:","phase:initial.phase,equivalentPhases:initial.equivalentPhases,counts:")
+  s=s.replace("const from=mode==='transfer'?'before':'transfer'","// Before and transfer are byte-identical; transfer only records main attestation, with zero repository writes.\nconst from='transfer'")
+ if n=='operator-proof.cjs':
+  s=s.replace('complete.verified!==13||complete.cleanRuns!==26','complete.verified!==5||complete.cleanRuns!==10').replace('Required13','Required5').replace("length!==5)g.fail('Full cohort proof missing')","length!==13)g.fail('Full cohort proof missing')").replace('records.length!==13','records.length!==5').replace('Thirteen records','Five records').replace("verified:13,logFiles:39","verified:5,logFiles:15")
+ if n=='operator-run-controls.cjs':
+  s=s.replace('tsMutantsParsed:13','tsMutantsParsed:5').replace('prepared.size===13','prepared.size===5').replace('ALL5 test originals','ALL13 test originals').replace('receipts.length===13','receipts.length===5')
+  s=s.replace("phase:initial.phase,controls:","phase:initial.phase,equivalentPhases:initial.equivalentPhases,controls:")
+ if n=='proof-attestation.cjs':s=s.replace('controls:13','controls:5')
+ (D/n).write_text(s)
+provenance={'template':str(T),'templatePinsSHA256':sha((T/'operator-pins.json').read_bytes()),'proposal':str(P),'manifestSHA256':sha((P/'manifest.json').read_bytes()),'handoffSHA256':sha((P/'handoff.json').read_bytes()),'templateFiles':{n:sha((T/n).read_bytes()) for n in names},'changes':['Exact billing proposal/data normalization and 13-file/125-125-119 counters','Before and transfer content alias explicitly canonicalized to transfer; no input/assertion or support edits','Held F5 and all119 survivor statement hashes checked','Strict TAP scalar decoder and FIRST outer assertion frame predicate byte-identical to reviewed template','Five unique controls; all5 log receipts required before cut','Full native local closure and original55 pins; preserve template runtime/dependency/identity pins without drift repinning']}
+(D/'template-provenance.json').write_text(json.dumps(provenance,indent=2)+'\n')
+print(D)

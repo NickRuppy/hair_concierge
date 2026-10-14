@@ -1,0 +1,19 @@
+{
+  "productId": "07-pantene-molecular-bond-repair",
+  "identity": {
+    "brand": "Pantene Pro-V",
+    "productName": "Miracles Molecular Bond Repair Intensive Haarmaske",
+    "packSize": "300 ml",
+    "gtinEan": "8700216173476",
+    "market": "DE (dm.de + Rossmann.de + Müller)"
+  },
+  "rawInci": "AQUA, STEARYL ALCOHOL, STEARAMIDOPROPYL DIMETHYLAMINE, CETYL ALCOHOL, BIS-AMINOPROPYL DIMETHICONE, GLUTAMIC ACID, PARFUM, BENZYL ALCOHOL, SODIUM BENZOATE, CITRIC ACID, BEHENTRIMONIUM METHOSULFATE, DISODIUM EDTA, POLYSORBATE 20, HEXYL CINNAMAL, PANTHENOL, PANTHENYL ETHYL ETHER, ISOPROPYL ALCOHOL, HISTIDINE, BENZYL SALICYLATE, CI 77492, LIMONENE, BIOTIN, METHICONE",
+  "directions": {
+    "text": "In den Händen verreiben, um die Pro-V Perlen aufzulösen. Auf das nasse Haar auftragen. 2 Minuten einwirken lassen. Ausspülen.",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "2",
+    "source": "mueller.de official product page (direct fetch, verbatim)",
+    "confidence": "high"
+  },
+  "note": "Blind calibration packet. Contains identity, formula of record, and authoritative directions only. No archetype labels, no claims summaries, no prior assessments."
+}

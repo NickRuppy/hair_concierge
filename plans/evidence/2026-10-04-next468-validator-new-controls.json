@@ -1,0 +1,536 @@
+[
+  {
+    "id": "D1-broad-false-lookup-demand",
+    "lane": "validator",
+    "phase": "new",
+    "intended": "First one.ok=true fails because broad base recommendation now gets product_lookup_required.",
+    "source": "src/lib/agent-v2/validation/final-answer-validator.ts",
+    "selectedTest": {
+      "file": "tests/agent-v2-final-answer-validator.spec.ts",
+      "name": "validator accepts explicit one and two product recommendation counts"
+    },
+    "originalHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/D1-broad-false-lookup-demand-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/D1-broad-false-lookup-demand-fault.tap"
+    },
+    "restoredHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/D1-broad-false-lookup-demand-after.tap"
+    },
+    "keeperAssertionLines": [
+      6179,
+      6233
+    ],
+    "assertionStacks": [
+      6179
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "D2-active-alternatives-exemption-removed",
+    "lane": "validator",
+    "phase": "new",
+    "intended": "Keeper ok=true fails for product_lookup_required. Unknown-rule warning cannot soften this error.",
+    "source": "src/lib/agent-v2/validation/final-answer-validator.ts",
+    "selectedTest": {
+      "file": "tests/agent-v2-final-answer-validator.spec.ts",
+      "name": "validator diet softens unknown hard rule metadata on grounded product alternatives"
+    },
+    "originalHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/D2-active-alternatives-exemption-removed-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/D2-active-alternatives-exemption-removed-fault.tap"
+    },
+    "restoredHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/D2-active-alternatives-exemption-removed-after.tap"
+    },
+    "keeperAssertionLines": [
+      2726,
+      2727
+    ],
+    "assertionStacks": [
+      2726
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "D3-informational-offer-demands-action",
+    "lane": "validator",
+    "phase": "new",
+    "intended": "After hidden action is actually removed, recollection reports pending_followup_action_missing; keeper ok/zero-errors fail.",
+    "source": "src/lib/agent-v2/validation/final-answer-validator.ts",
+    "selectedTest": {
+      "file": "tests/agent-v2-final-answer-validator.spec.ts",
+      "name": "AgentV2 validator strips hidden pending action behind informational next step"
+    },
+    "originalHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/D3-informational-offer-demands-action-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/D3-informational-offer-demands-action-fault.tap"
+    },
+    "restoredHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/D3-informational-offer-demands-action-after.tap"
+    },
+    "keeperAssertionLines": [
+      3528,
+      3529,
+      3530,
+      3531
+    ],
+    "assertionStacks": [
+      3528
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "D5-natural-product-prose-overblocked",
+    "lane": "validator",
+    "phase": "new",
+    "intended": "First one.ok=true fails for product_answer_shape when the raw-property filter incorrectly blocks all prose.",
+    "source": "src/lib/agent-v2/validation/final-answer-validator.ts",
+    "selectedTest": {
+      "file": "tests/agent-v2-final-answer-validator.spec.ts",
+      "name": "validator accepts explicit one and two product recommendation counts"
+    },
+    "originalHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/D5-natural-product-prose-overblocked-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/D5-natural-product-prose-overblocked-fault.tap"
+    },
+    "restoredHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/D5-natural-product-prose-overblocked-after.tap"
+    },
+    "keeperAssertionLines": [
+      6179,
+      6233
+    ],
+    "assertionStacks": [
+      6179
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "D4-missing-recommended-names-ignored",
+    "lane": "validator",
+    "phase": "new",
+    "intended": "Missing Second Shampoo finding disappears, strengthened keeper fails; baseline keeper ok=false should also fail as consistent input has no other blocker.",
+    "source": "src/lib/agent-v2/validation/final-answer-validator.ts",
+    "selectedTest": {
+      "file": "tests/agent-v2-final-answer-validator.spec.ts",
+      "name": "validator blocks incomplete product prose that omits a final recommendation"
+    },
+    "originalHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/D4-missing-recommended-names-ignored-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/D4-missing-recommended-names-ignored-fault.tap"
+    },
+    "restoredHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/D4-missing-recommended-names-ignored-after.tap"
+    },
+    "keeperAssertionLines": [
+      5816,
+      5822,
+      5823
+    ],
+    "assertionStacks": [
+      5816
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "C1-found-exact-treated-unresolved",
+    "lane": "validator",
+    "phase": "new",
+    "intended": "Exact shampoo becomes relevant unresolved result; retained absence assertion fails.",
+    "source": "src/lib/agent-v2/validation/final-answer-validator.ts",
+    "selectedTest": {
+      "file": "tests/agent-v2-final-answer-validator.spec.ts",
+      "name": "validator allows claims for exact lookup products when another lookup is unresolved"
+    },
+    "originalHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/C1-found-exact-treated-unresolved-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/C1-found-exact-treated-unresolved-fault.tap"
+    },
+    "restoredHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/C1-found-exact-treated-unresolved-after.tap"
+    },
+    "keeperAssertionLines": [
+      2333,
+      2334
+    ],
+    "assertionStacks": [
+      2333
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "C1-full-validity-guidance-reversed",
+    "lane": "validator",
+    "phase": "new",
+    "intended": "Transferred ok=true fails on required_guidance_loaded; old keeper checking only absence of product_lookup_unresolved remains green.",
+    "source": "src/lib/agent-v2/validation/final-answer-validator.ts",
+    "selectedTest": {
+      "file": "tests/agent-v2-final-answer-validator.spec.ts",
+      "name": "validator allows claims for exact lookup products when another lookup is unresolved"
+    },
+    "originalHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/C1-full-validity-guidance-reversed-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/C1-full-validity-guidance-reversed-fault.tap"
+    },
+    "restoredHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/C1-full-validity-guidance-reversed-after.tap"
+    },
+    "keeperAssertionLines": [
+      2333,
+      2334
+    ],
+    "assertionStacks": [
+      2333
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "F2-routine-missing-name-masked-by-offer",
+    "lane": "validator",
+    "phase": "new",
+    "intended": "Transferred missingProduct assertion fails while the unrelated hidden-offer visible_payload_not_rendered remains.",
+    "source": "src/lib/agent-v2/validation/final-answer-validator.ts",
+    "selectedTest": {
+      "file": "tests/agent-v2-final-answer-validator.spec.ts",
+      "name": "validator blocks incomplete routine product deep dive prose that omits the product"
+    },
+    "originalHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/F2-routine-missing-name-masked-by-offer-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/F2-routine-missing-name-masked-by-offer-fault.tap"
+    },
+    "restoredHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/F2-routine-missing-name-masked-by-offer-after.tap"
+    },
+    "keeperAssertionLines": [
+      5935,
+      5941,
+      5942
+    ],
+    "assertionStacks": [
+      5941
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "F3-wrong-memory-record-accepted",
+    "lane": "validator",
+    "phase": "new",
+    "intended": "Exact accepted and sanitized memory contents fail: wrong array element (unverified hair-texture write) was retained with same lengths.",
+    "source": "src/lib/agent-v2/validation/final-answer-validator.ts",
+    "selectedTest": {
+      "file": "tests/agent-v2-final-answer-validator.spec.ts",
+      "name": "validator drops invalid session memory without blocking valid final answer"
+    },
+    "originalHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/F3-wrong-memory-record-accepted-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/F3-wrong-memory-record-accepted-fault.tap"
+    },
+    "restoredHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/F3-wrong-memory-record-accepted-after.tap"
+    },
+    "keeperAssertionLines": [
+      9766,
+      9778,
+      9779,
+      9780,
+      9781,
+      9782,
+      9787
+    ],
+    "assertionStacks": [
+      9778
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  },
+  {
+    "id": "F3-wrong-memory-drop-attribution",
+    "lane": "validator",
+    "phase": "new",
+    "intended": "Exact dropped.write fails when receipt attributes the rejected second write to the first valid write.",
+    "source": "src/lib/agent-v2/validation/final-answer-validator.ts",
+    "selectedTest": {
+      "file": "tests/agent-v2-final-answer-validator.spec.ts",
+      "name": "validator drops invalid session memory without blocking valid final answer"
+    },
+    "originalHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/F3-wrong-memory-drop-attribution-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/F3-wrong-memory-drop-attribution-fault.tap"
+    },
+    "restoredHash": "4a834d15e82e7d433b95f64640105499e8ca3783d202aa89407fdfcb6d26b4f2",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next468-validator-mutations-new/F3-wrong-memory-drop-attribution-after.tap"
+    },
+    "keeperAssertionLines": [
+      9766,
+      9778,
+      9779,
+      9780,
+      9781,
+      9782,
+      9787
+    ],
+    "assertionStacks": [
+      9787
+    ],
+    "requiresMainIntendedAssertionInspection": true,
+    "mainIntendedAssertionInspected": true
+  }
+]

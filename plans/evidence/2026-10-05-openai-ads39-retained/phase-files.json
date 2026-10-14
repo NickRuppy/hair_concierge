@@ -1,0 +1,218 @@
+[
+  {
+    "phase": "before",
+    "file": "tests/openai-ads-browser-integration.test.ts",
+    "sha256": "79bec4c6528447448c437d0b62dd2422e0314adb105d5e3c9c31338c6407da74",
+    "bytes": 11218,
+    "lines": 275,
+    "censusSites": 1,
+    "nestedSites": 3
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/openai-ads-browser-integration.test.ts",
+    "sha256": "79bec4c6528447448c437d0b62dd2422e0314adb105d5e3c9c31338c6407da74",
+    "bytes": 11218,
+    "lines": 275,
+    "censusSites": 1,
+    "nestedSites": 3
+  },
+  {
+    "phase": "cut",
+    "file": "tests/openai-ads-browser-integration.test.ts",
+    "sha256": "79bec4c6528447448c437d0b62dd2422e0314adb105d5e3c9c31338c6407da74",
+    "bytes": 11218,
+    "lines": 275,
+    "censusSites": 1,
+    "nestedSites": 3
+  },
+  {
+    "phase": "before",
+    "file": "tests/openai-ads-browser.test.ts",
+    "sha256": "853c8174781df2bc02643c4670a27689229fa9bf05fbf4dacfa1309941c951d7",
+    "bytes": 7429,
+    "lines": 249,
+    "censusSites": 9,
+    "nestedSites": 0
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/openai-ads-browser.test.ts",
+    "sha256": "853c8174781df2bc02643c4670a27689229fa9bf05fbf4dacfa1309941c951d7",
+    "bytes": 7429,
+    "lines": 249,
+    "censusSites": 9,
+    "nestedSites": 0
+  },
+  {
+    "phase": "cut",
+    "file": "tests/openai-ads-browser.test.ts",
+    "sha256": "853c8174781df2bc02643c4670a27689229fa9bf05fbf4dacfa1309941c951d7",
+    "bytes": 7429,
+    "lines": 249,
+    "censusSites": 9,
+    "nestedSites": 0
+  },
+  {
+    "phase": "before",
+    "file": "tests/openai-ads-capi.test.ts",
+    "sha256": "37f05512230822da2f55ae588e09fd4504ee0ea929c763597ff1a492d55e3f63",
+    "bytes": 7232,
+    "lines": 249,
+    "censusSites": 10,
+    "nestedSites": 0
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/openai-ads-capi.test.ts",
+    "sha256": "37f05512230822da2f55ae588e09fd4504ee0ea929c763597ff1a492d55e3f63",
+    "bytes": 7232,
+    "lines": 249,
+    "censusSites": 10,
+    "nestedSites": 0
+  },
+  {
+    "phase": "cut",
+    "file": "tests/openai-ads-capi.test.ts",
+    "sha256": "37f05512230822da2f55ae588e09fd4504ee0ea929c763597ff1a492d55e3f63",
+    "bytes": 7232,
+    "lines": 249,
+    "censusSites": 10,
+    "nestedSites": 0
+  },
+  {
+    "phase": "before",
+    "file": "tests/openai-ads-consent-cookie.test.ts",
+    "sha256": "a7e331e2582b73560eb16f3b781550ff26d216bce7488c49573d7691b75dd3c5",
+    "bytes": 1283,
+    "lines": 24,
+    "censusSites": 2,
+    "nestedSites": 0
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/openai-ads-consent-cookie.test.ts",
+    "sha256": "a7e331e2582b73560eb16f3b781550ff26d216bce7488c49573d7691b75dd3c5",
+    "bytes": 1283,
+    "lines": 24,
+    "censusSites": 2,
+    "nestedSites": 0
+  },
+  {
+    "phase": "cut",
+    "file": "tests/openai-ads-consent-cookie.test.ts",
+    "sha256": "a7e331e2582b73560eb16f3b781550ff26d216bce7488c49573d7691b75dd3c5",
+    "bytes": 1283,
+    "lines": 24,
+    "censusSites": 2,
+    "nestedSites": 0
+  },
+  {
+    "phase": "before",
+    "file": "tests/openai-ads-context-postgres.test.ts",
+    "sha256": "6f71e8abf2c6745df293a6f1d112679de27ac506b9ad09e45dec71d304fc86a0",
+    "bytes": 5806,
+    "lines": 142,
+    "censusSites": 4,
+    "nestedSites": 0
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/openai-ads-context-postgres.test.ts",
+    "sha256": "6f71e8abf2c6745df293a6f1d112679de27ac506b9ad09e45dec71d304fc86a0",
+    "bytes": 5806,
+    "lines": 142,
+    "censusSites": 4,
+    "nestedSites": 0
+  },
+  {
+    "phase": "cut",
+    "file": "tests/openai-ads-context-postgres.test.ts",
+    "sha256": "6f71e8abf2c6745df293a6f1d112679de27ac506b9ad09e45dec71d304fc86a0",
+    "bytes": 5806,
+    "lines": 142,
+    "censusSites": 4,
+    "nestedSites": 0
+  },
+  {
+    "phase": "before",
+    "file": "tests/openai-ads-context-route.test.ts",
+    "sha256": "c3a5b4c7286a3e6ba850ca429682f4d831a67949e872f43f0da6909a3399a186",
+    "bytes": 5819,
+    "lines": 160,
+    "censusSites": 5,
+    "nestedSites": 0
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/openai-ads-context-route.test.ts",
+    "sha256": "c3a5b4c7286a3e6ba850ca429682f4d831a67949e872f43f0da6909a3399a186",
+    "bytes": 5819,
+    "lines": 160,
+    "censusSites": 5,
+    "nestedSites": 0
+  },
+  {
+    "phase": "cut",
+    "file": "tests/openai-ads-context-route.test.ts",
+    "sha256": "c3a5b4c7286a3e6ba850ca429682f4d831a67949e872f43f0da6909a3399a186",
+    "bytes": 5819,
+    "lines": 160,
+    "censusSites": 5,
+    "nestedSites": 0
+  },
+  {
+    "phase": "before",
+    "file": "tests/openai-ads-event-payload.test.ts",
+    "sha256": "c1bc131cd9816082b1b43b2b6a4640d42509fc86ffbbc2548ac38fcfe5523fc4",
+    "bytes": 6020,
+    "lines": 185,
+    "censusSites": 7,
+    "nestedSites": 0
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/openai-ads-event-payload.test.ts",
+    "sha256": "c1bc131cd9816082b1b43b2b6a4640d42509fc86ffbbc2548ac38fcfe5523fc4",
+    "bytes": 6020,
+    "lines": 185,
+    "censusSites": 7,
+    "nestedSites": 0
+  },
+  {
+    "phase": "cut",
+    "file": "tests/openai-ads-event-payload.test.ts",
+    "sha256": "c1bc131cd9816082b1b43b2b6a4640d42509fc86ffbbc2548ac38fcfe5523fc4",
+    "bytes": 6020,
+    "lines": 185,
+    "censusSites": 7,
+    "nestedSites": 0
+  },
+  {
+    "phase": "before",
+    "file": "tests/openai-ads-live-postgres.test.ts",
+    "sha256": "d8e70ba913504e9188afb2408399c3d4615db7f78e49a421efe18102a62db89c",
+    "bytes": 14591,
+    "lines": 315,
+    "censusSites": 1,
+    "nestedSites": 6
+  },
+  {
+    "phase": "transfer",
+    "file": "tests/openai-ads-live-postgres.test.ts",
+    "sha256": "d8e70ba913504e9188afb2408399c3d4615db7f78e49a421efe18102a62db89c",
+    "bytes": 14591,
+    "lines": 315,
+    "censusSites": 1,
+    "nestedSites": 6
+  },
+  {
+    "phase": "cut",
+    "file": "tests/openai-ads-live-postgres.test.ts",
+    "sha256": "d8e70ba913504e9188afb2408399c3d4615db7f78e49a421efe18102a62db89c",
+    "bytes": 14591,
+    "lines": 315,
+    "censusSites": 1,
+    "nestedSites": 6
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "version": "mask-research-envelope-v1.0",
+  "researchMethod": {
+    "policyId": "mask-classification-v1.0",
+    "modelVersion": "mask-inci-v1.0",
+    "policySha256": "d105ef3fdfc0e953591a54765004f59d107f049a9ea9007cf7c579dafa726ae0",
+    "lexiconSha256": "3dcaf54f8a7e4844f44d2731f30ca28c4a8565f17082d8fd0b27376ca3167ada"
+  },
+  "identity": {
+    "researchId": "mask-v1.0-13-olaplex-no3-hair-perfector",
+    "market": "DE/EU",
+    "exactProductName": "No. 3 Hair Perfector",
+    "brand": "Olaplex",
+    "gtin": null,
+    "identityStatus": "excluded_product_form",
+    "categoryBoundaryStatus": "excluded_product_form",
+    "exclusionReason": "excluded_pre_shampoo_bondbuilder_protocol",
+    "multiUse": false,
+    "uncoveredModes": [],
+    "confidence": "low",
+    "sourceIds": [
+      "hautschutzengel.de produkt/389484, accessed 2026-09-04"
+    ]
+  }
+}

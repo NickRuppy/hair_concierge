@@ -1,5 +1,10 @@
 import { createHash } from "node:crypto"
 import { readBondbuilderResearchProfile } from "@/lib/bondbuilder/research-facts"
+import {
+  HEAT_ACTIVATION_ROUTES,
+  heatActivationRouteServes,
+  type HeatActivationRoute,
+} from "@/lib/heat-activation/contract"
 
 import type { SupabaseClient } from "@supabase/supabase-js"
 
@@ -15,6 +20,7 @@ import {
 } from "@/lib/personal-plan/oil-heat-context"
 import { applicationGuidanceProtocolSchema } from "@/lib/routines/personal-plan/application/contracts"
 
+import { isDiffuserBlowDryEvent } from "../../heat-diffuser-rule"
 import { CATEGORY_ROLE_POLICIES } from "../authorities"
 import type { PersonalPlanCategory, Stage3DecisionSubject, Stage3ProductDraft } from "../contracts"
 import { expectedShampooBucket, expectedShampooSpecTarget } from "./categories/shampoo"
@@ -88,6 +94,7 @@ type Stage3AuthorityPresentationFields = {
   netContentUnit?: "ml" | "g" | null
   affiliateLink?: string | null
   currency?: string | null
+  marketSegment?: "drugstore" | "professional" | null
 }
 
 export async function loadStage3AuthorityFactBundle(
@@ -183,7 +190,7 @@ async function loadLegacyRecommendationCandidates(
   const { data, error } = await client
     .from("products")
     .select(
-      "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link,currency",
+      "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link,currency,market_segment",
     )
     .eq("category_key", category)
     .eq("is_active", true)
@@ -235,7 +242,7 @@ export async function loadStage3RecommendationCandidatePool(
       client
         .from("products")
         .select(
-          "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link,currency",
+          "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link,currency,market_segment",
           { count: "exact" },
         )
         .eq("category_key", category)
@@ -342,7 +349,7 @@ async function loadOneProduct(
   const { data, error } = await client
     .from("products")
     .select(
-      "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link,currency",
+      "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link,currency,market_segment",
     )
     .eq("id", productId)
     .eq("category_key", category)
@@ -375,7 +382,13 @@ async function normalizeProductFacts(
   const productId = text(product.id)
   if (!productId || product.category_key !== category) return null
   const [loadedSpec, protocols] = await Promise.all([
-    loadCategorySpec(client, category, productId, selectionContext),
+    loadCategorySpec(
+      client,
+      category,
+      productId,
+      selectionContext,
+      textArray(product.suitable_thicknesses),
+    ),
     loadProtocols(client, category, productId),
   ])
   return assembleProductFacts(category, product, productId, loadedSpec, protocols)
@@ -389,7 +402,13 @@ function normalizeProductFactsFromSnapshot(
 ): Stage3CategoryProductFacts | null {
   const productId = text(product.id)
   if (!productId || product.category_key !== category) return null
-  const loadedSpec = categorySpecFromSnapshot(category, productId, selectionContext, snapshot)
+  const loadedSpec = categorySpecFromSnapshot(
+    category,
+    productId,
+    selectionContext,
+    snapshot,
+    textArray(product.suitable_thicknesses),
+  )
   const protocols = protocolsFromRows(
     category,
     productId,
@@ -437,6 +456,10 @@ function assembleProductFacts(
         : null,
     affiliateLink: text(product.affiliate_link),
     currency: text(product.currency),
+    marketSegment:
+      product.market_segment === "drugstore" || product.market_segment === "professional"
+        ? (product.market_segment as "drugstore" | "professional")
+        : null,
   }
   const fingerprintCommon = omitPresentationFields(
     common as typeof common & Stage3AuthorityPresentationFields,
@@ -462,6 +485,7 @@ function omitPresentationFields<T extends Stage3AuthorityPresentationFields>(
     "netContentUnit",
     "affiliateLink",
     "currency",
+    "marketSegment",
   ])
   return Object.fromEntries(
     Object.entries(value).filter(
@@ -500,14 +524,7 @@ function categorySpecSources(category: PersonalPlanCategory): BatchSource[] {
     case "heat_protectant":
       return [source("product_heat_protectant_specs", "one")]
     case "oil":
-      return [
-        source("product_oil_specs", "one"),
-        source("product_oil_eligibility", "many", "product_id", [
-          "product_id",
-          "thickness",
-          "oil_subtype",
-        ]),
-      ]
+      return [source("product_oil_specs", "one")]
     case "mask":
       return [source("product_mask_specs", "one")]
     case "scalp_care":
@@ -578,7 +595,7 @@ async function loadProductsByIds(
             client
               .from("products")
               .select(
-                "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link,currency",
+                "id,name,image_url,category_key,is_active,lifecycle_status,is_chaarlie_recommended,suitable_thicknesses,updated_at,sort_order,price_eur,price_checked_at,purchase_link_status,net_content_value,net_content_unit,affiliate_link,currency,market_segment",
                 { count: "exact" },
               )
               .eq("category_key", category) as unknown as {
@@ -598,9 +615,16 @@ async function loadCategorySpec(
   category: PersonalPlanCategory,
   productId: string,
   selectionContext: CategorySelectionContext,
+  suitableThicknesses: string[] | null,
 ): Promise<LoadedCategorySpec> {
   const snapshot = await loadCategorySpecSnapshot(client, category, productId)
-  return categorySpecFromSnapshot(category, productId, selectionContext, snapshot)
+  return categorySpecFromSnapshot(
+    category,
+    productId,
+    selectionContext,
+    snapshot,
+    suitableThicknesses,
+  )
 }
 
 /** One product's spec-source rows in batch-snapshot shape, via the per-product queries. */
@@ -629,6 +653,7 @@ function categorySpecFromSnapshot(
   productId: string,
   selectionContext: CategorySelectionContext,
   snapshot: BatchSnapshot,
+  suitableThicknesses: string[] | null = null,
 ): LoadedCategorySpec {
   const rows = (table: string) => snapshot.get(table)?.get(productId) ?? []
   const singleton = (table: string) => {
@@ -649,6 +674,7 @@ function categorySpecFromSnapshot(
       const selected = selectConditionerSpec(rows("product_conditioner_specs"), selectionContext)
       return {
         thickness: selected.thickness,
+        thicknesses: selected.thicknesses,
         proteinMoistureBalance: selected.proteinMoistureBalance,
         weight: text(rerank?.weight),
         repairSupportLevel: text(rerank?.repair_level),
@@ -667,6 +693,10 @@ function categorySpecFromSnapshot(
         providesHeatProtection: booleanOrNull(row?.provides_heat_protection),
         careBenefits: textArray(row?.functional_benefits),
         applicationStages: textArray(row?.application_stage),
+        // Leave-In v1.2: key only when activated, so non-activated fingerprints never churn.
+        ...(row?.heat_activation_required === true
+          ? { heatActivation: { route: heatActivationRoute(row?.heat_activation_route) } }
+          : {}),
       }
     }
     case "heat_protectant": {
@@ -678,13 +708,14 @@ function categorySpecFromSnapshot(
     }
     case "oil": {
       const row = singleton("product_oil_specs")
-      const eligibility = rows("product_oil_eligibility")
       const explicitRoles = textArray(row?.role_support)
       const roleSupport = explicitOilRoleSupport(explicitRoles)
       return {
         roleSupport,
         weight: text(row?.weight),
-        targetThicknessEligible: targetOilThicknessEligible(eligibility, selectionContext),
+        thicknesses: suitableThicknesses,
+        // Compatibility projection for older consumers; new authority consumes thicknesses.
+        targetThicknessEligible: targetOilThicknessEligible(suitableThicknesses, selectionContext),
         providesHeatProtection: booleanOrNull(row?.provides_heat_protection),
       }
     }
@@ -724,12 +755,14 @@ function categorySpecFromSnapshot(
         productFormat: text(row?.product_format),
         usageProtocol: text(row?.usage_protocol),
         relationship: classifyBondbuilderRelationship(relationships),
-        ...(row?.research_profile != null ? {
-          technologyFamily: profile?.assessment.technology_family ?? null,
-          claimTrustLevel: profile?.assessment.claim_trust_level ?? null,
-          trustBasis: profile?.assessment.trust_basis ?? null,
-          researchProfile: profile,
-        } : {}),
+        ...(row?.research_profile != null
+          ? {
+              technologyFamily: profile?.assessment.technology_family ?? null,
+              claimTrustLevel: profile?.assessment.claim_trust_level ?? null,
+              trustBasis: profile?.assessment.trust_basis ?? null,
+              researchProfile: profile,
+            }
+          : {}),
       }
     }
     case "deep_cleansing_shampoo": {
@@ -745,11 +778,28 @@ function categorySpecFromSnapshot(
               : null
       return {
         supportedResetRoles: supportedResetRoles ? [...supportedResetRoles] : null,
-        scalpTypeFocus: text(row?.scalp_type_focus),
+        targetScalpTypes: deepCleansingTargetScalpTypes(row?.target_scalp_types),
         colorTreatedSuitability: text(row?.color_treated_suitability),
       }
     }
   }
+}
+
+const DEEP_CLEANSING_SCALP_TYPES = ["oily", "balanced", "dry"] as const
+type DeepCleansingScalpType = (typeof DEEP_CLEANSING_SCALP_TYPES)[number]
+
+/**
+ * `target_scalp_types` (Shampoo v1.6 §13.5 projection). Mirrors the column CHECK: a set of
+ * distinct oily/balanced/dry values, never oily together with dry. Anything else — including a
+ * missing column — is null, which means "not engine-assessed" and fails closed to no soft rank.
+ */
+export function deepCleansingTargetScalpTypes(value: unknown): DeepCleansingScalpType[] | null {
+  if (!Array.isArray(value)) return null
+  if (!value.every((entry) => DEEP_CLEANSING_SCALP_TYPES.includes(entry))) return null
+  const types = value as DeepCleansingScalpType[]
+  if (new Set(types).size !== types.length) return null
+  if (types.includes("oily") && types.includes("dry")) return null
+  return DEEP_CLEANSING_SCALP_TYPES.filter((type) => types.includes(type))
 }
 
 function shampooComparisonObservations(rows: Row[]): {
@@ -904,7 +954,11 @@ export async function loadStage3HeatCarrierCoverage(
   heatRoutes: string[],
   heatEvents: readonly PlanHeatToolUseEvent[],
 ): Promise<Stage3AuthorityFactBundle["heatCarrierCoverage"]> {
-  const qualifyingEvents = heatEvents.filter((event) => heatRoutes.includes(event.route))
+  // The Diffusor rule: a marked Diffusor is plain blow-drying for the protectant — it never
+  // qualifies a carrier requirement, even next to a Warmluftbürste on the same route.
+  const qualifyingEvents = heatEvents.filter(
+    (event) => heatRoutes.includes(event.route) && !isDiffuserBlowDryEvent(event),
+  )
   for (const category of ["leave_in", "oil", "heat_protectant"] as const) {
     const requiredRole =
       category === "oil"
@@ -1026,11 +1080,33 @@ export async function loadStage3HeatCarrierCoverage(
             verifiedEventIds,
           }
         }
-        return { carrierCategory: category, verifiedRoutes: [...heatRoutes] }
+        const verifiedRoutes = stage3IntegratedHeatCarrierRoutes(facts, heatRoutes)
+        if (verifiedRoutes === null) continue
+        return { carrierCategory: category, verifiedRoutes }
       }
     }
   }
   return { carrierCategory: null, verifiedRoutes: [] }
+}
+
+/**
+ * Routes a verified Leave-in / standalone heat carrier protects. Heat protection
+ * (never activation, D-e) decides whether it is a carrier at all; a heat-activated
+ * Leave-in is applied only before its activating heat step (Stage-5 places it by
+ * route), so it protects only the routes its activation route serves — a
+ * straightener event next to a blow-dry keeps its own heat protection.
+ * `null`: not a carrier for any of the user's routes.
+ */
+export function stage3IntegratedHeatCarrierRoutes(
+  facts: Stage3CategoryProductFacts,
+  heatRoutes: readonly string[],
+): string[] | null {
+  if (facts.category !== "leave_in" && facts.category !== "heat_protectant") return null
+  if (facts.spec.providesHeatProtection !== true) return null
+  const activation = facts.category === "leave_in" ? facts.spec.heatActivation : undefined
+  if (!activation) return [...heatRoutes]
+  const served = heatRoutes.filter((route) => heatActivationRouteServes(activation.route, [route]))
+  return served.length > 0 ? served : null
 }
 
 async function one(client: AdminClient, table: string, productId: string): Promise<Row | null> {
@@ -1099,106 +1175,122 @@ function shampooTargetFor(
   return target?.category === "shampoo" ? target : null
 }
 
-function selectShampooSpec(
-  rows: Row[],
-  context: CategorySelectionContext,
-): {
-  thickness: string | null
-  shampooBucket: string | null
-  scalpRoute: string | null
-  cleansingIntensity: string | null
-  targetFit: "matched" | "known_mismatch" | "unknown"
-} {
+function selectShampooSpec(rows: Row[], context: CategorySelectionContext) {
   const empty = {
     thickness: null,
+    thicknesses: null as string[] | null,
     shampooBucket: null,
     scalpRoute: null,
     cleansingIntensity: null,
     targetFit: "unknown" as const,
   }
-  if (!context.shampooTarget) return empty
-  const expectedBucket = expectedShampooBucket({
-    role: context.role,
-    target: context.shampooTarget,
-  })
-  if (!expectedBucket) return empty
-  const expectedScalpRoute = expectedShampooSpecTarget({
-    role: context.role,
-    target: context.shampooTarget,
-  })?.scalpRoute
-  if (!expectedScalpRoute) return empty
-  const completeRows = rows
-    .map((row) => ({
-      thickness: text(row.thickness),
-      shampooBucket: text(row.shampoo_bucket),
-      scalpRoute: text(row.scalp_route),
-      cleansingIntensity: text(row.cleansing_intensity),
-    }))
-    .filter(
+  const target = context.shampooTarget
+  const expected = target ? expectedShampooSpecTarget({ role: context.role, target }) : null
+  if (!expected || !context.hairThickness) return empty
+  const complete = rows.map((row) => ({
+    thickness: text(row.thickness),
+    shampooBucket: text(row.shampoo_bucket),
+    scalpRoute: text(row.scalp_route),
+    cleansingIntensity: text(row.cleansing_intensity),
+  }))
+  if (
+    !complete.length ||
+    complete.some(
       (row) =>
-        row.thickness !== null &&
-        row.shampooBucket !== null &&
-        row.scalpRoute !== null &&
-        row.cleansingIntensity !== null,
+        Object.values(row).some((value) => value === null) ||
+        !Number.isFinite(thicknessDistance(row.thickness, "fine")),
     )
-  if (completeRows.length !== rows.length || rows.length === 0) return empty
-  const matches = rows
-    .filter(
-      (row) =>
-        text(row.thickness) === context.hairThickness &&
-        text(row.shampoo_bucket) === expectedBucket &&
-        text(row.scalp_route) === expectedScalpRoute,
-    )
-    .map((row) => ({
-      thickness: text(row.thickness),
-      shampooBucket: text(row.shampoo_bucket),
-      scalpRoute: text(row.scalp_route),
-      cleansingIntensity: text(row.cleansing_intensity),
-    }))
-  const selected = singleSemanticMatch(matches)
-  if (!selected) {
-    return matches.length > 0 ? empty : { ...empty, targetFit: "known_mismatch" as const }
+  )
+    return empty
+  const matches = complete.filter(
+    (row) => row.shampooBucket === expected.shampooBucket && row.scalpRoute === expected.scalpRoute,
+  )
+  if (!matches.length) return { ...empty, targetFit: "known_mismatch" as const }
+  const nearest = nearestSpecRows(matches, (row) =>
+    thicknessDistance(row.thickness, context.hairThickness),
+  )
+  const semantics = singleSemanticMatch(nearest.map(({ thickness, ...rest }) => rest))
+  if (!semantics) return empty
+  // fit-verdict spec §7a.1, ruled 2026-10-12: retain the full thickness set for the selected job/intensity.
+  const thicknesses = [
+    ...new Set(
+      matches
+        .filter((row) => row.cleansingIntensity === semantics.cleansingIntensity)
+        .map((row) => row.thickness!),
+    ),
+  ].sort(
+    (a, b) => ["fine", "normal", "coarse"].indexOf(a) - ["fine", "normal", "coarse"].indexOf(b),
+  )
+  return {
+    ...semantics,
+    thickness: [...nearest].sort((a, b) => a.thickness!.localeCompare(b.thickness!))[0].thickness,
+    thicknesses,
+    targetFit: "matched" as const,
   }
-  return { ...selected, targetFit: "matched" as const }
 }
 
-function selectConditionerSpec(
-  rows: Row[],
-  context: CategorySelectionContext,
-): {
-  thickness: string | null
-  proteinMoistureBalance: string | null
-  targetFit: "matched" | "known_mismatch" | "unknown"
-} {
+function selectConditionerSpec(rows: Row[], context: CategorySelectionContext) {
   const empty = {
     thickness: null,
+    thicknesses: null as string[] | null,
     proteinMoistureBalance: null,
     targetFit: "unknown" as const,
   }
-  if (!context.conditionerTarget) return empty
-  const completeRows = rows
-    .map((row) => ({
-      thickness: text(row.thickness),
-      proteinMoistureBalance: conditionerBalance(row.protein_moisture_balance),
-    }))
-    .filter((row) => row.thickness !== null && row.proteinMoistureBalance !== null)
-  if (completeRows.length !== rows.length || rows.length === 0) return empty
-  const matches = rows
-    .filter(
+  if (!context.conditionerTarget || !context.hairThickness) return empty
+  const complete = rows.map((row) => ({
+    thickness: text(row.thickness),
+    proteinMoistureBalance: conditionerBalance(row.protein_moisture_balance),
+  }))
+  if (
+    !complete.length ||
+    complete.some(
       (row) =>
-        text(row.thickness) === context.hairThickness &&
-        conditionerBalance(row.protein_moisture_balance) ===
-          context.conditionerTarget?.careDirection,
+        row.thickness === null ||
+        row.proteinMoistureBalance === null ||
+        !Number.isFinite(thicknessDistance(row.thickness, "fine")),
     )
-    .map((row) => ({
-      thickness: text(row.thickness),
-      proteinMoistureBalance: conditionerBalance(row.protein_moisture_balance),
-    }))
-  const selected = singleSemanticMatch(matches)
-  if (!selected) {
-    return matches.length > 0 ? empty : { ...empty, targetFit: "known_mismatch" as const }
+  )
+    return empty
+  const directions = ["protein", "balanced", "moisture"]
+  const nearest = nearestSpecRows(
+    complete,
+    (row) =>
+      thicknessDistance(row.thickness, context.hairThickness) +
+      Math.abs(
+        directions.indexOf(row.proteinMoistureBalance!) -
+          directions.indexOf(context.conditionerTarget!.careDirection),
+      ),
+  )
+  const semantics = singleSemanticMatch(nearest.map(({ thickness, ...rest }) => rest))
+  if (!semantics) return empty
+  // Keep coupled row values: never combine thickness and care direction from unrelated rows.
+  const thicknesses = [
+    ...new Set(
+      complete
+        .filter((row) => row.proteinMoistureBalance === semantics.proteinMoistureBalance)
+        .map((row) => row.thickness!),
+    ),
+  ].sort(
+    (a, b) => ["fine", "normal", "coarse"].indexOf(a) - ["fine", "normal", "coarse"].indexOf(b),
+  )
+  return {
+    ...semantics,
+    thickness: [...nearest].sort((a, b) => a.thickness!.localeCompare(b.thickness!))[0].thickness,
+    thicknesses,
+    targetFit: "matched" as const,
   }
-  return { ...selected, targetFit: "matched" as const }
+}
+
+function thicknessDistance(product: string | null, target: string | null): number {
+  const scale = ["fine", "normal", "coarse"]
+  const left = scale.indexOf(product ?? "")
+  const right = scale.indexOf(target ?? "")
+  return left < 0 || right < 0 ? Infinity : Math.abs(left - right)
+}
+
+function nearestSpecRows<T>(rows: T[], distance: (row: T) => number): T[] {
+  const minimum = Math.min(...rows.map(distance))
+  return rows.filter((row) => distance(row) === minimum)
 }
 
 function singleSemanticMatch<T extends object>(matches: T[]): T | null {
@@ -1243,13 +1335,11 @@ function explicitOilRoleSupport(
 }
 
 function targetOilThicknessEligible(
-  eligibility: Row[],
+  thicknesses: string[] | null,
   context: CategorySelectionContext,
 ): boolean | null {
-  if (!context.hairThickness) return null
-  if (eligibility.length === 0) return null
-  if (eligibility.some((row) => text(row.thickness) === null)) return null
-  return eligibility.some((row) => text(row.thickness) === context.hairThickness)
+  if (!context.hairThickness || !thicknesses?.length) return null
+  return thicknesses.includes(context.hairThickness)
 }
 
 function text(value: unknown): string | null {
@@ -1258,6 +1348,12 @@ function text(value: unknown): string | null {
 
 function textArray(value: unknown): string[] | null {
   return Array.isArray(value) && value.every((item) => typeof item === "string") ? [...value] : null
+}
+
+function heatActivationRoute(value: unknown): HeatActivationRoute | null {
+  return (HEAT_ACTIVATION_ROUTES as readonly unknown[]).includes(value)
+    ? (value as HeatActivationRoute)
+    : null
 }
 
 function booleanOrNull(value: unknown): boolean | null {

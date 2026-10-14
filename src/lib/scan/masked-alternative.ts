@@ -21,6 +21,7 @@ import type { ScanSnapshotSource } from "./profile-context"
 export type ScanMaskedAlternative = {
   verdict: Extract<ScanVerdict, "ideal" | "supportive">
   verdictLabel: string
+  reasonLines?: string[]
   comparison: ScanAlternativeComparison
 }
 
@@ -28,6 +29,7 @@ export function maskAlternative(alternative: ScanAlternative): ScanMaskedAlterna
   return {
     verdict: alternative.verdict,
     verdictLabel: alternative.verdictLabel,
+    ...(alternative.reasonLines ? { reasonLines: alternative.reasonLines } : {}),
     comparison: deriveAlternativeComparison(alternative.criteria ?? []),
   }
 }

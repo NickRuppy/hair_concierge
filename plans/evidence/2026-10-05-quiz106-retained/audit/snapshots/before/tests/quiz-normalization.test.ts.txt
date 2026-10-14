@@ -1,0 +1,256 @@
+import assert from "node:assert/strict"
+import test from "node:test"
+
+import {
+  canonicalizeQuizAnswers,
+  normalizeStoredQuizAnswers,
+  projectQuizAnswersToLegacyVocabulary,
+  toggleTreatmentSelection,
+} from "../src/lib/quiz/normalization"
+import { DIAGNOSTIC_CONCERNS } from "../src/lib/quiz/diagnostic-input"
+import { getConcernOptions } from "../src/components/personal-plan-quiz/quiz-data"
+
+test("natur stays exclusive in treatment selection", () => {
+  assert.deepEqual(toggleTreatmentSelection([], "natur"), ["natur"])
+  assert.deepEqual(toggleTreatmentSelection(["natur"], "gefaerbt"), ["gefaerbt"])
+  assert.deepEqual(toggleTreatmentSelection(["gefaerbt", "blondiert"], "natur"), ["natur"])
+})
+
+test("chemical shape treatments combine with color treatments in canonical order", () => {
+  let selected = toggleTreatmentSelection([], "chemisch_geglaettet")
+  selected = toggleTreatmentSelection(selected, "gefaerbt")
+  selected = toggleTreatmentSelection(selected, "dauerwelle")
+  selected = toggleTreatmentSelection(selected, "blondiert")
+
+  assert.deepEqual(selected, ["gefaerbt", "blondiert", "dauerwelle", "chemisch_geglaettet"])
+})
+
+test("legacy pulltest values are normalized", () => {
+  const normalized = normalizeStoredQuizAnswers({
+    structure: "curly",
+    thickness: "normal",
+    density: "medium",
+    fingertest: "leicht_uneben",
+    pulltest: "ueberdehnt",
+    scalp_type: "trocken",
+    scalp_condition: "gereizt",
+    treatment: ["gefaerbt"],
+  })
+
+  assert.equal(normalized.pulltest, "stretches_stays")
+})
+
+test("density values are normalized and invalid values are removed", () => {
+  assert.equal(normalizeStoredQuizAnswers({ density: "low" }).density, "low")
+  assert.equal(normalizeStoredQuizAnswers({ density: "medium" }).density, "medium")
+  assert.equal(normalizeStoredQuizAnswers({ density: "high" }).density, "high")
+  assert.equal(normalizeStoredQuizAnswers({ density: "unknown" }).density, undefined)
+})
+
+test("hair length values are normalized and invalid values are removed", () => {
+  assert.equal(normalizeStoredQuizAnswers({ hair_length: "very_long" }).hair_length, "very_long")
+  assert.equal(normalizeStoredQuizAnswers({ hair_length: "unknown" }).hair_length, undefined)
+})
+
+test("legacy scalp values still map to type and condition", () => {
+  const normalized = normalizeStoredQuizAnswers({
+    structure: "wavy",
+    thickness: "fine",
+    fingertest: "glatt",
+    pulltest: "snaps",
+    scalp: "fettig_schuppen",
+    treatment: ["natur"],
+  })
+
+  assert.equal(normalized.scalp_type, "fettig")
+  assert.equal(normalized.has_scalp_issue, true)
+  assert.equal(normalized.scalp_condition, "schuppen")
+})
+
+test("legacy no-issue scalp answers normalize to a negative scalp gate", () => {
+  const normalized = normalizeStoredQuizAnswers({
+    structure: "straight",
+    thickness: "normal",
+    fingertest: "glatt",
+    pulltest: "stretches_bounces",
+    scalp_type: "ausgeglichen",
+    scalp_condition: "keine",
+    treatment: ["natur"],
+  })
+
+  assert.equal(normalized.scalp_type, "ausgeglichen")
+  assert.equal(normalized.has_scalp_issue, false)
+  assert.equal(normalized.scalp_condition, undefined)
+})
+
+test("stored answers without the new concern or scalp gate fields backfill clean defaults", () => {
+  const normalized = normalizeStoredQuizAnswers({
+    structure: "straight",
+    thickness: "normal",
+    fingertest: "glatt",
+    pulltest: "stretches_bounces",
+    scalp_type: "ausgeglichen",
+    treatment: ["natur"],
+  })
+
+  assert.equal(normalized.has_scalp_issue, false)
+  assert.deepEqual(normalized.concerns, [])
+})
+
+test("free-text concern notes are trimmed and empty strings are removed", () => {
+  const normalized = normalizeStoredQuizAnswers({
+    concerns: [],
+    concerns_other_text: "  statische Haare  ",
+  })
+
+  assert.equal(normalized.concerns_other_text, "statische Haare")
+})
+
+test("blank free-text concern notes normalize to undefined", () => {
+  const normalized = normalizeStoredQuizAnswers({
+    concerns: [],
+    concerns_other_text: "   ",
+  })
+
+  assert.equal(normalized.concerns_other_text, undefined)
+})
+
+test("legacy free-text concern notes are clamped to the current 50-character limit", () => {
+  assert.equal(
+    normalizeStoredQuizAnswers({ concerns_other_text: `  ${"x".repeat(120)}  ` })
+      .concerns_other_text,
+    "x".repeat(50),
+  )
+})
+
+test("shared hair-loss concern is added once after hair damage with reviewed copy", () => {
+  const concernIndex = DIAGNOSTIC_CONCERNS.indexOf("hair_loss_or_thinning")
+  assert.equal(concernIndex, DIAGNOSTIC_CONCERNS.indexOf("hair_damage") + 1)
+
+  const options = getConcernOptions("wavy")
+  const optionIndex = options.findIndex((option) => option.value === "hair_loss_or_thinning")
+  assert.equal(optionIndex, options.findIndex((option) => option.value === "hair_damage") + 1)
+  assert.deepEqual(options[optionIndex], {
+    value: "hair_loss_or_thinning",
+    label: "Haarausfall oder dünner werdendes Haar",
+    description: "Mir fallen mehr Haare auf als sonst oder mein Haar wirkt weniger dicht.",
+    midSentenceLabel: "Haarausfall oder dünner werdendes Haar",
+    icon: "goal-growth",
+  })
+})
+
+test("canonicalization drops invalid natur conflicts", () => {
+  const canonical = canonicalizeQuizAnswers({
+    structure: "straight",
+    thickness: "fine",
+    density: "low",
+    fingertest: "glatt",
+    pulltest: "stretches_bounces",
+    scalp_type: "ausgeglichen",
+    has_scalp_issue: false,
+    scalp_condition: "gereizt",
+    concerns: ["frizz", "breakage", "dryness"],
+    treatment: ["natur", "chemisch_geglaettet", "blondiert", "gefaerbt", "dauerwelle"],
+  })
+
+  assert.equal(canonical.has_scalp_issue, false)
+  assert.equal(canonical.density, "low")
+  assert.equal(canonical.scalp_condition, undefined)
+  assert.deepEqual(canonical.concerns, ["breakage", "dryness", "frizz"])
+  assert.equal(canonical.concerns_other_text, undefined)
+  assert.deepEqual(canonical.treatment, [
+    "gefaerbt",
+    "blondiert",
+    "dauerwelle",
+    "chemisch_geglaettet",
+  ])
+})
+
+test("goals are passed through when valid (sorted to canonical GOALS order)", () => {
+  const normalized = normalizeStoredQuizAnswers({
+    structure: "curly",
+    goals: ["volume", "shine", "less_frizz"],
+  })
+
+  // GOALS index: volume=0, less_frizz=2, shine=6
+  assert.deepEqual(normalized.goals, ["volume", "less_frizz", "shine"])
+})
+
+test("invalid goal values are filtered out", () => {
+  const normalized = normalizeStoredQuizAnswers({
+    goals: ["volume", "not_a_goal", "shine", 42 as unknown as string],
+  })
+
+  // volume=0, shine=6
+  assert.deepEqual(normalized.goals, ["volume", "shine"])
+})
+
+test("new quiz goals preserve every unique shared selection", () => {
+  const normalized = normalizeStoredQuizAnswers({
+    goals: [
+      "moisture",
+      "frizz_surface",
+      "shine",
+      "shape_definition",
+      "volume_balance",
+      "strength_ends",
+      "scalp_balance",
+      "manageability_styling",
+    ],
+  })
+
+  assert.deepEqual(normalized.goals, [
+    "moisture",
+    "shine",
+    "frizz_surface",
+    "shape_definition",
+    "volume_balance",
+    "strength_ends",
+    "scalp_balance",
+    "manageability_styling",
+  ])
+})
+
+test("goals drop the conflicting volume/less_volume pair (keeps first occurrence)", () => {
+  const normalized = normalizeStoredQuizAnswers({
+    goals: ["volume", "shine", "less_volume"],
+  })
+
+  // less_volume blocked because volume seen first; output sorted: volume=0, shine=6
+  assert.deepEqual(normalized.goals, ["volume", "shine"])
+})
+
+test("missing or empty goals normalize to undefined", () => {
+  assert.equal(normalizeStoredQuizAnswers({}).goals, undefined)
+  assert.equal(normalizeStoredQuizAnswers({ goals: [] }).goals, undefined)
+  assert.equal(normalizeStoredQuizAnswers({ goals: ["nope"] }).goals, undefined)
+})
+
+test("canonicalization carries goals through in canonical GOALS order", () => {
+  const canonical = canonicalizeQuizAnswers({
+    structure: "wavy",
+    thickness: "normal",
+    fingertest: "glatt",
+    pulltest: "stretches_bounces",
+    scalp_type: "ausgeglichen",
+    scalp_condition: "keine",
+    treatment: ["natur"],
+    goals: ["moisture", "less_frizz"],
+  })
+
+  // less_frizz=2, moisture=4
+  assert.deepEqual(canonical.goals, ["less_frizz", "moisture"])
+})
+
+test("shared quiz values project once into the existing profile vocabulary", () => {
+  const projected = projectQuizAnswersToLegacyVocabulary({
+    structure: "coily",
+    thickness: "coarse",
+    density: "high",
+    concerns: ["hair_damage", "frizz_flyaways", "low_shine", "tangling", "hair_loss_or_thinning"],
+    goals: ["manageability_styling", "volume_balance", "strength_ends"],
+  })
+
+  assert.deepEqual(projected.concerns, ["hair_loss", "hair_damage", "frizz", "tangling"])
+  assert.deepEqual(projected.goals, ["less_frizz", "less_volume", "anti_breakage"])
+})

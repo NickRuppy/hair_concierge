@@ -1,11 +1,8 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import {
-  consultBriefJsonSchemaFormat,
-  consultBriefSwapKeys,
-  toConsultBriefSections,
-} from "../src/lib/discovery/consult-brief/api-schema"
+import type { DiscoveryCallSheetBriefSections } from "../src/lib/discovery/call-sheet"
+import { toConsultBriefSections } from "../src/lib/discovery/consult-brief/api-schema"
 import {
   CONSULT_BRIEF_DEFAULT_MODEL,
   consultBriefModel,
@@ -14,9 +11,9 @@ import {
 } from "../src/lib/discovery/consult-brief/generate"
 import { consultSourceHash } from "../src/lib/discovery/consult-brief/hash"
 import type { ConsultInput } from "../src/lib/discovery/consult-brief/input"
+import { CONSULT_LEVER_KINDS } from "../src/lib/discovery/consult-brief/lever-scale"
 import { CONSULT_BOUNDARY_LINE } from "../src/lib/discovery/consult-brief/lint"
 import {
-  buildConsultBriefPrompt,
   CONSULT_BRIEF_PROMPT_VERSION,
   consultBriefSectionsSchema,
   type GeneratedConsultBriefSections,
@@ -73,6 +70,7 @@ function input(overrides: Partial<ConsultInput> = {}): ConsultInput {
     ],
     checklist: [{ kind: "ask_detangling" }],
     heat: null,
+    heatProtection: null,
     washFrequency: {
       current: null,
       currentLabel: null,
@@ -96,19 +94,22 @@ function validSections(): GeneratedConsultBriefSections {
       {
         title: "Schonend entwirren",
         note: "Breiter Kamm, von den Spitzen her.",
-        points: 1,
+        kind: "entwirren",
+        gap: "gross",
         bucket: "umgang",
       },
       {
         title: "Milder waschen",
         note: "Das Sanftwerk Mild Shampoo statt des jetzigen.",
-        points: 0.5,
+        kind: "waschrhythmus",
+        gap: "klein",
         bucket: "produkt",
       },
       {
         title: "Längen schützen",
         note: "Nass nur mit Conditioner kämmen.",
-        points: null,
+        kind: "entwirren",
+        gap: "offen",
         bucket: "umgang",
       },
     ],
@@ -121,6 +122,21 @@ function validSections(): GeneratedConsultBriefSections {
       "Wann war die letzte Blondierung?",
     ],
     erwartungen: ["Kämmbarkeit: stabil in 2–4 Wochen.", CONSULT_BOUNDARY_LINE],
+  }
+}
+
+/**
+ * `validSections()` as stored: zielLuecken `[]` (code-owned since v4), and each Hebel's level
+ * derived in code from kind + gap on bleached, breaking hair (point system v2):
+ * entwirren/gross 2+1 = ●●●, waschrhythmus/klein 2−1 = ●, entwirren/offen 2+1−1 = ●●.
+ */
+function storedValidSections(): DiscoveryCallSheetBriefSections {
+  const levels = [3, 1, 2] as const
+  const sections = validSections()
+  return {
+    ...sections,
+    hebel: sections.hebel.map((entry, index) => ({ ...entry, points: null, level: levels[index] })),
+    zielLuecken: [],
   }
 }
 
@@ -143,65 +159,6 @@ function completing(...outputs: (string | Error)[]) {
   }
   return { complete, calls }
 }
-
-// --- prompt -----------------------------------------------------------------------------------
-
-test("the prompt: German, guardrails as hard rules, the exact sections schema, the input", () => {
-  const { system, user } = buildConsultBriefPrompt(input())
-  assert.match(system, /Deutsch/)
-  assert.match(system, /## G1 — /)
-  for (const key of [
-    "mechanik",
-    "diagnose",
-    "hebel",
-    "bucket",
-    "swapReasons",
-    "callFragen",
-    "erwartungen",
-  ]) {
-    assert.ok(system.includes(`"${key}"`), key)
-  }
-  // zielLuecken is code-owned since v4: it never appears in the prompt's schema.
-  assert.equal(system.includes('"zielLuecken"'), false)
-  assert.equal(CONSULT_BRIEF_PROMPT_VERSION, "consult-brief-v5")
-  assert.match(system, /dritte[rn]? Person/)
-  assert.ok(user.includes(SHAMPOO_KEY))
-  assert.ok(user.includes("Glanzwerk Volumen Shampoo"))
-  assert.ok(user.includes("Womit entwirrst du?"))
-  // Evidence grades never reach the prompt (G5).
-  assert.doesNotMatch(user, /"evidence"/)
-})
-
-test("the prompt names the allowed swapReasons keys; the score arithmetic is the code's", () => {
-  const { user, system } = buildConsultBriefPrompt(input())
-  assert.ok(user.includes(`"${SHAMPOO_KEY}"`))
-  assert.ok(system.includes("Die Ziel-Rechnung und ihre Deckelung macht der Code"))
-})
-
-test("the v4 prompt: mechanik spec, bucket rule, gap-as-question rule, checklist item 5", () => {
-  const { system, user } = buildConsultBriefPrompt(input())
-  assert.ok(
-    system.includes(
-      '"mechanik": 2–3 Sätze, generisch und ohne Personenbezug: das Hauptproblem benannt, der Mechanismus dahinter, die typischen Ursachen',
-    ),
-  )
-  assert.ok(
-    system.includes(
-      'jeder mit "bucket": "produkt" für Produkt-Züge (Tausch, Neuzugang, Weglassen) oder "umgang" für Verhalten (Waschrhythmus, Hitze, Handling)',
-    ),
-  )
-  assert.ok(
-    system.includes(
-      "Liegen ihr Ziel und die realistische Erwartung auseinander, formuliere genau das als Frage",
-    ),
-  )
-  assert.ok(system.includes('"mechanik": ganz ohne Personenbezug'))
-  assert.ok(
-    user.includes(
-      '5. "hebel" und "callFragen" haben je 3 bis 5 Einträge, jeder Hebel den passenden "bucket", und jede Frage ändert den Plan.',
-    ),
-  )
-})
 
 test("the sections schema is strict: exactly the call sheet's shape", () => {
   assert.equal(consultBriefSectionsSchema.safeParse(validSections()).success, true)
@@ -240,16 +197,105 @@ test("a valid answer: brief + source hash, one completion with the configured mo
   const result = await generateConsultBrief(input(), { complete, model: "test-model" })
   assert.ok("brief" in result, JSON.stringify(result))
   // Code owns zielLuecken since v4: always `[]` in the generated brief.
-  assert.deepEqual(result.brief, { ...validSections(), zielLuecken: [] })
+  assert.deepEqual(result.brief, storedValidSections())
   assert.deepEqual(result.brief.zielLuecken, [])
   assert.equal(result.sourceHash, consultSourceHash(input()))
   assert.equal(calls.length, 1)
   assert.equal(calls[0]!.model, "test-model")
-  assert.deepEqual(calls[0], {
-    ...buildConsultBriefPrompt(input()),
-    model: "test-model",
-    format: consultBriefJsonSchemaFormat([SHAMPOO_KEY]),
-  })
+  const { system, user, format } = calls[0]!
+  assert.match(system, /Deutsch/)
+  assert.match(system, /## G1 — /)
+  for (const key of [
+    "mechanik",
+    "diagnose",
+    "hebel",
+    "bucket",
+    "swapReasons",
+    "callFragen",
+    "erwartungen",
+  ]) {
+    assert.ok(system.includes(`"${key}"`), key)
+  }
+  // zielLuecken is code-owned since v4: it never appears in the prompt's schema.
+  assert.equal(system.includes('"zielLuecken"'), false)
+  assert.equal(CONSULT_BRIEF_PROMPT_VERSION, "consult-brief-v6")
+  assert.match(system, /dritte[rn]? Person/)
+  assert.ok(user.includes(SHAMPOO_KEY))
+  assert.ok(user.includes("Glanzwerk Volumen Shampoo"))
+  assert.ok(user.includes("Womit entwirrst du?"))
+  // Evidence grades never reach the prompt (G5).
+  assert.doesNotMatch(user, /"evidence"/)
+  assert.ok(user.includes(`"${SHAMPOO_KEY}"`))
+  assert.ok(system.includes("Wirkungsstufe und Score-Spanne berechnet der Code"))
+  // Point system v2: every lever kind is listed for the model; the diagnosis and heat rules.
+  assert.ok(
+    system.includes("  - hitze_tools: Glätteisen, Lockenstab & Co.: schonender oder seltener"),
+  )
+  assert.ok(system.includes("  - kopfhaut: Kopfhaut (eigener Block)"))
+  assert.ok(system.includes('Die "diagnose" beschreibt ihren heutigen Zustand, nie den Plan'))
+  assert.ok(system.includes('heißt der Hebel „schonender"'))
+  assert.ok(system.includes("dazu keine eigene callFrage"))
+  assert.ok(
+    system.includes(
+      '"mechanik": 2–3 Sätze, generisch und ohne Personenbezug: das Hauptproblem benannt, der Mechanismus dahinter, die typischen Ursachen',
+    ),
+  )
+  assert.ok(
+    system.includes(
+      'jeder mit "bucket": "produkt" für Produkt-Züge (Tausch, Neuzugang, Weglassen) oder "umgang" für Verhalten (Waschrhythmus, Hitze, Handling)',
+    ),
+  )
+  assert.ok(
+    system.includes(
+      "Liegen ihr Ziel und die realistische Erwartung auseinander, formuliere genau das als Frage",
+    ),
+  )
+  assert.ok(system.includes('"mechanik": ganz ohne Personenbezug'))
+  assert.ok(
+    user.includes(
+      '5. "hebel" und "callFragen" haben je 3 bis 5 Einträge, jeder Hebel den passenden "bucket", "kind" und "gap", und jede Frage ändert den Plan und doppelt keine ask_-Frage der checklist.',
+    ),
+  )
+  assert.equal(format.type, "json_schema")
+  assert.equal(format.strict, true)
+  const schema = format.schema as {
+    additionalProperties: boolean
+    required: string[]
+    properties: Record<string, Record<string, unknown>>
+  }
+  assert.equal(schema.additionalProperties, false)
+  assert.deepEqual(schema.required.toSorted(), Object.keys(schema.properties).toSorted())
+  assert.equal(schema.properties.hebel!.minItems, 3)
+  assert.equal(schema.properties.hebel!.maxItems, 5)
+  assert.equal(schema.properties.callFragen!.minItems, 3)
+  assert.equal(schema.properties.callFragen!.maxItems, 5)
+  const hebelItem = schema.properties.hebel!.items as {
+    required: string[]
+    additionalProperties: boolean
+    properties: { kind: { enum: string[] }; gap: { enum: string[] } }
+  }
+  assert.deepEqual(hebelItem.required, ["title", "note", "kind", "gap", "bucket"])
+  assert.deepEqual(schema.required.toSorted(), [
+    "callFragen",
+    "diagnose",
+    "erwartungen",
+    "hebel",
+    "mechanik",
+    "swapReasons",
+  ])
+  assert.equal("zielLuecken" in schema.properties, false)
+  assert.equal(hebelItem.additionalProperties, false)
+  assert.deepEqual(hebelItem.properties.kind.enum, [...CONSULT_LEVER_KINDS])
+  assert.deepEqual(hebelItem.properties.gap.enum, ["gross", "klein", "offen"])
+  const swap = schema.properties.swapReasons as {
+    type: string
+    maxItems: number
+    items: { required: string[]; properties: { key: { enum?: string[] } } }
+  }
+  assert.equal(swap.type, "array")
+  assert.equal(swap.maxItems, 1)
+  assert.deepEqual(swap.items.required, ["key", "reason"])
+  assert.deepEqual(swap.items.properties.key.enum, [SHAMPOO_KEY])
 })
 
 test("a v4 answer without mechanik or with a bucket-less Hebel → invalid_schema", async () => {
@@ -268,14 +314,6 @@ test("invalid JSON → error, no brief", async () => {
   const { complete } = completing("Hier ist dein Brief: {")
   const result = await generateConsultBrief(input(), { complete, model: "m" })
   assert.deepEqual(result, { error: { code: "invalid_json" } })
-})
-
-test("JSON that misses the schema → error, no brief", async () => {
-  const { complete } = completing(JSON.stringify({ diagnose: "x" }))
-  const result = await generateConsultBrief(input(), { complete, model: "m" })
-  assert.ok("error" in result)
-  assert.equal(result.error.code, "invalid_schema")
-  assert.equal("brief" in result, false)
 })
 
 test("a lint failure twice → lint_failed with the SECOND run's findings, no brief", async () => {
@@ -304,7 +342,7 @@ test("a lint failure, then a clean retry → the retried brief; the retry carrie
   const { complete, calls } = completing(dirtyRaw, JSON.stringify(apiAnswer()))
   const result = await generateConsultBrief(input(), { complete, model: "m" })
   assert.ok("brief" in result, JSON.stringify(result))
-  assert.deepEqual(result.brief, { ...validSections(), zielLuecken: [] })
+  assert.deepEqual(result.brief, storedValidSections())
   assert.equal(calls.length, 2)
   assert.equal(calls[0]!.correction, undefined)
   const correction = calls[1]!.correction
@@ -319,16 +357,6 @@ test("a lint failure, then a clean retry → the retried brief; the retry carrie
   assert.deepEqual(calls[1]!.format, calls[0]!.format)
 })
 
-test("at most two completions, even when every answer lints dirty", async () => {
-  const dirty = validSections()
-  dirty.diagnose += " Die Kur repariert die Längen."
-  const { complete, calls } = completing(JSON.stringify(apiAnswer(dirty)))
-  const result = await generateConsultBrief(input(), { complete, model: "m" })
-  assert.ok("error" in result)
-  assert.equal(result.error.code, "lint_failed")
-  assert.equal(calls.length, 2)
-})
-
 test("a schema failure on the retry → that error, no third call", async () => {
   const dirty = validSections()
   dirty.diagnose += " Die Kur repariert die Längen."
@@ -339,10 +367,14 @@ test("a schema failure on the retry → that error, no third call", async () => 
 })
 
 test("no retry for JSON, schema or LLM failures on the first call", async () => {
-  for (const output of ["{", JSON.stringify({ diagnose: "x" }), new Error("boom")]) {
+  for (const [output, code] of [
+    ["{", "invalid_json"],
+    [JSON.stringify({ diagnose: "x" }), "invalid_schema"],
+    [new Error("boom"), "llm_failed"],
+  ] as const) {
     const { complete, calls } = completing(output)
     const result = await generateConsultBrief(input(), { complete, model: "m" })
-    assert.ok("error" in result)
+    assert.deepEqual(result, { error: { code } })
     assert.equal(calls.length, 1)
   }
 })
@@ -374,60 +406,6 @@ test("the boundary line is not doubled when the model already wrote it (trim-com
   ])
 })
 
-// --- API schema -------------------------------------------------------------------------------
-
-test("the API schema: strict, every property required, hebel/callFragen 3–5, points nullable", () => {
-  const format = consultBriefJsonSchemaFormat([SHAMPOO_KEY])
-  assert.equal(format.type, "json_schema")
-  assert.equal(format.strict, true)
-  const schema = format.schema as {
-    additionalProperties: boolean
-    required: string[]
-    properties: Record<string, Record<string, unknown>>
-  }
-  assert.equal(schema.additionalProperties, false)
-  assert.deepEqual(schema.required.toSorted(), Object.keys(schema.properties).toSorted())
-  assert.equal(schema.properties.hebel!.minItems, 3)
-  assert.equal(schema.properties.hebel!.maxItems, 5)
-  assert.equal(schema.properties.callFragen!.minItems, 3)
-  assert.equal(schema.properties.callFragen!.maxItems, 5)
-  const hebelItem = schema.properties.hebel!.items as {
-    required: string[]
-    additionalProperties: boolean
-    properties: { points: { type: string[] } }
-  }
-  assert.deepEqual(hebelItem.required, ["title", "note", "points", "bucket"])
-  assert.deepEqual(schema.required.toSorted(), [
-    "callFragen",
-    "diagnose",
-    "erwartungen",
-    "hebel",
-    "mechanik",
-    "swapReasons",
-  ])
-  assert.equal("zielLuecken" in schema.properties, false)
-  assert.equal(hebelItem.additionalProperties, false)
-  assert.deepEqual(hebelItem.properties.points.type, ["number", "null"])
-  const swap = schema.properties.swapReasons as {
-    type: string
-    maxItems: number
-    items: { required: string[]; properties: { key: { enum?: string[] } } }
-  }
-  assert.equal(swap.type, "array")
-  assert.equal(swap.maxItems, 1)
-  assert.deepEqual(swap.items.required, ["key", "reason"])
-  assert.deepEqual(swap.items.properties.key.enum, [SHAMPOO_KEY])
-})
-
-test("the API schema with no allowed swap keys: no empty enum, the array capped at zero", () => {
-  const format = consultBriefJsonSchemaFormat([])
-  const swap = (format.schema as { properties: { swapReasons: Record<string, unknown> } })
-    .properties.swapReasons as { maxItems: number; items: { properties: { key: object } } }
-  assert.equal(swap.maxItems, 0)
-  assert.deepEqual(swap.items.properties.key, { type: "string" })
-  assert.equal(JSON.stringify(format).includes('"enum":[]'), false)
-})
-
 test("no swap keys end to end: an empty swapReasons array becomes an empty record", async () => {
   const noSwaps = input({ products: [] })
   const sections = validSections()
@@ -435,22 +413,24 @@ test("no swap keys end to end: an empty swapReasons array becomes an empty recor
   sections.hebel[1] = {
     title: "Milder waschen",
     note: "Seltener und sanfter waschen.",
-    points: 0.5,
+    kind: "waschrhythmus",
+    gap: "klein",
     bucket: "umgang",
   }
   const { complete, calls } = completing(JSON.stringify(apiAnswer(sections)))
   const result = await generateConsultBrief(noSwaps, { complete, model: "m" })
   assert.ok("brief" in result, JSON.stringify(result))
   assert.deepEqual(result.brief.swapReasons, {})
-  assert.deepEqual(calls[0]!.format, consultBriefJsonSchemaFormat([]))
-})
-
-test("the swap keys match the ones the prompt names", () => {
-  const keys = consultBriefSwapKeys(input())
-  assert.deepEqual(keys, [SHAMPOO_KEY])
-  const { user } = buildConsultBriefPrompt(input())
-  for (const key of keys) assert.ok(user.includes(`"${key}"`), key)
-  assert.deepEqual(consultBriefSwapKeys(input({ products: [] })), [])
+  const { format, user } = calls[0]!
+  const swap = (format.schema as { properties: { swapReasons: Record<string, unknown> } })
+    .properties.swapReasons as { maxItems: number; items: { properties: { key: object } } }
+  assert.equal(swap.maxItems, 0)
+  assert.deepEqual(swap.items.properties.key, { type: "string" })
+  assert.equal(JSON.stringify(format).includes('"enum":[]'), false)
+  assert.ok(
+    user.includes("<erlaubte_swapReasons_keys>[]</erlaubte_swapReasons_keys>"),
+    "the empty allowed-swap-key tag is delivered",
+  )
 })
 
 test("array → record: the stored shape; duplicates and malformed pass through unconverted", () => {
@@ -504,4 +484,67 @@ test("the model: env override, else the strongest configured default", () => {
   assert.equal(consultBriefModel({ CONSULT_BRIEF_MODEL: " gpt-x " }), "gpt-x")
   assert.equal(consultBriefModel({}), CONSULT_BRIEF_DEFAULT_MODEL)
   assert.equal(consultBriefModel({ CONSULT_BRIEF_MODEL: "  " }), CONSULT_BRIEF_DEFAULT_MODEL)
+})
+
+test("her heat-protection answer overrides the model's gap before the level is derived", async () => {
+  const sections = validSections()
+  sections.hebel[0] = {
+    title: "Hitzeschutz jedes Mal",
+    note: "Vor jedem Glätten.",
+    kind: "hitzeschutz",
+    gap: "gross",
+    bucket: "produkt",
+  }
+  const { complete } = completing(JSON.stringify(apiAnswer(sections)))
+  const result = await generateConsultBrief(input({ heatProtection: "sometimes" }), {
+    complete,
+    model: "m",
+  })
+  assert.ok("brief" in result, JSON.stringify(result))
+  // „manchmal" = klein: 2 + 1 (bleached, breaking) − 1 = ●●, not the model's ●●●.
+  assert.equal(result.brief.hebel[0]!.gap, "klein")
+  assert.equal(result.brief.hebel[0]!.level, 2)
+})
+
+test("a Stil finding never discards a brief: left after the retry, the brief is kept", async () => {
+  // Prod 2026-10-12: a guardrail finding, then a retry with only a style finding — the brief
+  // must survive (style rules steer the retry; guardrails G1–G6 decide what is discarded).
+  const guardrail = validSections()
+  guardrail.diagnose += " Die Kur repariert die Längen."
+  const style = validSections()
+  style.diagnose += " Eine Spülung ist als neuer Schritt vorgesehen."
+  const { complete, calls } = completing(
+    JSON.stringify(apiAnswer(guardrail)),
+    JSON.stringify(apiAnswer(style)),
+  )
+  const result = await generateConsultBrief(input(), { complete, model: "m" })
+  assert.ok("brief" in result, JSON.stringify(result))
+  assert.equal(calls.length, 2)
+  assert.match(result.brief.diagnose, /vorgesehen/)
+  assert.equal(result.sourceHash, consultSourceHash(input()))
+})
+
+test("a retry with a guardrail AND a style finding is discarded with the guardrail finding only", async () => {
+  const mixed = validSections()
+  mixed.diagnose += " Die Kur repariert die Längen. Eine Spülung ist als neuer Schritt vorgesehen."
+  const raw = JSON.stringify(apiAnswer(mixed))
+  const { complete, calls } = completing(raw, raw)
+  const result = await generateConsultBrief(input(), { complete, model: "m" })
+  assert.ok("error" in result)
+  assert.equal(result.error.code, "lint_failed")
+  assert.equal(calls.length, 2)
+  assert.ok(result.error.findings && result.error.findings.length > 0)
+  assert.ok(result.error.findings.every((finding) => finding.guardrail !== "Stil"))
+})
+
+test("a style-only first draft is still retried once, and kept if the retry is no better", async () => {
+  const style = validSections()
+  style.diagnose += " Eine Spülung ist als neuer Schritt vorgesehen."
+  const raw = JSON.stringify(apiAnswer(style))
+  const { complete, calls } = completing(raw, raw)
+  const result = await generateConsultBrief(input(), { complete, model: "m" })
+  assert.ok("brief" in result, JSON.stringify(result))
+  assert.equal(calls.length, 2)
+  assert.ok(calls[1]!.correction?.instruction.includes("diagnose_plan_talk"))
+  assert.equal(result.sourceHash, consultSourceHash(input()))
 })

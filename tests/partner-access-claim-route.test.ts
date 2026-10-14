@@ -72,7 +72,11 @@ function dependencies(overrides: Record<string, unknown> = {}) {
 }
 
 test("new creator claim creates and signs into the exact named account without an email roundtrip", async () => {
-  const { calls, deps } = dependencies()
+  const { calls, deps } = dependencies({
+    hasCurrentPaidAppAccess: async () => {
+      throw new Error("must not be called for a just-created account")
+    },
+  })
   const response = await createPartnerAccessClaimHandler(deps)(request())
 
   assert.equal(response.status, 200)
@@ -96,29 +100,19 @@ test("new creator claim creates and signs into the exact named account without a
   assert.equal(response.cookies.get("chaarlie_funnel_session")?.value, "signed-funnel-cookie")
 })
 
-test("an existing unrelated account requires normal mailbox proof once", async () => {
-  const { calls, deps } = dependencies({
-    createUser: async () => {
-      throw Object.assign(new Error("already registered"), { code: "email_exists", status: 422 })
-    },
-  })
-  const response = await createPartnerAccessClaimHandler(deps)(request())
-
-  assert.equal(response.status, 202)
-  assert.deepEqual(await response.json(), { requiresEmail: true, email: "lea@example.test" })
-  assert.deepEqual(
-    calls.map(([name]) => name),
-    ["reserve", "release", "magicLink"],
-  )
-})
-
 test("an existing-account email can resume the claim in a different browser", async () => {
   const first = dependencies({
     createUser: async () => {
       throw Object.assign(new Error("already registered"), { code: "email_exists", status: 422 })
     },
   })
-  await createPartnerAccessClaimHandler(first.deps)(request())
+  const firstResponse = await createPartnerAccessClaimHandler(first.deps)(request())
+  assert.equal(firstResponse.status, 202)
+  assert.deepEqual(await firstResponse.json(), { requiresEmail: true, email: "lea@example.test" })
+  assert.deepEqual(
+    first.calls.map(([name]) => name),
+    ["reserve", "release", "magicLink"],
+  )
   const magicLink = first.calls.find(([name]) => name === "magicLink")?.[1] as {
     redirectTo: string
   }
@@ -219,38 +213,6 @@ test("a currently paying account claims without a fresh start", async () => {
     requiresEmail: false,
     freshStart: false,
   })
-})
-
-test("a lapsed account claims with a fresh start", async () => {
-  const { calls, deps } = dependencies({
-    getUser: async () => ({ id: ids.user, email: "lea@example.test" }),
-    hasCurrentPaidAppAccess: async () => false,
-  })
-  const response = await createPartnerAccessClaimHandler(deps)(request())
-  assert.equal(response.status, 200)
-  assert.equal(
-    (calls.find(([name]) => name === "complete")?.[1] as { freshStart: boolean }).freshStart,
-    true,
-  )
-  assert.deepEqual(await response.json(), {
-    destination: "/quiz?partner=1",
-    requiresEmail: false,
-    freshStart: true,
-  })
-})
-
-test("a new account always claims with a fresh start, without consulting billing", async () => {
-  const { calls, deps } = dependencies({
-    hasCurrentPaidAppAccess: async () => {
-      throw new Error("must not be called for a just-created account")
-    },
-  })
-  const response = await createPartnerAccessClaimHandler(deps)(request())
-  assert.equal(response.status, 200)
-  assert.equal(
-    (calls.find(([name]) => name === "complete")?.[1] as { freshStart: boolean }).freshStart,
-    true,
-  )
 })
 
 test("a paid-access lookup failure fails closed instead of assuming a fresh start", async () => {

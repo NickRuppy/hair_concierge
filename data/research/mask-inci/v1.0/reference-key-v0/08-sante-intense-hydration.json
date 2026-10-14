@@ -1,0 +1,366 @@
+{
+  "schemaVersion": "mask-research-record-v0.1",
+  "lane": "reference_key",
+  "productId": "08-sante-intense-hydration",
+  "identity": {
+    "brand": "Sante Naturkosmetik",
+    "productName": "Intense Hydration Maske Hyaluron + 3-Fach Protein Komplex",
+    "packSize": "150 ml (jar)",
+    "gtinEan": "4055297220682",
+    "market": "DE (brand-direct sante.de, Naturkosmetik retail)",
+    "formulaSource": "sante.de product page 40628 (brand-direct, direct verbatim fetch), accessed 2026-09-04",
+    "rawInciSha256": "0e17431414ade3807ea46a45aaede128f3029769275fe7861085bb98466e5c9a",
+    "identityState": "verified",
+    "identityStateReason": "Brand-direct verbatim fetch of the exact 150 ml jar SKU, explicitly distinguished from the 20 ml '1 Minute Wonder Mask' sachet (product code 40762, different EAN). Temporarily out of stock but an active SKU."
+  },
+  "g0": {
+    "value": "in_category",
+    "modeScoped": false,
+    "multiUse": null,
+    "rationale": "Directions state placement ('in feuchten Haarlängen'), a contact time (1 Minute) and a rinse. Single stated mode. Express dwell is fully eligible under charter F2 — dwell is never a boundary test.",
+    "evidenceSignals": [
+      "directions: 'Maske in feuchten Haarlängen verteilen' — lengths, stated, P5-compliant",
+      "directions: '1 Minute einwirken lassen' — product-stated contact time",
+      "directions: 'Ausspülen' — rinse-out",
+      "charter F2: 1-minute Kuren are in scope"
+    ],
+    "placementConjunctNote": "Placement stated ('Haarlängen'). The words 'nach der Haarwäsche' are not verbatim, but 'feuchten Haarlängen' plus the mask form carry it (AP-05-AFTERCLEANSING)."
+  },
+  "tailMarker": {
+    "ingredient": "Potassium Sorbate",
+    "rank": 18,
+    "anomalyNote": "The marker is a PRESERVATIVE at rank 18, one rank ahead of Parfum @19, in a 21-entry list. That gives the cohort's second-longest above-tail segment and demotes almost nothing — only Parfum and its two declared allergens sit in the tail. No §3.1 anomaly. Consequence worth noting: a Naturkosmetik formula with a short preservative system and a short fragrance block gets nearly its whole list credited, while conventional formulas with early Parfum lose theirs. The tail rule is not weight-neutral across formulation philosophies (AP-08-NATURKOSMETIK)."
+  },
+  "aboveTailSegment": [
+    "1 Aqua (Water)",
+    "2 Cetearyl Alcohol",
+    "3 Glycerin",
+    "4 Distearoylethyl Dimonium Chloride",
+    "5 Behenyl Alcohol",
+    "6 Betaine",
+    "7 Hydrolyzed Corn Protein",
+    "8 Hydrolyzed Wheat Protein",
+    "9 Hydrolyzed Soy Protein",
+    "10 Lactic Acid",
+    "11 Arginine",
+    "12 Sodium Lactate",
+    "13 Sodium Hyaluronate",
+    "14 Aloe Barbadensis Leaf Juice Powder",
+    "15 Leuconostoc/Radish Root Ferment Filtrate",
+    "16 Tocopherol",
+    "17 Helianthus Annuus (Sunflower) Seed Oil"
+  ],
+  "directProperties": {
+    "treatment_concentration_potential": { "value": "moderate", "note": "One cationic species and two fatty alcohols with a single lipid; broad payload but structurally narrow on §9.1's terms." },
+    "conditioning_deposition_potential": { "value": "moderate", "note": "Distearoylethyl Dimonium Chloride @4 is a permanent esterquat — one species, no amidoamine, so Lactic Acid @10 and Arginine @11 are NOT neutraliser-coupled here (C3 does not apply)." },
+    "wet_slip_detangling_potential": { "value": "moderate", "note": "Single esterquat with two fatty alcohols; wet evidence is not dry evidence." },
+    "dry_combability_potential": { "value": "moderate", "note": "No silicone at any rank; a protein film route is present but its MW is invisible on a label." },
+    "surface_lubrication_softness_potential": { "value": "moderate", "note": "Behenyl Alcohol @5 plus one sunflower oil at @17; a lean emollient load for the category." },
+    "smoothing_frizz_control_potential": { "value": "moderate", "note": "Claimed ('glättet die Haarstruktur & wirkt Frizz entgegen') but the architecture carries no silicone, no substantive polymer, and one lipid." },
+    "shine_potential": { "value": "lower", "note": "No alignment-oriented route at any rank." },
+    "humectant_support_potential": { "value": "higher", "note": "Five distinct qualifying humectant-class members above the tail from four different families — the cohort's broadest cluster, and one of only two that clear the D5 guard." },
+    "weight_deposition_potential": { "value": "lower", "note": "One lipid at rank 17, one esterquat, no butter, no occlusive, no silicone." },
+    "body_lightness_potential": { "value": "likely_preserving", "note": "Lean lipid load corroborated by explicit 'ohne zu beschweren' positioning — but see the weight field, where the anchor structure refuses `low`." },
+    "repair_lubrication_protection": { "value": "candidate", "note": "Manageability route only." },
+    "repair_surface_film": { "value": "candidate", "note": "Three distinct hydrolyzed proteins at ranks 7, 8 and 9 — the cohort's strongest above-tail protein cluster. MW unknown from INCI, so this supports 'a protein film route is present' and nothing more." },
+    "bond_specific_support": { "value": "unknown", "note": "No named bond token and no bond positioning." },
+    "color_chemical_damage_protection": { "value": "general_conditioning", "note": "Lactic Acid @10 / Sodium Lactate @12 are a buffer pair; no colour endpoint." },
+    "fragrance_scalp_exposure": { "value": "aromatic_or_allergen_exposure", "note": "Parfum @19 with Linalool @20 and Benzyl Salicylate @21 declared. 'NATRUE-zertifiziert' is not a fragrance-free or hypoallergenic claim and no such reading is made." }
+  },
+  "profile": {
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, brand-direct DE INCI of record (sha256 0e174314…), above-tail ranks 1–17; category-relative to the German drugstore rinse-out mask shelf.",
+      "rationale": "Exactly one §9.1 structural signal is satisfied. The formula carries a broad and genuinely material payload — three proteins, five humectants — but §9.1 measures structural conditioning intensity, not payload breadth, and on that axis this is a single-cationic, single-lipid formula. E2 ceiling: comparative structural intensity potential, not measured treatment performance.",
+      "evidenceSignals": [
+        "CETEARYL ALCOHOL (rank 2) — long-chain fatty alcohol in the top three, the one satisfied signal",
+        "DISTEAROYLETHYL DIMONIUM CHLORIDE (rank 4) — the only cationic surfactant at any rank",
+        "BEHENYL ALCOHOL (rank 5) — a second fatty alcohol; fatty-alcohol breadth is not a §9.1 signal and is excluded from S3 by definition",
+        "HELIANTHUS ANNUUS SEED OIL (rank 17) — the only non-fatty-alcohol lipid above the tail; S3 needs two"
+      ],
+      "derivation": "S1 = NOT satisfied (one cationic species). S2 = satisfied (Cetearyl Alcohol @2). S3 = NOT satisfied (one lipid, against a required two; the two fatty alcohols are excluded from the lipid count by S3's own wording). Count = 1 of 3.",
+      "thresholdReasoning": [
+        "Clears `moderate`: §9.1's 'everything else, including exactly one satisfied signal'.",
+        "`high` does not apply: it requires ≥2 signals, and only S2 holds. The formula's most distinctive features — the three-protein cluster and the five-member humectant cluster — are invisible to §9.1 by design, because D1 confines this field to structural position and assigns protein to repair_support_level and humectants to the focus layer.",
+        "`low` does not apply: Cetearyl Alcohol @2 defeats its second conjunct.",
+        "Confidence `moderate` by §9.1's own rule: high confidence requires ≥2 signals pointing the same way."
+      ],
+      "counterSignals": [
+        "Payload breadth versus structural narrowness: this is the cohort's clearest case where the two diverge, and §9.1 correctly reports the structural reading. Recorded so the divergence is visible to the review rather than silently absorbed.",
+        "Behenyl Alcohol @5 is a C22 fatty alcohol and a real emollient load; §9.1 gives fatty-alcohol breadth no credit beyond the S2 rank test."
+      ],
+      "limitations": [
+        "A three-step concentration scale is at the edge of INCI support.",
+        "Downstream cost: conditioning_level `moderate` caps damage_fit at healthy + moderately_damaged even though a specialist protein route exists — see the damageFit record and AP-08-SPECIALISTGATE."
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, above-tail ranks 1–17; an ingredient-informed matching prior, not a prediction of visible finish.",
+      "rationale": "The `high` anchor fails on cationic count and lipid load; the `low` anchor fails on a single conjunct, the cetearyl-class fatty alcohol at rank 2. `moderate` is the residual, despite a lean lipid load and an explicit 'ohne zu beschweren' claim pointing the other way. E2 ceiling: weight deposition potential, never measured finish.",
+      "evidenceSignals": [
+        "DISTEAROYLETHYL DIMONIUM CHLORIDE (rank 4) — a single cationic species (low-anchor conjunct 1: SATISFIED)",
+        "CETEARYL ALCOHOL (rank 2) — cetearyl-class fatty alcohol in the top three (low-anchor conjunct 2: FAILS)",
+        "no butter, heavy triglyceride, hydrogenated oil or occlusive hydrocarbon at any rank (low-anchor conjunct 3: SATISFIED)",
+        "HELIANTHUS ANNUUS SEED OIL (rank 17) — the only lipid, a mid-band plant oil at the far end of the above-tail segment",
+        "claim: 'verbessert die Kämmbarkeit ohne zu beschweren' — an explicit lightness positioning"
+      ],
+      "derivation": "§9.2 `high` = required base (≥2 cationics above tail AND cetearyl-class in top three): leg 1 fails. §9.2 `low` = single cationic AND no cetearyl-class fatty alcohol in the top three AND no R4b heavy lipid above the tail: conjuncts 1 and 3 hold, conjunct 2 fails. Residual = `moderate`.",
+      "thresholdReasoning": [
+        "Clears `moderate`: the residual bucket.",
+        "`high` does not apply: one cationic, one mid lipid at rank 17, no silicone.",
+        "`low` does not apply on the cetearyl conjunct alone — the second instance in the cohort of AP-07-LOWUNREACHABLE, and the more striking one, because here the exact-product positioning explicitly claims lightness and the formula corroborates it. §9.2 provides a conflict fallback for the opposite case (formula-only `high` contradicted by lightness positioning) but no symmetric mechanism for a formula-plus-claim lightness reading that the anchor refuses.",
+        "§9.2 conflict fallback not engaged: it applies only when a formula-only `high` is contradicted, and no `high` was reached."
+      ],
+      "counterSignals": [
+        "The graded `body_lightness_potential` reads `likely_preserving` with claim corroboration, while the profile field reads `moderate`. The divergence is the anchor's, not the evidence's.",
+        "'ohne zu beschweren' recorded as claim context; positioning corroborates but never creates, and there is no channel in §11 step 4 through which it could have moved this field downward."
+      ],
+      "limitations": ["A soft preference with a stated reason, never an exclusion."]
+    },
+    "careDirection": {
+      "value": "balanced",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, above-tail ranks 1–17; comparative care emphasis, never an assertion about a user's protein or moisture state (G6).",
+      "rationale": "This is the cohort's only genuinely substantive `balanced`: three distinct hydrolyzed proteins at consecutive ranks 7–9 satisfy the material R5 route on both of its legs, and five distinct qualifying humectants above the tail satisfy the humectant-cluster leg of the balanced test — not the loose S3 lipid leg that carried #04 and #05. Both sides of the value are real. E2 ceiling: comparative emphasis, not a delivered outcome.",
+      "evidenceSignals": [
+        "HYDROLYZED CORN PROTEIN (7), HYDROLYZED WHEAT PROTEIN (8), HYDROLYZED SOY PROTEIN (9) — three distinct qualifying R5 species above the tail, at consecutive ranks",
+        "GLYCERIN (3), BETAINE (6), SODIUM LACTATE (12), SODIUM HYALURONATE (13), ALOE BARBADENSIS LEAF JUICE POWDER (14) — five distinct qualifying humectant-class members above the tail, four of them non-glycerin",
+        "ARGININE (rank 11) — free amino acid, deliberately EXCLUDED from the humectant cluster (not on R9's list) and excluded from R5 by the mask delta",
+        "HELIANTHUS ANNUUS SEED OIL (17) — the single lipid; S3 is NOT satisfied, so the lipid leg of the balanced test is unavailable here",
+        "LACTIC ACID (10) / SODIUM LACTATE (12) — a buffer pair; C3's amidoamine-neutraliser reading does NOT apply because the cationic is a permanent esterquat, so Sodium Lactate is counted as a humectant on its own merits"
+      ],
+      "derivation": "§9.3 material-R5 test satisfied on leg (a) (three distinct species above the tail) and independently on leg (b) (a qualifying species at above-tail rank 7, inside the first eight). Then the `balanced` test: material R5 route AND (a qualifying humectant cluster of ≥3 distinct humectants above the tail with ≥2 non-glycerin, OR S3). The humectant cluster leg succeeds with five members and four non-glycerin; the S3 leg fails with one lipid. → `balanced`, earned on the humectant leg.",
+      "thresholdReasoning": [
+        "Clears `balanced`: both conjuncts hold, and the second holds on the strict humectant-cluster leg rather than the loose lipid leg. D6 reserves `balanced` for a substantive mixed protein-plus-moisture architecture; three proteins and five humectants above the tail is that architecture.",
+        "`protein` does not apply: the humectant leg is substantive and independent, so this is not a protein-dominant formula.",
+        "`moisture` does not apply: three hydrolyzed proteins at ranks 7–9 is a dominant protein-film route by any reading, and `moisture` is defined as the coherent direction WITHOUT one.",
+        "Aloe counted once and never as a strong member, per lexicon family 7's 'reconstituted powder at trace level' caution — the source list says 'Leaf Juice Powder' explicitly. Even discounting Aloe entirely, the cluster is four members with three non-glycerin and still clears."
+      ],
+      "counterSignals": [
+        "D4 heavy-protein-payload counter-signal FIRES (three distinct R5 species above the tail), binding confidence to `moderate` (§13 effect 2). Confidence would otherwise have been `high` — resolved tail marker, brand-direct verbatim source, unambiguous route separation.",
+        "Arginine's exclusion is a judgment: lexicon family 5b allows free amino acids 'at most a very weak contribution to the humectant cluster when several appear above the tail with no plausible neutraliser role', and here there IS no amidoamine to neutralise. I excluded it because R9's enumeration does not list it. Including it would raise the cluster to six and change nothing."
+      ],
+      "limitations": [
+        "INCI discloses no molecular weight; P-5's mechanics evidence is entirely MW-conditional, so the three-protein cluster supports 'a protein film route is present' and nothing about strength or breakage.",
+        "Banned vocabulary observed: no 'protein overload' language, and no 'hygral fatigue' reading of the humectant cluster (lexicon family 7: an unestablished construct that must never appear as a rule, a warning, or copy)."
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "medium",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only; comparative temporary damage-support route, not measured repair efficacy.",
+      "rationale": "A distinct temporary protein film route is present above the tail with three species at consecutive ranks 7–9 — the cohort's strongest §9.4 `medium` evidence. No named bond chemistry exists, so `high` is closed. E2 ceiling: comparative formula potential, never efficacy.",
+      "evidenceSignals": [
+        "HYDROLYZED CORN PROTEIN (7), HYDROLYZED WHEAT PROTEIN (8), HYDROLYZED SOY PROTEIN (9) — three qualifying R5 species above the tail",
+        "no maleate, gluconamide, or bond-positioned peptide token at any rank",
+        "ARGININE (11) — free amino acid, explicit non-upgrader"
+      ],
+      "derivation": "§9.4: bond_route = none closes `high`; the §9.3 material R5 route is satisfied on both legs, giving `medium`.",
+      "thresholdReasoning": [
+        "Clears `medium`: a distinct temporary protein/peptide/keratin fibre-film route.",
+        "`high` does not apply: no named bond token; hydrolyzed protein alone is an explicit non-qualifier for `high`, however many species are present. Three proteins do not aggregate into a bond route.",
+        "`low` does not apply: the route is genuine and above the tail.",
+        "Mask delta 1 applied in reverse: `medium` here is earned by the protein route, not by richness — conditioning_level is only `moderate`."
+      ],
+      "counterSignals": [
+        "'3-Fach Protein Komplex' front-of-pack matches the formula exactly. The value was determined blind; the claim added nothing."
+      ],
+      "limitations": ["Banned wording observed: no 'repairs', 'rebuilds', 'restores structure'."]
+    },
+    "primaryFocus": {
+      "value": "repair",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-first §9.5.2 hierarchy over above-tail ranks 1–17.",
+      "rationale": "`repair` is tested first among the special-purpose routes and clears on three distinct protein species above the tail. `moisture` is tested afterwards at step 4 and independently clears its own guard, so it takes the secondary slot §9.5.3 criterion 3 provides. The headline is the deterministic hierarchy's answer — and it is the one place in the cohort where §9.5.1's claim tie-break would have given a different answer. E2 ceiling: a comparative architectural direction, not a repair promise.",
+      "evidenceSignals": [
+        "HYDROLYZED CORN PROTEIN (7), HYDROLYZED WHEAT PROTEIN (8), HYDROLYZED SOY PROTEIN (9) — the distinct R5 film route that clears step 3",
+        "GLYCERIN (3), BETAINE (6), SODIUM LACTATE (12), SODIUM HYALURONATE (13), ALOE (14) — the independent M5 cluster that clears step 4",
+        "no silicone, no cationic polymer, no bond token at any rank",
+        "claims: 'Intense Hydration', 'Hyaluron', 'Feuchtigkeitsbooster für trockenes Haar' AND '3-Fach Protein Komplex' — the product leads with hydration in both its name and its first claim"
+      ],
+      "derivation": "Step 1 baseline exclusion applied. Step 2: the protein cluster is one M2 observation and the humectant cluster is one M5 observation — genuinely disjoint mechanisms, so both may be counted (§6 rule 3 keeps M5 disjoint from M1, and neither is M1 here). Step 3, tested in order: `repair` requires a distinct R5 protein/peptide film route — satisfied by three species. The hierarchy resolves the primary slot at step 3. Step 4 `moisture` is then evaluated for the secondary slot under §9.5.3 criterion 3.",
+      "thresholdReasoning": [
+        "Clears `repair`: §9.5.2 step 3's protein-film disjunct, met by three species at consecutive above-tail ranks — far beyond the 'not merely one protein token' bar.",
+        "`moisture` does not take the PRIMARY slot: §9.5.2 tests moisture at step 4, explicitly 'after repair/curl/colour/lightness because D5 requires that no richer special-purpose route wins'. A richer special-purpose route won. §9.5.3 criterion 3 then routes moisture to the secondary slot, which is exactly what happened.",
+        "This is the cohort's one live conflict between two binding rules, and it is recorded rather than resolved unilaterally. §9.5.1 states that exact-product claims MAY break a genuinely `dual_supported` tie. The verdict here IS `dual_supported`. The product's own name and lead claim are hydration-first. So §9.5.1 would hand the primary slot to `moisture`, while §9.5.2's ordering hands it to `repair`. I applied the deterministic hierarchy, because a formula-first standard cannot let a claim override a step order without saying so. See AP-08-TIEBREAK.",
+        "`smoothing` does not apply: reached only at step 6, after a step-3 route cleared. Its claim ('glättet die Haarstruktur & wirkt Frizz entgegen') has no architecture behind it — no silicone, no substantive polymer, one lipid at rank 17.",
+        "`general` does not apply: a differentiator cleared."
+      ],
+      "counterSignals": [
+        "Confidence is held at `moderate` specifically because of AP-08-TIEBREAK: a reviewer applying §9.5.1's tie-break in good faith reaches `moisture` as primary and `repair` as secondary — the same two values in the opposite order. This is a predictable blind-lane disagreement and should be adjudicated as a rule question, not scored as a reviewer error.",
+        "The 'Frizz' and 'glättet' claims were consulted and refused corroborating force, having no architecture to corroborate."
+      ],
+      "limitations": [
+        "Neither the repair nor the moisture reading is an efficacy statement; both are comparative architectural directions at E2."
+      ]
+    },
+    "secondaryFocus": {
+      "value": ["moisture"],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "§9.5.3 criterion-3 secondary evaluation over above-tail ranks 1–17.",
+      "rationale": "The humectant cluster independently meets the D5 guard's criteria 1 and 2 and adds distinct matching information: M5 water-binding is a genuinely different mechanism from the M2 protein film that carries the primary, so this is not double-counting. E2 wording observed throughout: humectant-forward comparative direction, never proven hydration.",
+      "evidenceSignals": [
+        "GLYCERIN (rank 3) — cluster member, within the first five ranks of the full list",
+        "BETAINE (rank 6) — non-glycerin cluster member",
+        "SODIUM LACTATE (rank 12) — non-glycerin cluster member",
+        "SODIUM HYALURONATE (rank 13) — non-glycerin cluster member",
+        "ALOE BARBADENSIS LEAF JUICE POWDER (rank 14) — counted once and never as a strong member (lexicon family 7)",
+        "HELIANTHUS ANNUUS SEED OIL (17) — the sole lipid, confirming the cluster is not riding on a rich emollient base"
+      ],
+      "derivation": "§9.5.3 criterion 1: ≥3 distinct humectants above the tail with ≥2 non-glycerin — five and four respectively. Criterion 2 (not the baseline): satisfied unusually cleanly, because this formula has almost no R1/R4 richness for M5 to be confused with — one esterquat and one plant oil. Criterion 3: a richer route (repair) won the primary, so moisture may still take a secondary if it independently meets criteria 1–2, which it does. Criterion 4: hydrolyzed proteins were not counted toward the cluster.",
+      "thresholdReasoning": [
+        "Clears `moisture` as a secondary: all four D5 guard criteria are met, and the slot adds distinct matching information rather than restating the primary.",
+        "A second secondary is NOT added: `smoothing` was the only other candidate and has no architecture (no silicone, no polymer, one lipid); spending a slot on it would be the free add-on §6 rule 2 forbids.",
+        "Confidence is `moderate`, not `high`: §9.5.3's confidence rule requires 'no competing route', and repair is a live competing route. The cluster itself would otherwise qualify for high — five members, glycerin at rank 3 inside the first five, resolved tail marker."
+      ],
+      "counterSignals": [
+        "Aloe is reconstituted powder at unquantifiable level; counted once, never strong. Even excluded, the cluster clears with four members.",
+        "Arginine excluded from the cluster (see careDirection)."
+      ],
+      "limitations": [
+        "Wording rule observed absolutely (D5, binding): this record says 'humectant-forward comparative direction' and never 'hydrates', 'proven hydration', 'moisturizes', or 'restores moisture balance' — notwithstanding that the product's own name is 'Intense Hydration'.",
+        "Note for the adapter boundary: `moisture` has no `functional_benefits` counterpart and would reach production only via `balance_direction`. No projection is authorized here."
+      ]
+    },
+    "hairThicknessFit": {
+      "value": ["fine", "normal", "coarse"],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Deterministic policy derivation from weight_potential (§9.6); a desired-finish/dosage prior, not an exclusion.",
+      "rationale": "weight_potential `moderate` maps to the full set.",
+      "evidenceSignals": ["derived from weight_potential = moderate"],
+      "derivation": "§9.6 table row 2.",
+      "thresholdReasoning": [
+        "Clears {fine, normal, coarse}: the moderate row.",
+        "{fine, normal} does not apply: it requires weight_potential `low`, which the cetearyl conjunct refused despite a lean lipid load and an explicit 'ohne zu beschweren' claim.",
+        "{normal, coarse} does not apply: it requires weight_potential `high`."
+      ],
+      "counterSignals": [],
+      "limitations": ["Research-level prior; no production projection is authorized."]
+    },
+    "damageFit": {
+      "value": ["healthy", "moderately_damaged"],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Deterministic policy derivation from conditioning_level and the specialist-route test (§9.7); a broad product prior, not a repair-efficacy claim.",
+      "rationale": "conditioning_level `moderate` maps directly to healthy + moderately_damaged. The specialist branch is never reached, because §9.7 offers it only under conditioning_level `high` — even though this product carries a qualifying specialist route.",
+      "evidenceSignals": [
+        "conditioning_level = moderate",
+        "repair_support_level = medium — a qualifying specialist route (§9.7 qualifier a), which the table cannot use at this conditioning level",
+        "bond_route = none"
+      ],
+      "derivation": "§9.7 row 2: conditioning_level `moderate` → exactly healthy + moderately_damaged. Rows 3 and 4 both key on conditioning_level `high`.",
+      "thresholdReasoning": [
+        "Clears {healthy, moderately_damaged}: the moderate row, which admits no specialist variant.",
+        "{moderately_damaged, highly_damaged} is structurally unreachable here: §9.7's specialist row requires conditioning_level `high` AND a qualifying specialist route. This product has the route but not the conditioning level. See AP-08-SPECIALISTGATE.",
+        "{healthy} alone does not apply: it requires conditioning_level `low`."
+      ],
+      "counterSignals": [
+        "The three-protein cluster that earns repair_support_level `medium` has no effect whatsoever on damage_fit, because the table's structure gates the specialist branch behind richness. That is a defensible conservative choice but it should be an explicit one."
+      ],
+      "limitations": ["Watch-list item 1: fully computable from fields 1 and 4 — and this product shows the computation drops information."]
+    },
+    "textureFit": {
+      "value": ["straight", "wavy", "curly"],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Deterministic policy derivation from weight_potential (§9.8); research-only.",
+      "rationale": "weight_potential `moderate` selects the balanced-architecture row.",
+      "evidenceSignals": ["weight_potential = moderate"],
+      "derivation": "§9.8 row 2.",
+      "thresholdReasoning": [
+        "Clears {straight, wavy, curly}: the balanced row.",
+        "{wavy, curly, coily} does not apply: weight_potential is not `high` and there is no high-slip R1/R3 breadth.",
+        "{straight, wavy} does not apply: it requires weight_potential `low`."
+      ],
+      "counterSignals": [],
+      "limitations": ["Research-only; no current consumer."]
+    }
+  },
+  "bondRoute": { "value": "none", "token": null, "rank": null },
+  "focusCareVerdict": {
+    "value": "dual_supported",
+    "claimRole": "tie_breaker",
+    "note": "The formula genuinely supports both directions: three distinct hydrolyzed proteins at ranks 7–9 (M2) and five distinct humectants across four families above the tail (M5), on disjoint mechanisms with almost no M1 richness to confuse either with. This is the cohort's only `dual_supported` verdict. claim_role is recorded as `tie_breaker` because §9.5.1 makes claims eligible to break exactly this kind of tie — and the product's name and lead claim ('Intense Hydration', 'Feuchtigkeitsbooster') would break it toward `moisture`. The claim was NOT applied, because §9.5.2's deterministic step order had already resolved the primary slot to `repair` at step 3. Both rules are binding and they point different ways; the conflict is escalated in AP-08-TIEBREAK rather than settled here."
+  },
+  "overloadCounterSignal": {
+    "fired": true,
+    "trigger": "§13 D4 — multiple distinct R5 species above the tail",
+    "species": [
+      { "ingredient": "HYDROLYZED CORN PROTEIN", "rank": 7 },
+      { "ingredient": "HYDROLYZED WHEAT PROTEIN", "rank": 8 },
+      { "ingredient": "HYDROLYZED SOY PROTEIN", "rank": 9 }
+    ],
+    "effects": [
+      "trace-level counter-signal record (this object)",
+      "confidence cap on care_direction at moderate — applied",
+      "human review trigger `protein_payload_review` — fired"
+    ],
+    "note": "Never a comparison field, never a user-facing verdict, never a value modifier, never a diagnosis or suitability exclusion. Banned vocabulary observed. Note that the D4 cap here suppresses what would otherwise be the cohort's best-evidenced high-confidence care_direction."
+  },
+  "blindToFinalChanges": [
+    {
+      "field": "primaryFocus",
+      "blindValue": "repair",
+      "finalValue": "repair",
+      "reason": "The most consequential non-change in the cohort. Unblinding revealed a hydration-first identity ('Intense Hydration Maske Hyaluron', 'Feuchtigkeitsbooster für trockenes Haar' as the lead claim) against a `dual_supported` verdict — precisely the situation §9.5.1 authorizes a claim to resolve. It was not applied, because §9.5.2's step order had already resolved the slot. Recorded, escalated, not silently adopted."
+    },
+    {
+      "field": "secondaryFocus",
+      "blindValue": "['moisture']",
+      "finalValue": "['moisture']",
+      "reason": "Determined blind from the five-member cluster; the hydration claim corroborated but did not create it."
+    },
+    {
+      "field": "all other fields",
+      "blindValue": "unchanged",
+      "finalValue": "unchanged",
+      "reason": "No shine threshold reached, no bond claim, no colour positioning. The 'ohne zu beschweren' lightness claim was noted but §9.2's conflict fallback applies only against a formula-only `high`, which was not reached, so there was no permitted channel for it to act through."
+    }
+  ],
+  "projectedOutputs": {
+    "concentration": "medium",
+    "weight": "medium",
+    "balance_direction": "balanced",
+    "repair_support_level": "medium",
+    "functional_benefits": [],
+    "suitable_thicknesses": ["fine", "normal", "coarse"]
+  },
+  "adjudicationPoints": [
+    {
+      "id": "AP-08-TIEBREAK",
+      "title": "§9.5.1's claim tie-break and §9.5.2's step order collide on the cohort's only dual_supported product",
+      "body": "§9.5.1 (binding, adapted from Shampoo Focus v1.5) says exact-product claims MAY break a genuinely `dual_supported` tie. §9.5.2 (deterministic hierarchy) tests `repair` at step 3 and `moisture` at step 4, so a formula that supports both never presents a tie for a claim to break — the step order always resolves it toward repair. On this product the two rules give different primaries: hierarchy says repair, claim tie-break says moisture. I applied the hierarchy and flagged it. This is not a hypothetical: it is a predictable blind-lane disagreement on a real product, and whichever way Nick rules, the losing sentence should be amended so the next reviewer is not left to choose. My recommendation, for Nick's decision and not adopted here: keep the hierarchy authoritative and narrow §9.5.1's tie-break to cases where two routes clear at the SAME step (e.g. two step-3 routes), since a formula-first standard should not let packaging reorder its own hierarchy.",
+      "source": "§9.5.1 hard rule vs §9.5.2 steps 3 and 4"
+    },
+    {
+      "id": "AP-08-SPECIALISTGATE",
+      "title": "§9.7's specialist damage_fit branch is unreachable without conditioning_level `high`",
+      "body": "This product carries the cohort's strongest protein film route — three distinct hydrolyzed proteins at consecutive above-tail ranks 7–9 — and earns repair_support_level `medium`, which §9.7 names as specialist qualifier (a). It still lands on healthy + moderately_damaged, because the specialist row is available only under conditioning_level `high`, and this lean Naturkosmetik formula is structurally `moderate`. Meanwhile #05, a rich almond-milk mask with two proteins, reaches the specialist row purely because its lipid stack pushed conditioning_level to `high`. The table therefore makes richness a precondition for a damage-specialist prior. That may be the intended conservatism — §9.7's mask delta warns that a large specialist bucket would mean the test is leaking — but as written the specialist qualifier list is misleading, because qualifier (a) cannot act on its own.",
+      "source": "§9.7 rows 2–4"
+    },
+    {
+      "id": "AP-08-NATURKOSMETIK",
+      "title": "The tail-marker rule systematically credits more of a Naturkosmetik list than a conventional one",
+      "body": "This product's earliest tail-class ingredient is Potassium Sorbate at rank 18 of 21, so 17 of 21 entries are credited. #11's earliest tail-class ingredient is a colourant at rank 7 of 30, so 6 of 30 are credited. The difference is driven by formulation philosophy — short preservative systems, short fragrance blocks, no colourants — rather than by anything about care payload. The rule is reproducible and defensible, but reviewers should know that above-tail segment length correlates with brand positioning, and that cross-product comparisons of 'how much is above the tail' are not comparing like with like.",
+      "source": "§3.1; lexicon §0.2 and family 12"
+    }
+  ],
+  "uncertainFields": ["primaryFocus", "weightPotential", "damageFit"],
+  "assumptionNotes": [
+    "Reviewer policy applied to every record in this lane: §3.1's hard cut determines above-tail membership without exception; the lexicon §0.2 boundary-band caution is applied only as a confidence modifier and never moves a value.",
+    "Review triggers fired: `protein_payload_review` (D4). NOT fired: `bond_claim_review`, `tail_marker_anomaly`, `specialist_damage_fit` (the specialist row was not reached), `weight_high_conflict`, `low_confidence_field`.",
+    "Protocol metadata for traceability only, zero classification credit: contact time 1 minute, sante.de verbatim, confidence high. Placement stated as Haarlängen, P5-compliant.",
+    "'NATRUE-zertifizierte Naturkosmetik, vegan' is certification context and creates no property; it is explicitly NOT read as a fragrance-free, hypoallergenic, or safety claim (R8: no listed signal is not allergy-safe, and this product declares Parfum plus two allergens).",
+    "Arginine was excluded from the humectant cluster on the ground that R9's enumeration does not list it; including it would not change any value."
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "blindId": "W205",
+  "productName": "Sebamed Urea 5%",
+  "brand": "Sebamed",
+  "positioningSources": [
+    {
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Anti-Juckreiz Akut Shampoo Urea 5% 200 ml | Nach 2 Wochen bis zu 63% weniger Trockenheit | Das sebamed Anti‑Juckreiz Shampoo bietet eine gezielte Akutpflege für juckende Kopfhaut und trockenes Haar. Die seifenfreie Formel ist besonders schonend und enthält feuchtigkeitsspendenden Harnstoff (Urea), der dazu beiträgt, die Kopfhaut zu glätten und Symptome sehr trockener Haut zu verbessern. Zusätzlich wirkt Polidocanol juckreizlindernd und unterstützt eine nachhaltige Beruhigung der Kopfhaut. Bereits nach zwei Wochen Anwendung kann die Trockenheit der Kopfhaut um bis zu 63 % reduziert werden.* Zusätzlich wird das Hautmikrobiom stabilisiert. (*Studie Dr. med. M. Podda, Hautklinik Darmstadt, Klinikum Darmstadt 2010) | Urea 5%: Urea ist ein hautverwandter natürlicher Feuchthaltefaktor, der Spannungsgefühl, Rauheit und Juckreiz trockene Haut lindert | Haartyp: trockene/sehr trockene Kopfhaut, trockenes/strapaziertes Haar | Nur zur äußerlichen Anwendung geeignet | Allgemeiner Hinweis: Die aufgeführten Inhaltsstoffe entsprechenden dem aktuellen Stand der Produktion ... Daher sind immer die Informationen auf dem Produkt ausschlaggebend.",
+      "directionsVerbatim": "Shampoo in der Handinnenfläche aufschäumen und unter leichtem Massieren auf die Kopfhaut auftragen. Ausspülen."
+    },
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Shampoo mit Urea für sehr trockene Kopfhaut | Hilft bei Juckreiz & spendet Feuchtigkeit | Seifenfreie Formel mit Polidocanol zur Beruhigung der Haut | Unterstützt die Glättung & Pflege von trockenem Haar | Das Shampoo Urea von sebamed wurde speziell für die Bedürfnisse von sehr trockener und juckender Kopfhaut entwickelt. Der feuchtigkeitsspendende Harnstoff kann dazu beitragen, die Haut zu glätten und Trockenheit spürbar zu reduzieren. Die seifenfreie Formel mit Polidocanol kann zudem bei Juckreiz helfen und sorgt für ein angenehmes Hautgefühl. Ideal als Akutpflege für empfindliche Kopfhaut und trockenes Haar. | Haartyp: trockenes Haar",
+      "directionsVerbatim": "sebamed TROCKENE HAUT Shampoo Urea Akut 5% auf dem nassen Haar verteilen, sanft einmassieren und mit lauwarmem Wasser (32 bis 35 Grad) gründlich ausspülen. Anschließend das Haar trocken tupfen und bei Verwendung von Föhn oder Trockenhaube möglichst niedrige Temperaturen einstellen."
+    },
+    {
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Die ausgesuchten Inhaltsstoffe von sebamed TROCKENE HAUT SHAMPOO UREA AKUT 5% lindern spürbar Juckreiz bei sehr trockener Kopfhaut und helfen, die natürliche Feuchtigkeitsbalance von Haut und Haar wieder herzustellen. Hochkonzentrierter Harnstoff (Urea) spendet intensiv Feuchtigkeit und glättet sehr trockene Kopfhaut. Hochkonzentriertes Polidocanol hilft, Juckreiz nachhaltig zu lindern. Die milde Tensidkombination (Zuckertenside) reinigt schonend, sorgt für eine gesunde Haarstruktur und hilft, Austrocknung beim Haare waschen zu vermeiden. Ein Stärkederivat trägt zu einer verbesserten Kämmbarkeit des Haares bei. Die sehr gute Eignung von sebamed TROCKENE HAUT Shampoo Urea Akut 5% für trockenes Haar und trockene, juckende Kopfhaut ist dermatologisch bestätigt.",
+      "directionsVerbatim": "(none on Rossmann PDP)"
+    }
+  ]
+}

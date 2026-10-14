@@ -25,11 +25,11 @@ if (testFiles.length === 0) {
 
 console.log(`Running ${testFiles.length} nested Personal Plan test files.`)
 
-const result = spawnSync(
-  process.execPath,
-  ["--import", "./tests/server-only-register.cjs", "--import", "tsx", "--test", ...testFiles],
-  { cwd: repositoryRoot, env: process.env, stdio: "inherit" },
-)
+const result = spawnSync("python3", ["scripts/verification/run.py", "--node-tests", ...testFiles], {
+  cwd: repositoryRoot,
+  env: process.env,
+  stdio: "inherit",
+})
 
 if (result.error) {
   console.error(result.error)

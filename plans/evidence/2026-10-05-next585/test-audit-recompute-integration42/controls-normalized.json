@@ -1,0 +1,293 @@
+[
+  {
+    "id": "closing-lineage-disabled",
+    "file": "supabase/migrations/20260825140000_personal_plan_refinement_recompute_activation.sql",
+    "from": "refinement.result_refined_need_version_id = v_refined_id",
+    "to": "FALSE /* audit: closing lineage omitted */",
+    "testFile": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+    "testName": "the closing completion of a Modul-1-projected draft activates the successor immediately (result_refined_need_version_id branch)",
+    "expectedAssertion": "result.routineProposalId === null",
+    "reason": "C1: real closing result branch returns pending proposal, while projection id deliberately differs.",
+    "sourceSha256": "7deb15f1ec8aa3cd2c62ff5198240a1535c96a6557025800c393fa9252691ecc",
+    "mutantSha256": "b789f847c3308bbfb6cbe0e0fcba08e38a864db142cd2aff2db9be1271f0d5aa",
+    "anchorLine": 94,
+    "validation": "SQL exact unique replacement only; not parsed or executed",
+    "command": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=^the closing completion of a Modul-1-projected draft activates the successor immediately \\(result_refined_need_version_id branch\\)$",
+      "tests/personal-plan-refinement-recompute-activation-migration.test.ts"
+    ],
+    "status": "not executed; main must verify clean→intended assertion red→byte restoration→clean individually",
+    "oracles": {
+      "before": {
+        "line": 544,
+        "text": "assert.equal(\n    result.routineProposalId,\n    null,\n    \"staged AND confirmed within the same transaction — the closing draft still satisfies condition 1 via result_refined_need_version_id\",\n  )"
+      },
+      "transfer": {
+        "line": 544,
+        "text": "assert.equal(\n    result.routineProposalId,\n    null,\n    \"staged AND confirmed within the same transaction — the closing draft still satisfies condition 1 via result_refined_need_version_id\",\n  )"
+      },
+      "cut": {
+        "line": 544,
+        "text": "assert.equal(\n    result.routineProposalId,\n    null,\n    \"staged AND confirmed within the same transaction — the closing draft still satisfies condition 1 via result_refined_need_version_id\",\n  )"
+      }
+    },
+    "requiredMessage": "staged AND confirmed within the same transaction — the closing draft still satisfies condition 1 via result_refined_need_version_id",
+    "requiredOperator": "strictEqual",
+    "proofKind": "existing actual owner oracle preserved"
+  },
+  {
+    "id": "module-projection-disabled",
+    "file": "supabase/migrations/20260825140000_personal_plan_refinement_recompute_activation.sql",
+    "from": "projection.value->>'needVersionId' = v_refined_id::text",
+    "to": "FALSE /* audit: projection lineage omitted */",
+    "testFile": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+    "testName": "a module-driven recompute activates the successor immediately instead of proposing it",
+    "expectedAssertion": "result.routineProposalId === null",
+    "reason": "C2: real products projection branch omitted; initial linear setup remains valid.",
+    "sourceSha256": "7deb15f1ec8aa3cd2c62ff5198240a1535c96a6557025800c393fa9252691ecc",
+    "mutantSha256": "341fbc42dec2e631e1f2d46e2f9c70450b266c3a0e01d0da066a7f1ff6bd4d21",
+    "anchorLine": 98,
+    "validation": "SQL exact unique replacement only; not parsed or executed",
+    "command": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=^a module-driven recompute activates the successor immediately instead of proposing it$",
+      "tests/personal-plan-refinement-recompute-activation-migration.test.ts"
+    ],
+    "status": "not executed; main must verify clean→intended assertion red→byte restoration→clean individually",
+    "oracles": {
+      "before": {
+        "line": 299,
+        "text": "assert.equal(\n    result.routineProposalId,\n    null,\n    \"confirmed within the same transaction, not just proposed\",\n  )"
+      },
+      "transfer": {
+        "line": 299,
+        "text": "assert.equal(\n    result.routineProposalId,\n    null,\n    \"confirmed within the same transaction, not just proposed\",\n  )"
+      },
+      "cut": {
+        "line": 299,
+        "text": "assert.equal(\n    result.routineProposalId,\n    null,\n    \"confirmed within the same transaction, not just proposed\",\n  )"
+      }
+    },
+    "requiredMessage": "confirmed within the same transaction, not just proposed",
+    "requiredOperator": "strictEqual",
+    "proofKind": "existing actual owner oracle preserved"
+  },
+  {
+    "id": "provenance-flag-ignored",
+    "file": "supabase/migrations/20260825140000_personal_plan_refinement_recompute_activation.sql",
+    "from": "IF p_mark_unrefined_direct_accept THEN",
+    "to": "IF false THEN",
+    "testFile": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+    "testName": "the direct-accept provenance write is atomic with activation",
+    "expectedAssertion": "after.unrefined_direct_accept === true",
+    "reason": "C3: SQL true provenance input is ignored; source literal write remains in migration.",
+    "sourceSha256": "7deb15f1ec8aa3cd2c62ff5198240a1535c96a6557025800c393fa9252691ecc",
+    "mutantSha256": "2bcf6ba34471e14a64b23981569d29a76adbd6bc4cddcd21383160728aa7745a",
+    "anchorLine": 146,
+    "validation": "SQL exact unique replacement only; not parsed or executed",
+    "command": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=^the direct-accept provenance write is atomic with activation$",
+      "tests/personal-plan-refinement-recompute-activation-migration.test.ts"
+    ],
+    "status": "not executed; main must verify clean→intended assertion red→byte restoration→clean individually",
+    "oracles": {
+      "before": {
+        "line": 671,
+        "text": "assert.equal(after.unrefined_direct_accept, true)"
+      },
+      "transfer": {
+        "line": 671,
+        "text": "assert.equal(after.unrefined_direct_accept, true)"
+      },
+      "cut": {
+        "line": 671,
+        "text": "assert.equal(after.unrefined_direct_accept, true)"
+      }
+    },
+    "requiredMessage": "Expected values to be strictly equal:",
+    "requiredOperator": "strictEqual",
+    "proofKind": "existing actual owner oracle preserved"
+  },
+  {
+    "id": "provenance-clears-active",
+    "file": "supabase/migrations/20260825140000_personal_plan_refinement_recompute_activation.sql",
+    "from": "SET unrefined_direct_accept = true,",
+    "to": "SET unrefined_direct_accept = true,\n           active_routine_version_id = NULL,",
+    "testFile": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+    "testName": "the direct-accept provenance write is atomic with activation",
+    "expectedAssertion": "after.active_routine_version_id is non-null, then equals result.routineVersionId",
+    "reason": "C3 transfer: provenance stays true and receipt remains valid, but actual persisted activation is lost; requires transferred assertion.",
+    "sourceSha256": "7deb15f1ec8aa3cd2c62ff5198240a1535c96a6557025800c393fa9252691ecc",
+    "mutantSha256": "716762ece85618fa130933c8598c5582c47e901f7854837911cd271f8fd969eb",
+    "anchorLine": 148,
+    "validation": "SQL exact unique replacement only; not parsed or executed",
+    "command": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=^the direct-accept provenance write is atomic with activation$",
+      "tests/personal-plan-refinement-recompute-activation-migration.test.ts"
+    ],
+    "status": "not executed; main must verify clean→intended assertion red→byte restoration→clean individually",
+    "oracles": {
+      "before": null,
+      "transfer": {
+        "line": 672,
+        "text": "assert.ok(after.active_routine_version_id, \"the provenance write leaves an active Routine\")"
+      },
+      "cut": {
+        "line": 672,
+        "text": "assert.ok(after.active_routine_version_id, \"the provenance write leaves an active Routine\")"
+      }
+    },
+    "requiredMessage": "the provenance write leaves an active Routine",
+    "requiredOperator": "==",
+    "proofKind": "new transferred positive oracle only; no before-oracle claim"
+  },
+  {
+    "id": "provenance-bumps-cas",
+    "file": "supabase/migrations/20260825140000_personal_plan_refinement_recompute_activation.sql",
+    "from": "SET unrefined_direct_accept = true,",
+    "to": "SET unrefined_direct_accept = true,\n           revision = revision + 1,",
+    "testFile": "tests/personal-plan-refinement-recompute-activation-migration.test.ts",
+    "testName": "the direct-accept provenance write is atomic with activation",
+    "expectedAssertion": "after.revision === result.revision",
+    "reason": "C4: real provenance write invalidates freshly returned CAS; SQL owner assertion catches beyond one private source spelling.",
+    "sourceSha256": "7deb15f1ec8aa3cd2c62ff5198240a1535c96a6557025800c393fa9252691ecc",
+    "mutantSha256": "83786fd0e4e0ccbbefd118389c243908098da9270c2f723ef95347239c703c25",
+    "anchorLine": 148,
+    "validation": "SQL exact unique replacement only; not parsed or executed",
+    "command": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=^the direct-accept provenance write is atomic with activation$",
+      "tests/personal-plan-refinement-recompute-activation-migration.test.ts"
+    ],
+    "status": "not executed; main must verify clean→intended assertion red→byte restoration→clean individually",
+    "oracles": {
+      "before": {
+        "line": 672,
+        "text": "assert.equal(\n    after.revision,\n    result.revision,\n    \"the provenance write does not bump the plan revision again\",\n  )"
+      },
+      "transfer": {
+        "line": 678,
+        "text": "assert.equal(\n    after.revision,\n    result.revision,\n    \"the provenance write does not bump the plan revision again\",\n  )"
+      },
+      "cut": {
+        "line": 678,
+        "text": "assert.equal(\n    after.revision,\n    result.revision,\n    \"the provenance write does not bump the plan revision again\",\n  )"
+      }
+    },
+    "requiredMessage": "the provenance write does not bump the plan revision again",
+    "requiredOperator": "strictEqual",
+    "proofKind": "existing actual owner oracle preserved"
+  },
+  {
+    "id": "adapter-rejects-null-receipt",
+    "file": "src/lib/personal-plan/routine-proposal-stager.ts",
+    "from": "routineProposalId: opaqueIdSchema.nullable(),",
+    "to": "routineProposalId: opaqueIdSchema,",
+    "testFile": "tests/personal-plan/persistence/routine-proposal-stager.test.ts",
+    "testName": "activation-aware delegating RPC permits no proposal pointer for first activation",
+    "expectedAssertion": "full completed/null result deepEqual",
+    "reason": "C1/C2 adapter boundary retained independently; actual schema rejects valid null response.",
+    "sourceSha256": "d3c010b03572ef4a593484da0fb7f3463b2c1bd4d78e5bd6c8b41be42e57408b",
+    "mutantSha256": "7235ab8c076195d1cc97bd0442c67de152ac4a309426bf8d6dd7f222cc7599f7",
+    "anchorLine": 167,
+    "validation": "TypeScript syntax parsed",
+    "command": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=^activation-aware delegating RPC permits no proposal pointer for first activation$",
+      "tests/personal-plan/persistence/routine-proposal-stager.test.ts"
+    ],
+    "status": "not executed; main must verify clean→intended assertion red→byte restoration→clean individually",
+    "oracles": {
+      "before": {
+        "line": 118,
+        "text": "assert.deepEqual(result, {\n    status: \"completed\",\n    portfolioVersionId: \"portfolio-1\",\n    routineVersionId: \"routine-1\",\n    routineProposalId: null,\n    revision: 5,\n  })"
+      },
+      "transfer": {
+        "line": 118,
+        "text": "assert.deepEqual(result, {\n    status: \"completed\",\n    portfolioVersionId: \"portfolio-1\",\n    routineVersionId: \"routine-1\",\n    routineProposalId: null,\n    revision: 5,\n  })"
+      },
+      "cut": {
+        "line": 118,
+        "text": "assert.deepEqual(result, {\n    status: \"completed\",\n    portfolioVersionId: \"portfolio-1\",\n    routineVersionId: \"routine-1\",\n    routineProposalId: null,\n    revision: 5,\n  })"
+      }
+    },
+    "requiredMessage": "Expected values to be strictly deep-equal:",
+    "requiredOperator": "deepStrictEqual",
+    "proofKind": "existing actual owner oracle preserved"
+  },
+  {
+    "id": "adapter-drops-provenance-flag",
+    "file": "src/lib/personal-plan/routine-proposal-stager.ts",
+    "from": "p_mark_unrefined_direct_accept: request.data.markUnrefinedDirectAccept === true,",
+    "to": "p_mark_unrefined_direct_accept: false,",
+    "testFile": "tests/personal-plan/persistence/routine-proposal-stager.test.ts",
+    "testName": "routine-proposal adapter forwards the atomic direct-accept provenance flag",
+    "expectedAssertion": "calls[0]?.p_mark_unrefined_direct_accept === true",
+    "reason": "C3 actual request delivery, independently observed before SQL.",
+    "sourceSha256": "d3c010b03572ef4a593484da0fb7f3463b2c1bd4d78e5bd6c8b41be42e57408b",
+    "mutantSha256": "c8c35afa4b992687ad16d0ba4267c52eb8f76e8b7dbe024cb5f93adb8001b1e6",
+    "anchorLine": 235,
+    "validation": "TypeScript syntax parsed",
+    "command": [
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=^routine-proposal adapter forwards the atomic direct-accept provenance flag$",
+      "tests/personal-plan/persistence/routine-proposal-stager.test.ts"
+    ],
+    "status": "not executed; main must verify clean→intended assertion red→byte restoration→clean individually",
+    "oracles": {
+      "before": {
+        "line": 191,
+        "text": "assert.equal(calls[0]?.p_mark_unrefined_direct_accept, true)"
+      },
+      "transfer": {
+        "line": 191,
+        "text": "assert.equal(calls[0]?.p_mark_unrefined_direct_accept, true)"
+      },
+      "cut": {
+        "line": 191,
+        "text": "assert.equal(calls[0]?.p_mark_unrefined_direct_accept, true)"
+      }
+    },
+    "requiredMessage": "Expected values to be strictly equal:",
+    "requiredOperator": "strictEqual",
+    "proofKind": "existing actual owner oracle preserved"
+  }
+]

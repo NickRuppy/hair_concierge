@@ -1,0 +1,19 @@
+--- tests/discovery-invitation-card.test.tsx (before)
++++ tests/discovery-invitation-card.test.tsx (transfer)
+@@ -65,6 +65,8 @@
+   )
+   assert.match(prefilled, /<input[^>]*type="email"[^>]*value="lea@example.test"/)
+   assert.ok(prefilled.includes("Deine E-Mail"))
++  assert.ok(prefilled.includes("bg-[var(--brand-coral)]"), "positive coral CTA absent")
++  assert.ok(!prefilled.includes("bg-[var(--brand-plum)]"), "negative plum token present")
+   assert.ok(!/<input[^>]*readonly/i.test(prefilled))
+   assert.ok(!/<input[^>]*disabled/i.test(prefilled))
+ 
+@@ -73,6 +75,7 @@
+   )
+   assert.match(empty, /<input[^>]*type="email"[^>]*value=""/)
+   assert.ok(empty.includes("Los geht"))
++  assert.match(empty, /motion-safe:animate-\[personalPlanStageTargetFade_var\(--motion-screen\)/)
+ })
+ 
+ test("the magic-link screen names the address the link went to", () => {

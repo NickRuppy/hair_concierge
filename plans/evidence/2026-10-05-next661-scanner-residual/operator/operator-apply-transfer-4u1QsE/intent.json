@@ -1,0 +1,116 @@
+{
+  "mode": "transfer",
+  "from": "before",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA": "b1619bebc5540a7ee42e2ed0ec18431cc2f9a52c43c471b3cefe9290c1d04d5f",
+  "prerequisite": null,
+  "files": [
+    {
+      "file": "tests/scan-alternative-comparison.test.ts",
+      "before": "f14accb79b547b8e2ae03d2209ca488c5293d68b26de9761759dd81a6f800778",
+      "after": "f14accb79b547b8e2ae03d2209ca488c5293d68b26de9761759dd81a6f800778"
+    },
+    {
+      "file": "tests/scan-analytics.test.ts",
+      "before": "1dff0ddbcec5ca5f07d4cd404ac43b419c6b077e85cbf6c39982390e7934871e",
+      "after": "1dff0ddbcec5ca5f07d4cd404ac43b419c6b077e85cbf6c39982390e7934871e"
+    },
+    {
+      "file": "tests/scan-catalog-search-typo.test.ts",
+      "before": "07e11e116311151d810306a03a939a3b65761113ca4eb48040c98608e7fd9897",
+      "after": "07e11e116311151d810306a03a939a3b65761113ca4eb48040c98608e7fd9897"
+    },
+    {
+      "file": "tests/scan-masked-alternative.test.ts",
+      "before": "0fdfaccbf9cd820b236319c29b1f436fc3ff36e486b9afffc2e40923140ec668",
+      "after": "1fd31b18c08166145bd3cd145c5c7e0ae5a7e099936b389d8d40a2154cfd3494"
+    },
+    {
+      "file": "tests/scan-name-only-submission-migration.test.ts",
+      "before": "567dab97d0a1046a414ff62e3e5c88d448ec2d60b125f668a8270eaf57abc618",
+      "after": "567dab97d0a1046a414ff62e3e5c88d448ec2d60b125f668a8270eaf57abc618"
+    },
+    {
+      "file": "tests/scan-observability.test.ts",
+      "before": "4fad30a5f6d04dbae371b31b687373186c846d2d59a84bcef5c1044144058782",
+      "after": "4fad30a5f6d04dbae371b31b687373186c846d2d59a84bcef5c1044144058782"
+    },
+    {
+      "file": "tests/scan-pending-submission.test.ts",
+      "before": "dad7338acea05026887a5e7342b6e0cbd9c1e2515b55ce9d2b2133a487260f60",
+      "after": "ce3ae6eec1ea9c7744d429f42ae6745a1897576d768a97d698334021aad0a5b3"
+    },
+    {
+      "file": "tests/scan-presentation-rows.test.ts",
+      "before": "224e8072febd335de814e1e0404d59fddb47bd3674b22298bf9943d47fabf8e8",
+      "after": "224e8072febd335de814e1e0404d59fddb47bd3674b22298bf9943d47fabf8e8"
+    },
+    {
+      "file": "tests/scan-product-presentation.test.ts",
+      "before": "df169295dd5af81c3f1ff27050f1ceba23902530f09a6eb2ec80606289453d8b",
+      "after": "df169295dd5af81c3f1ff27050f1ceba23902530f09a6eb2ec80606289453d8b"
+    },
+    {
+      "file": "tests/scan-profile-context.test.ts",
+      "before": "a1954509f65c914f35ed7e4d397685623a3a92c3fc7939603f1d84f7165a0677",
+      "after": "db1d57b6d6c5e0d2bdf5fd491380b9de5fa013155140ecb777d8569c593bb301"
+    },
+    {
+      "file": "tests/scan-resolve-anti-leak.test.ts",
+      "before": "fe243479378d21d0da02235d04252e2b49293304614e9dc46874608b36d65c3b",
+      "after": "0ee63b96304474779ef557c2e0681de50820143e10e532434f29762b0a602954"
+    },
+    {
+      "file": "tests/scan-role-selection.test.ts",
+      "before": "29d0c60a38ec3e47102da2fa4c130dfa3f7c01ff5232d8fd99a9e43c32adeb12",
+      "after": "29d0c60a38ec3e47102da2fa4c130dfa3f7c01ff5232d8fd99a9e43c32adeb12"
+    },
+    {
+      "file": "tests/scan-submit-dm-event-log.test.ts",
+      "before": "03ca04ca2493e7065d49908e2a7abc0c73dc12ecaefcb71a1f0af8f3147dfbbb",
+      "after": "03ca04ca2493e7065d49908e2a7abc0c73dc12ecaefcb71a1f0af8f3147dfbbb"
+    },
+    {
+      "file": "tests/scan-trigger-cards-ui.test.tsx",
+      "before": "7316d3546d9d53002c5db75a42b5c8ba05f89bad6f8a5636bba6a28a273f1ec3",
+      "after": "7316d3546d9d53002c5db75a42b5c8ba05f89bad6f8a5636bba6a28a273f1ec3"
+    },
+    {
+      "file": "tests/scan-trigger-session-marker.test.ts",
+      "before": "308eee575810814d0d0b2e13c7724d6b7840d4bd510622a41f4c88852c5e1531",
+      "after": "d02e7219d09ec8d31f287cceda5f11dd99f91be3835a48400fd0bfbfc712ae1f"
+    },
+    {
+      "file": "tests/scan-verdict-access.test.ts",
+      "before": "9995cb859942dd65316448cff235f9d9781d6f09c56517048f816b4783d6a0b8",
+      "after": "9995cb859942dd65316448cff235f9d9781d6f09c56517048f816b4783d6a0b8"
+    },
+    {
+      "file": "tests/scanner-analytics-context.test.ts",
+      "before": "5919aab593441fca35598b5169dc38530325fe0a4e35c47879f07220b89e2e5e",
+      "after": "5919aab593441fca35598b5169dc38530325fe0a4e35c47879f07220b89e2e5e"
+    },
+    {
+      "file": "tests/scanner-offer-analytics.test.ts",
+      "before": "9e54b9c2cfc4b0b95ff3a339bf92158b9d43dbe35d9c73b73d2745401cb43282",
+      "after": "9e54b9c2cfc4b0b95ff3a339bf92158b9d43dbe35d9c73b73d2745401cb43282"
+    },
+    {
+      "file": "tests/scanner-quiz-view.test.ts",
+      "before": "ff83b01c9de59739fbbfcbd3f80e3142e22f1ff576094a6b428b93ba56d93fa7",
+      "after": "ff83b01c9de59739fbbfcbd3f80e3142e22f1ff576094a6b428b93ba56d93fa7"
+    },
+    {
+      "file": "tests/scanner-result-artifact-email.test.ts",
+      "before": "fc43bac2b3ee3199d55e3e9db3d464c489a4c2a0fbaaac00ef30133cdb554455",
+      "after": "fc43bac2b3ee3199d55e3e9db3d464c489a4c2a0fbaaac00ef30133cdb554455"
+    },
+    {
+      "file": "tests/scanner-trial-offer.test.tsx",
+      "before": "054d6897fd9a11c332562d8a5052295b2f668e3677ba4bd155706a0467081205",
+      "after": "054d6897fd9a11c332562d8a5052295b2f668e3677ba4bd155706a0467081205"
+    }
+  ]
+}

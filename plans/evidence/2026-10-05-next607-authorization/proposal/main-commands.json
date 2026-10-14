@@ -1,0 +1,14 @@
+{
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "nativeRetainedBoundary": "node --import ./tests/server-only-register.cjs --import tsx --test --test-name-pattern=\"^retired one-time purchase requests stop before account or provider work$\" tests/stripe-checkout-session-route-contract.test.ts",
+  "nativePricing": "node --import ./tests/server-only-register.cjs --import tsx --test tests/personal-plan-pricing-experiment.test.ts",
+  "broaderMainOwned": "Relevant retained Stripe route, prepared-claim, existing one-time activation/consent/status/welcome and recovery contracts; full campaign native/c8 plus normal CI. No script here invokes them. Typecheck/lint/build remain main-only.",
+  "counts": {
+    "pricingBefore": 14,
+    "pricingAfter": 12,
+    "retirementBoundarySelected": 1,
+    "retirementBoundaryExistingRows": 2
+  },
+  "sourceRetirementNeedsMainAcceptance": true,
+  "credit": 0
+}

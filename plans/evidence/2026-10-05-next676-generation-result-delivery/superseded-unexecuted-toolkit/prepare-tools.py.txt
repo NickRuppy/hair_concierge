@@ -1,0 +1,51 @@
+from pathlib import Path
+import hashlib,json,re
+D=Path(__file__).parent;T=Path('/tmp/test-audit-care102-tools-fz8_q695');P=Path('/tmp/test-audit-plan-generation157-R7hJl1')
+sha=lambda b:hashlib.sha256(b).hexdigest()
+assert sha((T/'operator-pins.json').read_bytes())=='67f792bcbb94f1a2f6f807cddd4403c08da414aeec3748c71ad49d5bd28ccb89'
+(D/'template-originals').mkdir(exist_ok=True)
+files=['operator-guard.cjs','operator-edit.cjs','operator-run-controls.cjs','operator-proof.cjs','operator-readonly-preload.cjs','operator-native-proof.cjs','prepare-pins.cjs','proof-attestation.cjs','static-integrity.cjs','operator-pins.json']
+for f in files:(D/'template-originals'/f).write_bytes((T/f).read_bytes())
+def adapt(f):return re.sub(r"const PIN_SHA='[a-f0-9]{64}'","const PIN_SHA='PIN_SHA_PLACEHOLDER'",(T/f).read_text().replace(str(T),str(D)).replace('/tmp/test-audit-residual-care102-ezeu563r',str(P)))
+s=adapt('operator-guard.cjs');a=s.index('function nativeRegistrationNames(');b=s.index('function replaceOnce(',a)
+s=s[:a]+r'''function nativeRegistrationNames(ts,file,text){
+ const sf=parse(ts,file,text),names=[];
+ function walk(n){if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test'){
+  const title=n.arguments[0],loops=[];for(let p=n.parent;p;p=p.parent){if(ts.isFunctionLike(p)||ts.isForStatement(p)||ts.isForInStatement(p))fail('Nested/dynamic registration');if(ts.isForOfStatement(p))loops.push(p)}
+  if(!loops.length){if(!ts.isStringLiteralLike(title))fail('Unbound title');names.push(title.text)}else{
+   const loop=loops[0];if(file!=='tests/personal-plan/input.test.ts'||loops.length!==1||loop.initializer.getText(sf)!=='const field'||loop.expression.getText(sf)!=='["thickness", "elasticResponse"] as const'||title.getText(sf)!=='`mask-missing-${field}: required Mask target input fails closed at the shared parser`')fail('Only exact pre-existing two-row input loop accepted');
+   for(const field of ['thickness','elasticResponse'])names.push('mask-missing-'+field+': required Mask target input fails closed at the shared parser');
+  }
+ }if(ts.isCallExpression(n)&&n.expression.getText(sf)==='t.test')fail('Nested test');ts.forEachChild(n,walk)}walk(sf);return names
+}
+''' +s[b:]
+s=s.replace('candidates.length!==1||controls.length!==13','candidates.length!==7||controls.length!==18').replace("candidates.map(c=>[c.keeper.file+'\\0'+c.keeper.name,c.keeper])","candidates.flatMap(c=>c.keepers.map(k=>[k.file+'\\0'+k.name,k]))").replace("keepers.size!==1)fail('One unique keeper required')","keepers.size!==11)fail('Eleven unique preservation keepers required')")
+s=s.replace("if(reconstructed!==transfer.bytes.toString())fail('Transfer changed unrelated bytes')","for(const e of evidence.supportEdits.filter(e=>e.file===file&&e.phase==='transfer'))reconstructed=replaceOnce(reconstructed,e.from,e.to,'exact observational support transfer');\n    if(reconstructed!==transfer.bytes.toString())fail('Transfer changed unrelated bytes')")
+s=s.replace("c.donor.body+'\\n\\n'","c.donor.body").replace('e=>e.file===file))','e=>e.file===file&&e.phase===\'cut\'))')
+s=s.replace("Object.keys(snapshots).length!==7||JSON.stringify(counts)!=='{\"before\":102,\"transfer\":102,\"cut\":101}'||unrelated!==100||unchangedRetained!==100||changedKeepers!==1","Object.keys(snapshots).length!==27||JSON.stringify(counts)!=='{\"before\":157,\"transfer\":157,\"cut\":150}'||unrelated!==139||unchangedRetained!==143||changedKeepers!==7")
+s=s.replace("readJSON(PROPOSAL+'/ledger.json')","readJSON(PROPOSAL+'/ledger.json').cases").replace("j.classification==='F'","j.verdict==='F'").replace("length!==4)fail('Held F count')","length!==11)fail('Held F count')").replace('JSON.parse(held.title)','held.name').replace('held.callbackSHA256','held.callbackSHA')
+s=s.replace("phase==='cut'?101:102","phase==='cut'?151:158")
+a=s.index('  for(const c of candidates){\n    const donor=');b=s.index('  function guards(',a)
+s=s[:a]+r'''  for(const c of candidates){
+    const donor=snapshots[c.file].before.rows.get(c.donor.name);
+    if(c.assertionUnion.length!==donor.assertions.length)fail('Incomplete donor assertion accounting');
+    for(let i=0;i<c.assertionUnion.length;i++){
+      const u=c.assertionUnion[i];if(u.donorText!==donor.assertions[i].text||!u.basis||!u.targets.length)fail('Donor assertion union missing');
+      for(const t of u.targets)for(const phase of ['transfer','cut']){const row=snapshots[t.file][phase].rows.get(t.name);if(row?.assertions[t.index]?.text!==t.text)fail('Exact destination assertion changed')}
+    }
+  }
+''' +s[b:]
+s=s.replace("[...ctx.snapshots[c.test.file][phase].rows.keys()].filter(n=>pattern.test(n))","nativeRegistrationNames(ctx.ts,c.test.file,ctx.snapshots[c.test.file][phase].bytes.toString()).filter(n=>pattern.test(n))").replace('rows.get(c.test.name)','rows.get(c.test.registrationName||c.test.name)')
+(D/'operator-guard.cjs').write_text(s)
+s=adapt('operator-proof.cjs').replace('verified!==13','verified!==18').replace('cleanRuns!==26','cleanRuns!==36').replace('Required13','Required18').replace('length!==7','length!==27').replace('records.length!==13','records.length!==18').replace('Thirteen records','Eighteen records').replace('verified:13,logFiles:39','verified:18,logFiles:54')
+s=s.replace(' const messageMatches='," const names=[...run.text.matchAll(/^\\s{2}name:\\s*['\"]([^'\"]+)['\"]\\s*$/gm)].map(m=>m[1])\n const messageMatches=")
+s=s.replace("codes[0]==='ERR_ASSERTION'&&named","codes[0]==='ERR_ASSERTION'&&names.length===1&&names[0]==='AssertionError'&&control.diagnosticReady===true&&named")
+(D/'operator-proof.cjs').write_text(s)
+for f in ['operator-edit.cjs','operator-run-controls.cjs','operator-readonly-preload.cjs','operator-native-proof.cjs']:
+ s=adapt(f).replace('parsedPhaseFiles:21','parsedPhaseFiles:81').replace('sourceControlsParsed:13','sourceControlsParsed:18').replace('tsMutantsParsed:13','tsMutantsParsed:18').replace('prepared.size===13','prepared.size===18').replace('ALL7 test originals','ALL27 test originals').replace('receipts.length===13','receipts.length===18').replace("phase==='cut'?101:102","phase==='cut'?151:158")
+ if f=='operator-run-controls.cjs':s=s.replace("if(!['transfer','cut'].includes(initial.phase))", "if(!selectedId&&context.controls.some(c=>!c.diagnosticReady))g.fail('Full run blocked: unresolved D1-required-thickness diagnostic. No automatic probe. Root may explicitly select it for controlled capture, which cannot pass or authorize cut.');\nif(!['transfer','cut'].includes(initial.phase))")
+ if f=='operator-native-proof.cjs':
+  s=s.replace('totals.pass!==n','totals.pass!==n-1').replace('totals.skipped!==0','totals.skipped!==1')
+  s=s.replace("console.log(JSON.stringify", "const skipped=[...text.matchAll(/^ok \\d+ - (.+?) # SKIP(?: .*)?$/gm)].map(x=>x[1]);if(JSON.stringify(skipped)!==JSON.stringify(['real PostgreSQL serializes parallel repairs and rejects a concurrent source change']))g.fail('Only unchanged opt-in PostgreSQL skip allowed');\nconsole.log(JSON.stringify")
+ (D/f).write_text(s)
+(D/'template-provenance.json').write_text(json.dumps({'carePinsSHA256':sha((T/'operator-pins.json').read_bytes()),'source':str(T),'files':{f:sha((T/f).read_bytes())for f in files},'limits':'Template provenance only; source/control semantic acceptance pending.'},indent=2)+'\n')

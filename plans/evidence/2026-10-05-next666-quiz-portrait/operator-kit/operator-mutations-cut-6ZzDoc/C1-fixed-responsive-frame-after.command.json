@@ -1,0 +1,18 @@
+{
+  "executable": "/usr/local/bin/node",
+  "args": [
+    "--experimental-test-isolation=none",
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-reporter=tap",
+    "--test-name-pattern",
+    "^grid portrait cards fit the complete silhouette to the fixed media height$",
+    "tests/quiz-option-card.test.tsx"
+  ],
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "timeoutMs": 45000,
+  "detached": true
+}

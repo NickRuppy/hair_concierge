@@ -279,7 +279,6 @@ test("an active post-cutoff trial reaches the existing Stage 1 CTA; expired tria
     cohortCutoff: () => cutoff,
     migrationEnabled: () => true,
     appEnabled: () => true,
-    appRollout: () => "all" as const,
     stage2Enabled: () => true,
     stage3Enabled: () => true,
     stage4Enabled: () => true,
@@ -291,7 +290,6 @@ test("an active post-cutoff trial reaches the existing Stage 1 CTA; expired tria
     loadPlan: async () => null,
     loadCurrentRefinedNeed: async () => null,
     loadCurrentProductDraft: async () => null,
-    loadIsInternal: async () => false,
   }
 
   const active = await loadPersonalPlanJourneyAccessWithDeps(

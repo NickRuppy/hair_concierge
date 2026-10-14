@@ -1,0 +1,428 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "proposalDir": "/tmp/test-audit-stripe-trial128-proposal-74Xu81",
+  "counts": {
+    "before": 128,
+    "transfer": 128,
+    "cut": 123,
+    "verdicts": {
+      "R": 119,
+      "C": 5,
+      "F": 4
+    },
+    "donors": 5,
+    "primaryKeepers": 5,
+    "changedKeepers": 4,
+    "unrelatedCallbacksByteIdentical": 118,
+    "retainedCallbacksByteIdentical": 119
+  },
+  "files": [
+    {
+      "file": "tests/stripe-trial-invoice.test.ts",
+      "sites": {
+        "before": 21,
+        "transfer": 21,
+        "cut": 19
+      },
+      "sha256": {
+        "before": "4e801d34fe02adbb862106f9c328c7404eef12113c5ee591107f7b6175b13d51",
+        "transfer": "6d0cb2013d4c46a2c2ecc544934238e882f231897d2ef33168439fd90976a31d",
+        "cut": "b1aaf4a84a836bb658817d56a2e5b7fa7ec9ff67fbf5158069e04db9453defbf"
+      },
+      "unchangedSupportBeforeTransfer": true,
+      "unchangedSupportBeforeCut": true
+    },
+    {
+      "file": "tests/stripe-trial-account-activation.test.ts",
+      "sites": {
+        "before": 18,
+        "transfer": 18,
+        "cut": 16
+      },
+      "sha256": {
+        "before": "7891ab86622d9d708a75e8d92b964cb8c3f7c4498d2c228830c9979056968ab4",
+        "transfer": "b501af7ceb20a13b51776bc55659f9d911b0c1e44a81bd0ed042afd6fb9e8fb2",
+        "cut": "e3fc44ca68bbbabd28a2dcf2c79ae5826f4e2fc43d5979a5d6ce846867746e47"
+      },
+      "unchangedSupportBeforeTransfer": true,
+      "unchangedSupportBeforeCut": true
+    },
+    {
+      "file": "tests/stripe-trial-subscription-lifecycle.test.ts",
+      "sites": {
+        "before": 14,
+        "transfer": 14,
+        "cut": 14
+      },
+      "sha256": {
+        "before": "fa5206bb4626cdb32c5c6a7f4e1d18c0f19522d98aa34ec881fc26c06c524651",
+        "transfer": "fa5206bb4626cdb32c5c6a7f4e1d18c0f19522d98aa34ec881fc26c06c524651",
+        "cut": "fa5206bb4626cdb32c5c6a7f4e1d18c0f19522d98aa34ec881fc26c06c524651"
+      },
+      "unchangedSupportBeforeTransfer": true,
+      "unchangedSupportBeforeCut": true
+    },
+    {
+      "file": "tests/stripe-trial-continuation.test.ts",
+      "sites": {
+        "before": 12,
+        "transfer": 12,
+        "cut": 12
+      },
+      "sha256": {
+        "before": "2adaa26b3787d1b866360f06f5a7b5325701bc673cddd106a9e43c40a52dc036",
+        "transfer": "2adaa26b3787d1b866360f06f5a7b5325701bc673cddd106a9e43c40a52dc036",
+        "cut": "2adaa26b3787d1b866360f06f5a7b5325701bc673cddd106a9e43c40a52dc036"
+      },
+      "unchangedSupportBeforeTransfer": true,
+      "unchangedSupportBeforeCut": true
+    },
+    {
+      "file": "tests/stripe-trial-authorization.test.ts",
+      "sites": {
+        "before": 11,
+        "transfer": 11,
+        "cut": 10
+      },
+      "sha256": {
+        "before": "cc503f5aaffafde6c89351aaafcb05a002c94294807bd6e621c4329778d625ba",
+        "transfer": "2892f7bd5e3ec2e4e8f9888d89b6a3d4808c9a19603eede5fa8d305a5a391f35",
+        "cut": "b11893cf101df492ab4f0440798a4d94f9ef2ae8e0905c0ca73c060f8214ebd2"
+      },
+      "unchangedSupportBeforeTransfer": true,
+      "unchangedSupportBeforeCut": true
+    },
+    {
+      "file": "tests/stripe-trial-checkout.test.ts",
+      "sites": {
+        "before": 9,
+        "transfer": 9,
+        "cut": 9
+      },
+      "sha256": {
+        "before": "b7ca67b634e0381d0a60a56fa1b2f977a9e43530868b4719b1dffa58e1f95292",
+        "transfer": "b7ca67b634e0381d0a60a56fa1b2f977a9e43530868b4719b1dffa58e1f95292",
+        "cut": "b7ca67b634e0381d0a60a56fa1b2f977a9e43530868b4719b1dffa58e1f95292"
+      },
+      "unchangedSupportBeforeTransfer": true,
+      "unchangedSupportBeforeCut": true
+    },
+    {
+      "file": "tests/stripe-trial-continuation-reconcile.test.ts",
+      "sites": {
+        "before": 9,
+        "transfer": 9,
+        "cut": 9
+      },
+      "sha256": {
+        "before": "2fb3d2e2b1813994b02b581dbe0e338f8b18b5802d827274af28fbe49789d250",
+        "transfer": "2fb3d2e2b1813994b02b581dbe0e338f8b18b5802d827274af28fbe49789d250",
+        "cut": "2fb3d2e2b1813994b02b581dbe0e338f8b18b5802d827274af28fbe49789d250"
+      },
+      "unchangedSupportBeforeTransfer": true,
+      "unchangedSupportBeforeCut": true
+    },
+    {
+      "file": "tests/stripe-trial-management.test.ts",
+      "sites": {
+        "before": 8,
+        "transfer": 8,
+        "cut": 8
+      },
+      "sha256": {
+        "before": "fdcc0443934d110adc0adbaa2e3b003432ebef2cc5efa7b745bba3e6ac0d2855",
+        "transfer": "fdcc0443934d110adc0adbaa2e3b003432ebef2cc5efa7b745bba3e6ac0d2855",
+        "cut": "fdcc0443934d110adc0adbaa2e3b003432ebef2cc5efa7b745bba3e6ac0d2855"
+      },
+      "unchangedSupportBeforeTransfer": true,
+      "unchangedSupportBeforeCut": true
+    },
+    {
+      "file": "tests/stripe-trial-cancellation.test.ts",
+      "sites": {
+        "before": 7,
+        "transfer": 7,
+        "cut": 7
+      },
+      "sha256": {
+        "before": "aa683f1e596ff838934812921ce7d2baf5ea081ff8a2db515ab9ec9255705767",
+        "transfer": "aa683f1e596ff838934812921ce7d2baf5ea081ff8a2db515ab9ec9255705767",
+        "cut": "aa683f1e596ff838934812921ce7d2baf5ea081ff8a2db515ab9ec9255705767"
+      },
+      "unchangedSupportBeforeTransfer": true,
+      "unchangedSupportBeforeCut": true
+    },
+    {
+      "file": "tests/stripe-trial-prior-paid-history.test.ts",
+      "sites": {
+        "before": 6,
+        "transfer": 6,
+        "cut": 6
+      },
+      "sha256": {
+        "before": "6b24bb9eae7e2fb3b1c2ece6f43532d809b64766cceae626c6d81eef81ad87f7",
+        "transfer": "6b24bb9eae7e2fb3b1c2ece6f43532d809b64766cceae626c6d81eef81ad87f7",
+        "cut": "6b24bb9eae7e2fb3b1c2ece6f43532d809b64766cceae626c6d81eef81ad87f7"
+      },
+      "unchangedSupportBeforeTransfer": true,
+      "unchangedSupportBeforeCut": true
+    },
+    {
+      "file": "tests/stripe-trial-checkout-route.test.ts",
+      "sites": {
+        "before": 5,
+        "transfer": 5,
+        "cut": 5
+      },
+      "sha256": {
+        "before": "9ecb370408c14ef478200373ac33bc74b583294b23da2f7e18681ab2a187d571",
+        "transfer": "9ecb370408c14ef478200373ac33bc74b583294b23da2f7e18681ab2a187d571",
+        "cut": "9ecb370408c14ef478200373ac33bc74b583294b23da2f7e18681ab2a187d571"
+      },
+      "unchangedSupportBeforeTransfer": true,
+      "unchangedSupportBeforeCut": true
+    },
+    {
+      "file": "tests/stripe-trial-checkout-session-params.test.ts",
+      "sites": {
+        "before": 5,
+        "transfer": 5,
+        "cut": 5
+      },
+      "sha256": {
+        "before": "a6924fe6bcff65baecb70a7845d7293c4190c76cd6fad0a16fa1ff1ff51e9066",
+        "transfer": "a6924fe6bcff65baecb70a7845d7293c4190c76cd6fad0a16fa1ff1ff51e9066",
+        "cut": "a6924fe6bcff65baecb70a7845d7293c4190c76cd6fad0a16fa1ff1ff51e9066"
+      },
+      "unchangedSupportBeforeTransfer": true,
+      "unchangedSupportBeforeCut": true
+    },
+    {
+      "file": "tests/stripe-trial-catalog.test.ts",
+      "sites": {
+        "before": 3,
+        "transfer": 3,
+        "cut": 3
+      },
+      "sha256": {
+        "before": "7d69cb89ee4618f690fcfd1d542a569959716a0cf9754867edcef152219ad2e7",
+        "transfer": "7d69cb89ee4618f690fcfd1d542a569959716a0cf9754867edcef152219ad2e7",
+        "cut": "7d69cb89ee4618f690fcfd1d542a569959716a0cf9754867edcef152219ad2e7"
+      },
+      "unchangedSupportBeforeTransfer": true,
+      "unchangedSupportBeforeCut": true
+    }
+  ],
+  "guards": [
+    {
+      "file": "tests/stripe-trial-invoice.test.ts",
+      "sha256": "4e801d34fe02adbb862106f9c328c7404eef12113c5ee591107f7b6175b13d51"
+    },
+    {
+      "file": "tests/stripe-trial-account-activation.test.ts",
+      "sha256": "7891ab86622d9d708a75e8d92b964cb8c3f7c4498d2c228830c9979056968ab4"
+    },
+    {
+      "file": "tests/stripe-trial-subscription-lifecycle.test.ts",
+      "sha256": "fa5206bb4626cdb32c5c6a7f4e1d18c0f19522d98aa34ec881fc26c06c524651"
+    },
+    {
+      "file": "tests/stripe-trial-continuation.test.ts",
+      "sha256": "2adaa26b3787d1b866360f06f5a7b5325701bc673cddd106a9e43c40a52dc036"
+    },
+    {
+      "file": "tests/stripe-trial-authorization.test.ts",
+      "sha256": "cc503f5aaffafde6c89351aaafcb05a002c94294807bd6e621c4329778d625ba"
+    },
+    {
+      "file": "tests/stripe-trial-checkout.test.ts",
+      "sha256": "b7ca67b634e0381d0a60a56fa1b2f977a9e43530868b4719b1dffa58e1f95292"
+    },
+    {
+      "file": "tests/stripe-trial-continuation-reconcile.test.ts",
+      "sha256": "2fb3d2e2b1813994b02b581dbe0e338f8b18b5802d827274af28fbe49789d250"
+    },
+    {
+      "file": "tests/stripe-trial-management.test.ts",
+      "sha256": "fdcc0443934d110adc0adbaa2e3b003432ebef2cc5efa7b745bba3e6ac0d2855"
+    },
+    {
+      "file": "tests/stripe-trial-cancellation.test.ts",
+      "sha256": "aa683f1e596ff838934812921ce7d2baf5ea081ff8a2db515ab9ec9255705767"
+    },
+    {
+      "file": "tests/stripe-trial-prior-paid-history.test.ts",
+      "sha256": "6b24bb9eae7e2fb3b1c2ece6f43532d809b64766cceae626c6d81eef81ad87f7"
+    },
+    {
+      "file": "tests/stripe-trial-checkout-route.test.ts",
+      "sha256": "9ecb370408c14ef478200373ac33bc74b583294b23da2f7e18681ab2a187d571"
+    },
+    {
+      "file": "tests/stripe-trial-checkout-session-params.test.ts",
+      "sha256": "a6924fe6bcff65baecb70a7845d7293c4190c76cd6fad0a16fa1ff1ff51e9066"
+    },
+    {
+      "file": "tests/stripe-trial-catalog.test.ts",
+      "sha256": "7d69cb89ee4618f690fcfd1d542a569959716a0cf9754867edcef152219ad2e7"
+    },
+    {
+      "file": "tests/stripe-checkout-session-params.spec.ts",
+      "sha256": "ca497f57144a13a79f2c253e331a3cf2efbdd195d2eae2c5800155e73f792dd2"
+    },
+    {
+      "file": "tests/helpers/returning-checkout-route-fixture.ts",
+      "sha256": "a3450e855f6c0766097cc932e730becdd6999de30163801c18041905eda1d4e8"
+    },
+    {
+      "file": "src/lib/stripe/trial-authorization.ts",
+      "sha256": "a399a889fc879d52020ad3285e54925885211da3529682fa3ab281dcf7fdda73"
+    },
+    {
+      "file": "src/lib/stripe/trial-account-admission.ts",
+      "sha256": "36267f9ff61d48e48bebc4278d8606e0a7c677b05c3b425639fc4da35d7a50c0"
+    },
+    {
+      "file": "src/lib/stripe/trial-checkout.ts",
+      "sha256": "eaf7543533f25be9182842f1bb4678ce6e4a0f405e60d5c8e968d215f28dd408"
+    },
+    {
+      "file": "src/lib/stripe/trial-catalog.ts",
+      "sha256": "257b15dfcc196342adde6eb919f026fff2944aa5e6ccb635272ef1ddc0a782e0"
+    },
+    {
+      "file": "src/lib/stripe/trial-checkout-session-params.ts",
+      "sha256": "9341b1b612522030f2272dcb75a455ea914792c6810567aa2f176dd73ebb51c3"
+    },
+    {
+      "file": "src/lib/stripe/checkout-session-params.ts",
+      "sha256": "985f472524ca69289513989e59f39068cde6a1234c0b0a7429f15da343b595b9"
+    },
+    {
+      "file": "src/lib/stripe/trial-invoice.ts",
+      "sha256": "85e094f3d91b771acecddca5ed9468fa170807836399baea9b560294ed35f8c2"
+    },
+    {
+      "file": "src/lib/stripe/trial-continuation.ts",
+      "sha256": "139bd79e381b8f6d6016fb2aee7399a62e9eccc2784c06cbaf81588529903b6b"
+    },
+    {
+      "file": "src/lib/stripe/trial-management.ts",
+      "sha256": "a6017e206e18ca9e486eafa969db95fb610035904ee4883973f10050ecc651e9"
+    },
+    {
+      "file": "src/lib/stripe/trial-continuation-reconcile.ts",
+      "sha256": "7fbd1fbe6c91f440b4cd4f511506164b1e9fe4c07737ec6ff01a287ea9c2ff12"
+    },
+    {
+      "file": "src/app/api/billing/stripe-trial-continuation/reconcile/route.ts",
+      "sha256": "0b551338a794077bb248493a1f3a2d1dfbfd4f5c92a28893ee50db89fda3c079"
+    },
+    {
+      "file": "src/lib/stripe/webhook-failure.ts",
+      "sha256": "cf04b21cf458d1008d3376fc7e24aba08772fff6a9c9d078002ad9097407a667"
+    },
+    {
+      "file": "src/lib/auth/checkout-activation-outcome.ts",
+      "sha256": "23cd9f0bdbebe849abab313f2ce8dc418e0c3c5f1c4021714af7c904c60bee73"
+    },
+    {
+      "file": "src/lib/billing/trial-effective-contract.ts",
+      "sha256": "8700806b915a6472297eee6b523671fbcaa924a7eb4f4c02edf47bf6d5d40d96"
+    },
+    {
+      "file": "src/lib/billing/trial-offer.ts",
+      "sha256": "14083f0eb5677db3063e22ab585ca9779a51fac4e04ab8852ee2e11f087d4725"
+    },
+    {
+      "file": "src/lib/billing/trial-runtime.ts",
+      "sha256": "0dae1fdc8a90e3b71a6faf4a20fafa9c655c165650fbe952a3b36e66b29bffe0"
+    },
+    {
+      "file": "src/lib/billing/trial-admission.ts",
+      "sha256": "00dea2cbb5dad16446ee405f289aa7912c9cb895774653512d549ddea02d0017"
+    },
+    {
+      "file": "src/lib/billing/trial-policy.ts",
+      "sha256": "a88f33d5abfefd705629a0ca8ef739b893dd1908aeec639627916fc815daef02"
+    },
+    {
+      "file": "src/lib/billing/trial-access-projection.ts",
+      "sha256": "6bd7a205a589005d2301cf77511709b26f63076538f953e1da77d57e567ba17f"
+    },
+    {
+      "file": "src/lib/billing/trial-payment-events.ts",
+      "sha256": "4118cf4fca3745bc1aced3cf8a3f86e4ec684733f8f565bf1d61071dabb4bc9c"
+    },
+    {
+      "file": "src/lib/billing/trial-checkout-attempt.ts",
+      "sha256": "84ba2d9f52efceb8bc64a499176c5d2c24b479d9907185b8998da05320ac76a9"
+    },
+    {
+      "file": "src/lib/billing/trial-identity-claims.ts",
+      "sha256": "7e04ea1029da7e6c2c2864b860926fa83297d46c7174ea7310130d2c3536e963"
+    },
+    {
+      "file": "src/lib/billing/trial-management-operations.ts",
+      "sha256": "d89bcbcea01fc6e5cb1ec864212c32e2277cfceea6ff0ab21b3a4149a28d6e3c"
+    },
+    {
+      "file": "src/lib/billing/subscriptions.ts",
+      "sha256": "a6ba77a92481e13f6f03bc7b1c8d7fee75c02facfeb8ce747493bc64ecca995c"
+    },
+    {
+      "file": "src/lib/stripe/trial-cancellation.ts",
+      "sha256": "6e8da65a276dc23ac3ce4face961c1059b533cde765705ecb005a8f0a958fcaf"
+    },
+    {
+      "file": "src/lib/stripe/trial-prior-paid-history.ts",
+      "sha256": "422692df369d638699e4d232c73143ea6b664d65ae96ccb325f047656e4afaf0"
+    },
+    {
+      "file": "src/lib/billing/analytics-outbox.ts",
+      "sha256": "e81d7519e58438a54760efac9aa1b92227f028077fef049595facc84d480bef2"
+    },
+    {
+      "file": "src/lib/stripe/checkout-activation.ts",
+      "sha256": "f33ca66366ec59a915fdeba82bb397ad20891dd837495de25c6bf4e51deb8bdc"
+    },
+    {
+      "file": "src/lib/stripe/webhook-handlers.ts",
+      "sha256": "611ec5966703c23c01beb04982fff17715a801afb808ec9b80117ae0462e7041"
+    },
+    {
+      "file": "src/app/api/stripe/webhook/route.ts",
+      "sha256": "83c74462ffda261d3a044467d68a918b034febbefca9f6aad4ae131dd84f35ab"
+    },
+    {
+      "file": "src/app/api/stripe/create-checkout-session/route.ts",
+      "sha256": "0808a083b02a9611deab703bf9fc7a9b3cecb5dce2b5be1889003a0cd06a9bd8"
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    },
+    {
+      "file": "docs/free-trial-launch-runbook.md",
+      "sha256": "a1c60fbc2dc832110fbff6566df0cde37ba3e167debb5cf747f0e0afe9fba668"
+    }
+  ],
+  "scope": "prospective static evidence only; not a repository editor or execution approval; all original donor assertions retained until main preservation checks pass",
+  "noNewCallsInputsRows": "Only observations/rejection predicates added to four existing callbacks; production invocation/fixture statements unchanged. One existing generic rejects is strengthened in each of C2/C3. C4 needs no transfer.",
+  "sourceCleanup": "none",
+  "controls": 9
+}

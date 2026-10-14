@@ -1,0 +1,40 @@
+{
+  "status": "COMPLETE_READONLY_CONDITIONAL_SEVEN",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "counts": {
+    "before": 37,
+    "transfer": 37,
+    "cut": 30
+  },
+  "classification": {
+    "R": 30,
+    "F": 0,
+    "C": 5,
+    "D": 2
+  },
+  "currentReadsetPinsMatch": 47,
+  "snapshots": 15,
+  "unchangedSurvivingCallbacks": 28,
+  "unrelatedExcludingSevenPairs": 23,
+  "heldF": 0,
+  "sourceCleanup": null,
+  "runtimeChecks": 0,
+  "repositoryWrites": 0,
+  "hashes": {
+    "manifest.json": "20e860ff28dbf2fed2d9fdfd07482242f66a18988ab2dc4bc5514edf243f2ce6",
+    "ledger.json": "9a43224a97905922c4c16571fc787fae24191f85881fbb3d01b51a83fa1403de",
+    "complete-ledger.md": "10f4e8faa7551fc862f360cea314c676199ef4f2341e3b02fa6ff7b0a8f9d7c4",
+    "layer-plan.md": "1329747c8b79dfd9e091a532238182bddcf83433ca37e5451d256dbd083a3014",
+    "candidates.json": "e12d21510e24f5d7be53a7c4bf15a86d084ec939833d2d47bf51ea6fbcdb5e48",
+    "sites.json": "63211b8cef2856972657ffb08be0a16343345f219c3bffa3f9026a4d43ca4de3",
+    "controls.json": "a32963928b3a6f5dacb3a638b6933a8b89052fec81b0d62e65dadb02e9cc69c1",
+    "survivors.json": "fbf73696ed49904776e2416ebb538e6b98f1fab288c9e9f0a9e4e901adadc5e0",
+    "commands.json": "4f7ac5b217e28c73b5c788efe07018c42e19b29df4466691fd7fc5656eb0c707",
+    "static-receipt.json": "a7d34fe57aa547c89faf80d1e90054acc9626ca1cee9196db287770593b53bde",
+    "transfer.diff": "863657c826ef2fc3dcf4353549b6f0d17d72d13138f284c76940af64be847d32",
+    "complete.diff": "a89172f4b51844f248ac515268add7947ceb2865088eb97a7b8c9189f1f14abb",
+    "prepare.cjs": "e54a5bb28d93f637da211b1e66c3b72739b1406b4c18fd059ef0e15e34217a07",
+    "write-ledger.py": "2ef86a7709b1ab3642545b17f971e349dd9fdd3607a8d41d2847ebbec77fc866"
+  }
+}

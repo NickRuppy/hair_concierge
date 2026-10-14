@@ -1,4 +1,5 @@
 import type { ProductBondbuilderSpecs } from "@/lib/bondbuilder/constants"
+import type { HeatActivationRoute } from "@/lib/heat-activation/contract"
 
 type FactProvenance = "catalog_spec" | "bond_usage_protocol"
 
@@ -7,6 +8,8 @@ type LeaveInSpecRow = {
   roles: string[]
   provides_heat_protection: boolean
   heat_activation_required: boolean
+  /** Leave-In v1.2: the heat route that activates the product; NULL iff not activated. */
+  heat_activation_route?: HeatActivationRoute | null
   application_stage: string[]
 }
 
@@ -14,7 +17,10 @@ type DryShampooSpecRow = {
   format: "aerosol_spray" | "powder" | "foam_or_liquid"
 }
 
-type BondbuilderSpecRow = Pick<ProductBondbuilderSpecs, "application_mode" | "treatment_mode" | "product_format" | "usage_protocol">
+type BondbuilderSpecRow = Pick<
+  ProductBondbuilderSpecs,
+  "application_mode" | "treatment_mode" | "product_format" | "usage_protocol"
+>
 
 export type CatalogApplicationFacts = {
   facts: Record<string, unknown>
@@ -32,13 +38,17 @@ export function adaptCatalogApplicationFacts(
   input: CatalogApplicationFactsInput,
 ): CatalogApplicationFacts {
   switch (input.category) {
-    case "leave_in":
+    case "leave_in": {
+      // The route key exists only for an activated product, so every other Leave-in keeps
+      // byte-identical facts (S3 P10); `null` = activated but the route is not in the read.
+      const activated = input.spec.heat_activation_required === true
       return {
         facts: {
           format: input.spec.format,
           roles: input.spec.roles,
           providesHeatProtection: input.spec.provides_heat_protection,
           heatActivationRequired: input.spec.heat_activation_required,
+          ...(activated ? { heatActivationRoute: input.spec.heat_activation_route ?? null } : {}),
           applicationStage: input.spec.application_stage,
         },
         provenance: {
@@ -46,9 +56,11 @@ export function adaptCatalogApplicationFacts(
           roles: catalogSpec,
           providesHeatProtection: catalogSpec,
           heatActivationRequired: catalogSpec,
+          ...(activated ? { heatActivationRoute: catalogSpec } : {}),
           applicationStage: catalogSpec,
         },
       }
+    }
     case "dry_shampoo": {
       const formatResolution =
         input.spec.format === "foam_or_liquid"

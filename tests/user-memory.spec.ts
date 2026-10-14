@@ -427,15 +427,17 @@ test.describe("User memory persistence with fake Supabase", () => {
       hair_profiles: [{ user_id: "user-1", conversation_memory: null }],
     })
 
-    await updateUserMemoryEntry(
+    const result = await updateUserMemoryEntry(
       "user-1",
       "memory-1",
       "Der Nutzer mag inzwischen leichte Oele.",
       asSupabase(fake),
     )
 
+    expect(result).not.toBeNull()
     expect(fake.tables.user_memory_entries?.[0]).toEqual(
       expect.objectContaining({
+        id: "memory-1",
         content: "Der Nutzer mag inzwischen leichte Oele.",
         source: "manual",
         source_conversation_id: null,
@@ -483,36 +485,6 @@ test.describe("User memory persistence with fake Supabase", () => {
       expect.objectContaining({
         id: "memory-1",
         content: "Der Nutzer mag leichte Texturen.",
-      }),
-    )
-  })
-
-  test("manual edit succeeds when normalized_key changes but no collision exists", async () => {
-    const fake = new FakeSupabase({
-      user_memory_entries: [
-        createMemoryEntry({
-          id: "memory-1",
-          kind: "preference",
-          content: "Der Nutzer mag leichte Texturen.",
-          normalized_key: "preference:der_nutzer_mag_leichte_texturen",
-        }),
-      ],
-      hair_profiles: [{ user_id: "user-1", conversation_memory: null }],
-    })
-
-    const result = await updateUserMemoryEntry(
-      "user-1",
-      "memory-1",
-      "Der Nutzer bevorzugt schwere Oele.",
-      asSupabase(fake),
-    )
-
-    expect(result).not.toBeNull()
-    expect(fake.tables.user_memory_entries?.[0]).toEqual(
-      expect.objectContaining({
-        id: "memory-1",
-        content: "Der Nutzer bevorzugt schwere Oele.",
-        source: "manual",
       }),
     )
   })

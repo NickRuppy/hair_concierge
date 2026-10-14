@@ -4,10 +4,7 @@ import React, { type ReactElement, type ReactNode } from "react"
 import { renderToStaticMarkup } from "react-dom/server"
 
 import { ChatMessage } from "@/components/chat/chat-message"
-import {
-  ProductIntakeCard,
-  ProductIntakeSubmittedState,
-} from "@/components/chat/product-intake-card"
+import { ProductIntakeCard } from "@/components/chat/product-intake-card"
 import { ProductLookupClarificationCard } from "@/components/chat/product-lookup-clarification-card"
 import {
   applyChatStreamEventToMessages,
@@ -18,7 +15,6 @@ import {
 import {
   buildProductIntakeOfferStateByMessageId,
   buildProductLookupClarificationStateByMessageId,
-  findResolvedProductLookupSelectionForMessage,
   hasPendingProductIntakeReview,
 } from "@/lib/chat/product-lookup-selection-ui"
 import type { Message, Product, ProductIntakeOffer, ProductLookupClarification } from "@/lib/types"
@@ -313,6 +309,7 @@ test("assistant product lookup clarification renders an enabled structured selec
   assert.match(html, /Syoss Intense Curls/)
   assert.match(html, /Auswählen/)
   assert.doesNotMatch(html, /<button[^>]*\sdisabled(?:=""|>| )[^>]*>[\s\S]*Auswählen/)
+  assert.doesNotMatch(html, /<img\b/)
 })
 
 test("assistant product lookup clarification disables selection on the streaming message", () => {
@@ -351,10 +348,10 @@ test("assistant product lookup clarification locks after a later matching select
     },
   }
 
-  const resolvedSelection = findResolvedProductLookupSelectionForMessage(
-    [clarificationMessage, selectionMessage],
-    clarificationMessage,
-  )
+  const resolvedSelection =
+    buildProductLookupClarificationStateByMessageId([clarificationMessage, selectionMessage]).get(
+      clarificationMessage.id,
+    )?.resolvedSelection ?? null
 
   const html = renderToStaticMarkup(
     <ChatMessage
@@ -452,7 +449,13 @@ test("product intake card reports submitted metadata to parent", async () => {
         }) as ReactElement,
     )
 
-    const buttons = findButtons(harness.render())
+    const initial = harness.render()
+    const initialHtml = renderToStaticMarkup(initial)
+    assert.match(initialHtml, /Foto hochladen/)
+    assert.match(initialHtml, /Daten eingeben/)
+    assert.doesNotMatch(initialHtml, /Danke für dein Produkt/)
+    assert.doesNotMatch(initialHtml, /Wir haben es noch nicht sicher in unserer Datenbank/)
+    const buttons = findButtons(initial)
     const submitButton = buttons.find((button) =>
       textContent(button).includes("Produkt einreichen"),
     )
@@ -678,6 +681,13 @@ test("product intake card renders persisted submitted state after reload", () =>
   assert.match(html, /Danke, wir prüfen dein Produkt\./)
   assert.doesNotMatch(html, /Produkt einreichen/)
   assert.doesNotMatch(html, /Foto hochladen/)
+  assert.match(html, /role="status"/)
+  assert.match(html, /aria-live="polite"/)
+  assert.match(html, /Wir melden uns hier im Chat/)
+  assert.doesNotMatch(html, /Daten eingeben/)
+  assert.doesNotMatch(html, /Kategorie/)
+  assert.doesNotMatch(html, /Häufigkeit/)
+  assert.doesNotMatch(html, /Jean &amp; Len/)
 })
 
 test("product intake card renders resolved review state after approval", () => {
@@ -702,6 +712,8 @@ test("product intake card renders resolved review state after approval", () => {
   assert.match(html, /Produkt gespeichert\./)
   assert.doesNotMatch(html, /Produkt einreichen/)
   assert.doesNotMatch(html, /Danke, wir prüfen dein Produkt\./)
+  assert.match(html, /Du kannst dazu jetzt direkt weiterfragen\./)
+  assert.doesNotMatch(html, /Foto hochladen/)
 })
 
 test("assistant product lookup clarification suppresses recommendation cards", () => {
@@ -718,17 +730,6 @@ test("assistant product lookup clarification suppresses recommendation cards", (
 
   assert.match(html, /Syoss Intense Curls/)
   assert.doesNotMatch(html, /Balea Professional Ultimate Volume/)
-})
-
-test("normal product intake offers render as an action card without duplicate helper copy", () => {
-  const html = renderToStaticMarkup(
-    <ProductIntakeCard offer={createProductIntakeOffer()} conversationId="conversation-1" />,
-  )
-
-  assert.match(html, /Foto hochladen/)
-  assert.match(html, /Daten eingeben/)
-  assert.doesNotMatch(html, /Danke für dein Produkt/)
-  assert.doesNotMatch(html, /Wir haben es noch nicht sicher in unserer Datenbank/)
 })
 
 test("photo product intake marks barcode optional unless explicitly requested", () => {
@@ -773,30 +774,6 @@ test("needs-more-info product intake offers keep explicit repair guidance", () =
 
   assert.match(html, /Wir brauchen noch eine Ergänzung/)
   assert.match(html, /Ergänze bitte: Vorderseitenfoto, Produktname/)
-})
-
-test("pending product intake submitted state collapses the editable form", () => {
-  const html = renderToStaticMarkup(<ProductIntakeSubmittedState status="pending_review" />)
-
-  assert.match(html, /role="status"/)
-  assert.match(html, /aria-live="polite"/)
-  assert.match(html, /Danke, wir prüfen dein Produkt\./)
-  assert.match(html, /Wir melden uns hier im Chat/)
-  assert.doesNotMatch(html, /Foto hochladen/)
-  assert.doesNotMatch(html, /Daten eingeben/)
-  assert.doesNotMatch(html, /Kategorie/)
-  assert.doesNotMatch(html, /Häufigkeit/)
-  assert.doesNotMatch(html, /Jean &amp; Len/)
-  assert.doesNotMatch(html, /Produkt einreichen/)
-})
-
-test("matched product intake submitted state renders compact saved copy", () => {
-  const html = renderToStaticMarkup(<ProductIntakeSubmittedState status="matched" />)
-
-  assert.match(html, /Produkt gespeichert\./)
-  assert.match(html, /Du kannst dazu jetzt direkt weiterfragen\./)
-  assert.doesNotMatch(html, /Foto hochladen/)
-  assert.doesNotMatch(html, /Produkt einreichen/)
 })
 
 test("product selection helper detects already streamed selection messages", () => {
@@ -918,20 +895,6 @@ test("assistant product lookup clarification renders candidate images and brand 
   assert.match(html, /Syoss · Intense/)
   assert.match(html, />Curls</)
   assert.doesNotMatch(html, />Syoss Intense Curls</)
-})
-
-test("assistant product lookup clarification renders a category fallback without an image url", () => {
-  const html = renderToStaticMarkup(
-    <ProductLookupClarificationCard
-      clarification={createProductLookupClarification()}
-      conversationId="conversation-1"
-      assistantMessageId="message-clarification-1"
-      onSelectProduct={() => {}}
-    />,
-  )
-
-  assert.doesNotMatch(html, /<img\b/)
-  assert.match(html, /Syoss Intense Curls/)
 })
 
 test("assistant product lookup clarification candidate names can wrap instead of truncating", () => {

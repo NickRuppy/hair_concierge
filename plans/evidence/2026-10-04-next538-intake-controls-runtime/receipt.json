@@ -1,0 +1,521 @@
+[
+  {
+    "id": "matched-source-projection",
+    "lane": "intake",
+    "phase": "new",
+    "intended": "result.source must be onboarding at existing manual success",
+    "source": "src/lib/product-intake/submissions.ts",
+    "selectedTest": {
+      "file": "tests/product-intake-submissions.test.ts",
+      "name": "matched manual intake links user usage to the existing product without creating a submission"
+    },
+    "originalHash": "3098f48d86d40549f982a2a96c465e34f4278c59b593da4ef182f81d0df6fcf3",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/matched-source-projection-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/matched-source-projection-fault.tap"
+    },
+    "restoredHash": "3098f48d86d40549f982a2a96c465e34f4278c59b593da4ef182f81d0df6fcf3",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/matched-source-projection-after.tap"
+    },
+    "keeperAssertionLines": [
+      554,
+      555,
+      556,
+      557,
+      558,
+      559,
+      560,
+      561,
+      562
+    ],
+    "assertionStacks": [
+      555
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "wrong-owner-error-copy",
+    "lane": "intake",
+    "phase": "new",
+    "intended": "existing actual-route German owner-error regex, preserving400 andcode",
+    "source": "src/lib/product-intake/upload-paths.ts",
+    "selectedTest": {
+      "file": "tests/product-intake-submissions.test.ts",
+      "name": "route handler returns controlled client error for wrong-user upload paths"
+    },
+    "originalHash": "a5a096b823218cf583b96075710badf8744f701d833212828de6e266929fdd44",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/wrong-owner-error-copy-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/wrong-owner-error-copy-fault.tap"
+    },
+    "restoredHash": "a5a096b823218cf583b96075710badf8744f701d833212828de6e266929fdd44",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/wrong-owner-error-copy-after.tap"
+    },
+    "keeperAssertionLines": [
+      2093,
+      2094,
+      2095
+    ],
+    "assertionStacks": [
+      2095
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "missing-front-verification",
+    "lane": "intake",
+    "phase": "new",
+    "intended": "route expected410 now500 after missing source commit; exact status assertion, not timeout/import failure",
+    "source": "src/lib/product-intake/submissions.ts",
+    "selectedTest": {
+      "file": "tests/product-intake-submissions.test.ts",
+      "name": "route handler returns controlled expired response for missing tmp uploads"
+    },
+    "originalHash": "3098f48d86d40549f982a2a96c465e34f4278c59b593da4ef182f81d0df6fcf3",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/missing-front-verification-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/missing-front-verification-fault.tap"
+    },
+    "restoredHash": "3098f48d86d40549f982a2a96c465e34f4278c59b593da4ef182f81d0df6fcf3",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/missing-front-verification-after.tap"
+    },
+    "keeperAssertionLines": [
+      2127,
+      2128,
+      2129,
+      2130,
+      2131,
+      2132
+    ],
+    "assertionStacks": [
+      2127
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "photo-return-mode",
+    "lane": "intake",
+    "phase": "new",
+    "intended": "transferred result.intake_method photo",
+    "source": "src/lib/product-intake/submissions.ts",
+    "selectedTest": {
+      "file": "tests/product-intake-submissions.test.ts",
+      "name": "photo intake persists only server-derived uncertain validation state"
+    },
+    "originalHash": "3098f48d86d40549f982a2a96c465e34f4278c59b593da4ef182f81d0df6fcf3",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/photo-return-mode-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/photo-return-mode-fault.tap"
+    },
+    "restoredHash": "3098f48d86d40549f982a2a96c465e34f4278c59b593da4ef182f81d0df6fcf3",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/photo-return-mode-after.tap"
+    },
+    "keeperAssertionLines": [
+      812,
+      813,
+      814,
+      815,
+      819,
+      823,
+      824,
+      825,
+      826,
+      827,
+      828,
+      833,
+      834
+    ],
+    "assertionStacks": [
+      813
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "photo-persisted-front",
+    "lane": "intake",
+    "phase": "new",
+    "intended": "transferred literal persisted front path",
+    "source": "src/lib/product-intake/submissions.ts",
+    "selectedTest": {
+      "file": "tests/product-intake-submissions.test.ts",
+      "name": "photo intake persists only server-derived uncertain validation state"
+    },
+    "originalHash": "3098f48d86d40549f982a2a96c465e34f4278c59b593da4ef182f81d0df6fcf3",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/photo-persisted-front-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/photo-persisted-front-fault.tap"
+    },
+    "restoredHash": "3098f48d86d40549f982a2a96c465e34f4278c59b593da4ef182f81d0df6fcf3",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/photo-persisted-front-after.tap"
+    },
+    "keeperAssertionLines": [
+      812,
+      813,
+      814,
+      815,
+      819,
+      823,
+      824,
+      825,
+      826,
+      827,
+      828,
+      833,
+      834
+    ],
+    "assertionStacks": [
+      815
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "photo-persisted-barcode",
+    "lane": "intake",
+    "phase": "new",
+    "intended": "transferred literal persisted barcode path",
+    "source": "src/lib/product-intake/submissions.ts",
+    "selectedTest": {
+      "file": "tests/product-intake-submissions.test.ts",
+      "name": "photo intake persists only server-derived uncertain validation state"
+    },
+    "originalHash": "3098f48d86d40549f982a2a96c465e34f4278c59b593da4ef182f81d0df6fcf3",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/photo-persisted-barcode-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/photo-persisted-barcode-fault.tap"
+    },
+    "restoredHash": "3098f48d86d40549f982a2a96c465e34f4278c59b593da4ef182f81d0df6fcf3",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/photo-persisted-barcode-after.tap"
+    },
+    "keeperAssertionLines": [
+      812,
+      813,
+      814,
+      815,
+      819,
+      823,
+      824,
+      825,
+      826,
+      827,
+      828,
+      833,
+      834
+    ],
+    "assertionStacks": [
+      819
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "photo-usage-front",
+    "lane": "intake",
+    "phase": "new",
+    "intended": "transferred usage.front_image_path expects committed front",
+    "source": "src/lib/product-intake/submissions.ts",
+    "selectedTest": {
+      "file": "tests/product-intake-submissions.test.ts",
+      "name": "photo intake persists only server-derived uncertain validation state"
+    },
+    "originalHash": "3098f48d86d40549f982a2a96c465e34f4278c59b593da4ef182f81d0df6fcf3",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/photo-usage-front-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/photo-usage-front-fault.tap"
+    },
+    "restoredHash": "3098f48d86d40549f982a2a96c465e34f4278c59b593da4ef182f81d0df6fcf3",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/photo-usage-front-after.tap"
+    },
+    "keeperAssertionLines": [
+      812,
+      813,
+      814,
+      815,
+      819,
+      823,
+      824,
+      825,
+      826,
+      827,
+      828,
+      833,
+      834
+    ],
+    "assertionStacks": [
+      823
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "schema-premature-case-fold",
+    "lane": "intake",
+    "phase": "new",
+    "intended": "new pre-owner parsed AB-12 expected; final ab-12 alone was blind",
+    "source": "src/lib/product-intake/schemas.ts",
+    "selectedTest": {
+      "file": "tests/product-intake-submissions.test.ts",
+      "name": "scan submission normalizes the scanned identifier once before it is matched and persisted"
+    },
+    "originalHash": "4677e315cf32dbcdc4af1b7b0e55ea601979d1cfb7e9cf6a80177fbc1fe43eba",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/schema-premature-case-fold-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/schema-premature-case-fold-fault.tap"
+    },
+    "restoredHash": "4677e315cf32dbcdc4af1b7b0e55ea601979d1cfb7e9cf6a80177fbc1fe43eba",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/schema-premature-case-fold-after.tap"
+    },
+    "keeperAssertionLines": [
+      1817,
+      1830,
+      1831,
+      1832
+    ],
+    "assertionStacks": [
+      1817
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "schema-premature-punctuation-strip",
+    "lane": "intake",
+    "phase": "new",
+    "intended": "new pre-owner parsed AB-12 expected",
+    "source": "src/lib/product-intake/schemas.ts",
+    "selectedTest": {
+      "file": "tests/product-intake-submissions.test.ts",
+      "name": "scan submission normalizes the scanned identifier once before it is matched and persisted"
+    },
+    "originalHash": "4677e315cf32dbcdc4af1b7b0e55ea601979d1cfb7e9cf6a80177fbc1fe43eba",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/schema-premature-punctuation-strip-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/schema-premature-punctuation-strip-fault.tap"
+    },
+    "restoredHash": "4677e315cf32dbcdc4af1b7b0e55ea601979d1cfb7e9cf6a80177fbc1fe43eba",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next538-intake-mutations-new/schema-premature-punctuation-strip-after.tap"
+    },
+    "keeperAssertionLines": [
+      1817,
+      1830,
+      1831,
+      1832
+    ],
+    "assertionStacks": [
+      1817
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  }
+]

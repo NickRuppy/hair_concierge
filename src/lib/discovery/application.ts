@@ -244,6 +244,12 @@ export type DiscoveryApplicationPrintStep =
       purpose: string
       /** The verified steps in order — amounts live in the step copy, as on `/anwendung`. */
       actions: string[]
+      /**
+       * Indices into `actions` that are variant headings, not instructions („Auf trockenem
+       * Haar (empfohlen)"). Layout only — the words are already in `actions` — so it is kept
+       * out of the fingerprint (`withDiscoveryApplicationHash`): finalised sheets do not drift.
+       */
+      headings?: number[]
       note: string | null
     }
   | { kind: "transition"; copy: string }
@@ -278,14 +284,22 @@ function printDay(
   day: ApplicationDayView,
   usageOf: DiscoveryUsageLookup,
 ): DiscoveryApplicationPrintDay {
+  // The sheet's view is built without Tools, so no Tool section is ever present; the guard only
+  // narrows the step union.
+  const steps = day.steps.filter(
+    (step): step is Exclude<typeof step, { kind: "tool_use" }> => step.kind !== "tool_use",
+  )
   return {
     dayType: day.dayType,
     label: day.labelDe,
     summary: day.summaryDe,
     cadence: day.cadenceDe ? sentenceCase(day.cadenceDe) : null,
-    steps: day.steps.map((step): DiscoveryApplicationPrintStep => {
+    steps: steps.map((step): DiscoveryApplicationPrintStep => {
       if (step.kind === "product") {
         const usage = usageOf(day.dayType, step.productId, step.applicationInstanceKey)
+        const headings = step.actions.flatMap((action, index) =>
+          action.kind === "variant_heading" ? [index] : [],
+        )
         return {
           kind: "product",
           productId: step.productId,
@@ -295,6 +309,7 @@ function printDay(
           categoryLabel: step.categoryLabelDe,
           purpose: step.purposeDe,
           actions: step.actions.map((action) => action.copyDe),
+          ...(headings.length > 0 ? { headings } : {}),
           note: step.coverageNoteDe,
         }
       }

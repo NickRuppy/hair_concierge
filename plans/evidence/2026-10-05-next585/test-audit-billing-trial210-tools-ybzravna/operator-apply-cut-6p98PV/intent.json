@@ -1,0 +1,518 @@
+{
+  "mode": "cut",
+  "from": "transfer",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "files": [
+    {
+      "file": "tests/billing-trial-required-notices.test.ts",
+      "before": "a15b8bd4f60f3cdf5a7848eeea985e63655f856de2af8e0e813b9c55fa65a186",
+      "after": "6d928e6657417c53ad58f39c4d468c5adc241d53cb8ccad04413d438f0ed0239"
+    },
+    {
+      "file": "tests/billing-trial-admission-postgres.test.ts",
+      "before": "8d93d7fd495017bf38594450300a4a4483ca4bbeb932781c12409614c329a5f1",
+      "after": "38058edac4dd80694462b97060d94fd6bd2f30c1f58d568beb234f72e4f73bb3"
+    },
+    {
+      "file": "tests/billing-trial-payment-events.test.ts",
+      "before": "b921857dbe62edcd1c13d2c0654fec7341d4e86b99100f1bb98407756f07acae",
+      "after": "b921857dbe62edcd1c13d2c0654fec7341d4e86b99100f1bb98407756f07acae"
+    },
+    {
+      "file": "tests/billing-trial-identity-rights.test.ts",
+      "before": "78b4b162ab52aaf1572d50efa9b523e72f14c4fc64582f78fb1bd95f396856ed",
+      "after": "78b4b162ab52aaf1572d50efa9b523e72f14c4fc64582f78fb1bd95f396856ed"
+    },
+    {
+      "file": "tests/billing-trial-policy.test.ts",
+      "before": "93d6967667e8348c3643e720a235455d3ef27b11d43da3fe8ad79dd8fdeefabb",
+      "after": "9c9c63dd3e657b27248b374b0c1425054c70134e5a1eae718961e3d6c43d068c"
+    },
+    {
+      "file": "tests/billing-trial-lifecycle-analytics-postgres.test.ts",
+      "before": "907a695e40b2e1c1ecebecce3b44a484460f3d3aecdfd645eca69f5434d26d33",
+      "after": "907a695e40b2e1c1ecebecce3b44a484460f3d3aecdfd645eca69f5434d26d33"
+    },
+    {
+      "file": "tests/billing-trial-management-postgres.test.ts",
+      "before": "1821b56e6585914d50dcce8f558fdcd1c0fa68495d4b30cddafcf33166722eba",
+      "after": "1821b56e6585914d50dcce8f558fdcd1c0fa68495d4b30cddafcf33166722eba"
+    },
+    {
+      "file": "tests/billing-trial-access-postgres.test.ts",
+      "before": "903dc6506821e3794867d3539fd41dfd2d8f001dd951267efba6ef281f10c130",
+      "after": "903dc6506821e3794867d3539fd41dfd2d8f001dd951267efba6ef281f10c130"
+    },
+    {
+      "file": "tests/billing-trial-cancellation-reconcile.test.ts",
+      "before": "d22fa6014c3804485185b15cc06f9b9be8a8358ff538a8d62edd99a03727c8ed",
+      "after": "d22fa6014c3804485185b15cc06f9b9be8a8358ff538a8d62edd99a03727c8ed"
+    },
+    {
+      "file": "tests/billing-trial-offer.test.tsx",
+      "before": "4e0f44a1821d12517f85a00198c0dc0d3252b5a2b5ba3bb482db9c9c955d42f4",
+      "after": "4e0f44a1821d12517f85a00198c0dc0d3252b5a2b5ba3bb482db9c9c955d42f4"
+    },
+    {
+      "file": "tests/billing-trial-paid-recovery-postgres.test.ts",
+      "before": "e4015a5afb5ebc958cc664c05aafa6d9b3674e7f32aad3d4c43d44feb73f8be7",
+      "after": "e4015a5afb5ebc958cc664c05aafa6d9b3674e7f32aad3d4c43d44feb73f8be7"
+    },
+    {
+      "file": "tests/billing-trial-management-route.test.ts",
+      "before": "c05a7ba3a478a2d031192a201881a6928b8995e54b0a6e0c6467c500f3fe9549",
+      "after": "c05a7ba3a478a2d031192a201881a6928b8995e54b0a6e0c6467c500f3fe9549"
+    },
+    {
+      "file": "tests/billing-trial-membership.test.ts",
+      "before": "597200ce003698d1faecc346ab83bedca950fb875c8fe5207af8512bef9ab81e",
+      "after": "597200ce003698d1faecc346ab83bedca950fb875c8fe5207af8512bef9ab81e"
+    },
+    {
+      "file": "tests/billing-trial-access-projection.test.ts",
+      "before": "28dd9a4b37dae54d8c7e7c69120b22b5735329e5ff83499e0394113eb80e27de",
+      "after": "28dd9a4b37dae54d8c7e7c69120b22b5735329e5ff83499e0394113eb80e27de"
+    },
+    {
+      "file": "tests/billing-trial-history-backfill.test.ts",
+      "before": "599f7805df0b5c8786d7383448bc5424e4d05b9b17d1d78c5fbc0efe74df15d7",
+      "after": "599f7805df0b5c8786d7383448bc5424e4d05b9b17d1d78c5fbc0efe74df15d7"
+    },
+    {
+      "file": "tests/billing-trial-identity-claims.test.ts",
+      "before": "b871f27a410d1e4a97344547d577a5c4be3d594c7051ffb0783c5937fd3a839a",
+      "after": "b871f27a410d1e4a97344547d577a5c4be3d594c7051ffb0783c5937fd3a839a"
+    },
+    {
+      "file": "tests/billing-trial-paid-cancellation.test.ts",
+      "before": "e29cc24580dca1c9ec4a967b712d5d93310343086aed3b95611158e61deff549",
+      "after": "e29cc24580dca1c9ec4a967b712d5d93310343086aed3b95611158e61deff549"
+    },
+    {
+      "file": "tests/billing-trial-subscription-access.test.ts",
+      "before": "506de1abfee4a6ed711b2cb40e3e642bb35b3eaa110c271b6fa3fa4a8db56644",
+      "after": "506de1abfee4a6ed711b2cb40e3e642bb35b3eaa110c271b6fa3fa4a8db56644"
+    },
+    {
+      "file": "tests/billing-trial-cancellation-route.test.ts",
+      "before": "4d7a5df43e4b6dfeed31f9714615007c960402e6ad348ff428385ac414d15072",
+      "after": "4d7a5df43e4b6dfeed31f9714615007c960402e6ad348ff428385ac414d15072"
+    },
+    {
+      "file": "tests/billing-trial-required-notices-postgres.test.ts",
+      "before": "9e172d6237a58873d149d84ed8b891ee48bbd3c59557eb0dae197a9f3d764e6d",
+      "after": "9e172d6237a58873d149d84ed8b891ee48bbd3c59557eb0dae197a9f3d764e6d"
+    },
+    {
+      "file": "tests/billing-trial-analytics-delivery.test.ts",
+      "before": "6e0c496acb84acea7e723936cc3b8b241dfb5ba55c292d6bde21e230446c8905",
+      "after": "6e0c496acb84acea7e723936cc3b8b241dfb5ba55c292d6bde21e230446c8905"
+    },
+    {
+      "file": "tests/billing-trial-cancellation-declarations.test.ts",
+      "before": "9bf629b81df0c4f8099a7443df129e7d200132e9bf0d3bc3e9eb3faf2063be4b",
+      "after": "9bf629b81df0c4f8099a7443df129e7d200132e9bf0d3bc3e9eb3faf2063be4b"
+    },
+    {
+      "file": "tests/billing-trial-cancellation-provider-operations.test.ts",
+      "before": "d1f674c6422e2f6cec8cf3717091dd0e58b84e256a60d29b7520163d3ee8f7b2",
+      "after": "d1f674c6422e2f6cec8cf3717091dd0e58b84e256a60d29b7520163d3ee8f7b2"
+    },
+    {
+      "file": "tests/billing-trial-checkout-attempt.test.ts",
+      "before": "c9cb9905f8d4006575afc4d60dbec8a8a4dd588d190485731e70f3ff506443cb",
+      "after": "c9cb9905f8d4006575afc4d60dbec8a8a4dd588d190485731e70f3ff506443cb"
+    },
+    {
+      "file": "tests/billing-trial-paid-continuations-postgres.test.ts",
+      "before": "d093c6ca336b35dda0965cd1731f99d580130d6a13da88231ad32d9de80de027",
+      "after": "d093c6ca336b35dda0965cd1731f99d580130d6a13da88231ad32d9de80de027"
+    },
+    {
+      "file": "tests/billing-trial-paid-migration-authority.test.ts",
+      "before": "4dee59983cec6e7882bc63e3cfeba1677a526b77fb90fe7d79c6d943c3cbb09d",
+      "after": "4dee59983cec6e7882bc63e3cfeba1677a526b77fb90fe7d79c6d943c3cbb09d"
+    },
+    {
+      "file": "tests/billing-trial-paid-recovery-route.test.ts",
+      "before": "023bdac0906989c9d81711f9841f6766bb642d8582676ef816d052cc023ff5d0",
+      "after": "023bdac0906989c9d81711f9841f6766bb642d8582676ef816d052cc023ff5d0"
+    },
+    {
+      "file": "tests/billing-trial-prior-paid-history.test.ts",
+      "before": "c4d3fd7b26495b752f1e8a4b275c98fba5a16518c49f043827ee3414ddc63341",
+      "after": "c4d3fd7b26495b752f1e8a4b275c98fba5a16518c49f043827ee3414ddc63341"
+    },
+    {
+      "file": "tests/billing-trial-effective-payment-contract.test.ts",
+      "before": "1476e83892f86bfa1f4c6abf5253814b5a2412013b92a47887d97b23ac342305",
+      "after": "1476e83892f86bfa1f4c6abf5253814b5a2412013b92a47887d97b23ac342305"
+    },
+    {
+      "file": "tests/billing-trial-payment-reconciliation.test.ts",
+      "before": "2fee8faec59833a1a13629b49298b4150284c013a92fea98cdabae8f8d9d2928",
+      "after": "2fee8faec59833a1a13629b49298b4150284c013a92fea98cdabae8f8d9d2928"
+    },
+    {
+      "file": "tests/billing-trial-analytics-postgres.test.ts",
+      "before": "b84bae5b7f915b07b72b9d8d4fd74b569d3fcaa96942f99139b5a0d73f0ec9bc",
+      "after": "b84bae5b7f915b07b72b9d8d4fd74b569d3fcaa96942f99139b5a0d73f0ec9bc"
+    }
+  ],
+  "sourceGuards": [
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb"
+    },
+    {
+      "file": ".nvmrc",
+      "sha": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "file": "docs/free-trial-launch-runbook.md",
+      "sha": "a1c60fbc2dc832110fbff6566df0cde37ba3e167debb5cf747f0e0afe9fba668"
+    },
+    {
+      "file": "docs/trial-notices-and-claims-operations.md",
+      "sha": "965c7d487f796c49b3b92c65874cccaa583b7340dbd508459d29561b2077ab04"
+    },
+    {
+      "file": "package-lock.json",
+      "sha": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799"
+    },
+    {
+      "file": "package.json",
+      "sha": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": "scripts/billing/trial-history-backfill.ts",
+      "sha": "d793f381e2498057504346cd6fcbcef3b378c26d6c89ed7a3eb67219c2f77028"
+    },
+    {
+      "file": "scripts/billing/trial-identity-rights.ts",
+      "sha": "0979f567332b1c47d6467a5d8db1082a8c031d1adf6aa8cb98bc337690bb3416"
+    },
+    {
+      "file": "scripts/billing/trial-payment-reconciliation.ts",
+      "sha": "0dc2642aed572123066eb4204666dbb32150dbeefc55cd60238bbf4c0d4e2281"
+    },
+    {
+      "file": "src/app/api/billing/membership/route.ts",
+      "sha": "decca8220b32471d6c76037e67268190c7de093830ee53e94d4db733da4a1328"
+    },
+    {
+      "file": "src/app/api/billing/trial-cancellation/reconcile/route.ts",
+      "sha": "5fadb29f61566c1e18398e0c92134f2d75e15423c65feaa122767d17077cadfe"
+    },
+    {
+      "file": "src/app/api/billing/trial-cancellation/route.ts",
+      "sha": "49fc858b1e3ae04ca219b8dfc8230204c26230fb95580fab37631b2bef986046"
+    },
+    {
+      "file": "src/app/api/billing/trial-management/route.ts",
+      "sha": "3b27ba8b1478a37f9ae70c0735dc8b1558cb27b77da9fb8748f310997c2e27f2"
+    },
+    {
+      "file": "src/app/api/billing/trial-paid-cancellation/route.ts",
+      "sha": "240d45f60196df1fdfcb842c853e079a556f77d7ab5da8789535e9266487bd12"
+    },
+    {
+      "file": "src/app/api/billing/trial-paid-recovery/route.ts",
+      "sha": "2b03ec794f55036252e71704c46630694082a2aace29c60393e4dc181e2d0547"
+    },
+    {
+      "file": "src/app/api/billing/trial-required-notices/reconcile/route.ts",
+      "sha": "a4f95b1283d16177e0df7e63cd0ef4ae0dacd830ddeae7b5a3c9d6e3333fc0a8"
+    },
+    {
+      "file": "src/components/billing/trial-offer.tsx",
+      "sha": "4051ca8d025e47a2d1bd1d32796bdba7791953087493980148d672837a05374a"
+    },
+    {
+      "file": "src/components/quiz/result-offer-pricing.tsx",
+      "sha": "461bf77fd54505e7fdcaa10c0630bfc942803fdb13ddc546ba7c745c6e91d33a"
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/customerio.ts",
+      "sha": "901525211d4267c62f57504167c75b2b06a5bc6b21874cfb1b0a64e339adff5c"
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/meta-capi.ts",
+      "sha": "ad26d75c65085e730d105abb929483bde3f73769e14af3bff8ec36209e5d81f1"
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/posthog-server.ts",
+      "sha": "1ad0407338d9e27d8a0a3f55a15bfbbfb5274ef806af21862e2bcd0a2158887c"
+    },
+    {
+      "file": "src/lib/billing/subscriptions.ts",
+      "sha": "a6ba77a92481e13f6f03bc7b1c8d7fee75c02facfeb8ce747493bc64ecca995c"
+    },
+    {
+      "file": "src/lib/billing/trial-access-projection.ts",
+      "sha": "6bd7a205a589005d2301cf77511709b26f63076538f953e1da77d57e567ba17f"
+    },
+    {
+      "file": "src/lib/billing/trial-admission.ts",
+      "sha": "00dea2cbb5dad16446ee405f289aa7912c9cb895774653512d549ddea02d0017"
+    },
+    {
+      "file": "src/lib/billing/trial-analytics-context.ts",
+      "sha": "8fa707d663a6c657540fc45715f5a6a4e8022604ad0ccdad5cee777eb6bd0647"
+    },
+    {
+      "file": "src/lib/billing/trial-cancellation-declarations.ts",
+      "sha": "d8d5ebe26c29137f6c5e024dc91307c857fe493946db1fcb9a0ce3323fb5b7f7"
+    },
+    {
+      "file": "src/lib/billing/trial-cancellation-reconcile.ts",
+      "sha": "2680be571a30e235678c6b5e072bffc73b509db2d567d6ef56ae5132c2a33b31"
+    },
+    {
+      "file": "src/lib/billing/trial-checkout-attempt.ts",
+      "sha": "84ba2d9f52efceb8bc64a499176c5d2c24b479d9907185b8998da05320ac76a9"
+    },
+    {
+      "file": "src/lib/billing/trial-identity-claims.ts",
+      "sha": "7e04ea1029da7e6c2c2864b860926fa83297d46c7174ea7310130d2c3536e963"
+    },
+    {
+      "file": "src/lib/billing/trial-management-operations.ts",
+      "sha": "d89bcbcea01fc6e5cb1ec864212c32e2277cfceea6ff0ab21b3a4149a28d6e3c"
+    },
+    {
+      "file": "src/lib/billing/trial-membership.ts",
+      "sha": "1e5a8d19e1bd9e04ecc4d727a3460b28bfa70a6af955b355e605c79aaf4fdc05"
+    },
+    {
+      "file": "src/lib/billing/trial-offer.ts",
+      "sha": "14083f0eb5677db3063e22ab585ca9779a51fac4e04ab8852ee2e11f087d4725"
+    },
+    {
+      "file": "src/lib/billing/trial-paid-cancellation.ts",
+      "sha": "de39001781de5e37e204a4482ce5637f81ecb9bb68547ce91209261d041c0993"
+    },
+    {
+      "file": "src/lib/billing/trial-paid-recovery-operations.ts",
+      "sha": "ffed95f6ff851cacb280993434f17d354d223f8a6c8fb77bc4e97caa891d6089"
+    },
+    {
+      "file": "src/lib/billing/trial-payment-events.ts",
+      "sha": "4118cf4fca3745bc1aced3cf8a3f86e4ec684733f8f565bf1d61071dabb4bc9c"
+    },
+    {
+      "file": "src/lib/billing/trial-policy.ts",
+      "sha": "a88f33d5abfefd705629a0ca8ef739b893dd1908aeec639627916fc815daef02"
+    },
+    {
+      "file": "src/lib/billing/trial-prior-paid-history.ts",
+      "sha": "d95863b5c82dbdf4e88a28a6cc6f49ac4016da6f7316e0b4c160fd20fda8b904"
+    },
+    {
+      "file": "src/lib/billing/trial-required-notices-delivery.ts",
+      "sha": "a3373f462b91cbd8cb3cd4aa0ce73bbe9b95012fb098a2e9bea8196934539b83"
+    },
+    {
+      "file": "src/lib/billing/trial-required-notices-terms.ts",
+      "sha": "266b22ba746208ead6de85b15a2bddb63c7f1111680d782cc22be35d6724197a"
+    },
+    {
+      "file": "src/lib/billing/trial-required-notices.ts",
+      "sha": "c7b2d3f9b9818a2cd5d72839f6c772c8ceb48b7a5aa4442c0eefdc200837a7fa"
+    },
+    {
+      "file": "src/lib/billing/trial-runtime.ts",
+      "sha": "0dae1fdc8a90e3b71a6faf4a20fafa9c655c165650fbe952a3b36e66b29bffe0"
+    },
+    {
+      "file": "src/lib/billing/types.ts",
+      "sha": "f99c6f799c5c79a4218a2425fbd1b4ad4565c7f0592d1419b45ae6cb09e5047b"
+    },
+    {
+      "file": "src/lib/customerio/transactional.ts",
+      "sha": "5756d3bda21c0be6cbc1ed8885846a646edd8560f22c8b7fc5ac6601c62b95e2"
+    },
+    {
+      "file": "src/lib/paypal/prior-paid-history.ts",
+      "sha": "841d3317bd0cc74fe967a3067f86eceac952fe4e0a45ab2628dcbc58aef59f50"
+    },
+    {
+      "file": "src/lib/paypal/subscription-shapes.ts",
+      "sha": "bb879599956c47bb212a7b83fafa991403adb2a71c34c3b423190eb9f04217f5"
+    },
+    {
+      "file": "src/lib/paypal/trial-collection-start.ts",
+      "sha": "d22659e8282e0f18b69971b8948ba5afc4b284774aa1d2330f434ed3358513bc"
+    },
+    {
+      "file": "src/lib/stripe/trial-cancellation.ts",
+      "sha": "6e8da65a276dc23ac3ce4face961c1059b533cde765705ecb005a8f0a958fcaf"
+    },
+    {
+      "file": "src/lib/stripe/trial-prior-paid-history.ts",
+      "sha": "422692df369d638699e4d232c73143ea6b664d65ae96ccb325f047656e4afaf0"
+    },
+    {
+      "file": "supabase/migrations/20260527_add_billing_subscriptions.sql",
+      "sha": "164b2a27a91e9ed5dd9447da3c87c9d6f56f2e6c4737f48c0202cc8c8d528593"
+    },
+    {
+      "file": "supabase/migrations/20260603120000_add_provider_subscriber_email.sql",
+      "sha": "68f1830be9952abf83da17ae64ceb1d6026ffcf328b95c67931ab714492ce8ac"
+    },
+    {
+      "file": "supabase/migrations/20260708133700_billing_analytics_outbox.sql",
+      "sha": "02f8ca1df907dc85c56b1d8b60db49bd3e7b2cc3c272ee9f45344bc89f9ed351"
+    },
+    {
+      "file": "supabase/migrations/20260716120000_add_billing_cancel_scheduled_at.sql",
+      "sha": "bef71345afea323075bc24b5d6ddad0ec41ebccdb9f6b7f425e160638b32fca3"
+    },
+    {
+      "file": "supabase/migrations/20260822140000_billing_subscriptions_classified_views.sql",
+      "sha": "403092c7d01154ac3651c11fab860e07cf3320ce80c430e14984d287eb0b8ee6"
+    },
+    {
+      "file": "supabase/migrations/20260828104243_personal_plan_paid_migration_admission.sql",
+      "sha": "258af22e01b0287330b59753d645c13b51ab4da8ae564bcd2576c9e02086d39a"
+    },
+    {
+      "file": "supabase/migrations/20260914044650_trial_admission_foundation.sql",
+      "sha": "a791ee5abfeb6d9b7c240460f6271cae7a7953148bdfe928b72d4771e70b86f9"
+    },
+    {
+      "file": "supabase/migrations/20260914051220_trial_access_projection.sql",
+      "sha": "d412662b0e8a1ef162bec731a4603e82a23a0d3d11b97379a3d4771da1bf1c2f"
+    },
+    {
+      "file": "supabase/migrations/20260914051731_trial_paid_migration_authority.sql",
+      "sha": "d23a8823cbd0e91e9eec6e423c319e5cecafb8cecb3b467c033d3949efd57686"
+    },
+    {
+      "file": "supabase/migrations/20260914085036_trial_started_analytics.sql",
+      "sha": "e5ac05d7cd1288660b64912cea067569f6510b8811db44d4371874532215a90a"
+    },
+    {
+      "file": "supabase/migrations/20260914090614_trial_cancellation_declarations.sql",
+      "sha": "3d018b95ea5475b7011934dc2855427c6c16b9b27de395da2115a882d8d21c5f"
+    },
+    {
+      "file": "supabase/migrations/20260914091103_trial_checkout_attempt.sql",
+      "sha": "3548399f50d88186ccd586a47833dfa3f418d58145fc9968311e60f5a262d6e7"
+    },
+    {
+      "file": "supabase/migrations/20260914093927_trial_cancellation_provider_operations.sql",
+      "sha": "d3ef6379140aed99d2d076ccad0cef655fbfbaae82535171644454105b1b376c"
+    },
+    {
+      "file": "supabase/migrations/20260914094203_trial_payment_events.sql",
+      "sha": "7d1118c8ffb7b7dc0af7531dc9ece12b9019f7d60dcfa4ce526bb4f206cd8cb0"
+    },
+    {
+      "file": "supabase/migrations/20260914101500_trial_cancellation_provider_retry.sql",
+      "sha": "f9527c1be1b115e9f62a3c7545dbc78175e50d3c691c887f0b8f3512f0fb5c8d"
+    },
+    {
+      "file": "supabase/migrations/20260914135114_stripe_trial_continuation_operations.sql",
+      "sha": "8b12c0e8aa57b18b64f84096751a21202e09797f82d3df6560230a4ae9bbe4da"
+    },
+    {
+      "file": "supabase/migrations/20260914135123_trial_paid_continuation_links.sql",
+      "sha": "a6e36ae7ac72e5c8b15422758c5ce1eb9d7104ddab770129e2f26ad490db1d97"
+    },
+    {
+      "file": "supabase/migrations/20260914135527_trial_required_notices.sql",
+      "sha": "9dc9fac57e78c164dfc3e8d15b83324e21cab18c6595c7fdbf8edef33b899e5f"
+    },
+    {
+      "file": "supabase/migrations/20260914140320_trial_management_operations.sql",
+      "sha": "06fa6573682fc8ea8bfb405f8c199603c03ec0517b5cf47f7a408d3fcdd9810f"
+    },
+    {
+      "file": "supabase/migrations/20260914141036_trial_required_notice_revisions.sql",
+      "sha": "b2ac556ee86803e31acab647a8303c5aa885ca33300f3a1629867840ff303d94"
+    },
+    {
+      "file": "supabase/migrations/20260914141149_trial_effective_payment_contract.sql",
+      "sha": "452b54ef8e2be6277912120b1a6c42cdedc9b76af053c49f59181bd52a5215fc"
+    },
+    {
+      "file": "supabase/migrations/20260914141408_trial_effective_cancellation_contract.sql",
+      "sha": "52a12b0bd5bde59a7e8fdbada7a8f901fdfca826bf2b7e8734cb91d5766a2f96"
+    },
+    {
+      "file": "supabase/migrations/20260914142559_trial_prior_paid_claims.sql",
+      "sha": "de396becc8297ae95546eb978b5929532d5140ea680ef4b4dda4f4c2e1038575"
+    },
+    {
+      "file": "supabase/migrations/20260914142808_trial_paid_recovery_operations.sql",
+      "sha": "71ddb560ffd3f2c7ea8ebbdd72faf1b871fa09fbcdc9a5c4dfa0744b862edf8d"
+    },
+    {
+      "file": "supabase/migrations/20260914143515_trial_paid_recovery_ledger.sql",
+      "sha": "7e27fb0f78a1e5c7640ecb36325f2d8c461ee1d0ed2b933d11402735b6f5333f"
+    },
+    {
+      "file": "supabase/migrations/20260914143741_trial_paid_recovery_continuation_transition.sql",
+      "sha": "838e2c09c50f129fec7869238278be2db2e50edc6bc262c278a42ebc8544f0c5"
+    },
+    {
+      "file": "supabase/migrations/20260914144351_trial_identity_rights_lifecycle.sql",
+      "sha": "7c14fc04f91285d166d4a9171b3b2e1565b1b6827831e2b3e8ec1c6587c792ec"
+    },
+    {
+      "file": "supabase/migrations/20260914144833_trial_paid_cancellation_declarations.sql",
+      "sha": "9deb62bb7bfbfe779d13766bd977782fead7589d521916816c7e32c225c90ec6"
+    },
+    {
+      "file": "supabase/migrations/20260914151514_stripe_trial_lifecycle_cancellation_fence.sql",
+      "sha": "80470b30f8cb01f1abb94a7143e827b3b1b9efd463ba5c45e45d622d7805b4ca"
+    },
+    {
+      "file": "supabase/migrations/20260914153229_trial_identity_key_registry_safe_updates.sql",
+      "sha": "88459b8920871613f6e5cfe39bfff5e78d731f47d7e3fa5640ef41b8add17a25"
+    },
+    {
+      "file": "supabase/migrations/20260915070715_admission_recovery_reason.sql",
+      "sha": "6182065bdc7d835e1374cc9628f2bbf3eb12e92838bf52952cb863c6a72aaae0"
+    },
+    {
+      "file": "supabase/migrations/20260915113126_trial_lifecycle_analytics.sql",
+      "sha": "bb6a715b37376f351c704df612a61316476c36e2043b25401e7fef0ce187da52"
+    },
+    {
+      "file": "supabase/migrations/20260915141251_openai_ads_consent_context.sql",
+      "sha": "61c286bba22f14e1ba4b00834f21ff9f9b65dd5325fbec15934bf9cb57cd3a6d"
+    },
+    {
+      "file": "supabase/migrations/20260915141328_openai_ads_billing_delivery.sql",
+      "sha": "825003754dc66bfdd496f8c371affeebc463193d4a1593c6a74ccba2ab2fbaf1"
+    },
+    {
+      "file": "supabase/migrations/20260915145322_openai_ads_canonical_test_exclusion.sql",
+      "sha": "ae22b68365a7304960fd108d71c2cf04c114dc094a8eb2637fbd50a2a5a9b1f8"
+    },
+    {
+      "file": "supabase/migrations/20260915145501_trial_access_first_collection_bridge.sql",
+      "sha": "c8405c7e85401a0ab3538ba886a8ff0f238cf67b87e6ae58c2c6926f797b1c95"
+    },
+    {
+      "file": "supabase/migrations/20260915190000_paypal_trial_frozen_end.sql",
+      "sha": "a594cc604734bb54126fc0232b84ec6453b68c06a9c0f0a7d8fadc22e85b4558"
+    },
+    {
+      "file": "tests/helpers/customerio-liquid.ts",
+      "sha": "8d3d288cc309fed2a4b9d4347db8da6fac37dd5a405aef15a7c426bad72bfb6d"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    },
+    {
+      "file": "tsconfig.json",
+      "sha": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd"
+    }
+  ]
+}

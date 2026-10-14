@@ -1,0 +1,116 @@
+[
+  {
+    "original": "/tmp/test-audit-676-commit-checkpoint/archive-sources.json",
+    "archived": "checkpoint/archive-sources.json",
+    "sha256": "8eb57b409402e3fb3555d4b0ce3af96d04deca963b4fc27e16e2128a63f919a7",
+    "bytes": 1573
+  },
+  {
+    "original": "/tmp/test-audit-676-commit-checkpoint/checkpoint.json",
+    "archived": "checkpoint/checkpoint.json",
+    "sha256": "add07fd174c039128899daf73c15bc9d082fc2e211850d578d35e64b554d7b8f",
+    "bytes": 7047
+  },
+  {
+    "original": "/tmp/test-audit-final676-ci/command.json",
+    "archived": "ci/command.json",
+    "sha256": "a52551802ce0db1e899dcf828d4898fb12a1b35983b17f15427f170226bf6983",
+    "bytes": 136
+  },
+  {
+    "original": "/tmp/test-audit-final676-ci/result.json",
+    "archived": "ci/result.json",
+    "sha256": "425e43ffccf678af3f961fc123f7dd29fd234177ce7956090051a314d50dac34",
+    "bytes": 52
+  },
+  {
+    "original": "/tmp/test-audit-final676-ci/run.log",
+    "archived": "ci/run.log",
+    "sha256": "1eb2bd3d72662697b5b87a54c2118a9c849ef6fa49f0e6f09170e073c1866409",
+    "bytes": 12640
+  },
+  {
+    "original": "/tmp/test-audit-retirement-final676-proof/command.json",
+    "archived": "whole-native/command.json",
+    "sha256": "025b62836d67c6f3408ee3c3e81856dd87b5d4df385bc474138215fcd2e239b7",
+    "bytes": 56253
+  },
+  {
+    "original": "/tmp/test-audit-retirement-final676-proof/files.json",
+    "archived": "whole-native/files.json",
+    "sha256": "9a948e96541a9efc5071dd497a00abafd0f18b21aa87309c597666d986e9e648",
+    "bytes": 52925
+  },
+  {
+    "original": "/tmp/test-audit-retirement-final676-proof/result.json",
+    "archived": "whole-native/result.json",
+    "sha256": "8a4dc1340ba8207baa84b37d0c0a6d734a8b0cb54ce157560ccc143f51134f94",
+    "bytes": 59
+  },
+  {
+    "original": "/tmp/test-audit-retirement-final676-proof/run.log",
+    "archived": "whole-native/run.log",
+    "sha256": "f0237b9d1b0bf659dbc7c0cd542d6ae1d284c633fca457b304767781d2e24d6b",
+    "bytes": 319
+  },
+  {
+    "original": "/tmp/test-audit-retirement-final676-proof/tests.tap",
+    "archived": "whole-native/tests.tap",
+    "sha256": "ae3559fa557d72a36616811ea6fc807de4050c417867eb7c6e84f780f55f2647",
+    "bytes": 2603572
+  },
+  {
+    "original": "/tmp/test-audit-retirement-final676-proof/coverage-summary.json",
+    "archived": "whole-native/coverage-summary.json",
+    "sha256": "91bdbb142eb5eedf2b9ea848ebe14d1d3ca4e2de578ad9d97fa4331519a72537",
+    "bytes": 670478
+  },
+  {
+    "original": "/tmp/test-audit-retirement-final676-proof/coverage-final.json",
+    "archived": "whole-native/coverage-final.json",
+    "sha256": "34daac440ce92dc69308178843fbea3d432cef7a34a91f6149b31d7bc05c9e8a",
+    "bytes": 55580584
+  },
+  {
+    "original": "/tmp/test-audit-retirement-final676-proof/lcov.info",
+    "archived": "whole-native/lcov.info",
+    "sha256": "39ce6e89cc7c15dde895cff0c732e9943e779d88bcbbee6d2d5ff90a3dbab7dc",
+    "bytes": 6788816
+  },
+  {
+    "original": "/tmp/test-audit-final676-tested-tree.json",
+    "archived": "integration/test-audit-final676-tested-tree.json",
+    "sha256": "2b3da0ec58400b264c99c50dcde091155ba00e74bfc5cd96b85b9bb41ed0243c",
+    "bytes": 2616668
+  },
+  {
+    "original": "/tmp/test-audit-final676-tree-verification.json",
+    "archived": "integration/test-audit-final676-tree-verification.json",
+    "sha256": "de16da1ff3420cdf6f35cb7f47431a3dbcd3fdc27f82a6b70ae5030f603adee6",
+    "bytes": 269
+  },
+  {
+    "original": "/tmp/test-audit-final676-compare.cjs",
+    "archived": "integration/test-audit-final676-compare.cjs.txt",
+    "sha256": "65cb14601ad0c04a0fb0c198fd0eeb38707fd1504aa5342426748d7666ed641a",
+    "bytes": 3663
+  },
+  {
+    "original": "/tmp/test-audit-final676-tree.py",
+    "archived": "integration/test-audit-final676-tree.py.txt",
+    "sha256": "4dc6a50a4c0a4684ebf7acc2bfb1395835f4387139885f08e0b697e6f03284ad",
+    "bytes": 4776
+  },
+  {
+    "original": "/tmp/test-audit-next676-current-inventory.json",
+    "archived": "integration/test-audit-next676-current-inventory.json",
+    "sha256": "6d053a679b13a8596fccbc279a419ac3631d79ba6fe3cc0a42b7d0fabffcab3a",
+    "bytes": 2476026
+  },
+  {
+    "original": "/tmp/test-audit-next676-current-loc.json",
+    "archived": "integration/test-audit-next676-current-loc.json",
+    "sha256": "4971abe33ab119931117c935df8751bb6f29d18c93aa333c2fe64c17610e9e36",
+    "bytes": 361
+  }
+]

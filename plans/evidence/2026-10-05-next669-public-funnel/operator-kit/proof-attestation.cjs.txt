@@ -1,0 +1,53 @@
+'use strict';
+// Synthetic diagnostic shape checks only; no source/test execution or observed TAP claim.
+const fs=require('node:fs'),proof=require('./operator-proof.cjs'),controls=JSON.parse(fs.readFileSync(__dirname+'/operator-controls-normalized.json'));
+let assertions=0;function ok(v,m){assertions++;if(!v)throw Error(m)}
+const field=(key,value)=>'  '+key+': '+JSON.stringify(value)+'\n';
+function diagnostic(c){const d=c.diagnostic;return(d.kind==='omitted-undefined'?'':d.kind.startsWith('regex-')?'  expected:\n':field('expected',d.expected))+field('actual',d.kind==='regex-prefix'?d.syntheticShapeSample:d.actual)}
+function tap(c,phase){const o=c.oracles[phase],d=c.diagnostic,msg=d.kind==='regex-prefix'?d.fullHeader+'\n\n'+JSON.stringify(d.syntheticShapeSample):d.fullMessage;return `TAP version 13\n# Subtest: ${c.test.name}\nnot ok 1 - ${c.test.name}\n  ---\n  error: |-\n    ${msg.replaceAll('\n','\n    ')}\n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n${diagnostic(c)}  operator: '${c.expectedOperator}'\n  stack: |-\n    TestContext.<anonymous> (${c.test.file}:${o.startLine}:10)\n    Test.run (node:internal/test_runner/test:1000:1)\n  ...\n1..1\n# tests 1\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n`}
+function run(text,extra={}){return{status:1,signal:null,timedOut:false,spawnError:null,...proof.parseTAP(text),text,...extra}}
+for(const c of controls)for(const phase of ['transfer','cut']){
+ const text=tap(c,phase),accept=x=>proof.intended(c,run(x),phase).accepted;
+ ok(accept(text),c.id+' intended synthetic '+phase);
+ for(const extra of[{timedOut:true},{signal:'SIGKILL'},{spawnError:'error'},{status:0}])ok(!proof.intended(c,run(text,extra),phase).accepted,'process rejection');
+ for(const [from,to]of[["code: 'ERR_ASSERTION'","code: 'ERR_MODULE_NOT_FOUND'"],["name: 'AssertionError'","name: 'TypeError'"],["operator: '"+c.expectedOperator+"'","operator: '!='"],[c.test.file+':'+c.oracles[phase].startLine+':10',c.test.file+':1:10'],['# tests 1','# tests 0'],['# skipped 0','# skipped 1'],['# cancelled 0','# cancelled 1'],['# todo 0','# todo 1'],['# Subtest: '+c.test.name,'# Subtest: Wrong keeper'],['  error: |-','  error: >-']])ok(!accept(text.replace(from,to)),c.id+' rejects '+from);
+ ok(!accept(text.replace(/^  actual:.*\n/m,'')),'missing actual rejected');
+ ok(!accept(text.replace(/^  actual:.*\n/m,'  actual: &unknown\n')),'unknown actual rejected');
+ ok(!accept(text.replace(/^  actual:.*\n/m,'  actual: "unrelated"\n')),'wrong actual rejected');
+ ok(!accept(text.replace(/^  actual:.*\n/m,m=>m+m)),'duplicate actual rejected');
+ if(c.id!=='C1-04')ok(!accept(text.replace(/^  expected:.*\n/m,'')),'missing expected rejected outside explicit C1-04');
+ else{
+  for(const v of['undefined','"undefined"','null','false'])ok(!accept(text.replace('  operator:', '  expected: '+v+'\n  operator:')),'C1-04 present expected rejected '+v);
+  const other={...c,id:'C1-03'};ok(!proof.intended(other,run(text),phase).accepted,'omitted wrapper cannot migrate');
+  // A nested expected does not satisfy or change top-level omission semantics.
+  ok(accept(text.replace('  operator:', '  auxiliary:\n    expected: false\n  operator:')),'nested expected excluded');
+ }
+ if(c.diagnostic.kind==='scalar'){
+  ok(!accept(text.replace(/^  expected:.*\n/m,'  expected: "wrong"\n')),'wrong typed expected rejected');
+  if(typeof c.diagnostic.actual==='number')ok(!accept(text.replace(/^  actual:.*\n/m,field('actual',String(c.diagnostic.actual)))),'number/string distinction');
+ }
+ if(c.diagnostic.kind.startsWith('regex-')){
+  ok(!accept(text.replace('  expected:\n','  expected: "{}"\n')),'regexp diagnostic requires typed empty object');
+  ok(!accept(text.replace('  expected:\n','  expected:\n    nested: true\n')),'regexp nested expected rejected');
+ }
+ if(c.diagnostic.kind==='regex-prefix'){
+  const sample=c.diagnostic.syntheticShapeSample,prefix=sample+'x'.repeat(10000-sample.length),actualLine='  actual: '+JSON.stringify(prefix)+'... 731 more characters\n';
+  ok(accept(text.replace(/^  actual:.*\n/m,actualLine)),'supported inspect truncated prefix');
+  ok(!accept(text.replace(/^  actual:.*\n/m,actualLine.replace('731 more','0 more'))),'nonpositive truncation rejected');
+  ok(!accept(text.replace(/^  actual:.*\n/m,'  actual: '+JSON.stringify(sample)+'... 731 more characters\n')),'unsupported prefix length rejected');
+  ok(!accept(text.replace(/^  actual:.*\n/m,'  actual: '+JSON.stringify('x'.repeat(10000))+'... 731 more characters\n')),'bad markup absent prefix rejected');
+  ok(!accept(text.replace(c.diagnostic.fullHeader.replaceAll('\n','\n    '),'unrelated regex header')),'full regex header required');
+  // A correct-looking nested expected cannot substitute for the required top-level RegExp object.
+  ok(!accept(text.replace('  expected:\n','  auxiliary:\n    expected:\n')),'nested-only expected rejected');
+ }
+ const msg=proof.errorMessage(text);
+ for(const scalar of[JSON.stringify(msg),...(!msg.includes('\n')?["'"+msg.replaceAll("'","''")+"'"]:[])]){
+  const scalarText=text.replace(/  error: \|-\n(?:    [^\n]*\n)+?(?=  code:)/,'  error: '+scalar+'\n');ok(accept(scalarText),'decoded scalar message supported');
+ }
+ const wrong=text.replace(c.test.file+':'+c.oracles[phase].startLine+':10',c.test.file+':1:10').replace('  operator:','  auxiliary:\n    stack: |-\n      TestContext.<anonymous> ('+c.test.file+':'+c.oracles[phase].startLine+':10)\n  operator:');
+ ok(!accept(wrong),'nested correct frame cannot rescue wrong first outer frame');
+ const earlier=text.replace('    TestContext.<anonymous>','    helper (src/setup.ts:1:1)\n    TestContext.<anonymous>');ok(!accept(earlier),'earlier outer helper frame rejected');
+ const cleanText=`TAP version 13\n# Subtest: ${c.test.name}\nok 1 - ${c.test.name}\n1..1\n# tests 1\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n`;
+ ok(proof.clean(c,run(cleanText,{status:0})),'clean selected one');ok(!proof.clean(c,run(cleanText.replace('# tests 1','# tests 0'),{status:0})),'clean zero rejected');
+}
+console.log(JSON.stringify({status:'PASS_STATIC_SYNTHETIC_PARSER_ONLY',controls:20,phases:2,assertions,children:0,ownerImports:0,repositoryWrites:0,runtimeClaims:0,limits:'Synthetic literal diagnostic shapes, including full/explicitly truncated prefix and omitted undefined. Not actual SSR bytes or native fault evidence.'},null,2));

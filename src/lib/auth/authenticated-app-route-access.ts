@@ -97,14 +97,6 @@ export type AuthenticatedAppPageTierDependencies = {
 }
 
 /**
- * Original PR2 name, kept as an alias: `/scan` was the first page to need this
- * composite, but nothing in it is scan-specific — T12's gated Routine/Anwendung/Chat
- * pages read the very same tier. Existing `/scan` callers and their tests keep
- * compiling against the old name.
- */
-export type ScanPageTierDependencies = AuthenticatedAppPageTierDependencies
-
-/**
  * PR2 review fix (C1): `/scan`'s `tier` prop gates BEHAVIORAL surfaces since T9 (locked
  * Merken, premium pitches, T10's trigger-layer storage) — it can no longer be sourced from
  * `loadAuthenticatedAppNavigationAccess`'s classification, whose free-tier signal
@@ -143,9 +135,6 @@ export async function resolveAuthenticatedAppPageTier(
   })
   return entitlements.tier
 }
-
-/** PR2 name for the route-agnostic resolver above; see `ScanPageTierDependencies`. */
-export const resolveScanPageTier = resolveAuthenticatedAppPageTier
 
 /**
  * Separate from `loadScanRouteAccess`'s own `getUser` call: that dependency's return type
@@ -188,7 +177,7 @@ export const loadScanPageTier = loadAuthenticatedAppPageTier
  *
  * Fail-closed in both directions, mirroring the conventions already established here:
  * a tier-lookup failure resolves `"premium"` (never a free surface for a paying user —
- * same rule as `resolveAuthenticatedAppPageTier` and `shouldRenderGatedExample`), and a
+ * same rule as `resolveAuthenticatedAppPageTier` and `resolveGatedPageMode`), and a
  * KEEPSAKE-lookup failure resolves `"free"` (today's behaviour for a composite-denied
  * user — a keepsake read is never granted on an unreadable signal).
  */

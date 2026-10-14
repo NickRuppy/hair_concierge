@@ -1,0 +1,979 @@
+{
+  "counts": {
+    "R": 90,
+    "C": 6,
+    "F": 6,
+    "D": 1
+  },
+  "sites": [
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "a currently paid bound migration keeps Stage 2 access independently of the old cutoff",
+      "line": 240,
+      "sha256": "4089a3f34e887d77b41f51e010c0fbb3d35987a9b244c01f32f406104fb4104e",
+      "verdict": "R",
+      "rationale": "An already bound paid migration bypasses the old cohort cutoff in both narrow and full loaders; ordinary post-cutoff readiness cannot detect loss of the immutable migration exception.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "verified normal paid pre-cutoff sources enter the journey only while migration is enabled",
+      "line": 258,
+      "sha256": "f03438762819d34900f4c5eccc3473c130539499e34987799f086a6a1ce70db2",
+      "verdict": "R",
+      "rationale": "Current normal-paid one-time/launch sources require the migration-enabled exception before the cutoff. This contrasts ordinary paid authority with a bound migration and preserves both disabled and enabled outcomes.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "Stage 2 access keeps the app rollout gate and stops before later-stage authority reads",
+      "line": 296,
+      "sha256": "0aa8f6ca063df88942dfdb490055489cb49e99347261f745c1f0fbb390bc4a38",
+      "verdict": "R",
+      "rationale": "The app exclusion must occur before entitlement and the admitted Stage-2 read must avoid refined, draft, Stage-3 and Stage-4 dependencies. Monotonic counters make forbidden reads observable; C4 adds the timing receipt to this existing success.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "Stage 2 access remains fail-closed for incomplete owner source facts and throws on reads",
+      "line": 344,
+      "sha256": "1934ae8cc5216f9f63b0c042170438209d85a12ce301acfa523813ca506ccf06",
+      "verdict": "R",
+      "rationale": "Independent denied states include rollout off, paid_pending/none/revoked, old cohort, Stage-2 flag off, absent artifact/initial version, and an authoritative thrown read. Happy-path union cannot preserve these gates.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "internal app rollout excludes non-internal users before plan data is read",
+      "line": 415,
+      "sha256": "8b54d898e81dd5b7dbe4e0045e01377384dbabea86cd8b1956ea772868e9e29e",
+      "verdict": "R",
+      "rationale": "Full-loader internal rollout rejection must precede entitlement, observed with a monotonic count; narrow-loader exclusion does not establish full-route behavior.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "internal app rollout admits the internal owner to the regular journey",
+      "line": 433,
+      "sha256": "354a07a6f724e8f97f327ceafed21fb742978d529f74898037decb81667e1d9a",
+      "verdict": "R",
+      "rationale": "The internal owner can pass the internal rollout gate. The external rejection and all-users rollout fixtures do not exercise the positive internal predicate.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "loader derives the frontier only from owner-scoped entitlement, source, plan and current authority facts",
+      "line": 442,
+      "sha256": "db4deb44f74331edb4b54a030e4a97fbde2f28177793ab754d551770ccff5fcd",
+      "verdict": "C",
+      "rationale": "C3: identical deps() authority facts and user-1 as timing keeper528; transfer frontier=stage4 and allowed.stage3/stage4=true to its existing returned access.",
+      "candidate": {
+        "id": "C3",
+        "file": "tests/personal-plan-journey-access-loader.test.ts",
+        "name": "loader derives the frontier only from owner-scoped entitlement, source, plan and current authority facts",
+        "keeperFile": "tests/personal-plan-journey-access-loader.test.ts",
+        "keeper": "full journey access reports non-identifying Stage 3 sub-phase timings in dependency order"
+      }
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "journey access accepts a current Stage 3 draft with a valid product-load overlay",
+      "line": 451,
+      "sha256": "4aef3e8d0e4fa5d1cb29c55ca298fd8dd1abd013f537a3f59d2d5d7ea880c1c4",
+      "verdict": "R",
+      "rationale": "A resolved extra product-load category has its own overlay authority; accepting a base-only completed draft cannot catch rejecting the valid overlay.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "journey access accepts a product-load upgrade of an existing base category",
+      "line": 476,
+      "sha256": "edadb5fe686d65e3e91f0cde6c6b37c54d3e577b2a5433df34cfb411709c4d11",
+      "verdict": "R",
+      "rationale": "The overlay upgrades an existing base deep-cleansing category instead of adding a category; append-overlay acceptance does not establish this replacement authority branch.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "journey access still rejects a semantically stale product-load overlay",
+      "line": 504,
+      "sha256": "4f6777342a67d97dc7d545b19a9bbb51b9444a08302518465844cfd0c00f2617",
+      "verdict": "R",
+      "rationale": "An altered current-product-load profile invalidates the old overlay semantically. Shape-valid authority acceptance must not admit this stale interpretation.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "full journey access reports non-identifying Stage 3 sub-phase timings in dependency order",
+      "line": 528,
+      "sha256": "efffa2106c1b5d94c292e5c4effefa0a061ab93783d337e73d7dd1aa37cda465",
+      "verdict": "R",
+      "rationale": "Real loader clocks three reached phases with literal names/outcomes/durations and excludes owner IDs from telemetry; C3 adds exact access outputs at the same existing call.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "full journey access stops access timing after an early entitlement denial",
+      "line": 554,
+      "sha256": "3de728c0ce3e831bb9882dd21fa89d53f02efe89b87a3ee51def85fac740284b",
+      "verdict": "R",
+      "rationale": "Early paid_pending denial emits only the reached entitlement phase and stops the artifact path. Full successful timing cannot catch continuation after denial.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "full journey access reports the reached sub-phase when a dependency throws",
+      "line": 580,
+      "sha256": "bfb5da3f0821584f12b493c2495542ab8b2dfd4e649356fd3ef5859566232f27",
+      "verdict": "R",
+      "rationale": "An artifact failure emits the error phase with its duration and rejects with the original diagnostic. A normal timing list does not establish error delivery.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "the narrow Stage 2 access read never emits Stage 3 access timing",
+      "line": 605,
+      "sha256": "e79062b874b0f0229866df7ff634de614c393fa66b4701056c670f90ef5000a2",
+      "verdict": "C",
+      "rationale": "C4: narrow owner accepts the same active/artifact/initial-plan facts as296; add reporter and exact empty timing receipt to that existing success, preserving all zero later-read counters.",
+      "candidate": {
+        "id": "C4",
+        "file": "tests/personal-plan-journey-access-loader.test.ts",
+        "name": "the narrow Stage 2 access read never emits Stage 3 access timing",
+        "keeperFile": "tests/personal-plan-journey-access-loader.test.ts",
+        "keeper": "Stage 2 access keeps the app rollout gate and stops before later-stage authority reads"
+      }
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "loader starts independent current refined-need and product-draft reads together",
+      "line": 618,
+      "sha256": "2eea228e8157f41a4da20c15e396733a3c14b4cd65384c58fd3268f102eee051",
+      "verdict": "R",
+      "rationale": "A held refined-need promise must not delay starting the independent product-draft read. Final access equality does not establish parallel start.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "loader starts independent prepared-artifact and plan reads together",
+      "line": 647,
+      "sha256": "a203bd9a5f09af49382695f34a000bab412b7a95cf6ed694b4feffdf2c9c2936",
+      "verdict": "R",
+      "rationale": "A held artifact promise must not delay starting the plan read; this is a different prefix-stage concurrency edge from refined/draft.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "loader keeps paid-pending buyers on the compact wait route and throws on authoritative read failure",
+      "line": 676,
+      "sha256": "66799960f862c3344851155c254d4295e4d328a836d147a1d0ee46f2e3e2edec",
+      "verdict": "R",
+      "rationale": "Paid-pending recovery is identical with or without artifact lead; an active-source plan-read failure rejects with its diagnostic. The timing-denial fixture alone does not contain this input/error union.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "full journey keeps an active enrollment without an attached artifact lead on legacy routing",
+      "line": 718,
+      "sha256": "c48249105b46a2880409bad87f063bdc2a4a6ee9c4486b9930e7bfeb0944b3a7",
+      "verdict": "R",
+      "rationale": "Active enrollment without artifact lead retains legacy routing rather than promoting to personal_plan_start. The entitlement is active, unlike paid_pending denial.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "a valid refined source admits Stage 3 before a draft exists and while its current draft is active",
+      "line": 733,
+      "sha256": "61cbc2c9cd933f375cd07cc19315f39cc77b3f7943ee9556a811c0c6ecc33730",
+      "verdict": "R",
+      "rationale": "Absent and active current drafts admit Stage3 but not a completed proposal; the default completed-draft fixture does not establish both non-completed branches.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "an accepted Routine keeps Stage 4/5 reachable while a malformed successor resumes at the Stage 2 bridge",
+      "line": 768,
+      "sha256": "4f8f8676b5994dbd9c4b4fc3bf1541d249c787495fd51f5d93d6e2602e51aef6",
+      "verdict": "F",
+      "rationale": "F title only: actual assertions preserve accepted Routine Stage4/5 after malformed successor and expect routine_redirect at plan-start, not the Stage2-bridge behavior named in the title. Keep all current assertions.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "an accepted active Routine retains Stage 3 when its current successor authority is valid",
+      "line": 818,
+      "sha256": "937ccd0611ca322b0fa77838de66fe906461f1cb4d122cb9bc6bbc1fac4ea132",
+      "verdict": "R",
+      "rationale": "Accepted Routine plus valid current successor retains Stage3 too; degraded-successor recovery alone would permit accidentally denying all successor editing.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "the Routine page reads and renders an accepted Routine when only its successor Stage 3 access is degraded",
+      "line": 840,
+      "sha256": "4094a0b99964d48f84fa42d7e4c6e3bf47335a6c854b7587d5f219d5140a1281",
+      "verdict": "F",
+      "rationale": "F title only: this calls the real Routine page resolver with a supplied readView and checks its returned view; it does not render React. Narrow the render claim, retain degraded-successor resolver contract.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "a pending proposal remains fail-closed when its successor source is unavailable",
+      "line": 883,
+      "sha256": "9e11ee714856aa6cc2c3e325ff7a0b0bfaf186e96a862f3b7147720a8fc03a67",
+      "verdict": "R",
+      "rationale": "Pending proposal without accepted immutable Routine must throw on missing current refined source; the accepted-Routine recovery exception cannot leak into proposals.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "Supabase draft selection ignores stale rows while retaining a current row, and treats stale-only as absent",
+      "line": 906,
+      "sha256": "2a08a7c2cf8998c1b1e9e3e0974336c153bef094c1e786956bb60d7d03aff8d2",
+      "verdict": "F",
+      "rationale": "F private query ordering only: .at(-1) requires status filter to be last although fake and real conjunctive filters are order-independent. Keep current-row products/roles/overlay, stale-only null and literal neq:stale membership; replace last-position receipt with membership in a later zero-quota repair.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "Supabase loader keeps every journey fact owner and aggregate scoped",
+      "line": 966,
+      "sha256": "ff145681d6167981b5c1181781f1f487744856a387238a56d36038e633910b9d",
+      "verdict": "R",
+      "rationale": "Actual Supabase adapter calls are captured for every owner and aggregate selector. The deps() success fixtures manufacture loaded values and cannot establish these query predicates/projections.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "partner access retains its routing exemption when the account also has a trial",
+      "line": 9,
+      "sha256": "60601f402352234b57ea5c7ddf3ea3e06d71673f90cf6821aa18d32fbfc8c939",
+      "verdict": "R",
+      "rationale": "A partner also holding a trial retains partner routing exemption; source-precedence behavior is not the trial-only or partner-only branch.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "`unpaid ${provider} trial resolves its exact quiz without paid attribution`",
+      "line": 109,
+      "sha256": "8a4e317700741833e907083796bac94e43ee3c71e247a9b6c12d51b15a4cafb9",
+      "verdict": "R",
+      "rationale": "One AST declaration loops Stripe and PayPal trial projections. Exact unpaid trial source, quiz ownership and paidAt=null discriminate real trial provenance from paid launch attribution; keep both existing runtime cases.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "trial source rejects mismatched enrollment, malformed payload and changed lead ownership",
+      "line": 135,
+      "sha256": "bd2767bb7a52ec11a939c0de631d6b9c4ddeaecf7c4176d58c194d6fbadcf8bd",
+      "verdict": "R",
+      "rationale": "Mismatched enrollment ID, malformed source payload and changed lead owner deny trial resolution. A successful RPC result does not establish binding validation.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "revoked and expired trial projections never resolve a plan source",
+      "line": 159,
+      "sha256": "1e53795b5da024f0967b59cf72e970373836176f51707c9f9f8c103007325019",
+      "verdict": "R",
+      "rationale": "Revoked and expired trial projections must not yield a source, even with matching enrollment data; these are live-access predicates before source selection.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "trial read failures remain errors rather than an absent source",
+      "line": 173,
+      "sha256": "ffbbe70f479f1c43ef8ddb5e1d10a6f452a15d268702ce62e469b4b0ac44499d",
+      "verdict": "R",
+      "rationale": "Trial resolver DB failures throw instead of returning absence. An invalid source row returning none does not preserve error semantics.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "trial legacy eligibility cannot inherit the historical-paid migration bypass",
+      "line": 186,
+      "sha256": "373e17331b36ae8cf099472e0a49940a167926d54951fbb834890a8f17369f83",
+      "verdict": "R",
+      "rationale": "A legacy trial cannot borrow the historical-paid migration bypass. Both trial provenance and old lead date are operative; paid migration fixtures cannot own this negative.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "trial routing recognizes ready and pending plans while retaining ordinary cohort gates",
+      "line": 206,
+      "sha256": "8c834209846eebac843c099b462baa0bd9c83506cc44f7192b2b4f4c586f549e",
+      "verdict": "R",
+      "rationale": "Trial ready/pending frontier projection preserves cohort gates, including no historical paid bypass. The enrollment-only output does not establish routing.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "a current Personal Plan membership resolves through its exact provider purchase and quiz lead",
+      "line": 324,
+      "sha256": "41f28154ced6a7575adbc24e618dfce9ce40c660b16589236135713fa9b0a120",
+      "verdict": "C",
+      "rationale": "C5: keeper394 selects the identical subscription/session/lead/time after sorting and skipping an unrelated standard subscription. Transfer all seven enrollment fields and all three exact correlation predicates.",
+      "candidate": {
+        "id": "C5",
+        "file": "tests/personal-plan-enrollment.test.ts",
+        "name": "a current Personal Plan membership resolves through its exact provider purchase and quiz lead",
+        "keeperFile": "tests/personal-plan-enrollment.test.ts",
+        "keeper": "the launch membership is selected even when a standard subscription sorts ahead of it"
+      }
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "Stripe launch memberships use the checkout session reference persisted at activation",
+      "line": 359,
+      "sha256": "a1dbbce7edd0267ece4f741d351496ae79f574f4338232b9a2d0f0bc68246ee9",
+      "verdict": "R",
+      "rationale": "Stripe uses checkout_session_id while PayPal uses provider_subscription_id; retaining PayPal happy path cannot catch selecting sub_personal_plan instead of cs_personal_plan.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "the launch membership is selected even when a standard subscription sorts ahead of it",
+      "line": 394,
+      "sha256": "b7fbe01e74e3cd691641d03f2d64d2e564768d66b904b5a7ae423abf926942b3",
+      "verdict": "R",
+      "rationale": "Actual billing selection skips a longer-lived standard subscription and resolves the same exact launch row as324. Retain selection input and add complete donor result/query union.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "standard subscriptions and membership purchases without exact Personal Plan attribution fail closed",
+      "line": 427,
+      "sha256": "f7ae8ee72abe5ee0ff1e07ccc2ab167f3923e9b4be517400eec52f386709627b",
+      "verdict": "R",
+      "rationale": "Standard catalog, missing session attribution and a legacy quiz source without an enabled legacy cutover return the full empty enrollment. Full positive result does not prove these three negative admission paths.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "an unapplied field-test relation preserves ordinary non-Personal-Plan enrollment",
+      "line": 472,
+      "sha256": "b8cae5f858f545447f0a77fc46acefe43b27dbe41deb1cbe8866235a87cb6137",
+      "verdict": "R",
+      "rationale": "Missing field-test relation is an allowed pre-migration absence path; unrelated database failures are separately errors.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "a stale PostgREST partner relationship hint preserves ordinary enrollment",
+      "line": 504,
+      "sha256": "e74b31a265da0f01e593558241c36d7f9675c6dd1b0dff83cd606b9d40d60587",
+      "verdict": "R",
+      "rationale": "Specific stale PostgREST partner relationship hint is tolerated as unavailable optional relation; it is not the generic missing-table code.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "an active partner grant admits the exact legacy quiz indefinitely without cohort gates",
+      "line": 526,
+      "sha256": "f8a1f55df2236804b641fd781997587e425e14db7997bc94184c86681ea9774c",
+      "verdict": "R",
+      "rationale": "Live partner grant linked to exact invitation grants legacy access indefinitely despite ordinary cutoff/app gates, with owner/revocation query receipt.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "a claimed partner invitation without a lead binding or activation never grants access",
+      "line": 575,
+      "sha256": "deeb11d0bd16fcf058aaef868fe272bd86356dba6a55d68039543f348dfe2c02",
+      "verdict": "C",
+      "rationale": "C6: keeper623 has the same null lead AND null activation with valid matching current partner grant; opaque IDs differ only by consistent equality. Both return identical seven-field empty object; keeper additionally excludes revoked tester fallback.",
+      "candidate": {
+        "id": "C6",
+        "file": "tests/personal-plan-enrollment.test.ts",
+        "name": "a claimed partner invitation without a lead binding or activation never grants access",
+        "keeperFile": "tests/personal-plan-enrollment.test.ts",
+        "keeper": "a claimed partner's revoked tester enrollments never resurrect the old tester lead"
+      }
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "a claimed partner's revoked tester enrollments never resurrect the old tester lead",
+      "line": 623,
+      "sha256": "a9fc4b0bafa366324abefcce2988e798827d894b0de89c2906838b1960e783f5",
+      "verdict": "R",
+      "rationale": "Unbound claimed partner must not resurrect either revoked personal-plan or regular tester source. Both actual status queries exclude the extra rows; retains complete C6 denial union.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "a post-cutoff owned legacy lead is eligible only behind the independent cutover",
+      "line": 703,
+      "sha256": "e5d923096c826b30e34ef1e7673074a1e1205140c47fb639f4c486c9804b2c80",
+      "verdict": "R",
+      "rationale": "Post-cutoff owner legacy source is controlled by the independent legacy cutover, including disabled branch; personal_plan lead bypass does not exercise legacy policy.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "historical paid legacy enrollment and frontier agree when migration replaces the old cutover",
+      "line": 742,
+      "sha256": "ec1cbb0c3b1ca5bf91549091b180cd17af8b3c661c59a6dea0f887ba7462c0a6",
+      "verdict": "R",
+      "rationale": "Historical paid legacy enrollment and frontier must agree under migration-enabled replacement of old cutover; retained normal post-cutoff source does not establish this exception.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "historical legacy eligibility still requires owner, valid date, app rollout and live payment",
+      "line": 790,
+      "sha256": "b776bb9a081461e033e5c780f12d4c44bcd5907bda3722038cb228c7580a8f4c",
+      "verdict": "R",
+      "rationale": "Migration exception still requires exact owner, parseable date, rollout and current paid source. Blanket migration allowance would escape the earlier positive cases.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "a legacy moderator enrollment uses its persisted source discriminator",
+      "line": 830,
+      "sha256": "fffbfba154f499a66d383651a681fd5d9ea02e10008cf2583565d37202737f1e",
+      "verdict": "R",
+      "rationale": "Persisted moderator quiz_source_kind=legacy selects legacy source while its actual lead may be represented through field-test storage; cannot infer solely from table name.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "an unknown moderator enrollment source discriminator fails closed",
+      "line": 868,
+      "sha256": "ac4e18200a79b20ce5f5911da51ad9b6cbd598eba872fe39aedb4b40314c7d4b",
+      "verdict": "R",
+      "rationale": "Unknown persisted moderator source discriminator denies admission. Positive legacy/current discriminators do not establish fail-closed unknown behavior.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "field-test enrollment reads still fail closed on unrelated database errors",
+      "line": 901,
+      "sha256": "d8d3bae5d63c7d748ee7dff660f69db77a3bb714af7e3bb21d7f1089a6bc6465",
+      "verdict": "R",
+      "rationale": "Unrelated DB errors remain errors instead of tolerated missing relation; preserve diagnostic distinction.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "an existing paid migration keeps its immutable source even when another launch purchase exists",
+      "line": 919,
+      "sha256": "c14f230f70bcfc1788359889dbf7ddc2437fec3ee8d695eed9c22ee0e792d171",
+      "verdict": "R",
+      "rationale": "Ready immutable migration authority wins over a newer launch purchase and keeps bound source identity; launch-selection keeper assumes no migration.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "an unavailable migration authority never substitutes another purchase as the Plan source",
+      "line": 949,
+      "sha256": "a42f3cc41d69298e8770133418d6ef54e51f87997cf6e3a9226e150504652e29",
+      "verdict": "R",
+      "rationale": "Unavailable migration authority throws and cannot silently substitute a live purchase; successful authority precedence cannot detect fallback after errors.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "recording a module banner dismissal and reading it back reports that module dismissed",
+      "line": 110,
+      "sha256": "6e3346cffc76f05135cae9f29146d83489296576ffe126f982c101822c019f45",
+      "verdict": "D",
+      "rationale": "D1: exact same writer args, read args and products=true assertion already occur in119 before its additional habits=false assertion. No transfer or new input.",
+      "candidate": {
+        "id": "D1",
+        "file": "tests/personal-plan-lifecycle-marks.test.ts",
+        "name": "recording a module banner dismissal and reading it back reports that module dismissed",
+        "keeperFile": "tests/personal-plan-lifecycle-marks.test.ts",
+        "keeper": "dismissing one module leaves the other module's banner un-dismissed (per-module independence, i.e. the reappear-once mechanism)"
+      }
+    },
+    {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "dismissing one module leaves the other module's banner un-dismissed (per-module independence, i.e. the reappear-once mechanism)",
+      "line": 119,
+      "sha256": "9f85e674092710b3e5d7d76edcfe15c8c2f27f884c0ab63b3c4fd2dfeb49459a",
+      "verdict": "R",
+      "rationale": "Write/read products dismissal plus independent habits=false proves module separation and exactly contains D1.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "dismissing the same module twice is idempotent: exactly one stored row, still dismissed",
+      "line": 129,
+      "sha256": "6a725da30683972e0093699e8e45cbec24e30191c17029920d560ac59f42fb0a",
+      "verdict": "F",
+      "rationale": "F mock-owned idempotence: fake Map always uses user|kind|subject and ignores upsert options; wrong conflict target can remain green here. Retain two-write case, report lack of actual transport-option/DB proof; no deletion credit.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "dismissals are scoped per user: another user's dismissal never hides this user's banner",
+      "line": 148,
+      "sha256": "aefcd7b851f55d46d56f9ec80d26a6c0877fc7d6ed5825c1290a7380922324cf",
+      "verdict": "R",
+      "rationale": "Real selectSubjects query excludes a different user before membership. Add exact empty set from C1 so unrelated invented dismissed subjects cannot pass.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "a user with no dismissals reads as no modules dismissed",
+      "line": 161,
+      "sha256": "4e3047d8641247fa9d71effd8128596d4ab81c84b895dcdffc46f1eea0af4686",
+      "verdict": "C",
+      "rationale": "C1: actual load owner receives data=[] both here and after148 foreign-owner filtering. Add literal full empty set to148; no new read or row.",
+      "candidate": {
+        "id": "C1",
+        "file": "tests/personal-plan-lifecycle-marks.test.ts",
+        "name": "a user with no dismissals reads as no modules dismissed",
+        "keeperFile": "tests/personal-plan-lifecycle-marks.test.ts",
+        "keeper": "dismissals are scoped per user: another user's dismissal never hides this user's banner"
+      }
+    },
+    {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "module dismissal read degrades to 'no dismissals' (banner visible) when the table/columns are absent",
+      "line": 167,
+      "sha256": "82c9b650eebcaca87a813c236085b67eca431512e333ceac78529d2ba5443b61",
+      "verdict": "R",
+      "rationale": "Returned database error degrades banner visibility to both modules not dismissed; synchronous exceptions exercise a separate catch path.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "module dismissal read degrades to 'no dismissals' when the client throws synchronously",
+      "line": 174,
+      "sha256": "dd228a4292c266103cd2714e8ec3e77453a75820b5d7e5f126a2d4ef84bef99e",
+      "verdict": "R",
+      "rationale": "Synchronous from() throw reaches outer catch and returns exact empty dismissal state, unlike a returned query error.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "a stored subject outside the known module set is ignored rather than crashing the read",
+      "line": 179,
+      "sha256": "37e5fb4e3c015fae86bcaff5e3260fd88a978d08b03ac80aa34abacb68d7019f",
+      "verdict": "R",
+      "rationale": "Unknown stored subject is filtered from real loaded rows; an empty database cannot catch omission of the known-module whitelist.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "recording a module banner dismissal surfaces a write error to the caller",
+      "line": 192,
+      "sha256": "fe153ff0caa76736f745d35b454a0a2a17462d155e705f54d13e3f6fa190505f",
+      "verdict": "R",
+      "rationale": "Write error propagates to API caller instead of being swallowed like reads; read degradation does not establish write semantics.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "recording a nav surface visit and reading it back reports that surface visited",
+      "line": 201,
+      "sha256": "4b47c28fc66a843b2d2e140f1337d4a026e90a3cf3a28076398a10417f8094fa",
+      "verdict": "C",
+      "rationale": "C2: keeper258 performs identical profile writer/read under same user/time plus one other-kind row. Transfer available=true and profile/application membership booleans to the existing visited state.",
+      "candidate": {
+        "id": "C2",
+        "file": "tests/personal-plan-lifecycle-marks.test.ts",
+        "name": "recording a nav surface visit and reading it back reports that surface visited",
+        "keeperFile": "tests/personal-plan-lifecycle-marks.test.ts",
+        "keeper": "nav-visited state is independent per module-banner state: the two kinds never leak into each other"
+      }
+    },
+    {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "a user with no visits reads as available with nothing visited (every non-routine tab dots)",
+      "line": 212,
+      "sha256": "44a19c95847116e3c83ea0c88cda5ca471005e92e871e526b8656ea9a2a1461f",
+      "verdict": "R",
+      "rationale": "Successful zero rows is available=true and means unvisited dots; unavailable empty rows must remain distinct. Both chat/profile positive dots retained.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "routine is never dotted, visited or not",
+      "line": 222,
+      "sha256": "0695a6b896bb87604d2feae3526cd2ccb346506821a4836c2b6681ff583a3d51",
+      "verdict": "R",
+      "rationale": "Routine is never dotted before or after its own persisted visit. Other surfaces use membership and cannot establish this special exclusion.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "a visited surface no longer shows the unvisited dot",
+      "line": 232,
+      "sha256": "b5ad6906c4c3aad6450643bdd746ad7d591409bc04ea12aab932f04efdaaf1b2",
+      "verdict": "R",
+      "rationale": "Persisted chat visit removes chat dot while profile stays unvisited. The proposed profile keeper cannot catch a defect dropping chat from the stored allowed-surface set; retain.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "visiting the same nav surface twice is idempotent: exactly one stored row",
+      "line": 241,
+      "sha256": "97781b753a363fa0939f94ef5e4748567b5624f9843bafac46e4b173f07f668a",
+      "verdict": "F",
+      "rationale": "F mock-owned idempotence: Map imposes the PK independently of actual upsert conflict options. Keep repeated application visit but do not call this Postgres uniqueness proof.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "nav-visited state is independent per module-banner state: the two kinds never leak into each other",
+      "line": 258,
+      "sha256": "b04894506eab4748da173e73b4e5b9ae390d37e84880bef05dceb0a5f77715bd",
+      "verdict": "R",
+      "rationale": "Same profile visit/read as C2 with a products dismissal also present; literal sets protect actual kind separation. Add donor availability and helper-membership assertions.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "nav-visited read degrades to unavailable — no dots anywhere, NOT a dot on every tab — when the table is absent",
+      "line": 271,
+      "sha256": "567f33f7cdccad377568773da7245b6810cdbf48e36af9ee616f178859a6abe7",
+      "verdict": "R",
+      "rationale": "Returned table error makes available=false and suppresses chat/profile dots, contrasting successful empty rows. Preserve both signal and downstream decision.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "nav-visited read degrades to unavailable when the client throws synchronously",
+      "line": 283,
+      "sha256": "c9c9b1e32ad7d2ff61ec22d9188d62816f24e7c0e7bb715897276cb08c927e91",
+      "verdict": "R",
+      "rationale": "Synchronous query-construction failure must also suppress dots; returned error keeper does not exercise this exception path.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "recording a nav surface visit surfaces a write error to the caller",
+      "line": 289,
+      "sha256": "0b57088d9709e04828a4d227787cacf6df0e06a927ccb939bceb174a6ec794cd",
+      "verdict": "R",
+      "rationale": "Nav write error propagates to deferred caller for its own recovery; banner writer error does not establish nav wrapper wiring.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-quiz.test.ts",
+      "name": "quiz transition direction follows the navigation action, not screen order",
+      "line": 18,
+      "sha256": "3ff134f44d5cb241e713a2576a8ebe51c6b877e83b91a4f6244285141bd672f5",
+      "verdict": "R",
+      "rationale": "Back/advance action controls animation independent of numeric screen order; history stack tests do not observe animation direction.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-quiz.test.ts",
+      "name": "approved flow inserts the analysis bridge, midpoint, admission ladder, and daily commitment",
+      "line": 36,
+      "sha256": "991e2dbb12657202d1bb0272e19920c86db5fdb7e90631c06418e83b12a01ed7",
+      "verdict": "R",
+      "rationale": "Literal successful next screens cover positive/no-concern branch plus structural phase transitions. Current optional scalp conflict is a different predicate and phase.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-quiz.test.ts",
+      "name": "recurrence keeps ordinary history-stack Back semantics after moving beside concerns",
+      "line": 54,
+      "sha256": "0b2061c221a4718e58f612f55356a848e9473105fa730c9e69dc14ab5c4975c2",
+      "verdict": "R",
+      "rationale": "Appending same last screen is idempotent while recurrence extends history; next-screen mapping cannot detect broken Back stack ownership.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-quiz.test.ts",
+      "name": "five stable checkpoint sections cover every semantic phase",
+      "line": 64,
+      "sha256": "a752c59d9bf92ccc86c967e58566c5aab0b3f608c5978f12ad1554256a031011",
+      "verdict": "R",
+      "rationale": "Section labels drive restored progress/animation, with recurrence assigned goals_and_context and emotional relevance analysis. Routing sequence equality does not establish section membership.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-quiz.test.ts",
+      "name": "scalp concerns use one optional multi-select screen without a medical warning branch",
+      "line": 73,
+      "sha256": "5462eb99b1416dec881e20a97ffdc4c4209e1e84c901470bc309b1e31a698960",
+      "verdict": "R",
+      "rationale": "Optional scalp screen routes no trade-off to practical cost and fine+moisture to conflict. Both empty and dryness-only cannot activate conflict without a supported pair.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-quiz.test.ts",
+      "name": "the later scalp tail still reaches a conflict prompt after recurrence moved earlier",
+      "line": 86,
+      "sha256": "6e1f30309321fb36a1706c4a77b783ee306bfc374234855dbb8cab84d5995ab9",
+      "verdict": "R",
+      "rationale": "Oily scalp+dry lengths selects the other conflict predicate and conflict advances to practical cost. Fine/moisture test does not establish oily branch or outgoing conflict transition.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-quiz.test.ts",
+      "name": "browser draft trims malformed current concern notes without resetting v4 drafts",
+      "line": 97,
+      "sha256": "b8dee0f38254746b514069677c45c60b65808725b99e6fd4f9405b211ecd5357",
+      "verdict": "R",
+      "rationale": "Save/load trims and caps malformed note at50 while keeping draft version4. Server reject-long schema differs intentionally from tolerant browser restoration.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-quiz.test.ts",
+      "name": "conflicting-needs prompt is shown only for a supported trade-off",
+      "line": 110,
+      "sha256": "adc6dce33f5655e44a184477f69e79c324623acd58a7219fb668b1a77d1bd262",
+      "verdict": "R",
+      "rationale": "Exact prompt ID/copy for oily, fine, textured and treated trade-offs plus null unsupported input. Screen routing only checks truthiness and cannot establish these emitted messages.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-quiz.test.ts",
+      "name": "goals retain all eight selected domains without a cap",
+      "line": 142,
+      "sha256": "e1e06db436246f42a8a43998b222f105f22c87bec86ab19cfe3795d3b883459c",
+      "verdict": "R",
+      "rationale": "All eight selected goals survive browser roundtrip; server payload acceptance alone does not establish localStorage projection.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-quiz.test.ts",
+      "name": "draft preserves an explicit no-concerns answer across reloads",
+      "line": 161,
+      "sha256": "a36faccf3404c4328457a93a793a558619b553d775e45b34556a7c09e86483bf",
+      "verdict": "R",
+      "rationale": "Explicit empty concerns survives as [] rather than omitted undefined, which controls whether the question is answered; malformed/missing concerns are not equivalent.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-quiz.test.ts",
+      "name": "prepared-plan answer keys survive the draft's canonical field ordering",
+      "line": 175,
+      "sha256": "74769ac467a9282b6931fa056665e4de9409daacec2ab85f2f4b780d688625ae",
+      "verdict": "F",
+      "rationale": "F correlated key oracle: both expected and actual call getPersonalPlanQuizAnswersKey, so constant-key fault passes despite active prepare-cache use. Keep ordering input and add independent fixed canonical object/string receipt in later zero-quota repair; no new input required.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-quiz.test.ts",
+      "name": "stale elasticity opt-outs return the user to the required test",
+      "line": 208,
+      "sha256": "222e630b273b89c2a0b6cf78aeea08b9f5a423c748fe16e7809a3fb54546505c",
+      "verdict": "R",
+      "rationale": "Retired unknown elasticity rewinds screen/history to required test and removes obsolete answer. Generic malformed JSON null cannot detect this compatibility route.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-quiz.test.ts",
+      "name": "v4 drafts preserve exact concern recurrence and reject the retired v3 schema",
+      "line": 236,
+      "sha256": "3f7d55d83e582334112e3e522a7edd6b43ed84527b87bac6a372de2b099c8727",
+      "verdict": "R",
+      "rationale": "Exact selected recurrence survives; dangling recurrence is discarded; retired v3 draft is refused. Browser current-version and server persistence contracts are independent.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-quiz.test.ts",
+      "name": "draft excludes lead PII and all conversion-only answers",
+      "line": 280,
+      "sha256": "4282c60598a5ce4bd2b78bd12a821ac12fadeb5bce91c91633f01f526a8cc6de",
+      "verdict": "R",
+      "rationale": "Raw stored bytes exclude PII and ephemeral conversion fields, then durable answers reload correctly. Object-only projection cannot prove storage privacy.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-quiz.test.ts",
+      "name": "draft ignores removed rough-flow fields and malformed storage",
+      "line": 312,
+      "sha256": "f149e6b296bdbe9753dbd79df467748f7ff04b540c5aa5792b02b735672fd72e",
+      "verdict": "R",
+      "rationale": "Removed rough-flow fields disappear and invalid JSON restores null. Active durable fields positive case cannot establish former-schema rejection.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-quiz.test.ts",
+      "name": "draft persistence tolerates restricted storage",
+      "line": 336,
+      "sha256": "7cb611b344d45fa2ed3aa6a552e62302ebccb40db7d71cb908db1341564ccc11",
+      "verdict": "R",
+      "rationale": "Quota and blocked removal exceptions are tolerated; ordinary MemoryStorage cannot exercise browser storage failure.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-quiz.test.ts",
+      "name": "profile summary stays positive and derives four useful rows from durable answers",
+      "line": 355,
+      "sha256": "4bf97fd643111326de8848e877ac38ef828fa8358e616ffa6feed03f4ae6c824",
+      "verdict": "R",
+      "rationale": "Wavy/fine/medium moisture+dry scalp flexible profile emits four positive German rows and excludes medical framing. Other profile comparisons do not preserve these particular labels.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-quiz.test.ts",
+      "name": "materially different profiles produce recognizably different positive receipts",
+      "line": 375,
+      "sha256": "5286de09a5e7c2e65d1505b1ff264bbc4bced30afa4a0818b51ecd800908614e",
+      "verdict": "R",
+      "rationale": "Straight volume, curly treated strengthening/shape, and coily irritated contexts produce distinct public receipts and exact composite phrases; current helper consumes all relevant inputs.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-hair-assessment.test.ts",
+      "name": "the ten dimensions use only the approved primary, observation and support weights",
+      "line": 49,
+      "sha256": "fcd5e5304bf92231d65379ac28dfa2dc7f1c4d3f8dd1feb9f498cb0733db63f5",
+      "verdict": "R",
+      "rationale": "All ten literal evidence scores over deliberately crowded primary/observation/support input preserve numeric weights/caps, not merely three displayed IDs.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-hair-assessment.test.ts",
+      "name": "hair-loss dimension is pinned second for assessment tie-breaks",
+      "line": 86,
+      "sha256": "6d0c3cf03a5b22b749fb88c1b853864e6273bb7d9b1b2dac884ce652786956c8",
+      "verdict": "R",
+      "rationale": "Array order is actually used as final assessment sort tie-break. Current hair-loss copy fixture has moisture goal boost, so it does not prove hair-loss-before-moisture on tied priority; no same-input public keeper preserves this literal ordering.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-hair-assessment.test.ts",
+      "name": "support and goals cannot activate a dimension or worsen its visible band",
+      "line": 94,
+      "sha256": "c858b9307cab96c89daee3cf3bc2e48efb1460db83ae157dd62585a3a14dff02",
+      "verdict": "R",
+      "rationale": "Support/goal-only facts cannot activate/worsen dimensions; literal segment conversion boundaries are preserved too. Active high-evidence rows cannot establish absence semantics.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-hair-assessment.test.ts",
+      "name": "goals and exact-concern recurrence affect ordering only",
+      "line": 114,
+      "sha256": "2ff0817e78dc3a9a55f0870fa4d7e2fb917ed30d1fe9ef6116a06a131c7d3239",
+      "verdict": "R",
+      "rationale": "Goals and exact selected recurrence reorder priorities while evidence scores remain unchanged; numeric score fixture cannot detect priorities accidentally affecting visible band.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-hair-assessment.test.ts",
+      "name": "surface and shine are display siblings while breakage and split ends stay independent",
+      "line": 134,
+      "sha256": "179332364745e56df5ec98bf196ca7f454d317ad4db93d86889a69c0e12310c2",
+      "verdict": "R",
+      "rationale": "Surface/shine are display siblings while breakage/split stay independently selectable. Generic unique cardinality does not establish specific sibling policy.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-hair-assessment.test.ts",
+      "name": "Haarschäden and Frizz stay independent assessment signals",
+      "line": 144,
+      "sha256": "7f4bc64a69ae6198696c48c61b17f7f0389b923c0d229acf56a83c55a4b8175b",
+      "verdict": "R",
+      "rationale": "Generic hair damage and frizz are independent signals rather than aliases; explicit evidence, selected dimensions and copy must not collapse them.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-hair-assessment.test.ts",
+      "name": "generic damage honors its exact recurrence only as an ordering tie-break",
+      "line": 170,
+      "sha256": "186c668cdacd47eae1e6f3aacd65cc474a4d752005ac8c62e1d720d8ea5120f4",
+      "verdict": "R",
+      "rationale": "Only recurrence bound to hair_damage changes its ordering; unrelated concern recurrence cannot promote it. Generic recurrence keeper has other IDs.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-hair-assessment.test.ts",
+      "name": "hair-loss assessment row uses the reviewed cautious two-sentence copy",
+      "line": 184,
+      "sha256": "dbb5e6e816f38d76d4be6800804fd978503265d7a722fda5ab17f0d682b9fce7",
+      "verdict": "R",
+      "rationale": "Literal medically cautious two-sentence hair-loss copy is an independently reviewed visible claim, not replaceable by word-count or selected-ID checks.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-hair-assessment.test.ts",
+      "name": "explicit Haarschäden copy takes precedence over a stays-stretched observation",
+      "line": 207,
+      "sha256": "b9015f95ab53ca01eb66cf05bcf9c9701831b51a8c855502e8518a512a46d98b",
+      "verdict": "R",
+      "rationale": "Explicit hair_damage copy outranks stays-stretched observation; observation-only Stability row must remain a separate branch.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-hair-assessment.test.ts",
+      "name": "legacy factual answers adapt to the shared diagnosis without invented context",
+      "line": 222,
+      "sha256": "a9700bd291a51f86ebaacad10648f83d73a7c2c7ae94dc69aef2fd24f91b321f",
+      "verdict": "R",
+      "rationale": "Actual legacy factual adapter maps fields without synthesizing unasked context, then assessment remains valid. Modern answers bypass adapter and cannot preserve migration vocabulary.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-hair-assessment.test.ts",
+      "name": "a stretch observation cannot place Haarbruch beside explicitly selected Spliss",
+      "line": 254,
+      "sha256": "40e37db884d9cbdf969590d97001693abb7df949188b74254282f7621cf19338",
+      "verdict": "R",
+      "rationale": "Explicit Spliss suppresses a second observation-only Haarbruch row; ordinary sibling surface/shine is a separate exclusion.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-hair-assessment.test.ts",
+      "name": "a stays-stretched observation guarantees a neutral Stability row without claiming Haarbruch",
+      "line": 267,
+      "sha256": "0941f9004ec517a894b8eeef4bd77d3edf4fce627201a6b62ea8a4196a97bab2",
+      "verdict": "R",
+      "rationale": "Stays-stretched observation yields neutral Stability title/segment/literal explanation without claiming explicit breakage. Generic damage fixture selects explicit concern branch.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-hair-assessment.test.ts",
+      "name": "scalp irritation is retained regardless of concern order",
+      "line": 288,
+      "sha256": "6c8cc1b71cf3dbf865cd290520ebb3082f1f04f7703fc14d0323aac1229902cc",
+      "verdict": "R",
+      "rationale": "Irritation remains in evidence and public tolerance copy under both scalp-concern orders. A single fixed first concern cannot catch accidental order dependence.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-hair-assessment.test.ts",
+      "name": "positive fill uses only explicit neutral observations and still respects siblings",
+      "line": 309,
+      "sha256": "0d2977392af24296434458bd6e0e5d90163b98f56292aa878bd1e7e81735ea34",
+      "verdict": "R",
+      "rationale": "Positive fill requires explicit neutral facts and respects shine/surface siblings; selected IDs and cautious flexible copy are fixed independently.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-hair-assessment.test.ts",
+      "name": "an active dimension is not selected again as positive fill",
+      "line": 325,
+      "sha256": "44954f3e84108b82a7912b1afbae7a499eeac132d7b219e62b8914756367365b",
+      "verdict": "R",
+      "rationale": "An active frizz dimension is not repeated as positive smooth-surface fill; other sibling input does not have same active/neutral overlap.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-hair-assessment.test.ts",
+      "name": "crowded evidence ownership omits lower-priority clauses instead of breaking the copy contract",
+      "line": 338,
+      "sha256": "77f07e4de9df622acaf16e3f4fdd1d59eebfa17f0c512a024cd63ab9b5a33603",
+      "verdict": "R",
+      "rationale": "Three existing crowded inputs check external word/sentence/answer-highlight limits. Exhaustive376 chooses a single goal by concern-mask modulus and does not contain the complete ranking/ownership input union (notably multi-goal scenario). Keep whole declaration.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-hair-assessment.test.ts",
+      "name": "every selectable concern and observation composition stays inside the public copy contract",
+      "line": 376,
+      "sha256": "b05f5259a7f4664775367e5dcfd505e25c79abf4e0cd516abad5071118aed985",
+      "verdict": "R",
+      "rationale": "Existing exhaustive compositions cover all concern subsets and observation/treatment/length combinations for a prescribed goal selection, requiring three unique dimensions and nonthrowing public rows. Named examples do not contain this existing generated domain.",
+      "candidate": null
+    },
+    {
+      "file": "tests/personal-plan-hair-assessment.test.ts",
+      "name": "all reviewed row families keep public copy within two sentences and 28 words",
+      "line": 406,
+      "sha256": "7febecbb97ae7b95f714c6a9b1d9bec5316097e1fde6cce86d86668f4b799129",
+      "verdict": "R",
+      "rationale": "Eleven reviewed families independently check public word/sentence bounds and answer markup; exhaustive376 relies on owner-internal validator for bounds and does not assert answer text excludes angle brackets.",
+      "candidate": null
+    }
+  ]
+}

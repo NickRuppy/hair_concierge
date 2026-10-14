@@ -12,6 +12,7 @@ import {
   type PersonalPlanJourneyAccess,
 } from "@/lib/personal-plan/journey-access"
 import { loadPersonalPlanJourneyAccessForUser } from "@/lib/personal-plan/journey-access-loader"
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
 import { createSupabaseStage2RefinementPersistence } from "@/lib/personal-plan/persistence/stage2-refinement-supabase"
 import { createProductionStage3ProductsGateway } from "@/lib/personal-plan/products/production-persistence-gateway"
 import { createSupabaseStage3ProductionPersistence } from "@/lib/personal-plan/products/stage3-persistence-supabase"
@@ -20,6 +21,7 @@ import {
   isPersonalPlanStage2Enabled,
   isPersonalPlanStage3Enabled,
   isPersonalPlanStage4Enabled,
+  isShoppingBudgetEnabled,
 } from "@/lib/personal-plan/release"
 import { createInitialRoutineCandidateCompiler } from "@/lib/personal-plan/routine-candidate-compiler"
 import {
@@ -37,6 +39,7 @@ import {
 } from "@/lib/rate-limit"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
+import { loadKnownCareAnswers } from "@/lib/user-facts/read"
 import { saveUserFacts } from "@/lib/user-facts/save"
 
 const rate: RateLimitConfig = {
@@ -72,6 +75,7 @@ const STATUS_BY_CODE = {
   acceptance_not_ready: 409,
   refinement_in_progress: 409,
   plan_already_accepted: 409,
+  budget_required: 409,
 } as const
 
 export type AcceptIdealPlanRouteDeps = {
@@ -79,7 +83,13 @@ export type AcceptIdealPlanRouteDeps = {
   getUserId: () => Promise<string | null>
   loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
   checkRateLimit: typeof checkRateLimit
-  accept: (userId: string, input: AcceptIdealPlanInput) => Promise<AcceptIdealPlanResult>
+  /** Server-resolved Hair Tools rollout for this user; browser input never reaches it. */
+  toolsEnabled: (userId: string) => Promise<boolean>
+  accept: (
+    userId: string,
+    input: AcceptIdealPlanInput,
+    options: { toolsEnabled: boolean },
+  ) => Promise<AcceptIdealPlanResult>
 }
 
 function fail(error: string, status: number, headers?: HeadersInit): NextResponse {
@@ -114,7 +124,8 @@ export function createAcceptIdealPlanRouteHandler(deps: AcceptIdealPlanRouteDeps
     const parsed = bodySchema.safeParse(await request.json().catch(() => null))
     if (!parsed.success) return fail("invalid_request", 400)
     try {
-      const result = await deps.accept(userId, parsed.data)
+      const toolsEnabled = await deps.toolsEnabled(userId).catch(() => false)
+      const result = await deps.accept(userId, parsed.data, { toolsEnabled })
       console.info("personal_plan_accept_ideal_plan_api", {
         event: "accepted",
         duration_ms: Date.now() - started,
@@ -139,7 +150,8 @@ export const POST = createAcceptIdealPlanRouteHandler({
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   loadJourneyAccess: loadPersonalPlanJourneyAccessForUser,
   checkRateLimit,
-  accept: async (userId, input) => {
+  toolsEnabled: async (userId) => isPersonalPlanToolsEnabledForUser(userId, createAdminClient()),
+  accept: async (userId, input, { toolsEnabled }) => {
     const admin = createAdminClient()
     return acceptIdealPlan(
       {
@@ -148,9 +160,13 @@ export const POST = createAcceptIdealPlanRouteHandler({
           stage2Enabled: isPersonalPlanStage2Enabled(),
           stage3Enabled: isPersonalPlanStage3Enabled(),
           stage4Enabled: isPersonalPlanStage4Enabled(),
+          shoppingBudgetEnabled: isShoppingBudgetEnabled(),
         },
-        refinementPersistence: createSupabaseStage2RefinementPersistence(admin),
+        loadShoppingBudget: async (id) =>
+          (await createSupabaseStage3ProductionPersistence(admin).loadShoppingContext(id)).budget,
+        refinementPersistence: createSupabaseStage2RefinementPersistence(admin, { toolsEnabled }),
         saveFacts: (factsInput) => saveUserFacts(admin, factsInput),
+        loadKnownCareAnswers: (id) => loadKnownCareAnswers(admin, id),
         planState: {
           async loadActiveRoutineVersionId({ personalPlanId }) {
             const { data, error } = await admin
@@ -161,6 +177,16 @@ export const POST = createAcceptIdealPlanRouteHandler({
               .maybeSingle()
             if (error || !data) throw new Error("direct_accept_plan_state_unavailable")
             return data.active_routine_version_id ? String(data.active_routine_version_id) : null
+          },
+          async isUnrefinedDirectAccept({ personalPlanId }) {
+            const { data, error } = await admin
+              .from("personal_plans")
+              .select("unrefined_direct_accept")
+              .eq("id", personalPlanId)
+              .eq("user_id", userId)
+              .maybeSingle()
+            if (error || !data) throw new Error("direct_accept_plan_state_unavailable")
+            return data.unrefined_direct_accept === true
           },
         },
         stage3Gateway: createProductionStage3ProductsGateway({

@@ -11,49 +11,7 @@ export type JsonValue =
   | JsonValue[]
   | { [key: string]: JsonValue }
 
-const jsonValueSchema: z.ZodType<JsonValue> = z.lazy(() =>
-  z.union([
-    z.string(),
-    z.number(),
-    z.boolean(),
-    z.null(),
-    z.array(jsonValueSchema),
-    z.record(z.string(), jsonValueSchema),
-  ]),
-)
-
 const opaqueIdSchema = z.string().min(1)
-const hashSchema = z.string().regex(/^[a-f0-9]{64}$/)
-
-const needVersionRowBaseSchema = z.object({
-  id: opaqueIdSchema,
-  userId: opaqueIdSchema,
-  personalPlanId: opaqueIdSchema,
-  preparedArtifactSourceId: opaqueIdSchema.nullable(),
-  schemaVersion: z.number().int().positive(),
-  computationVersion: z.string().min(1),
-  inputHash: hashSchema,
-  inputSnapshot: jsonValueSchema,
-  outputSnapshot: jsonValueSchema,
-  createdAt: z.string().datetime(),
-})
-
-export const initialNeedVersionRowSchema = needVersionRowBaseSchema.extend({
-  kind: z.literal("initial"),
-  parentNeedVersionId: z.null(),
-})
-
-export const refinedNeedVersionRowSchema = needVersionRowBaseSchema.extend({
-  kind: z.literal("refined"),
-  parentNeedVersionId: opaqueIdSchema,
-})
-
-export const needVersionRowSchema = z.discriminatedUnion("kind", [
-  initialNeedVersionRowSchema,
-  refinedNeedVersionRowSchema,
-])
-
-export type NeedVersionRow = z.infer<typeof needVersionRowSchema>
 
 function normalizeJson(value: JsonValue): JsonValue {
   if (Array.isArray(value)) {
@@ -102,69 +60,6 @@ export function hashPersonalPlanNeedVersionInput(input: NeedVersionHashInput): s
       : {}),
   }
   return createHash("sha256").update(stableJson(preimage)).digest("hex")
-}
-
-export type SnapshotValueDecoder<T> = (raw: unknown) => { ok: true; value: T } | { ok: false }
-
-export type NeedVersionSnapshotDecoder<Input = unknown, Output = unknown> = {
-  schemaVersion: number
-  computationVersion: string
-  decodeInput: SnapshotValueDecoder<Input>
-  decodeOutput: SnapshotValueDecoder<Output>
-}
-
-export type NeedVersionDecoderRegistry = {
-  readonly decoders: ReadonlyMap<string, NeedVersionSnapshotDecoder>
-}
-
-function decoderKey(schemaVersion: number, computationVersion: string): string {
-  return `${schemaVersion}:${computationVersion}`
-}
-
-export function createNeedVersionDecoderRegistry(
-  decoders: readonly NeedVersionSnapshotDecoder[],
-): NeedVersionDecoderRegistry {
-  const registered = new Map<string, NeedVersionSnapshotDecoder>()
-  for (const decoder of decoders) {
-    const key = decoderKey(decoder.schemaVersion, decoder.computationVersion)
-    if (registered.has(key)) throw new Error(`Duplicate need-version decoder: ${key}`)
-    registered.set(key, decoder)
-  }
-  return { decoders: registered }
-}
-
-export type DecodedNeedVersionSnapshot =
-  | { ok: true; input: unknown; output: unknown }
-  | {
-      ok: false
-      error:
-        | {
-            code: "unsupported_snapshot_version"
-            schemaVersion: number
-            computationVersion: string
-          }
-        | { code: "invalid_snapshot" }
-    }
-
-export function decodeNeedVersionSnapshot(
-  registry: NeedVersionDecoderRegistry,
-  row: NeedVersionRow,
-): DecodedNeedVersionSnapshot {
-  const decoder = registry.decoders.get(decoderKey(row.schemaVersion, row.computationVersion))
-  if (!decoder) {
-    return {
-      ok: false,
-      error: {
-        code: "unsupported_snapshot_version",
-        schemaVersion: row.schemaVersion,
-        computationVersion: row.computationVersion,
-      },
-    }
-  }
-  const input = decoder.decodeInput(row.inputSnapshot)
-  const output = decoder.decodeOutput(row.outputSnapshot)
-  if (!input.ok || !output.ok) return { ok: false, error: { code: "invalid_snapshot" } }
-  return { ok: true, input: input.value, output: output.value }
 }
 
 export const userProductSchema = z

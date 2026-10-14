@@ -1,0 +1,50 @@
+from pathlib import Path
+import json,hashlib,difflib
+D=Path(__file__).parent;T=Path('/tmp/test-audit-scanner119-tools-e5gg36wq');P=Path('/tmp/test-audit-residual-care102-ezeu563r')
+sha=lambda b:hashlib.sha256(b).hexdigest();old=json.loads((T/'operator-pins.json').read_bytes())
+PIN='b1619bebc5540a7ee42e2ed0ec18431cc2f9a52c43c471b3cefe9290c1d04d5f'
+assert sha((T/'operator-pins.json').read_bytes())==PIN
+assert sha((P/'manifest.json').read_bytes())=='946a680f03ce84419ba6e3dc31e6c155cbecb2d96d10f36b2ee3a1dc6cec1a9b'
+assert sha((P/'handoff-receipt.json').read_bytes())=='d926359a52cb978c073d649af31c99a2ca5ca3c5d6f9c54d8839a0355f8a6000'
+def put(n,s):
+ p=D/n;assert p.resolve().is_relative_to(D.resolve());p.parent.mkdir(exist_ok=True,parents=True)
+ b=s.encode() if isinstance(s,str) else s
+ if p.exists():assert p.read_bytes()==b,p
+ else:p.write_bytes(b)
+def once(s,a,b):
+ assert s.count(a)==1,(a,s.count(a));return s.replace(a,b)
+provenance=[]
+for n in ['operator-pins.json','operator-guard.cjs','operator-edit.cjs','operator-run-controls.cjs','operator-proof.cjs','operator-readonly-preload.cjs','proof-attestation.cjs','operator-native-proof.cjs']:
+ b=(T/n).read_bytes();put('template-originals/'+n,b)
+ if n=='operator-pins.json':continue
+ norm=b.decode().replace("const PIN_SHA='"+PIN+"'","const PIN_SHA='PIN_SHA_PLACEHOLDER'")
+ field='entrypointTemplateHashes' if n in ['operator-edit.cjs','operator-run-controls.cjs','operator-native-proof.cjs'] else 'artifactHashes'
+ assert next(v for k,v in old[field].items() if Path(k).resolve()==(T/n).resolve())==sha(norm.encode() if field=='entrypointTemplateHashes' else b),n
+ s=norm.replace(str(T)+'/operator',str(D)+'/operator').replace('/tmp/test-audit-scanner-residual119',str(P))
+ if n=='operator-guard.cjs':
+  s=once(s,'candidates.length!==14||controls.length!==18','candidates.length!==1||controls.length!==13')
+  s=once(s,"keepers.size!==7)fail('Seven unique keepers required')","keepers.size!==1)fail('One unique keeper required')")
+  s=once(s,'Object.keys(snapshots).length!==21||JSON.stringify(counts)!==\'{"before":119,"transfer":119,"cut":105}\'||unrelated!==98||unchangedRetained!==100||changedKeepers!==5','Object.keys(snapshots).length!==7||JSON.stringify(counts)!==\'{"before":102,"transfer":102,"cut":101}\'||unrelated!==100||unchangedRetained!==100||changedKeepers!==1')
+  s=once(s,"ledger.filter(j=>j.classification==='F').length!==2","ledger.filter(j=>j.classification==='F').length!==4")
+  s=once(s,"rows.get(held.title)?.statement||'')!==held.sha256","rows.get(JSON.parse(held.title))?.callback||'')!==held.callbackSHA256")
+  s=s.replace("phase==='cut'?114:128","phase==='cut'?101:102")
+  a=s.index('function nativeRegistrationNames(');z=s.index('function replaceOnce(',a)
+  s=s[:a]+'''function nativeRegistrationNames(ts,file,text){
+  const sf=parse(ts,file,text),names=[];
+  function walk(n){if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test'){
+    const title=n.arguments[0];if(!ts.isStringLiteralLike(title))fail('Dynamic title rejected');
+    for(let p=n.parent;p;p=p.parent)if(ts.isForOfStatement(p)||ts.isForStatement(p)||ts.isForInStatement(p)||ts.isFunctionLike(p))fail('Dynamic or nested registration rejected');
+    names.push(title.text);
+  }if(ts.isCallExpression(n)&&n.expression.getText(sf)==='t.test')fail('Nested test rejected');ts.forEachChild(n,walk)}walk(sf);return names
+}
+'''+s[z:]
+ if n=='operator-edit.cjs':s=once(s,'parsedPhaseFiles:63,sourceControlsParsed:18','parsedPhaseFiles:21,sourceControlsParsed:13')
+ if n=='operator-run-controls.cjs':s=once(s,'tsMutantsParsed:16,sqlByteRecipes:2,allControlsPrepared:prepared.size===18','tsMutantsParsed:13,sqlByteRecipes:0,allControlsPrepared:prepared.size===13').replace('ALL21 test','ALL7 test').replace('receipts.length===18','receipts.length===13')
+ if n=='operator-proof.cjs':
+  for a,b in [('complete.verified!==18','complete.verified!==13'),('complete.cleanRuns!==36','complete.cleanRuns!==26'),('Required18','Required13'),('length!==21','length!==7'),('records.length!==18','records.length!==13'),('Eighteen records required','Thirteen records required'),('verified:18,logFiles:54','verified:13,logFiles:39')]:s=once(s,a,b)
+ if n=='proof-attestation.cjs':s=once(s,'controls:18','controls:13')
+ if n=='operator-native-proof.cjs':s=once(s,"n=phase==='cut'?114:128","n=phase==='cut'?101:102")
+ put(n,s);provenance.append({'file':n,'template':str(T/n),'templateSHA256':sha((T/n).read_bytes()),'preparedTemplateSHA256':sha(s.encode())})
+put('template-provenance.json',json.dumps({'templatePins':PIN,'strictProofPolicy':'Scanner119 decoded FULL diagnostic and FIRST outer assertion frame prefix unchanged','files':provenance},indent=2)+'\n')
+put('template-delta.patch',''.join(''.join(difflib.unified_diff((D/'template-originals'/x['file']).read_text().splitlines(True),(D/x['file']).read_text().splitlines(True),fromfile=x['template'],tofile=str(D/x['file']))) for x in provenance))
+print(D)

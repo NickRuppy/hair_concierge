@@ -1,0 +1,31 @@
+[
+  {
+    "id": "C1",
+    "mark": "C",
+    "file": "tests/freemium-sheet-checkout-contract.test.ts",
+    "donor": {
+      "name": "the submitted catalog is standard for the sheet in BOTH launch-pricing states",
+      "body": "test(\"the submitted catalog is standard for the sheet in BOTH launch-pricing states\", () => {\n  for (const launchPricingEnabled of [false, true]) {\n    assert.equal(\n      resolveCheckoutPricingCatalog({ source: \"premium_sheet\", launchPricingEnabled }),\n      \"standard\",\n      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,\n    )\n  }\n})",
+      "sha256": "9e1cbb3882137f8627064ab79b1ab1a97c520db48f8922c8db6824e506cc8dbf"
+    },
+    "keeper": {
+      "file": "tests/freemium-sheet-checkout-contract.test.ts",
+      "name": "the submitted price id equals the price the sheet rendered, both flag states",
+      "body": "test(\"the submitted price id equals the price the sheet rendered, both flag states\", () => {\n  for (const launchPricingEnabled of [false, true]) {\n    const catalog = resolveCheckoutPricingCatalog({\n      source: \"premium_sheet\",\n      launchPricingEnabled,\n    })\n    for (const row of premiumSheetPlans()) {\n      const plan = getStripePricingPlan(row.interval, catalog)\n      assert.equal(\n        plan.amount,\n        row.amount,\n        `${row.interval}: rendered ${row.amount} but would charge ${plan.amount}`,\n      )\n      assert.equal(plan.analyticsId, row.analyticsId)\n      // The env may not configure every price id locally; when it does, it must be the\n      // standard-catalog one, never the launch one.\n      const standardPriceId = getStripePriceId(row.interval, \"standard\")\n      const submittedPriceId = getStripePriceId(row.interval, catalog)\n      assert.equal(submittedPriceId, standardPriceId)\n    }\n  }\n})",
+      "sha256": "5b8defc8fc503d32f305f7d2858c64aa5d7da18fb4c9357f4154abe67d3dfdc6",
+      "after": "test(\"the submitted price id equals the price the sheet rendered, both flag states\", () => {\n  for (const launchPricingEnabled of [false, true]) {\n    const catalog = resolveCheckoutPricingCatalog({\n      source: \"premium_sheet\",\n      launchPricingEnabled,\n    })\n    assert.equal(\n      catalog,\n      \"standard\",\n      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,\n    )\n    for (const row of premiumSheetPlans()) {\n      const plan = getStripePricingPlan(row.interval, catalog)\n      assert.equal(\n        plan.amount,\n        row.amount,\n        `${row.interval}: rendered ${row.amount} but would charge ${plan.amount}`,\n      )\n      assert.equal(plan.analyticsId, row.analyticsId)\n      // The env may not configure every price id locally; when it does, it must be the\n      // standard-catalog one, never the launch one.\n      const standardPriceId = getStripePriceId(row.interval, \"standard\")\n      const submittedPriceId = getStripePriceId(row.interval, catalog)\n      assert.equal(submittedPriceId, standardPriceId)\n    }\n  }\n})",
+      "addedAssertions": [
+        "assert.equal(\n      catalog,\n      \"standard\",\n      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,\n    )"
+      ]
+    },
+    "assertionUnion": [
+      {
+        "donorText": "assert.equal(\n      resolveCheckoutPricingCatalog({ source: \"premium_sheet\", launchPricingEnabled }),\n      \"standard\",\n      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,\n    )",
+        "keeperIndex": 0,
+        "keeperText": "assert.equal(\n      catalog,\n      \"standard\",\n      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,\n    )",
+        "basis": "Only replace the identical existing owner call expression by already-captured catalog; preserve expected literal and diagnostic template verbatim."
+      }
+    ],
+    "equivalence": "Both callbacks loop literal [false,true] and call resolveCheckoutPricingCatalog({source:\"premium_sheet\",launchPricingEnabled}) exactly once per row. Pure owner reads only those fields and standard literal/flag resolver. Keeper uses same result for subsequent price comparisons; transfer occurs before any row helper or price-ID lookup. No fixture, flag environment, owner call, case, loop row, skip or expectation change."
+  }
+]

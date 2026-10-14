@@ -23,6 +23,7 @@ async function completeRefinement(page: Page) {
   await expect(page.getByRole("heading", { name: "Welche Produkte nutzt du?" })).toBeVisible()
   await chooseAndContinue(page, "Shampoo")
   await chooseAndContinue(page, "2×/Woche")
+  await chooseAndContinue(page, "Ist mir egal")
   await chooseAndContinue(page, "Leicht empfindlich oder juckend")
   await chooseAndContinue(page, "Nein, lieber nicht")
   await chooseAndContinue(page, "Kein Handtuch oder Tuch")

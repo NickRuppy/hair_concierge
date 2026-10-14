@@ -1,0 +1,388 @@
+[
+  {
+    "id": "C1",
+    "donor": {
+      "file": "tests/partner-access-journey.test.ts",
+      "name": "a signed-out visitor gets an ordinary journey with zero lookups",
+      "line": 80,
+      "start": 2532,
+      "end": 2911,
+      "body": "test(\"a signed-out visitor gets an ordinary journey with zero lookups\", async () => {\n  const resolution = await resolvePartnerJourney(\n    dependencies({\n      getUser: async () => null,\n      loadInvitation: async () => {\n        throw new Error(\"must not look up an invitation without a signed-in user\")\n      },\n    }),\n  )\n  assert.deepEqual(resolution, { kind: \"none\" })\n})",
+      "sha256": "f88a83eeb97f55d029f7608f90212bcdfca3e1f3ec5d9c4c1bd8d6a9de00ee47"
+    },
+    "keepers": [
+      {
+        "file": "tests/partner-access-journey.test.ts",
+        "name": "no auth session is an ordinary signed-out visit, not an outage",
+        "line": 204,
+        "start": 6948,
+        "end": 7363,
+        "body": "test(\"no auth session is an ordinary signed-out visit, not an outage\", async () => {\n  const resolution = await resolvePartnerJourney({\n    getUser: () => defaultGetUser(fakeAuthClient({ user: null, error: authSessionMissingError() })),\n    loadInvitation: async () => {\n      throw new Error(\"must not look up an invitation without a signed-in user\")\n    },\n  })\n  assert.deepEqual(resolution, { kind: \"none\" })\n})",
+        "sha256": "429d704a7f356bd2641cdcfa410cbad3d7f4a451cf0c55cc4558b196d000473f"
+      }
+    ],
+    "keeperAfter": [
+      {
+        "file": "tests/partner-access-journey.test.ts",
+        "name": "no auth session is an ordinary signed-out visit, not an outage",
+        "start": 6948,
+        "end": 7363,
+        "line": 204,
+        "body": "test(\"no auth session is an ordinary signed-out visit, not an outage\", async () => {\n  const resolution = await resolvePartnerJourney({\n    getUser: () => defaultGetUser(fakeAuthClient({ user: null, error: authSessionMissingError() })),\n    loadInvitation: async () => {\n      throw new Error(\"must not look up an invitation without a signed-in user\")\n    },\n  })\n  assert.deepEqual(resolution, { kind: \"none\" })\n})",
+        "sha256": "429d704a7f356bd2641cdcfa410cbad3d7f4a451cf0c55cc4558b196d000473f"
+      }
+    ],
+    "actualFailure": "Resolver no-user shortcut; unwanted lookup fails none because thrown collaborator maps unavailable.",
+    "operativeInputEquivalence": "Supabase no-session returns user:null plus AuthSessionMissingError; defaultGetUser normalizes to exactly donor null. Same resolvePartnerJourney call/zero reachable invitation read.",
+    "transfer": "None; keeper already asserts exact none.",
+    "history": "5a3e33f1 added no-cookie account-based resolution and real default auth regressions after generic resolver coverage.",
+    "sourceSupportCleanup": "Keep defaultGetUser injection/export: retained actual auth error/metadata tests need it.",
+    "nonTestCallers": [
+      "GET /api/partner-access/quiz-context and POST /api/quiz/lead -> resolvePartnerJourney"
+    ],
+    "risk": "Conditional until main native before/transfer/after and intended actual-owner mutations are verified; no browser/SQL/mounted-hook equivalence claim beyond explicit readsets.",
+    "focusedCommand": "node --import ./tests/server-only-register.cjs --import tsx --test tests/partner-access-journey.test.ts",
+    "readsetManifest": "manifest.json",
+    "strongerKeeperUnion": "keepers and keeperAfter carry full exact original/transfer bodies; controls.json pins actual owner fault bytes."
+  },
+  {
+    "id": "C2",
+    "donor": {
+      "file": "tests/partner-access-journey.test.ts",
+      "name": "a claimed, unrevoked invitation authorizes the partner journey from the user alone",
+      "line": 101,
+      "start": 3178,
+      "end": 3611,
+      "body": "test(\"a claimed, unrevoked invitation authorizes the partner journey from the user alone\", async () => {\n  const resolution = await resolvePartnerJourney(dependencies())\n  assert.deepEqual(resolution, {\n    kind: \"authorized\",\n    invitationId: invitationRow.id,\n    userId: \"creator-user\",\n    name: invitationRow.display_name,\n    email: invitationRow.normalized_email,\n    funnelSessionId: invitationRow.funnel_session_id,\n  })\n})",
+      "sha256": "773aea78b779b286d0238c8287e4b22f6fa7fb892db13f374c3b12be85d89669"
+    },
+    "keepers": [
+      {
+        "file": "tests/partner-access-journey.test.ts",
+        "name": "the default getUser path carries app_metadata through to the hint check",
+        "line": 227,
+        "start": 7846,
+        "end": 8272,
+        "body": "test(\"the default getUser path carries app_metadata through to the hint check\", async () => {\n  const resolution = await resolvePartnerJourney({\n    getUser: () =>\n      defaultGetUser(\n        fakeAuthClient({\n          user: { id: \"creator-user\", app_metadata: partnerMetadata },\n          error: null,\n        }),\n      ),\n    loadInvitation: async () => invitationRow,\n  })\n  assert.equal(resolution.kind, \"authorized\")\n})",
+        "sha256": "d3586051bb65b526586de054268f29ebe3ae553d22ffc412038d19f06e881f6a"
+      }
+    ],
+    "keeperAfter": [
+      {
+        "file": "tests/partner-access-journey.test.ts",
+        "name": "the default getUser path carries app_metadata through to the hint check",
+        "start": 7846,
+        "end": 8487,
+        "line": 227,
+        "body": "test(\"the default getUser path carries app_metadata through to the hint check\", async () => {\n  const resolution = await resolvePartnerJourney({\n    getUser: () =>\n      defaultGetUser(\n        fakeAuthClient({\n          user: { id: \"creator-user\", app_metadata: partnerMetadata },\n          error: null,\n        }),\n      ),\n    loadInvitation: async () => invitationRow,\n  })\n  assert.deepEqual(resolution, {\n    kind: \"authorized\",\n    invitationId: invitationRow.id,\n    userId: \"creator-user\",\n    name: invitationRow.display_name,\n    email: invitationRow.normalized_email,\n    funnelSessionId: invitationRow.funnel_session_id,\n  })\n})",
+        "sha256": "233e69eaff47cdc11c397e50179e153da0b287ef5093568b3d038214e6fd7ade"
+      }
+    ],
+    "actualFailure": "Corrupt any authorized invitation/user/name/email/funnel field.",
+    "operativeInputEquivalence": "Same user id creator-user, same partnerMetadata and identical invitationRow object; real default adapter emits those values then resolver executes same hint/read/projection.",
+    "transfer": "Replace existing kind-only equality with donor full deepEqual. No additional lookup or resolver call.",
+    "history": "5a3e33f1 introduced user-only resolution and auth app_metadata pass-through; generic fixture predates stronger adapter keeper.",
+    "sourceSupportCleanup": "No cleanup: fakeAuthClient remains canonical adapter support.",
+    "nonTestCallers": [
+      "GET /api/partner-access/quiz-context and POST /api/quiz/lead -> resolvePartnerJourney"
+    ],
+    "risk": "Conditional until main native before/transfer/after and intended actual-owner mutations are verified; no browser/SQL/mounted-hook equivalence claim beyond explicit readsets.",
+    "focusedCommand": "node --import ./tests/server-only-register.cjs --import tsx --test tests/partner-access-journey.test.ts",
+    "readsetManifest": "manifest.json",
+    "strongerKeeperUnion": "keepers and keeperAfter carry full exact original/transfer bodies; controls.json pins actual owner fault bytes."
+  },
+  {
+    "id": "C3",
+    "donor": {
+      "file": "tests/partner-access-journey.test.ts",
+      "name": "an auth-service error on getUser() is unavailable, not none",
+      "line": 166,
+      "start": 5749,
+      "end": 6178,
+      "body": "test(\"an auth-service error on getUser() is unavailable, not none\", async () => {\n  const resolution = await resolvePartnerJourney(\n    dependencies({\n      getUser: async () => {\n        throw new Error(\"auth service blip\")\n      },\n      loadInvitation: async () => {\n        throw new Error(\"must not look up an invitation when getUser() failed\")\n      },\n    }),\n  )\n  assert.deepEqual(resolution, { kind: \"unavailable\" })\n})",
+      "sha256": "9e8105db0a5168b540e45c3e92ef6c5e51279f6aa9a0a555441f08332749ae12"
+    },
+    "keepers": [
+      {
+        "file": "tests/partner-access-journey.test.ts",
+        "name": "a real auth failure on the default getUser path is unavailable, not none",
+        "line": 214,
+        "start": 7365,
+        "end": 7844,
+        "body": "test(\"a real auth failure on the default getUser path is unavailable, not none\", async () => {\n  const resolution = await resolvePartnerJourney({\n    getUser: () =>\n      defaultGetUser(\n        fakeAuthClient({ user: null, error: { name: \"AuthRetryableFetchError\", message: \"down\" } }),\n      ),\n    loadInvitation: async () => {\n      throw new Error(\"must not look up an invitation when getUser() failed\")\n    },\n  })\n  assert.deepEqual(resolution, { kind: \"unavailable\" })\n})",
+        "sha256": "84728842234aa4dc16bc8798e9c23d9be4ba4712f2754b1d9dd7ca8df2f60d73"
+      }
+    ],
+    "keeperAfter": [
+      {
+        "file": "tests/partner-access-journey.test.ts",
+        "name": "a real auth failure on the default getUser path is unavailable, not none",
+        "start": 7365,
+        "end": 7844,
+        "line": 214,
+        "body": "test(\"a real auth failure on the default getUser path is unavailable, not none\", async () => {\n  const resolution = await resolvePartnerJourney({\n    getUser: () =>\n      defaultGetUser(\n        fakeAuthClient({ user: null, error: { name: \"AuthRetryableFetchError\", message: \"down\" } }),\n      ),\n    loadInvitation: async () => {\n      throw new Error(\"must not look up an invitation when getUser() failed\")\n    },\n  })\n  assert.deepEqual(resolution, { kind: \"unavailable\" })\n})",
+        "sha256": "84728842234aa4dc16bc8798e9c23d9be4ba4712f2754b1d9dd7ca8df2f60d73"
+      }
+    ],
+    "actualFailure": "Map auth rejection to none instead of unavailable.",
+    "operativeInputEquivalence": "Generic Error message and actual AuthRetryableFetchError object are not read in resolver catch, only logged; default adapter throws actual error. Same unavailable object/forbidden lookup stub.",
+    "transfer": "None. Exact unavailable already present. Donor throw does not independently count downstream reads; do not claim that proof.",
+    "history": "5a3e33f1 added separate real missing-session/outage normalization regression.",
+    "sourceSupportCleanup": "No export removal.",
+    "nonTestCallers": [
+      "GET /api/partner-access/quiz-context and POST /api/quiz/lead -> resolvePartnerJourney"
+    ],
+    "risk": "Conditional until main native before/transfer/after and intended actual-owner mutations are verified; no browser/SQL/mounted-hook equivalence claim beyond explicit readsets.",
+    "focusedCommand": "node --import ./tests/server-only-register.cjs --import tsx --test tests/partner-access-journey.test.ts",
+    "readsetManifest": "manifest.json",
+    "strongerKeeperUnion": "keepers and keeperAfter carry full exact original/transfer bodies; controls.json pins actual owner fault bytes."
+  },
+  {
+    "id": "C4",
+    "donor": {
+      "file": "tests/partner-access-journey.test.ts",
+      "name": "only a stamped account can be made unavailable by an invitation read error",
+      "line": 256,
+      "start": 8735,
+      "end": 9352,
+      "body": "test(\"only a stamped account can be made unavailable by an invitation read error\", async () => {\n  const unstamped = await resolvePartnerJourney(\n    dependencies({\n      getUser: async () => ({ id: \"ordinary-user\", app_metadata: {} }),\n      loadInvitation: async () => {\n        throw new Error(\"database unavailable\")\n      },\n    }),\n  )\n  assert.deepEqual(unstamped, { kind: \"none\" })\n\n  const stamped = await resolvePartnerJourney(\n    dependencies({\n      loadInvitation: async () => {\n        throw new Error(\"database unavailable\")\n      },\n    }),\n  )\n  assert.deepEqual(stamped, { kind: \"unavailable\" })\n})",
+      "sha256": "567813de4e47889ad5e98dfb5bb2020eb01879b82ccc5024f46afd61b6fab3ec"
+    },
+    "keepers": [
+      {
+        "file": "tests/partner-access-journey.test.ts",
+        "name": "a signed-in user without the claim stamp never reads the invitation table",
+        "line": 241,
+        "start": 8274,
+        "end": 8733,
+        "body": "test(\"a signed-in user without the claim stamp never reads the invitation table\", async () => {\n  let lookups = 0\n  const resolution = await resolvePartnerJourney(\n    dependencies({\n      getUser: async () => ({ id: \"ordinary-user\", app_metadata: { provider: \"email\" } }),\n      loadInvitation: async () => {\n        lookups += 1\n        return invitationRow\n      },\n    }),\n  )\n  assert.deepEqual(resolution, { kind: \"none\" })\n  assert.equal(lookups, 0)\n})",
+        "sha256": "0c8f269a1abe98e695071248668b95379e59895587e70d3654e6eb2c5056c4c7"
+      },
+      {
+        "file": "tests/partner-access-journey.test.ts",
+        "name": "a read error is unavailable, not none or a thrown exception",
+        "line": 155,
+        "start": 5433,
+        "end": 5747,
+        "body": "test(\"a read error is unavailable, not none or a thrown exception\", async () => {\n  const resolution = await resolvePartnerJourney(\n    dependencies({\n      loadInvitation: async () => {\n        throw new Error(\"database unavailable\")\n      },\n    }),\n  )\n  assert.deepEqual(resolution, { kind: \"unavailable\" })\n})",
+        "sha256": "f79aab5fa2fc1002cc0764cfe057a45bac68c706aa510f69da081ba8c054d9a4"
+      }
+    ],
+    "keeperAfter": [
+      {
+        "file": "tests/partner-access-journey.test.ts",
+        "name": "a signed-in user without the claim stamp never reads the invitation table",
+        "start": 8489,
+        "end": 8948,
+        "line": 248,
+        "body": "test(\"a signed-in user without the claim stamp never reads the invitation table\", async () => {\n  let lookups = 0\n  const resolution = await resolvePartnerJourney(\n    dependencies({\n      getUser: async () => ({ id: \"ordinary-user\", app_metadata: { provider: \"email\" } }),\n      loadInvitation: async () => {\n        lookups += 1\n        return invitationRow\n      },\n    }),\n  )\n  assert.deepEqual(resolution, { kind: \"none\" })\n  assert.equal(lookups, 0)\n})",
+        "sha256": "0c8f269a1abe98e695071248668b95379e59895587e70d3654e6eb2c5056c4c7"
+      },
+      {
+        "file": "tests/partner-access-journey.test.ts",
+        "name": "a read error is unavailable, not none or a thrown exception",
+        "start": 5433,
+        "end": 5747,
+        "line": 155,
+        "body": "test(\"a read error is unavailable, not none or a thrown exception\", async () => {\n  const resolution = await resolvePartnerJourney(\n    dependencies({\n      loadInvitation: async () => {\n        throw new Error(\"database unavailable\")\n      },\n    }),\n  )\n  assert.deepEqual(resolution, { kind: \"unavailable\" })\n})",
+        "sha256": "f79aab5fa2fc1002cc0764cfe057a45bac68c706aa510f69da081ba8c054d9a4"
+      }
+    ],
+    "actualFailure": "Unstamped user invokes invitation lookup / stamped read error becomes none.",
+    "operativeInputEquivalence": "Both metadata objects are objects missing only relevant partner_access_invitation_id; provider is unused. Retained unstamped valid-return counter is stronger than throwing collaborator. Stamped donor dependency factory exactly equals retained read-error callback.",
+    "transfer": "None: two existing keeper calls already own both assertions. Entire two-call donor removed; no regrouping or appended case.",
+    "history": "5a3e33f1 added blast-radius gate for ordinary quiz submissions and overlapping zero-read proof.",
+    "sourceSupportCleanup": "Keep metadata predicate live in client and server.",
+    "nonTestCallers": [
+      "GET /api/partner-access/quiz-context and POST /api/quiz/lead -> resolvePartnerJourney"
+    ],
+    "risk": "Conditional until main native before/transfer/after and intended actual-owner mutations are verified; no browser/SQL/mounted-hook equivalence claim beyond explicit readsets.",
+    "focusedCommand": "node --import ./tests/server-only-register.cjs --import tsx --test tests/partner-access-journey.test.ts",
+    "readsetManifest": "manifest.json",
+    "strongerKeeperUnion": "keepers and keeperAfter carry full exact original/transfer bodies; controls.json pins actual owner fault bytes."
+  },
+  {
+    "id": "C5",
+    "donor": {
+      "file": "tests/partner-access-claim-route.test.ts",
+      "name": "a lapsed account claims with a fresh start",
+      "line": 224,
+      "start": 8465,
+      "end": 9066,
+      "body": "test(\"a lapsed account claims with a fresh start\", async () => {\n  const { calls, deps } = dependencies({\n    getUser: async () => ({ id: ids.user, email: \"lea@example.test\" }),\n    hasCurrentPaidAppAccess: async () => false,\n  })\n  const response = await createPartnerAccessClaimHandler(deps)(request())\n  assert.equal(response.status, 200)\n  assert.equal(\n    (calls.find(([name]) => name === \"complete\")?.[1] as { freshStart: boolean }).freshStart,\n    true,\n  )\n  assert.deepEqual(await response.json(), {\n    destination: \"/quiz?partner=1\",\n    requiresEmail: false,\n    freshStart: true,\n  })\n})",
+      "sha256": "bb961aadcafe2ddbdf69e11dcdcd96e5d74687bf682ee444445f7876a6c2ebd3"
+    },
+    "keepers": [
+      {
+        "file": "tests/partner-access-claim-route.test.ts",
+        "name": "authenticated continuation completes only the invitation email account",
+        "line": 177,
+        "start": 6769,
+        "end": 7846,
+        "body": "test(\"authenticated continuation completes only the invitation email account\", async () => {\n  const { calls, deps } = dependencies({\n    getUser: async () => ({ id: ids.user, email: \"lea@example.test\" }),\n  })\n  const response = await createPartnerAccessClaimHandler(deps)(request())\n  assert.equal(response.status, 200)\n  assert.deepEqual(\n    calls.map(([name]) => name),\n    [\"reserve\", \"ensureUserMetadata\", \"createFunnel\", \"complete\"],\n  )\n  // Default mock has no current paid access, so a lapsed/never-paying account gets a fresh start.\n  assert.equal(\n    (calls.find(([name]) => name === \"complete\")?.[1] as { freshStart: boolean }).freshStart,\n    true,\n  )\n  assert.deepEqual(await response.json(), {\n    destination: \"/quiz?partner=1\",\n    requiresEmail: false,\n    freshStart: true,\n  })\n\n  const mismatch = dependencies({\n    getUser: async () => ({ id: ids.user, email: \"other@example.test\" }),\n  })\n  const rejected = await createPartnerAccessClaimHandler(mismatch.deps)(request())\n  assert.equal(rejected.status, 403)\n  assert.deepEqual(mismatch.calls, [])\n})",
+        "sha256": "f9cec9c125c3749cccf505ebb276238cf5db765f5802b86b3618b8a542f54415"
+      }
+    ],
+    "keeperAfter": [
+      {
+        "file": "tests/partner-access-claim-route.test.ts",
+        "name": "authenticated continuation completes only the invitation email account",
+        "start": 7162,
+        "end": 8239,
+        "line": 187,
+        "body": "test(\"authenticated continuation completes only the invitation email account\", async () => {\n  const { calls, deps } = dependencies({\n    getUser: async () => ({ id: ids.user, email: \"lea@example.test\" }),\n  })\n  const response = await createPartnerAccessClaimHandler(deps)(request())\n  assert.equal(response.status, 200)\n  assert.deepEqual(\n    calls.map(([name]) => name),\n    [\"reserve\", \"ensureUserMetadata\", \"createFunnel\", \"complete\"],\n  )\n  // Default mock has no current paid access, so a lapsed/never-paying account gets a fresh start.\n  assert.equal(\n    (calls.find(([name]) => name === \"complete\")?.[1] as { freshStart: boolean }).freshStart,\n    true,\n  )\n  assert.deepEqual(await response.json(), {\n    destination: \"/quiz?partner=1\",\n    requiresEmail: false,\n    freshStart: true,\n  })\n\n  const mismatch = dependencies({\n    getUser: async () => ({ id: ids.user, email: \"other@example.test\" }),\n  })\n  const rejected = await createPartnerAccessClaimHandler(mismatch.deps)(request())\n  assert.equal(rejected.status, 403)\n  assert.deepEqual(mismatch.calls, [])\n})",
+        "sha256": "f9cec9c125c3749cccf505ebb276238cf5db765f5802b86b3618b8a542f54415"
+      }
+    ],
+    "actualFailure": "Unpaid authenticated user forwards false reset decision or wrong response.",
+    "operativeInputEquivalence": "Donor explicitly overrides hasCurrentPaidAppAccess to async false; factory default used by keeper is literally async false. Same request,user,email,invitation,no password,completion echo.",
+    "transfer": "None: keeper already has exact status200, full body and complete.freshStart true plus order and mismatch negative.",
+    "history": "5a3e33f1 paid-account exception P1 added; distinct paid=true and failure cases stay.",
+    "sourceSupportCleanup": "No cleanup; factory still used.",
+    "nonTestCallers": [
+      "POST /api/partner-access/claim -> live invitation client and partner continuation"
+    ],
+    "risk": "Conditional until main native before/transfer/after and intended actual-owner mutations are verified; no browser/SQL/mounted-hook equivalence claim beyond explicit readsets.",
+    "focusedCommand": "node --import ./tests/server-only-register.cjs --import tsx --test tests/partner-access-claim-route.test.ts",
+    "readsetManifest": "manifest.json",
+    "strongerKeeperUnion": "keepers and keeperAfter carry full exact original/transfer bodies; controls.json pins actual owner fault bytes."
+  },
+  {
+    "id": "C6",
+    "donor": {
+      "file": "tests/partner-access-claim-route.test.ts",
+      "name": "a new account always claims with a fresh start, without consulting billing",
+      "line": 242,
+      "start": 9068,
+      "end": 9569,
+      "body": "test(\"a new account always claims with a fresh start, without consulting billing\", async () => {\n  const { calls, deps } = dependencies({\n    hasCurrentPaidAppAccess: async () => {\n      throw new Error(\"must not be called for a just-created account\")\n    },\n  })\n  const response = await createPartnerAccessClaimHandler(deps)(request())\n  assert.equal(response.status, 200)\n  assert.equal(\n    (calls.find(([name]) => name === \"complete\")?.[1] as { freshStart: boolean }).freshStart,\n    true,\n  )\n})",
+      "sha256": "c982b02333d1359b363e98e44db39932d5e6b73c201ce860cdef698984b369c5"
+    },
+    "keepers": [
+      {
+        "file": "tests/partner-access-claim-route.test.ts",
+        "name": "new creator claim creates and signs into the exact named account without an email roundtrip",
+        "line": 74,
+        "start": 2718,
+        "end": 3753,
+        "body": "test(\"new creator claim creates and signs into the exact named account without an email roundtrip\", async () => {\n  const { calls, deps } = dependencies()\n  const response = await createPartnerAccessClaimHandler(deps)(request())\n\n  assert.equal(response.status, 200)\n  assert.deepEqual(await response.json(), {\n    destination: \"/quiz?partner=1\",\n    requiresEmail: false,\n    freshStart: true,\n  })\n  assert.deepEqual(\n    calls.map(([name]) => name),\n    [\"reserve\", \"createUser\", \"createFunnel\", \"complete\", \"signIn\"],\n  )\n  const createInput = calls.find(([name]) => name === \"createUser\")?.[1] as Record<string, unknown>\n  assert.equal(createInput.email, \"lea@example.test\")\n  assert.equal(createInput.name, \"Lea\")\n  assert.equal(\n    (calls.find(([name]) => name === \"complete\")?.[1] as { freshStart: boolean }).freshStart,\n    true,\n  )\n  assert.equal(response.headers.get(\"set-cookie\")?.includes(\"hidden-random-password\"), false)\n  assert.equal(response.cookies.get(\"chaarlie_funnel_session\")?.value, \"signed-funnel-cookie\")\n})",
+        "sha256": "2525162d1959078a1f99d00273585d2ba7a31a1bc6db80c33f5e2f74b7263612"
+      }
+    ],
+    "keeperAfter": [
+      {
+        "file": "tests/partner-access-claim-route.test.ts",
+        "name": "new creator claim creates and signs into the exact named account without an email roundtrip",
+        "start": 2718,
+        "end": 3879,
+        "line": 74,
+        "body": "test(\"new creator claim creates and signs into the exact named account without an email roundtrip\", async () => {\n  const { calls, deps } = dependencies({\n    hasCurrentPaidAppAccess: async () => {\n      throw new Error(\"must not be called for a just-created account\")\n    },\n  })\n  const response = await createPartnerAccessClaimHandler(deps)(request())\n\n  assert.equal(response.status, 200)\n  assert.deepEqual(await response.json(), {\n    destination: \"/quiz?partner=1\",\n    requiresEmail: false,\n    freshStart: true,\n  })\n  assert.deepEqual(\n    calls.map(([name]) => name),\n    [\"reserve\", \"createUser\", \"createFunnel\", \"complete\", \"signIn\"],\n  )\n  const createInput = calls.find(([name]) => name === \"createUser\")?.[1] as Record<string, unknown>\n  assert.equal(createInput.email, \"lea@example.test\")\n  assert.equal(createInput.name, \"Lea\")\n  assert.equal(\n    (calls.find(([name]) => name === \"complete\")?.[1] as { freshStart: boolean }).freshStart,\n    true,\n  )\n  assert.equal(response.headers.get(\"set-cookie\")?.includes(\"hidden-random-password\"), false)\n  assert.equal(response.cookies.get(\"chaarlie_funnel_session\")?.value, \"signed-funnel-cookie\")\n})",
+        "sha256": "73d5b5cdb339ce21554d4cdf2409201f45c4d863bca6d17434cfbb967ec24bcd"
+      }
+    ],
+    "actualFailure": "New account consults billing before recording fresh start.",
+    "operativeInputEquivalence": "Both request/createUser/password and completion paths identical. Only dependency difference is unreachable billing throw versus default false. Transfer exact forbidden collaborator into existing keeper; all donor assertions already there.",
+    "transfer": "Replace dependencies() in new-creator keeper with exact donor hasCurrentPaidAppAccess throwing override. No new owning call/input.",
+    "history": "5a3e33f1 explicitly exempts newly created account from paid lookup to guarantee fresh start.",
+    "sourceSupportCleanup": "No cleanup or changes to default production billing.",
+    "nonTestCallers": [
+      "POST /api/partner-access/claim -> live invitation client and partner continuation"
+    ],
+    "risk": "Conditional until main native before/transfer/after and intended actual-owner mutations are verified; no browser/SQL/mounted-hook equivalence claim beyond explicit readsets.",
+    "focusedCommand": "node --import ./tests/server-only-register.cjs --import tsx --test tests/partner-access-claim-route.test.ts",
+    "readsetManifest": "manifest.json",
+    "strongerKeeperUnion": "keepers and keeperAfter carry full exact original/transfer bodies; controls.json pins actual owner fault bytes."
+  },
+  {
+    "id": "C7",
+    "donor": {
+      "file": "tests/partner-access-ui.test.tsx",
+      "name": "creator invitation keeps the approved concise identity and account-creation copy",
+      "line": 9,
+      "start": 344,
+      "end": 1048,
+      "body": "test(\"creator invitation keeps the approved concise identity and account-creation copy\", () => {\n  const html = renderToStaticMarkup(\n    <PartnerInvitationCard\n      email=\"lea@example.test\"\n      mode=\"ready\"\n      name=\"Lea\"\n      onChangeEmail={() => {}}\n      onContinue={() => {}}\n    />,\n  )\n  assert.match(html, /Hi Lea, dein Zugang ist bereit\\./)\n  assert.match(html, /lea@example\\.test/)\n  assert.match(html, /Nicht deine E-Mail\\? Ändern/)\n  assert.match(html, /Los geht’s/)\n  assert.match(\n    html,\n    /Damit erstellst du dein Chaarlie Konto mit dieser E-Mail\\. Hast du schon eins, startest du damit neu\\./,\n  )\n  assert.doesNotMatch(html, /Abo|Zahlung|lebenslang|Produkttest|kostenlos/i)\n})",
+      "sha256": "172760f5336cf09d6b71ef0b2864ad475e7a2dce65de756a9030f37bf088586b"
+    },
+    "keepers": [
+      {
+        "file": "tests/partner-access-ui.test.tsx",
+        "name": "creator invitation greets a full-name account by first name",
+        "line": 30,
+        "start": 1050,
+        "end": 1358,
+        "body": "test(\"creator invitation greets a full-name account by first name\", () => {\n  const html = renderToStaticMarkup(\n    <PartnerInvitationCard email=\"lea@example.test\" mode=\"ready\" name=\"Lea Sommer\" />,\n  )\n  assert.match(html, /Hi Lea, dein Zugang ist bereit\\./)\n  assert.doesNotMatch(html, /Hi Lea Sommer/)\n})",
+        "sha256": "6a2a6c9d1da20bb27881afdf319409711b945a5543b62e66fcfc140bc90c74e9"
+      }
+    ],
+    "keeperAfter": [
+      {
+        "file": "tests/partner-access-ui.test.tsx",
+        "name": "creator invitation greets a full-name account by first name",
+        "start": 1050,
+        "end": 1704,
+        "line": 30,
+        "body": "test(\"creator invitation greets a full-name account by first name\", () => {\n  const html = renderToStaticMarkup(\n    <PartnerInvitationCard email=\"lea@example.test\" mode=\"ready\" name=\"Lea Sommer\" />,\n  )\n  assert.match(html, /Hi Lea, dein Zugang ist bereit\\./)\n  assert.doesNotMatch(html, /Hi Lea Sommer/)\n  assert.match(html, /lea@example\\.test/)\n  assert.match(html, /Nicht deine E-Mail\\? Ändern/)\n  assert.match(html, /Los geht’s/)\n  assert.match(\n    html,\n    /Damit erstellst du dein Chaarlie Konto mit dieser E-Mail\\. Hast du schon eins, startest du damit neu\\./,\n  )\n  assert.doesNotMatch(html, /Abo|Zahlung|lebenslang|Produkttest|kostenlos/i)\n})",
+        "sha256": "8ce20fe35aa93b386323705299eb153cc132be1dd33f86d9ae994d3f0285b405"
+      }
+    ],
+    "actualFailure": "Ready card drops identity/edit/start/disclosure literals or emits forbidden commercial terminology.",
+    "operativeInputEquivalence": "Lea and Lea Sommer both yield firstName Lea; same mode=ready,email,confirmed=false,error=null. Callback props only assigned to DOM event handlers, never tested/invoked by SSR; renderer omits those props. Existing full-name negative adds independent truncation risk.",
+    "transfer": "Move email/edit/CTA/disclosure/negative commercial assertions into existing full-name render; reuse existing greeting assertion rather than duplicate it.",
+    "history": "97e7da78 invitation copy;5a3e33f1 revised reset disclosure. Native proof retained, no substitution of conditional browser cadence.",
+    "sourceSupportCleanup": "Card export is live in public client and gated lab; retain.",
+    "nonTestCallers": [
+      "GET /partner/einladung -> PartnerInvitationClient -> PartnerInvitationCard; gated /labs/partner-access also consumes Card"
+    ],
+    "risk": "Conditional until main native before/transfer/after and intended actual-owner mutations are verified; no browser/SQL/mounted-hook equivalence claim beyond explicit readsets.",
+    "focusedCommand": "node --import ./tests/server-only-register.cjs --import tsx --test tests/partner-access-ui.test.tsx",
+    "readsetManifest": "manifest.json",
+    "strongerKeeperUnion": "keepers and keeperAfter carry full exact original/transfer bodies; controls.json pins actual owner fault bytes."
+  },
+  {
+    "id": "C8",
+    "donor": {
+      "file": "tests/partner-access-claim-route.test.ts",
+      "name": "an existing unrelated account requires normal mailbox proof once",
+      "line": 99,
+      "start": 3755,
+      "end": 4329,
+      "body": "test(\"an existing unrelated account requires normal mailbox proof once\", async () => {\n  const { calls, deps } = dependencies({\n    createUser: async () => {\n      throw Object.assign(new Error(\"already registered\"), { code: \"email_exists\", status: 422 })\n    },\n  })\n  const response = await createPartnerAccessClaimHandler(deps)(request())\n\n  assert.equal(response.status, 202)\n  assert.deepEqual(await response.json(), { requiresEmail: true, email: \"lea@example.test\" })\n  assert.deepEqual(\n    calls.map(([name]) => name),\n    [\"reserve\", \"release\", \"magicLink\"],\n  )\n})",
+      "sha256": "7f8cc4db5a7d210b5499973a8cb36d0cddf683958bd191bdf297ba3c68d65b9f"
+    },
+    "keepers": [
+      {
+        "file": "tests/partner-access-claim-route.test.ts",
+        "name": "an existing-account email can resume the claim in a different browser",
+        "line": 115,
+        "start": 4331,
+        "end": 5700,
+        "body": "test(\"an existing-account email can resume the claim in a different browser\", async () => {\n  const first = dependencies({\n    createUser: async () => {\n      throw Object.assign(new Error(\"already registered\"), { code: \"email_exists\", status: 422 })\n    },\n  })\n  await createPartnerAccessClaimHandler(first.deps)(request())\n  const magicLink = first.calls.find(([name]) => name === \"magicLink\")?.[1] as {\n    redirectTo: string\n  }\n  const next = new URL(magicLink.redirectTo).searchParams.get(\"next\")\n  const handoff = new URL(next ?? \"\", \"https://chaarlie.de\").hash.slice(\"#handoff=\".length)\n  assert.ok(handoff)\n\n  const second = dependencies({\n    decodeIntent: (value: string | null | undefined) =>\n      value === handoff\n        ? { invitationId: ids.invitation, tokenVersion: 1, issuedAt: 1, expiresAt: 9_999 }\n        : null,\n    getUser: async () => ({ id: ids.user, email: \"lea@example.test\" }),\n  })\n  const crossDeviceRequest = new NextRequest(\"https://chaarlie.de/api/partner-access/claim\", {\n    method: \"POST\",\n    headers: { origin: \"https://chaarlie.de\", \"content-type\": \"application/json\" },\n    body: JSON.stringify({ handoff }),\n  })\n  const response = await createPartnerAccessClaimHandler(second.deps)(crossDeviceRequest)\n  assert.equal(response.status, 200)\n  assert.equal(response.cookies.get(PARTNER_ACCESS_INTENT_COOKIE)?.value, handoff)\n})",
+        "sha256": "60e265b8d0bce4938877d78ea8578f030c71889df529f8f7a85af4c063f792c1"
+      }
+    ],
+    "keeperAfter": [
+      {
+        "file": "tests/partner-access-claim-route.test.ts",
+        "name": "an existing-account email can resume the claim in a different browser",
+        "start": 4457,
+        "end": 6093,
+        "line": 119,
+        "body": "test(\"an existing-account email can resume the claim in a different browser\", async () => {\n  const first = dependencies({\n    createUser: async () => {\n      throw Object.assign(new Error(\"already registered\"), { code: \"email_exists\", status: 422 })\n    },\n  })\n  const firstResponse = await createPartnerAccessClaimHandler(first.deps)(request())\n  assert.equal(firstResponse.status, 202)\n  assert.deepEqual(await firstResponse.json(), { requiresEmail: true, email: \"lea@example.test\" })\n  assert.deepEqual(\n    first.calls.map(([name]) => name),\n    [\"reserve\", \"release\", \"magicLink\"],\n  )\n  const magicLink = first.calls.find(([name]) => name === \"magicLink\")?.[1] as {\n    redirectTo: string\n  }\n  const next = new URL(magicLink.redirectTo).searchParams.get(\"next\")\n  const handoff = new URL(next ?? \"\", \"https://chaarlie.de\").hash.slice(\"#handoff=\".length)\n  assert.ok(handoff)\n\n  const second = dependencies({\n    decodeIntent: (value: string | null | undefined) =>\n      value === handoff\n        ? { invitationId: ids.invitation, tokenVersion: 1, issuedAt: 1, expiresAt: 9_999 }\n        : null,\n    getUser: async () => ({ id: ids.user, email: \"lea@example.test\" }),\n  })\n  const crossDeviceRequest = new NextRequest(\"https://chaarlie.de/api/partner-access/claim\", {\n    method: \"POST\",\n    headers: { origin: \"https://chaarlie.de\", \"content-type\": \"application/json\" },\n    body: JSON.stringify({ handoff }),\n  })\n  const response = await createPartnerAccessClaimHandler(second.deps)(crossDeviceRequest)\n  assert.equal(response.status, 200)\n  assert.equal(response.cookies.get(PARTNER_ACCESS_INTENT_COOKIE)?.value, handoff)\n})",
+        "sha256": "85a3783d24efc21df62b435a29810662c4fa1dea25543de454636aa346d2b95f"
+      }
+    ],
+    "actualFailure": "Email-exists handoff emits wrong202/body or fails to release before sending.",
+    "operativeInputEquivalence": "Existing keeper first stage uses same dependencies override with code email_exists,status422 and exact request. Real owner creates signed handoff already. Second stage is retained untouched.",
+    "transfer": "Bind existing first handler result; append status202, exact JSON, reserve-release-magicLink observed array before existing handoff extraction. No second added POST.",
+    "history": "97e7da78 initial mailbox handoff and later cross-browser continuation; both callbacks currently exercise identical first-leg operation.",
+    "sourceSupportCleanup": "No helper retirement; actual createIntent producer remains live and token/intent contracts retained.",
+    "nonTestCallers": [
+      "POST /api/partner-access/claim -> live invitation client and partner continuation"
+    ],
+    "risk": "Conditional until main native before/transfer/after and intended actual-owner mutations are verified; no browser/SQL/mounted-hook equivalence claim beyond explicit readsets.",
+    "focusedCommand": "node --import ./tests/server-only-register.cjs --import tsx --test tests/partner-access-claim-route.test.ts",
+    "readsetManifest": "manifest.json",
+    "strongerKeeperUnion": "keepers and keeperAfter carry full exact original/transfer bodies; controls.json pins actual owner fault bytes."
+  }
+]

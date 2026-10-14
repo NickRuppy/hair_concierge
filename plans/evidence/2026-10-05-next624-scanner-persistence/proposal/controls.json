@@ -1,0 +1,184 @@
+[
+  {
+    "id": "M1-start-rejection",
+    "candidate": "C1",
+    "file": "src/lib/scan/resolve-event-log.ts",
+    "sourceSha256": "cde316a0d8ecf6b25463cf79bffb8fc2304cbcba24b411a719d51ac63b65ba4d",
+    "from": "export async function recordScanResolveAttempt(\n  client: SupabaseClient,\n  attempt: ScanResolveAttempt,\n  captureException: typeof captureScanException = captureScanException,\n): Promise<void> {\n  try {\n    const { error } = await client.from(\"scan_resolve_events\").insert({\n      id: attempt.attemptId,\n      user_id: attempt.userId,\n      identifier_type: attempt.identifierType,\n      raw_value: attempt.rawValue,\n      canonical_value: canonicalizeGtin(attempt.rawValue),\n      ...(attempt.createdAt ? { created_at: attempt.createdAt } : {}),\n    })\n    if (error) {\n      console.warn(\"scan_resolve_attempt_start_failed\", { message: error.message })\n      reportAttemptLogFailure(new Error(error.message), captureException)\n    }\n  } catch (cause) {\n    console.warn(\"scan_resolve_attempt_start_failed\", { cause })\n    reportAttemptLogFailure(cause, captureException)\n  }\n}",
+    "to": "export async function recordScanResolveAttempt(\n  client: SupabaseClient,\n  attempt: ScanResolveAttempt,\n  captureException: typeof captureScanException = captureScanException,\n): Promise<void> {\n  try {\n    const { error } = await client.from(\"scan_resolve_events\").insert({\n      id: attempt.attemptId,\n      user_id: attempt.userId,\n      identifier_type: attempt.identifierType,\n      raw_value: attempt.rawValue,\n      canonical_value: canonicalizeGtin(attempt.rawValue),\n      ...(attempt.createdAt ? { created_at: attempt.createdAt } : {}),\n    })\n    if (error) {\n      console.warn(\"scan_resolve_attempt_start_failed\", { message: error.message })\n      reportAttemptLogFailure(new Error(error.message), captureException)\n      throw new Error(error.message)\n    }\n  } catch (cause) {\n    console.warn(\"scan_resolve_attempt_start_failed\", { cause })\n    reportAttemptLogFailure(cause, captureException)\n    throw cause\n  }\n}",
+    "keeperFile": "tests/scan-resolve-route.test.ts",
+    "keeperName": "attempt telemetry: an attempt-log write failure reaches Sentry through the route's injected captureScanException",
+    "expected": {
+      "code": "ERR_ASSERTION",
+      "operator": "doesNotReject",
+      "phases": {
+        "transfer": {
+          "line": 1095,
+          "text": "await assert.doesNotReject("
+        },
+        "cut": {
+          "line": 1095,
+          "text": "await assert.doesNotReject("
+        }
+      }
+    },
+    "mode": "descriptor_only_not_executed",
+    "validation": "main serial exact-selected-one clean→intended assertion red→byte-exact restore→clean; SQL only local PGlite"
+  },
+  {
+    "id": "M2-start-warning-severity",
+    "candidate": "C2",
+    "file": "src/lib/scan/resolve-event-log.ts",
+    "sourceSha256": "cde316a0d8ecf6b25463cf79bffb8fc2304cbcba24b411a719d51ac63b65ba4d",
+    "from": "    level: \"warning\",",
+    "to": "    level: \"error\",",
+    "keeperFile": "tests/scan-resolve-route.test.ts",
+    "keeperName": "attempt telemetry: an attempt-log write failure reaches Sentry through the route's injected captureScanException",
+    "expected": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "phases": {
+        "transfer": {
+          "line": 1099,
+          "text": "assert.deepEqual(captured, ["
+        },
+        "cut": {
+          "line": 1099,
+          "text": "assert.deepEqual(captured, ["
+        }
+      }
+    },
+    "mode": "descriptor_only_not_executed",
+    "validation": "main serial exact-selected-one clean→intended assertion red→byte-exact restore→clean; SQL only local PGlite"
+  },
+  {
+    "id": "M3-completion-rejection",
+    "candidate": "C3",
+    "file": "src/lib/scan/resolve-event-log.ts",
+    "sourceSha256": "cde316a0d8ecf6b25463cf79bffb8fc2304cbcba24b411a719d51ac63b65ba4d",
+    "from": "export async function completeScanResolveAttempt(\n  client: SupabaseClient,\n  completion: ScanResolveAttemptCompletion,\n  captureException: typeof captureScanException = captureScanException,\n): Promise<void> {\n  try {\n    const { error } = await client\n      .from(\"scan_resolve_events\")\n      .update({\n        lookup_outcome: completion.lookupOutcome,\n        terminal_outcome: completion.terminalOutcome,\n        matched_product_id: completion.matchedProductId,\n        failure_stage: completion.failureStage,\n        ...(completion.dmLookup\n          ? {\n              dm_lookup_outcome: completion.dmLookup.outcome,\n              dm_lookup_duration_ms: completion.dmLookup.durationMs,\n              dm_lookup_deadline_ms: completion.dmLookup.deadlineMs,\n            }\n          : {}),\n        completed_at: new Date().toISOString(),\n      })\n      .eq(\"id\", completion.attemptId)\n      .is(\"completed_at\", null)\n    if (error) {\n      console.warn(\"scan_resolve_attempt_completion_failed\", { message: error.message })\n      reportAttemptLogFailure(new Error(error.message), captureException)\n    }\n  } catch (cause) {\n    console.warn(\"scan_resolve_attempt_completion_failed\", { cause })\n    reportAttemptLogFailure(cause, captureException)\n  }\n}",
+    "to": "export async function completeScanResolveAttempt(\n  client: SupabaseClient,\n  completion: ScanResolveAttemptCompletion,\n  captureException: typeof captureScanException = captureScanException,\n): Promise<void> {\n  try {\n    const { error } = await client\n      .from(\"scan_resolve_events\")\n      .update({\n        lookup_outcome: completion.lookupOutcome,\n        terminal_outcome: completion.terminalOutcome,\n        matched_product_id: completion.matchedProductId,\n        failure_stage: completion.failureStage,\n        ...(completion.dmLookup\n          ? {\n              dm_lookup_outcome: completion.dmLookup.outcome,\n              dm_lookup_duration_ms: completion.dmLookup.durationMs,\n              dm_lookup_deadline_ms: completion.dmLookup.deadlineMs,\n            }\n          : {}),\n        completed_at: new Date().toISOString(),\n      })\n      .eq(\"id\", completion.attemptId)\n      .is(\"completed_at\", null)\n    if (error) {\n      console.warn(\"scan_resolve_attempt_completion_failed\", { message: error.message })\n      reportAttemptLogFailure(new Error(error.message), captureException)\n      throw new Error(error.message)\n    }\n  } catch (cause) {\n    console.warn(\"scan_resolve_attempt_completion_failed\", { cause })\n    reportAttemptLogFailure(cause, captureException)\n    throw cause\n  }\n}",
+    "keeperFile": "tests/scan-resolve-event-log.test.ts",
+    "keeperName": "a completion-write failure also captures to Sentry",
+    "expected": {
+      "code": "ERR_ASSERTION",
+      "operator": "doesNotReject",
+      "phases": {
+        "transfer": {
+          "line": 319,
+          "text": "await assert.doesNotReject("
+        },
+        "cut": {
+          "line": 227,
+          "text": "await assert.doesNotReject("
+        }
+      }
+    },
+    "mode": "descriptor_only_not_executed",
+    "validation": "main serial exact-selected-one clean→intended assertion red→byte-exact restore→clean; SQL only local PGlite"
+  },
+  {
+    "id": "M4-default-created-at",
+    "candidate": "D1",
+    "file": "src/lib/scan/resolve-event-log.ts",
+    "sourceSha256": "cde316a0d8ecf6b25463cf79bffb8fc2304cbcba24b411a719d51ac63b65ba4d",
+    "from": "...(attempt.createdAt ? { created_at: attempt.createdAt } : {}),",
+    "to": "...(attempt.createdAt ? { created_at: attempt.createdAt } : { created_at: \"2026-09-04T10:00:00.000Z\" }),",
+    "keeperFile": "tests/scan-resolve-event-log.test.ts",
+    "keeperName": "records a started attempt with canonical value",
+    "expected": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "phases": {
+        "transfer": {
+          "line": 56,
+          "text": "assert.deepEqual(inserted(), {"
+        },
+        "cut": {
+          "line": 56,
+          "text": "assert.deepEqual(inserted(), {"
+        }
+      }
+    },
+    "mode": "descriptor_only_not_executed",
+    "validation": "main serial exact-selected-one clean→intended assertion red→byte-exact restore→clean; SQL only local PGlite"
+  },
+  {
+    "id": "M5-legacy-version",
+    "candidate": "D2",
+    "file": "supabase/migrations/20260826093828_scan_resolve_terminal_telemetry_expand.sql",
+    "sourceSha256": "f337fd3fb67c4f026c20e99a63bab8b534fde509e19e28aa3178d3a7d8a2a717",
+    "from": "SET telemetry_version = 1,",
+    "to": "SET telemetry_version = 2,",
+    "keeperFile": "tests/scan-resolve-events-migration.test.ts",
+    "keeperName": "telemetry migration executes, accepts v2 starts, and aggregates before retention deletion",
+    "expected": {
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "phases": {
+        "transfer": {
+          "line": 227,
+          "text": "assert.equal(legacy.rows[0]?.count, 10)"
+        },
+        "cut": {
+          "line": 217,
+          "text": "assert.equal(legacy.rows[0]?.count, 10)"
+        }
+      }
+    },
+    "mode": "descriptor_only_not_executed",
+    "validation": "main serial exact-selected-one clean→intended assertion red→byte-exact restore→clean; SQL only local PGlite"
+  },
+  {
+    "id": "M6-legacy-resolution",
+    "candidate": "D2",
+    "file": "supabase/migrations/20260826093828_scan_resolve_terminal_telemetry_expand.sql",
+    "sourceSha256": "f337fd3fb67c4f026c20e99a63bab8b534fde509e19e28aa3178d3a7d8a2a717",
+    "from": "terminal_outcome = 'legacy_unknown'",
+    "to": "terminal_outcome = 'resolved'",
+    "keeperFile": "tests/scan-resolve-events-migration.test.ts",
+    "keeperName": "telemetry migration executes, accepts v2 starts, and aggregates before retention deletion",
+    "expected": {
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "phases": {
+        "transfer": {
+          "line": 227,
+          "text": "assert.equal(legacy.rows[0]?.count, 10)"
+        },
+        "cut": {
+          "line": 217,
+          "text": "assert.equal(legacy.rows[0]?.count, 10)"
+        }
+      }
+    },
+    "mode": "descriptor_only_not_executed",
+    "validation": "main serial exact-selected-one clean→intended assertion red→byte-exact restore→clean; SQL only local PGlite"
+  },
+  {
+    "id": "M7-premium-prediction",
+    "candidate": "D3",
+    "file": "src/app/api/scan/resolve/route.ts",
+    "sourceSha256": "9502eac574fbc19276f1c994b47a82f9c7c22e29a4f7bf89438203ed5a835ad4",
+    "from": "responseSavedState = { state: \"merkliste\", managedByScan: true }",
+    "to": "responseSavedState = { state: null, managedByScan: false }",
+    "keeperFile": "tests/scan-resolve-auto-save.test.ts",
+    "keeperName": "scan resolve auto-save: a write failure is caught and reported, never turned into a 5xx",
+    "expected": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "phases": {
+        "transfer": {
+          "line": 342,
+          "text": "assert.deepEqual(body.savedState, { state: \"merkliste\", managedByScan: true })"
+        },
+        "cut": {
+          "line": 324,
+          "text": "assert.deepEqual(body.savedState, { state: \"merkliste\", managedByScan: true })"
+        }
+      }
+    },
+    "mode": "descriptor_only_not_executed",
+    "validation": "main serial exact-selected-one clean→intended assertion red→byte-exact restore→clean; SQL only local PGlite"
+  }
+]

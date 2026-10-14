@@ -1,0 +1,8 @@
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const root='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning',dir='/tmp/test-audit-partner-access84';
+const ts=require(path.join(root,'node_modules/typescript/lib/typescript.js'));
+const cohort=JSON.parse(fs.readFileSync('/tmp/test-audit-navigation575-cohorts.json','utf8')).find(c=>c.name.startsWith('Partner-access'));
+const hash=s=>crypto.createHash('sha256').update(s).digest('hex');
+function sites(file,s){const sf=ts.createSourceFile(file,s,ts.ScriptTarget.Latest,true,file.endsWith('.tsx')?ts.ScriptKind.TSX:ts.ScriptKind.TS);if(sf.parseDiagnostics.length)throw Error('parse '+file);let rows=[];function walk(n){if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test'&&ts.isStringLiteral(n.arguments[0])){let stmt=n.parent;rows.push({file,name:n.arguments[0].text,line:sf.getLineAndCharacterOfPosition(n.getStart(sf)).line+1,start:stmt.getStart(sf),end:stmt.end,body:stmt.getText(sf),sha256:hash(stmt.getText(sf))})}ts.forEachChild(n,walk)}walk(sf);return rows}
+let all={};for(const f of cohort.files){const s=fs.readFileSync(path.join(root,f.file),'utf8');if(hash(s)!==f.sha256)throw Error('navigation changed '+f.file);all[f.file]=sites(f.file,s);if(all[f.file].length!==f.sites)throw Error('count')}
+fs.writeFileSync(dir+'/sites.json',JSON.stringify(all,null,2)+'\n');console.log(Object.entries(all).map(([f,r])=>f+'\n'+r.map((x,i)=>(i+1)+' '+x.line+' '+x.name).join('\n')).join('\n'));

@@ -1,0 +1,220 @@
+'use strict'
+// Main-only shared support. Loading/checking creates no children and writes no files.
+const fs = require('node:fs')
+const path = require('node:path')
+const crypto = require('node:crypto')
+const ROOT = '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning'
+const BASE = '/tmp/test-audit-scanner119-tools-e5gg36wq/operator'
+const PROPOSAL = '/tmp/test-audit-scanner-residual119'
+const LOCK = '/tmp/test-audit-pruning-operator-lock'
+const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex')
+const fail = message => { throw Error(message) }
+const readJSON = file => JSON.parse(fs.readFileSync(file, 'utf8'))
+function checkFile(pin) {
+  if (pin.sha === null) { if (fs.existsSync(pin.path)) fail('Previously absent identity file appeared: ' + pin.path); return }
+  if (!fs.existsSync(pin.path) || fs.realpathSync(pin.path) !== pin.realpath) fail('Pinned path drift: ' + pin.path)
+  const bytes = fs.readFileSync(pin.path)
+  if (pin.sharedConfigRelevantSHA) {
+    if (pin.path !== '/Users/nick/AI_work/hair_conscierge/.git/config' || pin.sharedConfigTargetBranch !== 'codex/test-audit-pruning') fail('Config exception outside exact shared metadata')
+    const text = bytes.toString('utf8'); if (!Buffer.from(text).equals(bytes)) fail('Non-UTF8 config')
+    let keep = true; const lines = []
+    for (const line of text.match(/[^\n]*\n|[^\n]+$/g) || []) {
+      if (line.startsWith('[')) {
+        const branch = line.match(/^\[branch "([^"\\]+)"\]\r?\n?$/)
+        keep = !branch || branch[1] === pin.sharedConfigTargetBranch
+      }
+      if (keep) lines.push(line)
+    }
+    if (sha(lines.join('')) !== pin.sharedConfigRelevantSHA) fail('Relevant shared config drift')
+  } else if (pin.sharedPackedTargetRef || pin.sharedPackedRelevantSHA) {
+    const policyPath='/tmp/test-audit-packed-refs-relevant-policy-9crva_8q/policy.cjs'
+    if(sha(fs.readFileSync(policyPath))!=='b1622277836750342cc6efe96c11bdf140d36fc7b76e7356d1c25869ab887bcd')fail('Packed policy drift')
+    require(policyPath).check(pin,bytes)
+  } else if (sha(bytes) !== pin.sha) fail('Pinned file drift: ' + pin.path)
+}
+function inventory(dir) {
+  const names = []
+  function visit(p) {
+    for (const d of fs.readdirSync(p, { withFileTypes: true }).sort((a,b) => a.name.localeCompare(b.name))) {
+      const full = path.join(p,d.name)
+      if (d.isDirectory()) visit(full)
+      else if (d.isFile() || d.isSymbolicLink()) names.push(path.relative(dir,full))
+      else fail('Unexpected file kind: ' + full)
+    }
+  }
+  visit(dir)
+  return names.sort()
+}
+function identity(pins) {
+  if (process.cwd() !== ROOT || fs.realpathSync(process.cwd()) !== ROOT || pins.root !== ROOT) fail('Exact real checkout required')
+  if (process.version !== pins.node.version || fs.realpathSync(process.execPath) !== pins.node.realpath || sha(fs.readFileSync(process.execPath)) !== pins.node.sha) fail('Pinned Node binary required')
+  for (const pin of pins.identityFiles) checkFile(pin)
+  const head = fs.readFileSync(path.join(pins.gitDir,'HEAD'),'utf8').trim()
+  if (head !== 'ref: refs/heads/' + pins.branch) fail('Branch drift')
+  const ref = path.join(pins.commonDir,'refs/heads',pins.branch)
+  const commit = fs.existsSync(ref) ? fs.readFileSync(ref,'utf8').trim() : fs.readFileSync(path.join(pins.commonDir,'packed-refs'),'utf8').split('\n').find(l => l.endsWith(' refs/heads/' + pins.branch))?.split(' ')[0]
+  if (commit !== pins.head) fail('HEAD drift')
+}
+function parse(ts,file,text) {
+  const sf = ts.createSourceFile(file,text,ts.ScriptTarget.Latest,true,file.endsWith('.tsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS)
+  if (sf.parseDiagnostics.length) fail('Syntax parse failed: ' + file)
+  return sf
+}
+function registrations(ts,file,text) {
+  const sf = parse(ts,file,text), rows = new Map()
+  function walk(n) {
+    if (ts.isCallExpression(n) && n.expression.getText(sf) === 'test') {
+      const cb = n.arguments.at(-1), title = n.arguments[0]
+      const name = ts.isStringLiteralLike(title) ? title.text : title.getText(sf)
+      if (!(ts.isArrowFunction(cb) || ts.isFunctionExpression(cb)) || rows.has(name)) fail('Unexpected duplicate registration: ' + file)
+      const assertions = []
+      function assertionWalk(x) {
+        if (ts.isCallExpression(x) && x.expression.getText(sf).startsWith('assert.')) assertions.push({startLine:sf.getLineAndCharacterOfPosition(x.getStart(sf)).line+1,text:x.getText(sf)})
+        ts.forEachChild(x,assertionWalk)
+      }
+      assertionWalk(cb)
+      rows.set(name,{name,statement:n.getText(sf),callback:cb.getText(sf),start:n.getStart(sf),end:n.end,assertions})
+    }
+    ts.forEachChild(n,walk)
+  }
+  walk(sf)
+  return rows
+}
+function nativeRegistrationNames(ts,file,text){
+  const sf=parse(ts,file,text),names=[];let table=null;
+  function tableWalk(n){if(ts.isVariableDeclaration(n)&&n.name.getText(sf)==='TYPO_TABLE'){if(!ts.isArrayLiteralExpression(n.initializer))fail('Literal typo table required');table=n.initializer.elements.map(e=>{if(!ts.isObjectLiteralExpression(e))fail('Literal table row');const row={};for(const p of e.properties){if(ts.isPropertyAssignment(p)&&['label','query'].includes(p.name.getText(sf))){if(!ts.isStringLiteralLike(p.initializer))fail('Literal label/query');row[p.name.getText(sf)]=p.initializer.text}}if(Object.keys(row).length!==2)fail('Both literal title fields required');return row})}ts.forEachChild(n,tableWalk)}tableWalk(sf);
+  function walk(n){if(ts.isCallExpression(n)&&n.expression.getText(sf)==='test'){
+    const title=n.arguments[0];let loop=null;for(let p=n.parent;p;p=p.parent)if(ts.isForOfStatement(p)){if(loop)fail('Nested registration loop');loop=p}
+    if(loop){if(file!=='tests/scan-catalog-search-typo.test.ts'||loop.expression.getText(sf)!=='TYPO_TABLE'||!table||table.length!==10||title.getText(sf)!=='`matchCatalogProducts typo table: ${label} ("${query}")`')fail('Unknown registration expansion');for(const r of table)names.push(`matchCatalogProducts typo table: ${r.label} ("${r.query}")`)}
+    else {if(!ts.isStringLiteralLike(title))fail('Unknown dynamic title');names.push(title.text)}
+  }ts.forEachChild(n,walk)}walk(sf);return names
+}
+function replaceOnce(text,from,to,label) {
+  if (text.split(from).length !== 2) fail('Non-unique anchor: ' + label)
+  return text.replace(from,() => to)
+}
+function load(pinSHA) {
+  const raw = fs.readFileSync(BASE+'-pins.json')
+  if (sha(raw) !== pinSHA) fail('Tool pins changed')
+  const pins = JSON.parse(raw)
+  identity(pins)
+  function guardArtifactsAndDependencies() {
+    for (const pin of pins.dependencies) checkFile(pin)
+    for (const tree of pins.dependencyTrees) if (JSON.stringify(inventory(tree.path)) !== JSON.stringify(tree.names)) fail('Installed dependency membership drift: '+tree.path)
+    for (const [file,hash] of Object.entries(pins.artifactHashes)) if (sha(fs.readFileSync(file)) !== hash) fail('Artifact drift: '+file)
+    for (const [file,hash] of Object.entries(pins.entrypointTemplateHashes)) {
+      const template = fs.readFileSync(file,'utf8').replace(/const PIN_SHA='[a-f0-9]{64}'/,"const PIN_SHA='PIN_SHA_PLACEHOLDER'")
+      if (sha(template) !== hash) fail('Entrypoint drift: '+file)
+    }
+  }
+  guardArtifactsAndDependencies()
+  const evidence=readJSON(BASE+'-evidence.json'),candidates=readJSON(BASE+'-candidates.json'),controls=readJSON(BASE+'-controls-normalized.json')
+  const ts=require(ROOT+'/node_modules/typescript')
+  if(evidence.root!==ROOT||evidence.head!==pins.head||evidence.branch!==pins.branch||candidates.length!==14||controls.length!==18||ts.version!==pins.typescriptVersion)fail('Proposal identity/count mismatch')
+  const snapshots={},counts={before:0,transfer:0,cut:0};let unrelated=0,unchangedRetained=0,changedKeepers=0
+  const keepers=new Map(candidates.map(c=>[c.keeper.file+'\0'+c.keeper.name,c.keeper]));if(keepers.size!==7)fail('Seven unique keepers required')
+  for(const file of Object.keys(evidence.phases.before)){
+    snapshots[file]={}
+    for(const phase of Object.keys(counts)){
+      const bytes=fs.readFileSync(evidence.snapshotPaths[phase][file]),rows=registrations(ts,file,bytes.toString())
+      if(sha(bytes)!==evidence.phases[phase][file])fail('Phase bytes: '+file)
+      snapshots[file][phase]={bytes,rows};counts[phase]+=rows.size
+    }
+    const {before,transfer,cut}=snapshots[file];let reconstructed=before.bytes.toString()
+    const local=candidates.filter(c=>c.file===file)
+    for(const c of local)if(before.rows.get(c.donor.name)?.statement!==c.donor.body||sha(c.donor.body)!==c.donor.sha256)fail('Original donor identity')
+    for(const k of keepers.values())if(k.file===file){
+      if(before.rows.get(k.name)?.statement!==k.body||sha(k.body)!==k.sha256)fail('Original keeper identity')
+      if(k.body!==k.after){
+        let exact=k.body;for(const e of k.reviewedEdits)exact=replaceOnce(exact,e.from,e.to,'reviewed assertion transfer');if(exact!==k.after)fail('Reviewed keeper edit reconstruction failed');for(const a of before.rows.get(k.name).assertions)if(!k.after.includes(a.text))fail('Original keeper assertion changed')
+        reconstructed=replaceOnce(reconstructed,k.body,k.after,'keeper transfer');changedKeepers++
+      }else if(k.reviewedEdits.length)fail('Unexpected assertion addition')
+    }
+    if(reconstructed!==transfer.bytes.toString())fail('Transfer changed unrelated bytes')
+    for(const c of local)reconstructed=replaceOnce(reconstructed,c.donor.body+'\n\n','',c.id)
+    for(const edit of evidence.supportEdits.filter(e=>e.file===file))reconstructed=replaceOnce(reconstructed,edit.from,edit.to,'exact unused import removal')
+    if(reconstructed!==cut.bytes.toString())fail('Cut changed unrelated support bytes')
+    for(const [name,row]of before.rows){const t=transfer.rows.get(name),k=cut.rows.get(name)
+      if(local.some(c=>c.donor.name===name)){if(k||t?.statement!==row.statement)fail('Donor phase mismatch');continue}
+      const keeper=keepers.get(file+'\0'+name)
+      if(keeper&&keeper.body!==keeper.after){if(t?.statement!==keeper.after||k?.statement!==keeper.after)fail('Keeper phase mismatch');continue}
+      if(t?.statement!==row.statement||k?.statement!==row.statement)fail('Retained callback changed');unchangedRetained++;if(!keeper)unrelated++
+    }
+  }
+  if(Object.keys(snapshots).length!==21||JSON.stringify(counts)!=='{"before":119,"transfer":119,"cut":105}'||unrelated!==98||unchangedRetained!==100||changedKeepers!==5)fail('Phase conservation mismatch')
+  const ledger=readJSON(PROPOSAL+'/ledger.json');if(ledger.filter(j=>j.classification==='F').length!==2)fail('Held F count');
+  for(const held of ledger.filter(j=>j.classification==='F'))for(const phase of ['before','transfer','cut'])if(sha(snapshots[held.file][phase].rows.get(held.title)?.statement||'')!==held.sha256)fail('Held F changed');
+  for(const phase of ['before','transfer','cut']){
+    const names=Object.keys(snapshots).flatMap(file=>nativeRegistrationNames(ts,file,snapshots[file][phase].bytes.toString()));
+    if(JSON.stringify(names)!==JSON.stringify(evidence.nativeNames[phase])||names.length!==(phase==='cut'?114:128)||new Set(names).size!==names.length)fail('Exact native registration inventory changed');
+  }
+  for(const c of candidates){
+    const donor=snapshots[c.file].before.rows.get(c.donor.name)
+    if(c.assertionUnion.length!==donor.assertions.length)fail('Incomplete donor assertion accounting')
+    for(const phase of ['transfer','cut']){
+      const row=snapshots[c.keeper.file][phase].rows.get(c.keeper.name)
+      if(row?.statement!==c.keeper.after)fail('Keeper union phase mismatch')
+      for(let i=0;i<c.assertionUnion.length;i++){
+        const u=c.assertionUnion[i]
+        if(u.donorText!==donor.assertions[i].text||u.keeperText!==row.assertions[u.keeperIndex]?.text||!u.basis)fail('Frozen whole assertion union mismatch')
+      }
+    }
+  }
+  function guards(overrides={}) {
+    identity(pins)
+    for(const [file,hash]of Object.entries(overrides))if(!controls.some(c=>c.file===file&&c.mutatedSha256===hash))fail("Unowned source override")
+    guardArtifactsAndDependencies()
+    for(const tree of pins.repositoryTrees) if(JSON.stringify(inventory(path.join(ROOT,tree.path)))!==JSON.stringify(tree.names)) fail('Repository readset membership drift: '+tree.path)
+    for(const r of pins.readset) if(sha(fs.readFileSync(path.join(ROOT,r.file)))!==(overrides[r.file]||r.sha)) fail('Readset drift/fault active: '+r.file)
+  }
+  function current(overrides={}) {
+    guards(overrides)
+    const bytes=Object.fromEntries(Object.keys(snapshots).map(f=>[f,fs.readFileSync(path.join(ROOT,f))]))
+    const matches=Object.keys(counts).filter(p=>Object.entries(bytes).every(([f,b])=>b.equals(snapshots[f][p].bytes)))
+    if(matches.length!==1)fail('Mixed or unknown test phase')
+    return {phase:matches[0],bytes}
+  }
+  function checkCohort(expected) { for(const[f,bytes]of Object.entries(expected))if(!fs.readFileSync(path.join(ROOT,f)).equals(bytes))fail('Cohort CAS drift: '+f) }
+  return {pins,evidence,candidates,controls,ts,snapshots,counts,unrelated,unchangedRetained,guards,current,checkCohort}
+}
+function fault(ctx,c) {
+  const escaped=c.test.name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
+  const exactCommand=['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-concurrency=1','--test-name-pattern=^'+escaped+'$',c.test.file]
+  if(JSON.stringify(c.command)!==JSON.stringify(exactCommand))fail('Control command is not exact pinned keeper')
+  const pattern=new RegExp('^'+escaped+'$')
+  for(const phase of ['before','transfer','cut'])if([...ctx.snapshots[c.test.file][phase].rows.keys()].filter(n=>pattern.test(n)).length!==1)fail('Exactly one keeper must match in every phase')
+  const original=fs.readFileSync(path.join(ROOT,c.file))
+  if(sha(original)!==c.sourceSha256)fail('Fault owner drift: '+c.id)
+  const text=original.toString(),sf=c.file.endsWith('.sql')?null:parse(ctx.ts,c.file,text)
+  let mutated
+  if(['function','variable'].includes(c.anchor.kind)){
+    const found=[];function walk(n){if(c.anchor.kind==='function'&&ctx.ts.isFunctionDeclaration(n)&&n.name?.text===c.anchor.scope)found.push(n);if(c.anchor.kind==='variable'&&ctx.ts.isVariableStatement(n)&&n.declarationList.declarations.some(d=>ctx.ts.isIdentifier(d.name)&&d.name.text===c.anchor.scope))found.push(n);ctx.ts.forEachChild(n,walk)}walk(sf)
+    if(found.length!==1||sha(found[0].getText(sf))!==c.anchor.scopeSha256||found[0].getText(sf).split(c.from).length!==2)fail('Unique function anchor drift')
+    const n=found[0];mutated=Buffer.from(text.slice(0,n.getStart(sf))+replaceOnce(n.getText(sf),c.from,c.to,c.id)+text.slice(n.end))
+  }else if(['file','sql-bytes'].includes(c.anchor.kind)&&c.anchor.scopeSha256===sha(original))mutated=Buffer.from(replaceOnce(text,c.from,c.to,c.id))
+  else fail('Unsupported source anchor')
+  if(sf)parse(ctx.ts,c.file,mutated.toString());else if(c.anchor.kind!=='sql-bytes')fail('SQL raw-byte anchor required')
+  if(sha(mutated)!==c.mutatedSha256)fail('Prospective fault hash mismatch')
+  for(const phase of ['transfer','cut']){
+    const row=ctx.snapshots[c.test.file][phase].rows.get(c.test.name),o=c.oracles[phase]
+    const matches=row?.assertions.filter(a=>a.text===o.text)||[]
+    if(sha(row?.statement||'')!==o.keeperSha256||matches.length!==1||matches[0].startLine!==o.startLine||sha(ctx.snapshots[c.test.file][phase].bytes)!==o.testFileSha256)fail('Callback-scoped fault oracle drift')
+  }
+  return {original,mutated}
+}
+function atomicCAS(file,expected,next) {
+  const target=path.join(ROOT,file),temp=target+'.test-audit-'+process.pid+'-'+crypto.randomUUID()+'.tmp'
+  if(!fs.readFileSync(target).equals(expected))fail('Owned CAS refused: '+file)
+  try{
+    fs.writeFileSync(temp,next,{flag:'wx',mode:fs.statSync(target).mode})
+    if(!fs.readFileSync(target).equals(expected))fail('Pre-rename CAS refused: '+file)
+    fs.renameSync(temp,target)
+  }finally{if(fs.existsSync(temp))fs.unlinkSync(temp)}
+}
+function lock() {
+  const token=crypto.randomUUID()
+  fs.mkdirSync(LOCK)
+  fs.writeFileSync(path.join(LOCK,'owner.json'),JSON.stringify({token,pid:process.pid,root:ROOT,operator:BASE}),{flag:'wx'})
+  return()=>{const owner=readJSON(path.join(LOCK,'owner.json'));if(owner.token!==token)fail('Lock ownership changed; preserve it');fs.unlinkSync(path.join(LOCK,'owner.json'));fs.rmdirSync(LOCK)}
+}
+module.exports={ROOT,BASE,PROPOSAL,LOCK,sha,fail,checkFile,inventory,identity,parse,registrations,nativeRegistrationNames,replaceOnce,load,fault,atomicCAS,lock}

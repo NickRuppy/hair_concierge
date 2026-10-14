@@ -152,24 +152,6 @@ function verdictDeps(
   }
 }
 
-test("F2: a catalog conditioner she uses as a mask is graded as a conditioner, with the difference named", async () => {
-  const graded: string[] = []
-  const [entry] = await loadParticipantScanVerdicts(
-    {} as SupabaseClient,
-    ids.user,
-    [item({ id: ids.item, category: "mask", productType: "conditioner" })],
-    context,
-    verdictDeps("conditioner", graded),
-  )
-  assert.equal(entry?.status, "verdict")
-  assert.deepEqual(graded, ["conditioner"])
-  if (entry?.status !== "verdict") return
-  assert.deepEqual(entry.usageDifference, {
-    usageCategory: "mask",
-    productCategory: "conditioner",
-  })
-})
-
 test("F2: an oil used on the scalp is in-family; a mask used as shampoo is not", async () => {
   const graded: string[] = []
   const [scalp] = await loadParticipantScanVerdicts(
@@ -386,16 +368,6 @@ function change(overrides: Partial<DiscoveryItemUsageChange>): DiscoveryItemUsag
   return { itemId: ids.item, category: "mask", role: null, productType: null, ...overrides }
 }
 
-test("F3: moving a bound conditioner to the mask step makes both steps' decisions stale", () => {
-  const model = modelOf([
-    item({ id: ids.item, category: "conditioner", productType: "conditioner" }),
-  ])
-  assert.deepEqual(
-    discoveryStaleDecisionKeysForUsageChange(model, change({})),
-    [COND_KEY, MASK_KEY].sort(),
-  )
-})
-
 test("F3: a move that displaces another item stales the displaced step too, and nothing else", () => {
   // The mask step holds `other` (created later); the moved barcode item outranks it.
   const model = modelOf([
@@ -424,19 +396,6 @@ test("F3: an oil role change stales the old and the new oil step", () => {
       change({ category: "oil", role: "dry_finish" }),
     ),
     [OIL_DRY_KEY, OIL_PRE_KEY].sort(),
-  )
-})
-
-test("F3: setting the usage of a research-pending item stales nothing (it binds nowhere yet)", () => {
-  const model = modelOf([
-    item({ id: ids.open, category: null, productId: null, source: "name_research" }),
-  ])
-  assert.deepEqual(
-    discoveryStaleDecisionKeysForUsageChange(
-      model,
-      change({ itemId: ids.open, productType: "conditioner" }),
-    ),
-    [],
   )
 })
 

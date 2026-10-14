@@ -1,0 +1,22 @@
+{
+  "version": "bondbuilder-protocol-source-observation-v1",
+  "checked_at": "2026-10-06",
+  "source": {
+    "id": "D06-OGX-BOOZT",
+    "url": "https://www.boozt.com/de/de/ogx/bond-repair-sealing-serum-50-ml_32962840/231199512",
+    "type": "exact_de_retailer_directions_2026_10_06",
+    "scope": "product",
+    "access": "full_text",
+    "author": null,
+    "authority": "retailer",
+    "affiliation": "Boozt, authorized OGX retailer",
+    "limitations": [
+      "Exact German-market 50 ml offer and EAN 3574661818474; physical pack not inspected.",
+      "Application directions only; selected formula and trust remain unchanged.",
+      "DE source gives no usage frequency. UK 1–2/week remains limited, not a DE instruction."
+    ],
+    "observation": "The DE offer identifies the OGX 50 ml Sealing Serum, EAN 3574661818474. Its directions describe bedtime use: take a small quantity into the palms, rub hands together, and spread through damp or dry hair from the tips upward. Keep the treatment in overnight without rinsing. The rest of the Bond Protein Repair range is suggested, not stated as a required companion or an extra wash. No DE frequency is specified.",
+    "checked_date": "2026-10-06",
+    "commercial_context": "Retailer product directions, not independent efficacy evidence."
+  }
+}

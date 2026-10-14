@@ -1,0 +1,1820 @@
+[
+  {
+    "file": "/tmp/test-audit-scanner-intake26/snapshots/cut/tests/scan-unknown-flow-ui.test.tsx",
+    "title": "dm thumbnail: a failed optimizer image becomes the accessible placeholder",
+    "line": 140,
+    "start": 4469,
+    "end": 4968,
+    "body": "test(\"dm thumbnail: a failed optimizer image becomes the accessible placeholder\", () => {\n  const tree = withClientHooks(() =>\n    ScanProductThumb({\n      imageUrl: \"https://products.dm-static.com/images/a\",\n      label: \"Shampoo\",\n      size: 48,\n      proxied: true,\n    }),\n  )\n  ;(tree.value.props as { onError: () => void }).onError()\n  tree.value = tree.rerender()\n  assert.equal(tree.value.props.role, \"img\")\n  assert.equal(tree.value.props[\"aria-label\"], \"Shampoo: Bild nicht verfügbar\")\n})",
+    "callback": "() => {\n  const tree = withClientHooks(() =>\n    ScanProductThumb({\n      imageUrl: \"https://products.dm-static.com/images/a\",\n      label: \"Shampoo\",\n      size: 48,\n      proxied: true,\n    }),\n  )\n  ;(tree.value.props as { onError: () => void }).onError()\n  tree.value = tree.rerender()\n  assert.equal(tree.value.props.role, \"img\")\n  assert.equal(tree.value.props[\"aria-label\"], \"Shampoo: Bild nicht verfügbar\")\n}",
+    "callbackSha256": "909f68a290edf5fc08a5331c1d66453325abd4ba62e1b2250ec59254b1b5d92c",
+    "assertions": [
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(tree.value.props.role, \"img\")",
+        "line": 151
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(tree.value.props[\"aria-label\"], \"Shampoo: Bild nicht verfügbar\")",
+        "line": 152
+      }
+    ],
+    "calls": [
+      {
+        "expression": "withClientHooks",
+        "text": "withClientHooks(() =>\n    ScanProductThumb({\n      imageUrl: \"https://products.dm-static.com/images/a\",\n      label: \"Shampoo\",\n      size: 48,\n      proxied: true,\n    }),\n  )",
+        "line": 141
+      },
+      {
+        "expression": "ScanProductThumb",
+        "text": "ScanProductThumb({\n      imageUrl: \"https://products.dm-static.com/images/a\",\n      label: \"Shampoo\",\n      size: 48,\n      proxied: true,\n    })",
+        "line": 142
+      },
+      {
+        "expression": "(tree.value.props as { onError: () => void }).onError",
+        "text": "(tree.value.props as { onError: () => void }).onError()",
+        "line": 149
+      },
+      {
+        "expression": "tree.rerender",
+        "text": "tree.rerender()",
+        "line": 150
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(tree.value.props.role, \"img\")",
+        "line": 151
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(tree.value.props[\"aria-label\"], \"Shampoo: Bild nicht verfügbar\")",
+        "line": 152
+      }
+    ]
+  },
+  {
+    "file": "/tmp/test-audit-scanner-intake26/snapshots/cut/tests/scan-unknown-flow-ui.test.tsx",
+    "title": "identified unknown: renders identity and one-tap confirmation without creating a submission on view",
+    "line": 155,
+    "start": 4970,
+    "end": 5755,
+    "body": "test(\"identified unknown: renders identity and one-tap confirmation without creating a submission on view\", () => {\n  const calls: unknown[] = []\n  const tree = withClientHooks(() =>\n    ScanUnknownFlow({\n      unknown: identifiedResult(),\n      submitting: false,\n      error: null,\n      onSubmit: (...args) => calls.push(args),\n    }),\n  )\n  const markup = renderToStaticMarkup(tree.value)\n  assert.match(markup, /Gefunden – jetzt prüfen wir es\\./)\n  assert.match(markup, /Weleda/)\n  assert.match(markup, /Benutzt du es als Shampoo\\?/)\n  assert.doesNotMatch(markup, /Barcode gelesen|Wobei benutzt|Weitere Produktarten/)\n  assert.deepEqual(calls, [])\n  categoryButton(tree.value, \"Ja, als Shampoo\").props.onClick()\n  assert.deepEqual(calls, [[{ category: \"shampoo\" }, \"one_tap\"]])\n})",
+    "callback": "() => {\n  const calls: unknown[] = []\n  const tree = withClientHooks(() =>\n    ScanUnknownFlow({\n      unknown: identifiedResult(),\n      submitting: false,\n      error: null,\n      onSubmit: (...args) => calls.push(args),\n    }),\n  )\n  const markup = renderToStaticMarkup(tree.value)\n  assert.match(markup, /Gefunden – jetzt prüfen wir es\\./)\n  assert.match(markup, /Weleda/)\n  assert.match(markup, /Benutzt du es als Shampoo\\?/)\n  assert.doesNotMatch(markup, /Barcode gelesen|Wobei benutzt|Weitere Produktarten/)\n  assert.deepEqual(calls, [])\n  categoryButton(tree.value, \"Ja, als Shampoo\").props.onClick()\n  assert.deepEqual(calls, [[{ category: \"shampoo\" }, \"one_tap\"]])\n}",
+    "callbackSha256": "ce66eed9346cee2c03b11e1f818918d905bb25195d79ea4bb854aec52577ab97",
+    "assertions": [
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Gefunden – jetzt prüfen wir es\\./)",
+        "line": 166
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Weleda/)",
+        "line": 167
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Benutzt du es als Shampoo\\?/)",
+        "line": 168
+      },
+      {
+        "expression": "assert.doesNotMatch",
+        "text": "assert.doesNotMatch(markup, /Barcode gelesen|Wobei benutzt|Weitere Produktarten/)",
+        "line": 169
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [])",
+        "line": 170
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [[{ category: \"shampoo\" }, \"one_tap\"]])",
+        "line": 172
+      }
+    ],
+    "calls": [
+      {
+        "expression": "withClientHooks",
+        "text": "withClientHooks(() =>\n    ScanUnknownFlow({\n      unknown: identifiedResult(),\n      submitting: false,\n      error: null,\n      onSubmit: (...args) => calls.push(args),\n    }),\n  )",
+        "line": 157
+      },
+      {
+        "expression": "ScanUnknownFlow",
+        "text": "ScanUnknownFlow({\n      unknown: identifiedResult(),\n      submitting: false,\n      error: null,\n      onSubmit: (...args) => calls.push(args),\n    })",
+        "line": 158
+      },
+      {
+        "expression": "identifiedResult",
+        "text": "identifiedResult()",
+        "line": 159
+      },
+      {
+        "expression": "calls.push",
+        "text": "calls.push(args)",
+        "line": 162
+      },
+      {
+        "expression": "renderToStaticMarkup",
+        "text": "renderToStaticMarkup(tree.value)",
+        "line": 165
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Gefunden – jetzt prüfen wir es\\./)",
+        "line": 166
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Weleda/)",
+        "line": 167
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Benutzt du es als Shampoo\\?/)",
+        "line": 168
+      },
+      {
+        "expression": "assert.doesNotMatch",
+        "text": "assert.doesNotMatch(markup, /Barcode gelesen|Wobei benutzt|Weitere Produktarten/)",
+        "line": 169
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [])",
+        "line": 170
+      },
+      {
+        "expression": "categoryButton(tree.value, \"Ja, als Shampoo\").props.onClick",
+        "text": "categoryButton(tree.value, \"Ja, als Shampoo\").props.onClick()",
+        "line": 171
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, \"Ja, als Shampoo\")",
+        "line": 171
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [[{ category: \"shampoo\" }, \"one_tap\"]])",
+        "line": 172
+      }
+    ]
+  },
+  {
+    "file": "/tmp/test-audit-scanner-intake26/snapshots/cut/tests/scan-unknown-flow-ui.test.tsx",
+    "title": "identified unknown: other reveals grid without submitting, then allows a category override",
+    "line": 175,
+    "start": 5757,
+    "end": 6573,
+    "body": "test(\"identified unknown: other reveals grid without submitting, then allows a category override\", () => {\n  const calls: unknown[] = []\n  const tree = withClientHooks(() =>\n    ScanUnknownFlow({\n      unknown: identifiedResult(),\n      submitting: false,\n      error: null,\n      onSubmit: (...args) => calls.push(args),\n    }),\n  )\n  categoryButton(tree.value, \"Wofür anderes\").props.onClick()\n  tree.value = tree.rerender()\n  assert.deepEqual(calls, [])\n  assert.match(renderToStaticMarkup(tree.value), /Wobei benutzt du es\\?/)\n  assert.equal(\n    findAll(\n      tree.value,\n      (element) => element.type === \"button\" && textContent(element) === \"Shampoo\",\n    ).length,\n    0,\n  )\n  categoryButton(tree.value, \"Conditioner\").props.onClick()\n  assert.deepEqual(calls, [[{ category: \"conditioner\" }, \"grid\"]])\n})",
+    "callback": "() => {\n  const calls: unknown[] = []\n  const tree = withClientHooks(() =>\n    ScanUnknownFlow({\n      unknown: identifiedResult(),\n      submitting: false,\n      error: null,\n      onSubmit: (...args) => calls.push(args),\n    }),\n  )\n  categoryButton(tree.value, \"Wofür anderes\").props.onClick()\n  tree.value = tree.rerender()\n  assert.deepEqual(calls, [])\n  assert.match(renderToStaticMarkup(tree.value), /Wobei benutzt du es\\?/)\n  assert.equal(\n    findAll(\n      tree.value,\n      (element) => element.type === \"button\" && textContent(element) === \"Shampoo\",\n    ).length,\n    0,\n  )\n  categoryButton(tree.value, \"Conditioner\").props.onClick()\n  assert.deepEqual(calls, [[{ category: \"conditioner\" }, \"grid\"]])\n}",
+    "callbackSha256": "08afd87afd61c9d147a859efdaedafed4a0d14f2a9b762834e47524dd091aa8a",
+    "assertions": [
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [])",
+        "line": 187
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(renderToStaticMarkup(tree.value), /Wobei benutzt du es\\?/)",
+        "line": 188
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(\n    findAll(\n      tree.value,\n      (element) => element.type === \"button\" && textContent(element) === \"Shampoo\",\n    ).length,\n    0,\n  )",
+        "line": 189
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [[{ category: \"conditioner\" }, \"grid\"]])",
+        "line": 197
+      }
+    ],
+    "calls": [
+      {
+        "expression": "withClientHooks",
+        "text": "withClientHooks(() =>\n    ScanUnknownFlow({\n      unknown: identifiedResult(),\n      submitting: false,\n      error: null,\n      onSubmit: (...args) => calls.push(args),\n    }),\n  )",
+        "line": 177
+      },
+      {
+        "expression": "ScanUnknownFlow",
+        "text": "ScanUnknownFlow({\n      unknown: identifiedResult(),\n      submitting: false,\n      error: null,\n      onSubmit: (...args) => calls.push(args),\n    })",
+        "line": 178
+      },
+      {
+        "expression": "identifiedResult",
+        "text": "identifiedResult()",
+        "line": 179
+      },
+      {
+        "expression": "calls.push",
+        "text": "calls.push(args)",
+        "line": 182
+      },
+      {
+        "expression": "categoryButton(tree.value, \"Wofür anderes\").props.onClick",
+        "text": "categoryButton(tree.value, \"Wofür anderes\").props.onClick()",
+        "line": 185
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, \"Wofür anderes\")",
+        "line": 185
+      },
+      {
+        "expression": "tree.rerender",
+        "text": "tree.rerender()",
+        "line": 186
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [])",
+        "line": 187
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(renderToStaticMarkup(tree.value), /Wobei benutzt du es\\?/)",
+        "line": 188
+      },
+      {
+        "expression": "renderToStaticMarkup",
+        "text": "renderToStaticMarkup(tree.value)",
+        "line": 188
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(\n    findAll(\n      tree.value,\n      (element) => element.type === \"button\" && textContent(element) === \"Shampoo\",\n    ).length,\n    0,\n  )",
+        "line": 189
+      },
+      {
+        "expression": "findAll",
+        "text": "findAll(\n      tree.value,\n      (element) => element.type === \"button\" && textContent(element) === \"Shampoo\",\n    )",
+        "line": 190
+      },
+      {
+        "expression": "textContent",
+        "text": "textContent(element)",
+        "line": 192
+      },
+      {
+        "expression": "categoryButton(tree.value, \"Conditioner\").props.onClick",
+        "text": "categoryButton(tree.value, \"Conditioner\").props.onClick()",
+        "line": 196
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, \"Conditioner\")",
+        "line": 196
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [[{ category: \"conditioner\" }, \"grid\"]])",
+        "line": 197
+      }
+    ]
+  },
+  {
+    "file": "/tmp/test-audit-scanner-intake26/snapshots/cut/tests/scan-unknown-flow-ui.test.tsx",
+    "title": "identified unknown: expanding alternative categories also excludes a secondary suggestion",
+    "line": 200,
+    "start": 6575,
+    "end": 7543,
+    "body": "test(\"identified unknown: expanding alternative categories also excludes a secondary suggestion\", () => {\n  const unknown = identifiedResult()\n  unknown.identified!.suggestedCategory = \"heat_protectant\"\n  const calls: unknown[] = []\n  const tree = withClientHooks(() =>\n    ScanUnknownFlow({\n      unknown,\n      submitting: false,\n      error: null,\n      onSubmit: (...args) => calls.push(args),\n    }),\n  )\n  categoryButton(tree.value, \"Wofür anderes\").props.onClick()\n  tree.value = tree.rerender()\n  categoryButton(tree.value, \"Weitere Produktarten\").props.onClick()\n  tree.value = tree.rerender()\n  assert.deepEqual(calls, [])\n  assert.equal(\n    findAll(\n      tree.value,\n      (element) =>\n        element.type === \"button\" && textContent(element) === CATEGORY_COPY.heat_protectant.label,\n    ).length,\n    0,\n  )\n  categoryButton(tree.value, CATEGORY_COPY.scalp_care.label).props.onClick()\n  assert.deepEqual(calls, [[{ category: \"scalp_care\" }, \"grid\"]])\n})",
+    "callback": "() => {\n  const unknown = identifiedResult()\n  unknown.identified!.suggestedCategory = \"heat_protectant\"\n  const calls: unknown[] = []\n  const tree = withClientHooks(() =>\n    ScanUnknownFlow({\n      unknown,\n      submitting: false,\n      error: null,\n      onSubmit: (...args) => calls.push(args),\n    }),\n  )\n  categoryButton(tree.value, \"Wofür anderes\").props.onClick()\n  tree.value = tree.rerender()\n  categoryButton(tree.value, \"Weitere Produktarten\").props.onClick()\n  tree.value = tree.rerender()\n  assert.deepEqual(calls, [])\n  assert.equal(\n    findAll(\n      tree.value,\n      (element) =>\n        element.type === \"button\" && textContent(element) === CATEGORY_COPY.heat_protectant.label,\n    ).length,\n    0,\n  )\n  categoryButton(tree.value, CATEGORY_COPY.scalp_care.label).props.onClick()\n  assert.deepEqual(calls, [[{ category: \"scalp_care\" }, \"grid\"]])\n}",
+    "callbackSha256": "6566c1c94dbb938b2970e6b15499ec87c23c5486499d8ac0ff4aa49122b4e4e3",
+    "assertions": [
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [])",
+        "line": 216
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(\n    findAll(\n      tree.value,\n      (element) =>\n        element.type === \"button\" && textContent(element) === CATEGORY_COPY.heat_protectant.label,\n    ).length,\n    0,\n  )",
+        "line": 217
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [[{ category: \"scalp_care\" }, \"grid\"]])",
+        "line": 226
+      }
+    ],
+    "calls": [
+      {
+        "expression": "identifiedResult",
+        "text": "identifiedResult()",
+        "line": 201
+      },
+      {
+        "expression": "withClientHooks",
+        "text": "withClientHooks(() =>\n    ScanUnknownFlow({\n      unknown,\n      submitting: false,\n      error: null,\n      onSubmit: (...args) => calls.push(args),\n    }),\n  )",
+        "line": 204
+      },
+      {
+        "expression": "ScanUnknownFlow",
+        "text": "ScanUnknownFlow({\n      unknown,\n      submitting: false,\n      error: null,\n      onSubmit: (...args) => calls.push(args),\n    })",
+        "line": 205
+      },
+      {
+        "expression": "calls.push",
+        "text": "calls.push(args)",
+        "line": 209
+      },
+      {
+        "expression": "categoryButton(tree.value, \"Wofür anderes\").props.onClick",
+        "text": "categoryButton(tree.value, \"Wofür anderes\").props.onClick()",
+        "line": 212
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, \"Wofür anderes\")",
+        "line": 212
+      },
+      {
+        "expression": "tree.rerender",
+        "text": "tree.rerender()",
+        "line": 213
+      },
+      {
+        "expression": "categoryButton(tree.value, \"Weitere Produktarten\").props.onClick",
+        "text": "categoryButton(tree.value, \"Weitere Produktarten\").props.onClick()",
+        "line": 214
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, \"Weitere Produktarten\")",
+        "line": 214
+      },
+      {
+        "expression": "tree.rerender",
+        "text": "tree.rerender()",
+        "line": 215
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [])",
+        "line": 216
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(\n    findAll(\n      tree.value,\n      (element) =>\n        element.type === \"button\" && textContent(element) === CATEGORY_COPY.heat_protectant.label,\n    ).length,\n    0,\n  )",
+        "line": 217
+      },
+      {
+        "expression": "findAll",
+        "text": "findAll(\n      tree.value,\n      (element) =>\n        element.type === \"button\" && textContent(element) === CATEGORY_COPY.heat_protectant.label,\n    )",
+        "line": 218
+      },
+      {
+        "expression": "textContent",
+        "text": "textContent(element)",
+        "line": 221
+      },
+      {
+        "expression": "categoryButton(tree.value, CATEGORY_COPY.scalp_care.label).props.onClick",
+        "text": "categoryButton(tree.value, CATEGORY_COPY.scalp_care.label).props.onClick()",
+        "line": 225
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, CATEGORY_COPY.scalp_care.label)",
+        "line": 225
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [[{ category: \"scalp_care\" }, \"grid\"]])",
+        "line": 226
+      }
+    ]
+  },
+  {
+    "file": "/tmp/test-audit-scanner-intake26/snapshots/cut/tests/scan-unknown-flow-ui.test.tsx",
+    "title": "identified unknown: ambiguous category uses the normal grid and mixed-case brand stays unchanged",
+    "line": 229,
+    "start": 7545,
+    "end": 8130,
+    "body": "test(\"identified unknown: ambiguous category uses the normal grid and mixed-case brand stays unchanged\", () => {\n  const unknown = identifiedResult(null)\n  unknown.identified!.brand = \"alverde Naturkosmetik\"\n  const tree = withClientHooks(() =>\n    ScanUnknownFlow({ unknown, submitting: false, error: null, onSubmit: () => undefined }),\n  )\n  const markup = renderToStaticMarkup(tree.value)\n  assert.match(markup, /alverde Naturkosmetik/)\n  assert.match(markup, /Wobei benutzt du es\\?/)\n  assert.doesNotMatch(markup, /Ja, als|Wofür anderes/)\n  categoryButton(tree.value, \"Shampoo\")\n})",
+    "callback": "() => {\n  const unknown = identifiedResult(null)\n  unknown.identified!.brand = \"alverde Naturkosmetik\"\n  const tree = withClientHooks(() =>\n    ScanUnknownFlow({ unknown, submitting: false, error: null, onSubmit: () => undefined }),\n  )\n  const markup = renderToStaticMarkup(tree.value)\n  assert.match(markup, /alverde Naturkosmetik/)\n  assert.match(markup, /Wobei benutzt du es\\?/)\n  assert.doesNotMatch(markup, /Ja, als|Wofür anderes/)\n  categoryButton(tree.value, \"Shampoo\")\n}",
+    "callbackSha256": "3e103dbc333e191a3967552554c02cbf8468f4592da213b26e6b6ca2e32b6253",
+    "assertions": [
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /alverde Naturkosmetik/)",
+        "line": 236
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Wobei benutzt du es\\?/)",
+        "line": 237
+      },
+      {
+        "expression": "assert.doesNotMatch",
+        "text": "assert.doesNotMatch(markup, /Ja, als|Wofür anderes/)",
+        "line": 238
+      }
+    ],
+    "calls": [
+      {
+        "expression": "identifiedResult",
+        "text": "identifiedResult(null)",
+        "line": 230
+      },
+      {
+        "expression": "withClientHooks",
+        "text": "withClientHooks(() =>\n    ScanUnknownFlow({ unknown, submitting: false, error: null, onSubmit: () => undefined }),\n  )",
+        "line": 232
+      },
+      {
+        "expression": "ScanUnknownFlow",
+        "text": "ScanUnknownFlow({ unknown, submitting: false, error: null, onSubmit: () => undefined })",
+        "line": 233
+      },
+      {
+        "expression": "renderToStaticMarkup",
+        "text": "renderToStaticMarkup(tree.value)",
+        "line": 235
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /alverde Naturkosmetik/)",
+        "line": 236
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Wobei benutzt du es\\?/)",
+        "line": 237
+      },
+      {
+        "expression": "assert.doesNotMatch",
+        "text": "assert.doesNotMatch(markup, /Ja, als|Wofür anderes/)",
+        "line": 238
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, \"Shampoo\")",
+        "line": 239
+      }
+    ]
+  },
+  {
+    "file": "/tmp/test-audit-scanner-intake26/snapshots/cut/tests/scan-unknown-flow-ui.test.tsx",
+    "title": "identified unknown: failed confirmation restores its label and keeps recovery available",
+    "line": 242,
+    "start": 8132,
+    "end": 9069,
+    "body": "test(\"identified unknown: failed confirmation restores its label and keeps recovery available\", () => {\n  const state = { submitting: false, error: null as string | null }\n  const calls: unknown[] = []\n  const tree = withClientHooks(() =>\n    ScanUnknownFlow({\n      unknown: identifiedResult(),\n      ...state,\n      onSubmit: (...args) => calls.push(args),\n    }),\n  )\n  categoryButton(tree.value, \"Ja, als Shampoo\").props.onClick()\n  state.submitting = true\n  tree.value = tree.rerender()\n  categoryButton(tree.value, \"Wird eingereicht\").props.onClick()\n  assert.equal(calls.length, 1)\n  assert.equal(categoryButton(tree.value, \"Wofür anderes\").props.disabled, true)\n  state.submitting = false\n  state.error = \"Hat nicht geklappt – versuch's nochmal.\"\n  tree.value = tree.rerender()\n  assert.equal(categoryButton(tree.value, \"Ja, als Shampoo\").props.disabled, false)\n  assert.match(renderToStaticMarkup(tree.value), /role=\"alert\"/)\n})",
+    "callback": "() => {\n  const state = { submitting: false, error: null as string | null }\n  const calls: unknown[] = []\n  const tree = withClientHooks(() =>\n    ScanUnknownFlow({\n      unknown: identifiedResult(),\n      ...state,\n      onSubmit: (...args) => calls.push(args),\n    }),\n  )\n  categoryButton(tree.value, \"Ja, als Shampoo\").props.onClick()\n  state.submitting = true\n  tree.value = tree.rerender()\n  categoryButton(tree.value, \"Wird eingereicht\").props.onClick()\n  assert.equal(calls.length, 1)\n  assert.equal(categoryButton(tree.value, \"Wofür anderes\").props.disabled, true)\n  state.submitting = false\n  state.error = \"Hat nicht geklappt – versuch's nochmal.\"\n  tree.value = tree.rerender()\n  assert.equal(categoryButton(tree.value, \"Ja, als Shampoo\").props.disabled, false)\n  assert.match(renderToStaticMarkup(tree.value), /role=\"alert\"/)\n}",
+    "callbackSha256": "5ef5e56583b63b227a274c0b082421ecdedf6eebe6653da6b4161377a86ba728",
+    "assertions": [
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(calls.length, 1)",
+        "line": 256
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(categoryButton(tree.value, \"Wofür anderes\").props.disabled, true)",
+        "line": 257
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(categoryButton(tree.value, \"Ja, als Shampoo\").props.disabled, false)",
+        "line": 261
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(renderToStaticMarkup(tree.value), /role=\"alert\"/)",
+        "line": 262
+      }
+    ],
+    "calls": [
+      {
+        "expression": "withClientHooks",
+        "text": "withClientHooks(() =>\n    ScanUnknownFlow({\n      unknown: identifiedResult(),\n      ...state,\n      onSubmit: (...args) => calls.push(args),\n    }),\n  )",
+        "line": 245
+      },
+      {
+        "expression": "ScanUnknownFlow",
+        "text": "ScanUnknownFlow({\n      unknown: identifiedResult(),\n      ...state,\n      onSubmit: (...args) => calls.push(args),\n    })",
+        "line": 246
+      },
+      {
+        "expression": "identifiedResult",
+        "text": "identifiedResult()",
+        "line": 247
+      },
+      {
+        "expression": "calls.push",
+        "text": "calls.push(args)",
+        "line": 249
+      },
+      {
+        "expression": "categoryButton(tree.value, \"Ja, als Shampoo\").props.onClick",
+        "text": "categoryButton(tree.value, \"Ja, als Shampoo\").props.onClick()",
+        "line": 252
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, \"Ja, als Shampoo\")",
+        "line": 252
+      },
+      {
+        "expression": "tree.rerender",
+        "text": "tree.rerender()",
+        "line": 254
+      },
+      {
+        "expression": "categoryButton(tree.value, \"Wird eingereicht\").props.onClick",
+        "text": "categoryButton(tree.value, \"Wird eingereicht\").props.onClick()",
+        "line": 255
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, \"Wird eingereicht\")",
+        "line": 255
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(calls.length, 1)",
+        "line": 256
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(categoryButton(tree.value, \"Wofür anderes\").props.disabled, true)",
+        "line": 257
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, \"Wofür anderes\")",
+        "line": 257
+      },
+      {
+        "expression": "tree.rerender",
+        "text": "tree.rerender()",
+        "line": 260
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(categoryButton(tree.value, \"Ja, als Shampoo\").props.disabled, false)",
+        "line": 261
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, \"Ja, als Shampoo\")",
+        "line": 261
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(renderToStaticMarkup(tree.value), /role=\"alert\"/)",
+        "line": 262
+      },
+      {
+        "expression": "renderToStaticMarkup",
+        "text": "renderToStaticMarkup(tree.value)",
+        "line": 262
+      }
+    ]
+  },
+  {
+    "file": "/tmp/test-audit-scanner-intake26/snapshots/cut/tests/scan-unknown-flow-ui.test.tsx",
+    "title": "ScanUnknownFlow: the bridge line sits under the headline, above the subline",
+    "line": 270,
+    "start": 9335,
+    "end": 10308,
+    "body": "test(\"ScanUnknownFlow: the bridge line sits under the headline, above the subline\", () => {\n  const tree = renderFlow({ submitting: false, onSubmit: () => undefined })\n  const markup = renderToStaticMarkup(tree.value)\n  assert.match(markup, /Danke dir – das ist neu für uns!/)\n  assert.match(markup, /Wir nehmen es auf\\. Dein Ergebnis kommt in den Chat\\./)\n  assert.match(markup, /Wobei benutzt du es\\?/)\n  const inputs = findAll(tree.value, (element) => element.type === \"input\")\n  assert.deepEqual(inputs, [])\n  assert.doesNotMatch(markup, /Marke/)\n  assert.doesNotMatch(markup, /Produktname/)\n  assert.doesNotMatch(markup, /Zur Prüfung einreichen/)\n  assert.match(markup, /Barcode gelesen – das Produkt fehlt noch in unserer Datenbank\\./)\n\n  const headline = markup.indexOf(\"Danke dir\")\n  const bridge = markup.indexOf(\"Barcode gelesen\")\n  const subline = markup.indexOf(\"Wir nehmen es auf\")\n  assert.ok(headline >= 0 && bridge > headline && subline > bridge, markup)\n})",
+    "callback": "() => {\n  const tree = renderFlow({ submitting: false, onSubmit: () => undefined })\n  const markup = renderToStaticMarkup(tree.value)\n  assert.match(markup, /Danke dir – das ist neu für uns!/)\n  assert.match(markup, /Wir nehmen es auf\\. Dein Ergebnis kommt in den Chat\\./)\n  assert.match(markup, /Wobei benutzt du es\\?/)\n  const inputs = findAll(tree.value, (element) => element.type === \"input\")\n  assert.deepEqual(inputs, [])\n  assert.doesNotMatch(markup, /Marke/)\n  assert.doesNotMatch(markup, /Produktname/)\n  assert.doesNotMatch(markup, /Zur Prüfung einreichen/)\n  assert.match(markup, /Barcode gelesen – das Produkt fehlt noch in unserer Datenbank\\./)\n\n  const headline = markup.indexOf(\"Danke dir\")\n  const bridge = markup.indexOf(\"Barcode gelesen\")\n  const subline = markup.indexOf(\"Wir nehmen es auf\")\n  assert.ok(headline >= 0 && bridge > headline && subline > bridge, markup)\n}",
+    "callbackSha256": "512450b6c695bf9be91dfa328cff1af98f5a49544287b01cb5f8df3bef390c6b",
+    "assertions": [
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Danke dir – das ist neu für uns!/)",
+        "line": 273
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Wir nehmen es auf\\. Dein Ergebnis kommt in den Chat\\./)",
+        "line": 274
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Wobei benutzt du es\\?/)",
+        "line": 275
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(inputs, [])",
+        "line": 277
+      },
+      {
+        "expression": "assert.doesNotMatch",
+        "text": "assert.doesNotMatch(markup, /Marke/)",
+        "line": 278
+      },
+      {
+        "expression": "assert.doesNotMatch",
+        "text": "assert.doesNotMatch(markup, /Produktname/)",
+        "line": 279
+      },
+      {
+        "expression": "assert.doesNotMatch",
+        "text": "assert.doesNotMatch(markup, /Zur Prüfung einreichen/)",
+        "line": 280
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Barcode gelesen – das Produkt fehlt noch in unserer Datenbank\\./)",
+        "line": 281
+      },
+      {
+        "expression": "assert.ok",
+        "text": "assert.ok(headline >= 0 && bridge > headline && subline > bridge, markup)",
+        "line": 286
+      }
+    ],
+    "calls": [
+      {
+        "expression": "renderFlow",
+        "text": "renderFlow({ submitting: false, onSubmit: () => undefined })",
+        "line": 271
+      },
+      {
+        "expression": "renderToStaticMarkup",
+        "text": "renderToStaticMarkup(tree.value)",
+        "line": 272
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Danke dir – das ist neu für uns!/)",
+        "line": 273
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Wir nehmen es auf\\. Dein Ergebnis kommt in den Chat\\./)",
+        "line": 274
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Wobei benutzt du es\\?/)",
+        "line": 275
+      },
+      {
+        "expression": "findAll",
+        "text": "findAll(tree.value, (element) => element.type === \"input\")",
+        "line": 276
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(inputs, [])",
+        "line": 277
+      },
+      {
+        "expression": "assert.doesNotMatch",
+        "text": "assert.doesNotMatch(markup, /Marke/)",
+        "line": 278
+      },
+      {
+        "expression": "assert.doesNotMatch",
+        "text": "assert.doesNotMatch(markup, /Produktname/)",
+        "line": 279
+      },
+      {
+        "expression": "assert.doesNotMatch",
+        "text": "assert.doesNotMatch(markup, /Zur Prüfung einreichen/)",
+        "line": 280
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Barcode gelesen – das Produkt fehlt noch in unserer Datenbank\\./)",
+        "line": 281
+      },
+      {
+        "expression": "markup.indexOf",
+        "text": "markup.indexOf(\"Danke dir\")",
+        "line": 283
+      },
+      {
+        "expression": "markup.indexOf",
+        "text": "markup.indexOf(\"Barcode gelesen\")",
+        "line": 284
+      },
+      {
+        "expression": "markup.indexOf",
+        "text": "markup.indexOf(\"Wir nehmen es auf\")",
+        "line": 285
+      },
+      {
+        "expression": "assert.ok",
+        "text": "assert.ok(headline >= 0 && bridge > headline && subline > bridge, markup)",
+        "line": 286
+      }
+    ]
+  },
+  {
+    "file": "/tmp/test-audit-scanner-intake26/snapshots/cut/tests/scan-unknown-flow-ui.test.tsx",
+    "title": "ScanUnknownFlow: tapping a category card submits exactly { category } once, no Absenden step",
+    "line": 289,
+    "start": 10310,
+    "end": 10993,
+    "body": "test(\"ScanUnknownFlow: tapping a category card submits exactly { category } once, no Absenden step\", () => {\n  const submissions: ScanSubmissionInput[] = []\n  const tree = renderFlow({\n    submitting: false,\n    onSubmit: (input) => submissions.push(input),\n  })\n\n  const shampooLabel = CATEGORY_COPY.shampoo.label\n  const card = categoryButton(tree.value, shampooLabel)\n  assert.equal(card.props.disabled, false)\n  card.props.onClick()\n\n  assert.deepEqual(submissions, [{ category: \"shampoo\" }])\n  // No \"Weiter\"/step-2 control exists to gate the submit behind a second tap.\n  assert.deepEqual(\n    findAll(tree.value, (element) => textContent(element) === \"Weiter\"),\n    [],\n  )\n})",
+    "callback": "() => {\n  const submissions: ScanSubmissionInput[] = []\n  const tree = renderFlow({\n    submitting: false,\n    onSubmit: (input) => submissions.push(input),\n  })\n\n  const shampooLabel = CATEGORY_COPY.shampoo.label\n  const card = categoryButton(tree.value, shampooLabel)\n  assert.equal(card.props.disabled, false)\n  card.props.onClick()\n\n  assert.deepEqual(submissions, [{ category: \"shampoo\" }])\n  // No \"Weiter\"/step-2 control exists to gate the submit behind a second tap.\n  assert.deepEqual(\n    findAll(tree.value, (element) => textContent(element) === \"Weiter\"),\n    [],\n  )\n}",
+    "callbackSha256": "e5d49a798903aece11818799946035e6e487e2c17be0bfb7e10581d617b176bc",
+    "assertions": [
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(card.props.disabled, false)",
+        "line": 298
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(submissions, [{ category: \"shampoo\" }])",
+        "line": 301
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(\n    findAll(tree.value, (element) => textContent(element) === \"Weiter\"),\n    [],\n  )",
+        "line": 303
+      }
+    ],
+    "calls": [
+      {
+        "expression": "renderFlow",
+        "text": "renderFlow({\n    submitting: false,\n    onSubmit: (input) => submissions.push(input),\n  })",
+        "line": 291
+      },
+      {
+        "expression": "submissions.push",
+        "text": "submissions.push(input)",
+        "line": 293
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, shampooLabel)",
+        "line": 297
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(card.props.disabled, false)",
+        "line": 298
+      },
+      {
+        "expression": "card.props.onClick",
+        "text": "card.props.onClick()",
+        "line": 299
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(submissions, [{ category: \"shampoo\" }])",
+        "line": 301
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(\n    findAll(tree.value, (element) => textContent(element) === \"Weiter\"),\n    [],\n  )",
+        "line": 303
+      },
+      {
+        "expression": "findAll",
+        "text": "findAll(tree.value, (element) => textContent(element) === \"Weiter\")",
+        "line": 304
+      },
+      {
+        "expression": "textContent",
+        "text": "textContent(element)",
+        "line": 304
+      }
+    ]
+  },
+  {
+    "file": "/tmp/test-audit-scanner-intake26/snapshots/cut/tests/scan-unknown-flow-ui.test.tsx",
+    "title": "ScanUnknownFlow: cards are disabled while submitting and a second tap does not resubmit",
+    "line": 309,
+    "start": 10995,
+    "end": 12022,
+    "body": "test(\"ScanUnknownFlow: cards are disabled while submitting and a second tap does not resubmit\", () => {\n  const submissions: ScanSubmissionInput[] = []\n  const tree = renderFlow({\n    submitting: true,\n    onSubmit: (input) => submissions.push(input),\n  })\n\n  const conditionerLabel = CATEGORY_COPY.conditioner.label\n  const card = categoryButton(tree.value, conditionerLabel)\n  // Structural: the disabled attribute really is set while a request is in flight.\n  assert.equal(card.props.disabled, true)\n\n  // Behavioral: even a direct tap (bypassing the HTML `disabled` attribute) must not\n  // fire a second submit — `handleTap` itself guards on the `submitting` prop.\n  card.props.onClick()\n  card.props.onClick()\n  assert.deepEqual(submissions, [])\n\n  // The \"Weitere Produktarten\" expander is disabled too.\n  const expander = findAll(\n    tree.value,\n    (element) => element.type === \"button\" && textContent(element) === \"Weitere Produktarten\",\n  )[0]\n  assert.ok(expander)\n  assert.equal(expander.props.disabled, true)\n})",
+    "callback": "() => {\n  const submissions: ScanSubmissionInput[] = []\n  const tree = renderFlow({\n    submitting: true,\n    onSubmit: (input) => submissions.push(input),\n  })\n\n  const conditionerLabel = CATEGORY_COPY.conditioner.label\n  const card = categoryButton(tree.value, conditionerLabel)\n  // Structural: the disabled attribute really is set while a request is in flight.\n  assert.equal(card.props.disabled, true)\n\n  // Behavioral: even a direct tap (bypassing the HTML `disabled` attribute) must not\n  // fire a second submit — `handleTap` itself guards on the `submitting` prop.\n  card.props.onClick()\n  card.props.onClick()\n  assert.deepEqual(submissions, [])\n\n  // The \"Weitere Produktarten\" expander is disabled too.\n  const expander = findAll(\n    tree.value,\n    (element) => element.type === \"button\" && textContent(element) === \"Weitere Produktarten\",\n  )[0]\n  assert.ok(expander)\n  assert.equal(expander.props.disabled, true)\n}",
+    "callbackSha256": "983acb1249edd91c1bf68dd9593f7c64e89cf72459fdcb67764af0774ae0b816",
+    "assertions": [
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(card.props.disabled, true)",
+        "line": 319
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(submissions, [])",
+        "line": 325
+      },
+      {
+        "expression": "assert.ok",
+        "text": "assert.ok(expander)",
+        "line": 332
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(expander.props.disabled, true)",
+        "line": 333
+      }
+    ],
+    "calls": [
+      {
+        "expression": "renderFlow",
+        "text": "renderFlow({\n    submitting: true,\n    onSubmit: (input) => submissions.push(input),\n  })",
+        "line": 311
+      },
+      {
+        "expression": "submissions.push",
+        "text": "submissions.push(input)",
+        "line": 313
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, conditionerLabel)",
+        "line": 317
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(card.props.disabled, true)",
+        "line": 319
+      },
+      {
+        "expression": "card.props.onClick",
+        "text": "card.props.onClick()",
+        "line": 323
+      },
+      {
+        "expression": "card.props.onClick",
+        "text": "card.props.onClick()",
+        "line": 324
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(submissions, [])",
+        "line": 325
+      },
+      {
+        "expression": "findAll",
+        "text": "findAll(\n    tree.value,\n    (element) => element.type === \"button\" && textContent(element) === \"Weitere Produktarten\",\n  )",
+        "line": 328
+      },
+      {
+        "expression": "textContent",
+        "text": "textContent(element)",
+        "line": 330
+      },
+      {
+        "expression": "assert.ok",
+        "text": "assert.ok(expander)",
+        "line": 332
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(expander.props.disabled, true)",
+        "line": 333
+      }
+    ]
+  },
+  {
+    "file": "/tmp/test-audit-scanner-intake26/snapshots/cut/tests/scan-unknown-flow-ui.test.tsx",
+    "title": "ScanUnknownFlow: the tapped card alone shows the submitting label while others stay put",
+    "line": 336,
+    "start": 12024,
+    "end": 13452,
+    "body": "test(\"ScanUnknownFlow: the tapped card alone shows the submitting label while others stay put\", () => {\n  // `submitting` is read from a mutable box on every render so `tree.rerender()` can\n  // pick up the parent's post-tap state change (mirrors `scan-flow.tsx`: `onSubmit`\n  // triggers `setSubmitting(true)` one render after the tap) while the hook harness\n  // keeps `tappedCategory`'s state across that rerender.\n  const parentState = { submitting: false }\n  const tree = withClientHooks(() =>\n    ScanUnknownFlow({\n      unknown: unknownResult(),\n      submitting: parentState.submitting,\n      error: null,\n      onSubmit: () => undefined,\n    }),\n  )\n\n  const maskLabel = CATEGORY_COPY.mask.label\n  categoryButton(tree.value, maskLabel).props.onClick()\n  parentState.submitting = true\n  tree.value = tree.rerender()\n\n  // Exactly one card swapped its label to the submitting placeholder — the tapped one.\n  const submittingCards = findAll(\n    tree.value,\n    (element) => element.type === \"button\" && textContent(element) === \"Wird eingereicht\",\n  )\n  assert.equal(submittingCards.length, 1)\n  assert.doesNotMatch(renderToStaticMarkup(tree.value), new RegExp(maskLabel))\n\n  // Every other primary category still renders its own plain label, not the\n  // submitting placeholder.\n  for (const key of [\"shampoo\", \"conditioner\", \"leave_in\", \"oil\"] as const) {\n    categoryButton(tree.value, CATEGORY_COPY[key].label)\n  }\n})",
+    "callback": "() => {\n  // `submitting` is read from a mutable box on every render so `tree.rerender()` can\n  // pick up the parent's post-tap state change (mirrors `scan-flow.tsx`: `onSubmit`\n  // triggers `setSubmitting(true)` one render after the tap) while the hook harness\n  // keeps `tappedCategory`'s state across that rerender.\n  const parentState = { submitting: false }\n  const tree = withClientHooks(() =>\n    ScanUnknownFlow({\n      unknown: unknownResult(),\n      submitting: parentState.submitting,\n      error: null,\n      onSubmit: () => undefined,\n    }),\n  )\n\n  const maskLabel = CATEGORY_COPY.mask.label\n  categoryButton(tree.value, maskLabel).props.onClick()\n  parentState.submitting = true\n  tree.value = tree.rerender()\n\n  // Exactly one card swapped its label to the submitting placeholder — the tapped one.\n  const submittingCards = findAll(\n    tree.value,\n    (element) => element.type === \"button\" && textContent(element) === \"Wird eingereicht\",\n  )\n  assert.equal(submittingCards.length, 1)\n  assert.doesNotMatch(renderToStaticMarkup(tree.value), new RegExp(maskLabel))\n\n  // Every other primary category still renders its own plain label, not the\n  // submitting placeholder.\n  for (const key of [\"shampoo\", \"conditioner\", \"leave_in\", \"oil\"] as const) {\n    categoryButton(tree.value, CATEGORY_COPY[key].label)\n  }\n}",
+    "callbackSha256": "f6b62db43f045a4b99d3ba12094d32f076229f1b8cd7d5041a0ff40e7ed83784",
+    "assertions": [
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(submittingCards.length, 1)",
+        "line": 361
+      },
+      {
+        "expression": "assert.doesNotMatch",
+        "text": "assert.doesNotMatch(renderToStaticMarkup(tree.value), new RegExp(maskLabel))",
+        "line": 362
+      }
+    ],
+    "calls": [
+      {
+        "expression": "withClientHooks",
+        "text": "withClientHooks(() =>\n    ScanUnknownFlow({\n      unknown: unknownResult(),\n      submitting: parentState.submitting,\n      error: null,\n      onSubmit: () => undefined,\n    }),\n  )",
+        "line": 342
+      },
+      {
+        "expression": "ScanUnknownFlow",
+        "text": "ScanUnknownFlow({\n      unknown: unknownResult(),\n      submitting: parentState.submitting,\n      error: null,\n      onSubmit: () => undefined,\n    })",
+        "line": 343
+      },
+      {
+        "expression": "unknownResult",
+        "text": "unknownResult()",
+        "line": 344
+      },
+      {
+        "expression": "categoryButton(tree.value, maskLabel).props.onClick",
+        "text": "categoryButton(tree.value, maskLabel).props.onClick()",
+        "line": 352
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, maskLabel)",
+        "line": 352
+      },
+      {
+        "expression": "tree.rerender",
+        "text": "tree.rerender()",
+        "line": 354
+      },
+      {
+        "expression": "findAll",
+        "text": "findAll(\n    tree.value,\n    (element) => element.type === \"button\" && textContent(element) === \"Wird eingereicht\",\n  )",
+        "line": 357
+      },
+      {
+        "expression": "textContent",
+        "text": "textContent(element)",
+        "line": 359
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(submittingCards.length, 1)",
+        "line": 361
+      },
+      {
+        "expression": "assert.doesNotMatch",
+        "text": "assert.doesNotMatch(renderToStaticMarkup(tree.value), new RegExp(maskLabel))",
+        "line": 362
+      },
+      {
+        "expression": "renderToStaticMarkup",
+        "text": "renderToStaticMarkup(tree.value)",
+        "line": 362
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, CATEGORY_COPY[key].label)",
+        "line": 367
+      }
+    ]
+  },
+  {
+    "file": "/tmp/test-audit-scanner-intake26/snapshots/cut/tests/scan-unknown-flow-ui.test.tsx",
+    "title": "ScanUnknownFlow: a failed submission clears the in-flight highlight next to the error (F17)",
+    "line": 371,
+    "start": 13454,
+    "end": 14817,
+    "body": "test(\"ScanUnknownFlow: a failed submission clears the in-flight highlight next to the error (F17)\", () => {\n  // The parent settles the request: `submitting` goes back to false and an error line\n  // appears. The card the user tapped must stop claiming it is still being submitted.\n  const parentState = { submitting: false, error: null as string | null }\n  const tree = withClientHooks(() =>\n    ScanUnknownFlow({\n      unknown: unknownResult(),\n      submitting: parentState.submitting,\n      error: parentState.error,\n      onSubmit: () => undefined,\n    }),\n  )\n\n  const oilLabel = CATEGORY_COPY.oil.label\n  categoryButton(tree.value, oilLabel).props.onClick()\n  parentState.submitting = true\n  tree.value = tree.rerender()\n  assert.equal(\n    findAll(tree.value, (element) => textContent(element) === \"Wird eingereicht\").length > 0,\n    true,\n  )\n\n  parentState.submitting = false\n  parentState.error = \"Hat nicht geklappt – versuch's nochmal.\"\n  tree.value = tree.rerender()\n\n  const markup = renderToStaticMarkup(tree.value)\n  assert.doesNotMatch(markup, /Wird eingereicht/)\n  assert.match(markup, /Hat nicht geklappt/)\n  // …and the card is no longer rendered as the selected one.\n  const card = categoryButton(tree.value, oilLabel)\n  assert.equal(card.props[\"aria-pressed\"], false)\n  assert.doesNotMatch(String(card.props.className), /brand-plum-ice/)\n})",
+    "callback": "() => {\n  // The parent settles the request: `submitting` goes back to false and an error line\n  // appears. The card the user tapped must stop claiming it is still being submitted.\n  const parentState = { submitting: false, error: null as string | null }\n  const tree = withClientHooks(() =>\n    ScanUnknownFlow({\n      unknown: unknownResult(),\n      submitting: parentState.submitting,\n      error: parentState.error,\n      onSubmit: () => undefined,\n    }),\n  )\n\n  const oilLabel = CATEGORY_COPY.oil.label\n  categoryButton(tree.value, oilLabel).props.onClick()\n  parentState.submitting = true\n  tree.value = tree.rerender()\n  assert.equal(\n    findAll(tree.value, (element) => textContent(element) === \"Wird eingereicht\").length > 0,\n    true,\n  )\n\n  parentState.submitting = false\n  parentState.error = \"Hat nicht geklappt – versuch's nochmal.\"\n  tree.value = tree.rerender()\n\n  const markup = renderToStaticMarkup(tree.value)\n  assert.doesNotMatch(markup, /Wird eingereicht/)\n  assert.match(markup, /Hat nicht geklappt/)\n  // …and the card is no longer rendered as the selected one.\n  const card = categoryButton(tree.value, oilLabel)\n  assert.equal(card.props[\"aria-pressed\"], false)\n  assert.doesNotMatch(String(card.props.className), /brand-plum-ice/)\n}",
+    "callbackSha256": "5895110003a901e840cd5a5122999d9cc591ffd99c45bb85bcb7b62b0d4d1d03",
+    "assertions": [
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(\n    findAll(tree.value, (element) => textContent(element) === \"Wird eingereicht\").length > 0,\n    true,\n  )",
+        "line": 388
+      },
+      {
+        "expression": "assert.doesNotMatch",
+        "text": "assert.doesNotMatch(markup, /Wird eingereicht/)",
+        "line": 398
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Hat nicht geklappt/)",
+        "line": 399
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(card.props[\"aria-pressed\"], false)",
+        "line": 402
+      },
+      {
+        "expression": "assert.doesNotMatch",
+        "text": "assert.doesNotMatch(String(card.props.className), /brand-plum-ice/)",
+        "line": 403
+      }
+    ],
+    "calls": [
+      {
+        "expression": "withClientHooks",
+        "text": "withClientHooks(() =>\n    ScanUnknownFlow({\n      unknown: unknownResult(),\n      submitting: parentState.submitting,\n      error: parentState.error,\n      onSubmit: () => undefined,\n    }),\n  )",
+        "line": 375
+      },
+      {
+        "expression": "ScanUnknownFlow",
+        "text": "ScanUnknownFlow({\n      unknown: unknownResult(),\n      submitting: parentState.submitting,\n      error: parentState.error,\n      onSubmit: () => undefined,\n    })",
+        "line": 376
+      },
+      {
+        "expression": "unknownResult",
+        "text": "unknownResult()",
+        "line": 377
+      },
+      {
+        "expression": "categoryButton(tree.value, oilLabel).props.onClick",
+        "text": "categoryButton(tree.value, oilLabel).props.onClick()",
+        "line": 385
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, oilLabel)",
+        "line": 385
+      },
+      {
+        "expression": "tree.rerender",
+        "text": "tree.rerender()",
+        "line": 387
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(\n    findAll(tree.value, (element) => textContent(element) === \"Wird eingereicht\").length > 0,\n    true,\n  )",
+        "line": 388
+      },
+      {
+        "expression": "findAll",
+        "text": "findAll(tree.value, (element) => textContent(element) === \"Wird eingereicht\")",
+        "line": 389
+      },
+      {
+        "expression": "textContent",
+        "text": "textContent(element)",
+        "line": 389
+      },
+      {
+        "expression": "tree.rerender",
+        "text": "tree.rerender()",
+        "line": 395
+      },
+      {
+        "expression": "renderToStaticMarkup",
+        "text": "renderToStaticMarkup(tree.value)",
+        "line": 397
+      },
+      {
+        "expression": "assert.doesNotMatch",
+        "text": "assert.doesNotMatch(markup, /Wird eingereicht/)",
+        "line": 398
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Hat nicht geklappt/)",
+        "line": 399
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, oilLabel)",
+        "line": 401
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(card.props[\"aria-pressed\"], false)",
+        "line": 402
+      },
+      {
+        "expression": "assert.doesNotMatch",
+        "text": "assert.doesNotMatch(String(card.props.className), /brand-plum-ice/)",
+        "line": 403
+      },
+      {
+        "expression": "String",
+        "text": "String(card.props.className)",
+        "line": 403
+      }
+    ]
+  },
+  {
+    "file": "/tmp/test-audit-scanner-intake26/snapshots/cut/tests/scan-research-intake-form-ui.test.tsx",
+    "title": "ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)",
+    "line": 124,
+    "start": 4186,
+    "end": 5222,
+    "body": "test(\"ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)\", () => {\n  const tree = renderForm({ brandText: \"\", productNameText: \"\", onSubmit: () => undefined })\n  const markup = renderToStaticMarkup(tree.value)\n  assert.match(markup, /Marke/)\n  assert.match(markup, /Produktname/)\n  assert.match(markup, /Was ist es\\?/)\n  assert.match(markup, /Tippe die Kategorie an – das reicht uns schon\\./)\n  assert.match(markup, /Zurück/)\n  // Task 6 copy audit: no user-facing string in the intake form leaks the retailer name.\n  assert.doesNotMatch(markup, /\\bdm\\b/)\n  assert.doesNotMatch(markup, /role=\"alert\"/)\n  assert.match(markup, /autofocus/)\n  const marke = findAll(tree.value, (element) => element.props[\"aria-label\"] === \"Marke\")[0]\n  assert.ok(marke)\n  assert.equal(marke.props.autoFocus, true)\n  const produktname = findAll(\n    tree.value,\n    (element) => element.props[\"aria-label\"] === \"Produktname\",\n  )[0]\n  assert.ok(produktname)\n  assert.notEqual(produktname.props.autoFocus, true)\n})",
+    "callback": "() => {\n  const tree = renderForm({ brandText: \"\", productNameText: \"\", onSubmit: () => undefined })\n  const markup = renderToStaticMarkup(tree.value)\n  assert.match(markup, /Marke/)\n  assert.match(markup, /Produktname/)\n  assert.match(markup, /Was ist es\\?/)\n  assert.match(markup, /Tippe die Kategorie an – das reicht uns schon\\./)\n  assert.match(markup, /Zurück/)\n  // Task 6 copy audit: no user-facing string in the intake form leaks the retailer name.\n  assert.doesNotMatch(markup, /\\bdm\\b/)\n  assert.doesNotMatch(markup, /role=\"alert\"/)\n  assert.match(markup, /autofocus/)\n  const marke = findAll(tree.value, (element) => element.props[\"aria-label\"] === \"Marke\")[0]\n  assert.ok(marke)\n  assert.equal(marke.props.autoFocus, true)\n  const produktname = findAll(\n    tree.value,\n    (element) => element.props[\"aria-label\"] === \"Produktname\",\n  )[0]\n  assert.ok(produktname)\n  assert.notEqual(produktname.props.autoFocus, true)\n}",
+    "callbackSha256": "b1fd38ad82366a73364144424b4297bf8dfa46f80dd98cd0773d009529b4f16d",
+    "assertions": [
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Marke/)",
+        "line": 127
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Produktname/)",
+        "line": 128
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Was ist es\\?/)",
+        "line": 129
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Tippe die Kategorie an – das reicht uns schon\\./)",
+        "line": 130
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Zurück/)",
+        "line": 131
+      },
+      {
+        "expression": "assert.doesNotMatch",
+        "text": "assert.doesNotMatch(markup, /\\bdm\\b/)",
+        "line": 133
+      },
+      {
+        "expression": "assert.doesNotMatch",
+        "text": "assert.doesNotMatch(markup, /role=\"alert\"/)",
+        "line": 134
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /autofocus/)",
+        "line": 135
+      },
+      {
+        "expression": "assert.ok",
+        "text": "assert.ok(marke)",
+        "line": 137
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(marke.props.autoFocus, true)",
+        "line": 138
+      },
+      {
+        "expression": "assert.ok",
+        "text": "assert.ok(produktname)",
+        "line": 143
+      },
+      {
+        "expression": "assert.notEqual",
+        "text": "assert.notEqual(produktname.props.autoFocus, true)",
+        "line": 144
+      }
+    ],
+    "calls": [
+      {
+        "expression": "renderForm",
+        "text": "renderForm({ brandText: \"\", productNameText: \"\", onSubmit: () => undefined })",
+        "line": 125
+      },
+      {
+        "expression": "renderToStaticMarkup",
+        "text": "renderToStaticMarkup(tree.value)",
+        "line": 126
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Marke/)",
+        "line": 127
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Produktname/)",
+        "line": 128
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Was ist es\\?/)",
+        "line": 129
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Tippe die Kategorie an – das reicht uns schon\\./)",
+        "line": 130
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Zurück/)",
+        "line": 131
+      },
+      {
+        "expression": "assert.doesNotMatch",
+        "text": "assert.doesNotMatch(markup, /\\bdm\\b/)",
+        "line": 133
+      },
+      {
+        "expression": "assert.doesNotMatch",
+        "text": "assert.doesNotMatch(markup, /role=\"alert\"/)",
+        "line": 134
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /autofocus/)",
+        "line": 135
+      },
+      {
+        "expression": "findAll",
+        "text": "findAll(tree.value, (element) => element.props[\"aria-label\"] === \"Marke\")",
+        "line": 136
+      },
+      {
+        "expression": "assert.ok",
+        "text": "assert.ok(marke)",
+        "line": 137
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(marke.props.autoFocus, true)",
+        "line": 138
+      },
+      {
+        "expression": "findAll",
+        "text": "findAll(\n    tree.value,\n    (element) => element.props[\"aria-label\"] === \"Produktname\",\n  )",
+        "line": 139
+      },
+      {
+        "expression": "assert.ok",
+        "text": "assert.ok(produktname)",
+        "line": 143
+      },
+      {
+        "expression": "assert.notEqual",
+        "text": "assert.notEqual(produktname.props.autoFocus, true)",
+        "line": 144
+      }
+    ]
+  },
+  {
+    "file": "/tmp/test-audit-scanner-intake26/snapshots/cut/tests/scan-research-intake-form-ui.test.tsx",
+    "title": "ScanResearchIntakeForm: a category tap is blocked while Marke is empty, even with a filled Produktname",
+    "line": 147,
+    "start": 5224,
+    "end": 5621,
+    "body": "test(\"ScanResearchIntakeForm: a category tap is blocked while Marke is empty, even with a filled Produktname\", () => {\n  const calls: string[] = []\n  const tree = renderForm({\n    brandText: \"\",\n    productNameText: \"Ciment Thermique\",\n    onSubmit: (category) => calls.push(category),\n  })\n  categoryButton(tree.value, CATEGORY_COPY.shampoo.label).props.onClick()\n  assert.deepEqual(calls, [])\n})",
+    "callback": "() => {\n  const calls: string[] = []\n  const tree = renderForm({\n    brandText: \"\",\n    productNameText: \"Ciment Thermique\",\n    onSubmit: (category) => calls.push(category),\n  })\n  categoryButton(tree.value, CATEGORY_COPY.shampoo.label).props.onClick()\n  assert.deepEqual(calls, [])\n}",
+    "callbackSha256": "1cf9e8a72f90908be987f088e9a4a48c7e02f95bca6d9aff786b3791fe4c53c5",
+    "assertions": [
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [])",
+        "line": 155
+      }
+    ],
+    "calls": [
+      {
+        "expression": "renderForm",
+        "text": "renderForm({\n    brandText: \"\",\n    productNameText: \"Ciment Thermique\",\n    onSubmit: (category) => calls.push(category),\n  })",
+        "line": 149
+      },
+      {
+        "expression": "calls.push",
+        "text": "calls.push(category)",
+        "line": 152
+      },
+      {
+        "expression": "categoryButton(tree.value, CATEGORY_COPY.shampoo.label).props.onClick",
+        "text": "categoryButton(tree.value, CATEGORY_COPY.shampoo.label).props.onClick()",
+        "line": 154
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, CATEGORY_COPY.shampoo.label)",
+        "line": 154
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [])",
+        "line": 155
+      }
+    ]
+  },
+  {
+    "file": "/tmp/test-audit-scanner-intake26/snapshots/cut/tests/scan-research-intake-form-ui.test.tsx",
+    "title": "ScanResearchIntakeForm: a category tap is blocked while Produktname is empty, even with a filled Marke",
+    "line": 158,
+    "start": 5623,
+    "end": 6013,
+    "body": "test(\"ScanResearchIntakeForm: a category tap is blocked while Produktname is empty, even with a filled Marke\", () => {\n  const calls: string[] = []\n  const tree = renderForm({\n    brandText: \"Kérastase\",\n    productNameText: \"\",\n    onSubmit: (category) => calls.push(category),\n  })\n  categoryButton(tree.value, CATEGORY_COPY.shampoo.label).props.onClick()\n  assert.deepEqual(calls, [])\n})",
+    "callback": "() => {\n  const calls: string[] = []\n  const tree = renderForm({\n    brandText: \"Kérastase\",\n    productNameText: \"\",\n    onSubmit: (category) => calls.push(category),\n  })\n  categoryButton(tree.value, CATEGORY_COPY.shampoo.label).props.onClick()\n  assert.deepEqual(calls, [])\n}",
+    "callbackSha256": "bfc119ac6fd928eb2ee02672af2241e17ecbfa4dd0b1dfaf2f813764c3cef300",
+    "assertions": [
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [])",
+        "line": 166
+      }
+    ],
+    "calls": [
+      {
+        "expression": "renderForm",
+        "text": "renderForm({\n    brandText: \"Kérastase\",\n    productNameText: \"\",\n    onSubmit: (category) => calls.push(category),\n  })",
+        "line": 160
+      },
+      {
+        "expression": "calls.push",
+        "text": "calls.push(category)",
+        "line": 163
+      },
+      {
+        "expression": "categoryButton(tree.value, CATEGORY_COPY.shampoo.label).props.onClick",
+        "text": "categoryButton(tree.value, CATEGORY_COPY.shampoo.label).props.onClick()",
+        "line": 165
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, CATEGORY_COPY.shampoo.label)",
+        "line": 165
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [])",
+        "line": 166
+      }
+    ]
+  },
+  {
+    "file": "/tmp/test-audit-scanner-intake26/snapshots/cut/tests/scan-research-intake-form-ui.test.tsx",
+    "title": "ScanResearchIntakeForm: a category tap submits exactly the tapped category once both fields are filled",
+    "line": 169,
+    "start": 6015,
+    "end": 6438,
+    "body": "test(\"ScanResearchIntakeForm: a category tap submits exactly the tapped category once both fields are filled\", () => {\n  const calls: string[] = []\n  const tree = renderForm({\n    brandText: \"Kérastase\",\n    productNameText: \"Ciment Thermique\",\n    onSubmit: (category) => calls.push(category),\n  })\n  categoryButton(tree.value, CATEGORY_COPY.conditioner.label).props.onClick()\n  assert.deepEqual(calls, [\"conditioner\"])\n})",
+    "callback": "() => {\n  const calls: string[] = []\n  const tree = renderForm({\n    brandText: \"Kérastase\",\n    productNameText: \"Ciment Thermique\",\n    onSubmit: (category) => calls.push(category),\n  })\n  categoryButton(tree.value, CATEGORY_COPY.conditioner.label).props.onClick()\n  assert.deepEqual(calls, [\"conditioner\"])\n}",
+    "callbackSha256": "1e66727d33e6618b29a90c8ea267cefe21f67702775650662429844def9f0d6f",
+    "assertions": [
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [\"conditioner\"])",
+        "line": 177
+      }
+    ],
+    "calls": [
+      {
+        "expression": "renderForm",
+        "text": "renderForm({\n    brandText: \"Kérastase\",\n    productNameText: \"Ciment Thermique\",\n    onSubmit: (category) => calls.push(category),\n  })",
+        "line": 171
+      },
+      {
+        "expression": "calls.push",
+        "text": "calls.push(category)",
+        "line": 174
+      },
+      {
+        "expression": "categoryButton(tree.value, CATEGORY_COPY.conditioner.label).props.onClick",
+        "text": "categoryButton(tree.value, CATEGORY_COPY.conditioner.label).props.onClick()",
+        "line": 176
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, CATEGORY_COPY.conditioner.label)",
+        "line": 176
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [\"conditioner\"])",
+        "line": 177
+      }
+    ]
+  },
+  {
+    "file": "/tmp/test-audit-scanner-intake26/snapshots/cut/tests/scan-research-intake-form-ui.test.tsx",
+    "title": "ScanResearchIntakeForm: whitespace-only text still counts as empty (blocks submit)",
+    "line": 180,
+    "start": 6440,
+    "end": 6807,
+    "body": "test(\"ScanResearchIntakeForm: whitespace-only text still counts as empty (blocks submit)\", () => {\n  const calls: string[] = []\n  const tree = renderForm({\n    brandText: \"   \",\n    productNameText: \"   \",\n    onSubmit: (category) => calls.push(category),\n  })\n  categoryButton(tree.value, CATEGORY_COPY.shampoo.label).props.onClick()\n  assert.deepEqual(calls, [])\n})",
+    "callback": "() => {\n  const calls: string[] = []\n  const tree = renderForm({\n    brandText: \"   \",\n    productNameText: \"   \",\n    onSubmit: (category) => calls.push(category),\n  })\n  categoryButton(tree.value, CATEGORY_COPY.shampoo.label).props.onClick()\n  assert.deepEqual(calls, [])\n}",
+    "callbackSha256": "4930ed2c279d741a77f9318d3397cb408fcc18d61f0e7c516006010f5d2d8d1a",
+    "assertions": [
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [])",
+        "line": 188
+      }
+    ],
+    "calls": [
+      {
+        "expression": "renderForm",
+        "text": "renderForm({\n    brandText: \"   \",\n    productNameText: \"   \",\n    onSubmit: (category) => calls.push(category),\n  })",
+        "line": 182
+      },
+      {
+        "expression": "calls.push",
+        "text": "calls.push(category)",
+        "line": 185
+      },
+      {
+        "expression": "categoryButton(tree.value, CATEGORY_COPY.shampoo.label).props.onClick",
+        "text": "categoryButton(tree.value, CATEGORY_COPY.shampoo.label).props.onClick()",
+        "line": 187
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, CATEGORY_COPY.shampoo.label)",
+        "line": 187
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [])",
+        "line": 188
+      }
+    ]
+  },
+  {
+    "file": "/tmp/test-audit-scanner-intake26/snapshots/cut/tests/scan-research-intake-form-ui.test.tsx",
+    "title": "ScanResearchIntakeForm: edits call onBrandTextChange/onProductNameTextChange with the raw typed value",
+    "line": 191,
+    "start": 6809,
+    "end": 7521,
+    "body": "test(\"ScanResearchIntakeForm: edits call onBrandTextChange/onProductNameTextChange with the raw typed value\", () => {\n  const brandCalls: string[] = []\n  const nameCalls: string[] = []\n  const tree = renderForm({\n    onBrandTextChange: (value) => brandCalls.push(value),\n    onProductNameTextChange: (value) => nameCalls.push(value),\n    onSubmit: () => undefined,\n  })\n  const inputs = findAll(tree.value, (element) => element.type === \"input\")\n  assert.equal(inputs.length, 2)\n  inputs[0].props.onChange({ target: { value: \"Kérastase\" } })\n  inputs[1].props.onChange({ target: { value: \"Ciment Thermique\" } })\n  assert.deepEqual(brandCalls, [\"Kérastase\"])\n  assert.deepEqual(nameCalls, [\"Ciment Thermique\"])\n})",
+    "callback": "() => {\n  const brandCalls: string[] = []\n  const nameCalls: string[] = []\n  const tree = renderForm({\n    onBrandTextChange: (value) => brandCalls.push(value),\n    onProductNameTextChange: (value) => nameCalls.push(value),\n    onSubmit: () => undefined,\n  })\n  const inputs = findAll(tree.value, (element) => element.type === \"input\")\n  assert.equal(inputs.length, 2)\n  inputs[0].props.onChange({ target: { value: \"Kérastase\" } })\n  inputs[1].props.onChange({ target: { value: \"Ciment Thermique\" } })\n  assert.deepEqual(brandCalls, [\"Kérastase\"])\n  assert.deepEqual(nameCalls, [\"Ciment Thermique\"])\n}",
+    "callbackSha256": "76185ba5ee204e0910a835c145b8148ade73409f36a112b378c1a09a188a37dc",
+    "assertions": [
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(inputs.length, 2)",
+        "line": 200
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(brandCalls, [\"Kérastase\"])",
+        "line": 203
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(nameCalls, [\"Ciment Thermique\"])",
+        "line": 204
+      }
+    ],
+    "calls": [
+      {
+        "expression": "renderForm",
+        "text": "renderForm({\n    onBrandTextChange: (value) => brandCalls.push(value),\n    onProductNameTextChange: (value) => nameCalls.push(value),\n    onSubmit: () => undefined,\n  })",
+        "line": 194
+      },
+      {
+        "expression": "brandCalls.push",
+        "text": "brandCalls.push(value)",
+        "line": 195
+      },
+      {
+        "expression": "nameCalls.push",
+        "text": "nameCalls.push(value)",
+        "line": 196
+      },
+      {
+        "expression": "findAll",
+        "text": "findAll(tree.value, (element) => element.type === \"input\")",
+        "line": 199
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(inputs.length, 2)",
+        "line": 200
+      },
+      {
+        "expression": "inputs[0].props.onChange",
+        "text": "inputs[0].props.onChange({ target: { value: \"Kérastase\" } })",
+        "line": 201
+      },
+      {
+        "expression": "inputs[1].props.onChange",
+        "text": "inputs[1].props.onChange({ target: { value: \"Ciment Thermique\" } })",
+        "line": 202
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(brandCalls, [\"Kérastase\"])",
+        "line": 203
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(nameCalls, [\"Ciment Thermique\"])",
+        "line": 204
+      }
+    ]
+  },
+  {
+    "file": "/tmp/test-audit-scanner-intake26/snapshots/cut/tests/scan-research-intake-form-ui.test.tsx",
+    "title": "ScanResearchIntakeForm: shows the five primary categories only, with a 'Mehr …' expander for the rest",
+    "line": 207,
+    "start": 7523,
+    "end": 8331,
+    "body": "test(\"ScanResearchIntakeForm: shows the five primary categories only, with a 'Mehr …' expander for the rest\", () => {\n  const tree = renderForm({ onSubmit: () => undefined })\n  for (const key of [\"shampoo\", \"conditioner\", \"leave_in\", \"mask\", \"oil\"] as const) {\n    categoryButton(tree.value, CATEGORY_COPY[key].label)\n  }\n  assert.equal(\n    findAll(\n      tree.value,\n      (element) =>\n        element.type === \"button\" && textContent(element) === CATEGORY_COPY.heat_protectant.label,\n    ).length,\n    0,\n  )\n  categoryButton(tree.value, \"Mehr …\").props.onClick()\n  tree.value = tree.rerender()\n  for (const key of [\n    \"heat_protectant\",\n    \"scalp_care\",\n    \"dry_shampoo\",\n    \"bondbuilder\",\n    \"deep_cleansing_shampoo\",\n  ] as const) {\n    categoryButton(tree.value, CATEGORY_COPY[key].label)\n  }\n})",
+    "callback": "() => {\n  const tree = renderForm({ onSubmit: () => undefined })\n  for (const key of [\"shampoo\", \"conditioner\", \"leave_in\", \"mask\", \"oil\"] as const) {\n    categoryButton(tree.value, CATEGORY_COPY[key].label)\n  }\n  assert.equal(\n    findAll(\n      tree.value,\n      (element) =>\n        element.type === \"button\" && textContent(element) === CATEGORY_COPY.heat_protectant.label,\n    ).length,\n    0,\n  )\n  categoryButton(tree.value, \"Mehr …\").props.onClick()\n  tree.value = tree.rerender()\n  for (const key of [\n    \"heat_protectant\",\n    \"scalp_care\",\n    \"dry_shampoo\",\n    \"bondbuilder\",\n    \"deep_cleansing_shampoo\",\n  ] as const) {\n    categoryButton(tree.value, CATEGORY_COPY[key].label)\n  }\n}",
+    "callbackSha256": "5d28e27f6225b60c3b0c5b65a55b77118c714963c1a0ce23f8a7a8f94f8dfd1d",
+    "assertions": [
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(\n    findAll(\n      tree.value,\n      (element) =>\n        element.type === \"button\" && textContent(element) === CATEGORY_COPY.heat_protectant.label,\n    ).length,\n    0,\n  )",
+        "line": 212
+      }
+    ],
+    "calls": [
+      {
+        "expression": "renderForm",
+        "text": "renderForm({ onSubmit: () => undefined })",
+        "line": 208
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, CATEGORY_COPY[key].label)",
+        "line": 210
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(\n    findAll(\n      tree.value,\n      (element) =>\n        element.type === \"button\" && textContent(element) === CATEGORY_COPY.heat_protectant.label,\n    ).length,\n    0,\n  )",
+        "line": 212
+      },
+      {
+        "expression": "findAll",
+        "text": "findAll(\n      tree.value,\n      (element) =>\n        element.type === \"button\" && textContent(element) === CATEGORY_COPY.heat_protectant.label,\n    )",
+        "line": 213
+      },
+      {
+        "expression": "textContent",
+        "text": "textContent(element)",
+        "line": 216
+      },
+      {
+        "expression": "categoryButton(tree.value, \"Mehr …\").props.onClick",
+        "text": "categoryButton(tree.value, \"Mehr …\").props.onClick()",
+        "line": 220
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, \"Mehr …\")",
+        "line": 220
+      },
+      {
+        "expression": "tree.rerender",
+        "text": "tree.rerender()",
+        "line": 221
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, CATEGORY_COPY[key].label)",
+        "line": 229
+      }
+    ]
+  },
+  {
+    "file": "/tmp/test-audit-scanner-intake26/snapshots/cut/tests/scan-research-intake-form-ui.test.tsx",
+    "title": "ScanResearchIntakeForm: the tapped card alone shows the submitting label while others and the back affordance disable",
+    "line": 233,
+    "start": 8333,
+    "end": 9525,
+    "body": "test(\"ScanResearchIntakeForm: the tapped card alone shows the submitting label while others and the back affordance disable\", () => {\n  const parentState = { submitting: false }\n  const tree = withClientHooks(() =>\n    ScanResearchIntakeForm({\n      brandText: \"Kérastase\",\n      productNameText: \"Ciment Thermique\",\n      onBrandTextChange: () => undefined,\n      onProductNameTextChange: () => undefined,\n      submitting: parentState.submitting,\n      error: null,\n      onBack: () => undefined,\n      onSubmit: () => undefined,\n    }),\n  )\n  categoryButton(tree.value, CATEGORY_COPY.mask.label).props.onClick()\n  parentState.submitting = true\n  tree.value = tree.rerender()\n\n  const submittingCards = findAll(\n    tree.value,\n    (element) => element.type === \"button\" && textContent(element) === \"Wird eingereicht\",\n  )\n  assert.equal(submittingCards.length, 1)\n  assert.doesNotMatch(renderToStaticMarkup(tree.value), new RegExp(CATEGORY_COPY.mask.label))\n  categoryButton(tree.value, CATEGORY_COPY.shampoo.label)\n\n  const back = findAll(\n    tree.value,\n    (element) => element.type === \"button\" && textContent(element) === \"Zurück\",\n  )[0]\n  assert.equal(back.props.disabled, true)\n})",
+    "callback": "() => {\n  const parentState = { submitting: false }\n  const tree = withClientHooks(() =>\n    ScanResearchIntakeForm({\n      brandText: \"Kérastase\",\n      productNameText: \"Ciment Thermique\",\n      onBrandTextChange: () => undefined,\n      onProductNameTextChange: () => undefined,\n      submitting: parentState.submitting,\n      error: null,\n      onBack: () => undefined,\n      onSubmit: () => undefined,\n    }),\n  )\n  categoryButton(tree.value, CATEGORY_COPY.mask.label).props.onClick()\n  parentState.submitting = true\n  tree.value = tree.rerender()\n\n  const submittingCards = findAll(\n    tree.value,\n    (element) => element.type === \"button\" && textContent(element) === \"Wird eingereicht\",\n  )\n  assert.equal(submittingCards.length, 1)\n  assert.doesNotMatch(renderToStaticMarkup(tree.value), new RegExp(CATEGORY_COPY.mask.label))\n  categoryButton(tree.value, CATEGORY_COPY.shampoo.label)\n\n  const back = findAll(\n    tree.value,\n    (element) => element.type === \"button\" && textContent(element) === \"Zurück\",\n  )[0]\n  assert.equal(back.props.disabled, true)\n}",
+    "callbackSha256": "adbc24705b9870e83c81db90a79997050bd29bafa74072e8ca13898946c23e36",
+    "assertions": [
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(submittingCards.length, 1)",
+        "line": 255
+      },
+      {
+        "expression": "assert.doesNotMatch",
+        "text": "assert.doesNotMatch(renderToStaticMarkup(tree.value), new RegExp(CATEGORY_COPY.mask.label))",
+        "line": 256
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(back.props.disabled, true)",
+        "line": 263
+      }
+    ],
+    "calls": [
+      {
+        "expression": "withClientHooks",
+        "text": "withClientHooks(() =>\n    ScanResearchIntakeForm({\n      brandText: \"Kérastase\",\n      productNameText: \"Ciment Thermique\",\n      onBrandTextChange: () => undefined,\n      onProductNameTextChange: () => undefined,\n      submitting: parentState.submitting,\n      error: null,\n      onBack: () => undefined,\n      onSubmit: () => undefined,\n    }),\n  )",
+        "line": 235
+      },
+      {
+        "expression": "ScanResearchIntakeForm",
+        "text": "ScanResearchIntakeForm({\n      brandText: \"Kérastase\",\n      productNameText: \"Ciment Thermique\",\n      onBrandTextChange: () => undefined,\n      onProductNameTextChange: () => undefined,\n      submitting: parentState.submitting,\n      error: null,\n      onBack: () => undefined,\n      onSubmit: () => undefined,\n    })",
+        "line": 236
+      },
+      {
+        "expression": "categoryButton(tree.value, CATEGORY_COPY.mask.label).props.onClick",
+        "text": "categoryButton(tree.value, CATEGORY_COPY.mask.label).props.onClick()",
+        "line": 247
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, CATEGORY_COPY.mask.label)",
+        "line": 247
+      },
+      {
+        "expression": "tree.rerender",
+        "text": "tree.rerender()",
+        "line": 249
+      },
+      {
+        "expression": "findAll",
+        "text": "findAll(\n    tree.value,\n    (element) => element.type === \"button\" && textContent(element) === \"Wird eingereicht\",\n  )",
+        "line": 251
+      },
+      {
+        "expression": "textContent",
+        "text": "textContent(element)",
+        "line": 253
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(submittingCards.length, 1)",
+        "line": 255
+      },
+      {
+        "expression": "assert.doesNotMatch",
+        "text": "assert.doesNotMatch(renderToStaticMarkup(tree.value), new RegExp(CATEGORY_COPY.mask.label))",
+        "line": 256
+      },
+      {
+        "expression": "renderToStaticMarkup",
+        "text": "renderToStaticMarkup(tree.value)",
+        "line": 256
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, CATEGORY_COPY.shampoo.label)",
+        "line": 257
+      },
+      {
+        "expression": "findAll",
+        "text": "findAll(\n    tree.value,\n    (element) => element.type === \"button\" && textContent(element) === \"Zurück\",\n  )",
+        "line": 259
+      },
+      {
+        "expression": "textContent",
+        "text": "textContent(element)",
+        "line": 261
+      },
+      {
+        "expression": "assert.equal",
+        "text": "assert.equal(back.props.disabled, true)",
+        "line": 263
+      }
+    ]
+  },
+  {
+    "file": "/tmp/test-audit-scanner-intake26/snapshots/cut/tests/scan-research-intake-form-ui.test.tsx",
+    "title": "ScanResearchIntakeForm: a second tap while submitting does not resubmit",
+    "line": 266,
+    "start": 9527,
+    "end": 9998,
+    "body": "test(\"ScanResearchIntakeForm: a second tap while submitting does not resubmit\", () => {\n  const calls: string[] = []\n  const tree = renderForm({\n    brandText: \"Kérastase\",\n    productNameText: \"Ciment Thermique\",\n    submitting: true,\n    onSubmit: (category) => calls.push(category),\n  })\n  categoryButton(tree.value, CATEGORY_COPY.shampoo.label).props.onClick()\n  categoryButton(tree.value, CATEGORY_COPY.shampoo.label).props.onClick()\n  assert.deepEqual(calls, [])\n})",
+    "callback": "() => {\n  const calls: string[] = []\n  const tree = renderForm({\n    brandText: \"Kérastase\",\n    productNameText: \"Ciment Thermique\",\n    submitting: true,\n    onSubmit: (category) => calls.push(category),\n  })\n  categoryButton(tree.value, CATEGORY_COPY.shampoo.label).props.onClick()\n  categoryButton(tree.value, CATEGORY_COPY.shampoo.label).props.onClick()\n  assert.deepEqual(calls, [])\n}",
+    "callbackSha256": "3835062a3c5e8b3e66e42b1cf0e9d5f138553724db6a5d145df626874b3c6d6f",
+    "assertions": [
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [])",
+        "line": 276
+      }
+    ],
+    "calls": [
+      {
+        "expression": "renderForm",
+        "text": "renderForm({\n    brandText: \"Kérastase\",\n    productNameText: \"Ciment Thermique\",\n    submitting: true,\n    onSubmit: (category) => calls.push(category),\n  })",
+        "line": 268
+      },
+      {
+        "expression": "calls.push",
+        "text": "calls.push(category)",
+        "line": 272
+      },
+      {
+        "expression": "categoryButton(tree.value, CATEGORY_COPY.shampoo.label).props.onClick",
+        "text": "categoryButton(tree.value, CATEGORY_COPY.shampoo.label).props.onClick()",
+        "line": 274
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, CATEGORY_COPY.shampoo.label)",
+        "line": 274
+      },
+      {
+        "expression": "categoryButton(tree.value, CATEGORY_COPY.shampoo.label).props.onClick",
+        "text": "categoryButton(tree.value, CATEGORY_COPY.shampoo.label).props.onClick()",
+        "line": 275
+      },
+      {
+        "expression": "categoryButton",
+        "text": "categoryButton(tree.value, CATEGORY_COPY.shampoo.label)",
+        "line": 275
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [])",
+        "line": 276
+      }
+    ]
+  },
+  {
+    "file": "/tmp/test-audit-scanner-intake26/snapshots/cut/tests/scan-research-intake-form-ui.test.tsx",
+    "title": "ScanResearchIntakeForm: onBack fires exactly on the back affordance",
+    "line": 279,
+    "start": 10000,
+    "end": 10401,
+    "body": "test(\"ScanResearchIntakeForm: onBack fires exactly on the back affordance\", () => {\n  const calls: number[] = []\n  const tree = renderForm({ onBack: () => calls.push(1), onSubmit: () => undefined })\n  const back = findAll(\n    tree.value,\n    (element) => element.type === \"button\" && textContent(element) === \"Zurück\",\n  )[0]\n  assert.ok(back)\n  back.props.onClick()\n  assert.deepEqual(calls, [1])\n})",
+    "callback": "() => {\n  const calls: number[] = []\n  const tree = renderForm({ onBack: () => calls.push(1), onSubmit: () => undefined })\n  const back = findAll(\n    tree.value,\n    (element) => element.type === \"button\" && textContent(element) === \"Zurück\",\n  )[0]\n  assert.ok(back)\n  back.props.onClick()\n  assert.deepEqual(calls, [1])\n}",
+    "callbackSha256": "c8cd4222f857aecdae4da2f70378d9c08ae9bd359c54b82fca6be100aeeed9d2",
+    "assertions": [
+      {
+        "expression": "assert.ok",
+        "text": "assert.ok(back)",
+        "line": 286
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [1])",
+        "line": 288
+      }
+    ],
+    "calls": [
+      {
+        "expression": "renderForm",
+        "text": "renderForm({ onBack: () => calls.push(1), onSubmit: () => undefined })",
+        "line": 281
+      },
+      {
+        "expression": "calls.push",
+        "text": "calls.push(1)",
+        "line": 281
+      },
+      {
+        "expression": "findAll",
+        "text": "findAll(\n    tree.value,\n    (element) => element.type === \"button\" && textContent(element) === \"Zurück\",\n  )",
+        "line": 282
+      },
+      {
+        "expression": "textContent",
+        "text": "textContent(element)",
+        "line": 284
+      },
+      {
+        "expression": "assert.ok",
+        "text": "assert.ok(back)",
+        "line": 286
+      },
+      {
+        "expression": "back.props.onClick",
+        "text": "back.props.onClick()",
+        "line": 287
+      },
+      {
+        "expression": "assert.deepEqual",
+        "text": "assert.deepEqual(calls, [1])",
+        "line": 288
+      }
+    ]
+  },
+  {
+    "file": "/tmp/test-audit-scanner-intake26/snapshots/cut/tests/scan-research-intake-form-ui.test.tsx",
+    "title": "ScanResearchIntakeForm: renders the standard error copy inside an alert role with a polite live region (task 6 a11y)",
+    "line": 291,
+    "start": 10403,
+    "end": 10862,
+    "body": "test(\"ScanResearchIntakeForm: renders the standard error copy inside an alert role with a polite live region (task 6 a11y)\", () => {\n  const tree = renderForm({\n    error: \"Hat nicht geklappt – versuch's nochmal.\",\n    onSubmit: () => undefined,\n  })\n  const markup = renderToStaticMarkup(tree.value)\n  assert.match(markup, /role=\"alert\"/)\n  assert.match(markup, /aria-live=\"polite\"/)\n  assert.match(markup, /Hat nicht geklappt – versuch&#x27;s nochmal\\./)\n})",
+    "callback": "() => {\n  const tree = renderForm({\n    error: \"Hat nicht geklappt – versuch's nochmal.\",\n    onSubmit: () => undefined,\n  })\n  const markup = renderToStaticMarkup(tree.value)\n  assert.match(markup, /role=\"alert\"/)\n  assert.match(markup, /aria-live=\"polite\"/)\n  assert.match(markup, /Hat nicht geklappt – versuch&#x27;s nochmal\\./)\n}",
+    "callbackSha256": "f49d6d60756333fa2339d1925e95415eaaae72a1d7e3adf6b10c9775e0e90264",
+    "assertions": [
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /role=\"alert\"/)",
+        "line": 297
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /aria-live=\"polite\"/)",
+        "line": 298
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Hat nicht geklappt – versuch&#x27;s nochmal\\./)",
+        "line": 299
+      }
+    ],
+    "calls": [
+      {
+        "expression": "renderForm",
+        "text": "renderForm({\n    error: \"Hat nicht geklappt – versuch's nochmal.\",\n    onSubmit: () => undefined,\n  })",
+        "line": 292
+      },
+      {
+        "expression": "renderToStaticMarkup",
+        "text": "renderToStaticMarkup(tree.value)",
+        "line": 296
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /role=\"alert\"/)",
+        "line": 297
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /aria-live=\"polite\"/)",
+        "line": 298
+      },
+      {
+        "expression": "assert.match",
+        "text": "assert.match(markup, /Hat nicht geklappt – versuch&#x27;s nochmal\\./)",
+        "line": 299
+      }
+    ]
+  }
+]

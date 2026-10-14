@@ -1,0 +1,32 @@
+{
+  "files": [
+    {
+      "file": "tests/personal-plan/refinement/module-status.test.ts",
+      "beforeSHA256": "3b1eee6eec64647981ea91b6d2b921df324c247930a63102053de6cefc59c67f",
+      "afterSHA256": "3b1eee6eec64647981ea91b6d2b921df324c247930a63102053de6cefc59c67f",
+      "changed": false
+    },
+    {
+      "file": "tests/personal-plan/refinement/refinement-status.test.ts",
+      "beforeSHA256": "6dd0545d97d80dc8548167d99a85b5752de90b11c2e3468ee0cbeffcf75815d0",
+      "afterSHA256": "6dd0545d97d80dc8548167d99a85b5752de90b11c2e3468ee0cbeffcf75815d0",
+      "changed": false
+    },
+    {
+      "file": "tests/personal-plan-refinement-presentation-route.test.ts",
+      "beforeSHA256": "0b1c469904918e19bb964040d41df3f67f94711868e09863c4d45f411572802b",
+      "afterSHA256": "0b1c469904918e19bb964040d41df3f67f94711868e09863c4d45f411572802b",
+      "changed": false
+    },
+    {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "beforeSHA256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a",
+      "afterSHA256": "3e9005764833c5d2af8566e041467d329e56f4a0994fc14f3ac71d5ec3888a31",
+      "changed": true
+    }
+  ],
+  "allASTShapesEqual": true,
+  "sourceWrites": 0,
+  "newInputsCallsOrTestRegistrations": 0,
+  "phaseProof": "Earlier native/fault proof was on archived preformat cut bytes. Fresh whole native/c8 checks these formatted bytes."
+}

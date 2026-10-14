@@ -5,14 +5,22 @@ import {
   loadPersonalPlanStage2AccessForUser,
   type PersonalPlanStage2Access,
 } from "@/lib/personal-plan/journey-access-loader"
-import { openOptionalRefinement } from "@/lib/personal-plan/persistence/stage2-optional-entry"
+import {
+  openOptionalRefinement,
+  Stage2OptionalEntryError,
+} from "@/lib/personal-plan/persistence/stage2-optional-entry"
 import {
   stage2SessionFromPersistedDraft,
   type Stage2PersistedDraft,
 } from "@/lib/personal-plan/persistence/stage2-refinement-service"
 import { isPersonalPlanAppV1Enabled } from "@/lib/personal-plan/release"
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
 import { Stage2RefinementError } from "@/lib/personal-plan/refinement/gateway"
 import { STAGE2_MODULES, type Stage2Module } from "@/lib/personal-plan/refinement/types"
+import {
+  reportUnexpectedStage2Error,
+  type Stage2UnexpectedErrorRoute,
+} from "@/lib/observability/personal-plan-stage2"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -20,10 +28,15 @@ export type Stage2OptionalEntryRouteDeps = {
   getUserId: () => Promise<string | null>
   enabled: () => boolean
   loadStage2Access: (userId: string) => Promise<PersonalPlanStage2Access>
+  /** Server-resolved Hair Tools rollout for this user; browser input never reaches it. */
+  toolsEnabled: (userId: string) => Promise<boolean>
   openOptionalRefinement: (input: {
     userId: string
     module: Stage2Module
+    toolsEnabled: boolean
   }) => Promise<Stage2PersistedDraft>
+  /** Logs + reports a failure the route answers with a generic 503. Defaults to Sentry. */
+  reportUnexpectedError?: (route: Stage2UnexpectedErrorRoute, error: unknown) => void
 }
 
 const requestSchema = z.object({ module: z.enum(STAGE2_MODULES) }).strict()
@@ -43,9 +56,18 @@ function serverTiming(phases: Record<string, number>) {
     .join(", ")
 }
 
-function errorResponse(error: unknown, started: number) {
+function errorResponse(
+  error: unknown,
+  started: number,
+  report: NonNullable<Stage2OptionalEntryRouteDeps["reportUnexpectedError"]>,
+) {
   if (error instanceof Stage2OptionalEntryInvalidRequestError) {
     return response({ error: "invalid_request" }, 400)
+  }
+  // A module without questions on the path (e.g. `tools` while its rollout is off): a caller
+  // error, not an outage.
+  if (error instanceof Stage2OptionalEntryError && error.message === "invalid_module") {
+    return response({ error: "invalid_module" }, 400)
   }
   const message = error instanceof Error ? error.message : ""
   const code =
@@ -54,6 +76,9 @@ function errorResponse(error: unknown, started: number) {
       : message === "revision_conflict"
         ? "revision_conflict"
         : "temporarily_unavailable"
+  if (!(error instanceof Stage2RefinementError) && code === "temporarily_unavailable") {
+    report("stage2_optional_entry", error)
+  }
   const status =
     code === "revision_conflict"
       ? 409
@@ -69,6 +94,7 @@ function errorResponse(error: unknown, started: number) {
 }
 
 export function createStage2OptionalEntryRouteHandler(deps: Stage2OptionalEntryRouteDeps) {
+  const report = deps.reportUnexpectedError ?? reportUnexpectedStage2Error
   return async function POST(request: Request) {
     const started = Date.now()
     const phases: Record<string, number> = {}
@@ -83,17 +109,20 @@ export function createStage2OptionalEntryRouteHandler(deps: Stage2OptionalEntryR
         return response({ error: "stage_not_ready" }, 409)
       }
       phases.journey = Date.now() - phaseStarted
-    } catch {
+    } catch (error) {
+      report("stage2_optional_entry_access", error)
       return response({ error: "temporarily_unavailable" }, 503)
     }
 
     try {
       const parsed = requestSchema.safeParse(await request.json().catch(() => null))
       if (!parsed.success) throw new Stage2OptionalEntryInvalidRequestError()
+      const toolsEnabled = await deps.toolsEnabled(userId).catch(() => false)
       phaseStarted = Date.now()
       const draft = await deps.openOptionalRefinement({
         userId,
         module: parsed.data.module,
+        toolsEnabled,
       })
       phases.operation = Date.now() - phaseStarted
       console.info("personal_plan_stage2_optional_entry_api", {
@@ -108,7 +137,7 @@ export function createStage2OptionalEntryRouteHandler(deps: Stage2OptionalEntryR
         "Server-Timing": serverTiming(phases),
       })
     } catch (error) {
-      return errorResponse(error, started)
+      return errorResponse(error, started, report)
     }
   }
 }
@@ -117,6 +146,7 @@ export const POST = createStage2OptionalEntryRouteHandler({
   enabled: () => isPersonalPlanAppV1Enabled(),
   getUserId: async () => (await (await createClient()).auth.getUser()).data.user?.id ?? null,
   loadStage2Access: loadPersonalPlanStage2AccessForUser,
-  openOptionalRefinement: ({ userId, module }) =>
-    openOptionalRefinement({ userId, module, client: createAdminClient() }),
+  toolsEnabled: async (userId) => isPersonalPlanToolsEnabledForUser(userId, createAdminClient()),
+  openOptionalRefinement: ({ userId, module, toolsEnabled }) =>
+    openOptionalRefinement({ userId, module, toolsEnabled, client: createAdminClient() }),
 })

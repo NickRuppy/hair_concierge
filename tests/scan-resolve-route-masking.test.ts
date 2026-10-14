@@ -138,6 +138,8 @@ function baseDeps(overrides: Partial<ScanResolveRouteDeps> = {}): ScanResolveRou
     isProductSearchQuarantined: async () => false,
     loadQuarantinedProductIdsAmong: async () => new Set<string>(),
     loadScanEvaluationContext: async () => context,
+    isShoppingBudgetEnabled: () => false,
+    loadShoppingBudget: async () => null,
     loadScanProductFacts: async () => null,
     loadRecommendationCandidates: async (_client, input) =>
       Object.fromEntries(input.roles.map((role) => [role, []])),
@@ -172,21 +174,26 @@ async function withFlag<T>(value: string | undefined, fn: () => Promise<T>): Pro
 }
 
 test("scan resolve masking: flag off never calls resolvePaidAccess, even for a free user", async () => {
-  await withFlag(undefined, async () => {
-    const handler = createScanResolveRouteHandler(
-      baseDeps({
-        resolvePaidAccess: async () => {
-          throw new Error("must not be called with the flag off")
-        },
-      }),
-    )
-    const response = await handler(request({ productId }))
-    assert.equal(response.status, 200)
-    const body = await response.json()
-    assert.equal(body.alternatives[0].productId, alternativeId)
-    assert.equal(body.alternatives[0].displayName, "Sanftes Shampoo")
-    assert.equal(body.freeRevealAvailable, undefined)
-  })
+  for (const value of [undefined, "1", "True", ""]) {
+    await withFlag(value, async () => {
+      let paidReads = 0
+      const handler = createScanResolveRouteHandler(
+        baseDeps({
+          resolvePaidAccess: async () => {
+            paidReads += 1
+            return "denied"
+          },
+        }),
+      )
+      const response = await handler(request({ productId }))
+      assert.equal(response.status, 200, String(value))
+      const body = await response.json()
+      assert.equal(body.alternatives[0].productId, alternativeId, String(value))
+      assert.equal(body.alternatives[0].displayName, "Sanftes Shampoo", String(value))
+      assert.equal(body.freeRevealAvailable, undefined, String(value))
+      assert.equal(paidReads, 0, String(value))
+    })
+  }
 })
 
 test("scan resolve masking: a free user (flag on, denied) gets masked alternatives plus the reveal affordance", async () => {

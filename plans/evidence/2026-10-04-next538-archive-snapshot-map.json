@@ -1,0 +1,50 @@
+{
+  "reason": "Evidence snapshots are documentation; keep original bytes with text extension outside compiler source inventory.",
+  "files": [
+    {
+      "archivePath": "plans/evidence/2026-10-04-next538-stage5-controls-runtime/originals/src/app/anwendung/loading.tsx",
+      "textSnapshotPath": "plans/evidence/2026-10-04-next538-stage5-controls-runtime/originals/src/app/anwendung/loading.tsx.snapshot.txt",
+      "sha256": "badac70a1417554f8b6fe470579134a943b19fb341d6a9495c418a7846f8b79b"
+    },
+    {
+      "archivePath": "plans/evidence/2026-10-04-next538-stage5-controls-runtime/originals/src/app/anwendung/page.tsx",
+      "textSnapshotPath": "plans/evidence/2026-10-04-next538-stage5-controls-runtime/originals/src/app/anwendung/page.tsx.snapshot.txt",
+      "sha256": "020e5be38ea8b1f00652265897430669c44c647f571f57a35a359bfc61c5e1f6"
+    },
+    {
+      "archivePath": "plans/evidence/2026-10-04-next538-stage5-controls-runtime/originals/src/components/layout/authenticated-app-shell.tsx",
+      "textSnapshotPath": "plans/evidence/2026-10-04-next538-stage5-controls-runtime/originals/src/components/layout/authenticated-app-shell.tsx.snapshot.txt",
+      "sha256": "e651773a2427db685a9a58213a4072f067b4ac7680ce687701357659913188d0"
+    },
+    {
+      "archivePath": "plans/evidence/2026-10-04-next538-stage5-controls-runtime/originals/src/components/layout/personal-plan-navigation.tsx",
+      "textSnapshotPath": "plans/evidence/2026-10-04-next538-stage5-controls-runtime/originals/src/components/layout/personal-plan-navigation.tsx.snapshot.txt",
+      "sha256": "12d2e9f4027060b9dc36a7a625967d6671b13e8c688e5941ea6082bd951873bf"
+    },
+    {
+      "archivePath": "plans/evidence/2026-10-04-next538-stage5-controls-runtime/originals/src/components/application/application-day-card.tsx",
+      "textSnapshotPath": "plans/evidence/2026-10-04-next538-stage5-controls-runtime/originals/src/components/application/application-day-card.tsx.snapshot.txt",
+      "sha256": "979c1bab81e4b8a44161cf18cc6413a2a53e152f49c9fb2e3f2747a060699e50"
+    },
+    {
+      "archivePath": "plans/evidence/2026-10-04-next538-stage5-controls-runtime/originals/src/lib/personal-plan/navigation-access.ts",
+      "textSnapshotPath": "plans/evidence/2026-10-04-next538-stage5-controls-runtime/originals/src/lib/personal-plan/navigation-access.ts.snapshot.txt",
+      "sha256": "419d254254478cd628089a24064c3afcbec5d68f8e597fa3b5c4f1d2a3f4ca2b"
+    },
+    {
+      "archivePath": "plans/evidence/2026-10-04-next538-intake-controls-runtime/originals/src/lib/product-intake/upload-paths.ts",
+      "textSnapshotPath": "plans/evidence/2026-10-04-next538-intake-controls-runtime/originals/src/lib/product-intake/upload-paths.ts.snapshot.txt",
+      "sha256": "a5a096b823218cf583b96075710badf8744f701d833212828de6e266929fdd44"
+    },
+    {
+      "archivePath": "plans/evidence/2026-10-04-next538-intake-controls-runtime/originals/src/lib/product-intake/submissions.ts",
+      "textSnapshotPath": "plans/evidence/2026-10-04-next538-intake-controls-runtime/originals/src/lib/product-intake/submissions.ts.snapshot.txt",
+      "sha256": "3098f48d86d40549f982a2a96c465e34f4278c59b593da4ef182f81d0df6fcf3"
+    },
+    {
+      "archivePath": "plans/evidence/2026-10-04-next538-intake-controls-runtime/originals/src/lib/product-intake/schemas.ts",
+      "textSnapshotPath": "plans/evidence/2026-10-04-next538-intake-controls-runtime/originals/src/lib/product-intake/schemas.ts.snapshot.txt",
+      "sha256": "4677e315cf32dbcdc4af1b7b0e55ea601979d1cfb7e9cf6a80177fbc1fe43eba"
+    }
+  ]
+}

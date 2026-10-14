@@ -1,0 +1,49 @@
+TAP version 13
+# Subtest: enabled reminder enqueues cutoff and revalidates just before sending once to verified owner
+not ok 1 - enabled reminder enqueues cutoff and revalidates just before sending once to verified owner
+  ---
+  duration_ms: 16.755708
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/trial-reminders-delivery.test.ts:2:2547'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    +   'https://chaarlie.de/removed',
+    -   'https://chaarlie.de/profile',
+        'https://chaarlie.de/kuendigen',
+        '{% unsubscribe_url %}',
+        'https://chaarlie.de/impressum',
+        'https://chaarlie.de/datenschutz'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'https://chaarlie.de/profile'
+    1: 'https://chaarlie.de/kuendigen'
+    2: '{% unsubscribe_url %}'
+    3: 'https://chaarlie.de/impressum'
+    4: 'https://chaarlie.de/datenschutz'
+  actual:
+    0: 'https://chaarlie.de/removed'
+    1: 'https://chaarlie.de/kuendigen'
+    2: '{% unsubscribe_url %}'
+    3: 'https://chaarlie.de/impressum'
+    4: 'https://chaarlie.de/datenschutz'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/trial-reminders-delivery.test.ts:101:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 269.559208

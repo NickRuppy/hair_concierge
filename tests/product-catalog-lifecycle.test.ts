@@ -1,5 +1,5 @@
 import assert from "node:assert/strict"
-import { readdirSync, readFileSync } from "node:fs"
+import { readFileSync } from "node:fs"
 import test from "node:test"
 
 import { isProductEligibleForMode } from "../src/lib/product-catalog/eligibility"
@@ -110,14 +110,6 @@ test("products select policy migration keeps user-visible catalog reads recommen
   assert.match(migration, /ON public\.product_lines/)
 })
 
-test("supabase migrations have unique version prefixes", () => {
-  const migrationNames = readdirSync("supabase/migrations").filter((name) => name.endsWith(".sql"))
-  const versions = migrationNames.map((name) => name.split("_", 1)[0])
-  const duplicates = versions.filter((version, index) => versions.indexOf(version) !== index)
-
-  assert.deepEqual(duplicates, [])
-})
-
 test("beta feedback remote-history mirror migrations are no-ops", () => {
   const betaFeedbackMirror = readFileSync(
     "supabase/migrations/20260528130643_beta_feedback.sql",
@@ -179,24 +171,6 @@ test("product with outgoing add_on_for is not primary-eligible", () => {
     isEligibleForPrimaryRecommendation(
       { is_active: true, lifecycle_status: "active", is_chaarlie_recommended: true },
       new Set(["add_on_for"]),
-    ),
-    false,
-  )
-})
-
-test("add-on product remains relationship-retrievable outside primary eligibility", () => {
-  const addOnRelationship = {
-    source_product_id: "olaplex-0",
-    target_product_id: "olaplex-3plus",
-    relationship_type: "add_on_for",
-  }
-
-  assert.equal(addOnRelationship.target_product_id, "olaplex-3plus")
-  assert.equal(addOnRelationship.relationship_type, "add_on_for")
-  assert.equal(
-    isEligibleForPrimaryRecommendation(
-      { is_active: true, lifecycle_status: "active", is_chaarlie_recommended: true },
-      new Set([addOnRelationship.relationship_type]),
     ),
     false,
   )

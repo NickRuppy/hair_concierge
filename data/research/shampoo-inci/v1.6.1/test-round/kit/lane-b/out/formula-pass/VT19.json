@@ -1,0 +1,152 @@
+{
+  "blindId": "VT19",
+  "inciFingerprintSha256": "3c44cb1ae0d128189054da9ef1d6e1743192d16935c0fb7bf95b5892b593d9d4",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, claims hidden)",
+  "standard": "shampoo-classification-v1.6.1 candidate text (unlocked)",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "ID-2: WATER/AQUA one entry; normalized one-based positions of the 57-entry list",
+    "e3ProminenceCutoff": "FRAGRANCE @16 -> positions 1-15 prominent"
+  },
+  "formulaFacts": {
+    "surfactantSystem": [
+      "Disodium Laureth Sulfosuccinate @2 - mild anionic, earliest prominent cleansing surfactant",
+      "Sodium Lauroyl Sarcosinate @3 - mild anionic, buffer",
+      "Cocamidopropyl Hydroxysultaine @4 - amphoteric, buffer",
+      "Sodium Lauryl Sulfoacetate @5 - mild anionic, buffer",
+      "Not cleansing: Cocamide MEA @6 (alkanolamide), Glycol Distearate @7, C12-13 Pareth-23 @21, C12-13 Pareth-3 @22, Trideceth-12 @23, PEG-150 Pentaerythrityl Tetrastearate @28",
+      "No strong anionic"
+    ],
+    "conditioningAndWeightRoutes": {
+      "silicone": ["Dimethicone @8", "Divinyldimethicone/Dimethicone Copolymer @24", "Amodimethicone @29", "Dimethiconol @30", "Cyclopentasiloxane @33 (volatile carrier; not counted as persistent deposition)"],
+      "cationic_polymer": ["Polyquaternium-7 @25", "Polyquaternium-10 @26", "Polyquaternium-59 @42"],
+      "cationic_conditioner": ["Quaternium-80 @27", "Cocamidopropyl Dimethylamine @43 (amidoamine)", "Cetrimonium Chloride @48"],
+      "payload_lipid": ["Argania Spinosa Kernel Oil @9", "Persea Gratissima (Avocado) Oil @10"],
+      "weak_refatter": ["PEG-6 Caprylic/Capric Glycerides @31"],
+      "protein_film": ["Hydrolyzed Vegetable Protein PG-Propyl Silanetriol @15", "Silk Amino Acids @17", "Hydrolyzed Keratin @18", "Keratin Amino Acids @19"],
+      "film_former": [],
+      "pearlizing_fatty_route_for_C2": ["Glycol Distearate @7"],
+      "humectantContext": ["Panthenol @32", "Glycerin @34", "Sodium PCA @36", "Butylene Glycol @38, Propylene Glycol @41 (solvents)"],
+      "excluded": ["Glycol Distearate @7 (pearlizing wax)", "Cocamide MEA @6 (alkanolamide)", "PEG-150 Pentaerythrityl Tetrastearate @28 (PEG thickener)", "Acrylates/Palmeth-25 Acrylate Copolymer @39 (anionic associative acrylate thickener, 6.4)", "Simmondsia Chinensis (Jojoba) Seed Extract @14 (extract, not the oil)", "chamomile/lavender/rosemary extracts @11-@13", "pareths/trideceth @21-@23", "Cyclopentasiloxane @33 (volatile)"]
+    },
+    "actives": ["no recognized anti-dandruff active"],
+    "scalpExposureFlags": ["Fragrance @16; lavender/rosemary extracts (extracts, not essential oils); no cooling agent", "E4 comfort list: Panthenol @32 not prominent - no prominent comfort route", "E4 humectant/refatting routes prominent: Argan Oil @9, Avocado Oil @10"]
+  },
+  "wLine": {
+    "wLine": "FRAGRANCE @16",
+    "candidateClasses": ["fragrance"],
+    "cap": "e3Point @16 (Fragrance)",
+    "alphabeticalRun": "none before the cap",
+    "skipped": [],
+    "plausibilityOfWLine": "No class a-d candidate before the cap; the E3 marker is the earliest candidate: (i) cleansing surfactants before; (ii) nothing between. W-line = cap, no fallback code",
+    "codes": [],
+    "payloadLipidMaterial": ["Argan Oil @9", "Avocado Oil @10"],
+    "payloadLipidNonMaterial": []
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "Low by C6: no strong anionic; the earliest prominent cleansing surfactant is the mild anionic Disodium Laureth Sulfosuccinate @2 with the prominent amphoteric Cocamidopropyl Hydroxysultaine @4. Counter-signal: three mild anionics (@2, @3, @5) plus an alkanolamide booster dominate, so realistic unknowns could make net cleansing moderate.",
+      "ruleIds": ["C3", "C4", "C6", "N-ALT"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "High: rich architecture under the Section 5 reading (E3) - prominent payload oils (Argan @9, Avocado @10) converge with a prominent silicone (Dimethicone @8); C2 also met (Dimethicone @8 early, cationic polymers @25/@26, Glycol Distearate @7, Glycerin @34/Panthenol @32/Sodium PCA @36). Further silicones, three cationic polymers, three cationic conditioners and four protein routes after Fragrance add support.",
+      "ruleIds": ["C2", "W-RICH", "E3", "5"]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "evidence": {
+        "silicone": ["Dimethicone @8", "Divinyldimethicone/Dimethicone Copolymer @24", "Amodimethicone @29", "Dimethiconol @30"],
+        "cationic_polymer": ["Polyquaternium-7 @25", "Polyquaternium-10 @26", "Polyquaternium-59 @42"],
+        "cationic_conditioner": ["Quaternium-80 @27", "Cocamidopropyl Dimethylamine @43", "Cetrimonium Chloride @48"],
+        "payload_lipid": ["material: Argania Spinosa Kernel Oil @9, Persea Gratissima Oil @10 (before W-line @16)"],
+        "weak_refatter": ["PEG-6 Caprylic/Capric Glycerides @31"],
+        "protein_film": ["Hydrolyzed Vegetable Protein PG-Propyl Silanetriol @15", "Silk Amino Acids @17", "Hydrolyzed Keratin @18", "Keratin Amino Acids @19"],
+        "film_former": [],
+        "reset": ["mild anionic @2, @3, @5", "amphoteric @4"],
+        "humectantContext": ["Panthenol @32", "Glycerin @34", "Sodium PCA @36"],
+        "excluded": ["Glycol Distearate @7", "Cocamide MEA @6", "PEG-150 Pentaerythrityl Tetrastearate @28", "Acrylates/Palmeth-25 Acrylate Copolymer @39", "Cyclopentasiloxane @33 (volatile)"],
+        "unresolved": []
+      },
+      "depositionLoad": "high - prominent dimethicone and two prominent oils, plus three further silicones incl. amodimethicone, three cationic polymers, three cationic conditioners and proteins",
+      "persistence": "high - dimethicone, amodimethicone, dimethiconol and polyquaternium/quat systems are substantive and accumulate",
+      "resetCapacity": "weak - C6 low mild-anionic/sultaine chassis",
+      "counterevidence": "Oils are liquid; many routes are after Fragrance and likely low-dose; ordinary rinse-off.",
+      "whyThisBand": "High: W-RICH (material Argan @9/Avocado @10 with prominent Dimethicone @8) with limited reset (weak) is the rich route; the convergence route (silicone + cationic polymer + cationic conditioner + material lipid + protein) also holds.",
+      "whyNotNeighborBand": "Not moderate: both high routes hold with prominent members, and a weak mild chassis cannot offset four silicones and three cationic polymers; no realistic unknown removes the prominent dimethicone + oils core.",
+      "confidenceLimitingFactor": "None material: converging prominent routes and weak reset.",
+      "rationale": "High: W-line = Fragrance @16 keeps both oils material; W-RICH + weak reset and multi-family convergence. W1 not applicable (no sulfate chassis).",
+      "ruleIds": ["6.6", "W-RICH", "W-LINE", "W1", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "repair",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "dual_supported (provisional; repair cluster stronger)",
+        "moistureRoutes": ["Argan Oil @9", "Avocado Oil @10", "Panthenol @32", "Glycerin @34", "Sodium PCA @36"],
+        "repairRoutes": ["Hydrolyzed Keratin @18", "Keratin Amino Acids @19", "Silk Amino Acids @17", "Hydrolyzed Vegetable Protein PG-Propyl Silanetriol @15", "Amodimethicone @29", "Polyquaternium-7 @25/-10 @26"],
+        "sharedConditioningRoutes": ["Dimethicone @8", "Glycol Distearate @7", "Quaternium-80 @27", "Cetrimonium Chloride @48"],
+        "limitation": "Proteins and humectants after Fragrance; rinse-off"
+      },
+      "claimRole": "not_applicable (claims hidden)",
+      "counterSignal": "No claims visible; formula supports repair and moisture.",
+      "decisionTrace": "Claim direction null (blind); formula dual_supported (coherent protein/deposition cluster for repair; oils plus humectants for moisture); provisional general.",
+      "rationale": "Provisional formula-only: general.",
+      "ruleIds": ["7.2", "7.3", "F1", "3.1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["shine"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no positioning visible.",
+      "rationale": "Provisional [].",
+      "ruleIds": ["8", "F2", "F3"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": ["alternating impossible (not strong)", "treatment impossible", "frequent needs U2 wording"],
+      "rationale": "Provisional default regular.",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional: positioning hidden. CSA formula half met via prominent E4 refatting routes (Argan @9, Avocado @10); no prominent E4 comfort route (Panthenol @32 after Fragrance).",
+      "ruleIds": ["10", "CSA", "E4"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active in the complete INCI.",
+      "ruleIds": ["11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "uncertainties": [
+    "C2 'cationic polymer' and humectant elements are listed only after Fragrance; C2 text defines 'early' only for the silicone. conditioningLevel high does not depend on it (rich architecture holds with prominent members).",
+    "Acrylates/Palmeth-25 Acrylate Copolymer @39 read as an anionic associative acrylate thickener (excluded); not band-moving either way.",
+    "Simmondsia Chinensis Seed Extract @14 read as an extract, not jojoba oil."
+  ]
+}

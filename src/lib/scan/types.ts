@@ -19,7 +19,11 @@ export type ScanVerdict = "ideal" | "supportive" | "mismatch" | "unknown"
 /** Maps onto the `--status-*` design tokens the result banner is painted with. */
 export type ScanStatusToken = "ok" | "pending" | "danger" | "neutral"
 
+/** Historical state union also consumed by the native adapter; C1 leaves it unchanged. */
 export type ScanDimensionState = "in_target" | "outside_target" | "no_target" | "unknown"
+
+/** Web rows preserve the evaluator's one-step caution outcome. */
+export type ScanWebDimensionState = ScanDimensionState | "supportive"
 
 export type ScanDimensionStop = {
   stopId: string
@@ -40,6 +44,9 @@ export type ScanDimension = {
   state: ScanDimensionState
 }
 
+/** Web-only row states; the native dimension contract keeps its historical union. */
+export type ScanWebDimension = Omit<ScanDimension, "state"> & { state: ScanWebDimensionState }
+
 export type ScanAlternative = {
   productId: string
   displayName: string
@@ -48,6 +55,21 @@ export type ScanAlternative = {
   netContentLabel: string | null
   verdict: Extract<ScanVerdict, "ideal" | "supportive">
   verdictLabel: string
+  /** Evaluator explanations for supportive/mismatch; absent on older stored payloads. */
+  reasonLines?: string[]
+  /**
+   * Shopping budget (Task 7). Present only when the user has a saved budget and the budget
+   * flag is on: `overBudget` only for a capped budget (true = the package costs more than
+   * the cap), `budgetLimitEur` is that cap, used for the list caption. Absent otherwise, so a
+   * budget-less response stays byte-identical. Never part of the masked free-tier shape.
+   */
+  overBudget?: boolean
+  budgetLimitEur?: 5 | 15
+  /**
+   * Drogerie/Profi badge. Present only when the segment is known, the display flag is on and
+   * the category is shampoo, conditioner or mask.
+   */
+  marketSegment?: "drugstore" | "professional"
   /**
    * Server-internal only (T8): the candidate's already-computed fit criteria, carried
    * through so the free-tier masked serializer (`masked-alternative.ts`) can derive
@@ -96,12 +118,14 @@ export type ScanInCatalogVerdictPayload = {
   kind: "in_catalog"
   verdict: ScanVerdict
   verdictLabel: string
+  /** Evaluator explanations for supportive/mismatch; absent on older stored payloads. */
+  reasonLines?: string[]
   verdictTitle: string
   status: ScanStatusToken
   subtitle: string
   evaluatedRole: PlanProductRole | null
   evaluatedRoleLabel: string | null
-  dimensions: ScanDimension[]
+  dimensions: ScanWebDimension[]
   /** Criterion-row fallback for compact categories without dimensions. */
   criteria: Stage3CriterionResult[]
   coverage: { matches: number; total: number } | null

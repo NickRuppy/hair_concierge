@@ -1,0 +1,791 @@
+[
+  {
+    "id": "C1-01",
+    "candidate": "C1",
+    "contract": "scroll container remains vertically scrollable",
+    "source": "src/components/gated-preview/gated-preview.tsx",
+    "originalSourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "find": "min-h-0 flex-1 overflow-y-auto overscroll-contain",
+    "replace": "min-h-0 flex-1 overscroll-contain",
+    "matchCount": 1,
+    "mutantSHA256": "08bf8508afc64f2cc8ab11f70ea5563293e14246878b0a2b9a1d70d35ea5f082",
+    "snapshot": "mutants/C1-01/src/components/gated-preview/gated-preview.tsx",
+    "oracle": {
+      "keeperTitle": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+      "testFile": "tests/gated-preview-component.test.tsx",
+      "code": "ERR_ASSERTION",
+      "operator": "match",
+      "decodedMessageIncludes": [
+        "overflow-y-auto",
+        "min-h-0 flex-1 overscroll-contain"
+      ],
+      "firstFrame": "FIRST outer assertion frame must equal the selected keeper file and phase line; reject helper/setup/import/module errors, unrelated failures, zero selections and duplicate selections.",
+      "transfer": {
+        "line": 141,
+        "assertion": "assert.match(scroll.props.className as string, /overflow-y-auto/)",
+        "keeperRegistrationLine": 117,
+        "firstFrameFile": "tests/gated-preview-component.test.tsx"
+      },
+      "cut": {
+        "line": 141,
+        "assertion": "assert.match(scroll.props.className as string, /overflow-y-auto/)",
+        "keeperRegistrationLine": 117,
+        "firstFrameFile": "tests/gated-preview-component.test.tsx"
+      }
+    },
+    "phaseRequirement": [
+      "transfer",
+      "cut"
+    ],
+    "runtimeStatus": "UNRUN"
+  },
+  {
+    "id": "C1-02",
+    "candidate": "C1",
+    "contract": "flex scroller may shrink",
+    "source": "src/components/gated-preview/gated-preview.tsx",
+    "originalSourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "find": "min-h-0 flex-1 overflow-y-auto overscroll-contain",
+    "replace": "flex-1 overflow-y-auto overscroll-contain",
+    "matchCount": 1,
+    "mutantSHA256": "824901464aeb426a972465ae2eb6fd091cb91aa282c670c03f2fdb1bd6640ea2",
+    "snapshot": "mutants/C1-02/src/components/gated-preview/gated-preview.tsx",
+    "oracle": {
+      "keeperTitle": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+      "testFile": "tests/gated-preview-component.test.tsx",
+      "code": "ERR_ASSERTION",
+      "operator": "match",
+      "decodedMessageIncludes": [
+        "min-h-0",
+        "flex-1 overflow-y-auto overscroll-contain"
+      ],
+      "firstFrame": "FIRST outer assertion frame must equal the selected keeper file and phase line; reject helper/setup/import/module errors, unrelated failures, zero selections and duplicate selections.",
+      "transfer": {
+        "line": 143,
+        "assertion": "assert.match(scroll.props.className as string, /min-h-0/)",
+        "keeperRegistrationLine": 117,
+        "firstFrameFile": "tests/gated-preview-component.test.tsx"
+      },
+      "cut": {
+        "line": 143,
+        "assertion": "assert.match(scroll.props.className as string, /min-h-0/)",
+        "keeperRegistrationLine": 117,
+        "firstFrameFile": "tests/gated-preview-component.test.tsx"
+      }
+    },
+    "phaseRequirement": [
+      "transfer",
+      "cut"
+    ],
+    "runtimeStatus": "UNRUN"
+  },
+  {
+    "id": "C1-03",
+    "candidate": "C1",
+    "contract": "keyboard scroll region role",
+    "source": "src/components/gated-preview/gated-preview.tsx",
+    "originalSourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "find": "          role=\"region\"",
+    "replace": "          role=\"presentation\"",
+    "matchCount": 1,
+    "mutantSHA256": "5cb149609e584fbf3893fd4c6211e1935ae7b6de72d2164140a146a38f6d89bb",
+    "snapshot": "mutants/C1-03/src/components/gated-preview/gated-preview.tsx",
+    "oracle": {
+      "keeperTitle": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+      "testFile": "tests/gated-preview-component.test.tsx",
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "decodedMessageIncludes": [
+        "presentation",
+        "region"
+      ],
+      "firstFrame": "FIRST outer assertion frame must equal the selected keeper file and phase line; reject helper/setup/import/module errors, unrelated failures, zero selections and duplicate selections.",
+      "transfer": {
+        "line": 146,
+        "assertion": "assert.equal(scroll.props.role, \"region\")",
+        "keeperRegistrationLine": 117,
+        "firstFrameFile": "tests/gated-preview-component.test.tsx"
+      },
+      "cut": {
+        "line": 146,
+        "assertion": "assert.equal(scroll.props.role, \"region\")",
+        "keeperRegistrationLine": 117,
+        "firstFrameFile": "tests/gated-preview-component.test.tsx"
+      }
+    },
+    "phaseRequirement": [
+      "transfer",
+      "cut"
+    ],
+    "runtimeStatus": "UNRUN"
+  },
+  {
+    "id": "C1-04",
+    "candidate": "C1",
+    "contract": "no duplicate accessible label",
+    "source": "src/components/gated-preview/gated-preview.tsx",
+    "originalSourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "find": "          aria-labelledby={exampleLabelId}",
+    "replace": "          aria-labelledby={exampleLabelId}\n          aria-label=\"duplicate\"",
+    "matchCount": 1,
+    "mutantSHA256": "0a3384a6fe5ff6eeb1f94d0d0e0091989b142b91b5056f12d22a351f663f0852",
+    "snapshot": "mutants/C1-04/src/components/gated-preview/gated-preview.tsx",
+    "oracle": {
+      "keeperTitle": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+      "testFile": "tests/gated-preview-component.test.tsx",
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "decodedMessageIncludes": [
+        "duplicate",
+        "undefined"
+      ],
+      "firstFrame": "FIRST outer assertion frame must equal the selected keeper file and phase line; reject helper/setup/import/module errors, unrelated failures, zero selections and duplicate selections.",
+      "transfer": {
+        "line": 150,
+        "assertion": "assert.equal(scroll.props[\"aria-label\"], undefined)",
+        "keeperRegistrationLine": 117,
+        "firstFrameFile": "tests/gated-preview-component.test.tsx"
+      },
+      "cut": {
+        "line": 150,
+        "assertion": "assert.equal(scroll.props[\"aria-label\"], undefined)",
+        "keeperRegistrationLine": 117,
+        "firstFrameFile": "tests/gated-preview-component.test.tsx"
+      }
+    },
+    "phaseRequirement": [
+      "transfer",
+      "cut"
+    ],
+    "runtimeStatus": "UNRUN"
+  },
+  {
+    "id": "C1-05",
+    "candidate": "C1",
+    "contract": "region references actual visible label",
+    "source": "src/components/gated-preview/gated-preview.tsx",
+    "originalSourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "find": "          aria-labelledby={exampleLabelId}",
+    "replace": "          aria-labelledby=\"wrong-label\"",
+    "matchCount": 1,
+    "mutantSHA256": "765c3e08761eddd4c8278491725070a396cca116fcdd41e888b3a7c002582c67",
+    "snapshot": "mutants/C1-05/src/components/gated-preview/gated-preview.tsx",
+    "oracle": {
+      "keeperTitle": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+      "testFile": "tests/gated-preview-component.test.tsx",
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "decodedMessageIncludes": [
+        "wrong-label",
+        "gated-preview-label-routine"
+      ],
+      "firstFrame": "FIRST outer assertion frame must equal the selected keeper file and phase line; reject helper/setup/import/module errors, unrelated failures, zero selections and duplicate selections.",
+      "transfer": {
+        "line": 151,
+        "assertion": "assert.equal(scroll.props[\"aria-labelledby\"], label.props.id)",
+        "keeperRegistrationLine": 117,
+        "firstFrameFile": "tests/gated-preview-component.test.tsx"
+      },
+      "cut": {
+        "line": 151,
+        "assertion": "assert.equal(scroll.props[\"aria-labelledby\"], label.props.id)",
+        "keeperRegistrationLine": 117,
+        "firstFrameFile": "tests/gated-preview-component.test.tsx"
+      }
+    },
+    "phaseRequirement": [
+      "transfer",
+      "cut"
+    ],
+    "runtimeStatus": "UNRUN"
+  },
+  {
+    "id": "C1-06",
+    "candidate": "C1",
+    "contract": "nonempty label id prevents equal-empty false green",
+    "source": "src/components/gated-preview/gated-preview.tsx",
+    "originalSourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "find": "  const exampleLabelId = `gated-preview-label-${feature}`",
+    "replace": "  const exampleLabelId = \"\"",
+    "matchCount": 1,
+    "mutantSHA256": "163de29953fbbb06b1bc1597a1bf610aab1c2d9fa11c572523690ca4dcf518df",
+    "snapshot": "mutants/C1-06/src/components/gated-preview/gated-preview.tsx",
+    "oracle": {
+      "keeperTitle": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+      "testFile": "tests/gated-preview-component.test.tsx",
+      "code": "ERR_ASSERTION",
+      "operator": "==",
+      "decodedMessageIncludes": [
+        "the band needs an id for the region to reference"
+      ],
+      "firstFrame": "FIRST outer assertion frame must equal the selected keeper file and phase line; reject helper/setup/import/module errors, unrelated failures, zero selections and duplicate selections.",
+      "transfer": {
+        "line": 152,
+        "assertion": "assert.ok(label.props.id, \"the band needs an id for the region to reference\")",
+        "keeperRegistrationLine": 117,
+        "firstFrameFile": "tests/gated-preview-component.test.tsx"
+      },
+      "cut": {
+        "line": 152,
+        "assertion": "assert.ok(label.props.id, \"the band needs an id for the region to reference\")",
+        "keeperRegistrationLine": 117,
+        "firstFrameFile": "tests/gated-preview-component.test.tsx"
+      }
+    },
+    "phaseRequirement": [
+      "transfer",
+      "cut"
+    ],
+    "runtimeStatus": "UNRUN"
+  },
+  {
+    "id": "C1-07",
+    "candidate": "C1",
+    "contract": "keyboard tab stop retained",
+    "source": "src/components/gated-preview/gated-preview.tsx",
+    "originalSourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "find": "          tabIndex={0}",
+    "replace": "          tabIndex={-1}",
+    "matchCount": 1,
+    "mutantSHA256": "119119c982689dcd96520a6c8493169f5babf27750395343632f839ed8b269e6",
+    "snapshot": "mutants/C1-07/src/components/gated-preview/gated-preview.tsx",
+    "oracle": {
+      "keeperTitle": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+      "testFile": "tests/gated-preview-component.test.tsx",
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "decodedMessageIncludes": [
+        "-1",
+        "0"
+      ],
+      "firstFrame": "FIRST outer assertion frame must equal the selected keeper file and phase line; reject helper/setup/import/module errors, unrelated failures, zero selections and duplicate selections.",
+      "transfer": {
+        "line": 153,
+        "assertion": "assert.equal(scroll.props.tabIndex, 0)",
+        "keeperRegistrationLine": 117,
+        "firstFrameFile": "tests/gated-preview-component.test.tsx"
+      },
+      "cut": {
+        "line": 153,
+        "assertion": "assert.equal(scroll.props.tabIndex, 0)",
+        "keeperRegistrationLine": 117,
+        "firstFrameFile": "tests/gated-preview-component.test.tsx"
+      }
+    },
+    "phaseRequirement": [
+      "transfer",
+      "cut"
+    ],
+    "runtimeStatus": "UNRUN"
+  },
+  {
+    "id": "C1-08",
+    "candidate": "C1",
+    "contract": "child is inside scroll container",
+    "source": "src/components/gated-preview/gated-preview.tsx",
+    "originalSourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "find": "          {children}",
+    "replace": "          {null}",
+    "matchCount": 1,
+    "mutantSHA256": "15e6cc01a69f22a3103622b61a0548d06915ac170dd8f9638c220649b8a6811f",
+    "snapshot": "mutants/C1-08/src/components/gated-preview/gated-preview.tsx",
+    "oracle": {
+      "keeperTitle": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+      "testFile": "tests/gated-preview-component.test.tsx",
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "decodedMessageIncludes": [
+        "children render inside the scroll container, not beside it"
+      ],
+      "firstFrame": "FIRST outer assertion frame must equal the selected keeper file and phase line; reject helper/setup/import/module errors, unrelated failures, zero selections and duplicate selections.",
+      "transfer": {
+        "line": 156,
+        "assertion": "assert.equal(child.length, 1, \"children render inside the scroll container, not beside it\")",
+        "keeperRegistrationLine": 117,
+        "firstFrameFile": "tests/gated-preview-component.test.tsx"
+      },
+      "cut": {
+        "line": 156,
+        "assertion": "assert.equal(child.length, 1, \"children render inside the scroll container, not beside it\")",
+        "keeperRegistrationLine": 117,
+        "firstFrameFile": "tests/gated-preview-component.test.tsx"
+      }
+    },
+    "phaseRequirement": [
+      "transfer",
+      "cut"
+    ],
+    "runtimeStatus": "UNRUN"
+  },
+  {
+    "id": "C1-09",
+    "candidate": "C1",
+    "contract": "exactly one vertical scroller",
+    "source": "src/components/gated-preview/gated-preview.tsx",
+    "originalSourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "find": "className=\"flex min-h-0 flex-1 flex-col overflow-hidden rounded-[20px]",
+    "replace": "className=\"overflow-y-auto flex min-h-0 flex-1 flex-col overflow-hidden rounded-[20px]",
+    "matchCount": 1,
+    "mutantSHA256": "6dfd1cbdeab96158e47cd8a05ecdc7c8f1938a766f20917207594a61356a268c",
+    "snapshot": "mutants/C1-09/src/components/gated-preview/gated-preview.tsx",
+    "oracle": {
+      "keeperTitle": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+      "testFile": "tests/gated-preview-component.test.tsx",
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "decodedMessageIncludes": [
+        "2",
+        "1"
+      ],
+      "firstFrame": "FIRST outer assertion frame must equal the selected keeper file and phase line; reject helper/setup/import/module errors, unrelated failures, zero selections and duplicate selections.",
+      "transfer": {
+        "line": 159,
+        "assertion": "assert.equal(\n    findAll(tree, (element) => /overflow-y-auto/.test(String(element.props.className ?? \"\")))\n      .length,\n    1,\n  )",
+        "keeperRegistrationLine": 117,
+        "firstFrameFile": "tests/gated-preview-component.test.tsx"
+      },
+      "cut": {
+        "line": 159,
+        "assertion": "assert.equal(\n    findAll(tree, (element) => /overflow-y-auto/.test(String(element.props.className ?? \"\")))\n      .length,\n    1,\n  )",
+        "keeperRegistrationLine": 117,
+        "firstFrameFile": "tests/gated-preview-component.test.tsx"
+      }
+    },
+    "phaseRequirement": [
+      "transfer",
+      "cut"
+    ],
+    "runtimeStatus": "UNRUN"
+  },
+  {
+    "id": "C2-01",
+    "candidate": "C2",
+    "contract": "all four shared transcript rows keep empty timestamps",
+    "source": "src/lib/gated-preview/fixtures/chat-example.ts",
+    "originalSourceSHA256": "a9f885d12e7a828d68eaafecf8af9365d99d0dfaed6e8577cf905b3f07f692b3",
+    "find": "    created_at: \"\",",
+    "replace": "    created_at: \"2026-07-11T10:05:00.000Z\",",
+    "matchCount": 1,
+    "mutantSHA256": "f01e7abb1f27dba360e51e54c677eb407f32ea26efd75ef188d89cab1fef612d",
+    "snapshot": "mutants/C2-01/src/lib/gated-preview/fixtures/chat-example.ts",
+    "oracle": {
+      "keeperTitle": "the Chat example is a short, capability-true transcript through the real bubbles",
+      "testFile": "tests/gated-example-pages.test.tsx",
+      "code": "ERR_ASSERTION",
+      "operator": "strictEqual",
+      "decodedMessageIncludes": [
+        "2026-07-11T10:05:00.000Z",
+        "''"
+      ],
+      "firstFrame": "FIRST outer assertion frame must equal the selected keeper file and phase line; reject helper/setup/import/module errors, unrelated failures, zero selections and duplicate selections.",
+      "transfer": {
+        "line": 294,
+        "assertion": "assert.equal(message.created_at, \"\")",
+        "keeperRegistrationLine": 271,
+        "firstFrameFile": "tests/gated-example-pages.test.tsx"
+      },
+      "cut": {
+        "line": 294,
+        "assertion": "assert.equal(message.created_at, \"\")",
+        "keeperRegistrationLine": 271,
+        "firstFrameFile": "tests/gated-example-pages.test.tsx"
+      }
+    },
+    "phaseRequirement": [
+      "transfer",
+      "cut"
+    ],
+    "runtimeStatus": "UNRUN"
+  },
+  {
+    "id": "C2-02",
+    "candidate": "C2",
+    "contract": "actual ChatMessage renderer must suppress timestamp markup for empty fixtures",
+    "source": "src/components/chat/chat-message.tsx",
+    "originalSourceSHA256": "2fcdfc1d4ab769afeb8e801a6db8c07df34486c70851f2154bcd6476bd87f476",
+    "find": "        {message.created_at && (\n          <div className=\"flex min-w-0 items-center gap-2 px-1\">\n            <span className=\"type-caption text-muted-foreground\">\n              {format(new Date(message.created_at), \"HH:mm\")}",
+    "replace": "        {true && (\n          <div className=\"flex min-w-0 items-center gap-2 px-1\">\n            <span className=\"type-caption text-muted-foreground\">\n              {\"12:34\"}",
+    "matchCount": 1,
+    "mutantSHA256": "fa78532866da4d8c04bd785cb833dd4a98577c6023cb7bdab19dad482ac0cd50",
+    "snapshot": "mutants/C2-02/src/components/chat/chat-message.tsx",
+    "oracle": {
+      "keeperTitle": "the Chat example is a short, capability-true transcript through the real bubbles",
+      "testFile": "tests/gated-example-pages.test.tsx",
+      "code": "ERR_ASSERTION",
+      "operator": "doesNotMatch",
+      "decodedMessageIncludes": [
+        "type-caption text-muted-foreground",
+        "12:34"
+      ],
+      "firstFrame": "FIRST outer assertion frame must equal the selected keeper file and phase line; reject helper/setup/import/module errors, unrelated failures, zero selections and duplicate selections.",
+      "transfer": {
+        "line": 296,
+        "assertion": "assert.doesNotMatch(html, /type-caption text-muted-foreground\">\\d\\d:\\d\\d/)",
+        "keeperRegistrationLine": 271,
+        "firstFrameFile": "tests/gated-example-pages.test.tsx"
+      },
+      "cut": {
+        "line": 296,
+        "assertion": "assert.doesNotMatch(html, /type-caption text-muted-foreground\">\\d\\d:\\d\\d/)",
+        "keeperRegistrationLine": 271,
+        "firstFrameFile": "tests/gated-example-pages.test.tsx"
+      }
+    },
+    "phaseRequirement": [
+      "transfer",
+      "cut"
+    ],
+    "runtimeStatus": "UNRUN"
+  },
+  {
+    "id": "C3-01",
+    "candidate": "C3",
+    "contract": "routine: no form in existing trapped SSR output",
+    "source": "src/components/gated-preview/gated-preview.tsx",
+    "originalSourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "find": "      <PremiumSheet\n",
+    "replace": "      <form />\n      <PremiumSheet\n",
+    "matchCount": 1,
+    "mutantSHA256": "06dbdb10b8a3ad5055c1fbc357d7b2ae6a9a0cbe102d997ff5d39a83f21ff44e",
+    "snapshot": "mutants/C3-01/src/components/gated-preview/gated-preview.tsx",
+    "oracle": {
+      "keeperTitle": "gated routine renders without touching the network",
+      "testFile": "tests/gated-pages-zero-mutation.test.tsx",
+      "code": "ERR_ASSERTION",
+      "operator": "doesNotMatch",
+      "decodedMessageIncludes": [
+        "<form"
+      ],
+      "firstFrame": "FIRST outer assertion frame must equal the selected keeper file and phase line; reject helper/setup/import/module errors, unrelated failures, zero selections and duplicate selections.",
+      "transfer": {
+        "line": 137,
+        "assertion": "assert.doesNotMatch(result, /<form/i)",
+        "keeperRegistrationLine": 127,
+        "firstFrameFile": "tests/gated-pages-zero-mutation.test.tsx"
+      },
+      "cut": {
+        "line": 137,
+        "assertion": "assert.doesNotMatch(result, /<form/i)",
+        "keeperRegistrationLine": 127,
+        "firstFrameFile": "tests/gated-pages-zero-mutation.test.tsx"
+      }
+    },
+    "phaseRequirement": [
+      "transfer",
+      "cut"
+    ],
+    "runtimeStatus": "UNRUN"
+  },
+  {
+    "id": "C3-02",
+    "candidate": "C3",
+    "contract": "routine: no submit control in existing trapped SSR output",
+    "source": "src/components/gated-preview/gated-preview.tsx",
+    "originalSourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "find": "      <PremiumSheet\n",
+    "replace": "      <button type=\"submit\" />\n      <PremiumSheet\n",
+    "matchCount": 1,
+    "mutantSHA256": "ba25e679ca8e46ff6dac3c36745a80a0b2d5d73d56932d348f5f50db48b60e5d",
+    "snapshot": "mutants/C3-02/src/components/gated-preview/gated-preview.tsx",
+    "oracle": {
+      "keeperTitle": "gated routine renders without touching the network",
+      "testFile": "tests/gated-pages-zero-mutation.test.tsx",
+      "code": "ERR_ASSERTION",
+      "operator": "doesNotMatch",
+      "decodedMessageIncludes": [
+        "type=\"submit\""
+      ],
+      "firstFrame": "FIRST outer assertion frame must equal the selected keeper file and phase line; reject helper/setup/import/module errors, unrelated failures, zero selections and duplicate selections.",
+      "transfer": {
+        "line": 138,
+        "assertion": "assert.doesNotMatch(result, /type=\"submit\"/i)",
+        "keeperRegistrationLine": 127,
+        "firstFrameFile": "tests/gated-pages-zero-mutation.test.tsx"
+      },
+      "cut": {
+        "line": 138,
+        "assertion": "assert.doesNotMatch(result, /type=\"submit\"/i)",
+        "keeperRegistrationLine": 127,
+        "firstFrameFile": "tests/gated-pages-zero-mutation.test.tsx"
+      }
+    },
+    "phaseRequirement": [
+      "transfer",
+      "cut"
+    ],
+    "runtimeStatus": "UNRUN"
+  },
+  {
+    "id": "C3-03",
+    "candidate": "C3",
+    "contract": "routine: no form action in existing trapped SSR output",
+    "source": "src/components/gated-preview/gated-preview.tsx",
+    "originalSourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "find": "      <PremiumSheet\n",
+    "replace": "      <button formAction=\"/forbidden\" />\n      <PremiumSheet\n",
+    "matchCount": 1,
+    "mutantSHA256": "592e88ecaaf5af854a4e44936aeca2e214e010cfaee681d073519194b73acdfa",
+    "snapshot": "mutants/C3-03/src/components/gated-preview/gated-preview.tsx",
+    "oracle": {
+      "keeperTitle": "gated routine renders without touching the network",
+      "testFile": "tests/gated-pages-zero-mutation.test.tsx",
+      "code": "ERR_ASSERTION",
+      "operator": "doesNotMatch",
+      "decodedMessageIncludes": [
+        "/forbidden"
+      ],
+      "firstFrame": "FIRST outer assertion frame must equal the selected keeper file and phase line; reject helper/setup/import/module errors, unrelated failures, zero selections and duplicate selections.",
+      "transfer": {
+        "line": 139,
+        "assertion": "assert.doesNotMatch(result, /formaction=/i)",
+        "keeperRegistrationLine": 127,
+        "firstFrameFile": "tests/gated-pages-zero-mutation.test.tsx"
+      },
+      "cut": {
+        "line": 139,
+        "assertion": "assert.doesNotMatch(result, /formaction=/i)",
+        "keeperRegistrationLine": 127,
+        "firstFrameFile": "tests/gated-pages-zero-mutation.test.tsx"
+      }
+    },
+    "phaseRequirement": [
+      "transfer",
+      "cut"
+    ],
+    "runtimeStatus": "UNRUN"
+  },
+  {
+    "id": "C3-04",
+    "candidate": "C3",
+    "contract": "anwendung: no form in existing trapped SSR output",
+    "source": "src/components/gated-preview/gated-preview.tsx",
+    "originalSourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "find": "      <PremiumSheet\n",
+    "replace": "      <form />\n      <PremiumSheet\n",
+    "matchCount": 1,
+    "mutantSHA256": "06dbdb10b8a3ad5055c1fbc357d7b2ae6a9a0cbe102d997ff5d39a83f21ff44e",
+    "snapshot": "mutants/C3-04/src/components/gated-preview/gated-preview.tsx",
+    "oracle": {
+      "keeperTitle": "gated anwendung renders without touching the network",
+      "testFile": "tests/gated-pages-zero-mutation.test.tsx",
+      "code": "ERR_ASSERTION",
+      "operator": "doesNotMatch",
+      "decodedMessageIncludes": [
+        "<form"
+      ],
+      "firstFrame": "FIRST outer assertion frame must equal the selected keeper file and phase line; reject helper/setup/import/module errors, unrelated failures, zero selections and duplicate selections.",
+      "transfer": {
+        "line": 137,
+        "assertion": "assert.doesNotMatch(result, /<form/i)",
+        "keeperRegistrationLine": 127,
+        "firstFrameFile": "tests/gated-pages-zero-mutation.test.tsx"
+      },
+      "cut": {
+        "line": 137,
+        "assertion": "assert.doesNotMatch(result, /<form/i)",
+        "keeperRegistrationLine": 127,
+        "firstFrameFile": "tests/gated-pages-zero-mutation.test.tsx"
+      }
+    },
+    "phaseRequirement": [
+      "transfer",
+      "cut"
+    ],
+    "runtimeStatus": "UNRUN"
+  },
+  {
+    "id": "C3-05",
+    "candidate": "C3",
+    "contract": "anwendung: no submit control in existing trapped SSR output",
+    "source": "src/components/gated-preview/gated-preview.tsx",
+    "originalSourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "find": "      <PremiumSheet\n",
+    "replace": "      <button type=\"submit\" />\n      <PremiumSheet\n",
+    "matchCount": 1,
+    "mutantSHA256": "ba25e679ca8e46ff6dac3c36745a80a0b2d5d73d56932d348f5f50db48b60e5d",
+    "snapshot": "mutants/C3-05/src/components/gated-preview/gated-preview.tsx",
+    "oracle": {
+      "keeperTitle": "gated anwendung renders without touching the network",
+      "testFile": "tests/gated-pages-zero-mutation.test.tsx",
+      "code": "ERR_ASSERTION",
+      "operator": "doesNotMatch",
+      "decodedMessageIncludes": [
+        "type=\"submit\""
+      ],
+      "firstFrame": "FIRST outer assertion frame must equal the selected keeper file and phase line; reject helper/setup/import/module errors, unrelated failures, zero selections and duplicate selections.",
+      "transfer": {
+        "line": 138,
+        "assertion": "assert.doesNotMatch(result, /type=\"submit\"/i)",
+        "keeperRegistrationLine": 127,
+        "firstFrameFile": "tests/gated-pages-zero-mutation.test.tsx"
+      },
+      "cut": {
+        "line": 138,
+        "assertion": "assert.doesNotMatch(result, /type=\"submit\"/i)",
+        "keeperRegistrationLine": 127,
+        "firstFrameFile": "tests/gated-pages-zero-mutation.test.tsx"
+      }
+    },
+    "phaseRequirement": [
+      "transfer",
+      "cut"
+    ],
+    "runtimeStatus": "UNRUN"
+  },
+  {
+    "id": "C3-06",
+    "candidate": "C3",
+    "contract": "anwendung: no form action in existing trapped SSR output",
+    "source": "src/components/gated-preview/gated-preview.tsx",
+    "originalSourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "find": "      <PremiumSheet\n",
+    "replace": "      <button formAction=\"/forbidden\" />\n      <PremiumSheet\n",
+    "matchCount": 1,
+    "mutantSHA256": "592e88ecaaf5af854a4e44936aeca2e214e010cfaee681d073519194b73acdfa",
+    "snapshot": "mutants/C3-06/src/components/gated-preview/gated-preview.tsx",
+    "oracle": {
+      "keeperTitle": "gated anwendung renders without touching the network",
+      "testFile": "tests/gated-pages-zero-mutation.test.tsx",
+      "code": "ERR_ASSERTION",
+      "operator": "doesNotMatch",
+      "decodedMessageIncludes": [
+        "/forbidden"
+      ],
+      "firstFrame": "FIRST outer assertion frame must equal the selected keeper file and phase line; reject helper/setup/import/module errors, unrelated failures, zero selections and duplicate selections.",
+      "transfer": {
+        "line": 139,
+        "assertion": "assert.doesNotMatch(result, /formaction=/i)",
+        "keeperRegistrationLine": 127,
+        "firstFrameFile": "tests/gated-pages-zero-mutation.test.tsx"
+      },
+      "cut": {
+        "line": 139,
+        "assertion": "assert.doesNotMatch(result, /formaction=/i)",
+        "keeperRegistrationLine": 127,
+        "firstFrameFile": "tests/gated-pages-zero-mutation.test.tsx"
+      }
+    },
+    "phaseRequirement": [
+      "transfer",
+      "cut"
+    ],
+    "runtimeStatus": "UNRUN"
+  },
+  {
+    "id": "C3-07",
+    "candidate": "C3",
+    "contract": "chat: no form in existing trapped SSR output",
+    "source": "src/components/gated-preview/gated-preview.tsx",
+    "originalSourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "find": "      <PremiumSheet\n",
+    "replace": "      <form />\n      <PremiumSheet\n",
+    "matchCount": 1,
+    "mutantSHA256": "06dbdb10b8a3ad5055c1fbc357d7b2ae6a9a0cbe102d997ff5d39a83f21ff44e",
+    "snapshot": "mutants/C3-07/src/components/gated-preview/gated-preview.tsx",
+    "oracle": {
+      "keeperTitle": "gated chat renders without touching the network",
+      "testFile": "tests/gated-pages-zero-mutation.test.tsx",
+      "code": "ERR_ASSERTION",
+      "operator": "doesNotMatch",
+      "decodedMessageIncludes": [
+        "<form"
+      ],
+      "firstFrame": "FIRST outer assertion frame must equal the selected keeper file and phase line; reject helper/setup/import/module errors, unrelated failures, zero selections and duplicate selections.",
+      "transfer": {
+        "line": 137,
+        "assertion": "assert.doesNotMatch(result, /<form/i)",
+        "keeperRegistrationLine": 127,
+        "firstFrameFile": "tests/gated-pages-zero-mutation.test.tsx"
+      },
+      "cut": {
+        "line": 137,
+        "assertion": "assert.doesNotMatch(result, /<form/i)",
+        "keeperRegistrationLine": 127,
+        "firstFrameFile": "tests/gated-pages-zero-mutation.test.tsx"
+      }
+    },
+    "phaseRequirement": [
+      "transfer",
+      "cut"
+    ],
+    "runtimeStatus": "UNRUN"
+  },
+  {
+    "id": "C3-08",
+    "candidate": "C3",
+    "contract": "chat: no submit control in existing trapped SSR output",
+    "source": "src/components/gated-preview/gated-preview.tsx",
+    "originalSourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "find": "      <PremiumSheet\n",
+    "replace": "      <button type=\"submit\" />\n      <PremiumSheet\n",
+    "matchCount": 1,
+    "mutantSHA256": "ba25e679ca8e46ff6dac3c36745a80a0b2d5d73d56932d348f5f50db48b60e5d",
+    "snapshot": "mutants/C3-08/src/components/gated-preview/gated-preview.tsx",
+    "oracle": {
+      "keeperTitle": "gated chat renders without touching the network",
+      "testFile": "tests/gated-pages-zero-mutation.test.tsx",
+      "code": "ERR_ASSERTION",
+      "operator": "doesNotMatch",
+      "decodedMessageIncludes": [
+        "type=\"submit\""
+      ],
+      "firstFrame": "FIRST outer assertion frame must equal the selected keeper file and phase line; reject helper/setup/import/module errors, unrelated failures, zero selections and duplicate selections.",
+      "transfer": {
+        "line": 138,
+        "assertion": "assert.doesNotMatch(result, /type=\"submit\"/i)",
+        "keeperRegistrationLine": 127,
+        "firstFrameFile": "tests/gated-pages-zero-mutation.test.tsx"
+      },
+      "cut": {
+        "line": 138,
+        "assertion": "assert.doesNotMatch(result, /type=\"submit\"/i)",
+        "keeperRegistrationLine": 127,
+        "firstFrameFile": "tests/gated-pages-zero-mutation.test.tsx"
+      }
+    },
+    "phaseRequirement": [
+      "transfer",
+      "cut"
+    ],
+    "runtimeStatus": "UNRUN"
+  },
+  {
+    "id": "C3-09",
+    "candidate": "C3",
+    "contract": "chat: no form action in existing trapped SSR output",
+    "source": "src/components/gated-preview/gated-preview.tsx",
+    "originalSourceSHA256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "find": "      <PremiumSheet\n",
+    "replace": "      <button formAction=\"/forbidden\" />\n      <PremiumSheet\n",
+    "matchCount": 1,
+    "mutantSHA256": "592e88ecaaf5af854a4e44936aeca2e214e010cfaee681d073519194b73acdfa",
+    "snapshot": "mutants/C3-09/src/components/gated-preview/gated-preview.tsx",
+    "oracle": {
+      "keeperTitle": "gated chat renders without touching the network",
+      "testFile": "tests/gated-pages-zero-mutation.test.tsx",
+      "code": "ERR_ASSERTION",
+      "operator": "doesNotMatch",
+      "decodedMessageIncludes": [
+        "/forbidden"
+      ],
+      "firstFrame": "FIRST outer assertion frame must equal the selected keeper file and phase line; reject helper/setup/import/module errors, unrelated failures, zero selections and duplicate selections.",
+      "transfer": {
+        "line": 139,
+        "assertion": "assert.doesNotMatch(result, /formaction=/i)",
+        "keeperRegistrationLine": 127,
+        "firstFrameFile": "tests/gated-pages-zero-mutation.test.tsx"
+      },
+      "cut": {
+        "line": 139,
+        "assertion": "assert.doesNotMatch(result, /formaction=/i)",
+        "keeperRegistrationLine": 127,
+        "firstFrameFile": "tests/gated-pages-zero-mutation.test.tsx"
+      }
+    },
+    "phaseRequirement": [
+      "transfer",
+      "cut"
+    ],
+    "runtimeStatus": "UNRUN"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "mode": "cut",
+  "from": "transfer",
+  "phase": "cut",
+  "counts": {
+    "before": 37,
+    "transfer": 37,
+    "cut": 30
+  },
+  "pinsSHA": "ffb6b2428bdceb285246596cafeba5e3b1a6870ec0ce885b875531178b10f0cd",
+  "prerequisite": {
+    "dir": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7",
+    "completionSHA": "775e7a57ebf26e3e7da0ecd10d20fadf4a817edee7a4c166385851f1749db0aa",
+    "verified": 13,
+    "logFiles": 39,
+    "phase": "transfer"
+  },
+  "changed": [
+    "tests/personal-plan/refinement/module-status.test.ts",
+    "tests/personal-plan/refinement/refinement-status.test.ts",
+    "tests/personal-plan-refinement-presentation-route.test.ts"
+  ],
+  "allTestHashes": {
+    "tests/personal-plan/refinement/module-status.test.ts": "3b1eee6eec64647981ea91b6d2b921df324c247930a63102053de6cefc59c67f",
+    "tests/personal-plan/refinement/refinement-status.test.ts": "6dd0545d97d80dc8548167d99a85b5752de90b11c2e3468ee0cbeffcf75815d0",
+    "tests/personal-plan-refinement-answer-provenance-migration.test.ts": "217adbb7848224154c56df114d4403aeceddbd3441fa6584ed88273a0414b76a",
+    "tests/personal-plan-refinement-presentation-route.test.ts": "0b1c469904918e19bb964040d41df3f67f94711868e09863c4d45f411572802b",
+    "tests/personal-plan-refinement-status-route.test.ts": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+  },
+  "sourceWrites": 0,
+  "testsRun": 0,
+  "originals": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-apply-cut-PH1QYs/originals"
+}

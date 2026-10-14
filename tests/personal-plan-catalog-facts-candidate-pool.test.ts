@@ -358,3 +358,67 @@ test("candidates by role: an empty catalog yields an empty list for every role",
   })
   assert.deepEqual(byRole, { shampoo_everyday: [], shampoo_dandruff: [] })
 })
+
+test("market segment: facts carry marketSegment (unknown values become null) without touching fingerprints", async () => {
+  const withSegment = (row: ReturnType<typeof product>, segment: unknown) => ({
+    ...row,
+    market_segment: segment,
+  })
+  const select = (rows: Row[]) =>
+    catalogClient({ ...SHAMPOO_TABLES, products: rows }, { supportsIn: true }).client
+  const selection = { ...LANES[0]!.selection, role: "shampoo_everyday" as const }
+  const derive = async (rows: Row[]) =>
+    deriveStage3RecommendationCandidates(
+      await loadStage3RecommendationCandidatePool(select(rows), "shampoo"),
+      selection,
+    )
+
+  const [professional, drugstore] = await derive([
+    withSegment(SHAMPOO_A, "professional"),
+    withSegment(SHAMPOO_B, "drugstore"),
+  ])
+  assert.equal(professional!.marketSegment, "professional")
+  assert.equal(drugstore!.marketSegment, "drugstore")
+
+  const [absent, unknown] = await derive([SHAMPOO_A, withSegment(SHAMPOO_B, "luxury")])
+  assert.equal(absent!.marketSegment, null)
+  assert.equal(unknown!.marketSegment, null)
+
+  // Presentation only: the fit fact fingerprint ignores the segment (and the recommendable
+  // expression is untouched: a recommended product without a segment stays recommendable).
+  const [asProfessional] = await derive([withSegment(SHAMPOO_A, "professional")])
+  const [asDrugstore] = await derive([withSegment(SHAMPOO_A, "drugstore")])
+  assert.equal(absent!.recommendable, true)
+  assert.equal(asProfessional!.factFingerprint, asDrugstore!.factFingerprint)
+  assert.equal(asProfessional!.factFingerprint, absent!.factFingerprint)
+  assert.notEqual(asProfessional!.marketSegment, asDrugstore!.marketSegment)
+})
+
+test("market segment: every catalog product select requests market_segment", async () => {
+  const selects: string[] = []
+  const { client } = catalogClient(SHAMPOO_TABLES, { supportsIn: true })
+  const spying = {
+    from: (table: string) => {
+      const chain = (client as unknown as { from(table: string): Record<string, unknown> }).from(
+        table,
+      )
+      if (table !== "products") return chain
+      const select = chain.select as (columns: string, ...rest: unknown[]) => unknown
+      chain.select = (columns: string, ...rest: unknown[]) => {
+        selects.push(columns)
+        return select(columns, ...rest)
+      }
+      return chain
+    },
+  } as never
+  const selection = LANES[0]!.selection
+
+  await loadStage3RecommendationCandidatePool(spying, "shampoo") // pool select
+  await loadStage3RecommendationCandidates(spying, {
+    category: "shampoo",
+    ...selection,
+    role: "shampoo_everyday",
+  }) // legacy select
+  assert.ok(selects.length >= 2)
+  for (const columns of selects) assert.match(columns, /(^|,)market_segment(,|$)/)
+})

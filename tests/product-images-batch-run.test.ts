@@ -49,16 +49,6 @@ test("alphaCoverage: matches the known opaque fraction of a synthetic square", (
   assert.ok(Math.abs(alphaCoverage(data, width, height) - expected) < 1e-9)
 })
 
-test("haloScore: a uniformly bright subject has ~0 boundary halo", () => {
-  const { data, width, height } = buildSquareSubject({
-    size: 30,
-    margin: 8,
-    fill: () => [235, 230, 225],
-  })
-  const score = haloScore(data, width, height)
-  assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)
-})
-
 test("haloScore: a warm dark ring around the boundary scores high", () => {
   const { data, width, height } = buildSquareSubject({
     size: 30,
@@ -151,4 +141,7 @@ test("a clean high-res source is ok with no reason at all", async () => {
   assert.equal(result.status, "ok")
   assert.equal(result.reason, null)
   assert.deepEqual(result.path_taken, ["alpha_passthrough"])
+
+  const score = result.metrics.halo_score
+  assert.ok(score < 0.02, `expected a near-zero halo score for a clean subject, got ${score}`)
 })

@@ -173,7 +173,7 @@ export function MembershipReactivationPage({
                   sie noch besser zu deinen Haaren und deinem Alltag passt?
                 </p>
               </div>
-              <OfferPreviewRoutine preview={routinePreview} routineOnly />
+              <OfferPreviewRoutine preview={routinePreview} />
             </div>
           </div>
         </div>

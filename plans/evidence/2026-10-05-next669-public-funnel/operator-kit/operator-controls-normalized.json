@@ -1,0 +1,1326 @@
+[
+  {
+    "id": "C1-01",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/components/gated-preview/gated-preview.tsx",
+    "sourceSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "mutatedSha256": "08bf8508afc64f2cc8ab11f70ea5563293e14246878b0a2b9a1d70d35ea5f082",
+    "originalDescriptorMutantSHA256": "08bf8508afc64f2cc8ab11f70ea5563293e14246878b0a2b9a1d70d35ea5f082",
+    "controlAmended": false,
+    "anchor": {
+      "kind": "file",
+      "scope": "src/components/gated-preview/gated-preview.tsx",
+      "scopeSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "expectedOccurrences": 1
+    },
+    "from": "min-h-0 flex-1 overflow-y-auto overscroll-contain",
+    "to": "min-h-0 flex-1 overscroll-contain",
+    "fullMutantPath": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C1-01/src/components/gated-preview/gated-preview.tsx",
+    "test": {
+      "file": "tests/gated-preview-component.test.tsx",
+      "name": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+      "registrationName": "renders the frame, the Beispiel band, the benefit line and exactly one CTA"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^renders the frame, the Beispiel band, the benefit line and exactly one CTA$",
+      "tests/gated-preview-component.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 141,
+        "text": "assert.match(scroll.props.className as string, /overflow-y-auto/)",
+        "keeperSha256": "deb17da5e4b8a11cd16b2f09003db931c8076eff3ef1ae1d76bb42fc8a15709d",
+        "testFileSha256": "587f2dd2b1f1e05f0f8cafeca3d7f547a29e35aca7d0546614249d83c668530a"
+      },
+      "cut": {
+        "startLine": 141,
+        "text": "assert.match(scroll.props.className as string, /overflow-y-auto/)",
+        "keeperSha256": "deb17da5e4b8a11cd16b2f09003db931c8076eff3ef1ae1d76bb42fc8a15709d",
+        "testFileSha256": "772de4c84214cd563954810307c35041d0ca540f1f974cff8a9b2e49a6fec7fb"
+      }
+    },
+    "expectedOperator": "match",
+    "diagnostic": {
+      "kind": "regex-scalar",
+      "actual": "min-h-0 flex-1 overscroll-contain px-4 pb-6 pt-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--brand-plum)]",
+      "pattern": "overflow-y-auto",
+      "flags": "",
+      "literal": "/overflow-y-auto/",
+      "fullMessage": "The input did not match the regular expression /overflow-y-auto/. Input:\n\n'min-h-0 flex-1 overscroll-contain px-4 pb-6 pt-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--brand-plum)]'\n"
+    },
+    "errorMessageIncludes": [
+      "The input did not match the regular expression /overflow-y-auto/. Input:\n\n'min-h-0 flex-1 overscroll-contain px-4 pb-6 pt-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--brand-plum)]'",
+      "The input did not match the regular expression /overflow-y-auto/. Input:"
+    ],
+    "intendedAssertion": "assert.match(scroll.props.className as string, /overflow-y-auto/)",
+    "limits": "Static normalization only. Root actual clean/red/exact restore/clean and FIRST keeper assertion are required in transfer and cut; setup/helper/unknown diagnostic rejected."
+  },
+  {
+    "id": "C1-02",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/components/gated-preview/gated-preview.tsx",
+    "sourceSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "mutatedSha256": "824901464aeb426a972465ae2eb6fd091cb91aa282c670c03f2fdb1bd6640ea2",
+    "originalDescriptorMutantSHA256": "824901464aeb426a972465ae2eb6fd091cb91aa282c670c03f2fdb1bd6640ea2",
+    "controlAmended": false,
+    "anchor": {
+      "kind": "file",
+      "scope": "src/components/gated-preview/gated-preview.tsx",
+      "scopeSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "expectedOccurrences": 1
+    },
+    "from": "min-h-0 flex-1 overflow-y-auto overscroll-contain",
+    "to": "flex-1 overflow-y-auto overscroll-contain",
+    "fullMutantPath": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C1-02/src/components/gated-preview/gated-preview.tsx",
+    "test": {
+      "file": "tests/gated-preview-component.test.tsx",
+      "name": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+      "registrationName": "renders the frame, the Beispiel band, the benefit line and exactly one CTA"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^renders the frame, the Beispiel band, the benefit line and exactly one CTA$",
+      "tests/gated-preview-component.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 143,
+        "text": "assert.match(scroll.props.className as string, /min-h-0/)",
+        "keeperSha256": "deb17da5e4b8a11cd16b2f09003db931c8076eff3ef1ae1d76bb42fc8a15709d",
+        "testFileSha256": "587f2dd2b1f1e05f0f8cafeca3d7f547a29e35aca7d0546614249d83c668530a"
+      },
+      "cut": {
+        "startLine": 143,
+        "text": "assert.match(scroll.props.className as string, /min-h-0/)",
+        "keeperSha256": "deb17da5e4b8a11cd16b2f09003db931c8076eff3ef1ae1d76bb42fc8a15709d",
+        "testFileSha256": "772de4c84214cd563954810307c35041d0ca540f1f974cff8a9b2e49a6fec7fb"
+      }
+    },
+    "expectedOperator": "match",
+    "diagnostic": {
+      "kind": "regex-scalar",
+      "actual": "flex-1 overflow-y-auto overscroll-contain px-4 pb-6 pt-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--brand-plum)]",
+      "pattern": "min-h-0",
+      "flags": "",
+      "literal": "/min-h-0/",
+      "fullMessage": "The input did not match the regular expression /min-h-0/. Input:\n\n'flex-1 overflow-y-auto overscroll-contain px-4 pb-6 pt-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--brand-plum)]'\n"
+    },
+    "errorMessageIncludes": [
+      "The input did not match the regular expression /min-h-0/. Input:\n\n'flex-1 overflow-y-auto overscroll-contain px-4 pb-6 pt-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--brand-plum)]'",
+      "The input did not match the regular expression /min-h-0/. Input:"
+    ],
+    "intendedAssertion": "assert.match(scroll.props.className as string, /min-h-0/)",
+    "limits": "Static normalization only. Root actual clean/red/exact restore/clean and FIRST keeper assertion are required in transfer and cut; setup/helper/unknown diagnostic rejected."
+  },
+  {
+    "id": "C1-03",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/components/gated-preview/gated-preview.tsx",
+    "sourceSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "mutatedSha256": "5cb149609e584fbf3893fd4c6211e1935ae7b6de72d2164140a146a38f6d89bb",
+    "originalDescriptorMutantSHA256": "5cb149609e584fbf3893fd4c6211e1935ae7b6de72d2164140a146a38f6d89bb",
+    "controlAmended": false,
+    "anchor": {
+      "kind": "file",
+      "scope": "src/components/gated-preview/gated-preview.tsx",
+      "scopeSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "expectedOccurrences": 1
+    },
+    "from": "          role=\"region\"",
+    "to": "          role=\"presentation\"",
+    "fullMutantPath": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C1-03/src/components/gated-preview/gated-preview.tsx",
+    "test": {
+      "file": "tests/gated-preview-component.test.tsx",
+      "name": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+      "registrationName": "renders the frame, the Beispiel band, the benefit line and exactly one CTA"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^renders the frame, the Beispiel band, the benefit line and exactly one CTA$",
+      "tests/gated-preview-component.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 146,
+        "text": "assert.equal(scroll.props.role, \"region\")",
+        "keeperSha256": "deb17da5e4b8a11cd16b2f09003db931c8076eff3ef1ae1d76bb42fc8a15709d",
+        "testFileSha256": "587f2dd2b1f1e05f0f8cafeca3d7f547a29e35aca7d0546614249d83c668530a"
+      },
+      "cut": {
+        "startLine": 146,
+        "text": "assert.equal(scroll.props.role, \"region\")",
+        "keeperSha256": "deb17da5e4b8a11cd16b2f09003db931c8076eff3ef1ae1d76bb42fc8a15709d",
+        "testFileSha256": "772de4c84214cd563954810307c35041d0ca540f1f974cff8a9b2e49a6fec7fb"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "diagnostic": {
+      "kind": "scalar",
+      "actual": "presentation",
+      "expected": "region",
+      "fullMessage": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'presentation'\n- 'region'\n"
+    },
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'presentation'\n- 'region'",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal(scroll.props.role, \"region\")",
+    "limits": "Static normalization only. Root actual clean/red/exact restore/clean and FIRST keeper assertion are required in transfer and cut; setup/helper/unknown diagnostic rejected."
+  },
+  {
+    "id": "C1-04",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/components/gated-preview/gated-preview.tsx",
+    "sourceSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "mutatedSha256": "0a3384a6fe5ff6eeb1f94d0d0e0091989b142b91b5056f12d22a351f663f0852",
+    "originalDescriptorMutantSHA256": "0a3384a6fe5ff6eeb1f94d0d0e0091989b142b91b5056f12d22a351f663f0852",
+    "controlAmended": false,
+    "anchor": {
+      "kind": "file",
+      "scope": "src/components/gated-preview/gated-preview.tsx",
+      "scopeSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "expectedOccurrences": 1
+    },
+    "from": "          aria-labelledby={exampleLabelId}",
+    "to": "          aria-labelledby={exampleLabelId}\n          aria-label=\"duplicate\"",
+    "fullMutantPath": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C1-04/src/components/gated-preview/gated-preview.tsx",
+    "test": {
+      "file": "tests/gated-preview-component.test.tsx",
+      "name": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+      "registrationName": "renders the frame, the Beispiel band, the benefit line and exactly one CTA"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^renders the frame, the Beispiel band, the benefit line and exactly one CTA$",
+      "tests/gated-preview-component.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 150,
+        "text": "assert.equal(scroll.props[\"aria-label\"], undefined)",
+        "keeperSha256": "deb17da5e4b8a11cd16b2f09003db931c8076eff3ef1ae1d76bb42fc8a15709d",
+        "testFileSha256": "587f2dd2b1f1e05f0f8cafeca3d7f547a29e35aca7d0546614249d83c668530a"
+      },
+      "cut": {
+        "startLine": 150,
+        "text": "assert.equal(scroll.props[\"aria-label\"], undefined)",
+        "keeperSha256": "deb17da5e4b8a11cd16b2f09003db931c8076eff3ef1ae1d76bb42fc8a15709d",
+        "testFileSha256": "772de4c84214cd563954810307c35041d0ca540f1f974cff8a9b2e49a6fec7fb"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "diagnostic": {
+      "kind": "omitted-undefined",
+      "actual": "duplicate",
+      "expectedEncoding": "top-level expected field absent ONLY for frozen C1-04",
+      "fullMessage": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'duplicate'\n- undefined\n"
+    },
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'duplicate'\n- undefined",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal(scroll.props[\"aria-label\"], undefined)",
+    "limits": "Static normalization only. Root actual clean/red/exact restore/clean and FIRST keeper assertion are required in transfer and cut; setup/helper/unknown diagnostic rejected."
+  },
+  {
+    "id": "C1-05",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/components/gated-preview/gated-preview.tsx",
+    "sourceSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "mutatedSha256": "765c3e08761eddd4c8278491725070a396cca116fcdd41e888b3a7c002582c67",
+    "originalDescriptorMutantSHA256": "765c3e08761eddd4c8278491725070a396cca116fcdd41e888b3a7c002582c67",
+    "controlAmended": false,
+    "anchor": {
+      "kind": "file",
+      "scope": "src/components/gated-preview/gated-preview.tsx",
+      "scopeSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "expectedOccurrences": 1
+    },
+    "from": "          aria-labelledby={exampleLabelId}",
+    "to": "          aria-labelledby=\"wrong-label\"",
+    "fullMutantPath": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C1-05/src/components/gated-preview/gated-preview.tsx",
+    "test": {
+      "file": "tests/gated-preview-component.test.tsx",
+      "name": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+      "registrationName": "renders the frame, the Beispiel band, the benefit line and exactly one CTA"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^renders the frame, the Beispiel band, the benefit line and exactly one CTA$",
+      "tests/gated-preview-component.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 151,
+        "text": "assert.equal(scroll.props[\"aria-labelledby\"], label.props.id)",
+        "keeperSha256": "deb17da5e4b8a11cd16b2f09003db931c8076eff3ef1ae1d76bb42fc8a15709d",
+        "testFileSha256": "587f2dd2b1f1e05f0f8cafeca3d7f547a29e35aca7d0546614249d83c668530a"
+      },
+      "cut": {
+        "startLine": 151,
+        "text": "assert.equal(scroll.props[\"aria-labelledby\"], label.props.id)",
+        "keeperSha256": "deb17da5e4b8a11cd16b2f09003db931c8076eff3ef1ae1d76bb42fc8a15709d",
+        "testFileSha256": "772de4c84214cd563954810307c35041d0ca540f1f974cff8a9b2e49a6fec7fb"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "diagnostic": {
+      "kind": "scalar",
+      "actual": "wrong-label",
+      "expected": "gated-preview-label-routine",
+      "fullMessage": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'wrong-label'\n- 'gated-preview-label-routine'\n"
+    },
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'wrong-label'\n- 'gated-preview-label-routine'",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal(scroll.props[\"aria-labelledby\"], label.props.id)",
+    "limits": "Static normalization only. Root actual clean/red/exact restore/clean and FIRST keeper assertion are required in transfer and cut; setup/helper/unknown diagnostic rejected."
+  },
+  {
+    "id": "C1-06",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/components/gated-preview/gated-preview.tsx",
+    "sourceSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "mutatedSha256": "163de29953fbbb06b1bc1597a1bf610aab1c2d9fa11c572523690ca4dcf518df",
+    "originalDescriptorMutantSHA256": "163de29953fbbb06b1bc1597a1bf610aab1c2d9fa11c572523690ca4dcf518df",
+    "controlAmended": false,
+    "anchor": {
+      "kind": "file",
+      "scope": "src/components/gated-preview/gated-preview.tsx",
+      "scopeSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "expectedOccurrences": 1
+    },
+    "from": "  const exampleLabelId = `gated-preview-label-${feature}`",
+    "to": "  const exampleLabelId = \"\"",
+    "fullMutantPath": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C1-06/src/components/gated-preview/gated-preview.tsx",
+    "test": {
+      "file": "tests/gated-preview-component.test.tsx",
+      "name": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+      "registrationName": "renders the frame, the Beispiel band, the benefit line and exactly one CTA"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^renders the frame, the Beispiel band, the benefit line and exactly one CTA$",
+      "tests/gated-preview-component.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 152,
+        "text": "assert.ok(label.props.id, \"the band needs an id for the region to reference\")",
+        "keeperSha256": "deb17da5e4b8a11cd16b2f09003db931c8076eff3ef1ae1d76bb42fc8a15709d",
+        "testFileSha256": "587f2dd2b1f1e05f0f8cafeca3d7f547a29e35aca7d0546614249d83c668530a"
+      },
+      "cut": {
+        "startLine": 152,
+        "text": "assert.ok(label.props.id, \"the band needs an id for the region to reference\")",
+        "keeperSha256": "deb17da5e4b8a11cd16b2f09003db931c8076eff3ef1ae1d76bb42fc8a15709d",
+        "testFileSha256": "772de4c84214cd563954810307c35041d0ca540f1f974cff8a9b2e49a6fec7fb"
+      }
+    },
+    "expectedOperator": "==",
+    "diagnostic": {
+      "kind": "scalar",
+      "actual": "",
+      "expected": true,
+      "fullMessage": "the band needs an id for the region to reference"
+    },
+    "errorMessageIncludes": [
+      "the band needs an id for the region to reference",
+      "the band needs an id for the region to reference"
+    ],
+    "intendedAssertion": "assert.ok(label.props.id, \"the band needs an id for the region to reference\")",
+    "limits": "Static normalization only. Root actual clean/red/exact restore/clean and FIRST keeper assertion are required in transfer and cut; setup/helper/unknown diagnostic rejected."
+  },
+  {
+    "id": "C1-07",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/components/gated-preview/gated-preview.tsx",
+    "sourceSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "mutatedSha256": "119119c982689dcd96520a6c8493169f5babf27750395343632f839ed8b269e6",
+    "originalDescriptorMutantSHA256": "119119c982689dcd96520a6c8493169f5babf27750395343632f839ed8b269e6",
+    "controlAmended": false,
+    "anchor": {
+      "kind": "file",
+      "scope": "src/components/gated-preview/gated-preview.tsx",
+      "scopeSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "expectedOccurrences": 1
+    },
+    "from": "          tabIndex={0}",
+    "to": "          tabIndex={-1}",
+    "fullMutantPath": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C1-07/src/components/gated-preview/gated-preview.tsx",
+    "test": {
+      "file": "tests/gated-preview-component.test.tsx",
+      "name": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+      "registrationName": "renders the frame, the Beispiel band, the benefit line and exactly one CTA"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^renders the frame, the Beispiel band, the benefit line and exactly one CTA$",
+      "tests/gated-preview-component.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 153,
+        "text": "assert.equal(scroll.props.tabIndex, 0)",
+        "keeperSha256": "deb17da5e4b8a11cd16b2f09003db931c8076eff3ef1ae1d76bb42fc8a15709d",
+        "testFileSha256": "587f2dd2b1f1e05f0f8cafeca3d7f547a29e35aca7d0546614249d83c668530a"
+      },
+      "cut": {
+        "startLine": 153,
+        "text": "assert.equal(scroll.props.tabIndex, 0)",
+        "keeperSha256": "deb17da5e4b8a11cd16b2f09003db931c8076eff3ef1ae1d76bb42fc8a15709d",
+        "testFileSha256": "772de4c84214cd563954810307c35041d0ca540f1f974cff8a9b2e49a6fec7fb"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "diagnostic": {
+      "kind": "scalar",
+      "actual": -1,
+      "expected": 0,
+      "fullMessage": "Expected values to be strictly equal:\n\n-1 !== 0\n"
+    },
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\n-1 !== 0",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal(scroll.props.tabIndex, 0)",
+    "limits": "Static normalization only. Root actual clean/red/exact restore/clean and FIRST keeper assertion are required in transfer and cut; setup/helper/unknown diagnostic rejected."
+  },
+  {
+    "id": "C1-08",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/components/gated-preview/gated-preview.tsx",
+    "sourceSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "mutatedSha256": "15e6cc01a69f22a3103622b61a0548d06915ac170dd8f9638c220649b8a6811f",
+    "originalDescriptorMutantSHA256": "15e6cc01a69f22a3103622b61a0548d06915ac170dd8f9638c220649b8a6811f",
+    "controlAmended": false,
+    "anchor": {
+      "kind": "file",
+      "scope": "src/components/gated-preview/gated-preview.tsx",
+      "scopeSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "expectedOccurrences": 1
+    },
+    "from": "          {children}",
+    "to": "          {null}",
+    "fullMutantPath": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C1-08/src/components/gated-preview/gated-preview.tsx",
+    "test": {
+      "file": "tests/gated-preview-component.test.tsx",
+      "name": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+      "registrationName": "renders the frame, the Beispiel band, the benefit line and exactly one CTA"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^renders the frame, the Beispiel band, the benefit line and exactly one CTA$",
+      "tests/gated-preview-component.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 156,
+        "text": "assert.equal(child.length, 1, \"children render inside the scroll container, not beside it\")",
+        "keeperSha256": "deb17da5e4b8a11cd16b2f09003db931c8076eff3ef1ae1d76bb42fc8a15709d",
+        "testFileSha256": "587f2dd2b1f1e05f0f8cafeca3d7f547a29e35aca7d0546614249d83c668530a"
+      },
+      "cut": {
+        "startLine": 156,
+        "text": "assert.equal(child.length, 1, \"children render inside the scroll container, not beside it\")",
+        "keeperSha256": "deb17da5e4b8a11cd16b2f09003db931c8076eff3ef1ae1d76bb42fc8a15709d",
+        "testFileSha256": "772de4c84214cd563954810307c35041d0ca540f1f974cff8a9b2e49a6fec7fb"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "diagnostic": {
+      "kind": "scalar",
+      "actual": 0,
+      "expected": 1,
+      "fullMessage": "children render inside the scroll container, not beside it\n\n0 !== 1\n"
+    },
+    "errorMessageIncludes": [
+      "children render inside the scroll container, not beside it\n\n0 !== 1",
+      "children render inside the scroll container, not beside it"
+    ],
+    "intendedAssertion": "assert.equal(child.length, 1, \"children render inside the scroll container, not beside it\")",
+    "limits": "Static normalization only. Root actual clean/red/exact restore/clean and FIRST keeper assertion are required in transfer and cut; setup/helper/unknown diagnostic rejected."
+  },
+  {
+    "id": "C1-09",
+    "candidates": [
+      "C1"
+    ],
+    "file": "src/components/gated-preview/gated-preview.tsx",
+    "sourceSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "mutatedSha256": "6dfd1cbdeab96158e47cd8a05ecdc7c8f1938a766f20917207594a61356a268c",
+    "originalDescriptorMutantSHA256": "6dfd1cbdeab96158e47cd8a05ecdc7c8f1938a766f20917207594a61356a268c",
+    "controlAmended": false,
+    "anchor": {
+      "kind": "file",
+      "scope": "src/components/gated-preview/gated-preview.tsx",
+      "scopeSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "expectedOccurrences": 1
+    },
+    "from": "className=\"flex min-h-0 flex-1 flex-col overflow-hidden rounded-[20px]",
+    "to": "className=\"overflow-y-auto flex min-h-0 flex-1 flex-col overflow-hidden rounded-[20px]",
+    "fullMutantPath": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C1-09/src/components/gated-preview/gated-preview.tsx",
+    "test": {
+      "file": "tests/gated-preview-component.test.tsx",
+      "name": "renders the frame, the Beispiel band, the benefit line and exactly one CTA",
+      "registrationName": "renders the frame, the Beispiel band, the benefit line and exactly one CTA"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^renders the frame, the Beispiel band, the benefit line and exactly one CTA$",
+      "tests/gated-preview-component.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 159,
+        "text": "assert.equal(\n    findAll(tree, (element) => /overflow-y-auto/.test(String(element.props.className ?? \"\")))\n      .length,\n    1,\n  )",
+        "keeperSha256": "deb17da5e4b8a11cd16b2f09003db931c8076eff3ef1ae1d76bb42fc8a15709d",
+        "testFileSha256": "587f2dd2b1f1e05f0f8cafeca3d7f547a29e35aca7d0546614249d83c668530a"
+      },
+      "cut": {
+        "startLine": 159,
+        "text": "assert.equal(\n    findAll(tree, (element) => /overflow-y-auto/.test(String(element.props.className ?? \"\")))\n      .length,\n    1,\n  )",
+        "keeperSha256": "deb17da5e4b8a11cd16b2f09003db931c8076eff3ef1ae1d76bb42fc8a15709d",
+        "testFileSha256": "772de4c84214cd563954810307c35041d0ca540f1f974cff8a9b2e49a6fec7fb"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "diagnostic": {
+      "kind": "scalar",
+      "actual": 2,
+      "expected": 1,
+      "fullMessage": "Expected values to be strictly equal:\n\n2 !== 1\n"
+    },
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\n2 !== 1",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal(\n    findAll(tree, (element) => /overflow-y-auto/.test(String(element.props.className ?? \"\")))\n      .length,\n    1,\n  )",
+    "limits": "Static normalization only. Root actual clean/red/exact restore/clean and FIRST keeper assertion are required in transfer and cut; setup/helper/unknown diagnostic rejected."
+  },
+  {
+    "id": "C2-01",
+    "candidates": [
+      "C2"
+    ],
+    "file": "src/lib/gated-preview/fixtures/chat-example.ts",
+    "sourceSha256": "a9f885d12e7a828d68eaafecf8af9365d99d0dfaed6e8577cf905b3f07f692b3",
+    "mutatedSha256": "f01e7abb1f27dba360e51e54c677eb407f32ea26efd75ef188d89cab1fef612d",
+    "originalDescriptorMutantSHA256": "f01e7abb1f27dba360e51e54c677eb407f32ea26efd75ef188d89cab1fef612d",
+    "controlAmended": false,
+    "anchor": {
+      "kind": "file",
+      "scope": "src/lib/gated-preview/fixtures/chat-example.ts",
+      "scopeSha256": "a9f885d12e7a828d68eaafecf8af9365d99d0dfaed6e8577cf905b3f07f692b3",
+      "expectedOccurrences": 1
+    },
+    "from": "    created_at: \"\",",
+    "to": "    created_at: \"2026-07-11T10:05:00.000Z\",",
+    "fullMutantPath": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C2-01/src/lib/gated-preview/fixtures/chat-example.ts",
+    "test": {
+      "file": "tests/gated-example-pages.test.tsx",
+      "name": "the Chat example is a short, capability-true transcript through the real bubbles",
+      "registrationName": "the Chat example is a short, capability-true transcript through the real bubbles"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^the Chat example is a short, capability-true transcript through the real bubbles$",
+      "tests/gated-example-pages.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 294,
+        "text": "assert.equal(message.created_at, \"\")",
+        "keeperSha256": "d75024e8943dd994c95c9dbb06ab1f91aca59fb3c5ac7ca93cd6da15951da5ef",
+        "testFileSha256": "0e6038435de0e3fde13c7199eed1337002a17e42d78b8973a562194ad2f1891c"
+      },
+      "cut": {
+        "startLine": 294,
+        "text": "assert.equal(message.created_at, \"\")",
+        "keeperSha256": "d75024e8943dd994c95c9dbb06ab1f91aca59fb3c5ac7ca93cd6da15951da5ef",
+        "testFileSha256": "1247d9a7a781a1c34e68302b2bd83ad9a9b58ef6e9689f43fd004d6df1f205ec"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "diagnostic": {
+      "kind": "scalar",
+      "actual": "2026-07-11T10:05:00.000Z",
+      "expected": "",
+      "fullMessage": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '2026-07-11T10:05:00.000Z'\n- ''\n"
+    },
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n+ actual - expected\n\n+ '2026-07-11T10:05:00.000Z'\n- ''",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal(message.created_at, \"\")",
+    "limits": "Static normalization only. Root actual clean/red/exact restore/clean and FIRST keeper assertion are required in transfer and cut; setup/helper/unknown diagnostic rejected."
+  },
+  {
+    "id": "C2-02",
+    "candidates": [
+      "C2"
+    ],
+    "file": "src/components/chat/chat-message.tsx",
+    "sourceSha256": "2fcdfc1d4ab769afeb8e801a6db8c07df34486c70851f2154bcd6476bd87f476",
+    "mutatedSha256": "fa78532866da4d8c04bd785cb833dd4a98577c6023cb7bdab19dad482ac0cd50",
+    "originalDescriptorMutantSHA256": "fa78532866da4d8c04bd785cb833dd4a98577c6023cb7bdab19dad482ac0cd50",
+    "controlAmended": false,
+    "anchor": {
+      "kind": "file",
+      "scope": "src/components/chat/chat-message.tsx",
+      "scopeSha256": "2fcdfc1d4ab769afeb8e801a6db8c07df34486c70851f2154bcd6476bd87f476",
+      "expectedOccurrences": 1
+    },
+    "from": "        {message.created_at && (\n          <div className=\"flex min-w-0 items-center gap-2 px-1\">\n            <span className=\"type-caption text-muted-foreground\">\n              {format(new Date(message.created_at), \"HH:mm\")}",
+    "to": "        {true && (\n          <div className=\"flex min-w-0 items-center gap-2 px-1\">\n            <span className=\"type-caption text-muted-foreground\">\n              {\"12:34\"}",
+    "fullMutantPath": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C2-02/src/components/chat/chat-message.tsx",
+    "test": {
+      "file": "tests/gated-example-pages.test.tsx",
+      "name": "the Chat example is a short, capability-true transcript through the real bubbles",
+      "registrationName": "the Chat example is a short, capability-true transcript through the real bubbles"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^the Chat example is a short, capability-true transcript through the real bubbles$",
+      "tests/gated-example-pages.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 296,
+        "text": "assert.doesNotMatch(html, /type-caption text-muted-foreground\">\\d\\d:\\d\\d/)",
+        "keeperSha256": "d75024e8943dd994c95c9dbb06ab1f91aca59fb3c5ac7ca93cd6da15951da5ef",
+        "testFileSha256": "0e6038435de0e3fde13c7199eed1337002a17e42d78b8973a562194ad2f1891c"
+      },
+      "cut": {
+        "startLine": 296,
+        "text": "assert.doesNotMatch(html, /type-caption text-muted-foreground\">\\d\\d:\\d\\d/)",
+        "keeperSha256": "d75024e8943dd994c95c9dbb06ab1f91aca59fb3c5ac7ca93cd6da15951da5ef",
+        "testFileSha256": "1247d9a7a781a1c34e68302b2bd83ad9a9b58ef6e9689f43fd004d6df1f205ec"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "diagnostic": {
+      "kind": "regex-prefix",
+      "pattern": "type-caption text-muted-foreground\">\\d\\d:\\d\\d",
+      "flags": "",
+      "literal": "/type-caption text-muted-foreground\">\\d\\d:\\d\\d/",
+      "fullHeader": "The input was expected to not match the regular expression /type-caption text-muted-foreground\">\\d\\d:\\d\\d/. Input:",
+      "requiredTokens": [
+        "12:34"
+      ],
+      "syntheticShapeSample": "<span class=\"type-caption text-muted-foreground\">12:34</span>",
+      "limits": "Exact regex header and typed actual full string or explicit supported truncated prefix must contain prohibited regex and token. Complete SSR HTML and truncation count deliberately not fabricated."
+    },
+    "errorMessageIncludes": [
+      "The input was expected to not match the regular expression /type-caption text-muted-foreground\">\\d\\d:\\d\\d/. Input:",
+      "/type-caption text-muted-foreground\">\\d\\d:\\d\\d/"
+    ],
+    "intendedAssertion": "assert.doesNotMatch(html, /type-caption text-muted-foreground\">\\d\\d:\\d\\d/)",
+    "limits": "Static normalization only. Root actual clean/red/exact restore/clean and FIRST keeper assertion are required in transfer and cut; setup/helper/unknown diagnostic rejected."
+  },
+  {
+    "id": "C3-01",
+    "candidates": [
+      "C3"
+    ],
+    "file": "src/components/gated-preview/gated-preview.tsx",
+    "sourceSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "mutatedSha256": "0bcba4b7dbdfe19d23a39c099072ada53a7969642813eeb91205586d14ce4737",
+    "originalDescriptorMutantSHA256": "06dbdb10b8a3ad5055c1fbc357d7b2ae6a9a0cbe102d997ff5d39a83f21ff44e",
+    "controlAmended": true,
+    "anchor": {
+      "kind": "file",
+      "scope": "src/components/gated-preview/gated-preview.tsx",
+      "scopeSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "expectedOccurrences": 1
+    },
+    "from": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n",
+    "to": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n      <form />\n",
+    "fullMutantPath": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C3-01/src/components/gated-preview/gated-preview.tsx",
+    "test": {
+      "file": "tests/gated-pages-zero-mutation.test.tsx",
+      "name": "gated routine renders without touching the network",
+      "registrationName": "`gated ${name} renders without touching the network`"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^gated routine renders without touching the network$",
+      "tests/gated-pages-zero-mutation.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 137,
+        "text": "assert.doesNotMatch(result, /<form/i)",
+        "keeperSha256": "4ba4466741672e2cd3115ae44f0a206cbcf465bc245249b75a0ee3734066d158",
+        "testFileSha256": "6fe2d119cc61f31a89bab936a644a307182624fcd1d9b7b696ea47ab21d6cdde"
+      },
+      "cut": {
+        "startLine": 137,
+        "text": "assert.doesNotMatch(result, /<form/i)",
+        "keeperSha256": "4ba4466741672e2cd3115ae44f0a206cbcf465bc245249b75a0ee3734066d158",
+        "testFileSha256": "96461917c03f9a4463632798e4a20a2a88251e41c5e938121c897bc94d72baa6"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "diagnostic": {
+      "kind": "regex-prefix",
+      "pattern": "<form",
+      "flags": "i",
+      "literal": "/<form/i",
+      "fullHeader": "The input was expected to not match the regular expression /<form/i. Input:",
+      "requiredTokens": [
+        "<form"
+      ],
+      "syntheticShapeSample": "<form></form>",
+      "limits": "Exact regex header and typed actual full string or explicit supported truncated prefix must contain prohibited regex and token. Complete SSR HTML and truncation count deliberately not fabricated."
+    },
+    "errorMessageIncludes": [
+      "The input was expected to not match the regular expression /<form/i. Input:",
+      "/<form/i"
+    ],
+    "intendedAssertion": "assert.doesNotMatch(result, /<form/i)",
+    "limits": "Static normalization only. Root actual clean/red/exact restore/clean and FIRST keeper assertion are required in transfer and cut; setup/helper/unknown diagnostic rejected."
+  },
+  {
+    "id": "C3-02",
+    "candidates": [
+      "C3"
+    ],
+    "file": "src/components/gated-preview/gated-preview.tsx",
+    "sourceSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "mutatedSha256": "5605831d38da2e0957673e39cbc3cca35a2dc8ef67842bcc759cebf8fcbe849f",
+    "originalDescriptorMutantSHA256": "ba25e679ca8e46ff6dac3c36745a80a0b2d5d73d56932d348f5f50db48b60e5d",
+    "controlAmended": true,
+    "anchor": {
+      "kind": "file",
+      "scope": "src/components/gated-preview/gated-preview.tsx",
+      "scopeSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "expectedOccurrences": 1
+    },
+    "from": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n",
+    "to": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n      <button type=\"submit\" />\n",
+    "fullMutantPath": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C3-02/src/components/gated-preview/gated-preview.tsx",
+    "test": {
+      "file": "tests/gated-pages-zero-mutation.test.tsx",
+      "name": "gated routine renders without touching the network",
+      "registrationName": "`gated ${name} renders without touching the network`"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^gated routine renders without touching the network$",
+      "tests/gated-pages-zero-mutation.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 138,
+        "text": "assert.doesNotMatch(result, /type=\"submit\"/i)",
+        "keeperSha256": "4ba4466741672e2cd3115ae44f0a206cbcf465bc245249b75a0ee3734066d158",
+        "testFileSha256": "6fe2d119cc61f31a89bab936a644a307182624fcd1d9b7b696ea47ab21d6cdde"
+      },
+      "cut": {
+        "startLine": 138,
+        "text": "assert.doesNotMatch(result, /type=\"submit\"/i)",
+        "keeperSha256": "4ba4466741672e2cd3115ae44f0a206cbcf465bc245249b75a0ee3734066d158",
+        "testFileSha256": "96461917c03f9a4463632798e4a20a2a88251e41c5e938121c897bc94d72baa6"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "diagnostic": {
+      "kind": "regex-prefix",
+      "pattern": "type=\"submit\"",
+      "flags": "i",
+      "literal": "/type=\"submit\"/i",
+      "fullHeader": "The input was expected to not match the regular expression /type=\"submit\"/i. Input:",
+      "requiredTokens": [
+        "type=\"submit\""
+      ],
+      "syntheticShapeSample": "<button type=\"submit\"></button>",
+      "limits": "Exact regex header and typed actual full string or explicit supported truncated prefix must contain prohibited regex and token. Complete SSR HTML and truncation count deliberately not fabricated."
+    },
+    "errorMessageIncludes": [
+      "The input was expected to not match the regular expression /type=\"submit\"/i. Input:",
+      "/type=\"submit\"/i"
+    ],
+    "intendedAssertion": "assert.doesNotMatch(result, /type=\"submit\"/i)",
+    "limits": "Static normalization only. Root actual clean/red/exact restore/clean and FIRST keeper assertion are required in transfer and cut; setup/helper/unknown diagnostic rejected."
+  },
+  {
+    "id": "C3-03",
+    "candidates": [
+      "C3"
+    ],
+    "file": "src/components/gated-preview/gated-preview.tsx",
+    "sourceSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "mutatedSha256": "8b56d3debca9babaefdf85d41f4d160b0ddc8eab737ec60b42748934762ecbd0",
+    "originalDescriptorMutantSHA256": "592e88ecaaf5af854a4e44936aeca2e214e010cfaee681d073519194b73acdfa",
+    "controlAmended": true,
+    "anchor": {
+      "kind": "file",
+      "scope": "src/components/gated-preview/gated-preview.tsx",
+      "scopeSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "expectedOccurrences": 1
+    },
+    "from": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n",
+    "to": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n      <button formAction=\"/forbidden\" />\n",
+    "fullMutantPath": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C3-03/src/components/gated-preview/gated-preview.tsx",
+    "test": {
+      "file": "tests/gated-pages-zero-mutation.test.tsx",
+      "name": "gated routine renders without touching the network",
+      "registrationName": "`gated ${name} renders without touching the network`"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^gated routine renders without touching the network$",
+      "tests/gated-pages-zero-mutation.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 139,
+        "text": "assert.doesNotMatch(result, /formaction=/i)",
+        "keeperSha256": "4ba4466741672e2cd3115ae44f0a206cbcf465bc245249b75a0ee3734066d158",
+        "testFileSha256": "6fe2d119cc61f31a89bab936a644a307182624fcd1d9b7b696ea47ab21d6cdde"
+      },
+      "cut": {
+        "startLine": 139,
+        "text": "assert.doesNotMatch(result, /formaction=/i)",
+        "keeperSha256": "4ba4466741672e2cd3115ae44f0a206cbcf465bc245249b75a0ee3734066d158",
+        "testFileSha256": "96461917c03f9a4463632798e4a20a2a88251e41c5e938121c897bc94d72baa6"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "diagnostic": {
+      "kind": "regex-prefix",
+      "pattern": "formaction=",
+      "flags": "i",
+      "literal": "/formaction=/i",
+      "fullHeader": "The input was expected to not match the regular expression /formaction=/i. Input:",
+      "requiredTokens": [
+        "/forbidden"
+      ],
+      "syntheticShapeSample": "<button formAction=\"/forbidden\"></button>",
+      "limits": "Exact regex header and typed actual full string or explicit supported truncated prefix must contain prohibited regex and token. Complete SSR HTML and truncation count deliberately not fabricated."
+    },
+    "errorMessageIncludes": [
+      "The input was expected to not match the regular expression /formaction=/i. Input:",
+      "/formaction=/i"
+    ],
+    "intendedAssertion": "assert.doesNotMatch(result, /formaction=/i)",
+    "limits": "Static normalization only. Root actual clean/red/exact restore/clean and FIRST keeper assertion are required in transfer and cut; setup/helper/unknown diagnostic rejected."
+  },
+  {
+    "id": "C3-04",
+    "candidates": [
+      "C3"
+    ],
+    "file": "src/components/gated-preview/gated-preview.tsx",
+    "sourceSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "mutatedSha256": "0bcba4b7dbdfe19d23a39c099072ada53a7969642813eeb91205586d14ce4737",
+    "originalDescriptorMutantSHA256": "06dbdb10b8a3ad5055c1fbc357d7b2ae6a9a0cbe102d997ff5d39a83f21ff44e",
+    "controlAmended": true,
+    "anchor": {
+      "kind": "file",
+      "scope": "src/components/gated-preview/gated-preview.tsx",
+      "scopeSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "expectedOccurrences": 1
+    },
+    "from": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n",
+    "to": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n      <form />\n",
+    "fullMutantPath": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C3-04/src/components/gated-preview/gated-preview.tsx",
+    "test": {
+      "file": "tests/gated-pages-zero-mutation.test.tsx",
+      "name": "gated anwendung renders without touching the network",
+      "registrationName": "`gated ${name} renders without touching the network`"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^gated anwendung renders without touching the network$",
+      "tests/gated-pages-zero-mutation.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 137,
+        "text": "assert.doesNotMatch(result, /<form/i)",
+        "keeperSha256": "4ba4466741672e2cd3115ae44f0a206cbcf465bc245249b75a0ee3734066d158",
+        "testFileSha256": "6fe2d119cc61f31a89bab936a644a307182624fcd1d9b7b696ea47ab21d6cdde"
+      },
+      "cut": {
+        "startLine": 137,
+        "text": "assert.doesNotMatch(result, /<form/i)",
+        "keeperSha256": "4ba4466741672e2cd3115ae44f0a206cbcf465bc245249b75a0ee3734066d158",
+        "testFileSha256": "96461917c03f9a4463632798e4a20a2a88251e41c5e938121c897bc94d72baa6"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "diagnostic": {
+      "kind": "regex-prefix",
+      "pattern": "<form",
+      "flags": "i",
+      "literal": "/<form/i",
+      "fullHeader": "The input was expected to not match the regular expression /<form/i. Input:",
+      "requiredTokens": [
+        "<form"
+      ],
+      "syntheticShapeSample": "<form></form>",
+      "limits": "Exact regex header and typed actual full string or explicit supported truncated prefix must contain prohibited regex and token. Complete SSR HTML and truncation count deliberately not fabricated."
+    },
+    "errorMessageIncludes": [
+      "The input was expected to not match the regular expression /<form/i. Input:",
+      "/<form/i"
+    ],
+    "intendedAssertion": "assert.doesNotMatch(result, /<form/i)",
+    "limits": "Static normalization only. Root actual clean/red/exact restore/clean and FIRST keeper assertion are required in transfer and cut; setup/helper/unknown diagnostic rejected."
+  },
+  {
+    "id": "C3-05",
+    "candidates": [
+      "C3"
+    ],
+    "file": "src/components/gated-preview/gated-preview.tsx",
+    "sourceSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "mutatedSha256": "5605831d38da2e0957673e39cbc3cca35a2dc8ef67842bcc759cebf8fcbe849f",
+    "originalDescriptorMutantSHA256": "ba25e679ca8e46ff6dac3c36745a80a0b2d5d73d56932d348f5f50db48b60e5d",
+    "controlAmended": true,
+    "anchor": {
+      "kind": "file",
+      "scope": "src/components/gated-preview/gated-preview.tsx",
+      "scopeSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "expectedOccurrences": 1
+    },
+    "from": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n",
+    "to": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n      <button type=\"submit\" />\n",
+    "fullMutantPath": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C3-05/src/components/gated-preview/gated-preview.tsx",
+    "test": {
+      "file": "tests/gated-pages-zero-mutation.test.tsx",
+      "name": "gated anwendung renders without touching the network",
+      "registrationName": "`gated ${name} renders without touching the network`"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^gated anwendung renders without touching the network$",
+      "tests/gated-pages-zero-mutation.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 138,
+        "text": "assert.doesNotMatch(result, /type=\"submit\"/i)",
+        "keeperSha256": "4ba4466741672e2cd3115ae44f0a206cbcf465bc245249b75a0ee3734066d158",
+        "testFileSha256": "6fe2d119cc61f31a89bab936a644a307182624fcd1d9b7b696ea47ab21d6cdde"
+      },
+      "cut": {
+        "startLine": 138,
+        "text": "assert.doesNotMatch(result, /type=\"submit\"/i)",
+        "keeperSha256": "4ba4466741672e2cd3115ae44f0a206cbcf465bc245249b75a0ee3734066d158",
+        "testFileSha256": "96461917c03f9a4463632798e4a20a2a88251e41c5e938121c897bc94d72baa6"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "diagnostic": {
+      "kind": "regex-prefix",
+      "pattern": "type=\"submit\"",
+      "flags": "i",
+      "literal": "/type=\"submit\"/i",
+      "fullHeader": "The input was expected to not match the regular expression /type=\"submit\"/i. Input:",
+      "requiredTokens": [
+        "type=\"submit\""
+      ],
+      "syntheticShapeSample": "<button type=\"submit\"></button>",
+      "limits": "Exact regex header and typed actual full string or explicit supported truncated prefix must contain prohibited regex and token. Complete SSR HTML and truncation count deliberately not fabricated."
+    },
+    "errorMessageIncludes": [
+      "The input was expected to not match the regular expression /type=\"submit\"/i. Input:",
+      "/type=\"submit\"/i"
+    ],
+    "intendedAssertion": "assert.doesNotMatch(result, /type=\"submit\"/i)",
+    "limits": "Static normalization only. Root actual clean/red/exact restore/clean and FIRST keeper assertion are required in transfer and cut; setup/helper/unknown diagnostic rejected."
+  },
+  {
+    "id": "C3-06",
+    "candidates": [
+      "C3"
+    ],
+    "file": "src/components/gated-preview/gated-preview.tsx",
+    "sourceSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "mutatedSha256": "8b56d3debca9babaefdf85d41f4d160b0ddc8eab737ec60b42748934762ecbd0",
+    "originalDescriptorMutantSHA256": "592e88ecaaf5af854a4e44936aeca2e214e010cfaee681d073519194b73acdfa",
+    "controlAmended": true,
+    "anchor": {
+      "kind": "file",
+      "scope": "src/components/gated-preview/gated-preview.tsx",
+      "scopeSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "expectedOccurrences": 1
+    },
+    "from": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n",
+    "to": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n      <button formAction=\"/forbidden\" />\n",
+    "fullMutantPath": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C3-06/src/components/gated-preview/gated-preview.tsx",
+    "test": {
+      "file": "tests/gated-pages-zero-mutation.test.tsx",
+      "name": "gated anwendung renders without touching the network",
+      "registrationName": "`gated ${name} renders without touching the network`"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^gated anwendung renders without touching the network$",
+      "tests/gated-pages-zero-mutation.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 139,
+        "text": "assert.doesNotMatch(result, /formaction=/i)",
+        "keeperSha256": "4ba4466741672e2cd3115ae44f0a206cbcf465bc245249b75a0ee3734066d158",
+        "testFileSha256": "6fe2d119cc61f31a89bab936a644a307182624fcd1d9b7b696ea47ab21d6cdde"
+      },
+      "cut": {
+        "startLine": 139,
+        "text": "assert.doesNotMatch(result, /formaction=/i)",
+        "keeperSha256": "4ba4466741672e2cd3115ae44f0a206cbcf465bc245249b75a0ee3734066d158",
+        "testFileSha256": "96461917c03f9a4463632798e4a20a2a88251e41c5e938121c897bc94d72baa6"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "diagnostic": {
+      "kind": "regex-prefix",
+      "pattern": "formaction=",
+      "flags": "i",
+      "literal": "/formaction=/i",
+      "fullHeader": "The input was expected to not match the regular expression /formaction=/i. Input:",
+      "requiredTokens": [
+        "/forbidden"
+      ],
+      "syntheticShapeSample": "<button formAction=\"/forbidden\"></button>",
+      "limits": "Exact regex header and typed actual full string or explicit supported truncated prefix must contain prohibited regex and token. Complete SSR HTML and truncation count deliberately not fabricated."
+    },
+    "errorMessageIncludes": [
+      "The input was expected to not match the regular expression /formaction=/i. Input:",
+      "/formaction=/i"
+    ],
+    "intendedAssertion": "assert.doesNotMatch(result, /formaction=/i)",
+    "limits": "Static normalization only. Root actual clean/red/exact restore/clean and FIRST keeper assertion are required in transfer and cut; setup/helper/unknown diagnostic rejected."
+  },
+  {
+    "id": "C3-07",
+    "candidates": [
+      "C3"
+    ],
+    "file": "src/components/gated-preview/gated-preview.tsx",
+    "sourceSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "mutatedSha256": "0bcba4b7dbdfe19d23a39c099072ada53a7969642813eeb91205586d14ce4737",
+    "originalDescriptorMutantSHA256": "06dbdb10b8a3ad5055c1fbc357d7b2ae6a9a0cbe102d997ff5d39a83f21ff44e",
+    "controlAmended": true,
+    "anchor": {
+      "kind": "file",
+      "scope": "src/components/gated-preview/gated-preview.tsx",
+      "scopeSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "expectedOccurrences": 1
+    },
+    "from": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n",
+    "to": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n      <form />\n",
+    "fullMutantPath": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C3-07/src/components/gated-preview/gated-preview.tsx",
+    "test": {
+      "file": "tests/gated-pages-zero-mutation.test.tsx",
+      "name": "gated chat renders without touching the network",
+      "registrationName": "`gated ${name} renders without touching the network`"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^gated chat renders without touching the network$",
+      "tests/gated-pages-zero-mutation.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 137,
+        "text": "assert.doesNotMatch(result, /<form/i)",
+        "keeperSha256": "4ba4466741672e2cd3115ae44f0a206cbcf465bc245249b75a0ee3734066d158",
+        "testFileSha256": "6fe2d119cc61f31a89bab936a644a307182624fcd1d9b7b696ea47ab21d6cdde"
+      },
+      "cut": {
+        "startLine": 137,
+        "text": "assert.doesNotMatch(result, /<form/i)",
+        "keeperSha256": "4ba4466741672e2cd3115ae44f0a206cbcf465bc245249b75a0ee3734066d158",
+        "testFileSha256": "96461917c03f9a4463632798e4a20a2a88251e41c5e938121c897bc94d72baa6"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "diagnostic": {
+      "kind": "regex-prefix",
+      "pattern": "<form",
+      "flags": "i",
+      "literal": "/<form/i",
+      "fullHeader": "The input was expected to not match the regular expression /<form/i. Input:",
+      "requiredTokens": [
+        "<form"
+      ],
+      "syntheticShapeSample": "<form></form>",
+      "limits": "Exact regex header and typed actual full string or explicit supported truncated prefix must contain prohibited regex and token. Complete SSR HTML and truncation count deliberately not fabricated."
+    },
+    "errorMessageIncludes": [
+      "The input was expected to not match the regular expression /<form/i. Input:",
+      "/<form/i"
+    ],
+    "intendedAssertion": "assert.doesNotMatch(result, /<form/i)",
+    "limits": "Static normalization only. Root actual clean/red/exact restore/clean and FIRST keeper assertion are required in transfer and cut; setup/helper/unknown diagnostic rejected."
+  },
+  {
+    "id": "C3-08",
+    "candidates": [
+      "C3"
+    ],
+    "file": "src/components/gated-preview/gated-preview.tsx",
+    "sourceSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "mutatedSha256": "5605831d38da2e0957673e39cbc3cca35a2dc8ef67842bcc759cebf8fcbe849f",
+    "originalDescriptorMutantSHA256": "ba25e679ca8e46ff6dac3c36745a80a0b2d5d73d56932d348f5f50db48b60e5d",
+    "controlAmended": true,
+    "anchor": {
+      "kind": "file",
+      "scope": "src/components/gated-preview/gated-preview.tsx",
+      "scopeSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "expectedOccurrences": 1
+    },
+    "from": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n",
+    "to": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n      <button type=\"submit\" />\n",
+    "fullMutantPath": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C3-08/src/components/gated-preview/gated-preview.tsx",
+    "test": {
+      "file": "tests/gated-pages-zero-mutation.test.tsx",
+      "name": "gated chat renders without touching the network",
+      "registrationName": "`gated ${name} renders without touching the network`"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^gated chat renders without touching the network$",
+      "tests/gated-pages-zero-mutation.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 138,
+        "text": "assert.doesNotMatch(result, /type=\"submit\"/i)",
+        "keeperSha256": "4ba4466741672e2cd3115ae44f0a206cbcf465bc245249b75a0ee3734066d158",
+        "testFileSha256": "6fe2d119cc61f31a89bab936a644a307182624fcd1d9b7b696ea47ab21d6cdde"
+      },
+      "cut": {
+        "startLine": 138,
+        "text": "assert.doesNotMatch(result, /type=\"submit\"/i)",
+        "keeperSha256": "4ba4466741672e2cd3115ae44f0a206cbcf465bc245249b75a0ee3734066d158",
+        "testFileSha256": "96461917c03f9a4463632798e4a20a2a88251e41c5e938121c897bc94d72baa6"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "diagnostic": {
+      "kind": "regex-prefix",
+      "pattern": "type=\"submit\"",
+      "flags": "i",
+      "literal": "/type=\"submit\"/i",
+      "fullHeader": "The input was expected to not match the regular expression /type=\"submit\"/i. Input:",
+      "requiredTokens": [
+        "type=\"submit\""
+      ],
+      "syntheticShapeSample": "<button type=\"submit\"></button>",
+      "limits": "Exact regex header and typed actual full string or explicit supported truncated prefix must contain prohibited regex and token. Complete SSR HTML and truncation count deliberately not fabricated."
+    },
+    "errorMessageIncludes": [
+      "The input was expected to not match the regular expression /type=\"submit\"/i. Input:",
+      "/type=\"submit\"/i"
+    ],
+    "intendedAssertion": "assert.doesNotMatch(result, /type=\"submit\"/i)",
+    "limits": "Static normalization only. Root actual clean/red/exact restore/clean and FIRST keeper assertion are required in transfer and cut; setup/helper/unknown diagnostic rejected."
+  },
+  {
+    "id": "C3-09",
+    "candidates": [
+      "C3"
+    ],
+    "file": "src/components/gated-preview/gated-preview.tsx",
+    "sourceSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+    "mutatedSha256": "8b56d3debca9babaefdf85d41f4d160b0ddc8eab737ec60b42748934762ecbd0",
+    "originalDescriptorMutantSHA256": "592e88ecaaf5af854a4e44936aeca2e214e010cfaee681d073519194b73acdfa",
+    "controlAmended": true,
+    "anchor": {
+      "kind": "file",
+      "scope": "src/components/gated-preview/gated-preview.tsx",
+      "scopeSha256": "3dcaa4860b6998c4c5a0a001e3cea93d49a36ede7b3de09b51e59d76dbc53dba",
+      "expectedOccurrences": 1
+    },
+    "from": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n",
+    "to": "      className={`flex ${SCREEN_HEIGHT_CLASS} flex-col gap-3 px-4 pb-4 pt-3`}\n    >\n      <button formAction=\"/forbidden\" />\n",
+    "fullMutantPath": "/var/folders/zq/tmsmyfv96wqf0jmfz3gpdfq80000gn/T/test-audit-public66-tools-0fvkcd4m/mutants/C3-09/src/components/gated-preview/gated-preview.tsx",
+    "test": {
+      "file": "tests/gated-pages-zero-mutation.test.tsx",
+      "name": "gated chat renders without touching the network",
+      "registrationName": "`gated ${name} renders without touching the network`"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^gated chat renders without touching the network$",
+      "tests/gated-pages-zero-mutation.test.tsx"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 139,
+        "text": "assert.doesNotMatch(result, /formaction=/i)",
+        "keeperSha256": "4ba4466741672e2cd3115ae44f0a206cbcf465bc245249b75a0ee3734066d158",
+        "testFileSha256": "6fe2d119cc61f31a89bab936a644a307182624fcd1d9b7b696ea47ab21d6cdde"
+      },
+      "cut": {
+        "startLine": 139,
+        "text": "assert.doesNotMatch(result, /formaction=/i)",
+        "keeperSha256": "4ba4466741672e2cd3115ae44f0a206cbcf465bc245249b75a0ee3734066d158",
+        "testFileSha256": "96461917c03f9a4463632798e4a20a2a88251e41c5e938121c897bc94d72baa6"
+      }
+    },
+    "expectedOperator": "doesNotMatch",
+    "diagnostic": {
+      "kind": "regex-prefix",
+      "pattern": "formaction=",
+      "flags": "i",
+      "literal": "/formaction=/i",
+      "fullHeader": "The input was expected to not match the regular expression /formaction=/i. Input:",
+      "requiredTokens": [
+        "/forbidden"
+      ],
+      "syntheticShapeSample": "<button formAction=\"/forbidden\"></button>",
+      "limits": "Exact regex header and typed actual full string or explicit supported truncated prefix must contain prohibited regex and token. Complete SSR HTML and truncation count deliberately not fabricated."
+    },
+    "errorMessageIncludes": [
+      "The input was expected to not match the regular expression /formaction=/i. Input:",
+      "/formaction=/i"
+    ],
+    "intendedAssertion": "assert.doesNotMatch(result, /formaction=/i)",
+    "limits": "Static normalization only. Root actual clean/red/exact restore/clean and FIRST keeper assertion are required in transfer and cut; setup/helper/unknown diagnostic rejected."
+  }
+]

@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: creator invitation greets a full-name account by first name
+ok 1 - creator invitation greets a full-name account by first name
+  ---
+  duration_ms: 5.120459
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 207.338792

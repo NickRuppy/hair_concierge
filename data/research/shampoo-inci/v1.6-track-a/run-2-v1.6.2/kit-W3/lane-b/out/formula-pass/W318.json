@@ -1,0 +1,139 @@
+{
+  "blindId": "W318",
+  "inciFingerprintSha256": "7def5e2af9726079ed0af2f394b941672e8bd3f031cb15361f5cad35cf9c8a5c",
+  "phase": "formula-pass (blind, claims hidden)",
+  "formulaBlock": {
+    "packSize": "354 ml",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 3,
+    "identityConfidence": "moderate",
+    "normalization": "'AQUA/WATER/EAU' and 'PARFUM (FRAGRANCE)' are single entries; packet positions = normalized ID-2 positions (24 entries).",
+    "e3Point": "PARFUM (FRAGRANCE) @12. Prominent = positions 1-11."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate by C1: defining anionic (earliest prominent strong anionic) Sodium C14-16 Olefin Sulfonate @3 (ether/sulfonate type) with prominent buffers Cocamidopropyl Betaine @2, Coco-Glucoside @5, Sodium Cocoyl Isethionate @7 (mild anionic), no reinforcing strong anionic. Disodium Laureth Sulfosuccinate @15 is after E3.",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "rationale": "High by the Section 5 rich-architecture anchor: W-RICH under its E3 reading (prominent payload lipids Macadamia Integrifolia Seed Oil @8 and Persea Gratissima Oil @9 converging with cationic Polyquaternium-10 @17 and Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @18), with humectants Glycerin @6, Panthenol @16. C2 itself is not met (no silicone and no pearlizing/fatty route besides the oils). Counter-signal: both cationics follow Parfum @12; reading the oils as one light route plus late polymers gives moderate, the neighbor.",
+      "ruleIds": ["5", "W-RICH", "C2", "E3", "N-ALT"]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "silicone": [],
+        "cationic_polymer": ["Polyquaternium-10 @17", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @18"],
+        "cationic_conditioner": [],
+        "payload_lipid": ["Macadamia Integrifolia Seed Oil @8 (material)", "Persea Gratissima Oil @9 (material)"],
+        "weak_refatter": [],
+        "protein_film": [],
+        "film_former": [],
+        "reset": ["Cocamidopropyl Betaine @2", "Sodium C14-16 Olefin Sulfonate @3", "Coco-Glucoside @5", "Sodium Cocoyl Isethionate @7", "Disodium Laureth Sulfosuccinate @15 (not prominent)"],
+        "humectantContext": ["Glycerin @6", "Panthenol @16", "Propylene Glycol @11 (solvent)"],
+        "excluded": ["Acrylates Copolymer @14 (anionic acrylate thickener, 6.4)", "Cyclodextrin @20 (complexing agent)", "Sodium Starch Octenylsuccinate @21, Hydroxypropyl Starch Phosphate @24 (non-cationic starch stabilizers/thickeners)", "Disodium EDTA @19 (chelator)"],
+        "unresolved": []
+      },
+      "wLine": {
+        "position": 10,
+        "inci": "PHENOXYETHANOL",
+        "classes": ["preservative_or_capped_active"],
+        "cap": "e3Point @12 (PARFUM)",
+        "alphabeticalRun": null,
+        "skipped": [],
+        "codes": [],
+        "note": "Phenoxyethanol @10 is the earliest candidate and plausible: (i) cleansing surfactants @2/@3 before it; (ii) only Propylene Glycol @11 between it and the cap. No 7-entry alphabetical run.",
+        "payloadLipidMaterial": ["Macadamia Integrifolia Seed Oil @8", "Persea Gratissima Oil @9"],
+        "payloadLipidNonMaterial": []
+      },
+      "depositionLoad": "moderate",
+      "persistence": "moderate",
+      "resetCapacity": "moderate",
+      "counterevidence": "W-RICH holds (two material plant oils @8/@9 with two cationic polymers, PQ-10 being substantive).",
+      "whyThisBand": "Two material plant oils plus two cationic polymers plausibly leave noticeable but bounded residue.",
+      "whyNotNeighborBand": "Not high: the rich route needs limited reset, but resetCapacity is moderate (C1 olefin-sulfonate chassis with three buffers); both cationic polymers are listed after Parfum @12 and the oils sit just before the W-line preservative @10, so the convergence is judged offset by reset. Not low: material lipids + cationic polymers (W2).",
+      "confidenceLimitingFactor": "W-RICH with moderate reset; oil dose unknown; high is the realistic neighbor.",
+      "rationale": "Moderate: W-RICH (macadamia @8, avocado @9 + PQ-10 @17, guar @18) offset by moderate C1 reset; neighbor high.",
+      "ruleIds": ["6.6", "W-RICH", "W-LINE", "W2", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "moisture",
+      "provisional": "formula-only; claims hidden",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": ["Glycerin @6", "Macadamia Integrifolia Seed Oil @8", "Persea Gratissima Oil @9", "Panthenol @16"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Polyquaternium-10 @17", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @18"],
+        "limitation": "Provisional; no protein or bond route."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Oil plus humectant cluster suggests a moisture/nourishment claim.",
+      "decisionTrace": "Claim direction null (blind); verdict provisionally moisture_supported; focus provisional general.",
+      "rationale": "Provisional general pending claims.",
+      "ruleIds": ["7.2", "7.3", "3.1"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": ["shine"],
+      "provisional": "formula-only; claims hidden",
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty secondary.",
+      "ruleIds": ["8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "frequent",
+      "provisional": "formula-only; claims hidden",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional default regular.",
+      "ruleIds": ["9", "U2"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "moderate",
+      "neighboringAlternative": "targeted",
+      "provisional": "formula-only; SC1 positioning not yet visible",
+      "rationale": "Provisional not_targeted pending SC1. Formula half: CSA met by prominent E4 humectant/refatting routes Glycerin @6, Macadamia Integrifolia Seed Oil @8, Persea Gratissima Oil @9; Panthenol @16 is not prominent. MB excluded (prominent Sodium C14-16 Olefin Sulfonate @3).",
+      "ruleIds": ["10", "CSA", "MB", "E4", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "No recognized anti-dandruff active.",
+      "ruleIds": ["11"]
+    }
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionicEther": ["Sodium C14-16 Olefin Sulfonate @3"],
+      "mildAnionic": ["Sodium Cocoyl Isethionate @7", "Disodium Laureth Sulfosuccinate @15 (not prominent)"],
+      "amphoteric": ["Cocamidopropyl Betaine @2"],
+      "nonionicGlucoside": ["Coco-Glucoside @5"],
+      "notCleansing": ["Sodium Chloride @4"]
+    },
+    "conditioningRoutes": ["Macadamia Integrifolia Seed Oil @8", "Persea Gratissima Oil @9", "Polyquaternium-10 @17", "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @18"],
+    "weightRoutes": ["payload_lipid @8/@9 (material)", "cationic_polymer @17/@18"],
+    "humectants": ["Glycerin @6", "Panthenol @16"],
+    "actives": [],
+    "exposure": ["Parfum @12"],
+    "mildBase": "excluded: prominent strong anionic Sodium C14-16 Olefin Sulfonate @3",
+    "preservatives": ["Phenoxyethanol @10", "Sodium Benzoate @13"]
+  },
+  "unresolvedMaterialIngredients": [],
+  "notes": ["conditioningLevel reading choice as in the W-RICH clause 'For conditioningLevel (Section 5), W-RICH alone still counts as a rich architecture'; the alternative C2-not-met reading (moderate) is the recorded neighbor."]
+}

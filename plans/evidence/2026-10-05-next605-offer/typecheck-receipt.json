@@ -1,0 +1,7 @@
+{
+  "command": "node node_modules/typescript/bin/tsc --noEmit",
+  "exitCode": 0,
+  "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "checkpoint": 605,
+  "note": "Main typecheck after allthree cuts closed; additional file beyond artifact-index, not silently repinned."
+}

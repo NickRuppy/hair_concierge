@@ -132,22 +132,6 @@ function normalizedAliasValue(alias: ProductIdentityBrandAlias): string {
   return normalizeIdentityText(alias.normalized_alias ?? alias.normalizedAlias ?? alias.alias)
 }
 
-function uniqueLabels(name: string, aliases: readonly string[] | undefined): string[] {
-  const labels = [name, ...(aliases ?? [])]
-  const seen = new Set<string>()
-  const unique: string[] = []
-
-  for (const label of labels) {
-    const normalized = normalizeIdentityText(label)
-    if (!normalized || seen.has(normalized)) continue
-
-    seen.add(normalized)
-    unique.push(label)
-  }
-
-  return unique
-}
-
 function uniqueAliases(aliases: readonly string[] | undefined): string[] {
   const seen = new Set<string>()
   const unique: string[] = []
@@ -196,33 +180,6 @@ function linePrefixLabels(line: ProductIdentityProductLine): string[] {
 
 function aliasPrefixLabels(alias: AliasTarget): string[] {
   return uniquePrefixLabels(alias.alias, alias.normalizedAlias)
-}
-
-export function detectBrandAliasConflicts(
-  brands: readonly ProductIdentityBrand[],
-): BrandAliasConflict[] {
-  const targetsByAlias = new Map<string, Map<string, { brandKey: string; label: string }>>()
-
-  for (const brand of brands) {
-    for (const label of uniqueLabels(brandName(brand), brand.aliases)) {
-      const normalizedAlias = normalizeIdentityText(label)
-      const targets = targetsByAlias.get(normalizedAlias) ?? new Map()
-      const key = brandId(brand)
-
-      if (!targets.has(key)) {
-        targets.set(key, { brandKey: key, label })
-      }
-
-      targetsByAlias.set(normalizedAlias, targets)
-    }
-  }
-
-  return Array.from(targetsByAlias.entries())
-    .filter(([, targets]) => targets.size > 1)
-    .map(([normalizedAlias, targets]) => ({
-      normalizedAlias,
-      targets: Array.from(targets.values()),
-    }))
 }
 
 function tokenSpans(value: string): TokenSpan[] {

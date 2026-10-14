@@ -1,0 +1,89 @@
+{
+  "slot": "U4",
+  "productId": "7200bb0b-7463-433b-86c8-744f5c1431de",
+  "name": "Garnier Wahre Schätze Ausgleichendes Shampoo Anziehende Aktivkohle & Schwarzkümmelöl (dm: 'Wahre Schätze Shampoo Aktivkohle, fettige Kopfhaut, 300 ml'; catalog name: Wahre Schätze Aktivkohle)",
+  "brand": "Wahre Schätze (Garnier)",
+  "packSize": "300 ml (the same formula is published for a 250 ml pack, GTIN 3600542512534)",
+  "gtins": [
+    "3600542512466"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/1679240/wahre-schaetze-shampoo-aktivkohle-fettige-kopfhaut",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "german_retailer_exact_gtin_shown_on_page",
+      "gtinShown": "3600542512466 ('GTIN: 3600542512466', dm-Artikelnummer 1679240)",
+      "inciVerbatim": "INGREDIENTS: AQUA / WATER • AMMONIUM LAURYL SULFATE • SODIUM CHLORIDE • COCAMIDOPROPYL BETAINE • NIGELLA SATIVA SEED OIL • TRIETHYL CITRATE • SODIUM HYDROXIDE • GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE • CHARCOAL POWDER • CITRIC ACID • POLYGLYCERIN-10 • POLYGLYCERYL- 10 MYRISTATE • POLYGLYCERYL-10 STEARATE • SODIUM BENZOATE • SODIUM DEHYDROACETATE • BENZOIC ACID • CARAMEL • LINALOOL • LIMONENE • BENZYL ALCOHOL • PARFUM / FRAGRANCE",
+      "claimsVerbatim": "Mixtur aus Inhaltsstoffen natürlichen Ursprungs von 97 % sowie Wasser | Spendet bis zu 72 h Feuchtigkeit | Ohne Silikone | Mit Aktivkohle & Schwarzkümmelöl | Wirkt trockenen Haaren entgegen || Das Wahre Schätze Ausgleichende Shampoo Anziehende Aktivkohle & Schwarzkümmelöl von Garnier ist eine Haarpflege, welche speziell auf die Bedürfnisse von schnell fettender Kopfhaut sowie trockenen Haarlängen abgestimmt ist. Unreinheiten, die sich an der Kopfhaut befinden, werden dank enthaltener Aktivkohle wie ein Magnet angezogen. Schwarzkümmelöl sorgt dafür, dass den Haarlängen für bis zu 72 h intensiv Feuchtigkeit verliehen wird. So wird die Kopfhaut sofort von Rückständen befreit, während die Haare hydratisiert werden. Die Formel des reinigenden Shampoos kommt ohne Silikone aus und trägt maßgeblich zur Förderung eines natürlichen Haargefühls bei. || Produktmerkmale: Wirkung: Pflege, Feuchtigkeit; Produkteigenschaften: vegan, ohne Silikone; Haartyp: fettiges Haar, trockenes Haar. Listing badges: Vegan, Ohne Silikone.",
+      "directionsVerbatim": "Das Wahre Schätze Ausgleichende Shampoo auf die nassen Haare geben und dort mit sanft kreisenden Bewegungen aufschäumen. Nun den Schaum gleichmäßig im Ansatz und in den Haarlängen verteilen. Im Anschluss diesen gründlich unter klarem Wasser ausspülen, bis keine Rückstände mehr im Haar verblieben sind. Danach kann zur weiteren Pflege des Haares die dazu passende Spülung oder Haarkur verwendet werden.",
+      "note": "Reached via the catalog's dm affiliate link (redirects to /p/d/1679240/...). 300 ml, 2,75 EUR, 'Momentan nicht lieferbar' at fetch time. Warning text: 'Bei Kontakt mit den Augen diese sofort gründlich ausspülen. Außer Reichweite von Kindern aufbewahren.' Company GARNIER, St Ouen. Typo on page: 'POLYGLYCERYL- 10 MYRISTATE' (space)."
+    },
+    {
+      "url": "https://www.garnier.de/haarpflege/haarpflege-marken/wahre-schaetze/aktivkohle/ausgleichendes-shampoo",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "manufacturer_de",
+      "gtinShown": "3600542512534 (schema.org gtin13 for the default 250 ml variant; the 300 ml selector did not change the structured data)",
+      "inciVerbatim": "1217466 D - INGREDIENTS: AQUA / WATER, AMMONIUM LAURYL SULFATE, SODIUM CHLORIDE, COCAMIDOPROPYL BETAINE, NIGELLA SATIVA SEED OIL, TRIETHYL CITRATE, SODIUM HYDROXIDE, GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, CHARCOAL POWDER, CITRIC ACID, POLYGLYCERIN-10, POLYGLYCERYL-10 MYRISTATE, POLYGLYCERYL-10 STEARATE, SODIUM BENZOATE, SODIUM DEHYDROACETATE, BENZOIC ACID, CARAMEL, LINALOOL, LIMONENE, BENZYL ALCOHOL, PARFUM / FRAGRANCE (F.I.L. Z70015011/1).",
+      "claimsVerbatim": "Das Garnier Wahre Schätze Ausgleichende Shampoo ist ein Tiefenreinigungsshampoo, das schnell fettende Kopfhaut reinigt und trockenen Haarlängen bis zu 72 Stunden Feuchtigkeit spendet. Gleichzeitig zieht es Rückstände und Unreinheiten auf der Kopfhaut nahezu magnetisch an und verleiht damit ein natürliches Haargefühl. Dafür enthält die vegane Formel sowohl Aktivkohle als auch Schwarzkümmelöl. || Das Wahre Schätze Ausgleichende Shampoo ist ein Tiefenreinigungsshampoo von Garnier, welches speziell für die Bedürfnisse von schnell fettender Kopfhaut und trockener Haarlängen entwickelt wurde. Die vegane Formel mit Schwarzkümmelöl und reinigender Aktivkohle wirkt dabei wie ein Magnet, um Rückstände und Unreinheiten direkt an der Kopfhaut anzuziehen und sie sofort sanft zu entfernen. Das tiefenreinigende Shampoo spendet den Haarlängen zudem bis zu 72 Stunden Feuchtigkeit, ohne ein fettiges Gefühl auf der Kopfhaut zu hinterlassen. Dank einer Formulierung ohne Silikone entsteht ein natürliches und schwereloses Haargefühl und eine ausgeglichene Kopfhaut. || Das Garnier Wahre Schätze Ausgleichende Shampoo auf einen Blick: • Tiefenreinigungsshampoo gegen schnell fettende Kopfhaut und trockene Haarlängen • Mit reinigender Aktivkohle und Schwarzkümmelöl • Spendet den Haarlängen bis zu 72 Stunden Feuchtigkeit • Zieht Unreinheiten und Rückstände an der Kopfhaut magnetisch an • Ohne Silikone für ein natürliches Haargefühl",
+      "directionsVerbatim": "Vor der Anwendung des Wahre Schätze Ausgleichenden Shampoos die Haare gründlich nassmachen. Nun eine kleine Menge des Tiefenreinigungsshampoos in die Handflächen geben und auf das nasse Haar auftragen. Anschließend das Shampoo mithilfe der Fingerspitzen gründlich auf der Kopfhaut aufschäumen und verteilen. Im Anschluss den Schaum gründlich unter klarem, warmem Wasser ausspülen. Den Kontakt mit den Augen vermeiden.",
+      "note": "Family page; sizes 250 ml and 300 ml offered; one ingredient list shown. Pack-wording 'Tiefenreinigungsshampoo' appears here (page title H1 'Ausgleichendes Shampoo', product name 'Wahre Schätze Shampoo Aktivkohle')."
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-garnier-wahre-schaetze-shampoo-aktivkohle-und-schwarzkuemmeloel-fettige-kopfhaut-und-trockene-laengen/p/3600542512534",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "german_retailer_exact_gtin_url_for_DIFFERENT_gtin_250ml",
+      "gtinShown": "3600542512534 (NOT the catalog GTIN; 250 ml, Artikelnummer 131943)",
+      "inciVerbatim": "1217466 D - Aqua / Water • Ammonium Lauryl Sulfate • Sodium Chloride • Cocamidopropyl Betaine • Nigella Sativa Seed Oil • Triethyl Citrate • Sodium Hydroxide • Guar Hydroxypropyltrimonium Chloride • Charcoal Powder • Citric Acid • Polyglycerin-10 • Polyglyceryl-10 Myristate • Polyglyceryl-10 Stearate • Sodium Benzoate • Sodium Dehydroacetate • Benzoic Acid • Caramel • Linalool • Limonene • Benzyl Alcohol • Parfum / Fragrance (F.I.L. Z70015011/1).",
+      "claimsVerbatim": "Das Garnier Wahre Schätze Ausgleichende Shampoo eignet sich für die Reinigung von schnell fettender Kopfhaut und Haarlängen, die zu Trockenheit neigen. Unreinheiten an der Kopfhaut werden magnetisch angezogen. Mit dem feuchtigkeitsspendenden Shampoo werden die Haarlängen bis zu 72 Stunden hydratisiert. Dafür ist die Formel mit Aktivkohle und Schwarzkümmelöl angereichert – für ein rundum natürliches Haargefühl. | vegan | ohne Silikone | spendet Feuchtigkeit bis zu 72 Stunden** | recyclebarer Flaschenkörper - aus 100% recyceltem Plastik | ** Instrumenteller Test nach Anwendung von Shampoo und Spülung",
+      "directionsVerbatim": "Für gesund aussehendes, strahlend schönes Haar das Garnier Wahre Schätze Shampoo Anziehende Aktivkohle sanft ins feuchte Haar einmassieren und im gesamten Haar verteilen. Zum Schluss gründlich ausspülen.",
+      "note": "Different pack (250 ml, 2,49 EUR). Shows the same sequence; recorded as formula corroboration only, not as identity evidence for 3600542512466. Rossmann has no page for /p/3600542512466 ('Hoppla - nichts gefunden')."
+    },
+    {
+      "url": "https://www.codecheck.info/p/kosmetik/haarpflege/shampoo/garnier-wahre-schaetze-anziehende-aktivkohle-shampoo.html",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "codecheck",
+      "gtinShown": "Found via search by 3600542512466; size field blank ('Ka')",
+      "inciVerbatim": null,
+      "claimsVerbatim": null,
+      "directionsVerbatim": null,
+      "note": "Thin user record; ingredient names match in the entity list (charcoal powder, ammonium lauryl sulfate etc.) but the raw list was not extracted. Supporting only; not used."
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "minor_text_variants",
+      "description": "Prefix '1217466 D - ' and suffix '(F.I.L. Z70015011/1)' appear in the manufacturer and Rossmann lists (batch/fragrance codes, not ingredients); dm omits both. dm has 'POLYGLYCERYL- 10 MYRISTATE' (stray space). Ingredient sequence identical across all three.",
+      "resolution": "Canonical list drops the two codes and uses unspaced 'POLYGLYCERYL-10 MYRISTATE'; verbatim lists kept in sources."
+    }
+  ],
+  "canonicalInci": [
+    "AQUA / WATER",
+    "AMMONIUM LAURYL SULFATE",
+    "SODIUM CHLORIDE",
+    "COCAMIDOPROPYL BETAINE",
+    "NIGELLA SATIVA SEED OIL",
+    "TRIETHYL CITRATE",
+    "SODIUM HYDROXIDE",
+    "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+    "CHARCOAL POWDER",
+    "CITRIC ACID",
+    "POLYGLYCERIN-10",
+    "POLYGLYCERYL-10 MYRISTATE",
+    "POLYGLYCERYL-10 STEARATE",
+    "SODIUM BENZOATE",
+    "SODIUM DEHYDROACETATE",
+    "BENZOIC ACID",
+    "CARAMEL",
+    "LINALOOL",
+    "LIMONENE",
+    "BENZYL ALCOHOL",
+    "PARFUM / FRAGRANCE"
+  ],
+  "canonicalReason": "Manufacturer DE list is the same sequence as dm's list for the exact GTIN 3600542512466. The manufacturer page publishes one list across its 250/300 ml selector; GTIN-to-formula binding for the 300 ml pack rests on dm (only one retailer with this exact GTIN).",
+  "inciFingerprintSha256": "4d21bc975505079b916aa495f148440be891511f6de5cfb207eb9bfeb79bd9a0",
+  "normalization": "Split verbatim INCI on commas; per item trim, lower-case, collapse internal whitespace; join items with '|'; sha256 (utf-8) hex. Original-case ingredient list is kept in canonicalInci[].",
+  "identityConfidence": "moderate",
+  "status": "frozen",
+  "blockReason": null,
+  "notes": "Pack wording around deep cleansing (verbatim, manufacturer): 'ein Tiefenreinigungsshampoo', 'Tiefenreinigungsshampoo gegen schnell fettende Kopfhaut und trockene Haarlängen', 'das tiefenreinigende Shampoo', 'Zieht Unreinheiten und Rückstände an der Kopfhaut magnetisch an', 'um Rückstände und Unreinheiten direkt an der Kopfhaut anzuziehen und sie sofort sanft zu entfernen'. dm's own text does NOT use 'Tiefenreinigung' (it says 'Wahre Schätze Ausgleichende Shampoo ... Unreinheiten ... wie ein Magnet angezogen ... So wird die Kopfhaut sofort von Rückständen befreit'; 'Die Formel des reinigenden Shampoos'). No 'reset' wording found on any source. dm names it 'Aktivkohle, fettige Kopfhaut'; catalog brand string is 'Wahre Schätze' (sibling X14 rows use 'Garnier Wahre Schätze'). Identity moderate: 250 ml and 300 ml packs have different GTINs and only the manufacturer's single list links them."
+}

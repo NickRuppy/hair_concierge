@@ -1,0 +1,450 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "files": [
+    "tests/product-identity-normalize.test.ts",
+    "tests/product-identity-resolution.test.ts",
+    "tests/product-identity-schema.test.ts",
+    "tests/product-identity-title.test.ts",
+    "tests/product-identity-correction.test.ts"
+  ],
+  "counts": {
+    "before": 31,
+    "transfer": 31,
+    "cut": 30
+  },
+  "classification": {
+    "R": 29,
+    "F": 1,
+    "C": 1,
+    "D": 0
+  },
+  "readset": [
+    {
+      "file": "tests/product-identity-normalize.test.ts",
+      "sha256": "512c74fa5948366cf8249991fe58a6ac490b3f537398d17ef18301a58b2e4e4f",
+      "read": "FULL callbacks/imports/fixtures/tables"
+    },
+    {
+      "file": "tests/product-identity-resolution.test.ts",
+      "sha256": "ada0ab7f7149b4bdf5a44d09069e3667677d9395d6385ebb3a3d89ce6f4cdfb7",
+      "read": "FULL callbacks/imports/fixtures/tables"
+    },
+    {
+      "file": "tests/product-identity-schema.test.ts",
+      "sha256": "392cad4a08642b04c4bc4a2e660adad2a25b821b6648fee8c207090d56023f57",
+      "read": "FULL callbacks/imports/fixtures/tables"
+    },
+    {
+      "file": "tests/product-identity-title.test.ts",
+      "sha256": "c9e2616cdbb7ee31cf47c7f1f739ac26db03cd9e1882c855d8d1b943cbc709bd",
+      "read": "FULL callbacks/imports/fixtures/tables"
+    },
+    {
+      "file": "tests/product-identity-correction.test.ts",
+      "sha256": "7a47c34d36387609bd4eac938b6b6dd8c188b88d0ffff1e5856a9e8667e85a46",
+      "read": "FULL callbacks/imports/fixtures/tables"
+    },
+    {
+      "file": "src/lib/product-identity/index.ts",
+      "sha256": "fd7c23ab66221159b693d8f3c076ad1169160e1d2ed1cd1de7b923d1e3a82d46",
+      "read": "FULL"
+    },
+    {
+      "file": "src/lib/product-identity/normalize.ts",
+      "sha256": "817e15aed0f145308fb7e971ac9ab6171ddb0d3f0b2c043e9e06377b765d69db",
+      "read": "FULL; GTIN sibling read as dependency only, no GTIN test re-audit"
+    },
+    {
+      "file": "src/lib/product-identity/brand-resolution.ts",
+      "sha256": "5182615a8419b477e73b0a00e05e78bb9436d8b7ad9c3c7f2d35850f65e48b8a",
+      "read": "FULL"
+    },
+    {
+      "file": "src/lib/product-identity/display-title.ts",
+      "sha256": "b3227a1c978a5e704bba7413087b75e97cd0b99b62aed25d05a3d6100e23c5cf",
+      "read": "FULL"
+    },
+    {
+      "file": "scripts/product-identity/correct-canonical-identities.ts",
+      "sha256": "8ea40065d227fa6d8ab3b74632630ed43517c9d3102c4567a5481940e19cc5bb",
+      "read": "FULL 1\u20131042; static only, no direct execution/import"
+    },
+    {
+      "file": "scripts/product-identity/apply-normalization.ts",
+      "sha256": "9202c6cd37273ae1fa384ca5abdd361ef4546fea9cea577b966ec28da59a5adb",
+      "read": "1\u2013240: imports, plan builder and direct helper dependencies; remaining operator not full-read"
+    },
+    {
+      "file": "scripts/product-identity/validate-normalization.ts",
+      "sha256": "3866d8c377342b7130447c03f11141540a17965514ee3e6b90e8de398e848e1e",
+      "read": "1\u2013180 and530\u2013570; remaining validator not full-read"
+    },
+    {
+      "file": "supabase/migrations/20260612120000_product_identity_normalization.sql",
+      "sha256": "c80c84821f78c3a93381031051feeaac2c8adc686418ec18cbced6676cbf7b08",
+      "read": "FULL"
+    },
+    {
+      "file": "supabase/migrations/20260706120000_product_visibility_policy_lifecycle.sql",
+      "sha256": "252a561ada662f9b94b6009cf4585a31ab96638f87ace54270d677ab377d920f",
+      "read": "FULL historical successor; no SQL execution"
+    },
+    {
+      "file": "docs/product-identity-normalization.md",
+      "sha256": "68e4ed008fb3c5416e569676fffef613a3abda2ea6eada1cf8ffe5ef9913e6a6",
+      "read": "FULL"
+    },
+    {
+      "file": "plans/2026-06-18-product-identity-canonical-correction.md",
+      "sha256": "711439692d8aadb076c7fcaab4cc16dfb946fc42861f6c2bdfb1df48755a9217",
+      "read": "1\u2013200; remainder not full-read"
+    },
+    {
+      "file": "AGENTS.md",
+      "sha256": "9072f0e4ef99aef972395aab4b26e4718be6ab7cac755a0fc303746d8ee162f8",
+      "read": "FULL current root; no nested AGENTS found"
+    },
+    {
+      "file": "tests/mobile-scan-search-identity.test.ts",
+      "sha256": "1dbad87ea6821484affc64db99e5d9aa054e5a41c4b8686889e12f44023157d7",
+      "read": "FULL overlap"
+    },
+    {
+      "file": "tests/discovery-product-line-title.test.tsx",
+      "sha256": "327c7ebc938eafccc422abeccd2dda076d7ad315fa201a9c8fdaddb0bab3307b",
+      "read": "FULL overlap"
+    },
+    {
+      "file": "tests/discovery-product-label.test.ts",
+      "sha256": "1587b2aa9cc8a22ce8a1963aa836cfdd9416eb6fcfc6e547965cb955b7e60473",
+      "read": "FULL overlap"
+    },
+    {
+      "file": "tests/product-line-display.test.ts",
+      "sha256": "683d5b4a6b4330b5f2da232eac5a60ff836a80b929b2dfeb0de0a3ae9e2739d0",
+      "read": "FULL overlap"
+    },
+    {
+      "file": "tests/product-card-rendering.test.tsx",
+      "sha256": "2d9c33bcba310547f4a156c3ccf957600811c412b3115752cecc7fe8ac5edad4",
+      "read": "1\u2013177 excerpt only; not full suite"
+    },
+    {
+      "file": "tests/product-catalog-lifecycle.test.ts",
+      "sha256": "6d3ca9c727a344c8375ffc9d69e24c82cd2243c052c6b1a57e879c30fc7f2766",
+      "read": "1\u2013125 excerpt, complete named select-policy keeper only"
+    },
+    {
+      "file": "src/lib/mobile/scan-service.ts",
+      "sha256": "eb56a474d802c60c12856aca5efbf23702fdab02f4350ab525a6be5fcbec3459",
+      "read": "240\u2013304 and400\u2013495 operative identity search/resolve projections"
+    },
+    {
+      "file": "src/components/scan/scan-search-sheet.tsx",
+      "sha256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+      "read": "85\u2013130 actual scanResultTitle owner"
+    },
+    {
+      "file": "src/components/discovery/intake/add-flow.ts",
+      "sha256": "e75bc0e87d52f2691e0f8f13517e97381c23cbd7865a97aa5a997e4000242df4",
+      "read": "82\u2013102 actual itemDisplayName owner"
+    },
+    {
+      "file": "src/lib/discovery/product-label.ts",
+      "sha256": "8d357c9064bde86270829baad10c17674ea312d9b4afdef0f239e5c30070e185",
+      "read": "FULL"
+    },
+    {
+      "file": "src/lib/routines/shape-for-ui.ts",
+      "sha256": "29f45dc67edc8b41a25933b5e7accf5ef12460fd60dd73a96f0d161c7b6c47e1",
+      "read": "1\u201385 actual productDisplayName/normalizeProductForDrawer"
+    },
+    {
+      "file": "src/lib/product-intake/product-lookup.ts",
+      "sha256": "5d71101e81c78dc1f2252e03c8b16d95527023327590ac5a8bcd631b3fbca971",
+      "read": "465\u2013550 lookupProductCandidate prefix plus symbol/caller search"
+    },
+    {
+      "file": "src/lib/product-intake/submissions.ts",
+      "sha256": "3098f48d86d40549f982a2a96c465e34f4278c59b593da4ef182f81d0df6fcf3",
+      "read": "615\u2013660,800\u2013880,990\u20131065 operative identity and submission paths"
+    },
+    {
+      "file": "src/lib/product-intake/product-matching.ts",
+      "sha256": "216efda432f30a2bfebcc6a1f6cf3a3557605e61d3ae733b743c898b74294f29",
+      "read": "1\u201375,308\u2013346 plus normalize/token caller searches"
+    },
+    {
+      "file": "src/lib/product-intake/repository.ts",
+      "sha256": "42accc64e3d9ab2519ce470615cc4f0760c30ce0ad2ffcac467e31841ab22cc6",
+      "read": "75\u2013178 actual loadCatalog/loadBrandResolutionCatalog"
+    },
+    {
+      "file": "src/lib/product-intake/route-handlers.ts",
+      "sha256": "0310e374ef568684dd6589b1bc86ab567f5c18967f9b89b223d73a10cc556f8c",
+      "read": "1\u2013160 operative POST auth/validation/submit chain"
+    },
+    {
+      "file": "src/lib/agent-v2/production/product-lookup-turn-outcome.ts",
+      "sha256": "1b7c9ea81ed89f5db08c1267daa07a882a93306003cb3582ec597c61eadc7518",
+      "read": "960\u20131045 operative known-brand lookup plus call search"
+    },
+    {
+      "file": "scripts/product-intake/review.ts",
+      "sha256": "ab5f90114f6837bc31f52058bd86590085bd043c23b1eb03b725ab306ccbab41",
+      "read": "FULL"
+    },
+    {
+      "file": "scripts/product-intake/codex-research-worker.ts",
+      "sha256": "caefa549edf2c1be3695616d8057e12b5249cc8a9615ff2832a42a49ec689652",
+      "read": "2060\u20132118 operative prompt context; other symbol matches only"
+    },
+    {
+      "file": "src/app/api/product-intake/onboarding/route.ts",
+      "sha256": "e5e101a3dce5a2bb1a2a909fdb0dbefe17a2a213746d4da84e4b78d0466b5966",
+      "read": "FULL"
+    },
+    {
+      "file": "src/app/api/product-intake/chat/route.ts",
+      "sha256": "9fe5c1c24c34d181cbedd14001b92d3a94391774fd905b5f3bf5312f240e8e3a",
+      "read": "FULL"
+    },
+    {
+      "file": "src/app/api/mobile/v1/scan/search/route.ts",
+      "sha256": "e5dbe68d707d4f495e13c4923236d403980553593f32e77b535e76e8913a4d29",
+      "read": "FULL"
+    },
+    {
+      "file": "src/app/api/scan/submit/route.ts",
+      "sha256": "b509ae15cc10aee607e086ac10c843d77668386dc546a6c640a167cb729c2dad",
+      "read": "symbol/default binding search only"
+    },
+    {
+      "file": "package.json",
+      "sha256": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+      "read": "scripts/executable dependency entries inspected"
+    },
+    {
+      "file": ".github/workflows/ci.yml",
+      "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+      "read": "1\u2013110 and145\u2013175; other test routing line matches"
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799",
+      "read": "HASH ONLY runtime dependency pin"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+      "read": "FULL marker stub only; not a database/provider stub"
+    },
+    {
+      "file": "node_modules/typescript/lib/typescript.js",
+      "sha256": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675",
+      "read": "HASH ONLY parser dependency; parser library loaded, compiler not run"
+    },
+    {
+      "file": "src/lib/product-lines/display.ts",
+      "sha256": "db984b35934573bd62617cd2affbbe75adf7b174326c80eabdfca4cc5f7cb40e",
+      "read": "1\u201395; display helper full, enrichment remainder not read"
+    },
+    {
+      "file": "src/app/api/product-intake/brand-options/route.ts",
+      "sha256": "b2df73ba75a7df37c9d81c6e0c715dc065ae545ea3cb56de952bfc6bd9e9b9e0",
+      "read": "FULL1\u2013152 (tail read separately)"
+    },
+    {
+      "file": ".nvmrc",
+      "sha256": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56",
+      "read": "FULL Node major22"
+    },
+    {
+      "file": "node_modules/tsx/package.json",
+      "sha256": "6e764b21991c21595441f82387c1451ccd10a3e7a3f0973cc5e3649a12dea7d2",
+      "read": "HASH ONLY selected runtime descriptor"
+    }
+  ],
+  "phaseHashes": {
+    "before": {
+      "tests/product-identity-normalize.test.ts": "512c74fa5948366cf8249991fe58a6ac490b3f537398d17ef18301a58b2e4e4f",
+      "tests/product-identity-resolution.test.ts": "ada0ab7f7149b4bdf5a44d09069e3667677d9395d6385ebb3a3d89ce6f4cdfb7",
+      "tests/product-identity-schema.test.ts": "392cad4a08642b04c4bc4a2e660adad2a25b821b6648fee8c207090d56023f57",
+      "tests/product-identity-title.test.ts": "c9e2616cdbb7ee31cf47c7f1f739ac26db03cd9e1882c855d8d1b943cbc709bd",
+      "tests/product-identity-correction.test.ts": "7a47c34d36387609bd4eac938b6b6dd8c188b88d0ffff1e5856a9e8667e85a46"
+    },
+    "transfer": {
+      "tests/product-identity-normalize.test.ts": "512c74fa5948366cf8249991fe58a6ac490b3f537398d17ef18301a58b2e4e4f",
+      "tests/product-identity-resolution.test.ts": "7b9c4752c20736e753132490431e577c614536537f10ddbb9eb26276d5ce4d58",
+      "tests/product-identity-schema.test.ts": "392cad4a08642b04c4bc4a2e660adad2a25b821b6648fee8c207090d56023f57",
+      "tests/product-identity-title.test.ts": "c9e2616cdbb7ee31cf47c7f1f739ac26db03cd9e1882c855d8d1b943cbc709bd",
+      "tests/product-identity-correction.test.ts": "7a47c34d36387609bd4eac938b6b6dd8c188b88d0ffff1e5856a9e8667e85a46"
+    },
+    "cut": {
+      "tests/product-identity-normalize.test.ts": "512c74fa5948366cf8249991fe58a6ac490b3f537398d17ef18301a58b2e4e4f",
+      "tests/product-identity-resolution.test.ts": "edbf3f82a925f46eed9e85104ac8f283ed13192de8e8784d516bc4f9b9927dfb",
+      "tests/product-identity-schema.test.ts": "392cad4a08642b04c4bc4a2e660adad2a25b821b6648fee8c207090d56023f57",
+      "tests/product-identity-title.test.ts": "c9e2616cdbb7ee31cf47c7f1f739ac26db03cd9e1882c855d8d1b943cbc709bd",
+      "tests/product-identity-correction.test.ts": "7a47c34d36387609bd4eac938b6b6dd8c188b88d0ffff1e5856a9e8667e85a46"
+    }
+  },
+  "untouchedCallbacks": [
+    {
+      "file": "tests/product-identity-normalize.test.ts",
+      "name": "canonical category constants include supported and known unsupported keys",
+      "sha256": "8c6c4308e487858a9ce3d36eeb685f2c71c5f90fc12b284aba81eede0b1807fc"
+    },
+    {
+      "file": "tests/product-identity-normalize.test.ts",
+      "name": "normalizeCategoryKey maps production labels, canonical keys, and simple oil aliases",
+      "sha256": "74fd331b916d361c02b071267bc79de983e73d1335dcab3604cb33d5f056c27e"
+    },
+    {
+      "file": "tests/product-identity-normalize.test.ts",
+      "name": "normalizeText folds accents, punctuation, case, and spacing",
+      "sha256": "b8ed8d473a998b61f481f8ae989a473a9cd84468677bfc3768f530f7657410fd"
+    },
+    {
+      "file": "tests/product-identity-normalize.test.ts",
+      "name": "normalizeIdentityText is stable for case, whitespace, punctuation, and safe diacritics",
+      "sha256": "5011d4a1e73e0076d8068fc88fd2bd9bdebfdf28f19d5fcc686cf6d87073f3e7"
+    },
+    {
+      "file": "tests/product-identity-normalize.test.ts",
+      "name": "normalizeIdentityText matches L'Oreal variants without broad unsafe rewrites",
+      "sha256": "b34b89e572b633b7a3b902660444bfd1d1fb1cf3bb2c36027dd7f2568fdab6b5"
+    },
+    {
+      "file": "tests/product-identity-normalize.test.ts",
+      "name": "normalizeIdentifier returns stable snake-case identifiers",
+      "sha256": "433e96b44137a770c957ee347fcadc98d1099eea504a8dcdfb8a16cbe567776d"
+    },
+    {
+      "file": "tests/product-identity-normalize.test.ts",
+      "name": "tokenizeProductName returns normalized searchable product-name tokens",
+      "sha256": "7d30b9ab0e7da16affeab1168dba301e2c4c52a909e2d3b13f88c519d5594bc2"
+    },
+    {
+      "file": "tests/product-identity-normalize.test.ts",
+      "name": "cleanProductDisplayName removes exact brand and product line prefixes conservatively",
+      "sha256": "debc7c37b4914b7c1ded8545eb022786bc27f75477fb2a2b157d808a126bf7ad"
+    },
+    {
+      "file": "tests/product-identity-resolution.test.ts",
+      "name": "resolveBrandFromText returns an exact brand and product line prefix match",
+      "sha256": "487cbe942d18c60b005ac5f1b13ae5dbf9a6ef84c9fb12a3b4626359ec167433"
+    },
+    {
+      "file": "tests/product-identity-resolution.test.ts",
+      "name": "resolveBrandFromText resolves Phase 0 aliases before canonical brand names",
+      "sha256": "3f78b2f953b0ee8ad45d9cca98a5be37fe41de012df62ae37dbffce5d5bd02a7"
+    },
+    {
+      "file": "tests/product-identity-resolution.test.ts",
+      "name": "conflicting aliases are reported and excluded from usable alias resolution",
+      "sha256": "7a5ad4e9696df95d10f8451232edd975fe7c5dfd520400d0ae35eebed6ecb182"
+    },
+    {
+      "file": "tests/product-identity-resolution.test.ts",
+      "name": "resolver uses Phase 0 normalized brand and line fields for punctuation variants",
+      "sha256": "90fe7fcabbc8122807a97e0decef49a9c4ca22aeb8a716c56d7cf4b0ffe553ae"
+    },
+    {
+      "file": "tests/product-identity-resolution.test.ts",
+      "name": "alias collisions with canonical brand names are reported and excluded",
+      "sha256": "8aed896e1cf4bb208a5c7eb21898f487682fa1dd501e656e810db6f2474ae715"
+    },
+    {
+      "file": "tests/product-identity-resolution.test.ts",
+      "name": "line-specific aliases with missing product lines are excluded",
+      "sha256": "49b880c67811a5aa0c2a956e78c7c21e03293e215c3fdd075a45c3f874bba361"
+    },
+    {
+      "file": "tests/product-identity-resolution.test.ts",
+      "name": "resolver handles corrected Phase A catalog aliases",
+      "sha256": "aa15e96f406812499fe82cf61bfc2d3d5aa101e7119456313017d2ca696f5351"
+    },
+    {
+      "file": "tests/product-identity-schema.test.ts",
+      "name": "product identity migration creates the phase 0 identity tables",
+      "sha256": "b6d4d96d8cad177c24293423b171643aab158ba1a0a4a902ab266351fd6c8fbc"
+    },
+    {
+      "file": "tests/product-identity-schema.test.ts",
+      "name": "product identity migration exposes only public-safe identity tables to public clients",
+      "sha256": "41621040685126f3988a805990f6cf3b66812bd4eb71eda24858dd1d8e869ca8"
+    },
+    {
+      "file": "tests/product-identity-schema.test.ts",
+      "name": "product identity migration keeps non-recommended products out of public product reads",
+      "sha256": "bcf212eee60c8177aea3884d48a884a30355bdf776f12f491f2ceec238949da9"
+    },
+    {
+      "file": "tests/product-identity-schema.test.ts",
+      "name": "product identity migration keeps semantic product matching aligned with catalog visibility",
+      "sha256": "a5c7bf70fb642cea8f8c88c7d0f551fa962039fd11e4890006319231f9b9c4b7"
+    },
+    {
+      "file": "tests/product-identity-schema.test.ts",
+      "name": "product identity migration extends products without contracting legacy fields",
+      "sha256": "13e6538f833e57940035131a6fc1037c7fc7a86193a7a91948a08d81786cb3db"
+    },
+    {
+      "file": "tests/product-identity-schema.test.ts",
+      "name": "product identity migration keeps product lines and identifiers compatible",
+      "sha256": "605f39014516365f59cbf177d081eab835a152799f3500c83fc372112c670ff2"
+    },
+    {
+      "file": "tests/product-identity-schema.test.ts",
+      "name": "product identity migration stores script-normalized identity values",
+      "sha256": "7c9bad695f9c8f8e76e972c7efe7c2bfa823052be4cae74d94d0b5bab4bf9406"
+    },
+    {
+      "file": "tests/product-identity-schema.test.ts",
+      "name": "product identity migration seeds all phase 0 product categories",
+      "sha256": "3371f01ca674c61f8ce1e70a1d70f28ddf7e28aa3598f4cd99a0ec8237ce4890"
+    },
+    {
+      "file": "tests/product-identity-schema.test.ts",
+      "name": "product identity migration stays inside the phase 0 boundary",
+      "sha256": "858205caa0269e24beebad80c1f34d22d5037c212ab2f8a9c0978ce3d8a1e2e9"
+    },
+    {
+      "file": "tests/product-identity-title.test.ts",
+      "name": "product identity title composes brand, line and name without visible duplication",
+      "sha256": "f28515ce89185fae7e08314d25dad834a27eef7594657de5e67fe77be6e1c32c"
+    },
+    {
+      "file": "tests/product-identity-title.test.ts",
+      "name": "product identity title ignores blank identity parts",
+      "sha256": "4ed7cb5db9a7c4389c4a582fe5e9f26872364796b5bb6caca92e2078d0ec7d00"
+    },
+    {
+      "file": "tests/product-identity-correction.test.ts",
+      "name": "canonical correction apply guard requires the production project confirmation",
+      "sha256": "57c074a89a7439593faa0955cbf4f2d7c7b792c9ef0d9ecda8058714cd14c2db"
+    },
+    {
+      "file": "tests/product-identity-correction.test.ts",
+      "name": "canonical correction product patch never writes live product names or legacy fields",
+      "sha256": "fc2859cdd4e9033c6b82efda6cc001b136e9e482355e62d965658f930bfd64df"
+    },
+    {
+      "file": "tests/product-identity-correction.test.ts",
+      "name": "canonical correction alias upsert rows only include database columns",
+      "sha256": "2759695dc620e99abfd60574716733dd5fd3a9fc159ffe18debf806f034572aa"
+    }
+  ],
+  "retainedHeldF": [
+    "product identity migration seeds all phase 0 product categories"
+  ],
+  "candidateIds": [
+    "C1"
+  ],
+  "sourceChanges": 0,
+  "controlsExecuted": 0,
+  "repositoryWrites": 0,
+  "readLimits": "All31 target callback/import/fixture/table bodies fully read. Four pure identity owners, correction1042-line owner, Phase0 and Phase5 migrations read fully. Named consumer bodies and direct entrypoints read at the explicit ranges; broad adjacent application files, full SQL lineage, and SDK transport internals are not claimed fully audited. No GTIN15 or catalog-metadata32 re-audit."
+}

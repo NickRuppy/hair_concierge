@@ -1,4 +1,7 @@
 import { PRODUCT_FREQUENCIES, type ProductFrequency } from "@/lib/vocabulary/frequencies"
+import type { ToolFamily, ToolReportedForm } from "@/lib/personal-plan/tools/contracts"
+import type { ToolFormPageKey } from "@/lib/personal-plan/tools/labels"
+import type { HairLength } from "@/lib/vocabulary/hair-length"
 import type {
   NightProtection,
   TowelMaterial,
@@ -32,6 +35,12 @@ export const DRY_SHAMPOO_BRIDGE_PREFERENCES = ["accept", "decline"] as const
 export type DryShampooBridgePreference = (typeof DRY_SHAMPOO_BRIDGE_PREFERENCES)[number]
 export const DRY_SHAMPOO_VISIBLE_HAIR_COLORS = ["light_blonde", "brown", "dark"] as const
 export type DryShampooVisibleHairColor = (typeof DRY_SHAMPOO_VISIBLE_HAIR_COLORS)[number]
+/**
+ * When the user wants the Bondbuilder step: before the wash (rinse-out), after the
+ * wash (leave-in), or either. States the user's answer, not a product property.
+ */
+export const BONDBUILDER_TIMINGS = ["before_wash", "after_wash", "no_preference"] as const
+export type BondbuilderTiming = (typeof BONDBUILDER_TIMINGS)[number]
 export const OIL_PURPOSES = ["prewash_lengths", "damp_leave_on", "dry_finish", "scalp"] as const
 export type OilPurpose = (typeof OIL_PURPOSES)[number]
 export const DRYING_ROUTES = [
@@ -48,6 +57,13 @@ export const ADDITIONAL_HEAT_TOOLS = [
   "thermal_rollers",
 ] as const
 export type AdditionalHeatTool = (typeof ADDITIONAL_HEAT_TOOLS)[number]
+/**
+ * How the hair is worn at night (Rev. 6, Gewohnheiten „Wie trägst du dein Haar nachts?"). A
+ * behaviour, not a thing: the night THINGS come from the Deine-Tools night page. `loose_tied` /
+ * `pineapple` are merged into the derived `nightProtection` list; `open` adds nothing.
+ */
+export const NIGHT_WEARS = ["open", "loose_tied", "pineapple"] as const
+export type NightWear = (typeof NIGHT_WEARS)[number]
 export const HEAT_PROTECTION_CONSISTENCIES = ["always", "sometimes", "no", "unsure"] as const
 export type HeatProtectionConsistency = (typeof HEAT_PROTECTION_CONSISTENCIES)[number]
 export const STAGE2_HEAT_EVENT_SOURCES = [
@@ -76,6 +92,7 @@ export type HeatEventAnswer = {
 export type PersonalPlanRefinementAnswersV1 = {
   currentProductCategories?: Stage2ProductCategory[]
   wetWashFrequency?: WetWashFrequency
+  bondbuilderTiming?: BondbuilderTiming
   scalpIrritationDetail?: ScalpIrritationDetail
   dryShampooBridgePreference?: DryShampooBridgePreference
   dryShampooVisibleHairColor?: DryShampooVisibleHairColor
@@ -85,11 +102,28 @@ export type PersonalPlanRefinementAnswersV1 = {
   additionalHeatTools?: AdditionalHeatTool[]
   heatEvents?: Record<string, HeatEventAnswer>
   nightProtection?: NightProtection[]
+  /**
+   * The night behaviour answer (`night_wear`). Only on the path while the Hair Tools rollout is
+   * on and the quiz hair length can be tied (not `very_short` / `short`; unknown length asks).
+   */
+  nightWear?: NightWear
+  /**
+   * The Tools overview answer (`tools_overview`): the families the user owns something in, in
+   * wash-day order (`TOOL_OVERVIEW_FAMILY_ORDER`). Every family NOT listed is an explicit none.
+   * Only on the path while the Hair Tools rollout is on.
+   */
+  toolFamiliesWithSomething?: ToolFamily[]
+  /**
+   * One answer per product-form PAGE (`tools:<pageKey>`), each sorted into its family's
+   * canonical order. An absent page is unanswered. `toolFormsByFamily` unions a family's pages.
+   */
+  toolForms?: Partial<Record<ToolFormPageKey, ToolReportedForm[]>>
 }
 
 export type Stage2StaticQuestionId =
   | "current_product_categories"
   | "wet_wash_frequency"
+  | "bondbuilder_timing"
   | "scalp_irritation_detail"
   | "dry_shampoo_bridge_preference"
   | "dry_shampoo_visible_hair_color"
@@ -98,14 +132,33 @@ export type Stage2StaticQuestionId =
   | "drying_routes"
   | "additional_heat_tools"
   | "night_protection"
+  | "night_wear"
 export type Stage2HeatEventQuestionId = `heat:${Stage2HeatEventSource}`
-export type Stage2QuestionId = Stage2StaticQuestionId | Stage2HeatEventQuestionId
+/** Questions of the `tools` module: the overview, then one question per product-form page. */
+export type Stage2ToolsQuestionId = "tools_overview" | `tools:${ToolFormPageKey}`
+export type Stage2QuestionId =
+  | Stage2StaticQuestionId
+  | Stage2HeatEventQuestionId
+  | Stage2ToolsQuestionId
 export type Stage2AnswerKey = keyof PersonalPlanRefinementAnswersV1
 
 export type Stage2TriggerContext = {
   relevantCategories: Stage2ProductCategory[]
   hasReportedIrritatedScalp: boolean
   dryShampooBridgeEligibility: "unknown" | "eligible" | "ineligible"
+  /**
+   * Server-resolved Hair Tools rollout for this request. `deriveStage2TriggerContext` sets it
+   * only when the rollout is on (`true`) and omits the key otherwise, so stored contexts and
+   * input hashes of members without the rollout never change. Absent means off — read it as
+   * `=== true`.
+   */
+  toolsEnabled?: boolean
+  /**
+   * The quiz hair length, set by `deriveStage2TriggerContext` only while the rollout is on (so
+   * tools-off contexts stay byte-identical). Gates `night_wear`: `very_short` / `short` cannot be
+   * tied; absent (unknown) asks.
+   */
+  hairLength?: HairLength
 }
 
 export type Stage2PathState = {
@@ -116,10 +169,17 @@ export type Stage2PathState = {
   prunedAnswerKeys: Stage2AnswerKey[]
 }
 
-/** Fixed two-value split of the refinement path. No abstraction for hypothetical further modules. */
-export const STAGE2_MODULES = ["products", "habits"] as const
+/**
+ * Fixed split of the refinement path, in the order the flow asks the modules. No abstraction
+ * for hypothetical further modules. `tools` is asked between `products` and `habits`.
+ */
+export const STAGE2_MODULES = ["products", "tools", "habits"] as const
 export type Stage2Module = (typeof STAGE2_MODULES)[number]
-export type Stage2ModuleStatus = "open" | "complete"
+/**
+ * `not_applicable`: the module has no question on the current path (e.g. `tools` while its
+ * rollout is off). It is neither a step the user has to do nor an assumption still in force.
+ */
+export type Stage2ModuleStatus = "open" | "complete" | "not_applicable"
 export type Stage2ModulePathState = {
   questionIds: Stage2QuestionId[]
   completedQuestionIds: Stage2QuestionId[]

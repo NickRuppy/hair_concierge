@@ -1,0 +1,138 @@
+[
+  {
+    "id": "D1",
+    "classification": "D",
+    "file": "tests/tracker-aggregation.test.ts",
+    "fileSha256": "546043fc6150db59f8501f8ab7d174e7f19de86814987a73e1f9038d6a2e72ea",
+    "donor": {
+      "file": "tests/tracker-aggregation.test.ts",
+      "line": 102,
+      "title": "observed wash cadence: 4 washes over 2 observed weeks -> 2/week",
+      "start": 2379,
+      "end": 2528,
+      "body": "() => {\n  assert.equal(estimateObservedWashCadencePerWeek(DENSE_WEEKS), 2)\n}",
+      "bodySha256": "faf908b709c6738e9b6589572ffde58511758953f532f7e1f262891c30e7de29"
+    },
+    "keeper": {
+      "file": "tests/tracker-aggregation.test.ts",
+      "line": 110,
+      "title": "shampoo cadence is the measured wash rhythm, not the self-report",
+      "start": 2706,
+      "end": 3038,
+      "body": "() => {\n  const cadences = computeObservedCadences(DENSE_WEEKS, 5, CADENCE_POLICIES)\n  const shampoo = cadences.find((c) => c.category === \"shampoo\")\n  assert.ok(shampoo)\n  assert.equal(shampoo.basis, \"wash_rhythm\")\n  assert.equal(shampoo.weeklyCadence, 2)\n}",
+      "bodySha256": "0e61b24ce1aec10a2dcd66fd1874519dc5713e42c07ca40e9f0ac72d1b086cbf"
+    },
+    "operativeInputProof": "Exact same DENSE_WEEKS object. computeObservedCadences calls estimateObservedWashCadencePerWeek unconditionally, then publishes its scalar as shampoo.weeklyCadence. Existing keeper asserts presence, wash_rhythm and literal 2 despite self-report 5. Direct donor adds no intermediate that the consumer hides.",
+    "assertionTransfer": "No transfer.",
+    "actualFailure": "Incorrect wash/week ratio or hidden self-report preference",
+    "nonTestCallers": [
+      "src/lib/tracking/api-handlers.ts:getTracker",
+      "src/lib/agent/tools/tracking-insights.ts:buildTrackingInsightContext"
+    ],
+    "history": "7f6b1d0f introduced Tracker helpers and these tests together; existing source and current API/chat callers keep behavior live. No retirement claim.",
+    "unlockedCleanup": "Only donor callback; no helper, import, fixture, SQL or production deletion.",
+    "risk": "Conditional until parent confirms baseline, transfers and actual-owner controls. No additional cases or inputs."
+  },
+  {
+    "id": "D2",
+    "classification": "D",
+    "file": "tests/tracker-aggregation.test.ts",
+    "fileSha256": "546043fc6150db59f8501f8ab7d174e7f19de86814987a73e1f9038d6a2e72ea",
+    "donor": {
+      "file": "tests/tracker-aggregation.test.ts",
+      "line": 106,
+      "title": "observed wash cadence: null with fewer than 2 observed weeks",
+      "start": 2530,
+      "end": 2704,
+      "body": "() => {\n  assert.equal(estimateObservedWashCadencePerWeek([washDay(\"2026-06-10\", [\"shampoo\"])]), null)\n}",
+      "bodySha256": "5f136fc98f10417d5fd7844c1dd5dcfce4d4cb39e3aed70ed03ada549ad61419"
+    },
+    "keeper": {
+      "file": "tests/tracker-aggregation.test.ts",
+      "line": 118,
+      "title": "shampoo emits no cadence when wash rhythm is unobserved (sparse logging)",
+      "start": 3040,
+      "end": 3376,
+      "body": "() => {\n  const days = [washDay(\"2026-06-10\", [\"shampoo\"]), washDay(\"2026-06-14\", [\"shampoo\"])]\n  const cadences = computeObservedCadences(days, 2, CADENCE_POLICIES)\n  assert.equal(\n    cadences.find((c) => c.category === \"shampoo\"),\n    undefined,\n  )\n}",
+      "bodySha256": "85b571af48422dafb7d82d577a091cb0e93653e40512e804bfd7b3a43aa7cc9a"
+    },
+    "operativeInputProof": "Donor one wash June10 and keeper two washes June10/14 are the same operative early-return state: zero observed weeks because each ISO week has fewer than four logged days. Both reach weeks.size < 2 before any wash arithmetic. Keeper additionally has self-report 2 and must emit no shampoo, so a zero/undefined/NaN observed result or a fallback-as-shampoo error is exposed. One vs two raw rows adds no other observed branch.",
+    "assertionTransfer": "No transfer; retain sparse input unchanged.",
+    "actualFailure": "Insufficient coverage emits measured wash cadence instead of null",
+    "nonTestCallers": [
+      "src/lib/tracking/api-handlers.ts:getTracker",
+      "src/lib/agent/tools/tracking-insights.ts:buildTrackingInsightContext"
+    ],
+    "history": "7f6b1d0f introduced Tracker helpers and these tests together; existing source and current API/chat callers keep behavior live. No retirement claim.",
+    "unlockedCleanup": "Only donor callback; no helper, import, fixture, SQL or production deletion.",
+    "risk": "Conditional until parent confirms baseline, transfers and actual-owner controls. No additional cases or inputs."
+  },
+  {
+    "id": "C1",
+    "classification": "C",
+    "file": "tests/tracker-aggregation.test.ts",
+    "fileSha256": "546043fc6150db59f8501f8ab7d174e7f19de86814987a73e1f9038d6a2e72ea",
+    "donor": {
+      "file": "tests/tracker-aggregation.test.ts",
+      "line": 127,
+      "title": "need-based policy: mask uses observed-week cadence instead of wash share",
+      "start": 3378,
+      "end": 3744,
+      "body": "() => {\n  const cadences = computeObservedCadences(DENSE_WEEKS, null, CADENCE_POLICIES)\n  const mask = cadences.find((c) => c.category === \"mask\")\n  assert.ok(mask)\n  assert.equal(mask.basis, \"day_level\")\n  assert.equal(mask.anchorSource, null)\n  assert.equal(mask.weeklyCadence, 1)\n}",
+      "bodySha256": "04810de79b3edc5e18e75717864536a5546ae9dfcfbf5d59e31976b3be1a6215"
+    },
+    "keeper": {
+      "file": "tests/tracker-aggregation.test.ts",
+      "line": 304,
+      "title": "custom and unconfirmed days do not affect cadence denominators or category usage",
+      "start": 9504,
+      "end": 10107,
+      "body": "() => {\n  const withCustom = [\n    ...DENSE_WEEKS,\n    customDay(\"2026-06-12\", [\"mask\"]),\n    customDay(\"2026-06-19\", [\"mask\"]),\n    { ...washDay(\"2026-06-22\", [\"shampoo\", \"mask\"]), confirmed: false },\n  ]\n  const cadences = computeObservedCadences(withCustom, null, CADENCE_POLICIES)\n  const mask = cadences.find((cadence) => cadence.category === \"mask\")\n  assert.ok(mask)\n  assert.equal(mask.usageDays, 2)\n  assert.equal(mask.weeklyCadence, 1)\n  assert.equal(estimateObservedWashCadencePerWeek(withCustom), 2)\n}",
+      "bodySha256": "ca30b1b385f1a79d80775114cb34036fa469aa46f00a733f19318c5f4dea3a88"
+    },
+    "operativeInputProof": "Both use DENSE_WEEKS, null self-report, CADENCE_POLICIES. Keeper adds two custom mask days and one unconfirmed shampoo/mask wash. isCadenceEligible and isWashLike exclude all three before observed-week, usage-day, wash-event and anchor computation. For mask the exact operative input remains two usage days across two observed weeks. Keeper additionally guards exclusion of those non-canonical records.",
+    "assertionTransfer": "Add mask.basis === day_level and mask.anchorSource === null to existing keeper; mask presence, cadence 1 and usageDays 2 already asserted.",
+    "actualFailure": "Need-based cadence claims wash_share or a wash-derived anchor",
+    "nonTestCallers": [
+      "src/lib/tracking/api-handlers.ts:getTracker",
+      "src/lib/agent/tools/tracking-insights.ts:buildTrackingInsightContext"
+    ],
+    "history": "7f6b1d0f introduced Tracker helpers and these tests together; existing source and current API/chat callers keep behavior live. No retirement claim.",
+    "unlockedCleanup": "Only donor callback; no helper, import, fixture, SQL or production deletion.",
+    "risk": "Conditional until parent confirms baseline, transfers and actual-owner controls. No additional cases or inputs."
+  },
+  {
+    "id": "C2",
+    "classification": "C",
+    "file": "tests/tracker-nudges.test.ts",
+    "fileSha256": "b2d918171c06640d9e035b056ebb9f8a7e451bb7186fe135e4afb66b1cdc8c76",
+    "donor": {
+      "file": "tests/tracker-nudges.test.ts",
+      "line": 108,
+      "title": "observed clearly above band -> decrease nudge",
+      "start": 2699,
+      "end": 2965,
+      "body": "() => {\n  const nudges = computeNudges({\n    cadences: [cadence(\"mask\", 5)],\n    targets: [MASK_TARGET],\n    dismissed: [],\n  })\n  assert.equal(nudges.length, 1)\n  assert.equal(nudges[0].direction, \"decrease\")\n}",
+      "bodySha256": "6c10d12490db90f3af23439806eeb9ad628724a218dbb2550a75d6608ac66da7"
+    },
+    "keeper": {
+      "file": "tests/tracker-nudges.test.ts",
+      "line": 118,
+      "title": "dismissed direction stays hidden; other direction still fires",
+      "start": 2967,
+      "end": 3407,
+      "body": "() => {\n  const dismissed = [{ category: \"mask\", direction: \"increase\" }]\n  assert.equal(\n    computeNudges({\n      cadences: [cadence(\"mask\", 1)],\n      targets: [MASK_TARGET],\n      dismissed,\n    }).length,\n    0,\n  )\n  assert.equal(\n    computeNudges({\n      cadences: [cadence(\"mask\", 5)],\n      targets: [MASK_TARGET],\n      dismissed,\n    }).length,\n    1,\n  )\n}",
+      "bodySha256": "21ed020c1641b48a88f43ac68299d942514cfa90329d952e7b5bc3aadf83fc95"
+    },
+    "operativeInputProof": "Both invoke computeNudges on cadence(mask,5) and MASK_TARGET min2/max4; direction is decrease. Keeper only adds dismissal key mask:increase, which cannot suppress mask:decrease. Production creates direction before the set lookup and returns the same result. No provider, persistence or metadata difference.",
+    "assertionTransfer": "Capture existing second computeNudges result as otherDirection; retain length 1 and add otherDirection[0].direction === decrease. No new call/input.",
+    "actualFailure": "Returned direction disagrees with the computed decrease direction",
+    "nonTestCallers": [
+      "src/lib/tracking/api-handlers.ts:getTracker",
+      "src/lib/agent/tools/tracking-insights.ts:buildTrackingInsightContext"
+    ],
+    "history": "7f6b1d0f introduced Tracker helpers and these tests together; existing source and current API/chat callers keep behavior live. No retirement claim.",
+    "unlockedCleanup": "Only donor callback; no helper, import, fixture, SQL or production deletion.",
+    "risk": "Conditional until parent confirms baseline, transfers and actual-owner controls. No additional cases or inputs."
+  }
+]

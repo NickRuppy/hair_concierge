@@ -2,15 +2,11 @@ import type {
   AgenticTerminalAnswer,
   AgenticTerminalProductCategory,
   AgenticTerminalStatePatch,
-  ClassificationResult,
   ConversationProductTopic,
   ConversationPendingOffer,
   ConversationState,
   ConversationStateTopic,
   ConversationStateTransition,
-  HairProfile,
-  ProductCategory,
-  RouterDecision,
   RoutineConversationLayer,
 } from "@/lib/types"
 import {
@@ -166,31 +162,6 @@ function normalizeAgentV2SessionMemory(
     .slice(-8)
 }
 
-export function applyConversationStateToClassification(params: {
-  state: ConversationState
-  classification: ClassificationResult
-  userMessage: string
-}): { classification: ClassificationResult; override: string | null } {
-  const { state, classification, userMessage } = params
-
-  if (
-    !isRoutineClassification(classification) &&
-    shouldApplyPendingRoutineAnswerOverride({ state, userMessage })
-  ) {
-    return {
-      classification: {
-        ...classification,
-        intent: "routine_help",
-        product_category: "routine",
-        router_confidence: Math.max(classification.router_confidence, 0.75),
-      },
-      override: "conversation_state_pending_routine_answer",
-    }
-  }
-
-  return { classification, override: null }
-}
-
 export function shouldApplyPendingRoutineAnswerOverride(params: {
   state: ConversationState
   userMessage: string
@@ -202,153 +173,6 @@ export function shouldApplyPendingRoutineAnswerOverride(params: {
     params.state.last_assistant_action === "asked_routine_basics" &&
     isLikelyPendingRoutineAnswer(params.userMessage)
   )
-}
-
-export function computeConversationStateTransition(params: {
-  previousState: ConversationState
-  classification: ClassificationResult
-  routerDecision: RouterDecision
-  userMessage: string
-  assistantAction: string | null
-  hairProfile: HairProfile | null
-  matchedProductCategory: ProductCategory
-  classifierOverride?: string | null
-}): ConversationStateTransition {
-  const previousState = normalizeConversationState(params.previousState)
-  let nextState: ConversationState = {
-    ...previousState,
-    answered_slots: [...previousState.answered_slots],
-    last_assistant_action: params.assistantAction,
-  }
-  let reason = "unchanged"
-
-  const classifiedProductTopic = toSupportedProductTopic(params.classification.product_category)
-  const matchedProductTopic = toSupportedProductTopic(params.matchedProductCategory)
-  const productTopic = matchedProductTopic ?? classifiedProductTopic
-  const requestedRoutineLayer = shouldSelectRoutineLayerFromBasics(previousState)
-    ? getRequestedRoutineLayer(params.userMessage)
-    : null
-  const isUnsupportedStandaloneCategorySwitch =
-    params.classification.intent === "product_recommendation" &&
-    params.classification.product_category !== null &&
-    params.classification.product_category !== "routine" &&
-    classifiedProductTopic === null &&
-    previousState.active_topic === "routine"
-
-  if (
-    params.classification.intent === "product_recommendation" &&
-    classifiedProductTopic !== null &&
-    previousState.active_topic === "routine"
-  ) {
-    nextState = {
-      ...nextState,
-      active_topic: classifiedProductTopic,
-      routine_layer: null,
-      pending_offer: null,
-      last_product_category: classifiedProductTopic,
-    }
-    reason = "category_switch"
-  } else if (isUnsupportedStandaloneCategorySwitch) {
-    nextState = {
-      ...nextState,
-      active_topic: null,
-      routine_layer: null,
-      pending_offer: null,
-      last_product_category: null,
-    }
-    reason = "category_switch_out_of_scope"
-  } else if (previousState.active_topic === "routine" && productTopic !== null) {
-    nextState = {
-      ...nextState,
-      active_topic: "routine",
-      routine_layer: "deep_dive",
-      pending_offer: null,
-      last_product_category: productTopic,
-    }
-    reason = "routine_category_deep_dive"
-  } else if (requestedRoutineLayer !== null) {
-    nextState = {
-      ...nextState,
-      active_topic: "routine",
-      routine_layer: requestedRoutineLayer.layer,
-      pending_offer: requestedRoutineLayer.includesBoth
-        ? "routine_deep_dive"
-        : "routine_other_layer",
-    }
-    reason = requestedRoutineLayer.reason
-  } else if (isRoutineClassification(params.classification)) {
-    const answeredSlots = mergeAnsweredSlots(
-      previousState.answered_slots,
-      toAnsweredSlots(params.userMessage, params.hairProfile),
-    )
-
-    nextState = {
-      ...nextState,
-      active_topic: "routine",
-      answered_slots: answeredSlots,
-      last_product_category: nextState.last_product_category,
-    }
-
-    if (previousState.active_topic !== "routine") {
-      const shouldAskRoutineBasics =
-        params.assistantAction === "asked_routine_basics" ||
-        (params.routerDecision.response_mode === "clarify_only" &&
-          params.routerDecision.clarification_reason === "missing_routine_frame")
-
-      if (shouldAskRoutineBasics) {
-        nextState.routine_layer = "basics"
-        nextState.pending_offer = "routine_goals_or_problems"
-        reason = "routine_started"
-      } else if (params.assistantAction === "answered_routine_basics") {
-        nextState.routine_layer = "basics"
-        nextState.pending_offer = "routine_goals_or_problems"
-        reason = "routine_basics_answered"
-      } else if (answeredSlots.length > 0) {
-        nextState.routine_layer = answeredSlots.includes("problem") ? "deep_dive" : "goals"
-        nextState.pending_offer = answeredSlots.includes("problem") ? null : "routine_deep_dive"
-        reason = "routine_started_with_frame"
-      } else {
-        nextState.routine_layer = "goals"
-        nextState.pending_offer = "routine_deep_dive"
-        reason = "routine_started_with_frame"
-      }
-    } else if (
-      previousState.routine_layer === "basics" &&
-      previousState.pending_offer === "routine_goals_or_problems" &&
-      answeredSlots.length > previousState.answered_slots.length
-    ) {
-      nextState.routine_layer = answeredSlots.includes("problem") ? "problems" : "goals"
-      nextState.pending_offer = "routine_deep_dive"
-      reason = "routine_basics_answered"
-    } else {
-      reason = "routine_continued"
-    }
-  }
-
-  if (
-    reason === "unchanged" &&
-    previousState.active_topic === "routine" &&
-    previousState.routine_layer === "basics" &&
-    previousState.pending_offer === "routine_goals_or_problems" &&
-    previousState.last_assistant_action === "asked_routine_basics" &&
-    params.assistantAction !== "asked_routine_basics" &&
-    !isRoutineClassification(params.classification) &&
-    productTopic === null
-  ) {
-    nextState = {
-      ...nextState,
-      pending_offer: null,
-    }
-    reason = "routine_pending_offer_dismissed"
-  }
-
-  return {
-    previous_state: previousState,
-    next_state: nextState,
-    reason,
-    changed_fields: getChangedFields(previousState, nextState),
-    classifier_override: params.classifierOverride ?? null,
-  }
 }
 
 export function resolveAgenticConversationStateTransition(params: {
@@ -407,10 +231,6 @@ export function resolveAgenticConversationStateTransition(params: {
   }
 }
 
-function isRoutineClassification(classification: ClassificationResult): boolean {
-  return classification.intent === "routine_help" || classification.product_category === "routine"
-}
-
 function isShortPendingRoutineAnswer(message: string): boolean {
   const normalized = message.trim().toLowerCase()
   return normalized.length > 0 && normalized.length <= 180
@@ -433,21 +253,6 @@ function isLikelyPendingRoutineAnswer(message: string): boolean {
     hasAcknowledgementSignal(lower) ||
     hasCategoryFollowupSignal(lower)
   )
-}
-
-function toAnsweredSlots(message: string, hairProfile: HairProfile | null): string[] {
-  const slots = new Set<string>()
-  const lower = message.toLowerCase()
-  if (hairProfile?.shampoo_frequency || hasRoutineCadenceSignal(lower)) {
-    slots.add("routine")
-  }
-  if ((hairProfile?.current_routine_products?.length ?? 0) > 0 || hasProductSignal(lower)) {
-    slots.add("products_tried")
-  }
-  if ((hairProfile?.concerns?.length ?? 0) > 0 || hasProblemSignal(lower)) {
-    slots.add("problem")
-  }
-  return Array.from(slots)
 }
 
 function hasRoutineCadenceSignal(lower: string): boolean {
@@ -475,66 +280,6 @@ function hasProblemOrGoalSignal(lower: string): boolean {
       lower,
     )
   )
-}
-
-function hasGoalSignal(lower: string): boolean {
-  return /\b(ziel|ziele|goal|goals|wunsch|wünsche|wuensche|möchte|moechte|will|richtung|mehr volumen|volumen|glanz|definition|definier|weniger|reduzier|bändigen|baendigen|wachstum)\b/.test(
-    lower,
-  )
-}
-
-function hasProblemLayerSignal(lower: string): boolean {
-  return (
-    hasProblemSignal(lower) ||
-    /\b(problem|probleme|concern|concerns|sorge|sorgen|thema|themen|fixen|lösen|loesen|verbessern|reparieren|angehen)\b/.test(
-      lower,
-    )
-  )
-}
-
-function shouldSelectRoutineLayerFromBasics(state: ConversationState): boolean {
-  return (
-    state.active_topic === "routine" &&
-    state.routine_layer === "basics" &&
-    state.pending_offer === "routine_goals_or_problems" &&
-    state.last_assistant_action === "answered_routine_basics"
-  )
-}
-
-function getRequestedRoutineLayer(message: string): {
-  layer: Exclude<RoutineConversationLayer, null>
-  includesBoth: boolean
-  reason: string
-} | null {
-  const lower = message.trim().toLowerCase()
-  const asksForGoals = hasGoalSignal(lower)
-  const asksForProblems = hasProblemLayerSignal(lower)
-
-  if (asksForGoals && asksForProblems) {
-    return {
-      layer: "goals",
-      includesBoth: true,
-      reason: "routine_goal_and_problem_layers_selected",
-    }
-  }
-
-  if (asksForGoals) {
-    return {
-      layer: "goals",
-      includesBoth: false,
-      reason: "routine_goal_layer_selected",
-    }
-  }
-
-  if (asksForProblems) {
-    return {
-      layer: "problems",
-      includesBoth: false,
-      reason: "routine_problem_layer_selected",
-    }
-  }
-
-  return null
 }
 
 function hasAcknowledgementSignal(lower: string): boolean {
@@ -668,10 +413,6 @@ function shouldApplySelectedProductsOutcome(
   return !["needs_more_info", "not_recommended", "no_catalog_match"].includes(
     selectedProducts.decision,
   )
-}
-
-function mergeAnsweredSlots(current: string[], next: string[]): string[] {
-  return Array.from(new Set([...current, ...next]))
 }
 
 function getChangedFields(

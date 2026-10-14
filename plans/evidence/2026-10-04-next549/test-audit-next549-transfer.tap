@@ -1,0 +1,480 @@
+TAP version 13
+# Subtest: Leave-In queue API is closed outside development
+ok 1 - Leave-In queue API is closed outside development
+  ---
+  duration_ms: 128.490334
+  ...
+# Subtest: Leave-In review API is closed outside development
+ok 2 - Leave-In review API is closed outside development
+  ---
+  duration_ms: 5.587041
+  ...
+# Subtest: Leave-In queue API returns the queue and the selected detail in development
+ok 3 - Leave-In queue API returns the queue and the selected detail in development
+  ---
+  duration_ms: 18.730125
+  ...
+# Subtest: Leave-In review API rejects an invalid payload
+ok 4 - Leave-In review API rejects an invalid payload
+  ---
+  duration_ms: 1.5495
+  ...
+# Subtest: Leave-In review API transitions a property to rework and back to approved
+ok 5 - Leave-In review API transitions a property to rework and back to approved
+  ---
+  duration_ms: 16.964917
+  ...
+# Subtest: Leave-In review API confirms a G0 exclusion and refuses product approval for it
+ok 6 - Leave-In review API confirms a G0 exclusion and refuses product approval for it
+  ---
+  duration_ms: 5.073875
+  ...
+# Subtest: Leave-In review API rejects an unknown product and an unknown property
+ok 7 - Leave-In review API rejects an unknown product and an unknown property
+  ---
+  duration_ms: 3.846834
+  ...
+# Subtest: Leave-In fixture loads, validates and covers both batches
+ok 8 - Leave-In fixture loads, validates and covers both batches
+  ---
+  duration_ms: 81.345584
+  ...
+# Subtest: Leave-In fixture carries the trimmed v0.4 review surface
+ok 9 - Leave-In fixture carries the trimmed v0.4 review surface
+  ---
+  duration_ms: 25.962042
+  ...
+# Subtest: Leave-In fixture carries no unseen-test adjudication points any more (T18 retired)
+ok 10 - Leave-In fixture carries no unseen-test adjudication points any more (T18 retired)
+  ---
+  duration_ms: 2.908833
+  ...
+# Subtest: Leave-In fixture carries no gold-set adjudication points any more
+ok 11 - Leave-In fixture carries no gold-set adjudication points any more
+  ---
+  duration_ms: 2.180666
+  ...
+# Subtest: Leave-In fixture applies the T6 repair rule and the T7 hold capture (gold-set)
+ok 12 - Leave-In fixture applies the T6 repair rule and the T7 hold capture (gold-set)
+  ---
+  duration_ms: 2.278125
+  ...
+# Subtest: Leave-In fixture carries a repair_support_level and hold capture on the unseen-test in-category products
+ok 13 - Leave-In fixture carries a repair_support_level and hold capture on the unseen-test in-category products
+  ---
+  duration_ms: 1.386709
+  ...
+# Subtest: Leave-In fixture annotates echo fields instead of listing them (T8)
+ok 14 - Leave-In fixture annotates echo fields instead of listing them (T8)
+  ---
+  duration_ms: 0.868875
+  ...
+# Subtest: Leave-In fixture makes product_form the presentation form, independently reviewable (T10, T11)
+ok 15 - Leave-In fixture makes product_form the presentation form, independently reviewable (T10, T11)
+  ---
+  duration_ms: 3.080083
+  ...
+# Subtest: Leave-In fixture folds the architecture read into WT's reasoning (T11, gold-set)
+ok 16 - Leave-In fixture folds the architecture read into WT's reasoning (T11, gold-set)
+  ---
+  duration_ms: 2.543167
+  ...
+# Subtest: Leave-In fixture's WT row names §3.1.2 on the unseen-test products too
+ok 17 - Leave-In fixture's WT row names §3.1.2 on the unseen-test products too
+  ---
+  duration_ms: 1.488834
+  ...
+# Subtest: Leave-In fixture keeps rationale verbatim and flags every extraction gap
+ok 18 - Leave-In fixture keeps rationale verbatim and flags every extraction gap
+  ---
+  duration_ms: 2.466625
+  ...
+# Subtest: Leave-In fixture carries a short reasoning line on every property
+ok 19 - Leave-In fixture carries a short reasoning line on every property
+  ---
+  duration_ms: 2.831958
+  ...
+# Subtest: Leave-In fixture captures application_stage as identity data, not a reviewed row (T12)
+ok 20 - Leave-In fixture captures application_stage as identity data, not a reviewed row (T12)
+  ---
+  duration_ms: 2.868292
+  ...
+# Subtest: Leave-In fixture applies the T17 hard-rule-audit items (H1/H2/H6/H9)
+ok 21 - Leave-In fixture applies the T17 hard-rule-audit items (H1/H2/H6/H9)
+  ---
+  duration_ms: 2.831
+  ...
+# Subtest: the Lab never renders the approval persistence key as the visible standard
+ok 22 - the Lab never renders the approval persistence key as the visible standard
+  ---
+  duration_ms: 0.801417
+  ...
+# Subtest: Leave-In review fingerprints are canonical and key-order independent
+ok 23 - Leave-In review fingerprints are canonical and key-order independent
+  ---
+  duration_ms: 0.495
+  ...
+# Subtest: Leave-In review state appends decisions and rejects malformed state
+ok 24 - Leave-In review state appends decisions and rejects malformed state
+  ---
+  duration_ms: 4.659083
+  ...
+# Subtest: Leave-In rework queue opens one entry per property and resolves it again
+ok 25 - Leave-In rework queue opens one entry per property and resolves it again
+  ---
+  duration_ms: 1.878333
+  ...
+# Subtest: Standard v1.0 stays byte-immutable: every v1.0 manifest artifact still matches its pin
+ok 26 - Standard v1.0 stays byte-immutable: every v1.0 manifest artifact still matches its pin
+  ---
+  duration_ms: 9.744
+  ...
+# Subtest: the v1.1 lock receipt binds the overlay, the frozen base and the adapter research method
+ok 27 - the v1.1 lock receipt binds the overlay, the frozen base and the adapter research method
+  ---
+  duration_ms: 1.237709
+  ...
+# Subtest: the v1.1 manifest pins every v1.1 artifact by bytes and sha256
+ok 28 - the v1.1 manifest pins every v1.1 artifact by bytes and sha256
+  ---
+  duration_ms: 4.039791
+  ...
+# Subtest: the overlay names its base by hash and states its scope
+ok 29 - the overlay names its base by hash and states its scope
+  ---
+  duration_ms: 0.317125
+  ...
+# Subtest: the v1.1 Lab fixture reopens exactly the 15 in-category care_direction rows
+ok 30 - the v1.1 Lab fixture reopens exactly the 15 in-category care_direction rows
+  ---
+  duration_ms: 8.475167
+  ...
+# Subtest: delivery capability is optional for older servers and disabled by default
+ok 31 - delivery capability is optional for older servers and disabled by default
+  ---
+  duration_ms: 1.111875
+  ...
+# Subtest: mobile intent enqueues once in either status/intent ordering, not old web scans
+ok 32 - mobile intent enqueues once in either status/intent ordering, not old web scans
+  ---
+  duration_ms: 707.294041
+  ...
+# Subtest: intent is owner-checked and candidate survives unrelated history deletion
+ok 33 - intent is owner-checked and candidate survives unrelated history deletion
+  ---
+  duration_ms: 395.138709
+  ...
+# Subtest: service-only claim is lease guarded and client roles cannot write intent
+ok 34 - service-only claim is lease guarded and client roles cannot write intent
+  ---
+  duration_ms: 368.986334
+  ...
+# Subtest: one candidate atomically produces independent email and current-device push
+ok 35 - one candidate atomically produces independent email and current-device push
+  ---
+  duration_ms: 735.157209
+  ...
+# Subtest: unknown result is held; pre-send expired processing can be reclaimed
+ok 36 - unknown result is held; pre-send expired processing can be reclaimed
+  ---
+  duration_ms: 405.383375
+  ...
+# Subtest: provider-credential retries never exhaust a device's only push; device refusals still do
+ok 37 - provider-credential retries never exhaust a device's only push; device refusals still do
+  ---
+  duration_ms: 380.839375
+  ...
+# Subtest: account deletion removes candidate, device and channel receipts
+ok 38 - account deletion removes candidate, device and channel receipts
+  ---
+  duration_ms: 388.010208
+  ...
+# Subtest: push lookup is service-only and invalidation preserves a rotated token
+ok 39 - push lookup is service-only and invalidation preserves a rotated token
+  ---
+  duration_ms: 366.310333
+  ...
+# Subtest: real PostgreSQL concurrent mobile intent and approval enqueue exactly once
+ok 40 - real PostgreSQL concurrent mobile intent and approval enqueue exactly once # SKIP
+  ---
+  duration_ms: 0.366875
+  ...
+# Subtest: delivery cron requires its secret even when disabled, without opening a client
+ok 41 - delivery cron requires its secret even when disabled, without opening a client
+  ---
+  duration_ms: 1.189375
+  ...
+# Subtest: authenticated disabled cron performs no database or provider work
+ok 42 - authenticated disabled cron performs no database or provider work
+  ---
+  duration_ms: 0.532375
+  ...
+# Subtest: cron storage failure returns a generic retryable response
+ok 43 - cron storage failure returns a generic retryable response
+  ---
+  duration_ms: 0.153584
+  ...
+# Subtest: disabled delivery does not claim, resolve, or contact providers
+ok 44 - disabled delivery does not claim, resolve, or contact providers
+  ---
+  duration_ms: 0.924625
+  ...
+# Subtest: candidate and each channel require a fresh usable assessment
+ok 45 - candidate and each channel require a fresh usable assessment
+  ---
+  duration_ms: 1.32975
+  ...
+# Subtest: candidate materialization does not bypass the second eligibility check
+ok 46 - candidate materialization does not bypass the second eligibility check
+  ---
+  duration_ms: 0.326917
+  ...
+# Subtest: concurrent workers send each independently leased channel only once
+ok 47 - concurrent workers send each independently leased channel only once
+  ---
+  duration_ms: 0.271916
+  ...
+# Subtest: ambiguous email remains held on later runs while push can finish
+ok 48 - ambiguous email remains held on later runs while push can finish
+  ---
+  duration_ms: 0.271375
+  ...
+# Subtest: missing or rebound device suppresses push but email is still delivered
+ok 49 - missing or rebound device suppresses push but email is still delivered
+  ---
+  duration_ms: 0.187542
+  ...
+# Subtest: device rebound during assessment resolution prevents the old owner's push
+ok 50 - device rebound during assessment resolution prevents the old owner's push
+  ---
+  duration_ms: 0.260667
+  ...
+# Subtest: unconfirmed email suppresses only email
+ok 51 - unconfirmed email suppresses only email
+  ---
+  duration_ms: 0.243083
+  ...
+# Subtest: email HTTP 400 settles failed_terminal
+ok 52 - email HTTP 400 settles failed_terminal
+  ---
+  duration_ms: 0.312541
+  ...
+# Subtest: email HTTP 408 settles unknown
+ok 53 - email HTTP 408 settles unknown
+  ---
+  duration_ms: 0.392
+  ...
+# Subtest: email HTTP 429 settles retry
+ok 54 - email HTTP 429 settles retry
+  ---
+  duration_ms: 0.106083
+  ...
+# Subtest: email HTTP 503 settles unknown
+ok 55 - email HTTP 503 settles unknown
+  ---
+  duration_ms: 0.084875
+  ...
+# Subtest: lost prepare lease never contacts the provider
+ok 56 - lost prepare lease never contacts the provider
+  ---
+  duration_ms: 0.133375
+  ...
+# Subtest: an APNs credential fault is tagged for the outbox refund and retried slowly
+ok 57 - an APNs credential fault is tagged for the outbox refund and retried slowly
+  ---
+  duration_ms: 0.132917
+  ...
+# Subtest: a fifth APNs credential fault reports the refunded retry rather than a terminal failure
+ok 58 - a fifth APNs credential fault reports the refunded retry rather than a terminal failure
+  ---
+  duration_ms: 0.153125
+  ...
+# Subtest: fifth definitive refusal reports the terminal state persisted by the outbox
+ok 59 - fifth definitive refusal reports the terminal state persisted by the outbox
+  ---
+  duration_ms: 0.099833
+  ...
+# Subtest: lost accepted receipt settlement leaves sending held and never resends
+ok 60 - lost accepted receipt settlement leaves sending held and never resends
+  ---
+  duration_ms: 0.147625
+  ...
+# Subtest: APNs ambiguity is held; invalid token revocation uses the sent owner-bound token
+ok 61 - APNs ambiguity is held; invalid token revocation uses the sent owner-bound token
+  ---
+  duration_ms: 0.253541
+  ...
+# Subtest: research email links to the neutral iPhone-first page, not web scanner results
+ok 62 - research email links to the neutral iPhone-first page, not web scanner results
+  ---
+  duration_ms: 3.442542
+  ...
+# Subtest: research link requires an opaque UUID and a trusted HTTPS origin
+ok 63 - research link requires an opaque UUID and a trusted HTTPS origin
+  ---
+  duration_ms: 1.460334
+  ...
+# Subtest: research email landing page opens both current pilot and public iPhone apps
+ok 64 - research email landing page opens both current pilot and public iPhone apps
+  ---
+  duration_ms: 5.494667
+  ...
+# Subtest: only the owning, marked mobile submission yields a freshly resolved assessment
+ok 65 - only the owning, marked mobile submission yields a freshly resolved assessment
+  ---
+  duration_ms: 0.615625
+  ...
+# Subtest: unowned, unmarked and unapproved submissions never resolve or leak a result
+ok 66 - unowned, unmarked and unapproved submissions never resolve or leak a result
+  ---
+  duration_ms: 0.201417
+  ...
+# Subtest: withdrawn, mismapped and profile-incomplete results remain ineligible
+ok 67 - withdrawn, mismapped and profile-incomplete results remain ineligible
+  ---
+  duration_ms: 0.21125
+  ...
+# Subtest: existing catalog coverage ledger closes the complete 259-product partition
+ok 68 - existing catalog coverage ledger closes the complete 259-product partition
+  ---
+  duration_ms: 11.779791
+  ...
+# Subtest: research lanes are complete, category-disjoint, and stable
+ok 69 - research lanes are complete, category-disjoint, and stable
+  ---
+  duration_ms: 8.365292
+  ...
+# Subtest: baseline is deterministic, supported-active-only, and reconciles barcode rows
+ok 70 - baseline is deterministic, supported-active-only, and reconciles barcode rows
+  ---
+  duration_ms: 8.989417
+  ...
+# Subtest: baseline sanitizes facts and open submissions without user data
+ok 71 - baseline sanitizes facts and open submissions without user data
+  ---
+  duration_ms: 0.236916
+  ...
+# Subtest: commercial evidence route preserves only the HTTPS origin and pathname
+ok 72 - commercial evidence route preserves only the HTTPS origin and pathname
+  ---
+  duration_ms: 0.0725
+  ...
+# Subtest: Phase 1A ledger selects the exact target coverage without static blockers
+ok 73 - Phase 1A ledger selects the exact target coverage without static blockers
+  ---
+  duration_ms: 12.996917
+  ...
+# Subtest: Phase 1A ledger retains every seed product and its 22 GTIN evidence packages
+ok 74 - Phase 1A ledger retains every seed product and its 22 GTIN evidence packages
+  ---
+  duration_ms: 4.322833
+  ...
+# Subtest: Phase 1A content fingerprint is stable across capture times
+ok 75 - Phase 1A content fingerprint is stable across capture times
+  ---
+  duration_ms: 5.65675
+  ...
+# Subtest: Phase 1B selects 54 confirmed-new candidates at exact target coverage
+ok 76 - Phase 1B selects 54 confirmed-new candidates at exact target coverage
+  ---
+  duration_ms: 12.825416
+  ...
+# Subtest: Phase 1B retains all five new pilot seeds and exact-PDP evidence only
+ok 77 - Phase 1B retains all five new pilot seeds and exact-PDP evidence only
+  ---
+  duration_ms: 2.625916
+  ...
+# Subtest: dry-shampoo corrections bind each evidence upgrade to its exact identity
+ok 78 - dry-shampoo corrections bind each evidence upgrade to its exact identity
+  ---
+  duration_ms: 2.034334
+  ...
+# Subtest: heat-protectant 005 emits its exact Rossmann PDP and excludes supplemental category evidence
+ok 79 - heat-protectant 005 emits its exact Rossmann PDP and excludes supplemental category evidence
+  ---
+  duration_ms: 2.604625
+  ...
+# Subtest: Phase 1B and the 25-product frozen pilot fingerprints are stable across capture times
+ok 80 - Phase 1B and the 25-product frozen pilot fingerprints are stable across capture times
+  ---
+  duration_ms: 4.463
+  ...
+# Subtest: scanner readiness derives shampoo roles from the applicable reviewed bucket
+ok 81 - scanner readiness derives shampoo roles from the applicable reviewed bucket
+  ---
+  duration_ms: 0.804875
+  ...
+# Subtest: scanner readiness discovers a dandruff-only product through its live authority load
+ok 82 - scanner readiness discovers a dandruff-only product through its live authority load
+  ---
+  duration_ms: 1.400125
+  ...
+# Subtest: readiness classification is deterministic and only admits complete non-unknown candidates
+ok 83 - readiness classification is deterministic and only admits complete non-unknown candidates
+  ---
+  duration_ms: 7.105125
+  ...
+# Subtest: a secondary applicable role with an unknown verdict blocks the product
+ok 84 - a secondary applicable role with an unknown verdict blocks the product
+  ---
+  duration_ms: 0.072708
+  ...
+# Subtest: linked products remain inside the strict full-catalog readiness audit
+ok 85 - linked products remain inside the strict full-catalog readiness audit
+  ---
+  duration_ms: 0.3285
+  ...
+# Subtest: fingerprint excludes export time and sorts object keys
+ok 86 - fingerprint excludes export time and sorts object keys
+  ---
+  duration_ms: 0.160417
+  ...
+# Subtest: Lane artifact validates exact assigned products and reconciliation schema
+ok 87 - Lane artifact validates exact assigned products and reconciliation schema
+  ---
+  duration_ms: 1.395792
+  ...
+# Subtest: Lane artifact fails closed on assignment, identity, checksum, and URL drift
+ok 88 - Lane artifact fails closed on assignment, identity, checksum, and URL drift
+  ---
+  duration_ms: 1.681208
+  ...
+# Subtest: real research batches reconcile all 150 products, split at 20, and fingerprint stably
+ok 89 - real research batches reconcile all 150 products, split at 20, and fingerprint stably
+  ---
+  duration_ms: 14.886167
+  ...
+# Subtest: research batches reject a cross-product GTIN ownership collision
+ok 90 - research batches reject a cross-product GTIN ownership collision
+  ---
+  duration_ms: 2.712917
+  ...
+# Subtest: research batches reject a GTIN claimed by an unresolved open submission
+ok 91 - research batches reject a GTIN claimed by an unresolved open submission
+  ---
+  duration_ms: 3.869792
+  ...
+# Subtest: remaining catalog research keeps exact product identities and valid distinct GTIN candidates
+ok 92 - remaining catalog research keeps exact product identities and valid distinct GTIN candidates
+  ---
+  duration_ms: 0.236125
+  ...
+# Subtest: parked Shampoo v1.4 package pins the reusable research method without activating production
+ok 93 - parked Shampoo v1.4 package pins the reusable research method without activating production
+  ---
+  duration_ms: 71.893334
+  ...
+# Subtest: parked package fails closed when a pinned artifact hash or activation boundary changes
+ok 94 - parked package fails closed when a pinned artifact hash or activation boundary changes
+  ---
+  duration_ms: 21.820708
+  ...
+1..94
+# tests 94
+# suites 0
+# pass 93
+# fail 0
+# cancelled 0
+# skipped 1
+# todo 0
+# duration_ms 3186.722958

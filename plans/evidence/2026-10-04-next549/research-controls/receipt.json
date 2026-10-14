@@ -1,0 +1,700 @@
+[
+  {
+    "id": "research32-C1-products",
+    "lane": "research",
+    "phase": "new",
+    "intended": "summary.products is exactly19",
+    "source": "src/lib/labs/leave-in-research-access.ts",
+    "selectedTest": {
+      "file": "tests/leave-in-research-api.test.ts",
+      "name": "Leave-In queue API returns the queue and the selected detail in development"
+    },
+    "originalHash": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-products-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-products-fault.tap"
+    },
+    "restoredHash": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-products-after.tap"
+    },
+    "keeperAssertionLines": [
+      65,
+      69,
+      70,
+      73,
+      74,
+      75,
+      77,
+      79,
+      80,
+      84,
+      85,
+      86,
+      90,
+      91,
+      92,
+      96,
+      100,
+      101,
+      103,
+      104,
+      105,
+      113,
+      114,
+      119
+    ],
+    "assertionStacks": [
+      69
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "research32-C1-excluded",
+    "lane": "research",
+    "phase": "new",
+    "intended": "summary.excluded is exactly4",
+    "source": "src/lib/labs/leave-in-research-access.ts",
+    "selectedTest": {
+      "file": "tests/leave-in-research-api.test.ts",
+      "name": "Leave-In queue API returns the queue and the selected detail in development"
+    },
+    "originalHash": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-excluded-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-excluded-fault.tap"
+    },
+    "restoredHash": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-excluded-after.tap"
+    },
+    "keeperAssertionLines": [
+      65,
+      69,
+      70,
+      73,
+      74,
+      75,
+      77,
+      79,
+      80,
+      84,
+      85,
+      86,
+      90,
+      91,
+      92,
+      96,
+      100,
+      101,
+      103,
+      104,
+      105,
+      113,
+      114,
+      119
+    ],
+    "assertionStacks": [
+      74
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "research32-C1-in-category",
+    "lane": "research",
+    "phase": "new",
+    "intended": "summary.inCategory is exactly15",
+    "source": "src/lib/labs/leave-in-research-access.ts",
+    "selectedTest": {
+      "file": "tests/leave-in-research-api.test.ts",
+      "name": "Leave-In queue API returns the queue and the selected detail in development"
+    },
+    "originalHash": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-in-category-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-in-category-fault.tap"
+    },
+    "restoredHash": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-in-category-after.tap"
+    },
+    "keeperAssertionLines": [
+      65,
+      69,
+      70,
+      73,
+      74,
+      75,
+      77,
+      79,
+      80,
+      84,
+      85,
+      86,
+      90,
+      91,
+      92,
+      96,
+      100,
+      101,
+      103,
+      104,
+      105,
+      113,
+      114,
+      119
+    ],
+    "assertionStacks": [
+      73
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "research32-C1-review-count",
+    "lane": "research",
+    "phase": "new",
+    "intended": "summary.reviewCounts.needsReview is exactly19",
+    "source": "src/lib/labs/leave-in-research-access.ts",
+    "selectedTest": {
+      "file": "tests/leave-in-research-api.test.ts",
+      "name": "Leave-In queue API returns the queue and the selected detail in development"
+    },
+    "originalHash": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-review-count-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-review-count-fault.tap"
+    },
+    "restoredHash": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-review-count-after.tap"
+    },
+    "keeperAssertionLines": [
+      65,
+      69,
+      70,
+      73,
+      74,
+      75,
+      77,
+      79,
+      80,
+      84,
+      85,
+      86,
+      90,
+      91,
+      92,
+      96,
+      100,
+      101,
+      103,
+      104,
+      105,
+      113,
+      114,
+      119
+    ],
+    "assertionStacks": [
+      75
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "research32-C1-effective-label",
+    "lane": "research",
+    "phase": "new",
+    "intended": "meta.effectiveStandard exact v1.1 label",
+    "source": "src/lib/labs/leave-in-research-access.ts",
+    "selectedTest": {
+      "file": "tests/leave-in-research-api.test.ts",
+      "name": "Leave-In queue API returns the queue and the selected detail in development"
+    },
+    "originalHash": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-effective-label-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-effective-label-fault.tap"
+    },
+    "restoredHash": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-effective-label-after.tap"
+    },
+    "keeperAssertionLines": [
+      65,
+      69,
+      70,
+      73,
+      74,
+      75,
+      77,
+      79,
+      80,
+      84,
+      85,
+      86,
+      90,
+      91,
+      92,
+      96,
+      100,
+      101,
+      103,
+      104,
+      105,
+      113,
+      114,
+      119
+    ],
+    "assertionStacks": [
+      79
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "research32-C1-overlay",
+    "lane": "research",
+    "phase": "new",
+    "intended": "meta.effectiveStandardOverlay exact v1.1 path",
+    "source": "src/lib/labs/leave-in-research-access.ts",
+    "selectedTest": {
+      "file": "tests/leave-in-research-api.test.ts",
+      "name": "Leave-In queue API returns the queue and the selected detail in development"
+    },
+    "originalHash": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-overlay-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-overlay-fault.tap"
+    },
+    "restoredHash": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-overlay-after.tap"
+    },
+    "keeperAssertionLines": [
+      65,
+      69,
+      70,
+      73,
+      74,
+      75,
+      77,
+      79,
+      80,
+      84,
+      85,
+      86,
+      90,
+      91,
+      92,
+      96,
+      100,
+      101,
+      103,
+      104,
+      105,
+      113,
+      114,
+      119
+    ],
+    "assertionStacks": [
+      80
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "research32-C1-order",
+    "lane": "research",
+    "phase": "new",
+    "intended": "goldSet.map(slot) exact1..13 sequence",
+    "source": "src/lib/labs/leave-in-research-access.ts",
+    "selectedTest": {
+      "file": "tests/leave-in-research-api.test.ts",
+      "name": "Leave-In queue API returns the queue and the selected detail in development"
+    },
+    "originalHash": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-order-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-order-fault.tap"
+    },
+    "restoredHash": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-order-after.tap"
+    },
+    "keeperAssertionLines": [
+      65,
+      69,
+      70,
+      73,
+      74,
+      75,
+      77,
+      79,
+      80,
+      84,
+      85,
+      86,
+      90,
+      91,
+      92,
+      96,
+      100,
+      101,
+      103,
+      104,
+      105,
+      113,
+      114,
+      119
+    ],
+    "assertionStacks": [
+      92
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "research32-C1-prefix",
+    "lane": "research",
+    "phase": "new",
+    "intended": "each unseen ID startsWith unseen-0 before subsequent detail GET",
+    "source": "src/lib/labs/leave-in-research-access.ts",
+    "selectedTest": {
+      "file": "tests/leave-in-research-api.test.ts",
+      "name": "Leave-In queue API returns the queue and the selected detail in development"
+    },
+    "originalHash": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-prefix-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-prefix-fault.tap"
+    },
+    "restoredHash": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C1-prefix-after.tap"
+    },
+    "keeperAssertionLines": [
+      65,
+      69,
+      70,
+      73,
+      74,
+      75,
+      77,
+      79,
+      80,
+      84,
+      85,
+      86,
+      90,
+      91,
+      92,
+      96,
+      100,
+      101,
+      103,
+      104,
+      105,
+      113,
+      114,
+      119
+    ],
+    "assertionStacks": [
+      103
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "research32-C2-registry",
+    "lane": "research",
+    "phase": "new",
+    "intended": "data.openAdjudications deepEqual []",
+    "source": "src/lib/labs/leave-in-research-access.ts",
+    "selectedTest": {
+      "file": "tests/leave-in-research-fixture.test.ts",
+      "name": "Leave-In fixture carries no unseen-test adjudication points any more (T18 retired)"
+    },
+    "originalHash": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C2-registry-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C2-registry-fault.tap"
+    },
+    "restoredHash": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C2-registry-after.tap"
+    },
+    "keeperAssertionLines": [
+      186,
+      189,
+      190,
+      192,
+      193,
+      197,
+      204,
+      205
+    ],
+    "assertionStacks": [
+      186
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "research32-C2-attached",
+    "lane": "research",
+    "phase": "new",
+    "intended": "all-product detail loop slot2 has zero adjudication properties; does not fail unseen14 prefix/values",
+    "source": "src/lib/labs/leave-in-research-access.ts",
+    "selectedTest": {
+      "file": "tests/leave-in-research-fixture.test.ts",
+      "name": "Leave-In fixture carries no unseen-test adjudication points any more (T18 retired)"
+    },
+    "originalHash": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C2-attached-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C2-attached-fault.tap"
+    },
+    "restoredHash": "6ba291baab220d1fd03ff84395d169a2d9cb5e6c81fce5f6f62f9026db3b1605",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next549-research-mutations-new/research32-C2-attached-after.tap"
+    },
+    "keeperAssertionLines": [
+      186,
+      189,
+      190,
+      192,
+      193,
+      197,
+      204,
+      205
+    ],
+    "assertionStacks": [
+      205
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  }
+]

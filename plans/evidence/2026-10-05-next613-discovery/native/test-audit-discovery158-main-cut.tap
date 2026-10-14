@@ -1,0 +1,839 @@
+TAP version 13
+# Subtest: the checklist category vocabulary is one set across engine, plan and migration
+ok 1 - the checklist category vocabulary is one set across engine, plan and migration
+  ---
+  duration_ms: 0.77325
+  ...
+# Subtest: the intake item source vocabulary is pinned
+ok 2 - the intake item source vocabulary is pinned
+  ---
+  duration_ms: 0.084083
+  ...
+# Subtest: the migration creates the four discovery tables with their shape constraints
+ok 3 - the migration creates the four discovery tables with their shape constraints
+  ---
+  duration_ms: 0.245625
+  ...
+# Subtest: all four discovery tables are service-only
+ok 4 - all four discovery tables are service-only
+  ---
+  duration_ms: 0.186167
+  ...
+# Subtest: the discovery migration applies clean and leaves every table service-only
+ok 5 - the discovery migration applies clean and leaves every table service-only
+  ---
+  duration_ms: 598.029625
+  ...
+# Subtest: an enrollment holds one live invitation per participant and per account
+ok 6 - an enrollment holds one live invitation per participant and per account
+  ---
+  duration_ms: 473.647709
+  ...
+# Subtest: an intake can only be finalized after submit, and never half-finalized
+ok 7 - an intake can only be finalized after submit, and never half-finalized
+  ---
+  duration_ms: 372.926416
+  ...
+# Subtest: items allow several products per category but exactly one explicit 'none'
+ok 8 - items allow several products per category but exactly one explicit 'none'
+  ---
+  duration_ms: 369.935375
+  ...
+# Subtest: a decision is one row per routine step and a swap always names a product
+ok 9 - a decision is one row per routine step and a swap always names a product
+  ---
+  duration_ms: 385.64525
+  ...
+# Subtest: booking-scheduled routes to every destination; the quiz snapshot stays PostHog-only
+ok 10 - booking-scheduled routes to every destination; the quiz snapshot stays PostHog-only
+  ---
+  duration_ms: 0.62
+  ...
+# Subtest: booking-scheduled fires the Meta Schedule standard event with its dedupe id
+ok 11 - booking-scheduled fires the Meta Schedule standard event with its dedupe id
+  ---
+  duration_ms: 0.354208
+  ...
+# Subtest: the Meta destination maps booking-scheduled through the funnel-package resolver
+ok 12 - the Meta destination maps booking-scheduled through the funnel-package resolver
+  ---
+  duration_ms: 0.288625
+  ...
+# Subtest: the Customer.io destination carries the booking's lead and funnel identity
+ok 13 - the Customer.io destination carries the booking's lead and funnel identity
+  ---
+  duration_ms: 0.284709
+  ...
+# Subtest: the quiz-entry snapshot emits for the discovery-call package under its own event name
+ok 14 - the quiz-entry snapshot emits for the discovery-call package under its own event name
+  ---
+  duration_ms: 0.232708
+  ...
+# Subtest: a package hand-off mid-bootstrap still emits the new package's snapshot
+ok 15 - a package hand-off mid-bootstrap still emits the new package's snapshot
+  ---
+  duration_ms: 1.13325
+  ...
+# Subtest: a scanner context resolving under a discovery mount never emits
+ok 16 - a scanner context resolving under a discovery mount never emits
+  ---
+  duration_ms: 0.084084
+  ...
+# Subtest: the checklist's display groups cover every category exactly once
+ok 17 - the checklist's display groups cover every category exactly once
+  ---
+  duration_ms: 0.738792
+  ...
+# Subtest: scalp care names its contents in the participant's row — the shared label stays bare
+ok 18 - scalp care names its contents in the participant's row — the shared label stays bare
+  ---
+  duration_ms: 0.104125
+  ...
+# Subtest: the shelves: conditioner is care, not washing
+ok 19 - the shelves: conditioner is care, not washing
+  ---
+  duration_ms: 0.132458
+  ...
+# Subtest: the fresh lead is projected in ordinary mode, with the enrollment's e-mail
+ok 20 - the fresh lead is projected in ordinary mode, with the enrollment's e-mail
+  ---
+  duration_ms: 0.782209
+  ...
+# Subtest: a silent linkQuizToProfile that achieved nothing is logged loudly
+ok 21 - a silent linkQuizToProfile that achieved nothing is logged loudly
+  ---
+  duration_ms: 1.216667
+  ...
+# Subtest: diagnostics without a bound lead is still incomplete
+ok 22 - diagnostics without a bound lead is still incomplete
+  ---
+  duration_ms: 0.13025
+  ...
+# Subtest: a throwing linkQuizToProfile does not take the page down, and is recorded
+ok 23 - a throwing linkQuizToProfile does not take the page down, and is recorded
+  ---
+  duration_ms: 0.114583
+  ...
+# Subtest: R28: the question sits at the top of Phase 3 with exactly two options, seeded from the call sheet
+ok 24 - R28: the question sits at the top of Phase 3 with exactly two options, seeded from the call sheet
+  ---
+  duration_ms: 110.436125
+  ...
+# Subtest: R28: a click saves {complexity} to the call sheet at once; a refusal rolls back with a line
+ok 25 - R28: a click saves {complexity} to the call sheet at once; a refusal rolls back with a line
+  ---
+  duration_ms: 66.896667
+  ...
+# Subtest: R28: an accepted save keeps the choice; a network failure rolls it back
+ok 26 - R28: an accepted save keeps the choice; a network failure rolls it back
+  ---
+  duration_ms: 53.056625
+  ...
+# Subtest: R28: an unreadable call sheet locks the choice instead of guessing
+ok 27 - R28: an unreadable call sheet locks the choice instead of guessing
+  ---
+  duration_ms: 16.115
+  ...
+# Subtest: R28: „Neu dazu“ steps say Essenziell / Optional with the step's benefit, pronoun-free
+ok 28 - R28: „Neu dazu“ steps say Essenziell / Optional with the step's benefit, pronoun-free
+  ---
+  duration_ms: 9.300084
+  ...
+# Subtest: F1: no rows, no table — nothing is invented
+ok 29 - F1: no rows, no table — nothing is invented
+  ---
+  duration_ms: 4.371
+  ...
+# Subtest: Iteration 3: „Super essenziell“ klappt optionale Neu-Schritte ein, „Normal“ zeigt alles
+ok 30 - Iteration 3: „Super essenziell“ klappt optionale Neu-Schritte ein, „Normal“ zeigt alles
+  ---
+  duration_ms: 15.991833
+  ...
+# Subtest: Iteration 3: a step without her product shows no „Bisheriges Produkt“-panel, but keeps the unanswered honesty line
+ok 31 - Iteration 3: a step without her product shows no „Bisheriges Produkt“-panel, but keeps the unanswered honesty line
+  ---
+  duration_ms: 5.912792
+  ...
+# Subtest: F2: a refresh during a pending write wins over the write's failure rollback
+ok 32 - F2: a refresh during a pending write wins over the write's failure rollback
+  ---
+  duration_ms: 43.457542
+  ...
+# Subtest: T4: an option with a packshot shows the thumbnail; without one there is no placeholder
+ok 33 - T4: an option with a packshot shows the thumbnail; without one there is no placeholder
+  ---
+  duration_ms: 7.162625
+  ...
+# Subtest: each ideal step carries why, product type, criteria, fit and timing from the pure helpers
+ok 34 - each ideal step carries why, product type, criteria, fit and timing from the pure helpers
+  ---
+  duration_ms: 11.022584
+  ...
+# Subtest: a malformed decision target degrades the depth to nothing instead of failing the call
+ok 35 - a malformed decision target degrades the depth to nothing instead of failing the call
+  ---
+  duration_ms: 0.536333
+  ...
+# Subtest: the step depth never enters the finalised fingerprint
+ok 36 - the step depth never enters the finalised fingerprint
+  ---
+  duration_ms: 1.470958
+  ...
+# Subtest: mobile rows keep label, product value and target value apart (iOS comparison table)
+ok 37 - mobile rows keep label, product value and target value apart (iOS comparison table)
+  ---
+  duration_ms: 0.440875
+  ...
+# Subtest: the verdict loader carries property rows for her product and every displayed alternative
+ok 38 - the verdict loader carries property rows for her product and every displayed alternative
+  ---
+  duration_ms: 0.940917
+  ...
+# Subtest: the optional-email migration has a unique version after the toolkit migration
+ok 39 - the optional-email migration has a unique version after the toolkit migration
+  ---
+  duration_ms: 0.889167
+  ...
+# Subtest: a name-only invite is allowed, and several can coexist
+ok 40 - a name-only invite is allowed, and several can coexist
+  ---
+  duration_ms: 528.575291
+  ...
+# Subtest: a non-null address is still normalised and unique among current invites
+ok 41 - a non-null address is still normalised and unique among current invites
+  ---
+  duration_ms: 420.084208
+  ...
+# Subtest: a claimed invite must carry its address
+ok 42 - a claimed invite must carry its address
+  ---
+  duration_ms: 356.521417
+  ...
+# Subtest: the product step lists every frequency, most frequent first, „Weiß ich nicht“ last
+ok 43 - the product step lists every frequency, most frequent first, „Weiß ich nicht“ last
+  ---
+  duration_ms: 0.63125
+  ...
+# Subtest: most frequent known frequency; unknown and unasked never count
+ok 44 - most frequent known frequency; unknown and unasked never count
+  ---
+  duration_ms: 0.094
+  ...
+# Subtest: conditioner and leave-in suggest the most recently saved shampoo's frequency
+ok 45 - conditioner and leave-in suggest the most recently saved shampoo's frequency
+  ---
+  duration_ms: 0.109917
+  ...
+# Subtest: no suggestion: other categories, no shampoo, or her last shampoo's frequency is unknown
+ok 46 - no suggestion: other categories, no shampoo, or her last shampoo's frequency is unknown
+  ---
+  duration_ms: 0.063666
+  ...
+# Subtest: steps: drying, tools, then per heat source its frequency — protection only where production asks
+ok 47 - steps: drying, tools, then per heat source its frequency — protection only where production asks
+  ---
+  duration_ms: 0.699
+  ...
+# Subtest: unanswered is not „none“: the multi-selects wait for an answer, [] answers them
+ok 48 - unanswered is not „none“: the multi-selects wait for an answer, [] answers them
+  ---
+  duration_ms: 0.088791
+  ...
+# Subtest: the PUT body carries only the CURRENT sources' answers and validates like the route
+ok 49 - the PUT body carries only the CURRENT sources' answers and validates like the route
+  ---
+  duration_ms: 1.272792
+  ...
+# Subtest: „Keiner dieser Wege“ + „Keine weiteren Tools“ is a complete, valid answer
+ok 50 - „Keiner dieser Wege“ + „Keine weiteren Tools“ is a complete, valid answer
+  ---
+  duration_ms: 0.180667
+  ...
+# Subtest: a complete answer parses to itself
+ok 51 - a complete answer parses to itself
+  ---
+  duration_ms: 1.889167
+  ...
+# Subtest: „Keiner dieser Wege“ + „Keine weiteren Tools“ is the empty answer with no events
+ok 52 - „Keiner dieser Wege“ + „Keine weiteren Tools“ is the empty answer with no events
+  ---
+  duration_ms: 0.204584
+  ...
+# Subtest: air drying implies no heat event
+ok 53 - air drying implies no heat event
+  ---
+  duration_ms: 0.1935
+  ...
+# Subtest: plain föhnen needs a frequency but no protection answer; diffuser and tools need both
+ok 54 - plain föhnen needs a frequency but no protection answer; diffuser and tools need both
+  ---
+  duration_ms: 0.400042
+  ...
+# Subtest: cross-field rejects: a missing event, an extra event, a duplicate answer
+ok 55 - cross-field rejects: a missing event, an extra event, a duplicate answer
+  ---
+  duration_ms: 0.476833
+  ...
+# Subtest: shape rejects: unknown keys, unknown values, „Weiß ich nicht“ as a heat frequency
+ok 56 - shape rejects: unknown keys, unknown values, „Weiß ich nicht“ as a heat frequency
+  ---
+  duration_ms: 0.474916
+  ...
+# Subtest: the cockpit block names drying, tools with frequency and protection
+ok 57 - the cockpit block names drying, tools with frequency and protection
+  ---
+  duration_ms: 0.230833
+  ...
+# Subtest: the joined catalog image reaches the browser view — object or array relation
+ok 58 - the joined catalog image reaches the browser view — object or array relation
+  ---
+  duration_ms: 0.457542
+  ...
+# Subtest: rows without a catalog product (or without a catalog image) degrade to no image
+ok 59 - rows without a catalog product (or without a catalog image) degrade to no image
+  ---
+  duration_ms: 0.087959
+  ...
+# Subtest: the product card shows its packshot
+ok 60 - the product card shows its packshot
+  ---
+  duration_ms: 8.325209
+  ...
+# Subtest: a selected product without an image shows its category icon instead
+ok 61 - a selected product without an image shows its category icon instead
+  ---
+  duration_ms: 1.393666
+  ...
+# Subtest: only a fully stamped account is a participant
+ok 62 - only a fully stamped account is a participant
+  ---
+  duration_ms: 0.466417
+  ...
+# Subtest: the allow-list is exactly invite, intake, quiz and scan
+ok 63 - the allow-list is exactly invite, intake, quiz and scan
+  ---
+  duration_ms: 0.099458
+  ...
+# Subtest: a participant reaches every checklist-called path with no subscription and freemium off
+ok 64 - a participant reaches every checklist-called path with no subscription and freemium off
+  ---
+  duration_ms: 2.9175
+  ...
+# Subtest: a participant on a member route lands on the checklist, and the checklist is terminal
+ok 65 - a participant on a member route lands on the checklist, and the checklist is terminal
+  ---
+  duration_ms: 2.703375
+  ...
+# Subtest: /reactivate cannot loop with the flag on: it bounces once to the terminal checklist
+ok 66 - /reactivate cannot loop with the flag on: it bounces once to the terminal checklist
+  ---
+  duration_ms: 0.223041
+  ...
+# Subtest: /reactivate cannot loop with the flag off either: the gate is inert
+ok 67 - /reactivate cannot loop with the flag off either: the gate is inert
+  ---
+  duration_ms: 1.204417
+  ...
+# Subtest: with the flag off a participant follows the ordinary paywall
+ok 68 - with the flag off a participant follows the ordinary paywall
+  ---
+  duration_ms: 1.510667
+  ...
+# Subtest: with the flag on an unstamped user is untouched by the gate
+ok 69 - with the flag on an unstamped user is untouched by the gate
+  ---
+  duration_ms: 0.599334
+  ...
+# Subtest: the two invite surfaces are public, exactly and only them
+ok 70 - the two invite surfaces are public, exactly and only them
+  ---
+  duration_ms: 0.510625
+  ...
+# Subtest: the rest of the discovery journey requires a session
+ok 71 - the rest of the discovery journey requires a session
+  ---
+  duration_ms: 0.132833
+  ...
+# Subtest: the two claim-time APIs are public because no session exists yet
+ok 72 - the two claim-time APIs are public because no session exists yet
+  ---
+  duration_ms: 0.04425
+  ...
+# Subtest: an unauthenticated checklist request goes to sign-in, not into the quiz
+ok 73 - an unauthenticated checklist request goes to sign-in, not into the quiz
+  ---
+  duration_ms: 0.129209
+  ...
+# Subtest: an expired-session intake XHR is redirected to /auth, never to the /quiz page
+ok 74 - an expired-session intake XHR is redirected to /auth, never to the /quiz page
+  ---
+  duration_ms: 0.060834
+  ...
+# Subtest: the discovery continuation is recognised only in its exact, handoff-only shape
+ok 75 - the discovery continuation is recognised only in its exact, handoff-only shape
+  ---
+  duration_ms: 0.253541
+  ...
+# Subtest: the discovery continuation never projects a stale legacy lead into the profile
+ok 76 - the discovery continuation never projects a stale legacy lead into the profile
+  ---
+  duration_ms: 1.338292
+  ...
+# Subtest: a credential that happens to contain code/token/error keeps its fragment
+ok 77 - a credential that happens to contain code/token/error keeps its fragment
+  ---
+  duration_ms: 0.22775
+  ...
+# Subtest: the stamp is only read when it is a real enrollment id
+ok 78 - the stamp is only read when it is a real enrollment id
+  ---
+  duration_ms: 0.303916
+  ...
+# Subtest: discovery:false keeps quiz navigation byte-identical
+ok 79 - discovery:false keeps quiz navigation byte-identical
+  ---
+  duration_ms: 0.40575
+  ...
+# Subtest: a discovery participant's quiz ends on their checklist, never on the paid result
+ok 80 - a discovery participant's quiz ends on their checklist, never on the paid result
+  ---
+  duration_ms: 0.065875
+  ...
+# Subtest: discovery is a locked identity and runs the same screens as partner
+ok 81 - discovery is a locked identity and runs the same screens as partner
+  ---
+  duration_ms: 0.249541
+  ...
+# Subtest: the quiz-context payload only accepts a complete participant identity
+ok 82 - the quiz-context payload only accepts a complete participant identity
+  ---
+  duration_ms: 0.197333
+  ...
+# Subtest: a name without the brand gets the brand in front
+ok 83 - a name without the brand gets the brand in front
+  ---
+  duration_ms: 0.605625
+  ...
+# Subtest: a name that already starts with the brand is not prefixed twice
+ok 84 - a name that already starts with the brand is not prefixed twice
+  ---
+  duration_ms: 0.3365
+  ...
+# Subtest: the brand match ignores case, outer whitespace and inner whitespace runs
+ok 85 - the brand match ignores case, outer whitespace and inner whitespace runs
+  ---
+  duration_ms: 0.057791
+  ...
+# Subtest: a name equal to the brand is just the name
+ok 86 - a name equal to the brand is just the name
+  ---
+  duration_ms: 0.036208
+  ...
+# Subtest: the brand only counts as a prefix at a word boundary
+ok 87 - the brand only counts as a prefix at a word boundary
+  ---
+  duration_ms: 0.082708
+  ...
+# Subtest: an empty or missing brand leaves the name alone, and vice versa
+ok 88 - an empty or missing brand leaves the name alone, and vice versa
+  ---
+  duration_ms: 0.038708
+  ...
+# Subtest: apostrophe variants count as the same brand, and the name keeps its own
+ok 89 - apostrophe variants count as the same brand, and the name keeps its own
+  ---
+  duration_ms: 0.144042
+  ...
+# Subtest: with a product line the title reads brand + line + name, de-duplicated
+ok 90 - with a product line the title reads brand + line + name, de-duplicated
+  ---
+  duration_ms: 4.015084
+  ...
+# Subtest: without a line the title is exactly the brand + name label
+ok 91 - without a line the title is exactly the brand + name label
+  ---
+  duration_ms: 0.681666
+  ...
+# Subtest: the loading screen reuses the real screen's layout classes and has no controls
+ok 92 - the loading screen reuses the real screen's layout classes and has no controls
+  ---
+  duration_ms: 13.636542
+  ...
+# Subtest: main problem: stated wins, a single concern is the main one, otherwise none
+ok 93 - main problem: stated wins, a single concern is the main one, otherwise none
+  ---
+  duration_ms: 0.482417
+  ...
+# Subtest: main problem: an invalid or no-longer-selected stated value is ignored
+ok 94 - main problem: an invalid or no-longer-selected stated value is ignored
+  ---
+  duration_ms: 0.126417
+  ...
+# Subtest: a legacy lead without primary_concern: German labels, grouped, no highlight
+ok 95 - a legacy lead without primary_concern: German labels, grouped, no highlight
+  ---
+  duration_ms: 0.900708
+  ...
+# Subtest: a legacy lead with a stated primary_concern highlights it
+ok 96 - a legacy lead with a stated primary_concern highlights it
+  ---
+  duration_ms: 0.171958
+  ...
+# Subtest: legacy: no scalp complaint reads „Nein“
+ok 97 - legacy: no scalp complaint reads „Nein“
+  ---
+  duration_ms: 0.097666
+  ...
+# Subtest: the legacy scalp labels mirror the scalp step's own cards
+ok 98 - the legacy scalp labels mirror the scalp step's own cards
+  ---
+  duration_ms: 0.072041
+  ...
+# Subtest: a personal-plan lead: its own question copy, texture-aware labels
+ok 99 - a personal-plan lead: its own question copy, texture-aware labels
+  ---
+  duration_ms: 0.2695
+  ...
+# Subtest: a personal-plan lead with a stated main problem highlights it
+ok 100 - a personal-plan lead with a stated main problem highlights it
+  ---
+  duration_ms: 0.085
+  ...
+# Subtest: a free-text concern is her answer, never „Nichts davon“ (both quiz kinds)
+ok 101 - a free-text concern is her answer, never „Nichts davon“ (both quiz kinds)
+  ---
+  duration_ms: 0.268083
+  ...
+# Subtest: no lead, an unknown quiz kind or unreadable answers say so instead of guessing
+ok 102 - no lead, an unknown quiz kind or unreadable answers say so instead of guessing
+  ---
+  duration_ms: 0.364625
+  ...
+# Discovery journey lookup failed: Error: table unavailable
+#     at loadEnrollment (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/discovery-quiz-identity.test.ts:81:13)
+#     at resolveDiscoveryJourney (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/discovery/journey.ts:45:30)
+#     at async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/discovery-quiz-identity.test.ts:78:22)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# Discovery quiz context lookup failed: Error: boom
+#     at Object.resolveDiscoveryJourney (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/discovery-quiz-identity.test.ts:126:13)
+#     at GET (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/api/beratung/quiz-context/route.ts:35:44)
+#     at TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/discovery-quiz-identity.test.ts:128:4)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# Lead API error: Error: ORDINARY_PATH_REACHED
+#     at Object.checkEmailDeliverability (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/discovery-quiz-identity.test.ts:319:13)
+#     at POST (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/api/quiz/lead/route.ts:314:49)
+#     at async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/discovery-quiz-identity.test.ts:325:20)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# Subtest: an unstamped or signed-out visitor resolves none without reading the table
+ok 103 - an unstamped or signed-out visitor resolves none without reading the table
+  ---
+  duration_ms: 0.787625
+  ...
+# Subtest: a revoked participant resolves none even while their JWT still carries the stamp
+ok 104 - a revoked participant resolves none even while their JWT still carries the stamp
+  ---
+  duration_ms: 0.117834
+  ...
+# Subtest: a read failure fails closed, and only for a stamped account
+ok 105 - a read failure fails closed, and only for a stamped account
+  ---
+  duration_ms: 1.535167
+  ...
+# Subtest: quiz-context hands the quiz the enrollment's identity
+ok 106 - quiz-context hands the quiz the enrollment's identity
+  ---
+  duration_ms: 1.71775
+  ...
+# Subtest: quiz-context is regular with the flag off and never resolves anything
+ok 107 - quiz-context is regular with the flag off and never resolves anything
+  ---
+  duration_ms: 0.243417
+  ...
+# Subtest: quiz-context refuses a revoked participant and a broken lookup
+ok 108 - quiz-context refuses a revoked participant and a broken lookup
+  ---
+  duration_ms: 0.614875
+  ...
+# Subtest: a participant's lead is saved under the enrollment identity, not the submitted one
+ok 109 - a participant's lead is saved under the enrollment identity, not the submitted one
+  ---
+  duration_ms: 3.041416
+  ...
+# Subtest: a recent regular lead with the same e-mail and answers is never returned for a discovery save
+ok 110 - a recent regular lead with the same e-mail and answers is never returned for a discovery save
+  ---
+  duration_ms: 0.616458
+  ...
+# Subtest: an identity mismatch fails closed, exactly like the partner analogue
+ok 111 - an identity mismatch fails closed, exactly like the partner analogue
+  ---
+  duration_ms: 0.810917
+  ...
+# Subtest: a cross-origin participant submission is refused before persistence
+ok 112 - a cross-origin participant submission is refused before persistence
+  ---
+  duration_ms: 0.501542
+  ...
+# Subtest: an unreadable enrollment fails closed rather than falling into the paid funnel
+ok 113 - an unreadable enrollment fails closed rather than falling into the paid funnel
+  ---
+  duration_ms: 0.473708
+  ...
+# Subtest: with the flag off the resolver is never called, so an ordinary lead is untouched
+ok 114 - with the flag off the resolver is never called, so an ordinary lead is untouched
+  ---
+  duration_ms: 1.240833
+  ...
+# Subtest: reconcile takes exactly one scope and normalizes the email
+ok 115 - reconcile takes exactly one scope and normalizes the email
+  ---
+  duration_ms: 0.992375
+  ...
+# Subtest: a half-gated reconcile reaches no database call at all
+ok 116 - a half-gated reconcile reaches no database call at all
+  ---
+  duration_ms: 0.946541
+  ...
+# Subtest: without --apply reconcile reports the plan and writes nothing
+ok 117 - without --apply reconcile reports the plan and writes nothing
+  ---
+  duration_ms: 0.588625
+  ...
+# Subtest: a gated reconcile writes only the approved, eligible product
+ok 118 - a gated reconcile writes only the approved, eligible product
+  ---
+  duration_ms: 0.2855
+  ...
+# Subtest: a submission with no row of its own reads as research-pending, not as approved
+ok 119 - a submission with no row of its own reads as research-pending, not as approved
+  ---
+  duration_ms: 0.127667
+  ...
+# Subtest: a row claimed between plan and write is reported, never counted as reconciled
+ok 120 - a row claimed between plan and write is reported, never counted as reconciled
+  ---
+  duration_ms: 0.124209
+  ...
+# Subtest: a product id under an unresolved status is reported, never written
+ok 121 - a product id under an unresolved status is reported, never written
+  ---
+  duration_ms: 0.654041
+  ...
+# Subtest: both resolved statuses reconcile — `matched_existing` as much as `approved`
+ok 122 - both resolved statuses reconcile — `matched_existing` as much as `approved`
+  ---
+  duration_ms: 0.1415
+  ...
+# Subtest: an unresolved submission's product id is never even asked about
+ok 123 - an unresolved submission's product id is never even asked about
+  ---
+  duration_ms: 0.243833
+  ...
+# Subtest: a product that loses eligibility between plan and write is not written
+ok 124 - a product that loses eligibility between plan and write is not written
+  ---
+  duration_ms: 0.373833
+  ...
+# Subtest: a dry run re-verifies nothing, because it writes nothing
+ok 125 - a dry run re-verifies nothing, because it writes nothing
+  ---
+  duration_ms: 0.091916
+  ...
+# Subtest: the pending-item read only ever asks for rows without a product id
+ok 126 - the pending-item read only ever asks for rows without a product id
+  ---
+  duration_ms: 0.299834
+  ...
+# Subtest: a named enrollment is reported even with nothing pending; a sweep stays quiet
+ok 127 - a named enrollment is reported even with nothing pending; a sweep stays quiet
+  ---
+  duration_ms: 0.169708
+  ...
+# Subtest: the write is itself guarded on product_id IS NULL
+ok 128 - the write is itself guarded on product_id IS NULL
+  ---
+  duration_ms: 0.112667
+  ...
+# Subtest: F4 golden: a legacy (tile-model) finalized routine keeps its exact sourceHash
+ok 129 - F4 golden: a legacy (tile-model) finalized routine keeps its exact sourceHash
+  ---
+  duration_ms: 8.169875
+  ...
+# Subtest: batch 9: the legacy fixture's third oil joins the first oil step — its hash moves on purpose
+ok 130 - batch 9: the legacy fixture's third oil joins the first oil step — its hash moves on purpose
+  ---
+  duration_ms: 0.465791
+  ...
+# Subtest: F4: a non-null usage role moves the fingerprint (and the binding)
+ok 131 - F4: a non-null usage role moves the fingerprint (and the binding)
+  ---
+  duration_ms: 0.581625
+  ...
+# Subtest: an item with a usage role binds to exactly that (category, role) step, even if it ranks later
+ok 132 - an item with a usage role binds to exactly that (category, role) step, even if it ranks later
+  ---
+  duration_ms: 0.3965
+  ...
+# Subtest: a role item never falls back to another role's step; role-less items fill what is left
+ok 133 - a role item never falls back to another role's step; role-less items fill what is left
+  ---
+  duration_ms: 0.15625
+  ...
+# Subtest: an unknown usage binds nowhere: `category_unknown`, even with a catalog product
+ok 134 - an unknown usage binds nowhere: `category_unknown`, even with a catalog product
+  ---
+  duration_ms: 0.073667
+  ...
+# Subtest: F6: her product used as something else carries „als … benutzt“ — and it is fingerprinted
+ok 135 - F6: her product used as something else carries „als … benutzt“ — and it is fingerprinted
+  ---
+  duration_ms: 0.480833
+  ...
+# Subtest: F6: the usage note needs both a usage and a product type, and never names a „none“ row
+ok 136 - F6: the usage note needs both a usage and a product type, and never names a „none“ row
+  ---
+  duration_ms: 0.099459
+  ...
+# Subtest: R29: the section offers no „Liste kopieren“ — the list flows into Phase 4 and the PDF
+ok 137 - R29: the section offers no „Liste kopieren“ — the list flows into Phase 4 and the PDF
+  ---
+  duration_ms: 17.0905
+  ...
+# Subtest: re-render with changed decisions: rows move between groups and the sum follows
+ok 138 - re-render with changed decisions: rows move between groups and the sum follows
+  ---
+  duration_ms: 10.626792
+  ...
+# Subtest: cockpit: an Entscheidung click updates the section at once, a refused write rolls it back
+ok 139 - cockpit: an Entscheidung click updates the section at once, a refused write rolls it back
+  ---
+  duration_ms: 134.233625
+  ...
+# Subtest: cockpit: a network failure rolls the optimistic row back too
+ok 140 - cockpit: a network failure rolls the optimistic row back too
+  ---
+  duration_ms: 50.108708
+  ...
+# Subtest: cockpit: an accepted write keeps the row and refreshes from the server
+ok 141 - cockpit: an accepted write keeps the row and refreshes from the server
+  ---
+  duration_ms: 47.473958
+  ...
+# Subtest: a catalog row tap reports BOTH the id and the whole result
+ok 142 - a catalog row tap reports BOTH the id and the whole result
+  ---
+  duration_ms: 10.820542
+  ...
+# Subtest: a dm row tap reports BOTH the gtin and the whole row
+ok 143 - a dm row tap reports BOTH the gtin and the whole row
+  ---
+  duration_ms: 9.136291
+  ...
+# Subtest: without the new props the sheet behaves exactly as before
+ok 144 - without the new props the sheet behaves exactly as before
+  ---
+  duration_ms: 7.401
+  ...
+# Subtest: batch 7: `stepContent` replaces header and search in the open sheet; the query survives
+ok 145 - batch 7: `stepContent` replaces header and search in the open sheet; the query survives
+  ---
+  duration_ms: 5.814084
+  ...
+# Subtest: batch 7: `resultsFooter` shows once the catalog lane answered, never before
+ok 146 - batch 7: `resultsFooter` shows once the catalog lane answered, never before
+  ---
+  duration_ms: 4.88625
+  ...
+# Subtest: batch 7: with the dm lane on, the footer sits BELOW the dm section and never hides it
+ok 147 - batch 7: with the dm lane on, the footer sits BELOW the dm section and never hides it
+  ---
+  duration_ms: 6.425334
+  ...
+# Subtest: price parser: the catalog's own de-DE labels, with or without a no-break space
+ok 148 - price parser: the catalog's own de-DE labels, with or without a no-break space
+  ---
+  duration_ms: 10.927166
+  ...
+# Subtest: price parser: garbage and ambiguity read as no price, never a guess
+ok 149 - price parser: garbage and ambiguity read as no price, never a guess
+  ---
+  duration_ms: 0.154334
+  ...
+# Subtest: sort: „Fit“ is the engine's order, unchanged (and a copy, never the same array)
+ok 150 - sort: „Fit“ is the engine's order, unchanged (and a copy, never the same array)
+  ---
+  duration_ms: 0.335875
+  ...
+# Subtest: sort: „Preis“ ascending, ties and priceless options keep the engine's order, at the end
+ok 151 - sort: „Preis“ ascending, ties and priceless options keep the engine's order, at the end
+  ---
+  duration_ms: 0.15275
+  ...
+# Subtest: sort: nothing priced — „Preis“ changes nothing
+ok 152 - sort: nothing priced — „Preis“ changes nothing
+  ---
+  duration_ms: 0.09125
+  ...
+# [discovery] call sheet lookup failed: TypeError: client.from is not a function
+#     at Object.loadDiscoveryCallSheet (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/discovery/call-sheet.ts:113:6)
+#     at DiscoveryCockpitPage (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/admin/beratung/[enrollmentId]/page.tsx:215:30)
+#     at async renderCockpit (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/discovery-unanswered-categories.test.tsx:247:19)
+#     at async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/discovery-unanswered-categories.test.tsx:270:18)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# [discovery] call sheet lookup failed: TypeError: client.from is not a function
+#     at Object.loadDiscoveryCallSheet (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/discovery/call-sheet.ts:113:6)
+#     at DiscoveryCockpitPage (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/admin/beratung/[enrollmentId]/page.tsx:215:30)
+#     at async renderCockpit (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/discovery-unanswered-categories.test.tsx:247:19)
+#     at async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/discovery-unanswered-categories.test.tsx:297:18)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# [discovery] call sheet lookup failed: TypeError: client.from is not a function
+#     at Object.loadDiscoveryCallSheet (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/lib/discovery/call-sheet.ts:113:6)
+#     at DiscoveryCockpitPage (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/admin/beratung/[enrollmentId]/page.tsx:215:30)
+#     at async renderCockpit (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/discovery-unanswered-categories.test.tsx:247:19)
+#     at async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/discovery-unanswered-categories.test.tsx:310:18)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# Subtest: the reduction keeps unanswered apart from „benutze ich nicht“ — and binds nothing to it
+ok 153 - the reduction keeps unanswered apart from „benutze ich nicht“ — and binds nothing to it
+  ---
+  duration_ms: 2.062541
+  ...
+# Subtest: the finalize fingerprint is stable, and still moves when a gap gets an answer
+ok 154 - the finalize fingerprint is stable, and still moves when a gap gets an answer
+  ---
+  duration_ms: 0.647125
+  ...
+# Subtest: a submitted intake's untouched step says so at the step — never „benutzt nichts“
+ok 155 - a submitted intake's untouched step says so at the step — never „benutzt nichts“
+  ---
+  duration_ms: 16.479625
+  ...
+# Subtest: with every unanswered category on a step, the summary line disappears
+ok 156 - with every unanswered category on a step, the summary line disappears
+  ---
+  duration_ms: 6.176709
+  ...
+# Subtest: before submission an open category is just not done yet — never „benutzt nichts“, no line
+ok 157 - before submission an open category is just not done yet — never „benutzt nichts“, no line
+  ---
+  duration_ms: 6.218
+  ...
+# Subtest: the participant's document reads like any other: gaps get the Idealplan's pick, nothing is dropped
+ok 158 - the participant's document reads like any other: gaps get the Idealplan's pick, nothing is dropped
+  ---
+  duration_ms: 1.356708
+  ...
+1..158
+# tests 158
+# suites 0
+# pass 158
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 15471.545208

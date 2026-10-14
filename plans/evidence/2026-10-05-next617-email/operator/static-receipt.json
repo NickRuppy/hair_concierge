@@ -1,0 +1,37 @@
+{
+  "status": "PASS_STATIC_ONLY",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "node": "v22.12.0",
+  "pinsSHA256": "d78a79b4a1411f0b004711bf14e2a7793a190b85221467d1489bf36ad1f41e90",
+  "ownedCounts": [
+    94,
+    94,
+    90
+  ],
+  "includingSupportCounts": [
+    105,
+    105,
+    101
+  ],
+  "originalGuardsPreserved": 76,
+  "nonphaseSourceSupportGuards": 70,
+  "runtimeDependencyPins": 81,
+  "selectedLocalImportClosure": 31,
+  "phaseFilesParsed": 54,
+  "fullUnchangedCallbacks": 100,
+  "ownedUnchangedCallbacks": 89,
+  "heldF": 8,
+  "sourceOwners": 3,
+  "sourceControls": 20,
+  "messageOraclesEqualIndependentReview": true,
+  "controlsRun": 0,
+  "children": 0,
+  "repositoryWrites": 0,
+  "ownerImports": 0,
+  "logs": {
+    "editor-check.log": "05e7a7a50b84e54cfc0fbacc212e2c0c1b4437de2af86433ff5324bc3ba336cb",
+    "controls-check.log": "2f083faff8ec39b58dbce2379581246b3175c46e30729f25b181c0e235a46f83"
+  },
+  "proposalManifestSHA256": "682498b63ba6b141d5a88ce476fa824e0a2e623156d8d1cefb94f24459b627ea",
+  "limits": "No native, compiler/typecheck, runtime message-parser test, deliberate fault, provider or DB run. Current source/hashes and all prospective mutant syntax verified only."
+}

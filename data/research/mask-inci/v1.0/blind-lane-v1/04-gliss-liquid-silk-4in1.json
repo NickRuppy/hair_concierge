@@ -1,0 +1,151 @@
+{
+  "productId": "04-gliss-liquid-silk-4in1",
+  "lane": "blind-v1",
+  "standardVersion": "mask-inci-v0.5",
+  "classifiedAt": "2026-10-06",
+  "attestation": {
+    "prohibitedFilesAccessed": false,
+    "inputsRead": [
+      "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1.md",
+      "docs/research/mask-inci/v1.0/02_evidence_lexicon.v0.1.md",
+      "docs/research/mask-inci/v1.0/00_category_charter.md",
+      "docs/research/mask-inci/v1.0/01_property-set-v0.md",
+      "data/research/mask-inci/v1.0/blind-packets/01-hask-argan-oil-sachet.json",
+      "data/research/mask-inci/v1.0/blind-packets/02-gliss-7sekunden-express-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets/03-bali-curls-sos-protein-treatment.json",
+      "data/research/mask-inci/v1.0/blind-packets/04-gliss-liquid-silk-4in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/05-isana-mandelmilch-3in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/06-monday-smooth-anti-frizz.json",
+      "data/research/mask-inci/v1.0/blind-packets/07-pantene-molecular-bond-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets/08-sante-intense-hydration.json",
+      "data/research/mask-inci/v1.0/blind-packets/09-balea-professional-aqua-hyaluron.json",
+      "data/research/mask-inci/v1.0/blind-packets/10-bali-curls-deep-repair-mask.json",
+      "data/research/mask-inci/v1.0/blind-packets/11-elvital-glycolic-gloss.json",
+      "data/research/mask-inci/v1.0/blind-packets/12-guhl-panthenol-reparatur-2in1.json",
+      "data/research/mask-inci/v1.0/blind-packets/13-olaplex-no3-hair-perfector.json"
+    ]
+  },
+  "g0": {
+    "value": "in_category",
+    "modeScoped": true,
+    "coveredMode": "post_shampoo_rinse_out_mask",
+    "rationale": "4-in-1 multi-use. Mask mode: after washing, 2–3 min, rinse → qualifies. Pre-shampoo mode (not after cleansing), Spülung mode (no stated contact time) and leave-in mode (not rinsed) do not. Exactly one qualifying mode → classified mode-scoped (§2.2 step 3).",
+    "evidenceSignals": [
+      "mask mode: 'Nach dem Waschen … 2 bis 3 Minuten einwirken lassen, gründlich ausspülen'",
+      "uncovered: pre-shampoo, Spülung, leave-in"
+    ]
+  },
+  "tailMarker": {
+    "ingredient": "PARFUM",
+    "index": 13,
+    "status": "plausible",
+    "note": "Earliest tail-class species PARFUM @13. Architecture species (Cetearyl Alcohol @2, cationics @4/@5/@7, Isopropyl Myristate @6) all outrank it; allergens and parabens follow. Plausible."
+  },
+  "bondRoute": "gluconamide",
+  "profile": {
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "S1: Behentrimonium Chloride @4, Distearoylethyl Hydroxyethylmonium Methosulfate @5, Behenamidopropyl Dimethylamine @7 (3 species). S2: Cetearyl Alcohol @2. S3: Isopropyl Myristate @6 + Glycosphingolipids @10 (R4a). S1+S2 without dependence on the boundary species, plausible marker, no material counter-signal → high.",
+      "evidenceSignals": [
+        "S1: @4/@5/@7",
+        "S2: Cetearyl @2",
+        "S3: IPM @6, Glycosphingolipids @10"
+      ],
+      "counterSignals": []
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No R4b above the marker (Isopropyl Myristate @6 is a light ester; Shea @15 and Apricot Kernel Oil @18 are in the tail) → high unavailable. Leanness test fails conjunct 3: three cationic species on the full list. → moderate.",
+      "evidenceSignals": [
+        "no above-tail R4b",
+        "no occlusive silicone stack (Amodimethicone @14 single, in tail)"
+      ],
+      "counterSignals": [
+        "3 cationic species on full list block low",
+        "Shea @15 / Apricot @18 tail-only (no credit)"
+      ]
+    },
+    "careDirection": {
+      "value": "protein",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Material R5 route: Hydrolyzed Silk @11 + Sericin @12, two distinct qualifying species above PARFUM @13. Humectant cluster absent (Glycerin @3 only above tail) → not balanced (a) → protein. Sericin @12 is at tail_index−1 and load-bearing (without it, a single R5 at @11 fails the rank-8 test → moisture), so confidence capped at moderate (E8); D4 heavy payload (multiple R5 above tail) caps it at moderate too. Gluconamide tokens are not counted as R5 (§6 rule 4).",
+      "evidenceSignals": [
+        "Hydrolyzed Silk @11",
+        "Sericin @12"
+      ],
+      "counterSignals": [
+        "Sericin @12 boundary-position (tail_index 13)",
+        "D4 protein payload counter-signal",
+        "no humectant cluster"
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "high",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "bond_route gluconamide: Hydroxypropylgluconamide @8 + Hydroxypropylammonium Gluconate @9, the named pair, both above PARFUM @13 on a plausible marker → high. Comparative formula potential only: none of the bond routes has strong independent product-level substantiation at drugstore concentrations, and gluconamide bonding's own literature reports the hair mechanism as unknown.",
+      "evidenceSignals": [
+        "Hydroxypropylgluconamide @8",
+        "Hydroxypropylammonium Gluconate @9"
+      ],
+      "counterSignals": [
+        "amino silicone (Amodimethicone @14) is never bond evidence"
+      ]
+    },
+    "primaryFocus": {
+      "value": "repair",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "rationale": "Step 3 repair clears on R7 named bond chemistry (gluconamide pair @8–9) plus a distinct R5 film route (@11–12); 'Bonding' positioning corroborates only. Shine lost: 'Glanz' positioning but no above-tail R2/R3 optical route (Amodimethicone @14 is in the tail). focus_care_verdict: repair_supported; claim_role: corroborating.",
+      "evidenceSignals": [
+        "gluconamide pair @8–9",
+        "R5: Hydrolyzed Silk @11, Sericin @12"
+      ],
+      "counterSignals": [
+        "'Liquid Silk Glanz' positioning without optical architecture"
+      ]
+    },
+    "secondaryFocus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No secondary: no humectant cluster; shine fails criterion 1 (no above-tail R2/R3); smoothing has no above-tail silicone/polymer beyond baseline.",
+      "evidenceSignals": [],
+      "counterSignals": []
+    }
+  },
+  "hinweise": {
+    "fired": [
+      {
+        "flag": "multi_use",
+        "value": "covered: post_shampoo_rinse_out_mask; uncovered: [pre_shampoo, conditioner, leave_in]",
+        "note": "Profile describes only the 2–3-min rinse-out mask mode; scope declaration, not a quality signal."
+      },
+      {
+        "flag": "protein_payload",
+        "value": "Hydrolyzed Silk @11, Sericin @12 (above tail_index 13)",
+        "note": "D4 heavy protein payload: caps care_direction confidence at moderate and routes to review; not a diagnosis, moves no value."
+      },
+      {
+        "flag": "boundary_position_ingredient",
+        "value": "Sericin @12 (tail_index 13)",
+        "note": "care_direction 'protein' hinges on a boundary-position ingredient: without Sericin @12 the material-R5 test fails and the value would be 'moisture'. Confidence capped at moderate (E8); value unmoved."
+      },
+      {
+        "flag": "claim_formula_mismatch",
+        "value": "'Liquid Silk Glanz' positioning vs no above-tail optical (R2/R3) architecture",
+        "note": "Gloss positioning not matched by the formula's above-tail architecture (silicone only in tail); moves no value."
+      }
+    ]
+  },
+  "reviewTriggers": [
+    "protein_payload_review",
+    "specialist_damage_fit",
+    "gloss_lamination_claim"
+  ]
+}

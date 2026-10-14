@@ -262,14 +262,6 @@ test("identified unknown: failed confirmation restores its label and keeps recov
   assert.match(renderToStaticMarkup(tree.value), /role="alert"/)
 })
 
-test("ScanUnknownFlow: renders the signed-off headline and question verbatim", () => {
-  const tree = renderFlow({ submitting: false, onSubmit: () => undefined })
-  const markup = renderToStaticMarkup(tree.value)
-  assert.match(markup, /Danke dir – das ist neu für uns!/)
-  assert.match(markup, /Wir nehmen es auf\. Dein Ergebnis kommt in den Chat\./)
-  assert.match(markup, /Wobei benutzt du es\?/)
-})
-
 /**
  * The viewfinder just said "✓ Gelesen – wird geprüft" and this sheet says the product is
  * new: without the bridge line the two read as a contradiction (Nick's phone test,
@@ -278,22 +270,20 @@ test("ScanUnknownFlow: renders the signed-off headline and question verbatim", (
 test("ScanUnknownFlow: the bridge line sits under the headline, above the subline", () => {
   const tree = renderFlow({ submitting: false, onSubmit: () => undefined })
   const markup = renderToStaticMarkup(tree.value)
+  assert.match(markup, /Danke dir – das ist neu für uns!/)
+  assert.match(markup, /Wir nehmen es auf\. Dein Ergebnis kommt in den Chat\./)
+  assert.match(markup, /Wobei benutzt du es\?/)
+  const inputs = findAll(tree.value, (element) => element.type === "input")
+  assert.deepEqual(inputs, [])
+  assert.doesNotMatch(markup, /Marke/)
+  assert.doesNotMatch(markup, /Produktname/)
+  assert.doesNotMatch(markup, /Zur Prüfung einreichen/)
   assert.match(markup, /Barcode gelesen – das Produkt fehlt noch in unserer Datenbank\./)
 
   const headline = markup.indexOf("Danke dir")
   const bridge = markup.indexOf("Barcode gelesen")
   const subline = markup.indexOf("Wir nehmen es auf")
   assert.ok(headline >= 0 && bridge > headline && subline > bridge, markup)
-})
-
-test("ScanUnknownFlow: renders no brand or product-name inputs (step 2 is gone)", () => {
-  const tree = renderFlow({ submitting: false, onSubmit: () => undefined })
-  const inputs = findAll(tree.value, (element) => element.type === "input")
-  assert.deepEqual(inputs, [])
-  const markup = renderToStaticMarkup(tree.value)
-  assert.doesNotMatch(markup, /Marke/)
-  assert.doesNotMatch(markup, /Produktname/)
-  assert.doesNotMatch(markup, /Zur Prüfung einreichen/)
 })
 
 test("ScanUnknownFlow: tapping a category card submits exactly { category } once, no Absenden step", () => {

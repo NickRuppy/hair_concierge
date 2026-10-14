@@ -1,0 +1,203 @@
+--- Scanner46/operator-guard.cjs
++++ Refinement37/operator-guard.cjs
+@@ -4,8 +4,8 @@
+ const path = require('node:path')
+ const crypto = require('node:crypto')
+ const ROOT = '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning'
+-const BASE = '/tmp/test-audit-scanner46-tools-xrqyw5u6/operator'
+-const PROPOSAL = '/tmp/test-audit-scanner46-proposal-RDeysZ'
++const BASE = '/tmp/test-audit-refinement37-tools-5ce9vx77/operator'
++const PROPOSAL = '/tmp/test-audit-refinement-status37'
+ const LOCK = '/tmp/test-audit-pruning-operator-lock'
+ const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex')
+ const fail = message => { throw Error(message) }
+@@ -97,9 +97,9 @@
+   guardArtifactsAndDependencies()
+   const evidence=readJSON(BASE+'-evidence.json'),candidates=readJSON(BASE+'-candidates.json'),controls=readJSON(BASE+'-controls-normalized.json')
+   const ts=require(ROOT+'/node_modules/typescript')
+-  if(evidence.root!==ROOT||evidence.head!==pins.head||evidence.branch!==pins.branch||candidates.length!==6||controls.length!==7||ts.version!==pins.typescriptVersion)fail('Proposal identity/count mismatch')
+-  const snapshots={},counts={before:0,transfer:0,cut:0};let unrelated=0,ownedUnchanged=0
+-  const keepers=new Map(candidates.map(c=>[c.keeper.file+'\0'+c.keeper.name,c.keeper]));if(keepers.size!==5)fail('Five distinct keepers required')
++  if(evidence.root!==ROOT||evidence.head!==pins.head||evidence.branch!==pins.branch||candidates.length!==7||controls.length!==13||ts.version!==pins.typescriptVersion)fail('Proposal identity/count mismatch')
++  const snapshots={},counts={before:0,transfer:0,cut:0};let unrelated=0,unchangedRetained=0,changedKeepers=0
++  const keepers=new Map(candidates.map(c=>[c.keeper.file+'\0'+c.keeper.name,c.keeper]));if(keepers.size!==7)fail('Seven unique keepers required')
+   for(const file of Object.keys(evidence.phases.before)){
+     snapshots[file]={}
+     for(const phase of Object.keys(counts)){
+@@ -112,22 +112,36 @@
+     for(const c of local)if(before.rows.get(c.donor.name)?.statement!==c.donor.body||sha(c.donor.body)!==c.donor.sha256)fail('Original donor identity')
+     for(const k of keepers.values())if(k.file===file){
+       if(before.rows.get(k.name)?.statement!==k.body||sha(k.body)!==k.sha256)fail('Original keeper identity')
+-      if(k.body!==k.after)reconstructed=replaceOnce(reconstructed,k.body,k.after,'keeper transfer')
++      if(k.body!==k.after){
++        if(k.addedAssertions.length!==1||replaceOnce(k.after,'  '+k.addedAssertions[0]+'\n','','sole assertion addition')!==k.body)fail('Keeper owner calls/input/support changed')
++        reconstructed=replaceOnce(reconstructed,k.body,k.after,'keeper transfer');changedKeepers++
++      }else if(k.addedAssertions.length)fail('Unexpected assertion addition')
+     }
+     if(reconstructed!==transfer.bytes.toString())fail('Transfer changed unrelated bytes')
+-    for(const c of local){const full=c.donor.body;if(reconstructed.includes(full+'\n\n'))reconstructed=replaceOnce(reconstructed,full+'\n\n','',c.id);else if(reconstructed.includes('\n\n'+full))reconstructed=replaceOnce(reconstructed,'\n\n'+full,'',c.id);else reconstructed=replaceOnce(reconstructed,full,'',c.id)}
+-    if(reconstructed!==cut.bytes.toString())fail('Cut changed unrelated bytes')
++    for(const c of local)reconstructed=replaceOnce(reconstructed,c.donor.body+'\n\n','',c.id)
++    for(const edit of evidence.supportEdits.filter(e=>e.file===file))reconstructed=replaceOnce(reconstructed,edit.from,edit.to,'exact unused import removal')
++    if(reconstructed!==cut.bytes.toString())fail('Cut changed unrelated support bytes')
+     for(const [name,row]of before.rows){const t=transfer.rows.get(name),k=cut.rows.get(name)
+       if(local.some(c=>c.donor.name===name)){if(k||t?.statement!==row.statement)fail('Donor phase mismatch');continue}
+       const keeper=keepers.get(file+'\0'+name)
+       if(keeper&&keeper.body!==keeper.after){if(t?.statement!==keeper.after||k?.statement!==keeper.after)fail('Keeper phase mismatch');continue}
+-      if(t?.statement!==row.statement||k?.statement!==row.statement)fail('Unrelated callback changed');unrelated++;if(evidence.ownedFiles.includes(file))ownedUnchanged++
+-    }
+-  }
+-  if(Object.keys(snapshots).length!==6||JSON.stringify(counts)!=='{"before":90,"transfer":90,"cut":84}'||unrelated!==82||ownedUnchanged!==39)fail('Phase conservation mismatch')
+-  const held=readJSON(PROPOSAL+'/ledger.json').sites.filter(j=>j.mark==='F');if(held.length!==5)fail('Held F count')
+-  for(const j of held)for(const phase of Object.keys(counts))if(snapshots[j.file][phase].rows.get(j.title)?.statement!==snapshots[j.file].before.rows.get(j.title)?.statement)fail('Held F changed')
+-  const unchangedRetained=unrelated
++      if(t?.statement!==row.statement||k?.statement!==row.statement)fail('Retained callback changed');unchangedRetained++;if(!keeper)unrelated++
++    }
++  }
++  if(Object.keys(snapshots).length!==5||JSON.stringify(counts)!=='{"before":37,"transfer":37,"cut":30}'||unrelated!==23||unchangedRetained!==28||changedKeepers!==2)fail('Phase conservation mismatch')
++  const ledger=readJSON(PROPOSAL+'/ledger.json');if(ledger.filter(j=>j.mark==='F').length!==0)fail('Held F changed')
++  for(const c of candidates){
++    const donor=snapshots[c.file].before.rows.get(c.donor.name)
++    if(c.assertionUnion.length!==donor.assertions.length)fail('Incomplete donor assertion accounting')
++    for(const phase of ['transfer','cut']){
++      const row=snapshots[c.keeper.file][phase].rows.get(c.keeper.name)
++      if(row?.statement!==c.keeper.after)fail('Keeper union phase mismatch')
++      for(let i=0;i<c.assertionUnion.length;i++){
++        const u=c.assertionUnion[i]
++        if(u.donorText!==donor.assertions[i].text||u.keeperText!==row.assertions[u.keeperIndex]?.text||!u.basis)fail('Frozen whole assertion union mismatch')
++      }
++    }
++  }
+   function guards(overrides={}) {
+     identity(pins)
+     for(const [file,hash]of Object.entries(overrides))if(!controls.some(c=>c.file===file&&c.mutatedSha256===hash))fail("Unowned source override")
+@@ -147,7 +161,7 @@
+ }
+ function fault(ctx,c) {
+   const escaped=c.test.name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
+-  const exactCommand=['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-name-pattern=^'+escaped+'$',c.test.file]
++  const exactCommand=['node','--import','./tests/server-only-register.cjs','--import','tsx','--test','--test-concurrency=1','--test-name-pattern=^'+escaped+'$',c.test.file]
+   if(JSON.stringify(c.command)!==JSON.stringify(exactCommand))fail('Control command is not exact pinned keeper')
+   const pattern=new RegExp('^'+escaped+'$')
+   for(const phase of ['before','transfer','cut'])if([...ctx.snapshots[c.test.file][phase].rows.keys()].filter(n=>pattern.test(n)).length!==1)fail('Exactly one keeper must match in every phase')
+@@ -155,8 +169,8 @@
+   if(sha(original)!==c.sourceSha256)fail('Fault owner drift: '+c.id)
+   const text=original.toString(),sf=c.file.endsWith('.sql')?null:parse(ctx.ts,c.file,text)
+   let mutated
+-  if(c.anchor.kind==='function'){
+-    const found=[];function walk(n){if(ctx.ts.isFunctionDeclaration(n)&&n.name?.text===c.anchor.scope)found.push(n);ctx.ts.forEachChild(n,walk)}walk(sf)
++  if(['function','variable'].includes(c.anchor.kind)){
++    const found=[];function walk(n){if(c.anchor.kind==='function'&&ctx.ts.isFunctionDeclaration(n)&&n.name?.text===c.anchor.scope)found.push(n);if(c.anchor.kind==='variable'&&ctx.ts.isVariableStatement(n)&&n.declarationList.declarations.some(d=>ctx.ts.isIdentifier(d.name)&&d.name.text===c.anchor.scope))found.push(n);ctx.ts.forEachChild(n,walk)}walk(sf)
+     if(found.length!==1||sha(found[0].getText(sf))!==c.anchor.scopeSha256||found[0].getText(sf).split(c.from).length!==2)fail('Unique function anchor drift')
+     const n=found[0];mutated=Buffer.from(text.slice(0,n.getStart(sf))+replaceOnce(n.getText(sf),c.from,c.to,c.id)+text.slice(n.end))
+   }else if(['file','sql-bytes'].includes(c.anchor.kind)&&c.anchor.scopeSha256===sha(original))mutated=Buffer.from(replaceOnce(text,c.from,c.to,c.id))
+@@ -166,7 +180,7 @@
+   for(const phase of ['transfer','cut']){
+     const row=ctx.snapshots[c.test.file][phase].rows.get(c.test.name),o=c.oracles[phase]
+     const matches=row?.assertions.filter(a=>a.text===o.text)||[]
+-    if(sha(row?.statement||'')!==o.keeperSha256||matches.length!==1||matches[0].startLine!==o.startLine)fail('Callback-scoped fault oracle drift')
++    if(sha(row?.statement||'')!==o.keeperSha256||matches.length!==1||matches[0].startLine!==o.startLine||sha(ctx.snapshots[c.test.file][phase].bytes)!==o.testFileSha256)fail('Callback-scoped fault oracle drift')
+   }
+   return {original,mutated}
+ }
+--- Scanner46/operator-edit.cjs
++++ Refinement37/operator-edit.cjs
+@@ -9,7 +9,7 @@
+ for(const c of context.controls)g.fault(context,c)
+ const initial=context.current()
+ if(mode==='check'){
+- console.log(JSON.stringify({mode,phase:initial.phase,counts:context.counts,unrelatedCallbacks:context.unrelated,unchangedRetainedCallbacks:context.unchangedRetained,parsedPhaseFiles:18,sourceControlsParsed:5,sqlByteControls:2,readsetGuards:context.pins.readset.length,dependencyFiles:context.pins.dependencies.length,repositoryWrites:0,childrenStarted:0},null,2));process.exit(0)
++ console.log(JSON.stringify({mode,phase:initial.phase,counts:context.counts,unrelatedCallbacks:context.unrelated,unchangedRetainedCallbacks:context.unchangedRetained,parsedPhaseFiles:15,sourceControlsParsed:13,readsetGuards:context.pins.readset.length,dependencyFiles:context.pins.dependencies.length,repositoryWrites:0,childrenStarted:0},null,2));process.exit(0)
+ }
+ const from=mode==='transfer'?'before':'transfer'
+ if(initial.phase!==from)g.fail('Expected '+from+', found '+initial.phase)
+--- Scanner46/operator-run-controls.cjs
++++ Refinement37/operator-run-controls.cjs
+@@ -10,7 +10,7 @@
+ if(!controls.length)g.fail('Unknown control ID')
+ const prepared=new Map(context.controls.map(c=>[c.id,g.fault(context,c)])),initial=context.current()
+ if(mode==='check'){
+-  console.log(JSON.stringify({mode,phase:initial.phase,controls:controls.length,tsMutantsParsed:5,sqlRawByteMutants:2,allControlsPrepared:prepared.size===7,phaseOracles:'exact assertion startLine and text in transfer/cut',selectedTestCount:1,repositoryWrites:0,runtimeRuns:0,childrenStarted:0},null,2));process.exit(0)
++  console.log(JSON.stringify({mode,phase:initial.phase,controls:controls.length,tsMutantsParsed:13,allControlsPrepared:prepared.size===13,phaseOracles:'exact assertion startLine and text in transfer/cut',selectedTestCount:1,repositoryWrites:0,runtimeRuns:0,childrenStarted:0},null,2));process.exit(0)
+ }
+ if(!['transfer','cut'].includes(initial.phase))g.fail('Transfer/cut phase required; no original false-pass claim')
+ for(const key of ['TRIAL_ADMISSION_MUTANT','TRIAL_ACCESS_MUTANT','NODE_OPTIONS','TSX_TSCONFIG_PATH'])if(process.env[key])g.fail('Existing harness mutant is active: '+key)
+@@ -52,7 +52,7 @@
+ ;(async()=>{
+  try{
+   dir=fs.mkdtempSync(g.BASE+'-mutations-'+phase+'-')
+-  // Snapshot ALL6 test originals and ALL unique mutant-owner originals before first child/write.
++  // Snapshot ALL5 test originals and ALL unique mutant-owner originals before first child/write.
+   ensurePhase()
+   const originals=new Map(Object.entries(initial.bytes))
+   for(const control of context.controls)originals.set(control.file,prepared.get(control.id).original)
+@@ -93,6 +93,6 @@
+   const complete={phase,verified:receipts.length,controlIds:receipts.map(r=>r.id),cleanRuns:receipts.length*2,root:g.ROOT,head:context.pins.head,branch:context.pins.branch,pinsSHA:PIN_SHA,receiptSHA256:g.sha(fs.readFileSync(path.join(dir,'receipt.json'))),allTestHashes:Object.fromEntries(Object.entries(final.bytes).map(([f,b])=>[f,g.sha(b)])),sourceGuards:context.pins.readset}
+   const completeBytes=JSON.stringify(complete,null,2)+'\n'
+   fs.writeFileSync(path.join(dir,'complete.json'),completeBytes,{flag:'wx'})
+-  console.log(JSON.stringify({receiptDir:dir,completionSHA256:g.sha(completeBytes),verified:receipts.length,eligibleForCut:phase==='transfer'&&receipts.length===7},null,2))
++  console.log(JSON.stringify({receiptDir:dir,completionSHA256:g.sha(completeBytes),verified:receipts.length,eligibleForCut:phase==='transfer'&&receipts.length===13},null,2))
+  }finally{killOwnedGroup('SIGKILL');process.off('SIGINT',stop);process.off('SIGTERM',stop);unlock()}
+ })().catch(error=>{record();if(dir)fs.writeFileSync(path.join(dir,'failure.json'),JSON.stringify({error:String(error),interrupted},null,2)+'\n',{flag:'wx'});console.error(error);process.exitCode=1})
+--- Scanner46/operator-proof.cjs
++++ Refinement37/operator-proof.cjs
+@@ -36,11 +36,11 @@
+  if(!/^[a-f0-9]{64}$/.test(completionSHA||''))g.fail('Main must provide exact completion SHA256')
+  const raw=fs.readFileSync(path.join(dir,'complete.json'));if(g.sha(raw)!==completionSHA)g.fail('Completion receipt hash mismatch')
+  const complete=JSON.parse(raw),receiptBytes=fs.readFileSync(path.join(dir,'receipt.json'))
+- if(complete.pinsSHA!==pinSHA||complete.root!==g.ROOT||complete.head!==ctx.pins.head||complete.branch!==ctx.pins.branch||complete.phase!=='transfer'||complete.verified!==7||complete.cleanRuns!==14||g.sha(receiptBytes)!==complete.receiptSHA256)g.fail('Incomplete/wrong transfer proof')
+- if(JSON.stringify(complete.controlIds)!==JSON.stringify(ctx.controls.map(c=>c.id)))g.fail('Required7 controls absent or out of order')
++ if(complete.pinsSHA!==pinSHA||complete.root!==g.ROOT||complete.head!==ctx.pins.head||complete.branch!==ctx.pins.branch||complete.phase!=='transfer'||complete.verified!==13||complete.cleanRuns!==26||g.sha(receiptBytes)!==complete.receiptSHA256)g.fail('Incomplete/wrong transfer proof')
++ if(JSON.stringify(complete.controlIds)!==JSON.stringify(ctx.controls.map(c=>c.id)))g.fail('Required13 controls absent or out of order')
+  for(const[file,hash]of Object.entries(complete.allTestHashes||{})){if(!ctx.snapshots[file]||hash!==g.sha(ctx.snapshots[file].transfer.bytes))g.fail('Receipt test phase mismatch')}
+- if(Object.keys(complete.allTestHashes||{}).length!==6)g.fail('Full cohort proof missing')
+- const records=JSON.parse(receiptBytes);if(records.length!==7)g.fail('Seven records required')
++ if(Object.keys(complete.allTestHashes||{}).length!==5)g.fail('Full cohort proof missing')
++ const records=JSON.parse(receiptBytes);if(records.length!==13)g.fail('Thirteen records required')
+  function reload(record,label,c){
+   const p=path.join(dir,c.id+'-'+label+'.tap')
+   if(record.log!==p||!record.logSHA256||g.sha(fs.readFileSync(p))!==record.logSHA256)g.fail('TAP path/hash drift')
+@@ -55,6 +55,6 @@
+   for(const readset of ctx.pins.readset)if(r.readsetBefore?.[readset.file]!==readset.sha||r.readsetAfter?.[readset.file]!==readset.sha)g.fail('Readset proof mismatch: '+c.id)
+   if(!clean(c,reload(r.before,'before',c))||!intended(c,reload(r.fault,'fault',c),'transfer').accepted||!clean(c,reload(r.after,'after',c)))g.fail('Required clean1/red1/restored clean1 not proved: '+c.id)
+  }
+- return {dir,completionSHA,verified:7,logFiles:21,phase:'transfer'}
++ return {dir,completionSHA,verified:13,logFiles:39,phase:'transfer'}
+ }
+ module.exports={parseTAP,named,clean,errorMessage,intended,validateTransferReceipt}
+--- Scanner46/proof-attestation.cjs
++++ Refinement37/proof-attestation.cjs
+@@ -2,7 +2,7 @@
+ // Static in-memory diagnostic-parser checks only. No owner/test execution or source writes.
+ const fs=require('node:fs'),proof=require('./operator-proof.cjs'),controls=JSON.parse(fs.readFileSync(__dirname+'/operator-controls-normalized.json','utf8'));
+ let assertions=0;function ok(value,message){assertions++;if(!value)throw Error(message)}
+-function tap(c,phase){const o=c.oracles[phase];return `TAP version 13\n# Subtest: ${c.test.name}\nnot ok 1 - ${c.test.name}\n  ---\n  error: |-\n    ${c.errorMessageIncludes.join('\n    ')}\n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  operator: '${c.expectedOperator}'\n  stack: |-\n    TestContext.<anonymous> (${c.test.file}:${o.startLine}:10)\n    Test.run (node:internal/test_runner/test:1000:1)\n  ...\n1..1\n# tests 1\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n`}
++function tap(c,phase){const o=c.oracles[phase];return `TAP version 13\n# Subtest: ${c.test.name}\nnot ok 1 - ${c.test.name}\n  ---\n  error: |-\n    ${c.errorMessageIncludes.join('\n').replaceAll('\n','\n    ')}\n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  operator: '${c.expectedOperator}'\n  stack: |-\n    TestContext.<anonymous> (${c.test.file}:${o.startLine}:10)\n    Test.run (node:internal/test_runner/test:1000:1)\n  ...\n1..1\n# tests 1\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n`}
+ function run(text,extra={}){return{status:1,signal:null,timedOut:false,spawnError:null,...proof.parseTAP(text),text,...extra}}
+ for(const c of controls)for(const phase of ['transfer','cut']){
+  const text=tap(c,phase);ok(proof.intended(c,run(text),phase).accepted,c.id+' intended');
+@@ -15,15 +15,20 @@
+  ok(!proof.intended(c,run(text.replace('# tests 1','# tests 0')),phase).accepted,'zero rejected');
+  ok(!proof.intended(c,run(text.replace('# skipped 0','# skipped 1')),phase).accepted,'skip rejected');
+  ok(!proof.intended(c,run(text.replace('# Subtest: '+c.test.name,'# Subtest: Wrong test')),phase).accepted,'wrong name rejected');
+- for(const part of c.errorMessageIncludes)ok(!proof.intended(c,run(text.replace(part,'unrelated diagnostic')),phase).accepted,'required message fragment rejected');
++ for(const part of c.errorMessageIncludes)ok(!proof.intended(c,run(text.replace(part.replaceAll('\n','\n    '),'unrelated diagnostic')),phase).accepted,'required message fragment rejected');
+  const body=c.errorMessageIncludes.join(' | ');
+- for(const scalar of [JSON.stringify(body), "'"+body.replaceAll("'", "''")+"'"]){
++ for(const scalar of [JSON.stringify(body), ...(!body.includes("\n")?["'"+body.replaceAll("'", "''")+"'"]:[])]){
+   const scalarText=text.replace(/  error: \|-\n(?:    [^\n]*\n)+?(?=  code:)/,'  error: '+scalar+'\n');
+-  ok(proof.intended(c,run(scalarText),phase).accepted,'decoded scalar accepted');
++  ok(proof.intended(c,run(scalarText),phase).accepted,c.id+' decoded scalar accepted');
+  }
+  ok(!proof.intended(c,run(text.replace('  error: |-','  error: >-')),phase).accepted,'unknown scalar rejected');
++ const nestedWrong=text.replace("  operator: '"+c.expectedOperator+"'","  actual:\n    stack: |-\n      setup (src/unrelated.ts:1:1)\n  operator: '"+c.expectedOperator+"'");
++ ok(proof.intended(c,run(nestedWrong),phase).accepted,'nested actual stack ignored');
++ const wrongOuter=nestedWrong.replace(c.test.file+':'+c.oracles[phase].startLine+':10',c.test.file+':1:10').replace('setup (src/unrelated.ts:1:1)','TestContext.<anonymous> ('+c.test.file+':'+c.oracles[phase].startLine+':10)');
++ ok(!proof.intended(c,run(wrongOuter),phase).accepted,'correct nested frame cannot rescue wrong assertion frame');
++
+  const cleanText=`TAP version 13\n# Subtest: ${c.test.name}\nok 1 - ${c.test.name}\n1..1\n# tests 1\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n`;
+  ok(proof.clean(c,run(cleanText,{status:0})),'clean accepted');
+  ok(!proof.clean(c,run(cleanText.replace('# tests 1','# tests 0'),{status:0})),'zero clean rejected');
+ }
+-console.log(JSON.stringify({status:'PASS_STATIC_SYNTHETIC_PARSER_ONLY',controls:7,phases:2,assertions,children:0,ownerImports:0,repositoryWrites:0,runtimeClaims:0,note:'Diagnostic-shape rejection checks only, not native fault sensitivity or real TAP evidence.'},null,2));
++console.log(JSON.stringify({status:'PASS_STATIC_SYNTHETIC_PARSER_ONLY',controls:13,phases:2,assertions,children:0,ownerImports:0,repositoryWrites:0,runtimeClaims:0,note:'Diagnostic-shape rejection checks only, not native fault sensitivity or real TAP evidence.'},null,2));

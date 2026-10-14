@@ -1,0 +1,27 @@
+{
+  "phase": "transfer",
+  "controls": [
+    "C1-headline",
+    "C1-subline",
+    "C1-question",
+    "C2-input",
+    "C2-brand",
+    "C2-product",
+    "C2-submit",
+    "C3-brand",
+    "C3-product",
+    "C3-question",
+    "C3-helper",
+    "C3-back",
+    "C3-retailer",
+    "C4-alert"
+  ],
+  "originalHashes": {
+    "tests/scan-unknown-flow-ui.test.tsx": "d38009049b28480a4e7c2ffef32a0bb32c1aebf214b330f7e676833e3c87f965",
+    "tests/scan-research-intake-form-ui.test.tsx": "dce07ca36f7520d19358c7638d5ed6e3810231d73b17cfed6e16f24d874782cb",
+    "src/lib/scan/verdict-labels.ts": "badd8bce5f663a04afd98b11c8c3d30883d4d449bc6747cb18f95ad7be6d1b0c",
+    "src/components/scan/scan-unknown-flow.tsx": "a4c0e6d23c85476d17016dcb488641ca10e3c3059fab53596f1f8f5fd95b5754",
+    "src/components/scan/scan-search-sheet.tsx": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa"
+  },
+  "pinsSHA": "bfbedb7adb1865d0cc2ada97d9e74fe934645326654e6001273713495e390a5c"
+}

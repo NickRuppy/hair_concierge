@@ -1,0 +1,52 @@
+{
+  "mode": "cut",
+  "from": "transfer",
+  "phase": "cut",
+  "counts": {
+    "before": 103,
+    "transfer": 103,
+    "cut": 97
+  },
+  "pinsSHA": "1d93d7ae5effb128241fa0e24922e385b618f25d362ff6966bd0ffda03293af6",
+  "prerequisite": {
+    "cohort": {
+      "dir": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-transfer-tqGAqi",
+      "completionSHA": "32e89a2c36cde73c351921357dbc0c89b90f10b17d4808564d8f6def8eb3d272",
+      "phase": "transfer",
+      "verified": 103
+    },
+    "controls": {
+      "dir": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A",
+      "completionSHA": "f048bb7e29026d6cba39074071da5b00ef330068cd4f70c562459d229f682610",
+      "phase": "transfer",
+      "verified": 14,
+      "logFiles": 42
+    }
+  },
+  "changed": [
+    "src/lib/personal-plan/rollout-access.ts",
+    "src/lib/personal-plan/journey-access-loader.ts",
+    "src/lib/personal-plan/release.ts",
+    "tests/personal-plan-journey-access-loader.test.ts",
+    "tests/personal-plan-stage3-release.test.ts",
+    "tests/freemium-enrollment-admission.test.ts",
+    "tests/personal-plan-trial-stage1-journey.test.ts",
+    "tests/personal-plan-field-test-access.test.ts",
+    "tests/personal-plan-rollout-access.test.ts"
+  ],
+  "allFileHashes": {
+    "src/lib/personal-plan/rollout-access.ts": "b4efd27a848a803c60848cf16ac8b9d0c845ae22dabb84a09cc912472eeb206c",
+    "src/lib/personal-plan/journey-access-loader.ts": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+    "src/lib/personal-plan/release.ts": "7fff03697221fa4281c0a3756c3cfab618460c536e60cb05e060e38d2693fdd0",
+    "tests/personal-plan-journey-access-loader.test.ts": "7a18014ae40a06640e9fa54354a1109fd613986858c53c7ff072144ed175b6c8",
+    "tests/personal-plan-stage3-release.test.ts": "b875712849799021f740e63ef79e82e8eadd355b09df66a62d12031c605a7bec",
+    "tests/auth-middleware-personal-plan-routine.test.ts": "772d32f6e8bce05037c324ea7b11a9260d75c99c54bc00e6e4c13588e7129e24",
+    "tests/freemium-enrollment-admission.test.ts": "30e53eaa8a77054424780676bd341ea6aeb7821c652d36ea69faa8440c20b3e1",
+    "tests/personal-plan-trial-stage1-journey.test.ts": "1af6fcb04a9e0d8e864fdcd1760bb325130fa3bea7f8104bb44996933679feb2",
+    "tests/personal-plan-field-test-access.test.ts": "0701492072d7229a19c832017a5d46b708be3785a7839e9325eee3e5d1a7e963",
+    "tests/personal-plan-rollout-access.test.ts": "3f9f358536dc36b6197100414281d55315a8c0d65b098c1433676edf925a1d18"
+  },
+  "sourceWrites": 3,
+  "testsRun": 0,
+  "originals": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-apply-cut-wjSBX5/originals"
+}

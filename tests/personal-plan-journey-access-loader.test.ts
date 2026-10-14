@@ -195,7 +195,6 @@ function deps(
     }),
     cohortCutoff: () => new Date("2026-08-01T00:00:00Z"),
     appEnabled: () => true,
-    appRollout: () => "all",
     stage2Enabled: () => true,
     stage3Enabled: () => true,
     stage4Enabled: () => true,
@@ -232,7 +231,6 @@ function deps(
       products: [],
       roleAssignments: [],
     }),
-    loadIsInternal: async () => false,
     ...overrides,
   }
 }
@@ -293,28 +291,15 @@ test("verified normal paid pre-cutoff sources enter the journey only while migra
   }
 })
 
-test("Stage 2 access keeps the app rollout gate and stops before later-stage authority reads", async () => {
-  let entitlementReads = 0
-  const excluded = await loadPersonalPlanStage2AccessWithDeps(
-    deps({
-      appRollout: () => "internal",
-      loadIsInternal: async () => false,
-      loadEntitlement: async () => {
-        entitlementReads += 1
-        throw new Error("must not read entitlement for excluded users")
-      },
-    }),
-    "customer-1",
-  )
-  assert.deepEqual(excluded, { allowed: false })
-  assert.equal(entitlementReads, 0)
-
+test("Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing", async () => {
+  const timings: Array<{ operation: string; outcome: string; durationMs: number }> = []
   let refinedReads = 0
   let draftReads = 0
   let stage3Reads = 0
   let stage4Reads = 0
   const access = await loadPersonalPlanStage2AccessWithDeps(
     deps({
+      reportStage3AccessTiming: (timing) => timings.push(timing),
       loadCurrentRefinedNeed: async () => {
         refinedReads += 1
         throw new Error("must not load refined need")
@@ -339,6 +324,7 @@ test("Stage 2 access keeps the app rollout gate and stops before later-stage aut
   assert.equal(draftReads, 0)
   assert.equal(stage3Reads, 0)
   assert.equal(stage4Reads, 0)
+  assert.deepEqual(timings, [])
 })
 
 test("Stage 2 access remains fail-closed for incomplete owner source facts and throws on reads", async () => {
@@ -410,42 +396,6 @@ test("Stage 2 access remains fail-closed for incomplete owner source facts and t
       ),
     /artifact database unavailable/,
   )
-})
-
-test("internal app rollout excludes non-internal users before plan data is read", async () => {
-  let entitlementReads = 0
-  const access = await loadPersonalPlanJourneyAccessWithDeps(
-    deps({
-      appRollout: () => "internal",
-      loadIsInternal: async () => false,
-      loadEntitlement: async () => {
-        entitlementReads += 1
-        throw new Error("must not read entitlement for excluded users")
-      },
-    }),
-    "customer-1",
-  )
-
-  assert.deepEqual(access, { kind: "legacy" })
-  assert.equal(entitlementReads, 0)
-})
-
-test("internal app rollout admits the internal owner to the regular journey", async () => {
-  const access = await loadPersonalPlanJourneyAccessWithDeps(
-    deps({ appRollout: () => "internal", loadIsInternal: async () => true }),
-    "nick-1",
-  )
-
-  assert.equal(access.kind, "personal_plan")
-})
-
-test("loader derives the frontier only from owner-scoped entitlement, source, plan and current authority facts", async () => {
-  const access = await loadPersonalPlanJourneyAccessWithDeps(deps(), "user-1")
-  assert.equal(access.kind, "personal_plan")
-  if (access.kind !== "personal_plan") throw new Error("expected Personal Plan access")
-  assert.equal(access.frontier, "stage4")
-  assert.equal(access.allowed.stage3, true)
-  assert.equal(access.allowed.stage4, true)
 })
 
 test("journey access accepts a current Stage 3 draft with a valid product-load overlay", async () => {
@@ -542,6 +492,10 @@ test("full journey access reports non-identifying Stage 3 sub-phase timings in d
   )
 
   assert.equal(access.kind, "personal_plan")
+  if (access.kind !== "personal_plan") throw new Error("expected Personal Plan access")
+  assert.equal(access.frontier, "stage4")
+  assert.equal(access.allowed.stage3, true)
+  assert.equal(access.allowed.stage4, true)
   assert.deepEqual(timings, [
     { operation: "stage3_access_entitlement", outcome: "eligible", durationMs: 5 },
     { operation: "stage3_access_artifact_plan", outcome: "ready", durationMs: 5 },
@@ -600,19 +554,6 @@ test("full journey access reports the reached sub-phase when a dependency throws
     { operation: "stage3_access_entitlement", outcome: "eligible", durationMs: 4 },
     { operation: "stage3_access_artifact_plan", outcome: "error", durationMs: 7 },
   ])
-})
-
-test("the narrow Stage 2 access read never emits Stage 3 access timing", async () => {
-  const timings: Array<{ operation: string; outcome: string; durationMs: number }> = []
-
-  assert.deepEqual(
-    await loadPersonalPlanStage2AccessWithDeps(
-      deps({ reportStage3AccessTiming: (timing) => timings.push(timing) }),
-      "user-1",
-    ),
-    { allowed: true },
-  )
-  assert.deepEqual(timings, [])
 })
 
 test("loader starts independent current refined-need and product-draft reads together", async () => {
@@ -1062,7 +1003,6 @@ test("Supabase loader keeps every journey fact owner and aggregate scoped", asyn
       ...loader,
       cohortCutoff: () => new Date("2026-08-01T00:00:00Z"),
       appEnabled: () => true,
-      appRollout: () => "all",
       stage2Enabled: () => true,
       stage3Enabled: () => true,
       stage4Enabled: () => true,
@@ -1099,7 +1039,6 @@ test("Supabase loader keeps every journey fact owner and aggregate scoped", asyn
       ...loader,
       cohortCutoff: () => new Date("2026-08-01T00:00:00Z"),
       appEnabled: () => true,
-      appRollout: () => "all",
       stage2Enabled: () => true,
       stage3Enabled: () => true,
       stage4Enabled: () => true,

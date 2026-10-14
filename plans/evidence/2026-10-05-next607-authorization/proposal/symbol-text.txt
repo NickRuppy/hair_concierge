@@ -1,0 +1,21 @@
+src/lib/funnel/server.ts:460:export type PersonalPlanOneTimeCheckoutAuthorization = {
+src/lib/funnel/server.ts:470:export class PersonalPlanOneTimeCheckoutAuthorizationError extends Error {
+src/lib/funnel/server.ts:481:    this.name = "PersonalPlanOneTimeCheckoutAuthorizationError"
+src/lib/funnel/server.ts:485:type PersonalPlanOneTimeCheckoutSession = {
+src/lib/funnel/server.ts:496:export async function assertPersonalPlanOneTimeCheckoutAuthorized(input: {
+src/lib/funnel/server.ts:500:    data: PersonalPlanOneTimeCheckoutSession | null
+src/lib/funnel/server.ts:503:}): Promise<PersonalPlanOneTimeCheckoutAuthorization> {
+src/lib/funnel/server.ts:522:    throw new PersonalPlanOneTimeCheckoutAuthorizationError("lookup_failed", { cause: error })
+src/lib/funnel/server.ts:534:    throw new PersonalPlanOneTimeCheckoutAuthorizationError("not_authorized")
+tests/personal-plan-pricing-experiment.test.ts:21:  assertPersonalPlanOneTimeCheckoutAuthorized,
+tests/personal-plan-pricing-experiment.test.ts:23:  PersonalPlanOneTimeCheckoutAuthorizationError,
+tests/personal-plan-pricing-experiment.test.ts:464:    await assertPersonalPlanOneTimeCheckoutAuthorized({
+tests/personal-plan-pricing-experiment.test.ts:485:      assertPersonalPlanOneTimeCheckoutAuthorized({
+tests/personal-plan-pricing-experiment.test.ts:497:    assertPersonalPlanOneTimeCheckoutAuthorized({
+tests/personal-plan-pricing-experiment.test.ts:503:      error instanceof PersonalPlanOneTimeCheckoutAuthorizationError &&
+tests/personal-plan-pricing-experiment.test.ts:508:    assertPersonalPlanOneTimeCheckoutAuthorized({
+tests/personal-plan-pricing-experiment.test.ts:514:      error instanceof PersonalPlanOneTimeCheckoutAuthorizationError &&
+src/app/api/stripe/create-checkout-session/route.ts:18:  assertPersonalPlanOneTimeCheckoutAuthorized,
+src/app/api/stripe/create-checkout-session/route.ts:19:  PersonalPlanOneTimeCheckoutAuthorizationError,
+src/app/api/stripe/create-checkout-session/route.ts:629:        authorization = await assertPersonalPlanOneTimeCheckoutAuthorized({
+src/app/api/stripe/create-checkout-session/route.ts:635:          !(error instanceof PersonalPlanOneTimeCheckoutAuthorizationError) ||

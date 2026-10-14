@@ -1,0 +1,20 @@
+{
+  "phase": "transfer",
+  "controls": [
+    "C1-retained-password-capability",
+    "C2-billing-before-profile"
+  ],
+  "originalHashes": {
+    "tests/reactivation-stripe-context-postgres.test.ts": "386b328b8478e40597058348a792890627f573e3df9a6697ed7e1723fc54a270",
+    "tests/reactivation-checkout-metadata.test.ts": "784478263208522bf37bb2dffc1f4e816811d0b08c45f345e4d5aca92b76bd3e",
+    "tests/reactivation-retained-account-activation.test.ts": "f17b5ef299ee814826530918c1f412ade5e6368cc83b29f5b075a35ab013c890",
+    "tests/reactivation-stripe-context-runtime.test.ts": "257a4a472930539e71266d8320dffd60f175b091749ba5c74caae4ebf75e84e9",
+    "tests/reactivation-helpers.test.ts": "6639b8910ac9253d87b2b008fb5e53c3f38e335511a518b6dcb97fa7dea39ab7",
+    "tests/reactivation-checkout-recovery.spec.ts": "82f0c6591d955477440721ee865bfa370055d12b9066b0f8c881ab86aa401a8a",
+    "tests/reactivation-trial-management.test.ts": "c8f04e9cbc7d85c908b7e9a59fc753a42c3cad7bd8156f9075b24222c984d637",
+    "tests/reactivation-auth-return.test.ts": "0438dc495f5c5c01c6f0ee0ed6406cfaafc359d8086fe0debe5f99bfbd35b17d",
+    "tests/reactivation-routing.test.ts": "72b7affede80ab62f0db66e4c73e42f8c3ac532ed6e2100c46172f0bcf998623",
+    "src/lib/stripe/checkout-activation.ts": "f33ca66366ec59a915fdeba82bb397ad20891dd837495de25c6bf4e51deb8bdc"
+  },
+  "pinsSHA": "53a0eef9d6f320b4e07ca6987d9b8c995dfbc459e349f3fe2384cf94475a9d76"
+}

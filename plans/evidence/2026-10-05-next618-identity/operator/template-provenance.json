@@ -1,0 +1,15 @@
+{
+  "template": "/tmp/test-audit-scanner-intake26-tools-y8mclofg",
+  "files": {
+    "operator-guard.cjs": "138b98bcc23fb557728710eda4bfa40d187db09c57a441faf06603719cf01066",
+    "operator-edit.cjs": "4d0d57e7627d4887d9674c9144eec6dadec654e3535fb1d69f7e94d1fef6e116",
+    "operator-proof.cjs": "ac2caa50115e31e56bad616e602cdeda204544042bbe2529e49c399c3506d0d5",
+    "operator-run-controls.cjs": "1e9282a217065bdd1fa3a1627ddc0227ade4f213d35430a224c74c4db7440fee",
+    "operator-readonly-preload.cjs": "e1d17e207ee830cae3197a07bb0c142ba1288dc972958cefac0951abbfda4d6c"
+  },
+  "reviewedModeratorPins": {
+    "path": "/tmp/test-audit-moderator183-tools-p18tq7i2/operator-pins.json",
+    "sha256": "37dcec58febab9809b5a64510fd18a288f6b3756c9a19bb7a00cfadfbba8c20f"
+  },
+  "changes": "Exact identity31 counts/shape; accepted two-assertion union; strictEqual expected/actual scalar decoding added alongside decoded message and first-frame proof; no source/test writes by preparer."
+}

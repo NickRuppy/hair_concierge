@@ -1,3 +1,4 @@
+// fit-verdict spec §1/§7b, ruled 2026-10-12: web labels and actions.
 import type { ScanMaskedVerdictResult } from "../src/lib/scan/masked-alternative"
 import type {
   ScanAlternativePresentation,
@@ -34,7 +35,8 @@ const IN_CATALOG_BASE = {
   kind: "in_catalog" as const,
   verdict: "mismatch" as const,
   verdictLabel: "Passt nicht",
-  verdictTitle: "Passt nicht zu deinem Haar",
+  reasonLines: ["Für dein Haar eher schwer"],
+  verdictTitle: "Passt nicht",
   status: "danger" as const,
   subtitle: "1 von 3 Zielbereichen getroffen",
   evaluatedRole: null,
@@ -67,7 +69,8 @@ const ALTERNATIVE_WITHOUT_LINK: ScanAlternativePresentation = {
   priceLabel: null,
   netContentLabel: null,
   verdict: "supportive",
-  verdictLabel: "Passt mit Einschränkung",
+  verdictLabel: "Passt bedingt",
+  reasonLines: ["Eher für feines Haar gedacht"],
   brand: null,
   purchaseUrl: null,
 }
@@ -100,7 +103,7 @@ const PREMIUM_WITH_DIMENSIONS: ScanResolvedVerdictResult = {
   ...IN_CATALOG_BASE,
   verdict: "ideal",
   verdictLabel: "Passt",
-  verdictTitle: "Passt zu deinem Haar",
+  verdictTitle: "Passt",
   status: "ok",
   subtitle: "3 von 3 Zielbereichen getroffen",
   evaluatedRole: "shampoo_everyday",

@@ -1,0 +1,242 @@
+[
+  {
+    "file": "tests/personal-plan/refinement/module-status.test.ts",
+    "name": "a fully auto-accepted draft leaves both modules open and assumptions active",
+    "before": "954c9646b451e08f3b856d97c9bb17d093b190fbb70ca48c92a2e0b842a80148",
+    "after": "954c9646b451e08f3b856d97c9bb17d093b190fbb70ca48c92a2e0b842a80148",
+    "unchanged": true,
+    "keeper": true
+  },
+  {
+    "file": "tests/personal-plan/refinement/module-status.test.ts",
+    "name": "a draft the user answered end to end has no open module and no assumptions",
+    "before": "61be81a72e8be16b546578e9c7b9f9b93728c7ed68cb58fc36f476ec3b332583",
+    "after": "61be81a72e8be16b546578e9c7b9f9b93728c7ed68cb58fc36f476ec3b332583",
+    "unchanged": true,
+    "keeper": false
+  },
+  {
+    "file": "tests/personal-plan/refinement/module-status.test.ts",
+    "name": "one user-answered module keeps assumptions active while the other stays open",
+    "before": "a716d0a951b04c6ccb2b6d51ba1bea14b83e853cc20aeb94a66c8dbdc8edb8ac",
+    "after": "a716d0a951b04c6ccb2b6d51ba1bea14b83e853cc20aeb94a66c8dbdc8edb8ac",
+    "unchanged": true,
+    "keeper": false
+  },
+  {
+    "file": "tests/personal-plan/refinement/module-status.test.ts",
+    "name": "legacy answers without a provenance entry count as user answers",
+    "before": "daa57298a459de44f446c4b37ea6b9a04b43f2a99f8ef7942e5b7ff16fa9b3ff",
+    "after": "daa57298a459de44f446c4b37ea6b9a04b43f2a99f8ef7942e5b7ff16fa9b3ff",
+    "unchanged": true,
+    "keeper": false
+  },
+  {
+    "file": "tests/personal-plan/refinement/refinement-status.test.ts",
+    "name": "assumed-only answers (no user provenance) count as open, matching direct-accept semantics",
+    "before": "fd185e9489a647273d69719d6071d45d702a746e06db2d849731c4aaf9985cd5",
+    "after": "fd185e9489a647273d69719d6071d45d702a746e06db2d849731c4aaf9985cd5",
+    "unchanged": true,
+    "keeper": false
+  },
+  {
+    "file": "tests/personal-plan/refinement/refinement-status.test.ts",
+    "name": "banner reappears once a different module becomes the next open one, even if the old dismissal is still stored",
+    "before": "39de1e6bfaed70dba0dc630165caa43e1d8719d188d6f72d1282af94156be096",
+    "after": "39de1e6bfaed70dba0dc630165caa43e1d8719d188d6f72d1282af94156be096",
+    "unchanged": true,
+    "keeper": false
+  },
+  {
+    "file": "tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+    "name": "the provenance backfill labels a synthetic draft on a CLEARED-flag plan 'assumed'",
+    "before": "ac97ab0e7fa7bf6672d029896d6233294a7dce4a3c00c42837718716c5f0f078",
+    "after": "ac97ab0e7fa7bf6672d029896d6233294a7dce4a3c00c42837718716c5f0f078",
+    "unchanged": true,
+    "keeper": false
+  },
+  {
+    "file": "tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+    "name": "the provenance backfill still labels a synthetic draft on a flagged plan 'assumed'",
+    "before": "2062a017d350abddae5db9127caccd8c38693e73e8554d51815ad81c64c468e8",
+    "after": "2062a017d350abddae5db9127caccd8c38693e73e8554d51815ad81c64c468e8",
+    "unchanged": true,
+    "keeper": false
+  },
+  {
+    "file": "tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+    "name": "the provenance backfill leaves a plan without direct-acceptance evidence entirely 'user'",
+    "before": "8a6eb39983e2bbab670a42a9a479e29e62f1049b600a40d616a666954ca49bc7",
+    "after": "8a6eb39983e2bbab670a42a9a479e29e62f1049b600a40d616a666954ca49bc7",
+    "unchanged": true,
+    "keeper": false
+  },
+  {
+    "file": "tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+    "name": "the provenance backfill splits a reopened, partially refined draft per answer",
+    "before": "9c27f30229c2b96c4df9e20251b3bfee95de78de3adbc4944b5fb9ba3f905a6b",
+    "after": "9c27f30229c2b96c4df9e20251b3bfee95de78de3adbc4944b5fb9ba3f905a6b",
+    "unchanged": true,
+    "keeper": false
+  },
+  {
+    "file": "tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+    "name": "the provenance backfill keeps an assumed-valued heat event 'assumed' inside the cohort",
+    "before": "32539b0e6d2940c38a3f0de8b41e6909315d03979c6657eb3796a9258fdc900c",
+    "after": "32539b0e6d2940c38a3f0de8b41e6909315d03979c6657eb3796a9258fdc900c",
+    "unchanged": true,
+    "keeper": false
+  },
+  {
+    "file": "tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+    "name": "the provenance backfill errs to 'assumed' for a draft indistinguishable from the defaults",
+    "before": "9af0515063111b63c9980d0ccebdf38d73d60a0b0d1c42e194bf04711d13e47e",
+    "after": "9af0515063111b63c9980d0ccebdf38d73d60a0b0d1c42e194bf04711d13e47e",
+    "unchanged": true,
+    "keeper": false
+  },
+  {
+    "file": "tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+    "name": "the provenance backfill writes an empty map for a draft with no completed answers",
+    "before": "bf139a8ad9ab043081f032335fcb39992541142796db6f9aa74d1ea0d859bf07",
+    "after": "bf139a8ad9ab043081f032335fcb39992541142796db6f9aa74d1ea0d859bf07",
+    "unchanged": true,
+    "keeper": false
+  },
+  {
+    "file": "tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+    "name": "the save RPC keeps a 5-argument compatibility overload for the migrate-then-deploy window",
+    "before": "f54573670a785439c56da5b1f6a270ed87640ffdd1075fbabbd430668c601ed7",
+    "after": "f54573670a785439c56da5b1f6a270ed87640ffdd1075fbabbd430668c601ed7",
+    "unchanged": true,
+    "keeper": false
+  },
+  {
+    "file": "tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+    "name": "the 5-argument compatibility overload preserves backfilled provenance instead of wiping it",
+    "before": "e5c4272d99f1b18153973cb5f648b1d0ce75e3d3ecd7322f3398497e78b0b12d",
+    "after": "e5c4272d99f1b18153973cb5f648b1d0ce75e3d3ecd7322f3398497e78b0b12d",
+    "unchanged": true,
+    "keeper": false
+  },
+  {
+    "file": "tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+    "name": "the 6-argument save RPC still rejects a non-object provenance payload",
+    "before": "216f2c8429d1900ec5aa56c51aadac74e5fb958c8eeefab056138b9564244425",
+    "after": "216f2c8429d1900ec5aa56c51aadac74e5fb958c8eeefab056138b9564244425",
+    "unchanged": true,
+    "keeper": false
+  },
+  {
+    "file": "tests/personal-plan-refinement-presentation-route.test.ts",
+    "name": "returns the refinement answers bound to the current refined need version",
+    "before": "38dfe8c28b9288bf587b8aa8ea00d422e4166401b8966ab0aec5c532bbd404ad",
+    "after": "38dfe8c28b9288bf587b8aa8ea00d422e4166401b8966ab0aec5c532bbd404ad",
+    "unchanged": true,
+    "keeper": false
+  },
+  {
+    "file": "tests/personal-plan-refinement-presentation-route.test.ts",
+    "name": "returns null answers when no complete draft matches the pointer",
+    "before": "f105c2ebabac5c1c3d97bc3a98e94f3af89a1800bd4d45e4ef9a23d5a9e550ea",
+    "after": "f105c2ebabac5c1c3d97bc3a98e94f3af89a1800bd4d45e4ef9a23d5a9e550ea",
+    "unchanged": true,
+    "keeper": true
+  },
+  {
+    "file": "tests/personal-plan-refinement-presentation-route.test.ts",
+    "name": "returns included routine products of the active version",
+    "before": "6440e834318e18a8365c67104d386471291ea5746e7fe41b38c5edc9a04dddf1",
+    "after": "6440e834318e18a8365c67104d386471291ea5746e7fe41b38c5edc9a04dddf1",
+    "unchanged": true,
+    "keeper": false
+  },
+  {
+    "file": "tests/personal-plan-refinement-presentation-route.test.ts",
+    "name": "routineProducts is null when the active routine is authority_repair_required",
+    "before": "9c3939f6582fce3e42e409fdacf849cfb9f83a06bf065fe6832006b3fcc418e2",
+    "after": "9c3939f6582fce3e42e409fdacf849cfb9f83a06bf065fe6832006b3fcc418e2",
+    "unchanged": true,
+    "keeper": false
+  },
+  {
+    "file": "tests/personal-plan-refinement-presentation-route.test.ts",
+    "name": "refinement presentation API rejects unauthenticated reads",
+    "before": "040bde3ba09c84a9565b9a711d95693d9fc9c14fcb9ba77d1b1beb4d130a5537",
+    "after": "040bde3ba09c84a9565b9a711d95693d9fc9c14fcb9ba77d1b1beb4d130a5537",
+    "unchanged": true,
+    "keeper": false
+  },
+  {
+    "file": "tests/personal-plan-refinement-status-route.test.ts",
+    "name": "fresh plan with no refinement draft: both modules open, progress 2/4",
+    "before": "bad81e5552ef7653a71b1712db928cefe5526ca580c095de6a1a0db2d71d0288",
+    "after": "a246f2dbedb3e6f1e615e06c94807cff136623c8858a0bd5492e170f83eb729a",
+    "unchanged": false,
+    "keeper": true
+  },
+  {
+    "file": "tests/personal-plan-refinement-status-route.test.ts",
+    "name": "partial products user-answers: products open with the correct open-question count",
+    "before": "f1454bc0bd680f377be7ca39d9b0f2affeb1b42b0652f98c2583c2aa243eec32",
+    "after": "f1454bc0bd680f377be7ca39d9b0f2affeb1b42b0652f98c2583c2aa243eec32",
+    "unchanged": true,
+    "keeper": true
+  },
+  {
+    "file": "tests/personal-plan-refinement-status-route.test.ts",
+    "name": "products module complete via lineage: 3/4 and the handoff marker is set",
+    "before": "974961a1b80cd15af0e79c4db7195db243b9e0e483f3fad7cf40e1fac6997f58",
+    "after": "974961a1b80cd15af0e79c4db7195db243b9e0e483f3fad7cf40e1fac6997f58",
+    "unchanged": true,
+    "keeper": true
+  },
+  {
+    "file": "tests/personal-plan-refinement-status-route.test.ts",
+    "name": "both modules complete: 4/4",
+    "before": "3586d769766ff39e1819555a96a17c0364f2b328097d001ec07483f68793c0b2",
+    "after": "3586d769766ff39e1819555a96a17c0364f2b328097d001ec07483f68793c0b2",
+    "unchanged": true,
+    "keeper": true
+  },
+  {
+    "file": "tests/personal-plan-refinement-status-route.test.ts",
+    "name": "banner reflects a stored dismissal for the current open module",
+    "before": "80cf00d350bd46e98ea7546aff853d52e91aa7cf238e0c1a0b587127e141787e",
+    "after": "77289bcdf398868005f31dce5a2a5ebeb0ca345e24a43936211e38dfbcbba9eb",
+    "unchanged": false,
+    "keeper": true
+  },
+  {
+    "file": "tests/personal-plan-refinement-status-route.test.ts",
+    "name": "in_progress draft wins over a completed draft on the same initial need version",
+    "before": "8c1b48a99e7060aa30b88fd7b3c5bf0313702af0a00de0bb8b15e49b77d42408",
+    "after": "8c1b48a99e7060aa30b88fd7b3c5bf0313702af0a00de0bb8b15e49b77d42408",
+    "unchanged": true,
+    "keeper": false
+  },
+  {
+    "file": "tests/personal-plan-refinement-status-route.test.ts",
+    "name": "initial need version with neither a Stage-1 lead nor a prepared-artifact source degrades to 503",
+    "before": "96e5a8a516fd741dfb82084baeed6484dd9dec684ad5658efe2b7b9de95710c7",
+    "after": "96e5a8a516fd741dfb82084baeed6484dd9dec684ad5658efe2b7b9de95710c7",
+    "unchanged": true,
+    "keeper": false
+  },
+  {
+    "file": "tests/personal-plan-refinement-status-route.test.ts",
+    "name": "no personal plan: typed 404",
+    "before": "c5240d71349596ee1b4cc0f6373c1cb35e571c0b9585e5ecdce3d1608d77b776",
+    "after": "c5240d71349596ee1b4cc0f6373c1cb35e571c0b9585e5ecdce3d1608d77b776",
+    "unchanged": true,
+    "keeper": false
+  },
+  {
+    "file": "tests/personal-plan-refinement-status-route.test.ts",
+    "name": "rejects unauthenticated reads",
+    "before": "e83fb008cfb6e5f003b045a42f52aaec13988d3f875a7662c65db9a746fbe199",
+    "after": "e83fb008cfb6e5f003b045a42f52aaec13988d3f875a7662c65db9a746fbe199",
+    "unchanged": true,
+    "keeper": false
+  }
+]

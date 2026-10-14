@@ -1,0 +1,89 @@
+"""Fresh TMP-only template adapter. Does not import products or start children."""
+from pathlib import Path
+import hashlib,json,difflib
+D=Path(__file__).parent;T=Path('/tmp/test-audit-scanner46-tools-xrqyw5u6');P='/tmp/test-audit-refinement-status37'
+sha=lambda x:hashlib.sha256(x).hexdigest()
+assert D.resolve().parent==Path('/tmp').resolve()
+assert sha((T/'operator-pins.json').read_bytes())=='e17df846d1944a146f0f760dbd16d77c404a1d1cafea73b9fefedf12a8b8fcb3'
+assert sha(Path(P+'/manifest.json').read_bytes())=='20e860ff28dbf2fed2d9fdfd07482242f66a18988ab2dc4bc5514edf243f2ce6'
+assert sha(Path(P+'/handoff.json').read_bytes())=='9bf451758eab49e3b0593eae2a96dfcf969c771bbb829da1b5c407438fd11789'
+oldpins=json.loads((T/'operator-pins.json').read_bytes())
+def write(p,b):
+ assert p.parent.resolve().is_relative_to(D.resolve())
+ with p.open('xb') as f:f.write(b)
+def once(s,a,b):
+ assert s.count(a)==1,a
+ return s.replace(a,b)
+(D/'template-originals').mkdir()
+provenance=[]
+for n in ['operator-pins.json','operator-guard.cjs','operator-edit.cjs','operator-run-controls.cjs','operator-proof.cjs','operator-readonly-preload.cjs','proof-attestation.cjs']:
+ orig=(T/n).read_bytes();write(D/'template-originals'/n,orig)
+ if n=='operator-pins.json':continue
+ if n not in ('operator-edit.cjs','operator-run-controls.cjs','proof-attestation.cjs'):
+  aliases=[h for p,h in oldpins['artifactHashes'].items() if Path(p).resolve()==(T/n).resolve()]
+  assert aliases and all(h==sha(orig) for h in aliases),n
+ s=orig.decode().replace(str(T)+'/operator',str(D)+'/operator').replace('/tmp/test-audit-scanner46-proposal-RDeysZ',P)
+ s=s.replace("const PIN_SHA='e17df846d1944a146f0f760dbd16d77c404a1d1cafea73b9fefedf12a8b8fcb3'","const PIN_SHA='PIN_SHA_PLACEHOLDER'")
+ if n=='operator-guard.cjs':
+  start=s.index('  if(evidence.root!==ROOT');end=s.index('  function guards(overrides={})',start)
+  s=s[:start]+'''  if(evidence.root!==ROOT||evidence.head!==pins.head||evidence.branch!==pins.branch||candidates.length!==7||controls.length!==13||ts.version!==pins.typescriptVersion)fail('Proposal identity/count mismatch')
+  const snapshots={},counts={before:0,transfer:0,cut:0};let unrelated=0,unchangedRetained=0,changedKeepers=0
+  const keepers=new Map(candidates.map(c=>[c.keeper.file+'\\0'+c.keeper.name,c.keeper]));if(keepers.size!==7)fail('Seven unique keepers required')
+  for(const file of Object.keys(evidence.phases.before)){
+    snapshots[file]={}
+    for(const phase of Object.keys(counts)){
+      const bytes=fs.readFileSync(evidence.snapshotPaths[phase][file]),rows=registrations(ts,file,bytes.toString())
+      if(sha(bytes)!==evidence.phases[phase][file])fail('Phase bytes: '+file)
+      snapshots[file][phase]={bytes,rows};counts[phase]+=rows.size
+    }
+    const {before,transfer,cut}=snapshots[file];let reconstructed=before.bytes.toString()
+    const local=candidates.filter(c=>c.file===file)
+    for(const c of local)if(before.rows.get(c.donor.name)?.statement!==c.donor.body||sha(c.donor.body)!==c.donor.sha256)fail('Original donor identity')
+    for(const k of keepers.values())if(k.file===file){
+      if(before.rows.get(k.name)?.statement!==k.body||sha(k.body)!==k.sha256)fail('Original keeper identity')
+      if(k.body!==k.after){
+        if(k.addedAssertions.length!==1||replaceOnce(k.after,'  '+k.addedAssertions[0]+'\\n','','sole assertion addition')!==k.body)fail('Keeper owner calls/input/support changed')
+        reconstructed=replaceOnce(reconstructed,k.body,k.after,'keeper transfer');changedKeepers++
+      }else if(k.addedAssertions.length)fail('Unexpected assertion addition')
+    }
+    if(reconstructed!==transfer.bytes.toString())fail('Transfer changed unrelated bytes')
+    for(const c of local)reconstructed=replaceOnce(reconstructed,c.donor.body+'\\n\\n','',c.id)
+    for(const edit of evidence.supportEdits.filter(e=>e.file===file))reconstructed=replaceOnce(reconstructed,edit.from,edit.to,'exact unused import removal')
+    if(reconstructed!==cut.bytes.toString())fail('Cut changed unrelated support bytes')
+    for(const [name,row]of before.rows){const t=transfer.rows.get(name),k=cut.rows.get(name)
+      if(local.some(c=>c.donor.name===name)){if(k||t?.statement!==row.statement)fail('Donor phase mismatch');continue}
+      const keeper=keepers.get(file+'\\0'+name)
+      if(keeper&&keeper.body!==keeper.after){if(t?.statement!==keeper.after||k?.statement!==keeper.after)fail('Keeper phase mismatch');continue}
+      if(t?.statement!==row.statement||k?.statement!==row.statement)fail('Retained callback changed');unchangedRetained++;if(!keeper)unrelated++
+    }
+  }
+  if(Object.keys(snapshots).length!==5||JSON.stringify(counts)!=='{"before":37,"transfer":37,"cut":30}'||unrelated!==23||unchangedRetained!==28||changedKeepers!==2)fail('Phase conservation mismatch')
+  const ledger=readJSON(PROPOSAL+'/ledger.json');if(ledger.filter(j=>j.mark==='F').length!==0)fail('Held F changed')
+  for(const c of candidates){
+    const donor=snapshots[c.file].before.rows.get(c.donor.name)
+    if(c.assertionUnion.length!==donor.assertions.length)fail('Incomplete donor assertion accounting')
+    for(const phase of ['transfer','cut']){
+      const row=snapshots[c.keeper.file][phase].rows.get(c.keeper.name)
+      if(row?.statement!==c.keeper.after)fail('Keeper union phase mismatch')
+      for(let i=0;i<c.assertionUnion.length;i++){
+        const u=c.assertionUnion[i]
+        if(u.donorText!==donor.assertions[i].text||u.keeperText!==row.assertions[u.keeperIndex]?.text||!u.basis)fail('Frozen whole assertion union mismatch')
+      }
+    }
+  }
+''' +s[end:]
+  s=once(s,"'tsx','--test','--test-name-pattern=^'","'tsx','--test','--test-concurrency=1','--test-name-pattern=^'")
+  s=once(s,"if(c.anchor.kind==='function'){","if(['function','variable'].includes(c.anchor.kind)){")
+  s=once(s,"if(ctx.ts.isFunctionDeclaration(n)&&n.name?.text===c.anchor.scope)found.push(n);","if(c.anchor.kind==='function'&&ctx.ts.isFunctionDeclaration(n)&&n.name?.text===c.anchor.scope)found.push(n);if(c.anchor.kind==='variable'&&ctx.ts.isVariableStatement(n)&&n.declarationList.declarations.some(d=>ctx.ts.isIdentifier(d.name)&&d.name.text===c.anchor.scope))found.push(n);")
+  s=once(s,"||matches[0].startLine!==o.startLine)","||matches[0].startLine!==o.startLine||sha(ctx.snapshots[c.test.file][phase].bytes)!==o.testFileSha256)")
+ if n=='operator-edit.cjs':s=once(s,'parsedPhaseFiles:18,sourceControlsParsed:5,sqlByteControls:2','parsedPhaseFiles:15,sourceControlsParsed:13')
+ if n=='operator-run-controls.cjs':
+  s=once(s,'tsMutantsParsed:5,sqlRawByteMutants:2,allControlsPrepared:prepared.size===7','tsMutantsParsed:13,allControlsPrepared:prepared.size===13')
+  s=s.replace('ALL6 test','ALL5 test').replace('receipts.length===7','receipts.length===13')
+ if n=='operator-proof.cjs':
+  for a,b in [('complete.verified!==7','complete.verified!==13'),('complete.cleanRuns!==14','complete.cleanRuns!==26'),('Required7','Required13'),('length!==6','length!==5'),('records.length!==7','records.length!==13'),('Seven records required','Thirteen records required'),('verified:7,logFiles:21','verified:13,logFiles:39')]:s=once(s,a,b)
+ if n=='proof-attestation.cjs':s=s.replace('controls:7','controls:13')
+ write(D/n,s.encode())
+ provenance.append({'file':n,'template':str(T/n),'templateSHA256':sha(orig),'preparedTemplateSHA256':sha(s.encode())})
+write(D/'template-provenance.json',(json.dumps({'templatePins':'e17df846d1944a146f0f760dbd16d77c404a1d1cafea73b9fefedf12a8b8fcb3','currentStackPolicy':'/tmp/test-audit-scanner46-main-stack-proof-b8afrpth','files':provenance},indent=2)+'\n').encode())
+write(D/'template-delta.patch',''.join(''.join(difflib.unified_diff((D/'template-originals'/x['file']).read_text().splitlines(True),(D/x['file']).read_text().splitlines(True),fromfile=x['template'],tofile=str(D/x['file']))) for x in provenance).encode())

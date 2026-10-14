@@ -1,0 +1,25 @@
+{
+  "mode": "cut",
+  "from": "transfer",
+  "phase": "cut",
+  "counts": {
+    "before": 152,
+    "transfer": 152,
+    "cut": 143
+  },
+  "changed": [
+    "tests/scan-detection-state.test.ts",
+    "tests/scan-scanner-session.test.ts",
+    "tests/scan-scanner-loop.test.ts",
+    "tests/scan-flow-state.test.ts"
+  ],
+  "allTestHashes": {
+    "tests/scan-detection-state.test.ts": "29e30198444141775f21ab30c9a43ba3d464f103c82047e86cca247ab52ac5b7",
+    "tests/scan-scanner-session.test.ts": "55bdc4cf8f17ded461cb685a5d836e54de91b16627c5099651ce21228c5b1c7e",
+    "tests/scan-scanner-loop.test.ts": "9c0b680ffc7584c966263016a1ca988d7d283d6c488d88dba5c16c9fe5ada911",
+    "tests/scan-flow-state.test.ts": "bab06d984760e52026dec5de3de1c869489afd760d02af355bfc8d9aaa454c45"
+  },
+  "sourceWrites": 0,
+  "testsRun": 0,
+  "originals": "/tmp/test-audit-scanner-detection-session-apply-cut-rnyTE4/originals"
+}

@@ -1,0 +1,51 @@
+{
+  "mode": "cut",
+  "from": "transfer",
+  "to": "cut",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "manifestSha256": "178a9f2642414241a7ad55c4e37b6d986b35527ba1f6d71699dbc303a742c69d",
+  "controlProof": {
+    "path": "/tmp/test-audit-next549-catalog-mutations-new/receipt.json",
+    "sha256": "7d139600f772b2dc87e29725db17127c0af558f3d500805fe31e46123a5249b0"
+  },
+  "backup": "/tmp/catalog8-cut-dR9Bj0",
+  "status": "complete",
+  "files": [
+    {
+      "file": "tests/scanner-catalog-coverage-existing-ledger.test.ts",
+      "before": "6f57876eb54965c069cd6c440229e454a125c01e4399b3acc2f266f4ca5288e5",
+      "after": "0c6599a78fd67be74f723e8e7010e83e23e6099143345a47d8c965b497e0cb3f",
+      "backup": "/tmp/catalog8-cut-dR9Bj0/tests/scanner-catalog-coverage-existing-ledger.test.ts"
+    },
+    {
+      "file": "tests/scanner-catalog-coverage-phase1a-ledger.test.ts",
+      "before": "69499e208cd91c52688a7e5df18850bd4b21151809a086de0f37d6b06c19fbe5",
+      "after": "3af5889a79f89ba2117c36f1e0ffba10d259ba39e07208c43cd430b7ce425a43",
+      "backup": "/tmp/catalog8-cut-dR9Bj0/tests/scanner-catalog-coverage-phase1a-ledger.test.ts"
+    },
+    {
+      "file": "tests/scanner-catalog-coverage-phase1b-ledger.test.ts",
+      "before": "2045e3fa39b76e2fa6a14a908648bcbd6e6d6427039eb7a229a996a07e4ab6d3",
+      "after": "733c9a25c8d55bd141564fc4152800e1e9a441f95902e1469f9792e89ba3f1bf",
+      "backup": "/tmp/catalog8-cut-dR9Bj0/tests/scanner-catalog-coverage-phase1b-ledger.test.ts"
+    },
+    {
+      "file": "tests/scanner-catalog-coverage-research-batches.test.ts",
+      "before": "31aa48db8bf088feadf6f830eb3144cd8aa66c7ac039c2eda09218a6736f80c1",
+      "after": "31aa48db8bf088feadf6f830eb3144cd8aa66c7ac039c2eda09218a6736f80c1",
+      "backup": "/tmp/catalog8-cut-dR9Bj0/tests/scanner-catalog-coverage-research-batches.test.ts"
+    },
+    {
+      "file": "tests/scanner-catalog-coverage-readiness.test.ts",
+      "before": "20af0916fd719f6f482e32bea99b38c9ab4a236fdc408c8039a5265333733be8",
+      "after": "20af0916fd719f6f482e32bea99b38c9ab4a236fdc408c8039a5265333733be8",
+      "backup": "/tmp/catalog8-cut-dR9Bj0/tests/scanner-catalog-coverage-readiness.test.ts"
+    },
+    {
+      "file": "tests/scanner-catalog-coverage-live-baseline.test.ts",
+      "before": "7fd7e7b1e3fd6ee28149f9f3ab44288271d512c318ee331e9db5d1e532aeb37a",
+      "after": "9d45217aaf942fd2e194d6b0881371bc551a03fca6016300a42a6178490e3f77",
+      "backup": "/tmp/catalog8-cut-dR9Bj0/tests/scanner-catalog-coverage-live-baseline.test.ts"
+    }
+  ]
+}

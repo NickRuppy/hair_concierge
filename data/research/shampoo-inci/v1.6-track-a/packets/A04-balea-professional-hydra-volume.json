@@ -1,0 +1,62 @@
+{
+  "slot": "A04",
+  "productId": "1311e51c-7941-4d2c-b9b4-7a450ee37f15",
+  "name": "Balea Professional Shampoo Hydra Volume, 250 ml",
+  "brand": "Balea",
+  "packSize": "250 ml",
+  "gtins": [
+    "4066447990126"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/3126236/balea-professional-shampoo-hydra-volume",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de (dm-Eigenmarke; dm drogerie markt GmbH + Co. KG is brand owner and listed 'Anschrift des Unternehmens')",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4066447990126 (page text 'GTIN'; dm-Artikelnummer 3126236; 'Shampoo Hydra Volume, 250 ml')",
+      "inciVerbatim": "INGREDIENTS: AQUA | SODIUM LAURETH SULFATE | COCAMIDOPROPYL HYDROXYSULTAINE | SODIUM CHLORIDE | COCO|GLUCOSIDE | SODIUM HYALURONATE | NIACINAMIDE | KAOLIN | GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE | CITRIC ACID | PARFUM | METHYL BENZOATE | SODIUM BENZOATE|",
+      "claimsVerbatim": "Volumenshampoo | Für feines Haar mit platten Ansatz & trockenen Spitzen | Feuchtigkeitsspendend | pH-hautneutrale Formel | Hautverträglichkeit dermatologisch bestätigt | Das Hydra Volume Shampoo von Balea PROFESSIONAL bietet eine gründliche Reinigung für den Haaransatz und versorgt das Haar mit Feuchtigkeit bis in die Spitzen. Es wurde speziell für die Bedürfnisse von feinem Haar mit einem platten Ansatz und trockenen Spitzen entwickelt. Die pH-hautneutrale Formel reinigt sanft und kann dem Haar zu mehr Fülle verhelfen. Für ein gepflegtes und voluminöses Haargefühl sorgt das Shampoo und unterstützt ein frisches Aussehen der Haare. | Produktmerkmale: Wirkung: Pflege, Volumen; Produkteigenschaften: ohne Silikone, Ohne Alkohol, vegan",
+      "directionsVerbatim": "Sanft auf die Kopfhaut und ins nasse Haar einmassieren und sorgfältig mit lauwarmen Wasser ausspülen."
+    },
+    {
+      "url": "https://inkeedecoder.com/products/balea-professional-hydra-volume-shampoo",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "database_user_uploaded (support only)",
+      "sourceKind": "retailer",
+      "gtinShown": null,
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Hydroxysultaine, Sodium Chloride, Coco-Glucoside, Sodium Hyaluronate, Niacinamide, Kaolin, Guar Hydroxypropyltrimonium Chloride, Citric Acid, Parfum, Methyl Benzoate, Sodium Benzoate",
+      "claimsVerbatim": "Volumizing shampoo. (user upload 06/23/2026, listing text only)",
+      "directionsVerbatim": null
+    }
+  ],
+  "conflicts": [],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Hydroxysultaine",
+    "Sodium Chloride",
+    "Coco-Glucoside",
+    "Sodium Hyaluronate",
+    "Niacinamide",
+    "Kaolin",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Citric Acid",
+    "Parfum",
+    "Methyl Benzoate",
+    "Sodium Benzoate"
+  ],
+  "canonicalReason": "dm.de is the only German market source: Balea is a dm private label, so the dm.de product page (GTIN 4066447990126, 250 ml) doubles as the brand-owner page. The list is rendered pipe-separated ('COCO|GLUCOSIDE' = Coco-Glucoside, the hyphen is rendered as a pipe) and has no truncation marker. A user-uploaded database (INKEEDecoder, support only) shows the same 13 items in the same order. No second German retailer exists (dm exclusive brand) and no pack photo was available, so this is a single-origin freeze.",
+  "inciFingerprintSha256": "723f7c1a8786cbc8b2d2414a5bfa1cdd8238be027319aea858bbfef9d03cebd0",
+  "normalization": "Split the canonical raw INCI on ',' (not on commas inside locants such as '1,2-'), merged split synonym entries such as 'Aqua (Water)' / 'Aqua/Water/Eau' into one item each; per ingredient: lower-case, trim, collapse internal whitespace, remove whitespace around '/'; drop a trailing period and any leading label such as 'Inhaltsstoffe:'; keep parentheses, asterisks and hyphens as published; join the normalized ingredients with '|' and sha256 the UTF-8 string.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Single-origin freeze: dm.de is both retailer and brand owner. Short 13-item list (no preservative system beyond Sodium Benzoate / Methyl Benzoate, no polyquats) is unusual for a surfactant shampoo but there is no ellipsis/'u.a.' marker and the user-uploaded database agrees. Recommended: a pack-back photo if Nick wants a tier-1 confirmation.",
+    "Intake package (ops/product-intake-research/2026-10-05/41e9950e-...) contains only the front packshot image and no INCI; research.md is an empty template. The intake payload cites the same dm.de page and GTIN.",
+    "Normalization: the dm string is pipe-delimited; items were split on ' | ', the artefact 'COCO|GLUCOSIDE' merged to 'Coco-Glucoside', the trailing '|' dropped. Casing set to Title Case (irrelevant to the fingerprint).",
+    "Claims 'ohne Silikone', 'vegan', 'ohne Alkohol' consistent with the INCI (no silicone, no alcohol, no animal-derived item). Claim 'feuchtigkeitsspendend' supported by Sodium Hyaluronate/Niacinamide. The dm page keeps 'Hergestellt in' blank."
+  ]
+}

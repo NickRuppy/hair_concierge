@@ -80,13 +80,6 @@ test("loadScanEvaluationContext: initial fallback without refined head preserves
   const context = await loadScanEvaluationContext(stubClient(source) as never, "owner")
   assert.equal(context?.snapshotSource, "initial")
   assert.deepEqual(context?.snapshot.decisions, source.initial!.output_snapshot.decisions)
-})
-
-test("loadScanEvaluationContext: genuinely absent refined source falls back to compatible initial", async () => {
-  const source = await fixture()
-  source.refined = null
-  const context = await loadScanEvaluationContext(stubClient(source) as never, "owner")
-  assert.equal(context?.snapshotSource, "initial")
   assert.deepEqual(context?.snapshot.profile.hair, source.initial!.output_snapshot.profile.hair)
 })
 

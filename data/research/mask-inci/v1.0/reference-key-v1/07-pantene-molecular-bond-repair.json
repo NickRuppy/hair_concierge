@@ -1,0 +1,461 @@
+{
+  "schemaVersion": "mask-research-record-v0.1",
+  "lane": "reference_key",
+  "standardVersion": "mask-inci-v0.4",
+  "productId": "07-pantene-molecular-bond-repair",
+  "identity": {
+    "brand": "Pantene Pro-V",
+    "productName": "Miracles Molecular Bond Repair Intensive Haarmaske",
+    "packSize": "300 ml",
+    "gtinEan": "8700216173476",
+    "market": "DE (dm.de + Rossmann.de + Müller)",
+    "formulaSource": "mueller.de IPN2964989 (direct retailer fetch, verbatim — INCI and directions from the same successful page load), accessed 2026-09-04",
+    "rawInciSha256": "7be31024068a8a96a303b7637c4993c7efcc8896713e283da8bc136f2f9c400f",
+    "identityState": "verified",
+    "identityStateReason": "Exact product name and EAN both matched on a directly fetched retailer page. A similarly-named 160 ml variant with a materially different INCI was identified and kept separate, not merged (§2.4). This is the cohort's highest-quality identity record."
+  },
+  "g0": {
+    "value": "in_category",
+    "modeScoped": false,
+    "multiUse": null,
+    "rationale": "Directions state a contact time and a rinse and describe a single post-wash mask mode. No leave-in, pre-shampoo or overnight mode. Not a bondbuilder catalog product with a specialist protocol — it is a conventional drugstore rinse-out mask carrying bond positioning, which charter F3 explicitly includes.",
+    "evidenceSignals": [
+      "directions: 'Auf das nasse Haar auftragen. 2 Minuten einwirken lassen. Ausspülen.'",
+      "directions: 'In den Händen verreiben, um die Pro-V Perlen aufzulösen' — a preparation step, not a second mode",
+      "charter F3: bond-claim drugstore masks are in scope, with the bond route claim-gated",
+      "single stated mode"
+    ],
+    "placementConjunctNote": "Neither placement nor the words 'nach der Haarwäsche' are stated verbatim ('auf das nasse Haar'). Not used as a refusal ground (AP-G0-PLACEMENT, AP-05-AFTERCLEANSING)."
+  },
+  "tailMarker": {
+    "ingredient": "PARFUM",
+    "rank": 7,
+    "index": 7,
+    "plausible": true,
+    "anomalyNote": "No §3.1 anomaly: rank 7 > 3, and three conditioning ingredients precede the marker (Stearyl Alcohol @2, Stearamidopropyl Dimethylamine @3, Cetyl Alcohol @4). The marker is early relative to a 23-entry list, so Behentrimonium Methosulfate @11, Panthenol @15, Panthenyl Ethyl Ether @16, Histidine @18 and Biotin @22 are all demoted. That demotion is well-founded here: this is a genuinely short-payload formula, not a hero-tail artefact.  ||  PLAUSIBILITY ASSESSMENT (R2, §3.1.1, added under v0.2): PLAUSIBLE. STEARYL ALCOHOL @2, STEARAMIDOPROPYL DIMETHYLAMINE @3, CETYL ALCOHOL @4 and BIS-AMINOPROPYL DIMETHICONE @5 - the complete credited architecture - outrank PARFUM @7; conventional O/W emulsion with AQUA @1. BEHENTRIMONIUM METHOSULFATE @11 sits below the marker, an ordinary single-species demotion in a genuinely short-payload formula. GLUTAMIC ACID @6 is the tail_index - 1 species; it is the amidoamine neutraliser (lexicon C3) and carries no signal in any field, so R3's tail-edge exclusion changes nothing here."
+  },
+  "aboveTailSegment": [
+    "1 AQUA",
+    "2 STEARYL ALCOHOL",
+    "3 STEARAMIDOPROPYL DIMETHYLAMINE",
+    "4 CETYL ALCOHOL",
+    "5 BIS-AMINOPROPYL DIMETHICONE",
+    "6 GLUTAMIC ACID"
+  ],
+  "directProperties": {
+    "treatment_concentration_potential": {
+      "value": "moderate",
+      "note": "A conventional single-amidoamine plus two-fatty-alcohol base with one amino silicone; no lipid of any kind above the tail."
+    },
+    "conditioning_deposition_potential": {
+      "value": "moderate",
+      "note": "Stearamidopropyl Dimethylamine @3 with Glutamic Acid @6 as its near-certain neutraliser (C3) — a textbook single-cationic base."
+    },
+    "wet_slip_detangling_potential": {
+      "value": "moderate",
+      "note": "One amidoamine plus an amino silicone; wet evidence is not dry evidence."
+    },
+    "dry_combability_potential": {
+      "value": "moderate",
+      "note": "Bis-Aminopropyl Dimethicone deposits preferentially on damaged, more anionic fibre regions — direction only, no numbers (Pr-2 percentages are unverified). No dry endpoint."
+    },
+    "surface_lubrication_softness_potential": {
+      "value": "moderate",
+      "note": "Two fatty alcohols plus an amino silicone; friction proxy is not perceived softness."
+    },
+    "smoothing_frizz_control_potential": {
+      "value": "higher",
+      "note": "The amino silicone at rank 5 is the formula's one distinct route beyond the base; still not weatherproof frizz control."
+    },
+    "shine_potential": {
+      "value": "moderate",
+      "note": "Optical route present and lipid-lean, but it is the same M3-sharing-M1 film, and there is no gloss positioning to corroborate."
+    },
+    "humectant_support_potential": {
+      "value": "lower",
+      "note": "Zero humectants above the tail. Panthenol @15 and Panthenyl Ethyl Ether @16 are both demoted."
+    },
+    "weight_deposition_potential": {
+      "value": "lower",
+      "note": "No lipid, butter, oil or occlusive stack anywhere above the tail; two fatty alcohols and one silicone."
+    },
+    "body_lightness_potential": {
+      "value": "balanced",
+      "note": "Lipid-free above the tail but two fatty alcohols in the top four; no lightness positioning to corroborate a preserving reading."
+    },
+    "repair_lubrication_protection": {
+      "value": "candidate",
+      "note": "Manageability route only; manageability is not breakage protection and neither is structural repair."
+    },
+    "repair_surface_film": {
+      "value": "none_visible",
+      "note": "No protein or peptide species at any rank. Glutamic Acid and Histidine are free amino acids — explicit non-qualifiers — and Glutamic Acid is the amidoamine neutraliser besides."
+    },
+    "bond_specific_support": {
+      "value": "claim_only",
+      "note": "'Molecular Bond Repair' and 'Molecular Repair Technology' with no nameable bond-chemistry INCI token at any rank. Bis-Aminopropyl Dimethicone is an amino silicone and an explicit family-6 non-qualifier."
+    },
+    "color_chemical_damage_protection": {
+      "value": "general_conditioning",
+      "note": "Citric Acid @10 and Disodium EDTA @12 are tail-position pH/chelation context; no colour endpoint. CI 77492 @20 is a colourant."
+    },
+    "fragrance_scalp_exposure": {
+      "value": "aromatic_or_allergen_exposure",
+      "note": "Parfum @7, Hexyl Cinnamal @14, Benzyl Salicylate @19, Limonene @21."
+    }
+  },
+  "profile": {
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, exact-market DE INCI of record (sha256 7be31024…, direct Müller fetch), above-tail ranks 1–6; category-relative to the German drugstore rinse-out mask shelf.",
+      "rationale": "Exactly one of the three §9.1 structural signals is satisfied, which §9.1 assigns to the moderate bucket by definition. This is a structurally minimal formula: one cationic species, two fatty alcohols, one silicone, no lipid. E2 ceiling: comparative structural intensity potential, not measured treatment performance.",
+      "evidenceSignals": [
+        "STEARYL ALCOHOL (rank 2) — long-chain fatty alcohol in the top three, the one satisfied signal",
+        "STEARAMIDOPROPYL DIMETHYLAMINE (rank 3) — the only cationic species above the tail",
+        "BEHENTRIMONIUM METHOSULFATE (rank 11) — a second cationic, but BELOW tail_index 7",
+        "no non-fatty-alcohol lipid at any rank above the tail (Bis-Aminopropyl Dimethicone @5 is an R2 silicone, not an R4 lipid; Glutamic Acid @6 is a free amino acid)",
+        "CETYL ALCOHOL (rank 4) — a second fatty alcohol, but S2 asks for rank 2 or 3, which Stearyl Alcohol already satisfies; breadth of fatty alcohols is not a separate signal"
+      ],
+      "derivation": "S1 (≥2 distinct cationics above the tail) = NOT satisfied; one. S2 satisfied (Stearyl Alcohol @2). S3 (≥2 distinct non-fatty-alcohol lipids above the tail) = NOT satisfied; zero. Count = 1 of 3.",
+      "thresholdReasoning": [
+        "Clears `moderate`: §9.1 assigns `moderate` to 'everything else, including exactly one satisfied signal'. Exactly one is satisfied.",
+        "`high` does not apply: it requires ≥2 of {S1,S2,S3}. Only S2 holds, and the second cationic that would have carried S1 sits four ranks below the marker.",
+        "`low` does not apply: it requires NONE of the three — specifically a single cationic species AND no fatty alcohol in the top three AND at most one lipid above the tail. The first and third conditions hold, but Stearyl Alcohol @2 defeats the second.",
+        "Confidence is `moderate` rather than `high` by the §9.1 rule itself: high confidence requires ≥2 signals pointing the same way, and only one is available — despite this being the cohort's best-sourced formula.",
+        "Re-derived under v0.2 (R3): the value `moderate` STANDS, and the route to it is unchanged in substance. S1 fails — STEARAMIDOPROPYL DIMETHYLAMINE @3 is the only cationic above the tail, and BEHENTRIMONIUM METHOSULFATE @11 is tail-side. S2 is satisfied by STEARYL ALCOHOL @2. S3 fails: there is no lipid of any class above the tail. One signal, and S1 is not it, so `high` is doubly unreachable. The tail-edge exclusion changes nothing: the tail_index − 1 species is GLUTAMIC ACID @6, which carries no structural signal. No material counter-signal fires."
+      ],
+      "counterSignals": [
+        "Polysorbate 20 @13, Disodium EDTA @12 and Methicone @23 are formulation infrastructure in the tail and earn nothing (lexicon family 10).",
+        "Biotin @22 earns zero credit on every property and is kept away from any hair-loss-adjacent language (G6)."
+      ],
+      "limitations": [
+        "A three-step concentration scale is at the edge of INCI support.",
+        "This is the one cohort product where source quality is excellent and the signal count is still thin — the scale's resolution, not the evidence, is the limit."
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, above-tail ranks 1–6 (marker PARFUM @7, resolved and plausible on all three §3.1.1 limbs); an ingredient-informed matching prior, not a prediction of visible finish.",
+      "rationale": "CHANGED under v0.4 (E7, 2026-09-30): `low` → `moderate`. E7 rules that the E4 leanness test's third conjunct ('a single cationic species') is counted on the FULL INCI list, not the above-tail segment: sub-1 % cationics still deposit on hair, and a formula running more than one deposition species is not structurally lean regardless of where PARFUM lands. On the full list this formula runs TWO cationic species — STEARAMIDOPROPYL DIMETHYLAMINE @3 and BEHENTRIMONIUM METHOSULFATE @11 — so conjunct 3 fails and `low` is withheld. `high` still fails at its required core (no R4b heavy lipid at any rank). The residual `moderate` is the conservative failure direction E7 names. E2 ceiling: weight deposition potential, never measured finish.",
+      "evidenceSignals": [
+        "CONJUNCT 1 — no R4b heavy lipid above the marker: SATISFIED, and on the whole list — no lipid of any class, R4a or R4b, at any rank of the 23-entry list",
+        "CONJUNCT 2 — no occlusive silicone stack above the tail: SATISFIED. BIS-AMINOPROPYL DIMETHICONE @5 is a single silicone species (METHICONE @23 is tail-side and is not a dimethicone/dimethiconol pair partner)",
+        "CONJUNCT 3 — a single cationic species, counted on the FULL INCI list (E7, 2026-09-30): NOT SATISFIED. STEARAMIDOPROPYL DIMETHYLAMINE @3 (protonatable amidoamine) and BEHENTRIMONIUM METHOSULFATE @11 (long-chain quat) are two distinct S1-family species on the full list. The second sits below PARFUM @7, which under E4's former above-tail scope hid it; under E7 it counts",
+        "tail marker PARFUM @7, resolved and `plausible: true` — unchanged; the marker quality is not what withholds `low` here, the full-list cationic count is",
+        "boundary check (E1): the tail_index − 1 species is GLUTAMIC ACID @6, which carries no §9.2 term; not load-bearing, no `boundary_position_ingredient` flag"
+      ],
+      "derivation": "§9.2 under E4's leanness test with E7's full-list counting scope for conjunct 3. `low`: conjunct 1 HOLDS, conjunct 2 HOLDS, conjunct 3 FAILS (two cationic species on the full list: @3, @11) → `low` not available. `high`: fails at its required core (no R4b heavy lipid at any rank). Residual = `moderate`.",
+      "thresholdReasoning": [
+        "Clears `moderate`: §9.2's residual, 'the expected majority, and accepted'.",
+        "`low` does not apply — the value that MOVED. Under v0.3 conjunct 3 was counted on the above-tail segment and held on STEARAMIDOPROPYL DIMETHYLAMINE @3 alone; that counting scope was §9.2's own unruled [judgment call — review] and this record carried it as AP-07-CATIONICSCOPE. Nick ruled E7 on 2026-09-30: the conjunct counts the full list. BEHENTRIMONIUM METHOSULFATE @11 is a second deposition species, so the formula is not structurally lean on E4's own reasoning ('a formula running one deposition species is structurally lean in a way a formula running three is not').",
+        "`high` does not apply: no R4b heavy lipid at any rank, one silicone. The anchor has no required core.",
+        "Conjunct 3 is decided on the full list and does not depend on the marker's exact position, so no marker-position caveat attaches to this value any longer.",
+        "Confidence `moderate`: §9.2's default for the residual; nothing about the full-list count is uncertain (the INCI is a verbatim, EAN-matched direct retailer fetch), but `moderate` is the residual bucket and the graded `weight_deposition_potential` reads `lower`, i.e. a reviewer weighing the lean lipid architecture sees a neighbouring value on the evidence, even though the ruled anchor forecloses it."
+      ],
+      "counterSignals": [
+        "The graded direct property `weight_deposition_potential` reads `lower` ('no lipid, butter, oil or occlusive stack anywhere above the tail') against a profile value of `moderate` — the same divergence the v0.2 record carried. The gap is E7's deposition-breadth conjunct, not a disagreement about lipids.",
+        "The weight move does NOT move the focus: no §9.5.2 rule reads `weight_potential` after E6 deleted step 3's `lightness` route (checked exhaustively in the v0.3 primaryFocus re-check, retained below)."
+      ],
+      "limitations": [
+        "A soft preference with a stated reason, never an exclusion (§9.2 wording rule).",
+        "An ingredient-informed matching prior at E2, never a prediction about visible body or finish."
+      ]
+    },
+    "careDirection": {
+      "value": "moisture",
+      "balancedReading": null,
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only, above-tail ranks 1–6; comparative care emphasis, never an assertion about a user's protein or moisture state (G6).",
+      "rationale": "CHANGED under v0.4 (E9, 2026-09-30): `balanced` / `neither_dominant` → `moisture`. E9 rules that a single silicone species is NOT a 'substantive R2 silicone system' for §9.3 reading (b) clause 2: a system needs at least two distinct R2 silicone species above the tail, or one silicone plus a corroborating R3 cationic-polymer film or R6a acid-gloss route above the tail. This formula carries exactly one silicone above the tail (BIS-AMINOPROPYL DIMETHICONE @5) and no R3 or R6a species at any rank, so clause 2 fails, reading (b) is unavailable, and the field takes D6's honest category default. E3's acceptance of reading (b) on this record is superseded by E9 on the clause-2 question E3 did not rule. E2 ceiling: comparative emphasis, not a delivered outcome.",
+      "evidenceSignals": [
+        "no protein anchor: no hydrolyzed protein, peptide, keratin or cationised protein at ANY rank; GLUTAMIC ACID @6 and HISTIDINE @18 are free amino acids and explicit R5 non-qualifiers",
+        "reading (b) clause 2 — NOT satisfied under E9: BIS-AMINOPROPYL DIMETHICONE @5 is the only R2 silicone above the tail (METHICONE @23 is tail-side), and no R3 cationic polymer or R6a acid-gloss species appears at any rank to corroborate it. One silicone species is not a system",
+        "no humectant pair and no S3 lipid stack above the tail (PANTHENOL @15 and PANTHENYL ETHYL ETHER @16 are tail-side) — the formula carries the bare R1 base plus one silicone",
+        "PARFUM (rank 7) — tail marker, plausible under §3.1.1 (R2)"
+      ],
+      "derivation": "§9.3 (R6, E9). `protein` fails: no material R5 route. `balanced` reading (a) fails: it needs the R5 route. `balanced` reading (b): clause 1 holds, clause 2 FAILS under E9 (one silicone species; no corroborating R3/R6a route), so clauses 3–4 are not reached. Residual = `moisture`, D6's coherent non-protein default.",
+      "thresholdReasoning": [
+        "Clears `moisture`: the coherent conditioning direction without a material protein-film route — D6's stated category default, and the value this record held under v0.1.",
+        "`balanced` reading (b) does not apply — the value that MOVED. The v0.2/v0.3 record reached it on all four clauses with clause 2 read as 'one amino silicone is a film-led mechanism' and flagged that reading as its one judgment (AP-07-READINGB). Nick ruled E9 on 2026-09-30: a single silicone species is not a system. Clause 2 now fails.",
+        "`balanced` reading (a) does not apply: no R5 route.",
+        "`protein` does not apply: no protein species at any rank. 'Molecular Bond Repair' naming is E0 and creates nothing.",
+        "`unknown` does not apply: the formula is readable and unconflicted.",
+        "Confidence `moderate`, not `high`: the value is reached by elimination on a structurally minimal formula whose care result the film genuinely carries (E3's finding about the architecture stands; E9 rules only that one species does not make a clause-2 system). A reviewer weighing the silicone's share of this short credited segment sees a close neighbour."
+      ],
+      "counterSignals": [
+        "The film observation that carried reading (b) is not withdrawn as a fact: BIS-AMINOPROPYL DIMETHICONE @5 is still the only non-baseline route above the tail, and it still carries this record's `smoothing` focus (§9.5.2 step 6). What E9 changes is only whether one species is enough to make `care_direction` say 'neither leads'.",
+        "The credited segment is six entries in a 23-entry list; BEHENTRIMONIUM METHOSULFATE @11 is a tail-side R1 species and creates no leg either way."
+      ],
+      "limitations": [
+        "Comparative architectural direction at E2 only; no diagnosis of a user's protein or moisture state is made or implied (G6).",
+        "After E9, `balanced` reading (b) is reached nowhere in this cohort (§18 open question 4)."
+      ]
+    },
+    "repairSupportLevel": {
+      "value": "low",
+      "confidence": "high",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-only; comparative temporary damage-support route, not measured repair efficacy.",
+      "rationale": "This is the cohort's designated bond-discrimination stress case and the standard refuses it cleanly. 'Molecular Bond Repair' is E0 naming; the active chemistry is an amino silicone, which R7 and lexicon family 6 name as an explicit non-qualifier precisely because it contains 'amino' and appears in bond-marketed products. No protein route exists either. E2 ceiling: comparative formula potential, never efficacy.",
+      "evidenceSignals": [
+        "BIS-AMINOPROPYL DIMETHICONE (rank 5) — amino silicone, explicit family-6 non-qualifier for bond_route and explicit §9.4 non-upgrader",
+        "no maleate, gluconamide, or bond-positioned peptide token at any rank",
+        "no protein or peptide species at any rank",
+        "GLUTAMIC ACID (6), HISTIDINE (18) — free amino acids, explicit non-qualifiers",
+        "PANTHENOL (15), PANTHENYL ETHYL ETHER (16), BIOTIN (22) — explicit non-upgraders, and in the tail besides",
+        "claims: 'Molecular Repair Technology', '5.000+ Pro-V Nutri-Pearls', 'mit Biotin' — all E0"
+      ],
+      "derivation": "§9.4: bond_route = none (no nameable token; branded naming never substitutes for a token) closes `high`. No material R5 route closes `medium`. Residual = `low`.",
+      "thresholdReasoning": [
+        "Clears `low`: ordinary conditioning and lubrication only.",
+        "`medium` does not apply: no protein/peptide/keratin film route exists at any rank.",
+        "`high` does not apply: R7 requires the reviewer to record the exact INCI token carrying the chemistry. There is none — 'Molecular Repair Technology' is a proprietary complex with no identifiable INCI species — so bond_route is `none` and the `bond_claim_review` trigger fires, which §14 predicts will be the single most frequent mask trigger.",
+        "Mask delta 3 applied verbatim: 'Bond'/'Reparatur'/'Plex' on the pack is not repair; 'Bond' front-of-pack is frequently an ordinary rich mask — and here it is an ordinary LIGHT mask.",
+        "Confidence `high`: the value is deterministic on the absence of a token, and the INCI is verbatim from a direct retailer fetch."
+      ],
+      "counterSignals": [
+        "Biotin is a marketing token with zero credit on every property, and is deliberately kept away from hair-loss-adjacent language per G6 and lexicon family 5c."
+      ],
+      "limitations": [
+        "Banned wording observed: no 'repairs', 'rebuilds bonds', 'restores structure', 'reverses damage'.",
+        "The archetype worked as designed: the cohort needed a 'bond-branded without named chemistry' discrimination stress case and this product provides an unambiguous negative."
+      ]
+    },
+    "primaryFocus": {
+      "value": "smoothing",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Formula-first §9.5.2 hierarchy over above-tail ranks 1–6.",
+      "rationale": "Every special-purpose route fails, the moisture guard fails at zero cluster members, and the shine threshold fails its claim-corroboration leg. Step 6 is then reached with one genuine candidate: an amino silicone at rank 5 in a six-entry above-tail segment, which is a distinct silicone route beyond the ordinary mask base and is a dry-surface-control route. `general` was the close competitor. E2 ceiling: comparative smoothing potential, never weatherproof frizz control.",
+      "evidenceSignals": [
+        "BIS-AMINOPROPYL DIMETHICONE (rank 5) — the only route above the tail beyond the conditioning base; amino silicones deposit preferentially on damaged, more anionic fibre regions (direction only, no numbers — Pr-2's circulating percentages are unverified)",
+        "zero humectants above the tail",
+        "no lipid above the tail",
+        "no gloss, Glanz, Glaze or Laminierung positioning anywhere in the claims"
+      ],
+      "derivation": "Step 1 baseline exclusion applied. Step 2: one M1 base observation plus one M1/M3 silicone observation. Step 3: `repair` blocked (no R5, bond_route none, and step 3 states explicitly that `bond_specific_support = claim_only` cannot set repair); `curl_support` blocked (single cationic, no polymer — slip is not distinctive); `color_care` blocked (no candidate, no positioning). Step 3 has NO fourth leg under v0.3: E6 deletes the `lightness` route and removes the value from the vocabulary (§9.5, §9.5.2 step 3), so the hierarchy runs straight on. Step 4 `moisture` blocked (zero humectants above the tail). Step 5 `shine` blocked (criteria 2 and 3 fail). Step 6 `smoothing` clears.",
+      "thresholdReasoning": [
+        "Clears `smoothing`: step 6 requires dry surface control to be the clearest practical differentiator AND the architecture to extend materially beyond the ordinary mask base via a distinct silicone, substantive polymer, or substantial lipid route. The amino silicone at rank 5 is the only thing in this formula that is not base, so it is by construction both the clearest differentiator and the material extension.",
+        "`repair` does not apply, and this is the product's whole purpose in the cohort: the strongest bond positioning in the set produces no repair focus, because step 3 names 'generic repair naming' and 'bond_specific_support = claim_only' as things that cannot set `repair`.",
+        "`shine` does not apply: criterion 1 is arguably satisfied (an alignment-oriented amino silicone above the tail with a genuinely low lipid load — zero lipids above the tail), but criterion 2 fails because this same M1/M3 deposition is the sole optical basis, and criterion 3 fails outright for want of any gloss positioning. §9.5.4's own instruction in that case is to select `smoothing` and keep the claim as context — which is what was done.",
+        "`general` was the close competitor and lost narrowly. The argument for it: a single amino silicone in a thin formula is slender ground for a named focus, and step 6's 'clearest practical differentiator' is trivially satisfied when almost nothing else is present. The argument that won: §9.5.1 explicitly routes a `nonspecific` verdict to `smoothing` when the dry-surface route genuinely clears step 6, and an amino silicone at rank 5 of 6 above-tail entries is a real, distinct, non-baseline route. Confidence is held at `moderate` to record that this call could reasonably go the other way. See AP-07-SMOOTHINGVGENERAL.",
+        "RE-CHECKED under v0.3 (E4/E6), value UNCHANGED at `smoothing`. The weight field moved to `low` on this record, so the check that matters is whether any focus rule reads `weight_potential`. Exhaustively: §9.5.2 step 3's `lightness` route did, and E6 deletes it; `curl_support` reads slip plus weight/body architecture and was already blocked on a single cationic with no polymer; `shine` §9.5.4 criterion 1 reads LIPID LOAD, not the weight value, and already failed criteria 2 and 3; the §9.5.3 moisture guard reads the humectant cluster (zero members here) and never reads weight; steps 6–8 read architecture only. No rule forces a headline move, and none is made. Recorded because on a lean record this is precisely the place a value could drift unnoticed.",
+        "RE-CHECKED under v0.4 (E7, E9), value UNCHANGED at `smoothing`. The weight move (low → moderate) touches no focus rule after E6. The care_direction move (balanced → moisture) touches no focus rule either: §9.3.1 keeps `care_direction` and the focus field on different tests, and step 6 reads the amino silicone as a dry-surface route regardless of whether §9.3 reads it as a clause-2 system."
+      ],
+      "counterSignals": [
+        "The product makes no smoothing or anti-frizz claim, so the focus has no corroboration — permitted (positioning corroborates but never creates, and its absence does not block), but it means this focus rests on a single ingredient.",
+        "Consistency check performed against #06, which reaches `smoothing` on a dimethicone/dimethiconol pair at ranks 4–5. The two products reach the same focus on very different evidential strength; only confidence distinguishes them.",
+        "Had E6 not removed `lightness`, this record would STILL have kept `smoothing`: step 3's deleted route needed `body_lightness_potential: likely_preserving` as its second condition and this product reads `balanced`. So the headline here is stable for two independent reasons — the route is gone, and it would have failed anyway."
+      ],
+      "limitations": [
+        "Amino silicones may support a comparative smoothing-on-damaged-hair reading; they do not raise repair_support_level, and no such upgrade was made."
+      ]
+    },
+    "secondaryFocus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "evidenceScope": "Same hierarchy pass as primaryFocus.",
+      "rationale": "`shine` would reuse the same M1/M3 film just counted for the primary and fails its own criteria 2 and 3; `moisture` fails at zero cluster members; `repair` is closed at step 3.",
+      "evidenceSignals": [
+        "one silicone above the tail, carrying both the smoothing and any putative shine reading",
+        "zero humectants above the tail"
+      ],
+      "derivation": "§6 rule 2: shine that is merely the optical consequence of the smoothing/deposition film shares M3 with M1 and does not earn its own slot. §9.5.3 criterion 1 fails for moisture.",
+      "thresholdReasoning": [
+        "Zero secondaries is correct: the above-tail segment contains exactly one non-baseline route, and it has already been spent on the primary."
+      ],
+      "counterSignals": [],
+      "limitations": []
+    },
+    "hairThicknessFit": {
+      "value": [
+        "fine",
+        "normal",
+        "coarse"
+      ],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "derivedEcho": true,
+      "echoDriver": "weightPotential (§9.5E/§9.6, R9)",
+      "evidenceScope": "Deterministic policy derivation from weight_potential (§9.6); a desired-finish/dosage prior, not an exclusion.",
+      "rationale": "Echo field (R9): re-derived under v0.4 because its driver moved back to `moderate` (E7, 2026-09-30). `coarse` returns to the set.",
+      "evidenceSignals": [
+        "derived from weight_potential = moderate (E7, 2026-09-30)"
+      ],
+      "derivation": "§9.6 table row 2 (`moderate` → {fine, normal, coarse}).",
+      "thresholdReasoning": [
+        "Clears {fine, normal, coarse}: the `moderate` row.",
+        "{fine, normal} does not apply: it requires weight_potential `low`, withheld under E7 (two cationics on the full list).",
+        "{normal, coarse} does not apply: it requires weight_potential `high`."
+      ],
+      "counterSignals": [],
+      "limitations": [
+        "Research-level prior; no production projection is authorized.",
+        "Echo field under R9 (§9.5E): a deterministic projection of already-reviewed fields, displayed as a „→ ergibt:“ annotation on its driving row and not separately reviewed. Still emitted in the envelope and in every projection; its confidence cannot exceed its driver's."
+      ]
+    },
+    "damageFit": {
+      "value": [
+        "healthy",
+        "moderately_damaged"
+      ],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "derivedEcho": true,
+      "echoDriver": "conditioningLevel + repairSupportLevel/bondRoute (§9.5E, R9)",
+      "evidenceScope": "Deterministic policy derivation from conditioning_level and the specialist-route test (§9.7); a broad product prior, not a repair-efficacy claim.",
+      "rationale": "conditioning_level `moderate` maps directly to healthy + moderately_damaged.",
+      "evidenceSignals": [
+        "conditioning_level = moderate",
+        "repair_support_level = low",
+        "bond_route = none"
+      ],
+      "derivation": "§9.7 row 2.",
+      "thresholdReasoning": [
+        "Clears {healthy, moderately_damaged}: the moderate row.",
+        "{moderately_damaged, highly_damaged} does not apply: the specialist branch exists only under conditioning_level `high`, and no specialist qualifier is present in any case — §9.7's never-qualifying list names generic silicone, panthenol, free amino acids and repair naming, which is the entire content of this product's repair story.",
+        "{healthy} alone does not apply: it requires conditioning_level `low`.",
+        "Worth reporting: a mask positioned for the most damaged hair on the shelf lands on the same broad prior as a plain conditioner. That is the intended discrimination."
+      ],
+      "counterSignals": [],
+      "limitations": [
+        "Watch-list item 1: fully computable from fields 1 and 4.",
+        "Echo field under R9 (§9.5E): a deterministic projection of already-reviewed fields, displayed as a „→ ergibt:“ annotation on its driving row and not separately reviewed. Still emitted in the envelope and in every projection; its confidence cannot exceed its driver's."
+      ]
+    },
+    "textureFit": {
+      "value": [
+        "straight",
+        "wavy",
+        "curly"
+      ],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "derivedEcho": true,
+      "echoDriver": "weightPotential (§9.5E/§9.8, R9)",
+      "evidenceScope": "Deterministic policy derivation from weight_potential (§9.8); research-only.",
+      "rationale": "Echo field (R9): re-derived under v0.4 because its driver moved back to `moderate` (E7, 2026-09-30). `curly` returns to the set.",
+      "evidenceSignals": [
+        "weight_potential = moderate (E7, 2026-09-30)"
+      ],
+      "derivation": "§9.8 row 2 (balanced architecture, `weight_potential: moderate`).",
+      "thresholdReasoning": [
+        "Clears {straight, wavy, curly}: the balanced-architecture row.",
+        "{straight, wavy} does not apply: it requires weight_potential `low`.",
+        "{wavy, curly, coily} does not apply: weight is not `high`, and there is no high-slip R1/R3 breadth on a single-silicone formula.",
+        "Curl branding alone never determines the result, and there is none here."
+      ],
+      "counterSignals": [],
+      "limitations": [
+        "Research-only; no current consumer.",
+        "Echo field under R9 (§9.5E): a deterministic projection of already-reviewed fields, displayed as a „→ ergibt:“ annotation on its driving row and not separately reviewed. Still emitted in the envelope and in every projection; its confidence cannot exceed its driver's."
+      ]
+    }
+  },
+  "bondRoute": {
+    "value": "none",
+    "token": null,
+    "rank": null
+  },
+  "focusCareVerdict": {
+    "value": "nonspecific",
+    "claimRole": "not_applicable",
+    "note": "The repair direction is claim-only: no protein, no peptide, no named bond token, and an amino silicone that the standard and lexicon both name as an explicit non-qualifier. The moisture direction is unsupported: zero humectants above the tail. Generic conditioning distinguishes neither. §9.5.1's hard rule applied without exception — claims can never convert nonspecific formula evidence into a specialist focus, so 'Molecular Bond Repair' produced nothing. The verdict resolved to `smoothing` rather than `general` because the dry-surface route cleared step 6."
+  },
+  "overloadCounterSignal": null,
+  "blindToFinalChanges": [
+    {
+      "field": "repairSupportLevel",
+      "blindValue": "low",
+      "finalValue": "low",
+      "reason": "Recorded as an explicit non-change on the cohort's designated bond-discrimination case. Unblinding revealed 'Molecular Bond Repair' in the product name plus 'Molecular Repair Technology' in the claims. §11 step 4 permits claims to influence the `bond_claim_review` trigger and nothing else on this field; the trigger fired and the value did not move."
+    },
+    {
+      "field": "primaryFocus",
+      "blindValue": "smoothing",
+      "finalValue": "smoothing",
+      "reason": "Unblinding could only have changed this via §9.5.4 criterion 3 (no gloss positioning exists) or a dual_supported tie (none existed). The repair positioning was checked against step 3's explicit bar and rejected."
+    },
+    {
+      "field": "all other fields",
+      "blindValue": "unchanged",
+      "finalValue": "unchanged",
+      "reason": "No lightness positioning, no colour positioning, no dual tie."
+    }
+  ],
+  "projectedOutputs": {
+    "concentration": "medium",
+    "weight": "medium",
+    "balance_direction": "moisture",
+    "repair_support_level": "low",
+    "functional_benefits": [
+      "smoothing_frizz_control"
+    ],
+    "suitable_thicknesses": [
+      "fine",
+      "normal",
+      "coarse"
+    ]
+  },
+  "adjudicationPoints": [
+    {
+      "id": "AP-07-READINGB",
+      "title": "CLOSED by E9 (2026-09-30) — one silicone species is not a 'substantive R2 silicone system'; care_direction returns to `moisture`",
+      "body": "Raised under v0.2 and carried through v0.3: this record reached `balanced` / `neither_dominant` on all four §9.3 reading-(b) clauses, with clause 2 resting on a single amino silicone (BIS-AMINOPROPYL DIMETHICONE @5), and asked whether one species is a 'substantive R2 silicone system'. E3 (2026-09-14) accepted the reading (b) outcome on the architecture; it did not rule the clause-2 question. Nick ruled E9 on 2026-09-30: clause 2 requires a system — at least two distinct R2 silicone species above the tail, or one plus a corroborating R3 cationic-polymer film or R6a acid-gloss route above the tail. This formula has one silicone and no R3/R6a species at any rank, so clause 2 fails and care_direction is `moisture` (moderate confidence). Consequence for the cohort, recorded as the run's answer to §18 open question 4: reading (b) now fires nowhere (#11, the anchor case, already failed clause 4), and it stays reserved for genuine structural outliers. Nothing further is needed from Nick on this record.",
+      "source": "§9.3 `balanced` reading (b) clause 2 (R6, E9 2026-09-30); §18 open question 4; plans/mask-inci/round1-rule-rulings.md, Escalation rulings (round-2, 2026-09-30), E9"
+    },
+    {
+      "id": "AP-07-CATIONICSCOPE",
+      "title": "CLOSED by E7 (2026-09-30) — the single-cationic conjunct is counted on the full INCI list; weight_potential returns to `moderate`",
+      "body": "Raised under v0.3: `weight_potential: low` held only because conjunct 3 of E4's leanness test was counted on the above-tail segment, where STEARAMIDOPROPYL DIMETHYLAMINE @3 was the only cationic; BEHENTRIMONIUM METHOSULFATE @11 is a second on the full list, demoted only by an early PARFUM @7. Nick ruled E7 on 2026-09-30: conjunct 3 counts the FULL INCI list — sub-1 % cationics still deposit, a formula running several deposition species is not structurally lean regardless of where Parfum lands, and `moderate` is the conservative failure direction. Two cationics → conjunct 3 fails → `moderate`, with both echo fields re-derived ({fine, normal, coarse}; {straight, wavy, curly}). The parallel case #09 moves identically; #08 and #12 keep `low`, their single cationic holding on the full list. Nothing further is needed from Nick on this record.",
+      "source": "§9.2 `low` leanness test conjunct 3 (E4, E7 2026-09-30); plans/mask-inci/round1-rule-rulings.md, Escalation rulings (round-2, 2026-09-30), E7"
+    }
+  ],
+  "uncertainFields": [
+    "primaryFocus"
+  ],
+  "assumptionNotes": [
+    "Re-derived under v0.4 (E7 full-list cationic counting scope; E9 clause-2 system requirement for §9.3 reading (b)), not patched. E8, E10 and E11 checked and not engaging on this record (no R5 species at any rank; primary is not the step-8 fallback; no bond token).",
+    "Fields whose value moved under v0.4: weightPotential (low → moderate, light → medium, E7); hairThicknessFit (echo: {fine, normal} → {fine, normal, coarse}); textureFit (echo: {straight, wavy} → {straight, wavy, curly}); careDirection (balanced / neither_dominant → moisture, E9; confidence held at moderate); projectedOutputs weight, balance_direction and suitable_thicknesses.",
+    "Fields re-checked under v0.4 WITHOUT a value move: primaryFocus (`smoothing`), secondaryFocus (empty), conditioningLevel, repairSupportLevel, damageFit, bondRoute, focusCareVerdict, tailMarker, hinweise.",
+    "uncertainFields: `weightPotential` and `careDirection` REMOVED — each was listed only for the rule question E7 / E9 now settles (AP-07-CATIONICSCOPE, AP-07-READINGB, both CLOSED). `primaryFocus` stays for the live AP-07-SMOOTHINGVGENERAL.",
+    "Review triggers under v0.4 — FIRED: `bond_claim_review` (unchanged). NOT fired: `weight_high_conflict`, `tail_marker_anomaly`, `tail_marker_unresolved`, `protein_payload_review`, `specialist_damage_fit`, `low_confidence_field`.",
+    "— carried forward from reference-key-v1 (Standard v0.3), retained as provenance —",
+    "Re-derived under v0.3 (E4 restated leanness test, applied UNIFORMLY per E6; E6's removal of the `lightness` focus checked against every focus rule that reads `weight_potential`), not patched.",
+    "Fields whose value moved under v0.3: weightPotential (moderate → low, i.e. medium → light, E4/E6 — the AP-07-LOWUNREACHABLE escalation answered in the direction this record argued for); hairThicknessFit (echo: {fine, normal, coarse} → {fine, normal}); textureFit (echo: {straight, wavy, curly} → {straight, wavy}); projectedOutputs weight and suitable_thicknesses.",
+    "Fields re-checked under v0.3 WITHOUT a value move: primaryFocus (`smoothing`, unchanged — E6 deletes step 3's `lightness` route, and this record would have failed it anyway on `body_lightness_potential: balanced`; no other focus rule reads the weight value, checked exhaustively in its thresholdReasoning); secondaryFocus (empty, unchanged); careDirection (`balanced` / `neither_dominant`, the E3-accepted reading, untouched by E4/E6); conditioningLevel, repairSupportLevel, damageFit, bondRoute, focusCareVerdict, tailMarker, hinweise.",
+    "E1 produces NO `boundary_position_ingredient` flag on this record: GLUTAMIC ACID @6 sits at tail_index − 1 but carries no §9.1 signal and no §9.2 term, so it is not load-bearing for any value and nothing was struck under v0.2 or restored under v0.3.",
+    "Blind-lane record re-checked for the moved field: the three leanness conjuncts are formula readings available in the blind packet (no lipid, one silicone, one above-tail cationic), and the pack carries no lightness, volume or 'ohne zu beschweren' positioning that unblinding could have added, so the blind lane reaches `low` too. No entry in blindToFinalChanges moves.",
+    "`weightPotential` REMAINS in uncertainFields, unlike on #12 and #08 where the parallel move removed it. The reason is specific and is not the anchor's novelty: conjunct 3 holds only on the above-tail counting scope, with a second cationic (BEHENTRIMONIUM METHOSULFATE @11) tail-side on the full list, so the field is completed and recorded but not settled (§9.9). #09 Balea is treated identically for the same reason; #08 Sante is not, its conjuncts holding on the full list. See AP-07-CATIONICSCOPE.",
+    "Review triggers under v0.3 — FIRED: `bond_claim_review` (unchanged from v0.1 and v0.2). NOT fired: `weight_high_conflict` (cannot fire on a `low` value; and the pack makes no richness claim a `low` would contradict), `tail_marker_anomaly`, `tail_marker_unresolved`, `protein_payload_review`, `specialist_damage_fit`, `low_confidence_field` (no field at `low` CONFIDENCE — note the distinction from `weight_potential: low`, which is a value).",
+    "— carried forward from reference-key-v1 (Standard v0.2), retained as provenance —",
+    "Re-derived under v0.2 (R6 two-readings rule; R3/R4 re-checked; R8 `hinweise`; R2 plausibility prong; R9 echo markers), not patched.",
+    "Fields whose value moved: careDirection (moisture → balanced, reading `neither_dominant`, R6), with its confidence stepped from `high` to the `moderate` ceiling §9.3 sets for reading (b). conditioningLevel `moderate` and weightPotential `moderate` both survive re-derivation: S1 fails on a single above-tail cationic, and the weight anchor has no R4b core while the leanness test fails on two fatty alcohols with one at rank 2.",
+    "Review triggers under v0.2 — FIRED: `bond_claim_review` (Bond/Molecular Repair positioning with no nameable bond token above the tail — carried from v0.1 and unchanged). NOT fired: `tail_marker_anomaly`, `tail_marker_unresolved`, `protein_payload_review`, `specialist_damage_fit`, `weight_high_conflict`, `low_confidence_field`.",
+    "— carried forward from reference-key-v0 (Standard v0.1), retained as provenance —",
+    "Reviewer policy applied to every record in this lane: §3.1's hard cut determines above-tail membership without exception; the lexicon §0.2 boundary-band caution is applied only as a confidence modifier and never moves a value.",
+    "Review triggers fired: `bond_claim_review` (Bond/Molecular Repair positioning with no nameable bond-chemistry INCI token above the tail — §14 predicts this as the single most frequent mask trigger, and this is its textbook instance). NOT fired: `tail_marker_anomaly`, `protein_payload_review`, `specialist_damage_fit`, `weight_high_conflict`, `low_confidence_field`.",
+    "Protocol metadata for traceability only, zero classification credit: contact time 2 minutes, source mueller.de verbatim, confidence high. Placement not stated; P5 owns it.",
+    "G6 observed: Biotin is treated as a marketing token with zero credit and is kept entirely away from hair-loss-adjacent language."
+  ],
+  "derivedFrom": "reference-key-v1/07-pantene-molecular-bond-repair.json (Standard v0.3), itself derived from Standard v0.2 and reference-key-v0 (Standard v0.1). Re-derived under Standard v0.4 (E7, E9), not patched: E7 and E9 are systemic, so no v0.3 field approval, fingerprint, agreement or distribution statement carries into this revision.",
+  "hinweise": {
+    "fired": [
+      {
+        "flag": "claim_formula_mismatch",
+        "value": "'Molecular Repair Technology', product name 'Molecular Bond Repair' vs bond_route `none` and repair_support_level `low`",
+        "note": "Bond/repair positioning with no nameable bond-chemistry INCI token above the tail; BIS-AMINOPROPYL DIMETHICONE @5 is an amino silicone and an explicit family-6 non-qualifier. `bond_claim_review` fires, which §14 expects to be the single most frequent mask trigger. 'mit Biotin' is likewise a token: BIOTIN @22 is in the tail and earns zero credit on every property."
+      }
+    ]
+  },
+  "v0AdjudicationPointStatus": {
+    "AP-07-LOWUNREACHABLE": "CLOSED by E4 (2026-09-14) as applied uniformly under E6. Raised under v0.1 and carried through v0.2: this product — lipid-free above the tail — was the cohort's clearest instance of an unreachable `low`, refused it by a cetearyl-class fatty alcohol at rank 2 that the lexicon itself describes as carrying no signal. E4 deleted the conjunct; E6 rules the restated test applies uniformly rather than only to the record E4's expected-effects column named. `weight_potential` is now `low` on all three remaining conjuncts. What is NOT closed and travels on as AP-07-CATIONICSCOPE: the single-cationic conjunct holds only because the formula's second cationic is tail-side. SUPERSEDED IN EFFECT by E7 (2026-09-30): the unreachability this point raised (the fatty-alcohol conjunct) stays closed, but the value it produced does not survive — under E7's full-list count the formula's two cationics withhold `low`, and `weight_potential` is `moderate` again, now for a ruled reason.",
+    "AP-07-SMOOTHINGVGENERAL": "STILL LIVE — carried forward from reference-key-v0."
+  }
+}

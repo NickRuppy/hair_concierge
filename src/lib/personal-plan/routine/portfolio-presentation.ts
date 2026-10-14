@@ -94,12 +94,6 @@ export function routinePresentationLabels(presentation: PortfolioPresentation | 
   const hasReplacementPresentation =
     presentation?.schemaVersion === 3 || presentation?.schemaVersion === 4
   return {
-    plannedLabelFor(sourceDecisionKeys: readonly string[]) {
-      return hasReplacementPresentation &&
-        sourceDecisionKeys.some((key) => presentation.plannedPurchaseDecisionKeys.includes(key))
-        ? "Noch kaufen"
-        : null
-    },
     fitLabelFor(fitDecision: string) {
       return hasReplacementPresentation && fitDecision === "informed_override"
         ? "Mit Einschränkung"

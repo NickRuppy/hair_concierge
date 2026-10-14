@@ -1,0 +1,8 @@
+{
+  "verdict": "NO CUT:53R4F0C0D; separate conditional zero-count wrapper closure",
+  "manifestSha256": "c1bbef0e730049b85d7ff49160283d119ba9d8121772af4c15673a40e7c5eccd",
+  "staticCheckSha256": "17ebc6274eec3702d510cffce3c84df63bd3d82ddb4d053c69aa47eb8141f18d",
+  "readScopeSha256": "47769f2287dded9c3fe05d0600e85ccb902485629a429791ecc22afedbd9a222",
+  "ledgerSha256": "7bdfae018f8e9c9cc7fe402fbba4c66aba31678f06ae224f862586fed74a1cb4",
+  "runtimeExecuted": false
+}

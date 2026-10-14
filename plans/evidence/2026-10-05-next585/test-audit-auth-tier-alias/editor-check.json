@@ -1,0 +1,16 @@
+{
+  "mode": "--check",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "counts": {
+    "before": 14,
+    "after": 14,
+    "renamed": 5,
+    "untouched": 9,
+    "removed": 0
+  },
+  "readsetGuards": 18,
+  "parsedSnapshots": 4,
+  "sourceLinesRemoved": 11,
+  "status": "PASS; no writes"
+}

@@ -1,0 +1,87 @@
+{
+  "slot": "A53",
+  "productId": "b761256d-c0d2-4413-9fa5-8ab950ef69bf",
+  "name": "Syoss Intense Fullness Kräftigendes Shampoo (Rossmann: Shampoo Intense Fullness), 440 ml",
+  "brand": "Syoss (Henkel)",
+  "packSize": "440 ml",
+  "gtins": [
+    "4015100860429"
+  ],
+  "sources": [
+    {
+      "url": "https://www.syoss.de/haarpflege/shampoo/syoss-intense-fullness-kraeftigendes-shampoo.html",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "4015100860429 (schema.org gtin); page does not print the pack size in captured text (440 ml per Rossmann)",
+      "inciVerbatim": "Shampoo:Aqua (Water, Eau), Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, PEG-7 Glyceryl Cocoate, Hydrolyzed Keratin, Niacinamide, Dimethicone, Sodium Benzoate, Parfum (Fragrance), Citric Acid, Amodimethicone, Guar Hydroxypropyltrimonium Chloride, PEG-40 Hydrogenated Castor Oil, Hydrogenated Castor Oil, Glycol Distearate, Laureth-4, PEG-120 Methyl Glucose Dioleate, Hexyl Cinnamal, Laureth-23, Prunus Armeniaca (Apricot) Kernel Oil, Trideceth-10, Sodium Hydroxide, Citronellol, Tetramethyl Acetyloctahydronaphthalenes, Propylene Glycol, Limonene, Linalyl Acetate, Phenoxyethanol, Linalool, Sodium Salicylate, Potassium Sorbate",
+      "claimsVerbatim": "Kräftigendes Shampoo | Intense Fullness | Tiefenpflegende Formel mit 3% Niacinamide-Volumen-Komplex, stärkt das Harr von innen. Für rundum schönes und gesund aussehendes Haar.",
+      "directionsVerbatim": "Anwendung für professionelle Ergebnisse: Sanft im nassen Haar verteilen und gründlich ausspülen"
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-syoss-shampoo-intense-fullness/p/4015100860429",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "gtinShown": "4015100860429 (URL + schema.org sku; Rossmann Artikelnummer 179947; 440 ml (1 L = 9,07 €); 3,99 EUR; Kontakt Henkel AG & Co. KGaA)",
+      "inciVerbatim": "Aqua (Water, Eau), Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, PEG-7 Glyceryl Cocoate, Hydrolyzed Keratin, Niacinamide, Dimethicone, Sodium Benzoate, Parfum (Fragrance), Citric Acid, Amodimethicone, Guar Hydroxypropyltrimonium Chloride, PEG-40 Hydrogenated Castor Oil, Hydrogenated Castor Oil, Glycol Distearate, Laureth-4, PEG-120 Methyl Glucose Dioleate, Benzyl Salicylate, Hexyl Cinnamal, Laureth-23, Prunus Armeniaca (Apricot) Kernel Oil, Trideceth-10, Sodium Hydroxide, Citronellol, Tetramethyl Acetyloctahydronaphthalenes, Propylene Glycol, Limonene, Linalyl Acetate, Linalool, Phenoxyethanol, Sodium Salicylate",
+      "claimsVerbatim": "SYOSS Shampoo Intense Fullness – Kräftigendes Shampoo für feines, kraftloses Haar mit Niacinamide-Volumen-Komplex Das SYOSS Intense Fullness Shampoo eignet sich für feines und kraftloses Haar und verleiht ihm Fülle mit jeder Anwendung. Es kombiniert pflegende Inhaltsstoffe mit einem 3% Niacinamide-Volumen-Komplex. Das Shampoo stärkt die Haare von innen und sorgt so für mehr Volumen. Die Formel enthält 88% Inhaltsstoffe natürlichen Ursprungs inklusive Wasser und der Flaschenkörper des Shampoos besteht aus 100% recyceltem Plastik (Kappe ausgenommen). SYOSS entwickelt mit mehr als 45 Jahren Haar-Expertise Produkte für professionelle Performance. | für dünnes, kraftloses Haar – Das Volumen Haarshampoo eignet sich für feines und kraftloses Haar, stärkt es und verleiht somit Fülle und Volumen | Fülle-Wirkung – Die pflegende Formel stärkt dünnes Haar von innen und verleiht voller aussehendes Haar mit jeder Anwendung, für schönes und gesund aussehendes Haar | Niacinamide-Volumen-Komplex – In dem Shampoo vereinen sich pflegende Inhaltsstoffe mit einem 3% Niacinamide-Volumen-Komplex, für schönes und gesund aussehendes Haar | Inhaltsstoffe natürlichen Ursprungs – Das Shampoo für feines Haar enthält 88% Inhaltsstoffe natürlichen Ursprungs, inklusive Wasser | 100% recyceltes Plastik",
+      "directionsVerbatim": "Sanft im nassen Haar verteilen und ausspülen. Nutze anschließend eine Spülung."
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "inci_differs_between_manufacturer_and_retailer",
+      "quote": "syoss.de (and v1.3 capture 2026-08-10): '... Laureth-4, PEG-120 Methyl Glucose Dioleate, Hexyl Cinnamal, Laureth-23, ... Propylene Glycol, Limonene, Linalyl Acetate, Phenoxyethanol, Linalool, Sodium Salicylate, Potassium Sorbate' (32 items). rossmann.de: '... Laureth-4, PEG-120 Methyl Glucose Dioleate, Benzyl Salicylate, Hexyl Cinnamal, Laureth-23, ... Propylene Glycol, Limonene, Linalyl Acetate, Linalool, Phenoxyethanol, Sodium Salicylate' (32 items): Rossmann ADDS Benzyl Salicylate (after PEG-120 Methyl Glucose Dioleate), LACKS Potassium Sorbate, and swaps Linalool/Phenoxyethanol order.",
+      "resolution": "Not merged. Manufacturer page (Henkel, current, GTIN in schema.org) taken as canonical; Rossmann (Henkel-supplied feed but possibly an older/other batch version; item 'nicht in Filialen verfügbar') kept as an unresolved conflict. No second German retailer lists this product (dm does not carry Intense Fullness; Müller/Douglas/Budni not found), so no tie-breaker and no pack photo."
+    }
+  ],
+  "canonicalInci": [
+    "Aqua (Water, Eau)",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Betaine",
+    "Sodium Chloride",
+    "PEG-7 Glyceryl Cocoate",
+    "Hydrolyzed Keratin",
+    "Niacinamide",
+    "Dimethicone",
+    "Sodium Benzoate",
+    "Parfum (Fragrance)",
+    "Citric Acid",
+    "Amodimethicone",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "PEG-40 Hydrogenated Castor Oil",
+    "Hydrogenated Castor Oil",
+    "Glycol Distearate",
+    "Laureth-4",
+    "PEG-120 Methyl Glucose Dioleate",
+    "Hexyl Cinnamal",
+    "Laureth-23",
+    "Prunus Armeniaca (Apricot) Kernel Oil",
+    "Trideceth-10",
+    "Sodium Hydroxide",
+    "Citronellol",
+    "Tetramethyl Acetyloctahydronaphthalenes",
+    "Propylene Glycol",
+    "Limonene",
+    "Linalyl Acetate",
+    "Phenoxyethanol",
+    "Linalool",
+    "Sodium Salicylate",
+    "Potassium Sorbate"
+  ],
+  "canonicalReason": "Manufacturer DE page (syoss.de) wins over the single conflicting retailer (Rossmann); it is identical to the v1.3 capture of 2026-08-10. Because the manufacturer page is not a pack read and the Rossmann difference could reflect either an older or a newer batch, status is frozen_with_conflict.",
+  "inciFingerprintSha256": "0af2b2c6498075d6eaf4d9c65ebe305e1ad716f5f112407ee38d98517575d981",
+  "normalization": "Split the canonical INCI on ',' (or '|' / '•' separators where the source uses them; dm renders a non-breaking hyphen as '|' inside names, e.g. 'COCO|GLUCOSIDE' = 'Coco-Glucoside'); per ingredient: trim, collapse internal whitespace, merge split synonym entries (e.g. 'Aqua (Water, Eau)' stays one item), strip trailing full stop; canonicalInci keeps the published capitalisation/asterisks; for the hash each item is lower-cased; items joined with '|' and sha256 over the UTF-8 string.",
+  "identityConfidence": "moderate",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen_with_conflict",
+  "blockReason": null,
+  "notes": [
+    "Differences affect two minor items (Benzyl Salicylate fragrance allergen; Potassium Sorbate preservative); cleansing/conditioning structure (SLES + cocamidopropyl betaine, Dimethicone + Amodimethicone, Niacinamide) is identical in both lists, so classification is unlikely to move. A pack photo or a second retailer would settle it.",
+    "Catalog 'Syoss Intense Fullness Shampoo' = syoss.de 'Intense Fullness Kräftigendes Shampoo' = Rossmann 'Shampoo Intense Fullness'; GTIN anchored by manufacturer schema.org and Rossmann sku. dm.de does not list this product (it carries Keratin/Repair/Volume/Glaze/Men Power) - possible that the catalog entry is sold only via Rossmann/online.",
+    "Claim-INCI check: '3% Niacinamide-Volumen-Komplex' -> Niacinamide present (position 7, plausibly the 3%); Hydrolyzed Keratin and Dimethicone present; no conflict. Rossmann '88% natürlichen Ursprungs' not testable.",
+    "Rossmann page: not in any store near default radius; online orderable."
+  ]
+}

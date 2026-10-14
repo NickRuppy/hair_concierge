@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: maskAlternative: an alternative with no carried criteria yields an empty comparison
+ok 1 - maskAlternative: an alternative with no carried criteria yields an empty comparison
+  ---
+  duration_ms: 1.39225
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 663.680708

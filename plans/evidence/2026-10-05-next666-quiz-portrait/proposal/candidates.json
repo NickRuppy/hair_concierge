@@ -1,0 +1,253 @@
+[
+  {
+    "id": "C1",
+    "donorFile": "tests/hair-length-option-card.test.tsx",
+    "keeperFile": "tests/quiz-option-card.test.tsx",
+    "donor": {
+      "title": "shared hair-length card keeps the complete decorative portrait composition inside one fixed media frame",
+      "line": 24,
+      "start": 711,
+      "end": 1680,
+      "body": "test(\"shared hair-length card keeps the complete decorative portrait composition inside one fixed media frame\", () => {\n  const html = renderToStaticMarkup(\n    <HairLengthOptionCard\n      config={portraitConfig}\n      description=\"Taille oder länger.\"\n      label=\"Sehr lang\"\n      onClick={() => {}}\n      selected={false}\n      selectionVariant=\"regular\"\n    />,\n  )\n\n  assert.match(html, /data-hair-length-card=\"true\" data-selection-variant=\"regular\"/)\n  assert.match(html, /h-\\[184px\\]/)\n  assert.match(html, /h-\\[140px\\]/)\n  assert.match(html, /\\[@media\\(max-height:700px\\)\\]:h-\\[152px\\]/)\n  assert.match(html, /data-hair-portrait-media=\"true\"/)\n  assert.match(\n    html,\n    /class=\"flex h-full w-full items-center justify-center scale-\\[0\\.9\\]\" data-hair-portrait-art=\"true\"/,\n  )\n  assert.match(html, /<svg aria-hidden=\"true\"/)\n  assert.match(html, /<img alt=\"\"/)\n  assert.match(html, /aria-pressed=\"false\"/)\n  assert.match(html, /aria-describedby=\"[^\"]+\"/)\n})",
+      "sha256": "278897d0470a38f733061620621718c8d470b85c5626b7cc19ba94968ac2406d",
+      "assertions": [
+        {
+          "text": "assert.match(html, /data-hair-length-card=\"true\" data-selection-variant=\"regular\"/)",
+          "line": 36
+        },
+        {
+          "text": "assert.match(html, /h-\\[184px\\]/)",
+          "line": 37
+        },
+        {
+          "text": "assert.match(html, /h-\\[140px\\]/)",
+          "line": 38
+        },
+        {
+          "text": "assert.match(html, /\\[@media\\(max-height:700px\\)\\]:h-\\[152px\\]/)",
+          "line": 39
+        },
+        {
+          "text": "assert.match(html, /data-hair-portrait-media=\"true\"/)",
+          "line": 40
+        },
+        {
+          "text": "assert.match(\n    html,\n    /class=\"flex h-full w-full items-center justify-center scale-\\[0\\.9\\]\" data-hair-portrait-art=\"true\"/,\n  )",
+          "line": 41
+        },
+        {
+          "text": "assert.match(html, /<svg aria-hidden=\"true\"/)",
+          "line": 45
+        },
+        {
+          "text": "assert.match(html, /<img alt=\"\"/)",
+          "line": 46
+        },
+        {
+          "text": "assert.match(html, /aria-pressed=\"false\"/)",
+          "line": 47
+        },
+        {
+          "text": "assert.match(html, /aria-describedby=\"[^\"]+\"/)",
+          "line": 48
+        }
+      ],
+      "calls": [
+        "renderToStaticMarkup(\n    <HairLengthOptionCard\n      config={portraitConfig}\n      description=\"Taille oder länger.\"\n      label=\"Sehr lang\"\n      onClick={() => {}}\n      selected={false}\n      selectionVariant=\"regular\"\n    />,\n  )"
+      ]
+    },
+    "keeperBefore": {
+      "title": "grid portrait cards fit the complete silhouette to the fixed media height",
+      "line": 70,
+      "start": 2543,
+      "end": 3573,
+      "body": "test(\"grid portrait cards fit the complete silhouette to the fixed media height\", () => {\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      label=\"Sehr lang\"\n      description=\"Taille oder länger.\"\n      active={false}\n      onClick={() => {}}\n      visual={{\n        kind: \"portrait\",\n        alt: \"Haarlängen-Illustration\",\n        config: {\n          kind: \"personalized\",\n          density: \"medium\",\n          length: \"very_long\",\n          naturalRootPattern: \"wavy\",\n          treatedLengthPattern: \"wavy\",\n          treatmentState: \"none\",\n        },\n      }}\n      visualLayout=\"grid\"\n    />,\n  )\n\n  assert.match(html, /data-hair-length-card=\"true\"/)\n  assert.match(html, /data-hair-portrait-media=\"true\"/)\n  assert.match(html, /data-hair-portrait-art=\"true\"/)\n  assert.match(html, /class=\"relative block h-full w-full object-contain\"/)\n  assert.match(html, /alt=\"\"/)\n\n  assert.match(\n    html,\n    /class=\"flex h-full w-full items-center justify-center scale-\\[0\\.9\\]\" data-hair-portrait-art=\"true\"/,\n  )\n})",
+      "sha256": "da7bdde9c4321f9b129a9656caf79716f70e421b739e207bb1833ef2c1413162",
+      "assertions": [
+        {
+          "text": "assert.match(html, /data-hair-length-card=\"true\"/)",
+          "line": 93
+        },
+        {
+          "text": "assert.match(html, /data-hair-portrait-media=\"true\"/)",
+          "line": 94
+        },
+        {
+          "text": "assert.match(html, /data-hair-portrait-art=\"true\"/)",
+          "line": 95
+        },
+        {
+          "text": "assert.match(html, /class=\"relative block h-full w-full object-contain\"/)",
+          "line": 96
+        },
+        {
+          "text": "assert.match(html, /alt=\"\"/)",
+          "line": 97
+        },
+        {
+          "text": "assert.match(\n    html,\n    /class=\"flex h-full w-full items-center justify-center scale-\\[0\\.9\\]\" data-hair-portrait-art=\"true\"/,\n  )",
+          "line": 99
+        }
+      ],
+      "calls": [
+        "renderToStaticMarkup(\n    <QuizOptionCard\n      label=\"Sehr lang\"\n      description=\"Taille oder länger.\"\n      active={false}\n      onClick={() => {}}\n      visual={{\n        kind: \"portrait\",\n        alt: \"Haarlängen-Illustration\",\n        config: {\n          kind: \"personalized\",\n          density: \"medium\",\n          length: \"very_long\",\n          naturalRootPattern: \"wavy\",\n          treatedLengthPattern: \"wavy\",\n          treatmentState: \"none\",\n        },\n      }}\n      visualLayout=\"grid\"\n    />,\n  )"
+      ]
+    },
+    "keeperAfter": {
+      "title": "grid portrait cards fit the complete silhouette to the fixed media height",
+      "line": 70,
+      "start": 2543,
+      "end": 3976,
+      "body": "test(\"grid portrait cards fit the complete silhouette to the fixed media height\", () => {\n  const html = renderToStaticMarkup(\n    <QuizOptionCard\n      label=\"Sehr lang\"\n      description=\"Taille oder länger.\"\n      active={false}\n      onClick={() => {}}\n      visual={{\n        kind: \"portrait\",\n        alt: \"Haarlängen-Illustration\",\n        config: {\n          kind: \"personalized\",\n          density: \"medium\",\n          length: \"very_long\",\n          naturalRootPattern: \"wavy\",\n          treatedLengthPattern: \"wavy\",\n          treatmentState: \"none\",\n        },\n      }}\n      visualLayout=\"grid\"\n    />,\n  )\n\n  assert.match(html, /data-hair-length-card=\"true\"/)\n  assert.match(html, /data-hair-portrait-media=\"true\"/)\n  assert.match(html, /data-hair-portrait-art=\"true\"/)\n  assert.match(html, /class=\"relative block h-full w-full object-contain\"/)\n  assert.match(html, /alt=\"\"/)\n\n  assert.match(\n    html,\n    /class=\"flex h-full w-full items-center justify-center scale-\\[0\\.9\\]\" data-hair-portrait-art=\"true\"/,\n  )\n  assert.match(html, /data-hair-length-card=\"true\" data-selection-variant=\"regular\"/)\n  assert.match(html, /h-\\[184px\\]/)\n  assert.match(html, /h-\\[140px\\]/)\n  assert.match(html, /\\[@media\\(max-height:700px\\)\\]:h-\\[152px\\]/)\n  assert.match(html, /<svg aria-hidden=\"true\"/)\n  assert.match(html, /<img alt=\"\"/)\n  assert.match(html, /aria-pressed=\"false\"/)\n  assert.match(html, /aria-describedby=\"[^\"]+\"/)\n})",
+      "sha256": "406d4cd0d878a0030b1e876b28428c6df7f3de03dfc9c3f84ae20f3db004cea9",
+      "assertions": [
+        {
+          "text": "assert.match(html, /data-hair-length-card=\"true\"/)",
+          "line": 93
+        },
+        {
+          "text": "assert.match(html, /data-hair-portrait-media=\"true\"/)",
+          "line": 94
+        },
+        {
+          "text": "assert.match(html, /data-hair-portrait-art=\"true\"/)",
+          "line": 95
+        },
+        {
+          "text": "assert.match(html, /class=\"relative block h-full w-full object-contain\"/)",
+          "line": 96
+        },
+        {
+          "text": "assert.match(html, /alt=\"\"/)",
+          "line": 97
+        },
+        {
+          "text": "assert.match(\n    html,\n    /class=\"flex h-full w-full items-center justify-center scale-\\[0\\.9\\]\" data-hair-portrait-art=\"true\"/,\n  )",
+          "line": 99
+        },
+        {
+          "text": "assert.match(html, /data-hair-length-card=\"true\" data-selection-variant=\"regular\"/)",
+          "line": 103
+        },
+        {
+          "text": "assert.match(html, /h-\\[184px\\]/)",
+          "line": 104
+        },
+        {
+          "text": "assert.match(html, /h-\\[140px\\]/)",
+          "line": 105
+        },
+        {
+          "text": "assert.match(html, /\\[@media\\(max-height:700px\\)\\]:h-\\[152px\\]/)",
+          "line": 106
+        },
+        {
+          "text": "assert.match(html, /<svg aria-hidden=\"true\"/)",
+          "line": 107
+        },
+        {
+          "text": "assert.match(html, /<img alt=\"\"/)",
+          "line": 108
+        },
+        {
+          "text": "assert.match(html, /aria-pressed=\"false\"/)",
+          "line": 109
+        },
+        {
+          "text": "assert.match(html, /aria-describedby=\"[^\"]+\"/)",
+          "line": 110
+        }
+      ],
+      "calls": [
+        "renderToStaticMarkup(\n    <QuizOptionCard\n      label=\"Sehr lang\"\n      description=\"Taille oder länger.\"\n      active={false}\n      onClick={() => {}}\n      visual={{\n        kind: \"portrait\",\n        alt: \"Haarlängen-Illustration\",\n        config: {\n          kind: \"personalized\",\n          density: \"medium\",\n          length: \"very_long\",\n          naturalRootPattern: \"wavy\",\n          treatedLengthPattern: \"wavy\",\n          treatmentState: \"none\",\n        },\n      }}\n      visualLayout=\"grid\"\n    />,\n  )"
+      ]
+    },
+    "addedAssertions": [
+      {
+        "text": "assert.match(html, /data-hair-length-card=\"true\" data-selection-variant=\"regular\"/)",
+        "line": 36
+      },
+      {
+        "text": "assert.match(html, /h-\\[184px\\]/)",
+        "line": 37
+      },
+      {
+        "text": "assert.match(html, /h-\\[140px\\]/)",
+        "line": 38
+      },
+      {
+        "text": "assert.match(html, /\\[@media\\(max-height:700px\\)\\]:h-\\[152px\\]/)",
+        "line": 39
+      },
+      {
+        "text": "assert.match(html, /<svg aria-hidden=\"true\"/)",
+        "line": 45
+      },
+      {
+        "text": "assert.match(html, /<img alt=\"\"/)",
+        "line": 46
+      },
+      {
+        "text": "assert.match(html, /aria-pressed=\"false\"/)",
+        "line": 47
+      },
+      {
+        "text": "assert.match(html, /aria-describedby=\"[^\"]+\"/)",
+        "line": 48
+      }
+    ],
+    "assertionUnion": [
+      {
+        "donorText": "assert.match(html, /data-hair-length-card=\"true\" data-selection-variant=\"regular\"/)",
+        "keeperText": "assert.match(html, /data-hair-length-card=\"true\" data-selection-variant=\"regular\"/)",
+        "alreadyPresent": false
+      },
+      {
+        "donorText": "assert.match(html, /h-\\[184px\\]/)",
+        "keeperText": "assert.match(html, /h-\\[184px\\]/)",
+        "alreadyPresent": false
+      },
+      {
+        "donorText": "assert.match(html, /h-\\[140px\\]/)",
+        "keeperText": "assert.match(html, /h-\\[140px\\]/)",
+        "alreadyPresent": false
+      },
+      {
+        "donorText": "assert.match(html, /\\[@media\\(max-height:700px\\)\\]:h-\\[152px\\]/)",
+        "keeperText": "assert.match(html, /\\[@media\\(max-height:700px\\)\\]:h-\\[152px\\]/)",
+        "alreadyPresent": false
+      },
+      {
+        "donorText": "assert.match(html, /data-hair-portrait-media=\"true\"/)",
+        "keeperText": "assert.match(html, /data-hair-portrait-media=\"true\"/)",
+        "alreadyPresent": true
+      },
+      {
+        "donorText": "assert.match(\n    html,\n    /class=\"flex h-full w-full items-center justify-center scale-\\[0\\.9\\]\" data-hair-portrait-art=\"true\"/,\n  )",
+        "keeperText": "assert.match(\n    html,\n    /class=\"flex h-full w-full items-center justify-center scale-\\[0\\.9\\]\" data-hair-portrait-art=\"true\"/,\n  )",
+        "alreadyPresent": true
+      },
+      {
+        "donorText": "assert.match(html, /<svg aria-hidden=\"true\"/)",
+        "keeperText": "assert.match(html, /<svg aria-hidden=\"true\"/)",
+        "alreadyPresent": false
+      },
+      {
+        "donorText": "assert.match(html, /<img alt=\"\"/)",
+        "keeperText": "assert.match(html, /<img alt=\"\"/)",
+        "alreadyPresent": false
+      },
+      {
+        "donorText": "assert.match(html, /aria-pressed=\"false\"/)",
+        "keeperText": "assert.match(html, /aria-pressed=\"false\"/)",
+        "alreadyPresent": false
+      },
+      {
+        "donorText": "assert.match(html, /aria-describedby=\"[^\"]+\"/)",
+        "keeperText": "assert.match(html, /aria-describedby=\"[^\"]+\"/)",
+        "alreadyPresent": false
+      }
+    ],
+    "operativeInputs": "Same false selected, regular variant, very_long, medium density, no treatment, label Sehr lang and description Taille oder länger. Direct coily vs wrapper wavy selects a different unasserted src/markers record; both current manifest assets ownBody=false. Shared card never branches on texture; figure uses src and ownBody only. Keep wrapper existing render and all original inputs."
+  }
+]

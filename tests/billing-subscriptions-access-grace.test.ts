@@ -40,30 +40,6 @@ test("EXPIRED_ENTITLEMENT_GRACE_MS is exactly 1 day, matching the SQL grace wind
   assert.equal(EXPIRED_ENTITLEMENT_GRACE_MS, ONE_DAY_MS)
 })
 
-test("hasCurrentBillingAccess: active row with period end 2 days past has no access", () => {
-  const row = billingRow({
-    entitlement_status: "active",
-    current_period_end: isoOffset(-2 * ONE_DAY_MS),
-  })
-  assert.equal(hasCurrentBillingAccess(row, NOW), false)
-})
-
-test("hasCurrentBillingAccess: active row 12 hours past is within the grace window", () => {
-  const row = billingRow({
-    entitlement_status: "active",
-    current_period_end: isoOffset(-12 * 60 * 60 * 1000),
-  })
-  assert.equal(hasCurrentBillingAccess(row, NOW), true)
-})
-
-test("hasCurrentBillingAccess: active row with period end in the future has access", () => {
-  const row = billingRow({
-    entitlement_status: "active",
-    current_period_end: isoOffset(ONE_DAY_MS),
-  })
-  assert.equal(hasCurrentBillingAccess(row, NOW), true)
-})
-
 test("hasCurrentBillingAccess: past_due row exactly at the grace boundary has access", () => {
   const row = billingRow({
     entitlement_status: "past_due",
@@ -105,19 +81,6 @@ test("hasCurrentBillingAccess: canceled row without cancel_at_period_end has no 
     current_period_end: isoOffset(ONE_DAY_MS),
   })
   assert.equal(hasCurrentBillingAccess(row, NOW), false)
-})
-
-test("hasCurrentBillingAccess: active row with null current_period_end keeps existing (grantsaccess) behavior", () => {
-  // current_period_end null on an open-entitlement row is treated as
-  // legacy/incomplete billing_subscriptions data (e.g. rows backfilled from
-  // profiles before a first webhook populated the period). Grace-window
-  // enforcement only applies once we have a real period_end to measure
-  // against, so null rows fall back to the pre-existing status-only check.
-  const row = billingRow({
-    entitlement_status: "active",
-    current_period_end: null,
-  })
-  assert.equal(hasCurrentBillingAccess(row, NOW), true)
 })
 
 test("hasCurrentLegacyProfileAccess: active profile 2 days past period end has no access", () => {

@@ -1,0 +1,68 @@
+{
+  "blindId": "T215",
+  "inciFingerprintSha256": "926b4f48400d27a381a3854afd2573d0e1c4e1d435d55a78e60691c1f68f60ba",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "completeness": "complete",
+    "sourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "No split entries; positions = packet order (normalized, one-based).",
+    "prominenceCutoff": "E3: Parfum at 13; positions 1-12 prominent."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate (C1): Sodium Laureth Sulfate (2) defining anionic, buffered by Cocamidopropyl Hydroxysultaine (3) and Coco-Glucoside (5); no reinforcing strong anionic.",
+      "counterSignal": "Little refatting; convention unchanged.",
+      "neighboringAlternative": "none",
+      "ruleIds": ["C1", "C3", "C4"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: one meaningful system, Guar Hydroxypropyltrimonium Chloride (10, prominent), with Hydrolyzed Wheat Protein (6) and Glycerin (9). C2 not met (no silicone, payload lipid or pearlizing route).",
+      "counterSignal": "Single polymer and a hydrolyzed protein; a cleansing-led low reading is realistic.",
+      "neighboringAlternative": "low",
+      "ruleIds": ["C2", "Section 5 anchors"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: one cationic guar (10) and a hydrolyzed wheat protein (6) against an effective buffered SLES chassis; no silicone, lipid or film former.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {"value": "light", "rationale": "Guar (10) and hydrolyzed protein (6)."},
+        "persistence": {"value": "low", "rationale": "Light polymer and hydrolyzed protein are weakly retained."},
+        "resetCapacity": {"value": "moderate", "rationale": "C1 SLES + sultaine + glucoside."}
+      },
+      "extractedEvidence": {
+        "cationic_polymer": [{"ingredient": "Guar Hydroxypropyltrimonium Chloride", "position": 10}],
+        "protein_film": [{"ingredient": "Hydrolyzed Wheat Protein", "position": 6}],
+        "silicone": [], "payload_lipid": [], "weak_refatter": [], "film_former": [],
+        "reset": [{"ingredient": "Sodium Laureth Sulfate", "position": 2}, {"ingredient": "Cocamidopropyl Hydroxysultaine", "position": 3}, {"ingredient": "Coco-Glucoside", "position": 5}],
+        "excluded": [{"ingredient": "Laureth-2", "position": 12, "reason": "low-ethoxylate thickener"}, {"ingredient": "Biotin", "position": 7, "reason": "vitamin, no deposition role"}, {"ingredient": "Oryza Sativa Extract", "position": 8, "reason": "botanical extract, no deposition role"}],
+        "context_humectants": [{"ingredient": "Glycerin", "position": 9}]
+      },
+      "whyThisBand": "One light polymer plus a hydrolyzed protein with moderate reset: low anchor.",
+      "whyNotNeighborBand": "W2: two families present, but they are one guar and a hydrolyzed (small, weakly film-forming) protein; no silicone, lipid or film former converges and the SLES chassis offsets light residue.",
+      "limitingFactor": "Guar level unknown (neighbor moderate)."
+    },
+    "focusPrimary": {"value": "general", "confidence": "low", "provisional": true, "rationale": "Pending claims. Care-direction verdict provisional: nonspecific (single hydrolyzed protein is not repair_supported; Biotin and rice extract are marketing-type actives). Low weight would be compatible with volume if claimed."},
+    "focusSecondary": {"value": [], "confidence": "low", "provisional": true, "rationale": "Empty default pending claims."},
+    "usageRole": {"value": "regular", "confidence": "low", "provisional": true, "rationale": "Default."},
+    "scalpComfortTarget": {"value": "not_targeted", "confidence": "low", "provisional": true, "rationale": "No positioning yet. CSA formula half met only via prominent Glycerin (9) humectant route; no comfort route."},
+    "dandruffSupport": {"value": "not_supported", "confidence": "high", "rationale": "Neither Piroctone Olamine nor Climbazole in the complete INCI."}
+  },
+  "formulaFacts": [
+    {"ingredient": "Sodium Laureth Sulfate", "position": 2, "role": "defining anionic (ether type)"},
+    {"ingredient": "Cocamidopropyl Hydroxysultaine", "position": 3, "role": "amphoteric buffer"},
+    {"ingredient": "Coco-Glucoside", "position": 5, "role": "nonionic buffer"},
+    {"ingredient": "Hydrolyzed Wheat Protein", "position": 6, "role": "protein_film"},
+    {"ingredient": "Biotin", "position": 7, "role": "vitamin additive"},
+    {"ingredient": "Glycerin", "position": 9, "role": "humectant"},
+    {"ingredient": "Guar Hydroxypropyltrimonium Chloride", "position": 10, "role": "cationic_polymer"},
+    {"ingredient": "Parfum", "position": 13, "role": "E3 fragrance marker"}
+  ],
+  "unresolvedMaterialIngredients": []
+}

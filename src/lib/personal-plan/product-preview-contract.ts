@@ -39,7 +39,26 @@ export type Stage1ProductExampleCommerce = {
   availabilityLabel: string | null
   productUrl: string | null
   affiliateDisclosure: string | null
+  /**
+   * Present only when a saved budget shaped the proposal: whether this package price is above
+   * it. Absent without a budget — the preview then makes no affordability claim at all.
+   */
+  overBudget?: boolean
+  /**
+   * Drogerie/Profi tier, present only for Shampoo, Conditioner and Mask with a known segment
+   * while the badge display gate is on.
+   */
+  marketSegment?: Stage1ProductMarketSegment
 }
+
+export type Stage1ProductMarketSegment = "drugstore" | "professional"
+
+/** The categories whose cards may carry the Drogerie/Profi badge. */
+export const STAGE1_MARKET_SEGMENT_BADGE_CATEGORIES: ReadonlySet<Stage1Category> = new Set([
+  "shampoo",
+  "conditioner",
+  "mask",
+])
 
 /**
  * One buyable recommendation for one Stage-3 role. `decisionKey`, `productId`

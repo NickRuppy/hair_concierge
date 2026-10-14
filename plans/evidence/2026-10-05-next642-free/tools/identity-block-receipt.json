@@ -1,0 +1,15 @@
+{
+  "status": "BLOCKED_NO_REPIN",
+  "identityMismatches": [
+    {
+      "path": "/Users/nick/AI_work/hair_conscierge/.git/packed-refs",
+      "expectedSHA256": "e1c4bf1d8f62deff84b449eff0e35459de5e13d9936e881f71b1162d61c12d28",
+      "actualSHA256": "eade1aecea291867a0e50b00ed9e37de9b308fefe5b25668008a61e3a6069b2d"
+    }
+  ],
+  "targetPackedRefLines": [
+    "21e0e41fa996ec6a725c258ab3766971f0edb94d refs/heads/codex/test-audit-pruning"
+  ],
+  "expectedHead": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "sourceGuardMismatches": []
+}

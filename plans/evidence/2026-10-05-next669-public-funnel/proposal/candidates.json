@@ -1,0 +1,629 @@
+[
+  {
+    "id": "C1",
+    "file": "tests/gated-preview-component.test.tsx",
+    "donor": {
+      "ordinal": 2,
+      "title": "\"the example content sits inside the one in-frame scroll container\"",
+      "line": 141,
+      "endLine": 169,
+      "callbackSHA256": "54e1e9c58bc9a9f77ec1dbb24e1f4ea2169c8673635ec907325010454b1c5af6"
+    },
+    "keeper": {
+      "ordinal": 1,
+      "title": "\"renders the frame, the Beispiel band, the benefit line and exactly one CTA\"",
+      "line": 117,
+      "endLine": 139,
+      "callbackSHA256": "49f24aaf678750439aa9f2f3837a4a19dd99c121cc6ba5242b1fac04ebc8225e"
+    },
+    "donorStatement": "test(\"the example content sits inside the one in-frame scroll container\", () => {\n  const tree = renderPreview().render()\n\n  const scroll = requireByData(tree, \"data-gated-preview-scroll\")\n  assert.match(scroll.props.className as string, /overflow-y-auto/)\n  // Flex child that may shrink below its content — otherwise the frame grows instead.\n  assert.match(scroll.props.className as string, /min-h-0/)\n\n  // Keyboard users must be able to reach and scroll the region.\n  assert.equal(scroll.props.role, \"region\")\n  // T11 review F2 (final cleanup batch): the region's name REFERENCES the visible\n  // „Beispiel\" band instead of repeating its text in a separate `aria-label` — a screen\n  // reader announced the same string twice back to back before this.\n  assert.equal(scroll.props[\"aria-label\"], undefined)\n  const label = requireByData(tree, \"data-gated-preview-label\")\n  assert.equal(scroll.props[\"aria-labelledby\"], label.props.id)\n  assert.ok(label.props.id, \"the band needs an id for the region to reference\")\n  assert.equal(scroll.props.tabIndex, 0)\n\n  const child = findByData(scroll, \"data-example-child\")\n  assert.equal(child.length, 1, \"children render inside the scroll container, not beside it\")\n\n  // No second scroller anywhere in the tree.\n  assert.equal(\n    findAll(tree, (element) => /overflow-y-auto/.test(String(element.props.className ?? \"\")))\n      .length,\n    1,\n  )\n})",
+    "donorRemovalText": "\n\ntest(\"the example content sits inside the one in-frame scroll container\", () => {\n  const tree = renderPreview().render()\n\n  const scroll = requireByData(tree, \"data-gated-preview-scroll\")\n  assert.match(scroll.props.className as string, /overflow-y-auto/)\n  // Flex child that may shrink below its content — otherwise the frame grows instead.\n  assert.match(scroll.props.className as string, /min-h-0/)\n\n  // Keyboard users must be able to reach and scroll the region.\n  assert.equal(scroll.props.role, \"region\")\n  // T11 review F2 (final cleanup batch): the region's name REFERENCES the visible\n  // „Beispiel\" band instead of repeating its text in a separate `aria-label` — a screen\n  // reader announced the same string twice back to back before this.\n  assert.equal(scroll.props[\"aria-label\"], undefined)\n  const label = requireByData(tree, \"data-gated-preview-label\")\n  assert.equal(scroll.props[\"aria-labelledby\"], label.props.id)\n  assert.ok(label.props.id, \"the band needs an id for the region to reference\")\n  assert.equal(scroll.props.tabIndex, 0)\n\n  const child = findByData(scroll, \"data-example-child\")\n  assert.equal(child.length, 1, \"children render inside the scroll container, not beside it\")\n\n  // No second scroller anywhere in the tree.\n  assert.equal(\n    findAll(tree, (element) => /overflow-y-auto/.test(String(element.props.className ?? \"\")))\n      .length,\n    1,\n  )\n})",
+    "originalKeeperStatement": "test(\"renders the frame, the Beispiel band, the benefit line and exactly one CTA\", () => {\n  const tree = renderPreview().render()\n\n  const frame = requireByData(tree, \"data-gated-preview-frame\")\n  assert.match(frame.props.className as string, /rounded-\\[20px\\]/)\n  assert.match(frame.props.className as string, /border/)\n  assert.match(frame.props.className as string, /overflow-hidden/)\n\n  const label = requireByData(tree, \"data-gated-preview-label\")\n  assert.equal(textContent(label), EXAMPLE_LABEL)\n\n  const ctaBlock = requireByData(tree, \"data-gated-preview-cta-block\")\n  assert.ok(textContent(ctaBlock).includes(BENEFIT), \"benefit line renders above the CTA\")\n\n  const buttons = findAll(tree, (element) => (element.props.variant as string) === \"cta\")\n  assert.equal(buttons.length, 1, \"exactly one CTA — one job, one button\")\n  assert.equal(textContent(buttons[0]), CTA)\n\n  // The whole surface is one screen: the page body must not grow with the example.\n  const section = requireByData(tree, \"data-gated-preview\")\n  assert.equal(section.props[\"data-gated-preview\"], \"routine\")\n  assert.match(section.props.className as string, /100dvh/)\n})",
+    "transferKeeperStatement": "test(\"renders the frame, the Beispiel band, the benefit line and exactly one CTA\", () => {\n  const tree = renderPreview().render()\n\n  const frame = requireByData(tree, \"data-gated-preview-frame\")\n  assert.match(frame.props.className as string, /rounded-\\[20px\\]/)\n  assert.match(frame.props.className as string, /border/)\n  assert.match(frame.props.className as string, /overflow-hidden/)\n\n  const label = requireByData(tree, \"data-gated-preview-label\")\n  assert.equal(textContent(label), EXAMPLE_LABEL)\n\n  const ctaBlock = requireByData(tree, \"data-gated-preview-cta-block\")\n  assert.ok(textContent(ctaBlock).includes(BENEFIT), \"benefit line renders above the CTA\")\n\n  const buttons = findAll(tree, (element) => (element.props.variant as string) === \"cta\")\n  assert.equal(buttons.length, 1, \"exactly one CTA — one job, one button\")\n  assert.equal(textContent(buttons[0]), CTA)\n\n  // The whole surface is one screen: the page body must not grow with the example.\n  const section = requireByData(tree, \"data-gated-preview\")\n  assert.equal(section.props[\"data-gated-preview\"], \"routine\")\n  assert.match(section.props.className as string, /100dvh/)\n\n  const scroll = requireByData(tree, \"data-gated-preview-scroll\")\n  assert.match(scroll.props.className as string, /overflow-y-auto/)\n  // Flex child that may shrink below its content — otherwise the frame grows instead.\n  assert.match(scroll.props.className as string, /min-h-0/)\n\n  // Keyboard users must be able to reach and scroll the region.\n  assert.equal(scroll.props.role, \"region\")\n  // T11 review F2 (final cleanup batch): the region's name REFERENCES the visible\n  // „Beispiel\" band instead of repeating its text in a separate `aria-label` — a screen\n  // reader announced the same string twice back to back before this.\n  assert.equal(scroll.props[\"aria-label\"], undefined)\n  assert.equal(scroll.props[\"aria-labelledby\"], label.props.id)\n  assert.ok(label.props.id, \"the band needs an id for the region to reference\")\n  assert.equal(scroll.props.tabIndex, 0)\n\n  const child = findByData(scroll, \"data-example-child\")\n  assert.equal(child.length, 1, \"children render inside the scroll container, not beside it\")\n\n  // No second scroller anywhere in the tree.\n  assert.equal(\n    findAll(tree, (element) => /overflow-y-auto/.test(String(element.props.className ?? \"\")))\n      .length,\n    1,\n  )\n})",
+    "transferredBlock": "  const scroll = requireByData(tree, \"data-gated-preview-scroll\")\n  assert.match(scroll.props.className as string, /overflow-y-auto/)\n  // Flex child that may shrink below its content — otherwise the frame grows instead.\n  assert.match(scroll.props.className as string, /min-h-0/)\n\n  // Keyboard users must be able to reach and scroll the region.\n  assert.equal(scroll.props.role, \"region\")\n  // T11 review F2 (final cleanup batch): the region's name REFERENCES the visible\n  // „Beispiel\" band instead of repeating its text in a separate `aria-label` — a screen\n  // reader announced the same string twice back to back before this.\n  assert.equal(scroll.props[\"aria-label\"], undefined)\n  assert.equal(scroll.props[\"aria-labelledby\"], label.props.id)\n  assert.ok(label.props.id, \"the band needs an id for the region to reference\")\n  assert.equal(scroll.props.tabIndex, 0)\n\n  const child = findByData(scroll, \"data-example-child\")\n  assert.equal(child.length, 1, \"children render inside the scroll container, not beside it\")\n\n  // No second scroller anywhere in the tree.\n  assert.equal(\n    findAll(tree, (element) => /overflow-y-auto/.test(String(element.props.className ?? \"\")))\n      .length,\n    1,\n  )",
+    "nativeDonorCount": 1,
+    "status": "CONDITIONAL_MAIN_AND_INDEPENDENT_REVIEW_AND_RUNTIME_REQUIRED",
+    "assertionUnion": {
+      "originalDonor": [
+        {
+          "name": "assert.match",
+          "line": 145,
+          "text": "assert.match(scroll.props.className as string, /overflow-y-auto/)"
+        },
+        {
+          "name": "assert.match",
+          "line": 147,
+          "text": "assert.match(scroll.props.className as string, /min-h-0/)"
+        },
+        {
+          "name": "assert.equal",
+          "line": 150,
+          "text": "assert.equal(scroll.props.role, \"region\")"
+        },
+        {
+          "name": "assert.equal",
+          "line": 154,
+          "text": "assert.equal(scroll.props[\"aria-label\"], undefined)"
+        },
+        {
+          "name": "assert.equal",
+          "line": 156,
+          "text": "assert.equal(scroll.props[\"aria-labelledby\"], label.props.id)"
+        },
+        {
+          "name": "assert.ok",
+          "line": 157,
+          "text": "assert.ok(label.props.id, \"the band needs an id for the region to reference\")"
+        },
+        {
+          "name": "assert.equal",
+          "line": 158,
+          "text": "assert.equal(scroll.props.tabIndex, 0)"
+        },
+        {
+          "name": "assert.equal",
+          "line": 161,
+          "text": "assert.equal(child.length, 1, \"children render inside the scroll container, not beside it\")"
+        },
+        {
+          "name": "assert.equal",
+          "line": 164,
+          "text": "assert.equal(\n    findAll(tree, (element) => /overflow-y-auto/.test(String(element.props.className ?? \"\")))\n      .length,\n    1,\n  )"
+        }
+      ],
+      "originalKeeper": [
+        {
+          "name": "assert.match",
+          "line": 121,
+          "text": "assert.match(frame.props.className as string, /rounded-\\[20px\\]/)"
+        },
+        {
+          "name": "assert.match",
+          "line": 122,
+          "text": "assert.match(frame.props.className as string, /border/)"
+        },
+        {
+          "name": "assert.match",
+          "line": 123,
+          "text": "assert.match(frame.props.className as string, /overflow-hidden/)"
+        },
+        {
+          "name": "assert.equal",
+          "line": 126,
+          "text": "assert.equal(textContent(label), EXAMPLE_LABEL)"
+        },
+        {
+          "name": "assert.ok",
+          "line": 129,
+          "text": "assert.ok(textContent(ctaBlock).includes(BENEFIT), \"benefit line renders above the CTA\")"
+        },
+        {
+          "name": "assert.equal",
+          "line": 132,
+          "text": "assert.equal(buttons.length, 1, \"exactly one CTA — one job, one button\")"
+        },
+        {
+          "name": "assert.equal",
+          "line": 133,
+          "text": "assert.equal(textContent(buttons[0]), CTA)"
+        },
+        {
+          "name": "assert.equal",
+          "line": 137,
+          "text": "assert.equal(section.props[\"data-gated-preview\"], \"routine\")"
+        },
+        {
+          "name": "assert.match",
+          "line": 138,
+          "text": "assert.match(section.props.className as string, /100dvh/)"
+        }
+      ],
+      "transferKeeper": [
+        {
+          "name": "assert.match",
+          "line": 121,
+          "text": "assert.match(frame.props.className as string, /rounded-\\[20px\\]/)"
+        },
+        {
+          "name": "assert.match",
+          "line": 122,
+          "text": "assert.match(frame.props.className as string, /border/)"
+        },
+        {
+          "name": "assert.match",
+          "line": 123,
+          "text": "assert.match(frame.props.className as string, /overflow-hidden/)"
+        },
+        {
+          "name": "assert.equal",
+          "line": 126,
+          "text": "assert.equal(textContent(label), EXAMPLE_LABEL)"
+        },
+        {
+          "name": "assert.ok",
+          "line": 129,
+          "text": "assert.ok(textContent(ctaBlock).includes(BENEFIT), \"benefit line renders above the CTA\")"
+        },
+        {
+          "name": "assert.equal",
+          "line": 132,
+          "text": "assert.equal(buttons.length, 1, \"exactly one CTA — one job, one button\")"
+        },
+        {
+          "name": "assert.equal",
+          "line": 133,
+          "text": "assert.equal(textContent(buttons[0]), CTA)"
+        },
+        {
+          "name": "assert.equal",
+          "line": 137,
+          "text": "assert.equal(section.props[\"data-gated-preview\"], \"routine\")"
+        },
+        {
+          "name": "assert.match",
+          "line": 138,
+          "text": "assert.match(section.props.className as string, /100dvh/)"
+        },
+        {
+          "name": "assert.match",
+          "line": 141,
+          "text": "assert.match(scroll.props.className as string, /overflow-y-auto/)"
+        },
+        {
+          "name": "assert.match",
+          "line": 143,
+          "text": "assert.match(scroll.props.className as string, /min-h-0/)"
+        },
+        {
+          "name": "assert.equal",
+          "line": 146,
+          "text": "assert.equal(scroll.props.role, \"region\")"
+        },
+        {
+          "name": "assert.equal",
+          "line": 150,
+          "text": "assert.equal(scroll.props[\"aria-label\"], undefined)"
+        },
+        {
+          "name": "assert.equal",
+          "line": 151,
+          "text": "assert.equal(scroll.props[\"aria-labelledby\"], label.props.id)"
+        },
+        {
+          "name": "assert.ok",
+          "line": 152,
+          "text": "assert.ok(label.props.id, \"the band needs an id for the region to reference\")"
+        },
+        {
+          "name": "assert.equal",
+          "line": 153,
+          "text": "assert.equal(scroll.props.tabIndex, 0)"
+        },
+        {
+          "name": "assert.equal",
+          "line": 156,
+          "text": "assert.equal(child.length, 1, \"children render inside the scroll container, not beside it\")"
+        },
+        {
+          "name": "assert.equal",
+          "line": 159,
+          "text": "assert.equal(\n    findAll(tree, (element) => /overflow-y-auto/.test(String(element.props.className ?? \"\")))\n      .length,\n    1,\n  )"
+        }
+      ],
+      "cutKeeper": [
+        {
+          "name": "assert.match",
+          "line": 121,
+          "text": "assert.match(frame.props.className as string, /rounded-\\[20px\\]/)"
+        },
+        {
+          "name": "assert.match",
+          "line": 122,
+          "text": "assert.match(frame.props.className as string, /border/)"
+        },
+        {
+          "name": "assert.match",
+          "line": 123,
+          "text": "assert.match(frame.props.className as string, /overflow-hidden/)"
+        },
+        {
+          "name": "assert.equal",
+          "line": 126,
+          "text": "assert.equal(textContent(label), EXAMPLE_LABEL)"
+        },
+        {
+          "name": "assert.ok",
+          "line": 129,
+          "text": "assert.ok(textContent(ctaBlock).includes(BENEFIT), \"benefit line renders above the CTA\")"
+        },
+        {
+          "name": "assert.equal",
+          "line": 132,
+          "text": "assert.equal(buttons.length, 1, \"exactly one CTA — one job, one button\")"
+        },
+        {
+          "name": "assert.equal",
+          "line": 133,
+          "text": "assert.equal(textContent(buttons[0]), CTA)"
+        },
+        {
+          "name": "assert.equal",
+          "line": 137,
+          "text": "assert.equal(section.props[\"data-gated-preview\"], \"routine\")"
+        },
+        {
+          "name": "assert.match",
+          "line": 138,
+          "text": "assert.match(section.props.className as string, /100dvh/)"
+        },
+        {
+          "name": "assert.match",
+          "line": 141,
+          "text": "assert.match(scroll.props.className as string, /overflow-y-auto/)"
+        },
+        {
+          "name": "assert.match",
+          "line": 143,
+          "text": "assert.match(scroll.props.className as string, /min-h-0/)"
+        },
+        {
+          "name": "assert.equal",
+          "line": 146,
+          "text": "assert.equal(scroll.props.role, \"region\")"
+        },
+        {
+          "name": "assert.equal",
+          "line": 150,
+          "text": "assert.equal(scroll.props[\"aria-label\"], undefined)"
+        },
+        {
+          "name": "assert.equal",
+          "line": 151,
+          "text": "assert.equal(scroll.props[\"aria-labelledby\"], label.props.id)"
+        },
+        {
+          "name": "assert.ok",
+          "line": 152,
+          "text": "assert.ok(label.props.id, \"the band needs an id for the region to reference\")"
+        },
+        {
+          "name": "assert.equal",
+          "line": 153,
+          "text": "assert.equal(scroll.props.tabIndex, 0)"
+        },
+        {
+          "name": "assert.equal",
+          "line": 156,
+          "text": "assert.equal(child.length, 1, \"children render inside the scroll container, not beside it\")"
+        },
+        {
+          "name": "assert.equal",
+          "line": 159,
+          "text": "assert.equal(\n    findAll(tree, (element) => /overflow-y-auto/.test(String(element.props.className ?? \"\")))\n      .length,\n    1,\n  )"
+        }
+      ]
+    },
+    "keeperPhaseLines": {
+      "transfer": 117,
+      "cut": 117
+    }
+  },
+  {
+    "id": "C2",
+    "file": "tests/gated-example-pages.test.tsx",
+    "donor": {
+      "ordinal": 10,
+      "title": "\"no example message carries a timestamp — a formatted one would mismatch on hydration\"",
+      "line": 294,
+      "endLine": 299,
+      "callbackSHA256": "fba5b5f0f77577c7fafb7f63c95c67b7a2dfd4535782573ac2ff2753a2b7b3d9"
+    },
+    "keeper": {
+      "ordinal": 9,
+      "title": "\"the Chat example is a short, capability-true transcript through the real bubbles\"",
+      "line": 271,
+      "endLine": 292,
+      "callbackSHA256": "cda434fdedfbfe299a3a309a7acea45f717311009d26f0cbd4daa3f19e257b2c"
+    },
+    "donorStatement": "test(\"no example message carries a timestamp — a formatted one would mismatch on hydration\", () => {\n  for (const message of GATED_CHAT_EXAMPLE_MESSAGES) {\n    assert.equal(message.created_at, \"\")\n  }\n  assert.doesNotMatch(render(GatedChatExample), /type-caption text-muted-foreground\">\\d\\d:\\d\\d/)\n})",
+    "donorRemovalText": "\n\ntest(\"no example message carries a timestamp — a formatted one would mismatch on hydration\", () => {\n  for (const message of GATED_CHAT_EXAMPLE_MESSAGES) {\n    assert.equal(message.created_at, \"\")\n  }\n  assert.doesNotMatch(render(GatedChatExample), /type-caption text-muted-foreground\">\\d\\d:\\d\\d/)\n})",
+    "originalKeeperStatement": "test(\"the Chat example is a short, capability-true transcript through the real bubbles\", () => {\n  const html = render(GatedChatExample)\n\n  assert.match(html, /data-testid=\"message-user\"/)\n  assert.match(html, /data-testid=\"message-assistant\"/)\n  assert.match(html, /data-testid=\"chat-input\"/)\n  assert.match(html, /disabled=\"\"/, \"the composer renders visibly unusable\")\n\n  // Short: Nick asked for something short — two turns, four messages.\n  assert.equal(GATED_CHAT_EXAMPLE_MESSAGES.length, 4)\n  assert.equal(GATED_CHAT_EXAMPLE_MESSAGES.filter((m) => m.role === \"user\").length, 2)\n\n  const transcript = GATED_CHAT_EXAMPLE_MESSAGES.map((m) => m.content ?? \"\").join(\"\\n\")\n  // Capability-true: general hair-care Q&A the paid chat genuinely does. No scan-aware\n  // claim and no verdict explanation — those are explicitly forbidden content here.\n  for (const forbidden of [/scan/i, /gescannt/i, /verdict/i, /passt nicht/i, /Merkliste/i]) {\n    assert.doesNotMatch(transcript, forbidden, `the transcript must not claim ${forbidden}`)\n  }\n  // No feedback affordance and no product card: both need live handlers.\n  assert.doesNotMatch(html, /Antwort positiv bewerten/)\n  assert.doesNotMatch(html, /weitere Empfehlungen/)\n})",
+    "transferKeeperStatement": "test(\"the Chat example is a short, capability-true transcript through the real bubbles\", () => {\n  const html = render(GatedChatExample)\n\n  assert.match(html, /data-testid=\"message-user\"/)\n  assert.match(html, /data-testid=\"message-assistant\"/)\n  assert.match(html, /data-testid=\"chat-input\"/)\n  assert.match(html, /disabled=\"\"/, \"the composer renders visibly unusable\")\n\n  // Short: Nick asked for something short — two turns, four messages.\n  assert.equal(GATED_CHAT_EXAMPLE_MESSAGES.length, 4)\n  assert.equal(GATED_CHAT_EXAMPLE_MESSAGES.filter((m) => m.role === \"user\").length, 2)\n\n  const transcript = GATED_CHAT_EXAMPLE_MESSAGES.map((m) => m.content ?? \"\").join(\"\\n\")\n  // Capability-true: general hair-care Q&A the paid chat genuinely does. No scan-aware\n  // claim and no verdict explanation — those are explicitly forbidden content here.\n  for (const forbidden of [/scan/i, /gescannt/i, /verdict/i, /passt nicht/i, /Merkliste/i]) {\n    assert.doesNotMatch(transcript, forbidden, `the transcript must not claim ${forbidden}`)\n  }\n  // No feedback affordance and no product card: both need live handlers.\n  assert.doesNotMatch(html, /Antwort positiv bewerten/)\n  assert.doesNotMatch(html, /weitere Empfehlungen/)\n\n  for (const message of GATED_CHAT_EXAMPLE_MESSAGES) {\n    assert.equal(message.created_at, \"\")\n  }\n  assert.doesNotMatch(html, /type-caption text-muted-foreground\">\\d\\d:\\d\\d/)\n})",
+    "transferredBlock": "  for (const message of GATED_CHAT_EXAMPLE_MESSAGES) {\n    assert.equal(message.created_at, \"\")\n  }\n  assert.doesNotMatch(html, /type-caption text-muted-foreground\">\\d\\d:\\d\\d/)",
+    "nativeDonorCount": 1,
+    "status": "CONDITIONAL_MAIN_AND_INDEPENDENT_REVIEW_AND_RUNTIME_REQUIRED",
+    "assertionUnion": {
+      "originalDonor": [
+        {
+          "name": "assert.equal",
+          "line": 296,
+          "text": "assert.equal(message.created_at, \"\")"
+        },
+        {
+          "name": "assert.doesNotMatch",
+          "line": 298,
+          "text": "assert.doesNotMatch(render(GatedChatExample), /type-caption text-muted-foreground\">\\d\\d:\\d\\d/)"
+        }
+      ],
+      "originalKeeper": [
+        {
+          "name": "assert.match",
+          "line": 274,
+          "text": "assert.match(html, /data-testid=\"message-user\"/)"
+        },
+        {
+          "name": "assert.match",
+          "line": 275,
+          "text": "assert.match(html, /data-testid=\"message-assistant\"/)"
+        },
+        {
+          "name": "assert.match",
+          "line": 276,
+          "text": "assert.match(html, /data-testid=\"chat-input\"/)"
+        },
+        {
+          "name": "assert.match",
+          "line": 277,
+          "text": "assert.match(html, /disabled=\"\"/, \"the composer renders visibly unusable\")"
+        },
+        {
+          "name": "assert.equal",
+          "line": 280,
+          "text": "assert.equal(GATED_CHAT_EXAMPLE_MESSAGES.length, 4)"
+        },
+        {
+          "name": "assert.equal",
+          "line": 281,
+          "text": "assert.equal(GATED_CHAT_EXAMPLE_MESSAGES.filter((m) => m.role === \"user\").length, 2)"
+        },
+        {
+          "name": "assert.doesNotMatch",
+          "line": 287,
+          "text": "assert.doesNotMatch(transcript, forbidden, `the transcript must not claim ${forbidden}`)"
+        },
+        {
+          "name": "assert.doesNotMatch",
+          "line": 290,
+          "text": "assert.doesNotMatch(html, /Antwort positiv bewerten/)"
+        },
+        {
+          "name": "assert.doesNotMatch",
+          "line": 291,
+          "text": "assert.doesNotMatch(html, /weitere Empfehlungen/)"
+        }
+      ],
+      "transferKeeper": [
+        {
+          "name": "assert.match",
+          "line": 274,
+          "text": "assert.match(html, /data-testid=\"message-user\"/)"
+        },
+        {
+          "name": "assert.match",
+          "line": 275,
+          "text": "assert.match(html, /data-testid=\"message-assistant\"/)"
+        },
+        {
+          "name": "assert.match",
+          "line": 276,
+          "text": "assert.match(html, /data-testid=\"chat-input\"/)"
+        },
+        {
+          "name": "assert.match",
+          "line": 277,
+          "text": "assert.match(html, /disabled=\"\"/, \"the composer renders visibly unusable\")"
+        },
+        {
+          "name": "assert.equal",
+          "line": 280,
+          "text": "assert.equal(GATED_CHAT_EXAMPLE_MESSAGES.length, 4)"
+        },
+        {
+          "name": "assert.equal",
+          "line": 281,
+          "text": "assert.equal(GATED_CHAT_EXAMPLE_MESSAGES.filter((m) => m.role === \"user\").length, 2)"
+        },
+        {
+          "name": "assert.doesNotMatch",
+          "line": 287,
+          "text": "assert.doesNotMatch(transcript, forbidden, `the transcript must not claim ${forbidden}`)"
+        },
+        {
+          "name": "assert.doesNotMatch",
+          "line": 290,
+          "text": "assert.doesNotMatch(html, /Antwort positiv bewerten/)"
+        },
+        {
+          "name": "assert.doesNotMatch",
+          "line": 291,
+          "text": "assert.doesNotMatch(html, /weitere Empfehlungen/)"
+        },
+        {
+          "name": "assert.equal",
+          "line": 294,
+          "text": "assert.equal(message.created_at, \"\")"
+        },
+        {
+          "name": "assert.doesNotMatch",
+          "line": 296,
+          "text": "assert.doesNotMatch(html, /type-caption text-muted-foreground\">\\d\\d:\\d\\d/)"
+        }
+      ],
+      "cutKeeper": [
+        {
+          "name": "assert.match",
+          "line": 274,
+          "text": "assert.match(html, /data-testid=\"message-user\"/)"
+        },
+        {
+          "name": "assert.match",
+          "line": 275,
+          "text": "assert.match(html, /data-testid=\"message-assistant\"/)"
+        },
+        {
+          "name": "assert.match",
+          "line": 276,
+          "text": "assert.match(html, /data-testid=\"chat-input\"/)"
+        },
+        {
+          "name": "assert.match",
+          "line": 277,
+          "text": "assert.match(html, /disabled=\"\"/, \"the composer renders visibly unusable\")"
+        },
+        {
+          "name": "assert.equal",
+          "line": 280,
+          "text": "assert.equal(GATED_CHAT_EXAMPLE_MESSAGES.length, 4)"
+        },
+        {
+          "name": "assert.equal",
+          "line": 281,
+          "text": "assert.equal(GATED_CHAT_EXAMPLE_MESSAGES.filter((m) => m.role === \"user\").length, 2)"
+        },
+        {
+          "name": "assert.doesNotMatch",
+          "line": 287,
+          "text": "assert.doesNotMatch(transcript, forbidden, `the transcript must not claim ${forbidden}`)"
+        },
+        {
+          "name": "assert.doesNotMatch",
+          "line": 290,
+          "text": "assert.doesNotMatch(html, /Antwort positiv bewerten/)"
+        },
+        {
+          "name": "assert.doesNotMatch",
+          "line": 291,
+          "text": "assert.doesNotMatch(html, /weitere Empfehlungen/)"
+        },
+        {
+          "name": "assert.equal",
+          "line": 294,
+          "text": "assert.equal(message.created_at, \"\")"
+        },
+        {
+          "name": "assert.doesNotMatch",
+          "line": 296,
+          "text": "assert.doesNotMatch(html, /type-caption text-muted-foreground\">\\d\\d:\\d\\d/)"
+        }
+      ]
+    },
+    "keeperPhaseLines": {
+      "transfer": 271,
+      "cut": 271
+    }
+  },
+  {
+    "id": "C3",
+    "file": "tests/gated-pages-zero-mutation.test.tsx",
+    "donor": {
+      "ordinal": 2,
+      "title": "`gated ${name} renders no form and no submit control`",
+      "line": 137,
+      "endLine": 143,
+      "callbackSHA256": "fb7f1e0498f6ac6171f1e910dd52c503ad8f1c6fea679cd0abf0acab678d54e2"
+    },
+    "keeper": {
+      "ordinal": 1,
+      "title": "`gated ${name} renders without touching the network`",
+      "line": 127,
+      "endLine": 135,
+      "callbackSHA256": "d8b047585d736fe41e34e4400428cbc3a7b1385a7c02d50317062740e0fefe72"
+    },
+    "donorStatement": "test(`gated ${name} renders no form and no submit control`, () => {\n    const { result } = renderComposition(Composition)\n    // A mutation needs a transport: fetch (trapped above) or a form. Neither exists.\n    assert.doesNotMatch(result, /<form/i)\n    assert.doesNotMatch(result, /type=\"submit\"/i)\n    assert.doesNotMatch(result, /formaction=/i)\n  })",
+    "donorRemovalText": "\n\n  test(`gated ${name} renders no form and no submit control`, () => {\n    const { result } = renderComposition(Composition)\n    // A mutation needs a transport: fetch (trapped above) or a form. Neither exists.\n    assert.doesNotMatch(result, /<form/i)\n    assert.doesNotMatch(result, /type=\"submit\"/i)\n    assert.doesNotMatch(result, /formaction=/i)\n  })",
+    "originalKeeperStatement": "test(`gated ${name} renders without touching the network`, () => {\n    const { result, calls } = renderComposition(Composition)\n    assert.deepEqual(\n      calls,\n      [],\n      `gated ${name} must issue zero requests, got ${JSON.stringify(calls)}`,\n    )\n    assert.ok(result.length > 0, \"the composition renders something\")\n  })",
+    "transferKeeperStatement": "test(`gated ${name} renders without touching the network`, () => {\n    const { result, calls } = renderComposition(Composition)\n    assert.deepEqual(\n      calls,\n      [],\n      `gated ${name} must issue zero requests, got ${JSON.stringify(calls)}`,\n    )\n    assert.ok(result.length > 0, \"the composition renders something\")\n\n    // A mutation needs a transport: fetch (trapped above) or a form. Neither exists.\n    assert.doesNotMatch(result, /<form/i)\n    assert.doesNotMatch(result, /type=\"submit\"/i)\n    assert.doesNotMatch(result, /formaction=/i)\n  })",
+    "transferredBlock": "    // A mutation needs a transport: fetch (trapped above) or a form. Neither exists.\n    assert.doesNotMatch(result, /<form/i)\n    assert.doesNotMatch(result, /type=\"submit\"/i)\n    assert.doesNotMatch(result, /formaction=/i)",
+    "nativeDonorCount": 3,
+    "status": "CONDITIONAL_MAIN_AND_INDEPENDENT_REVIEW_AND_RUNTIME_REQUIRED",
+    "assertionUnion": {
+      "originalDonor": [
+        {
+          "name": "assert.doesNotMatch",
+          "line": 140,
+          "text": "assert.doesNotMatch(result, /<form/i)"
+        },
+        {
+          "name": "assert.doesNotMatch",
+          "line": 141,
+          "text": "assert.doesNotMatch(result, /type=\"submit\"/i)"
+        },
+        {
+          "name": "assert.doesNotMatch",
+          "line": 142,
+          "text": "assert.doesNotMatch(result, /formaction=/i)"
+        }
+      ],
+      "originalKeeper": [
+        {
+          "name": "assert.deepEqual",
+          "line": 129,
+          "text": "assert.deepEqual(\n      calls,\n      [],\n      `gated ${name} must issue zero requests, got ${JSON.stringify(calls)}`,\n    )"
+        },
+        {
+          "name": "assert.ok",
+          "line": 134,
+          "text": "assert.ok(result.length > 0, \"the composition renders something\")"
+        }
+      ],
+      "transferKeeper": [
+        {
+          "name": "assert.deepEqual",
+          "line": 129,
+          "text": "assert.deepEqual(\n      calls,\n      [],\n      `gated ${name} must issue zero requests, got ${JSON.stringify(calls)}`,\n    )"
+        },
+        {
+          "name": "assert.ok",
+          "line": 134,
+          "text": "assert.ok(result.length > 0, \"the composition renders something\")"
+        },
+        {
+          "name": "assert.doesNotMatch",
+          "line": 137,
+          "text": "assert.doesNotMatch(result, /<form/i)"
+        },
+        {
+          "name": "assert.doesNotMatch",
+          "line": 138,
+          "text": "assert.doesNotMatch(result, /type=\"submit\"/i)"
+        },
+        {
+          "name": "assert.doesNotMatch",
+          "line": 139,
+          "text": "assert.doesNotMatch(result, /formaction=/i)"
+        }
+      ],
+      "cutKeeper": [
+        {
+          "name": "assert.deepEqual",
+          "line": 129,
+          "text": "assert.deepEqual(\n      calls,\n      [],\n      `gated ${name} must issue zero requests, got ${JSON.stringify(calls)}`,\n    )"
+        },
+        {
+          "name": "assert.ok",
+          "line": 134,
+          "text": "assert.ok(result.length > 0, \"the composition renders something\")"
+        },
+        {
+          "name": "assert.doesNotMatch",
+          "line": 137,
+          "text": "assert.doesNotMatch(result, /<form/i)"
+        },
+        {
+          "name": "assert.doesNotMatch",
+          "line": 138,
+          "text": "assert.doesNotMatch(result, /type=\"submit\"/i)"
+        },
+        {
+          "name": "assert.doesNotMatch",
+          "line": 139,
+          "text": "assert.doesNotMatch(result, /formaction=/i)"
+        }
+      ]
+    },
+    "keeperPhaseLines": {
+      "transfer": 127,
+      "cut": 127
+    }
+  }
+]

@@ -1,0 +1,7 @@
+retirement-response-status clean1 / intended red1 / exact restore / clean1
+{
+  "receiptDir": "/tmp/test-audit-one-time-authorization-tools-89785z66/operator-mutations-before-eO3xTh",
+  "completionSHA256": "cd78bd22e6efdbd2582a04230b0742a3aafede90e1054b71410f04f3e63e0c04",
+  "verified": 1,
+  "eligibleForCut": true
+}

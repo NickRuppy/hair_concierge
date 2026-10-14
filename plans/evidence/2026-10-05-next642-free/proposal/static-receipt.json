@@ -1,0 +1,23 @@
+{
+  "status": "PASS_PARSE_RECONSTRUCTION_ONLY",
+  "counts": {
+    "before": 67,
+    "transfer": 67,
+    "cut": 66
+  },
+  "unrelatedCallbacks": 65,
+  "phaseFilesParsed": 21,
+  "sourceMutantsParsed": 2,
+  "sourceControlScopes": 1,
+  "originalGuardsCurrent": true,
+  "readsetPins": 247,
+  "localClosure": 231,
+  "declaredRowsUnchanged": true,
+  "nonAssertionCallsUnchanged": true,
+  "repositoryWrites": 0,
+  "childrenStarted": 0,
+  "ownerImports": 0,
+  "nativeRuns": 0,
+  "repairCredit": 0,
+  "removalCredit": 0
+}

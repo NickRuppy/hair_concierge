@@ -1,0 +1,61 @@
+commit 3731914008f0592aec0d7971572b19760e34c39e
+Author:     NickRuppy <149665130+NickRuppy@users.noreply.github.com>
+AuthorDate: Thu Aug 20 17:57:12 2026 +0200
+Commit:     GitHub <noreply@github.com>
+CommitDate: Thu Aug 20 17:57:12 2026 +0200
+
+    perf(landing): defer heavy code beyond first paint (#454)
+    
+    ## Why
+    
+    The ads Personal Plan landing eagerly shipped the complete quiz and full
+    Sentry browser runtime before the visitor could use the first screen.
+    This increased initial JavaScript and delayed mobile LCP on both landing
+    routes.
+    
+    ## What changed
+    
+    - Defer the full Sentry SDK until after first paint on landing routes
+    while buffering early browser errors.
+    - Server-render a lightweight, visually identical first texture question
+    on `/lp/haarplan` and load the remaining quiz after first paint.
+    - Preserve local/server draft authority, exact-once analytics, the
+    existing 400 ms selection feedback, and result/email behavior.
+    - Automatically recover a failed continuation load for fresh selections
+    and local drafts with one bounded refresh, retained state,
+    offline/visibility awareness, and no retry button.
+    
+    ## Measured result versus current `origin/main`
+    
+    - Ads initial JS: 458,555 → 235,839 bytes gzip (-217.5 KiB / -48.6%).
+    - Organic initial JS: 399,062 → 216,628 bytes gzip (-178.2 KiB /
+    -45.7%).
+    - Five-pair median simulated-mobile LCP: 4,686 → 3,381 ms (-1,305 ms /
+    -27.8%).
+    - Median TBT: 59 → 50 ms; CLS remains 0.
+    
+    ## Verification
+    
+    - 36 focused landing, Sentry, funnel, and progressive-entry tests.
+    - All 1,872 Personal Plan tests.
+    - `PERSONAL_PLAN_QUIZ_V1_ENABLED=true npm run ci:verify` (typecheck,
+    lint, production build); lint has 0 errors and 4 pre-existing warnings.
+    - Production-browser fresh selection and local-draft forced
+    failure/recovery, keyboard/back/reload, server-resume SSR/hydration, and
+    mobile screenshot parity.
+    - Read-only Claude whole-tree review; its local-draft recovery finding
+    was fixed and the post-fix delta was revalidated.
+    
+    ## Residual risk
+    
+    - A failed initial hydration chunk on an already server-resumed session
+    cannot be recovered inside that same component; route-global chunk
+    recovery is intentionally outside this deferred-entry change.
+    - The shell-to-full analytics race is guarded by source-contract tests
+    plus browser evidence rather than a DOM component harness.
+    
+    No migrations, production writes, feature activation, deployment, or
+    merge are included.
+
+ tests/landing-client-import-boundary.test.ts | 161 +++++++++++++++++++++++++++
+ 1 file changed, 161 insertions(+)

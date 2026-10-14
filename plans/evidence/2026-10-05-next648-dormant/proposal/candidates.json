@@ -1,0 +1,120 @@
+[
+  {
+    "id": "D1",
+    "file": "tests/personal-plan-journey-access-loader.test.ts",
+    "line": 418,
+    "title": "internal app rollout excludes non-internal users before plan data is read",
+    "decision": "CONDITIONAL D",
+    "retirement": "Only with atomic removal of the obsolete selector/helper chain in all three source owners and cleanup of every named dependency reference. No substitute fixture/readset equivalence claim.",
+    "originalAssertions": [
+      {
+        "line": 432,
+        "callee": "assert.deepEqual",
+        "text": "assert.deepEqual(access, { kind: \"legacy\" })"
+      },
+      {
+        "line": 433,
+        "callee": "assert.equal",
+        "text": "assert.equal(entitlementReads, 0)"
+      }
+    ],
+    "sourceClosure": "layer-plan.md + closure-inventory.json + history-retirement.txt",
+    "keeperRequirement": "Existing released-all defaults, appEnabled/incomplete facts, migration/cutoff, narrow Stage2 no-later-read/timing, and full journey state tests remain.",
+    "runtime": "UNRUN"
+  },
+  {
+    "id": "D2",
+    "file": "tests/personal-plan-journey-access-loader.test.ts",
+    "line": 436,
+    "title": "internal app rollout admits the internal owner to the regular journey",
+    "decision": "CONDITIONAL D",
+    "retirement": "Only with atomic removal of the obsolete selector/helper chain in all three source owners and cleanup of every named dependency reference. No substitute fixture/readset equivalence claim.",
+    "originalAssertions": [
+      {
+        "line": 442,
+        "callee": "assert.equal",
+        "text": "assert.equal(access.kind, \"personal_plan\")"
+      }
+    ],
+    "sourceClosure": "layer-plan.md + closure-inventory.json + history-retirement.txt",
+    "keeperRequirement": "Existing released-all defaults, appEnabled/incomplete facts, migration/cutoff, narrow Stage2 no-later-read/timing, and full journey state tests remain.",
+    "runtime": "UNRUN"
+  },
+  {
+    "id": "D3",
+    "file": "tests/personal-plan-rollout-access.test.ts",
+    "line": 77,
+    "title": "an active tester grant admits a field-test owner without an email allowlist",
+    "decision": "CONDITIONAL D",
+    "retirement": "Only with atomic removal of the obsolete selector/helper chain in all three source owners and cleanup of every named dependency reference. No substitute fixture/readset equivalence claim.",
+    "originalAssertions": [
+      {
+        "line": 117,
+        "callee": "assert.equal",
+        "text": "assert.equal(\n    await isActivePersonalPlanFieldTestOwner(\n      \"guest-1\",\n      client as never,\n      new Date(\"2026-08-10T12:00:00.000Z\"),\n    ),\n    true,\n  )"
+      }
+    ],
+    "sourceClosure": "layer-plan.md + closure-inventory.json + history-retirement.txt",
+    "keeperRequirement": "Live enrollment owner contracts in personal-plan-field-test-access.test.ts remain; they are distinct real behavior, not equivalently transplanted old helper calls. Released zero-read helper test stays.",
+    "runtime": "UNRUN"
+  },
+  {
+    "id": "D4",
+    "file": "tests/personal-plan-rollout-access.test.ts",
+    "line": 127,
+    "title": "an active regular-quiz tester grant is also an internal field-test owner",
+    "decision": "CONDITIONAL D",
+    "retirement": "Only with atomic removal of the obsolete selector/helper chain in all three source owners and cleanup of every named dependency reference. No substitute fixture/readset equivalence claim.",
+    "originalAssertions": [
+      {
+        "line": 170,
+        "callee": "assert.equal",
+        "text": "assert.equal(\n    await isActivePersonalPlanFieldTestOwner(\n      \"guest-1\",\n      client as never,\n      new Date(\"2026-08-10T12:00:00.000Z\"),\n    ),\n    true,\n  )"
+      },
+      {
+        "line": 178,
+        "callee": "assert.deepEqual",
+        "text": "assert.deepEqual(queriedTables, [\n    \"personal_plan_test_enrollments\",\n    \"regular_quiz_test_enrollments\",\n  ])"
+      }
+    ],
+    "sourceClosure": "layer-plan.md + closure-inventory.json + history-retirement.txt",
+    "keeperRequirement": "Live enrollment owner contracts in personal-plan-field-test-access.test.ts remain; they are distinct real behavior, not equivalently transplanted old helper calls. Released zero-read helper test stays.",
+    "runtime": "UNRUN"
+  },
+  {
+    "id": "D5",
+    "file": "tests/personal-plan-rollout-access.test.ts",
+    "line": 184,
+    "title": "an unapplied field-test relation is not an internal-owner signal",
+    "decision": "CONDITIONAL D",
+    "retirement": "Only with atomic removal of the obsolete selector/helper chain in all three source owners and cleanup of every named dependency reference. No substitute fixture/readset equivalence claim.",
+    "originalAssertions": [
+      {
+        "line": 213,
+        "callee": "assert.equal",
+        "text": "assert.equal(await isActivePersonalPlanFieldTestOwner(\"user-1\", client as never), false)"
+      }
+    ],
+    "sourceClosure": "layer-plan.md + closure-inventory.json + history-retirement.txt",
+    "keeperRequirement": "Live enrollment owner contracts in personal-plan-field-test-access.test.ts remain; they are distinct real behavior, not equivalently transplanted old helper calls. Released zero-read helper test stays.",
+    "runtime": "UNRUN"
+  },
+  {
+    "id": "D6",
+    "file": "tests/personal-plan-rollout-access.test.ts",
+    "line": 216,
+    "title": "field-test owner reads still fail closed on unrelated database errors",
+    "decision": "CONDITIONAL D",
+    "retirement": "Only with atomic removal of the obsolete selector/helper chain in all three source owners and cleanup of every named dependency reference. No substitute fixture/readset equivalence claim.",
+    "originalAssertions": [
+      {
+        "line": 242,
+        "callee": "assert.rejects",
+        "text": "assert.rejects(\n    isActivePersonalPlanFieldTestOwner(\"user-1\", client as never),\n    (error: unknown) =>\n      typeof error === \"object\" && error !== null && \"code\" in error && error.code === \"XX000\",\n  )"
+      }
+    ],
+    "sourceClosure": "layer-plan.md + closure-inventory.json + history-retirement.txt",
+    "keeperRequirement": "Live enrollment owner contracts in personal-plan-field-test-access.test.ts remain; they are distinct real behavior, not equivalently transplanted old helper calls. Released zero-read helper test stays.",
+    "runtime": "UNRUN"
+  }
+]

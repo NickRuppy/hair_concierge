@@ -1,5 +1,11 @@
 # Bondbuilder research engine
 
+Latest recommendation intent: Nick approved all five new reviewed products, including low-trust OGX/Aveda, as recommendation options without a trust upgrade. The [dated recommendation policy](recommendation-policy-2026-10-05.md) supersedes availability-only intent; implementation and routine-readiness are separate from frozen research and live flags.
+
+2026-10-07 Première correction: [matching shampoo is recommended, not a mandatory companion](recommendation-policy-2026-10-05.md#première-partner-correction--2026-10-07). Normal layered shampooing remains. A separate P08 packet and guarded migration are prepared; live apply/readback remains a separate gate. Historical profiles and the four-product package are unchanged.
+
+2026-10-06 diameter ruling: all in-scope Bondbuilders are suitable for fine, normal and coarse hair. The [category recommendation rule](recommendation-policy-2026-10-05.md#hair-diameter-ruling--2026-10-06) replaces diameter-specific recommendation gating, not the frozen producer research or new-submission approval boundary.
+
 Status: **v0.5 bounded owner-locked; full-profile research routing code enabled**. [2026-10-05 lock/activation receipt](lock-2026-10-05.md) records accepted coverage and exact unchanged pins. Running-release deployment remains separately verified; strict recommendation holds remain unchanged. Research-only catalogue availability has the separate approved lane below.
 
 2026-10-05 catalogue follow-up: Nick approved [research-only availability for the five reviewed new rows](../../../plans/bondbuilder-product-launch/plan.md). The [internal catalogue lane](internal-catalogue-admission.md#research-only-catalogue-availability-2026-10-05) separates searchable/scannable, non-recommended rows from strict global recommendation readiness. [Fresh producer observations](catalogue-source-followup-2026-10-05.md) retain source/market/formula limitations and unresolved recommendation facts. This publication change does not rewrite the frozen v0.5 method or confer fit/protocol readiness; live deployment/apply evidence remains separate.

@@ -167,25 +167,6 @@ test("non-GTIN raw value logs a null canonical value", async () => {
   assert.equal((inserted() as { canonical_value: unknown }).canonical_value, null)
 })
 
-test("fail-open: an insert error never throws", async () => {
-  resetAttemptLogCaptureThrottleForTests()
-  const { client } = stubClient({ error: { message: "boom" } })
-  const { capture } = stubCapture()
-
-  await assert.doesNotReject(
-    recordScanResolveAttempt(
-      client as never,
-      {
-        attemptId: "00000000-0000-4000-8000-000000000001",
-        userId: "user-1",
-        identifierType: "ean",
-        rawValue: "4012345678901",
-      },
-      capture,
-    ),
-  )
-})
-
 test("fail-open: a thrown client error never propagates", async () => {
   resetAttemptLogCaptureThrottleForTests()
   const { client } = stubClient(() => {
@@ -201,40 +182,6 @@ test("fail-open: a thrown client error never propagates", async () => {
         userId: "user-1",
         identifierType: "ean",
         rawValue: "4012345678901",
-      },
-      capture,
-    ),
-  )
-})
-
-test("fail-open: a completion error never propagates", async () => {
-  resetAttemptLogCaptureThrottleForTests()
-  const client = {
-    from() {
-      return {
-        update() {
-          return {
-            eq() {
-              return {
-                is: async () => ({ error: { message: "completion unavailable" } }),
-              }
-            },
-          }
-        },
-      }
-    },
-  }
-  const { capture } = stubCapture()
-
-  await assert.doesNotReject(
-    completeScanResolveAttempt(
-      client as never,
-      {
-        attemptId: "00000000-0000-4000-8000-000000000001",
-        lookupOutcome: "miss",
-        terminalOutcome: "unknown_product",
-        matchedProductId: null,
-        failureStage: null,
       },
       capture,
     ),
@@ -258,45 +205,6 @@ test("an explicit createdAt is written as the row's created_at", async () => {
   assert.equal((inserted() as { created_at?: string }).created_at, "2026-09-04T10:00:00.000Z")
 })
 
-test("without an explicit createdAt the row keeps the column default", async () => {
-  const { client, inserted } = stubClient({ error: null })
-
-  await recordScanResolveAttempt(client as never, {
-    attemptId: "00000000-0000-4000-8000-000000000001",
-    userId: "user-1",
-    identifierType: "ean",
-    rawValue: "0022796976116",
-  })
-
-  assert.equal("created_at" in (inserted() as Record<string, unknown>), false)
-})
-
-test("a start-write failure captures once to Sentry with the attempt_log_write_failed reason", async () => {
-  resetAttemptLogCaptureThrottleForTests()
-  const { client } = stubClient({ error: { message: "boom" } })
-  const { capture, captured } = stubCapture()
-
-  await recordScanResolveAttempt(
-    client as never,
-    {
-      attemptId: "00000000-0000-4000-8000-000000000001",
-      userId: "user-1",
-      identifierType: "ean",
-      rawValue: "4012345678901",
-    },
-    capture,
-  )
-
-  assert.equal(captured.length, 1)
-  assert.deepEqual((captured[0] as { details: unknown }).details, {
-    route: "resolve",
-    status: 200,
-    reason: "attempt_log_write_failed",
-    // Fail-open telemetry: warning, not error (plan §5 task 5).
-    level: "warning",
-  })
-})
-
 test("a completion-write failure also captures to Sentry", async () => {
   resetAttemptLogCaptureThrottleForTests()
   const client = {
@@ -316,16 +224,19 @@ test("a completion-write failure also captures to Sentry", async () => {
   }
   const { capture, captured } = stubCapture()
 
-  await completeScanResolveAttempt(
-    client as never,
-    {
-      attemptId: "00000000-0000-4000-8000-000000000001",
-      lookupOutcome: "miss",
-      terminalOutcome: "unknown_product",
-      matchedProductId: null,
-      failureStage: null,
-    },
-    capture,
+  await assert.doesNotReject(
+    completeScanResolveAttempt(
+      client as never,
+      {
+        attemptId: "00000000-0000-4000-8000-000000000001",
+        lookupOutcome: "miss",
+        terminalOutcome: "unknown_product",
+        matchedProductId: null,
+        failureStage: null,
+      },
+      capture,
+    ),
+    "attempt-log completion errors must not reject",
   )
 
   assert.equal(captured.length, 1)

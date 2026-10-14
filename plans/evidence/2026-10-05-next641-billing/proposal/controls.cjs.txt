@@ -1,0 +1,36 @@
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
+const ROOT='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning',OUT='/tmp/test-audit-billing-operational125';
+const ts=require(path.join(ROOT,'node_modules/typescript'));
+const sha=x=>crypto.createHash('sha256').update(x).digest('hex');
+const candidates=JSON.parse(fs.readFileSync(path.join(OUT,'candidate-bodies.json'),'utf8'));
+const recipes=[
+ ['expired-access',['C1','D1'],'src/lib/billing/subscriptions.ts','isWithinExpiryGrace','return timestamp >= now.getTime() - EXPIRED_ENTITLEMENT_GRACE_MS','return true','assert.equal(summary.status, "expired")','active','expired'],
+ ['premature-grace-end',['C2'],'src/lib/billing/subscriptions.ts','isWithinExpiryGrace','return timestamp >= now.getTime() - EXPIRED_ENTITLEMENT_GRACE_MS','return timestamp >= now.getTime()','assert.equal(summary.status, "active")','expired','active'],
+ ['reject-future-access',['C3'],'src/lib/billing/subscriptions.ts','isWithinExpiryGrace','return timestamp >= now.getTime() - EXPIRED_ENTITLEMENT_GRACE_MS','return timestamp >= now.getTime() - EXPIRED_ENTITLEMENT_GRACE_MS && timestamp <= now.getTime()','assert.equal(summary.status, "active")','expired','active'],
+ ['reject-legacy-null',['C4'],'src/lib/billing/subscriptions.ts','hasCurrentBillingAccess','if (row.current_period_end == null) return true','if (row.current_period_end == null) return false','assert.equal(summarizeAdminUserBilling(subscriptionRow(), NOW).status, "active")','expired','active'],
+ ['skip-incident-flush',['D2'],'src/app/api/billing/payment-monitor/route.ts','confirmTelemetryDelivery','return flushTelemetryWithRetry(flush)','return true','assert.equal(flushes, 1)',0,1],
+];
+const controls=recipes.map(([id,ids,file,functionName,from,to,assertion,actual,expected])=>{
+ const original=fs.readFileSync(path.join(ROOT,file),'utf8');
+ const ast=ts.createSourceFile(file,original,ts.ScriptTarget.Latest,true);
+ const scopes=ast.statements.filter(n=>ts.isFunctionDeclaration(n)&&n.name?.text===functionName);
+ if(scopes.length!==1)throw new Error('scope not unique');
+ const s=scopes[0],scope=original.slice(s.getStart(ast),s.end);
+ if(scope.split(from).length!==2)throw new Error('anchor not unique in scope');
+ const fromAll=original.slice(0,s.getStart(ast))+scope.replace(from,to)+original.slice(s.end);
+ if(ts.createSourceFile(file,fromAll,ts.ScriptTarget.Latest,true).parseDiagnostics.length)throw new Error('mutation parse');
+ const keeper=candidates.find(c=>c.id===ids[0]).keeperBefore;
+ if(keeper.body.split(assertion).length!==2)throw new Error('assertion not unique');
+ const test=fs.readFileSync(path.join(OUT,'before',keeper.file),'utf8');
+ const pos=keeper.start+keeper.body.indexOf(assertion);
+ const line=test.slice(0,pos).split('\n').length;
+ const phaseFirstKeeperFrames=Object.fromEntries(['before','transfer','cut'].map(phase=>{
+  const bytes=fs.readFileSync(path.join(OUT,phase,keeper.file),'utf8');
+  if(bytes.split(keeper.body).length!==2)throw new Error('phase keeper not unique');
+  const assertionPos=bytes.indexOf(keeper.body)+keeper.body.indexOf(assertion);
+  return [phase,{file:keeper.file,line:bytes.slice(0,assertionPos).split('\n').length,column:3}];
+ }));
+ return {id,candidates:ids,file,sourceSHA256:sha(original),functionName,functionSHA256:sha(scope),functionBefore:scope,from,to,prospectiveSHA256:sha(fromAll),keeper:{file:keeper.file,title:keeper.title,sha256:keeper.sha256},oracle:{code:'ERR_ASSERTION',operator:'strictEqual',actual,expected,assertion,firstKeeperFrame:{file:keeper.file,line,column:3},phaseFirstKeeperFrames,messageRequirement:'Require decoded actual/expected plus ERR_ASSERTION and strictEqual at FIRST keeper frame; reject timeout/import/setup/hook failure.'},command:{cwd:ROOT,argv:['node','--import','./tests/server-only-register.cjs','--import','tsx','--test',`--test-name-pattern=^${keeper.title.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}$`,keeper.file]},execution:'Not executed. Main must serially verify exact selected1 clean -> intended assertion RED -> own byte-exact CAS restore -> exact selected1 clean. C1 and D1 deliberately share one unique fault/keeper; no duplicate fault-count credit.'};
+});
+fs.writeFileSync(path.join(OUT,'controls.json'),JSON.stringify(controls,null,2)+'\n');
+console.log(JSON.stringify({validProspectiveParsedMutations:controls.length,runtimeInvocations:0}));

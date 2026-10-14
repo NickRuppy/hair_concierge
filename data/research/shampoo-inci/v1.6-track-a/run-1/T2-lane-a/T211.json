@@ -1,0 +1,570 @@
+{
+  "blindId": "T211",
+  "inciFingerprintSha256": "d5f7e210079ae4b8e0fa1afcb15470223370382bdb75d32d7d564076d52ba30a",
+  "identity": {
+    "productName": "Schwarzkopf GLISS Shampoo Liquid Silk",
+    "brand": "Schwarzkopf GLISS",
+    "market": "DE",
+    "packSize": "250 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "'Aqua (Water, Eau)' one entry. Normalized positions = packet positions.",
+    "sourceIds": [
+      "formula:T211 (tier 2, complete)",
+      "reveal:T211#0 manufacturer DE product page (Henkel / Schwarzkopf); JSON markup gtin 4015100813111; 'Größe 250 ml' [manufacturer_de, grade moderate]",
+      "reveal:T211#1 dm.de PDP (browser tab, Inhaltsstoffe accordion expanded); Anschrift: Henkel AG & Co. KGaA [retailer, grade low]",
+      "reveal:T211#2 Rossmann PDP (browser tab); JSON-LD sku 4015100813111; Rossmann Artikelnummer 154090; 250 ml; 2,49 EUR [retailer, grade low]"
+    ]
+  },
+  "status": "classified",
+  "policy": "shampoo-classification-v1.6",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic is ether/sulfonate type with at least one prominent buffer and no prominent reinforcing strong anionic -> moderate. SLES (2) buffered by CAPB (4).",
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 13
+        }
+      ],
+      "counterSignal": "Only one prominent buffer; refatters. No move.",
+      "neighboringAlternative": "none",
+      "sourceIds": [
+        "formula:T211 (tier 2, complete)"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "One meaningful system, Polyquaternium-10 (10), plus light routes: Glycosphingolipids (5), Hydrolyzed Silk (6), Sericin (7), PEG-7 Glyceryl Cocoate (9), Glyceryl Oleate (15), Glycol Distearate (17), Hydrogenated Castor Oil (18), Prunus Armeniaca Kernel Oil (21). C2 not met (no silicone, no prominent payload lipid, no deliberate humectant).",
+      "formulaFacts": [
+        {
+          "ingredient": "Glycosphingolipids",
+          "position": 5
+        },
+        {
+          "ingredient": "Hydrolyzed Silk",
+          "position": 6
+        },
+        {
+          "ingredient": "Sericin",
+          "position": 7
+        },
+        {
+          "ingredient": "Polyquaternium-10",
+          "position": 10
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 17
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 18
+        }
+      ],
+      "counterSignal": "PQ-10 and lipids are post-fragrance; low realistic.",
+      "neighboringAlternative": "low",
+      "sourceIds": [
+        "formula:T211 (tier 2, complete)"
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: many light families, but the only cationic is a post-fragrance Polyquaternium-10, the lipids are late/trace, and proteins are water-soluble; effective C1 reset.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "PQ-10 (10), proteins (6, 7), weak refatters (5, 9, 15), late lipids (18, 21)."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "No silicone; HCO and apricot oil trace after PEG-40 HCO; proteins rinse."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 moderate chassis."
+        }
+      },
+      "evidenceByFamily": {
+        "cationic_polymer": [
+          [
+            "Polyquaternium-10",
+            10
+          ]
+        ],
+        "protein_film": [
+          [
+            "Hydrolyzed Silk",
+            6
+          ],
+          [
+            "Sericin",
+            7
+          ]
+        ],
+        "weak_refatter": [
+          [
+            "Glycosphingolipids",
+            5
+          ],
+          [
+            "PEG-7 Glyceryl Cocoate",
+            9
+          ],
+          [
+            "Glyceryl Oleate",
+            15
+          ]
+        ],
+        "payload_lipid": [
+          [
+            "Hydrogenated Castor Oil",
+            18
+          ],
+          [
+            "Prunus Armeniaca Kernel Oil",
+            21
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            4
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Coco-Glucoside",
+            13
+          ]
+        ]
+      },
+      "excluded": [
+        [
+          "PEG-120 Methyl Glucose Dioleate",
+          12,
+          "PEG thickener"
+        ],
+        [
+          "PEG-40 Hydrogenated Castor Oil",
+          16,
+          "solubilizer (6.4)"
+        ],
+        [
+          "Glycol Distearate",
+          17,
+          "pearlizer"
+        ],
+        [
+          "Laureth-4",
+          20,
+          "thickener"
+        ],
+        [
+          "Butylene Glycol",
+          19,
+          "solvent"
+        ]
+      ],
+      "unresolved": [
+        [
+          "Glycosphingolipids",
+          5,
+          "lipid-like additive; read as weak_refatter (cf. Lecithin); level likely low despite position"
+        ]
+      ],
+      "counterSignal": "Four deposition families including PQ-10 and a waxy lipid; combined residue could be noticeable.",
+      "whyThisBand": "Every depositing family is light, late or water-soluble; reset is effective.",
+      "whyNotNeighborBand": "Not moderate (W2): the cationic family is a single PQ-10 after Parfum (10); proteins (6, 7) are water-soluble hydrolysates at marketing level (before Parfum but after Glycosphingolipids); the lipids are trace (HCO 18 and apricot oil 21, after PEG-40 HCO and the pearlizer); an effective SLES reset faces only light routes.",
+      "confidenceLimitingFactor": "Four light families; combined effect uncertain, moderate realistic.",
+      "ruleNotes": [
+        "W2"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Polyquaternium-10",
+          "position": 10,
+          "family": "cationic_polymer"
+        },
+        {
+          "ingredient": "Hydrolyzed Silk",
+          "position": 6,
+          "family": "protein_film"
+        },
+        {
+          "ingredient": "Sericin",
+          "position": 7,
+          "family": "protein_film"
+        },
+        {
+          "ingredient": "Glycosphingolipids",
+          "position": 5,
+          "family": "weak_refatter"
+        },
+        {
+          "ingredient": "PEG-7 Glyceryl Cocoate",
+          "position": 9,
+          "family": "weak_refatter"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 15,
+          "family": "weak_refatter"
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 18,
+          "family": "payload_lipid"
+        },
+        {
+          "ingredient": "Prunus Armeniaca Kernel Oil",
+          "position": 21,
+          "family": "payload_lipid"
+        },
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "family": "anionic_surfactant"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "family": "amphoteric_surfactant"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 13,
+          "family": "nonionic_surfactant"
+        }
+      ],
+      "canonicalFormula": {
+        "inciFingerprintSha256": "d5f7e210079ae4b8e0fa1afcb15470223370382bdb75d32d7d564076d52ba30a",
+        "sourceTier": 2,
+        "completeness": "complete",
+        "identityConfidence": "high",
+        "captureDate": "not in sealed packet"
+      },
+      "sourceIds": [
+        "formula:T211 (tier 2, complete)"
+      ]
+    },
+    "focusPrimary": {
+      "value": "shine",
+      "confidence": "moderate",
+      "neighboringAlternative": "repair",
+      "rationale": "Shine: the dominant manufacturer_de (moderate) claim is gloss and smoothing ('Schutz & gesund aussehender Glanz', 'glättet die Haaroberfläche und verleiht Glanz', 'für stumpfes, sprödes und glanzloses Haar'). Formula has a plausible smoothing/light-film route: Hydrolyzed Silk (6), Sericin (7), Glycosphingolipids (5, the claimed 'Ceramide'), Polyquaternium-10 (10).",
+      "counterSignal": "Repair wording ('schützt und stärkt das Haar', 'sprödes Haar') and a repair_supported frozen verdict.",
+      "formulaFacts": [
+        {
+          "ingredient": "Glycosphingolipids",
+          "position": 5
+        },
+        {
+          "ingredient": "Hydrolyzed Silk",
+          "position": 6
+        },
+        {
+          "ingredient": "Sericin",
+          "position": 7
+        },
+        {
+          "ingredient": "Polyquaternium-10",
+          "position": 10
+        }
+      ],
+      "claimRole": "candidate",
+      "sourceIds": [
+        "formula:T211 (tier 2, complete)",
+        "reveal:T211#0 manufacturer DE product page (Henkel / Schwarzkopf); JSON markup gtin 4015100813111; 'Größe 250 ml' [manufacturer_de, grade moderate]",
+        "reveal:T211#1 dm.de PDP (browser tab, Inhaltsstoffe accordion expanded); Anschrift: Henkel AG & Co. KGaA [retailer, grade low]",
+        "reveal:T211#2 Rossmann PDP (browser tab); JSON-LD sku 4015100813111; Rossmann Artikelnummer 154090; 250 ml; 2,49 EUR [retailer, grade low]"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "repair"
+      ],
+      "rationale": "Empty: repair wording exists, but its formula route (silk, sericin, glycosphingolipids, PQ-10) is the same route cited for shine (F2/F3); the only other repair ingredients (Hydrogenated Castor Oil 18, apricot oil 21) are trace.",
+      "counterSignal": "Repair_supported verdict and moderate repair wording.",
+      "formulaFacts": [],
+      "sourceIds": [
+        "formula:T211 (tier 2, complete)",
+        "reveal:T211#0 manufacturer DE product page (Henkel / Schwarzkopf); JSON markup gtin 4015100813111; 'Größe 250 ml' [manufacturer_de, grade moderate]",
+        "reveal:T211#1 dm.de PDP (browser tab, Inhaltsstoffe accordion expanded); Anschrift: Henkel AG & Co. KGaA [retailer, grade low]",
+        "reveal:T211#2 Rossmann PDP (browser tab); JSON-LD sku 4015100813111; Rossmann Artikelnummer 154090; 250 ml; 2,49 EUR [retailer, grade low]"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Regular: 'Regelmäßig ... anwenden' is not frequency wording (U2).",
+      "counterSignal": "None.",
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "formulaFacts": [],
+      "sourceIds": [
+        "formula:T211 (tier 2, complete)",
+        "reveal:T211#0 manufacturer DE product page (Henkel / Schwarzkopf); JSON markup gtin 4015100813111; 'Größe 250 ml' [manufacturer_de, grade moderate]",
+        "reveal:T211#1 dm.de PDP (browser tab, Inhaltsstoffe accordion expanded); Anschrift: Henkel AG & Co. KGaA [retailer, grade low]",
+        "reveal:T211#2 Rossmann PDP (browser tab); JSON-LD sku 4015100813111; Rossmann Artikelnummer 154090; 250 ml; 2,49 EUR [retailer, grade low]"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no scalp claim.",
+      "counterSignal": "CSA would fail anyway.",
+      "formulaFacts": [],
+      "sourceIds": [
+        "formula:T211 (tier 2, complete)",
+        "reveal:T211#0 manufacturer DE product page (Henkel / Schwarzkopf); JSON markup gtin 4015100813111; 'Größe 250 ml' [manufacturer_de, grade moderate]",
+        "reveal:T211#1 dm.de PDP (browser tab, Inhaltsstoffe accordion expanded); Anschrift: Henkel AG & Co. KGaA [retailer, grade low]",
+        "reveal:T211#2 Rossmann PDP (browser tab); JSON-LD sku 4015100813111; Rossmann Artikelnummer 154090; 250 ml; 2,49 EUR [retailer, grade low]"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11).",
+      "counterSignal": "None; formula complete (ID-1).",
+      "neighboringAlternative": "none",
+      "sourceIds": [
+        "formula:T211 (tier 2, complete)"
+      ]
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "repair_supported",
+      "moistureRoutes": [],
+      "repairRoutes": [
+        "Hydrolyzed Silk 6",
+        "Sericin 7",
+        "Glycosphingolipids 5"
+      ],
+      "sharedConditioningRoutes": [
+        "Polyquaternium-10 10"
+      ],
+      "limitation": "Claims lead with gloss; repair route shared with shine."
+    },
+    "claimRole": "candidate",
+    "counterSignal": "Repair wording and repair-supported formula.",
+    "neighboringAlternative": "repair"
+  },
+  "decisionTrace": {
+    "primaryFocus": {
+      "claimDirection": "shine (manufacturer_de headline, moderate)",
+      "formulaCompatible": true,
+      "compatibleRoute": "Silk/sericin/ceramide smoothing + PQ-10 light film",
+      "decisionReason": "Dominant gloss claim with compatible smoothing route -> shine (7.1, 7.2)"
+    },
+    "secondaryFocus": {
+      "emptyDefaultConsidered": true,
+      "selectedValues": [],
+      "matchingDistinctClaims": [
+        "'schützt und stärkt das Haar' (moderate)"
+      ],
+      "independentRoutes": [
+        "none independent (F3)"
+      ],
+      "whyDistinctFromPrimary": "Same route as primary (F2)",
+      "exceptionCode": null
+    },
+    "usageRole": {
+      "default": "regular",
+      "nonDefaultTriggerCode": "none",
+      "triggerEvidence": [],
+      "rationale": "No trigger."
+    }
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W=low, C=moderate -> ideal for fine. Confidence = lowest of inputs (13.8): moderate. T2: thickness/texture claims ignored."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W=low, C=moderate -> ideal for normal. Confidence = lowest of inputs (13.8): moderate. T2: thickness/texture claims ignored."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W=low, C=moderate -> acceptable for coarse. Confidence = lowest of inputs (13.8): moderate. T2: thickness/texture claims ignored."
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential low -> light, 1:1; confidence = weightPotential confidence (13.8)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "high",
+        "sOrdinaryWays": [
+          1
+        ],
+        "rationale": "S-ORDINARY way 1: no qualifying E2 claim; manufacturer_de source present -> high."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate, D1 false -> regular. I3 checked against neighbor none for each projected bucket."
+    },
+    "positioning": {
+      "explicitResetPositioning": {
+        "value": false,
+        "confidence": "high",
+        "rationale": "D1: no 'tiefenrein', 'deep clean', 'clarifying shampoo' or 'detox-reinigung' stem in the name or a manufacturer/pack claim, and no occasional-use directions."
+      }
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "moderate",
+      "rationale": "D2 not met: D1 false (or formula not strong)."
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "expectedIntensity": "regular",
+        "liveMatch": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "expectedIntensity": "regular",
+        "liveMatch": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable",
+        "expectedIntensity": "regular",
+        "liveMatch": "supportive"
+      }
+    ],
+    "required_protocol_roles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_thickness_boundary",
+        "detail": "fine: ideal; weightPotential neighbor moderate -> acceptable"
+      }
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "researchCombinationConfidence": null,
+    "liveComparison": "review_live_value_differs not computed in the lane (catalog-dependent, resolved by the orchestrator after freeze, 14)."
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "general (provisional, low)",
+      "final": "shine",
+      "evidence": "manufacturer_de gloss/smoothing claims",
+      "reason": "Post-unblind reconciliation (3.2): claims identify/confirm the candidate job; formula compatibility checked against the frozen verdict."
+    },
+    {
+      "property": "focusSecondary",
+      "blind": "[] (provisional, low)",
+      "final": "[] -> unchanged",
+      "evidence": "Revealed positioning",
+      "reason": "Section 8 / F2-F3 checked."
+    },
+    {
+      "property": "usageRole",
+      "blind": "regular (provisional, low)",
+      "final": "regular",
+      "evidence": "no trigger",
+      "reason": "Section 9 triggers checked mechanically with CL-SRC grades."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blind": "not_targeted (provisional, low; CSA recorded)",
+      "final": "not_targeted",
+      "evidence": "no scalp claim",
+      "reason": "SC1 positioning plus CSA formula half (Section 10)."
+    },
+    {
+      "property": "cleansingStrength / conditioningLevel / weightPotential / dandruffSupport",
+      "blind": "frozen formula values",
+      "final": "unchanged",
+      "evidence": "Claims may not assign or move formula properties (3.2, 6.5 step 5, C7).",
+      "reason": "No formula error found on reconciliation."
+    }
+  ],
+  "claimToInciChecks": [
+    {
+      "claim": "Ceramide",
+      "inci": "Glycosphingolipids (5)",
+      "result": "match (ceramide-type lipid)"
+    },
+    {
+      "claim": "Seide",
+      "inci": "Hydrolyzed Silk (6), Sericin (7)",
+      "result": "match, named by the manufacturer"
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "formulaPassFile": "out/formula-pass/T211.json (frozen before reveal)",
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeWeightSubjudgmentsPresent": true,
+    "whyNotNeighborBandSpecific": true,
+    "w2AppliedWhereTwoOrMoreFamilies": true,
+    "confidenceNamesLimitingUncertainty": "Four light families; combined effect uncertain, moderate realistic.",
+    "comparisonWithEarlierValuesMadeInLane": false,
+    "noWebUsed": true
+  },
+  "uncertainties": [
+    "Glycosphingolipids classified weak_refatter, not payload_lipid; if payload_lipid and prominent it could fill the C2 lipid slot, but C2 still fails on humectant, so conditioning stays moderate.",
+    "focusPrimary shine vs repair: claims lead with Glanz but also say 'sprödes Haar ... stärkt'; chose shine as the headline job, repair as neighbor."
+  ]
+}

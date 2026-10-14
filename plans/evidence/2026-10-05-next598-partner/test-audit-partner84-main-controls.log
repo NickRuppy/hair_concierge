@@ -1,0 +1,26 @@
+C1-no-session-not-outage clean1 / intended red1 / exact restore / clean1
+C2-projection-invitationId clean1 / intended red1 / exact restore / clean1
+C2-projection-userId clean1 / intended red1 / exact restore / clean1
+C2-projection-name clean1 / intended red1 / exact restore / clean1
+C2-projection-email clean1 / intended red1 / exact restore / clean1
+C2-projection-funnelSessionId clean1 / intended red1 / exact restore / clean1
+C3-auth-fault-not-none clean1 / intended red1 / exact restore / clean1
+C4-unstamped-lookup clean1 / intended red1 / exact restore / clean1
+C4-stamped-read-fault clean1 / intended red1 / exact restore / clean1
+C5-unpaid-restart clean1 / intended red1 / exact restore / clean1
+C6-new-account-billing-read clean1 / intended red1 / exact restore / clean1
+C7-visible-email clean1 / intended red1 / exact restore / clean1
+C7-change-email-copy clean1 / intended red1 / exact restore / clean1
+C7-start-copy clean1 / intended red1 / exact restore / clean1
+C7-account-copy clean1 / intended red1 / exact restore / clean1
+C7-noncommercial-copy clean1 / intended red1 / exact restore / clean1
+C8-mail-status clean1 / intended red1 / exact restore / clean1
+C8-mail-required clean1 / intended red1 / exact restore / clean1
+C8-mail-address clean1 / intended red1 / exact restore / clean1
+C8-release-before-mail clean1 / intended red1 / exact restore / clean1
+{
+  "receiptDir": "/tmp/test-audit-partner84-tools-5qofnelt/operator-mutations-transfer-YxWejd",
+  "completionSHA256": "2fa2455efefaeede6f93cc7190e675c2ac7a71c2e66b0fe04a3c66768c23d083",
+  "verified": 20,
+  "eligibleForCut": true
+}

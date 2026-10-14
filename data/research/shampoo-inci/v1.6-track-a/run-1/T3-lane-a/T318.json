@@ -1,0 +1,792 @@
+{
+  "blindId": "T318",
+  "inciFingerprintSha256": "7def5e2af9726079ed0af2f394b941672e8bd3f031cb15361f5cad35cf9c8a5c",
+  "identity": {
+    "productName": "Being Big Hair Shampoo (Volumen Shampoo)",
+    "brand": "Being",
+    "market": "DE",
+    "formulaBlock": {
+      "normalization": "'AQUA/WATER/EAU' and 'PARFUM (FRAGRANCE)' one entry each. E3: Parfum at 12; prominent = 1-11.",
+      "formulaCompleteness": "complete",
+      "formulaSourceTier": 3,
+      "identityConfidence": "moderate",
+      "rawInciCount": 24
+    }
+  },
+  "claimSources": [
+    {
+      "id": "S1",
+      "sourceKind": "retailer",
+      "grade": "low"
+    },
+    {
+      "id": "S2",
+      "sourceKind": "retailer",
+      "grade": "low"
+    },
+    {
+      "id": "S3",
+      "sourceKind": "manufacturer_foreign",
+      "grade": "low"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: Sodium C14-16 Olefin Sulfonate (3) is the defining sulfonate-type anionic, buffered by Cocamidopropyl Betaine (2), Coco-Glucoside (5) and Sodium Cocoyl Isethionate (7); no reinforcing strong anionic -> moderate.",
+      "neighboringAlternative": "none",
+      "counterSignal": "Betaine listed ahead of the AOS and three buffers argue milder; C1 holds.",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T318"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 2,
+          "role": "buffer (amphoteric), listed first"
+        },
+        {
+          "ingredient": "Sodium C14-16 Olefin Sulfonate",
+          "position": 3,
+          "role": "defining anionic, sulfonate type (C1)"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 5,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 6,
+          "role": "humectant; E4"
+        },
+        {
+          "ingredient": "Sodium Cocoyl Isethionate",
+          "position": 7,
+          "role": "buffer (mild anionic)"
+        },
+        {
+          "ingredient": "Macadamia Integrifolia Seed Oil",
+          "position": 8,
+          "role": "payload_lipid; E4 humectant/refatting"
+        },
+        {
+          "ingredient": "Persea Gratissima Oil",
+          "position": 9,
+          "role": "payload_lipid; E4 humectant/refatting"
+        },
+        {
+          "ingredient": "Acrylates Copolymer",
+          "position": 14,
+          "role": "anionic acrylate thickener, excluded (6.4)"
+        },
+        {
+          "ingredient": "Disodium Laureth Sulfosuccinate",
+          "position": 15,
+          "role": "mild anionic, not prominent"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 16,
+          "role": "comfort route, not prominent"
+        },
+        {
+          "ingredient": "Polyquaternium-10",
+          "position": 17,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 18,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Cyclodextrin",
+          "position": 20,
+          "role": "complexing agent"
+        },
+        {
+          "ingredient": "Sodium Starch Octenylsuccinate",
+          "position": 21,
+          "role": "starch derivative"
+        },
+        {
+          "ingredient": "Hydroxypropyl Starch Phosphate",
+          "position": 24,
+          "role": "thickener"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "W-RICH: prominent payload lipids (Macadamia Seed Oil 8, Avocado Oil 9) converge with two cationic polymers (Polyquaternium-10 17, guar 18); Section 5 counts W-RICH as rich. C2 itself is not met (no pearlizing/fatty route).",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "Cationics are after Parfum and there is no pearlizer/fatty alcohol or silicone; care could be one meaningful oil system (moderate).",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T318"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 2,
+          "role": "buffer (amphoteric), listed first"
+        },
+        {
+          "ingredient": "Sodium C14-16 Olefin Sulfonate",
+          "position": 3,
+          "role": "defining anionic, sulfonate type (C1)"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 5,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 6,
+          "role": "humectant; E4"
+        },
+        {
+          "ingredient": "Sodium Cocoyl Isethionate",
+          "position": 7,
+          "role": "buffer (mild anionic)"
+        },
+        {
+          "ingredient": "Macadamia Integrifolia Seed Oil",
+          "position": 8,
+          "role": "payload_lipid; E4 humectant/refatting"
+        },
+        {
+          "ingredient": "Persea Gratissima Oil",
+          "position": 9,
+          "role": "payload_lipid; E4 humectant/refatting"
+        },
+        {
+          "ingredient": "Acrylates Copolymer",
+          "position": 14,
+          "role": "anionic acrylate thickener, excluded (6.4)"
+        },
+        {
+          "ingredient": "Disodium Laureth Sulfosuccinate",
+          "position": 15,
+          "role": "mild anionic, not prominent"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 16,
+          "role": "comfort route, not prominent"
+        },
+        {
+          "ingredient": "Polyquaternium-10",
+          "position": 17,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 18,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Cyclodextrin",
+          "position": 20,
+          "role": "complexing agent"
+        },
+        {
+          "ingredient": "Sodium Starch Octenylsuccinate",
+          "position": 21,
+          "role": "starch derivative"
+        },
+        {
+          "ingredient": "Hydroxypropyl Starch Phosphate",
+          "position": 24,
+          "role": "thickener"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-RICH (two plant oils + two late cationics) with a moderate C1 reset -> not limited reset; liquid oils and late cationics -> moderate.",
+      "neighboringAlternative": "high",
+      "counterSignal": "W-RICH and two cationic polymers converge.",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "two prominent oils + two late cationic polymers"
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Polyquaternium-10 can build up; liquid oils light"
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 AOS buffered by three co-surfactants"
+        }
+      },
+      "whyThisBand": "Converging oil + cationic routes, effective reset: noticeable but bounded residue.",
+      "whyNotNeighborBand": "high needs weak reset with W-RICH or multiple persistent systems not offset; reset moderate, no silicone, cationics late. low excluded by converging prominent oils + cationics (W2).",
+      "evidenceByFamily": {
+        "payload_lipid": [
+          [
+            "Macadamia Integrifolia Seed Oil",
+            8
+          ],
+          [
+            "Persea Gratissima Oil",
+            9
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Polyquaternium-10",
+            17
+          ],
+          [
+            "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+            18
+          ]
+        ],
+        "context_humectant": [
+          [
+            "Glycerin",
+            6
+          ],
+          [
+            "Panthenol",
+            16
+          ]
+        ],
+        "excluded": [
+          [
+            "Acrylates Copolymer",
+            14,
+            "acrylate thickener (6.4)"
+          ],
+          [
+            "Cyclodextrin",
+            20,
+            "complexing agent"
+          ],
+          [
+            "Sodium Starch Octenylsuccinate",
+            21,
+            "starch derivative/absorbent"
+          ],
+          [
+            "Hydroxypropyl Starch Phosphate",
+            24,
+            "thickener"
+          ],
+          [
+            "Disodium EDTA",
+            19,
+            "chelator"
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium C14-16 Olefin Sulfonate",
+            3
+          ],
+          [
+            "Sodium Cocoyl Isethionate",
+            7
+          ],
+          [
+            "Disodium Laureth Sulfosuccinate",
+            15
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            2
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Coco-Glucoside",
+            5
+          ]
+        ],
+        "unresolved": []
+      },
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T318"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 2,
+          "role": "buffer (amphoteric), listed first"
+        },
+        {
+          "ingredient": "Sodium C14-16 Olefin Sulfonate",
+          "position": 3,
+          "role": "defining anionic, sulfonate type (C1)"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 5,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 6,
+          "role": "humectant; E4"
+        },
+        {
+          "ingredient": "Sodium Cocoyl Isethionate",
+          "position": 7,
+          "role": "buffer (mild anionic)"
+        },
+        {
+          "ingredient": "Macadamia Integrifolia Seed Oil",
+          "position": 8,
+          "role": "payload_lipid; E4 humectant/refatting"
+        },
+        {
+          "ingredient": "Persea Gratissima Oil",
+          "position": 9,
+          "role": "payload_lipid; E4 humectant/refatting"
+        },
+        {
+          "ingredient": "Acrylates Copolymer",
+          "position": 14,
+          "role": "anionic acrylate thickener, excluded (6.4)"
+        },
+        {
+          "ingredient": "Disodium Laureth Sulfosuccinate",
+          "position": 15,
+          "role": "mild anionic, not prominent"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 16,
+          "role": "comfort route, not prominent"
+        },
+        {
+          "ingredient": "Polyquaternium-10",
+          "position": 17,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 18,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Cyclodextrin",
+          "position": 20,
+          "role": "complexing agent"
+        },
+        {
+          "ingredient": "Sodium Starch Octenylsuccinate",
+          "position": 21,
+          "role": "starch derivative"
+        },
+        {
+          "ingredient": "Hydroxypropyl Starch Phosphate",
+          "position": 24,
+          "role": "thickener"
+        }
+      ],
+      "formulaIdentifiers": {
+        "inciFingerprintSha256": "7def5e2af9726079ed0af2f394b941672e8bd3f031cb15361f5cad35cf9c8a5c",
+        "sourceTier": 3,
+        "captureDate": "per frozen packet (not shown to lane)"
+      },
+      "confidenceLimitingFactor": "INCI-only: concentrations, charge density and deposition unknown"
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "confidence": "moderate",
+      "rationale": "Name 'Big Hair ... (Volumen Shampoo)' (high) positions fullness/volume; formula is compatible but with a trade-off (weightPotential moderate, not high).",
+      "counterSignal": "Formula is W-RICH (macadamia + avocado oils with two cationics) and conditioningLevel high, which works against lift; 'Volumen Shampoo' may be retailer title text.",
+      "neighboringAlternative": "general",
+      "formulaFacts": [
+        {
+          "ingredient": "Macadamia Integrifolia Seed Oil",
+          "position": 8
+        },
+        {
+          "ingredient": "Persea Gratissima Oil",
+          "position": 9
+        }
+      ],
+      "claimRole": "candidate",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedRoutes": [],
+        "limitation": "Volume decision."
+      },
+      "decisionTrace": {
+        "claimDirection": "volume",
+        "formulaCompatible": "yes with trade-off (weight moderate)",
+        "compatibleRoute": "C1 AOS chassis; no silicone",
+        "decisionReason": "Positioned focus kept; deposition recorded as trade-off (7.2)."
+      },
+      "sourceIds": [
+        "name (high); S1 Rossmann (low); S2 Hagel retailer (low); S3 US brand page, English (low, E1 foreign)"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "'Klaerend'/'clarifying wash' are low-graded; no other qualifying claim.",
+      "counterSignal": "None.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "claims": [],
+        "routes": [],
+        "exception": null
+      },
+      "sourceIds": [
+        "name (high); S1 Rossmann (low); S2 Hagel retailer (low); S3 US brand page, English (low, E1 foreign)"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Default; 'Invigorating daily shampoo' is on a foreign page (low) and cannot fire frequent.",
+      "counterSignal": "None.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "decisionTrace": {
+        "default": "regular",
+        "trigger": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [
+          "frequent: only low-graded wording"
+        ],
+        "rationale": "No trigger."
+      },
+      "sourceIds": [
+        "name (high); S1 Rossmann (low); S2 Hagel retailer (low); S3 US brand page, English (low, E1 foreign)"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "No scalp positioning.",
+      "counterSignal": "None.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "sourceIds": [
+        "name (high); S1 Rossmann (low); S2 Hagel retailer (low); S3 US brand page, English (low, E1 foreign)"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T318"
+      ]
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "not_applicable",
+      "moistureRoutes": [],
+      "repairRoutes": [],
+      "sharedRoutes": [],
+      "limitation": "Volume decision."
+    },
+    "claimRole": "candidate",
+    "counterSignal": "Formula is W-RICH (macadamia + avocado oils with two cationics) and conditioningLevel high, which works against lift; 'Volumen Shampoo' may be retailer title text.",
+    "neighboringAlternative": "general",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "volume",
+        "formulaCompatible": "yes with trade-off (weight moderate)",
+        "compatibleRoute": "C1 AOS chassis; no silicone",
+        "decisionReason": "Positioned focus kept; deposition recorded as trade-off (7.2)."
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "claims": [],
+        "routes": [],
+        "exception": null
+      },
+      "usageRole": {
+        "default": "regular",
+        "trigger": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [
+          "frequent: only low-graded wording"
+        ],
+        "rationale": "No trigger."
+      }
+    }
+  },
+  "weightRecord": {
+    "value": "moderate",
+    "confidence": "moderate",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "moderate",
+        "rationale": "two prominent oils + two late cationic polymers"
+      },
+      "persistence": {
+        "value": "moderate",
+        "rationale": "Polyquaternium-10 can build up; liquid oils light"
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C1 AOS buffered by three co-surfactants"
+      }
+    },
+    "evidenceByFamily": {
+      "payload_lipid": [
+        [
+          "Macadamia Integrifolia Seed Oil",
+          8
+        ],
+        [
+          "Persea Gratissima Oil",
+          9
+        ]
+      ],
+      "cationic_polymer": [
+        [
+          "Polyquaternium-10",
+          17
+        ],
+        [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          18
+        ]
+      ],
+      "context_humectant": [
+        [
+          "Glycerin",
+          6
+        ],
+        [
+          "Panthenol",
+          16
+        ]
+      ],
+      "excluded": [
+        [
+          "Acrylates Copolymer",
+          14,
+          "acrylate thickener (6.4)"
+        ],
+        [
+          "Cyclodextrin",
+          20,
+          "complexing agent"
+        ],
+        [
+          "Sodium Starch Octenylsuccinate",
+          21,
+          "starch derivative/absorbent"
+        ],
+        [
+          "Hydroxypropyl Starch Phosphate",
+          24,
+          "thickener"
+        ],
+        [
+          "Disodium EDTA",
+          19,
+          "chelator"
+        ]
+      ],
+      "anionic_surfactant": [
+        [
+          "Sodium C14-16 Olefin Sulfonate",
+          3
+        ],
+        [
+          "Sodium Cocoyl Isethionate",
+          7
+        ],
+        [
+          "Disodium Laureth Sulfosuccinate",
+          15
+        ]
+      ],
+      "amphoteric_surfactant": [
+        [
+          "Cocamidopropyl Betaine",
+          2
+        ]
+      ],
+      "nonionic_surfactant": [
+        [
+          "Coco-Glucoside",
+          5
+        ]
+      ],
+      "unresolved": []
+    },
+    "whyThisBand": "Converging oil + cationic routes, effective reset: noticeable but bounded residue.",
+    "whyNotNeighborBand": "high needs weak reset with W-RICH or multiple persistent systems not offset; reset moderate, no silicone, cationics late. low excluded by converging prominent oils + cationics (W2).",
+    "counterSignal": "W-RICH and two cationic polymers converge.",
+    "neighboringAlternative": "high",
+    "formulaIdentifiers": {
+      "inciFingerprintSha256": "7def5e2af9726079ed0af2f394b941672e8bd3f031cb15361f5cad35cf9c8a5c",
+      "sourceTier": 3,
+      "captureDate": "per frozen packet (not shown to lane)"
+    },
+    "confidenceLimitingFactor": "INCI-only: concentrations, charge density and deposition unknown"
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1 (fine, W moderate) = acceptable; ordinary target, T6 n/a; T4: neighbor would lower the tier -> review_thickness_boundary"
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1 (normal, W moderate) = ideal; ordinary target, T6 n/a; T4: neighbor would lower the tier -> review_thickness_boundary"
+      },
+      {
+        "thickness": "coarse",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1 (coarse, W moderate, C high) = ideal; ordinary target, T6 n/a; T4: neighbor would lower the tier -> review_thickness_boundary"
+      }
+    ],
+    "weight": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential moderate -> moderate."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "bucket": "normal",
+        "route": "balanced",
+        "confidence": "moderate",
+        "rationale": "S-ORDINARY way 1; retailer/foreign copy only (13.8 -> moderate)."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate, D1 False -> regular."
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "evidence": "No D1 wording ('clarifying wash' is foreign, low and not 'Clarifying Shampoo')."
+    },
+    "explicitResetPositioning": false,
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "moderate",
+      "rationale": "D2 not met: D1 false"
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable",
+        "display": "amber"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal",
+        "display": "green"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal",
+        "display": "green"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_thickness_boundary",
+        "detail": "fine, normal, coarse"
+      }
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "catalogDependent": "review_live_value_differs not computed in lane (live rows unseen)."
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "moisture (provisional, low)",
+      "final": "volume",
+      "evidence": "Name 'Big Hair ... (Volumen Shampoo)' (high) positions fullness/volume; formula is compatible but with a trade-off (weightPotential moderate, not high)."
+    },
+    {
+      "property": "focusSecondary",
+      "blind": "[] (provisional)",
+      "final": [],
+      "evidence": "'Klaerend'/'clarifying wash' are low-graded; no other qualifying claim."
+    },
+    {
+      "property": "usageRole",
+      "blind": "regular (provisional)",
+      "final": "regular",
+      "evidence": "Default; 'Invigorating daily shampoo' is on a foreign page (low) and cannot fire frequent."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blind": "unknown (positioning hidden)",
+      "final": "not_targeted",
+      "evidence": "No scalp positioning."
+    },
+    {
+      "property": "cleansingStrength/conditioningLevel/weightPotential/dandruffSupport",
+      "blind": "frozen",
+      "final": "unchanged",
+      "evidence": "Claims cannot assign these (3.2); no revealed formula conflict."
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "noComparisonWithEarlierValues": true
+  },
+  "uncertainties": [
+    {
+      "reading": "volume compatibility with W-RICH formula",
+      "chosen": "volume (trade-off)",
+      "alternative": "general"
+    }
+  ]
+}

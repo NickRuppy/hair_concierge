@@ -1,0 +1,53 @@
+--- before/tests/gated-example-pages.test.tsx
++++ cut/tests/gated-example-pages.test.tsx
+@@ -289,13 +289,11 @@
+   // No feedback affordance and no product card: both need live handlers.
+   assert.doesNotMatch(html, /Antwort positiv bewerten/)
+   assert.doesNotMatch(html, /weitere Empfehlungen/)
+-})
+-
+-test("no example message carries a timestamp — a formatted one would mismatch on hydration", () => {
++
+   for (const message of GATED_CHAT_EXAMPLE_MESSAGES) {
+     assert.equal(message.created_at, "")
+   }
+-  assert.doesNotMatch(render(GatedChatExample), /type-caption text-muted-foreground">\d\d:\d\d/)
++  assert.doesNotMatch(html, /type-caption text-muted-foreground">\d\d:\d\d/)
+ })
+ 
+ test("every example is framed by GatedPreview with its own label, benefit and one CTA", () => {
+--- before/tests/gated-pages-zero-mutation.test.tsx
++++ cut/tests/gated-pages-zero-mutation.test.tsx
+@@ -132,10 +132,7 @@
+       `gated ${name} must issue zero requests, got ${JSON.stringify(calls)}`,
+     )
+     assert.ok(result.length > 0, "the composition renders something")
+-  })
+-
+-  test(`gated ${name} renders no form and no submit control`, () => {
+-    const { result } = renderComposition(Composition)
++
+     // A mutation needs a transport: fetch (trapped above) or a form. Neither exists.
+     assert.doesNotMatch(result, /<form/i)
+     assert.doesNotMatch(result, /type="submit"/i)
+--- before/tests/gated-preview-component.test.tsx
++++ cut/tests/gated-preview-component.test.tsx
+@@ -136,10 +136,6 @@
+   const section = requireByData(tree, "data-gated-preview")
+   assert.equal(section.props["data-gated-preview"], "routine")
+   assert.match(section.props.className as string, /100dvh/)
+-})
+-
+-test("the example content sits inside the one in-frame scroll container", () => {
+-  const tree = renderPreview().render()
+ 
+   const scroll = requireByData(tree, "data-gated-preview-scroll")
+   assert.match(scroll.props.className as string, /overflow-y-auto/)
+@@ -152,7 +148,6 @@
+   // „Beispiel" band instead of repeating its text in a separate `aria-label` — a screen
+   // reader announced the same string twice back to back before this.
+   assert.equal(scroll.props["aria-label"], undefined)
+-  const label = requireByData(tree, "data-gated-preview-label")
+   assert.equal(scroll.props["aria-labelledby"], label.props.id)
+   assert.ok(label.props.id, "the band needs an id for the region to reference")
+   assert.equal(scroll.props.tabIndex, 0)

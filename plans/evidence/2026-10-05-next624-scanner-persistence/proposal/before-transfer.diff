@@ -1,0 +1,46 @@
+--- before/tests/scan-resolve-event-log.test.ts
++++ transfer/tests/scan-resolve-event-log.test.ts
+@@ -316,16 +316,19 @@
+   }
+   const { capture, captured } = stubCapture()
+ 
+-  await completeScanResolveAttempt(
+-    client as never,
+-    {
+-      attemptId: "00000000-0000-4000-8000-000000000001",
+-      lookupOutcome: "miss",
+-      terminalOutcome: "unknown_product",
+-      matchedProductId: null,
+-      failureStage: null,
+-    },
+-    capture,
++  await assert.doesNotReject(
++    completeScanResolveAttempt(
++      client as never,
++      {
++        attemptId: "00000000-0000-4000-8000-000000000001",
++        lookupOutcome: "miss",
++        terminalOutcome: "unknown_product",
++        matchedProductId: null,
++        failureStage: null,
++      },
++      capture,
++    ),
++    "attempt-log completion errors must not reject",
+   )
+ 
+   assert.equal(captured.length, 1)
+--- before/tests/scan-resolve-route.test.ts
++++ transfer/tests/scan-resolve-route.test.ts
+@@ -1092,7 +1092,10 @@
+   )
+   const response = await handler(request({ identifier: { type: "ean", value: "4006381333931" } }))
+   assert.equal(response.status, 200)
+-  await Promise.all(queued.splice(0).map((task) => task()))
++  await assert.doesNotReject(
++    Promise.all(queued.splice(0).map((task) => task())),
++    "attempt-log insert errors must not reject the route deferred drain",
++  )
+   assert.deepEqual(captured, [
+     // Fail-open telemetry: warning, not error (plan §5 task 5).
+     { route: "resolve", status: 200, reason: "attempt_log_write_failed", level: "warning" },

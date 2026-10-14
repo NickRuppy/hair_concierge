@@ -1,0 +1,157 @@
+[
+  {
+    "id": "C1",
+    "owner": "src/app/beratung/produkte/loading.tsx",
+    "originalSha256": "740f4a80b796a766d1981dba5dd2b184f5f1ba769ffeee523a93463711347551",
+    "mutantSha256": "759feec81bb4a25bc40e914b5a33dc6bcad2dbc9418259a04f8aa42f3a71843f",
+    "search": ">Deine Produkte</h1>",
+    "replace": ">Deine Pflegeprodukte</h1>",
+    "testFile": "tests/discovery-products-loading.test.tsx",
+    "title": "the loading screen reuses the real screen's layout classes and has no controls",
+    "phaseOracles": {
+      "transfer": {
+        "line": 55,
+        "assertion": "assert.deepEqual(textSequence(loading), textSequence(real))",
+        "keeperLine": 52,
+        "keeperTitle": "the loading screen reuses the real screen's layout classes and has no controls"
+      },
+      "cut": {
+        "line": 47,
+        "assertion": "assert.deepEqual(textSequence(loading), textSequence(real))",
+        "keeperLine": 44,
+        "keeperTitle": "the loading screen reuses the real screen's layout classes and has no controls"
+      }
+    },
+    "expected": {
+      "code": "ERR_ASSERTION",
+      "operator": "deepStrictEqual",
+      "message": null,
+      "firstKeeperFrameRequired": true
+    },
+    "limit": "Representative owner fault only; runtime/first frame/message not observed. Main must run clean1/fault1 intended assertion/byte restore/clean1. C1 auto diagnostic contains markup text; C2 header message exact concatenation inferred from source, verify before accepting."
+  },
+  {
+    "id": "C2",
+    "owner": "src/components/discovery/cockpit/discovery-call-cockpit.tsx",
+    "originalSha256": "2d0adde32589464e10ba2b9a1bb9d13263ca40bbfada8b9d4ab82a1572d68071",
+    "mutantSha256": "279265cc86456c29264984292d3a0c2dfd1f6e942221de8ce1ac87142738c16f",
+    "search": "const RECOMMENDED_HEADER = \"Empfohlenes Produkt\"",
+    "replace": "const RECOMMENDED_HEADER = \"Anderes Produkt\"",
+    "testFile": "tests/discovery-cockpit-complexity-dom.test.tsx",
+    "title": "R28: „Neu dazu“ steps say Essenziell / Optional with the step's benefit, pronoun-free",
+    "phaseOracles": {
+      "transfer": {
+        "line": 281,
+        "assertion": "assert.ok(header.includes(\"Empfohlenes Produkt\"), header)",
+        "keeperLine": 267,
+        "keeperTitle": "R28: „Neu dazu“ steps say Essenziell / Optional with the step's benefit, pronoun-free"
+      },
+      "cut": {
+        "line": 281,
+        "assertion": "assert.ok(header.includes(\"Empfohlenes Produkt\"), header)",
+        "keeperLine": 267,
+        "keeperTitle": "R28: „Neu dazu“ steps say Essenziell / Optional with the step's benefit, pronoun-free"
+      }
+    },
+    "expected": {
+      "code": "ERR_ASSERTION",
+      "operator": "==",
+      "message": "Anderes ProduktZiel",
+      "firstKeeperFrameRequired": true
+    },
+    "limit": "Representative owner fault only; runtime/first frame/message not observed. Main must run clean1/fault1 intended assertion/byte restore/clean1. C1 auto diagnostic contains markup text; C2 header message exact concatenation inferred from source, verify before accepting."
+  },
+  {
+    "id": "C3",
+    "owner": "src/components/discovery/cockpit/discovery-call-cockpit.tsx",
+    "originalSha256": "2d0adde32589464e10ba2b9a1bb9d13263ca40bbfada8b9d4ab82a1572d68071",
+    "mutantSha256": "e09e3d995f01b82e353d9252e5af1b75af71d68664133a48065c4f8af1eff200",
+    "search": "    complexityValue === \"essenziell\"",
+    "replace": "    complexity === \"essenziell\"",
+    "testFile": "tests/discovery-cockpit-complexity-dom.test.tsx",
+    "title": "R28: a click saves {complexity} to the call sheet at once; a refusal rolls back with a line",
+    "phaseOracles": {
+      "transfer": {
+        "line": 212,
+        "assertion": "assert.ok(document.getElementById(\"runsheet-complexity-folded\"), \"optional steps fold before the save settles\")",
+        "keeperLine": 197,
+        "keeperTitle": "R28: a click saves {complexity} to the call sheet at once; a refusal rolls back with a line"
+      },
+      "cut": {
+        "line": 212,
+        "assertion": "assert.ok(document.getElementById(\"runsheet-complexity-folded\"), \"optional steps fold before the save settles\")",
+        "keeperLine": 197,
+        "keeperTitle": "R28: a click saves {complexity} to the call sheet at once; a refusal rolls back with a line"
+      }
+    },
+    "expected": {
+      "code": "ERR_ASSERTION",
+      "operator": "==",
+      "message": "optional steps fold before the save settles",
+      "firstKeeperFrameRequired": true
+    },
+    "limit": "Representative owner fault only; runtime/first frame/message not observed. Main must run clean1/fault1 intended assertion/byte restore/clean1. C1 auto diagnostic contains markup text; C2 header message exact concatenation inferred from source, verify before accepting."
+  },
+  {
+    "id": "C4",
+    "owner": "src/lib/discovery/refined-routine.ts",
+    "originalSha256": "79a8321c4bb5c53a9594b0664cc708f326bca7ff058c6aeba4faa18cd821ee00",
+    "mutantSha256": "2250d2273a5ec8c0679d0f4706d3031bf76ac8cd6cb89c34d4b003cb64889bf9",
+    "search": "      ...(usageLabel ? { ownedUsageLabel: usageLabel } : {}),",
+    "replace": "      ownedUsageLabel: usageLabel ?? undefined,",
+    "testFile": "tests/discovery-refined-usage.test.ts",
+    "title": "batch 9: the legacy fixture's third oil joins the first oil step — its hash moves on purpose",
+    "phaseOracles": {
+      "transfer": {
+        "line": 218,
+        "assertion": "assert.ok(!(\"ownedUsageLabel\" in entry), \"legacy entry omits ownedUsageLabel\")",
+        "keeperLine": 206,
+        "keeperTitle": "batch 9: the legacy fixture's third oil joins the first oil step — its hash moves on purpose"
+      },
+      "cut": {
+        "line": 218,
+        "assertion": "assert.ok(!(\"ownedUsageLabel\" in entry), \"legacy entry omits ownedUsageLabel\")",
+        "keeperLine": 206,
+        "keeperTitle": "batch 9: the legacy fixture's third oil joins the first oil step — its hash moves on purpose"
+      }
+    },
+    "expected": {
+      "code": "ERR_ASSERTION",
+      "operator": "==",
+      "message": "legacy entry omits ownedUsageLabel",
+      "firstKeeperFrameRequired": true
+    },
+    "limit": "Representative owner fault only; runtime/first frame/message not observed. Main must run clean1/fault1 intended assertion/byte restore/clean1. C1 auto diagnostic contains markup text; C2 header message exact concatenation inferred from source, verify before accepting."
+  },
+  {
+    "id": "C5",
+    "owner": "src/app/admin/beratung/[enrollmentId]/page.tsx",
+    "originalSha256": "586f0276c8add490377ab3340ce08c9045ea76b029ea7a07389a82fef0cc7eb5",
+    "mutantSha256": "e64b91d9dc9d2aa64b14ff534cc6b9dca4280151e10d62404dd36d0ddd36bf64",
+    "search": "const UNANSWERED_PREFIX = \"Nicht angegeben:\"",
+    "replace": "const UNANSWERED_PREFIX = \"Nicht erfasst:\"",
+    "testFile": "tests/discovery-unanswered-categories.test.tsx",
+    "title": "a submitted intake's untouched step says so at the step — never „benutzt nichts“",
+    "phaseOracles": {
+      "transfer": {
+        "line": 286,
+        "assertion": "assert.ok(\n    markup.includes(\n      \"Nicht angegeben: Tiefenreinigung · Conditioner · Bondbuilder · Kopfhautpflege · Hitzeschutz · Trockenshampoo — im Call fragen.\",\n    ),\n    \"summary names exactly the six unanswered categories without steps\",\n  )",
+        "keeperLine": 269,
+        "keeperTitle": "a submitted intake's untouched step says so at the step — never „benutzt nichts“"
+      },
+      "cut": {
+        "line": 286,
+        "assertion": "assert.ok(\n    markup.includes(\n      \"Nicht angegeben: Tiefenreinigung · Conditioner · Bondbuilder · Kopfhautpflege · Hitzeschutz · Trockenshampoo — im Call fragen.\",\n    ),\n    \"summary names exactly the six unanswered categories without steps\",\n  )",
+        "keeperLine": 269,
+        "keeperTitle": "a submitted intake's untouched step says so at the step — never „benutzt nichts“"
+      }
+    },
+    "expected": {
+      "code": "ERR_ASSERTION",
+      "operator": "==",
+      "message": "summary names exactly the six unanswered categories without steps",
+      "firstKeeperFrameRequired": true
+    },
+    "limit": "Representative owner fault only; runtime/first frame/message not observed. Main must run clean1/fault1 intended assertion/byte restore/clean1. C1 auto diagnostic contains markup text; C2 header message exact concatenation inferred from source, verify before accepting."
+  }
+]

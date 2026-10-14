@@ -20,33 +20,60 @@ import {
   type LeaveInRole,
   type LeaveInWeight,
 } from "@/lib/leave-in/constants"
+import {
+  applyHeatActivationToLeaveInProjection,
+  heatActivationCaptureSchema,
+  type HeatActivationCapture,
+  type HeatActivationRoute,
+} from "@/lib/heat-activation/contract"
 import { HAIR_THICKNESSES, type HairThickness } from "@/lib/vocabulary"
 
 export const LEAVE_IN_RESEARCH_ENVELOPE_VERSION = "leave-in-research-envelope-v1.0" as const
 export const LEAVE_IN_PRODUCTION_ADAPTER_VERSION = "leave-in-production-adapter-v1" as const
 /**
- * Standard v1.1 = the frozen v1.0 standard plus the T20 overlay (2026-09-29).
- * `policySha256` pins the v1.1 overlay document, which itself names the v1.0
- * base by hash; `LEAVE_IN_BASE_STANDARD` pins that base. A v1.0-stamped envelope
- * is refused (`needs_research`): T20 reopened `care_direction` on every record,
- * so a pre-T20 direction may not reach the catalog without re-derivation.
+ * Standard v1.2 = the frozen v1.0 standard + the T20 overlay (v1.1, 2026-09-29)
+ * + the T21 heat-activation overlay (v1.2, 2026-10-09). `policySha256` pins the
+ * v1.2 overlay document, which names the v1.1 overlay and the v1.0 base by hash.
+ * The envelope version and the adapter version stay unchanged (AD-6 precedent).
+ *
+ * A v1.0-stamped envelope fails the strict parse; a v1.1-stamped envelope is
+ * refused with a re-stamp reason (`needs_research`): v1.2 added the required
+ * `identity.heatActivation` capture, and a missing capture must never default
+ * to "not activated" (§1.1 fails toward review).
  */
 export const LEAVE_IN_PRODUCTION_ADAPTER_RESEARCH_METHOD = {
+  policyId: "leave-in-classification-v1.2",
+  modelVersion: "leave-in-inci-v1.2",
+  policySha256: "8847308ac4d518e6bb4c4bbd7174e9cf29990cdc9e0437f5a664ef8ffa71c806",
+  runbookSha256: "dce7d84982e52f5094a0b29500105d13f42c31d44e04b1871bcbef1bda5e56ca",
+} as const
+
+/** The Standard v1.1 research-method stamp, refused since v1.2 (kept as a pin). */
+export const LEAVE_IN_V1_1_RESEARCH_METHOD = {
   policyId: "leave-in-classification-v1.1",
   modelVersion: "leave-in-inci-v1.1",
   policySha256: "9c1340357b4c0cf38933340f4592250d10f2cccc1429b0e4d46508d47eee032b",
   runbookSha256: "dce7d84982e52f5094a0b29500105d13f42c31d44e04b1871bcbef1bda5e56ca",
 } as const
 
-/** The byte-frozen Standard v1.0 the v1.1 overlay applies to. */
+/** The byte-frozen Standard v1.0 the overlays apply to. */
 export const LEAVE_IN_BASE_STANDARD = {
   path: "docs/research/leave-in-inci/v1.0/leave-in-classification-standard.md",
   sha256: "7ae5e882d9cba3e3fccdea3623d056efe802ff3bc3adbe554112e471da551ace",
 } as const
 
-/** The v1.1 overlay document `policySha256` pins. */
+/** The byte-frozen v1.1 (T20) overlay the v1.2 overlay builds on. */
+export const LEAVE_IN_V1_1_OVERLAY = {
+  path: "docs/research/leave-in-inci/v1.1/leave-in-classification-overlay.v1.1.md",
+  sha256: "9c1340357b4c0cf38933340f4592250d10f2cccc1429b0e4d46508d47eee032b",
+} as const
+
+/** The v1.2 overlay document `policySha256` pins. */
 export const LEAVE_IN_OVERLAY_PATH =
-  "docs/research/leave-in-inci/v1.1/leave-in-classification-overlay.v1.1.md" as const
+  "docs/research/leave-in-inci/v1.2/leave-in-classification-overlay.v1.2.md" as const
+
+/** v1.1 → v1.2 refusal reason (P3): the capture must be re-stamped, never defaulted. */
+const V1_1_REFUSAL_REASON = `researchMethod.policyId: ${LEAVE_IN_V1_1_RESEARCH_METHOD.policyId} — v1.2 added identity.heatActivation; re-stamp required`
 
 // ---------------------------------------------------------------------------
 // Production vocabularies that live inline in the intake validator
@@ -230,6 +257,12 @@ export const leaveInResearchEnvelopeSchema = z
          */
         productForm: z.enum(LEAVE_IN_FORMATS),
         applicationStage: uniqueArray(z.enum(LEAVE_IN_APPLICATION_STAGES)),
+        /**
+         * Leave-In v1.2 (T21, HA-1…HA-9): directions-led, manufacturer-gated
+         * heat activation, transcribed at identity next to applicationStage.
+         * Required — a missing capture is never read as "not activated".
+         */
+        heatActivation: heatActivationCaptureSchema,
         identityStatus: z.enum([
           "verified",
           "verified_with_minor_source_difference",
@@ -368,7 +401,7 @@ type LeaveInSpecsRow = {
   weight: LeaveInWeight
   roles: LeaveInRole[]
   provides_heat_protection: boolean
-  heat_activation_required: false
+  heat_activation_required: boolean
   care_benefits: LeaveInCareBenefit[]
   ingredient_flags: LeaveInIngredientFlag[]
   application_stage: LeaveInApplicationStage[]
@@ -376,7 +409,12 @@ type LeaveInSpecsRow = {
   repair_support_level: LeaveInRepairSupportLevel
   plan_roles: LeaveInPlanRole[]
   functional_benefits: LeaveInFunctionalBenefit[]
+  /** AD-7: null exactly when `heat_activation_required` is false (table CHECK). */
+  heat_activation_route: HeatActivationRoute | null
 }
+
+/** The derivation before AD-7 applies the heat-activation invariants. */
+type LeaveInBaseSpecsRow = Omit<LeaveInSpecsRow, "heat_activation_route">
 
 type LeaveInFitSpecsRow = {
   weight: LeaveInWeight
@@ -619,10 +657,16 @@ export function deriveLeaveInIngredientFlags(
 
 /**
  * Faithful TypeScript port of `public.expand_leave_in_eligibility`
- * (supabase/migrations/20260314234500_add_leave_in_eligibility_and_matcher.sql).
+ * (supabase/migrations/20260314234500_add_leave_in_eligibility_and_matcher.sql,
+ * redefined by 20261013150000_leave_in_heat_activation_schema.sql — Leave-In v1.2).
  * Bucket order, context order and the cross-product loop order match the SQL
  * exactly, so a projected row set is byte-identical to what the RPC rebuilds.
  * Keep in sync with that migration.
+ *
+ * v1.2 (D-e, S3 plan §2.5): the `heat_protect` bucket comes from heat
+ * protection only — activation never counts as protection. An activated
+ * product lives in the `heat_style` context only, and every one of its care
+ * buckets emits that `heat_style` row (non-activated products are unchanged).
  */
 export function expandLeaveInEligibility(input: {
   thicknesses: readonly string[]
@@ -637,7 +681,7 @@ export function expandLeaveInEligibility(input: {
   const roles = input.roles ?? []
 
   const buckets: LeaveInNeedBucket[] = []
-  if (input.heatActivationRequired || input.providesHeatProtection) buckets.push("heat_protect")
+  if (input.providesHeatProtection) buckets.push("heat_protect")
   if (careBenefits.includes("curl_definition")) buckets.push("curl_definition")
   if (careBenefits.includes("repair") || careBenefits.includes("protein")) buckets.push("repair")
   if (
@@ -683,7 +727,7 @@ export function expandLeaveInEligibility(input: {
         continue
       }
       for (const context of contexts) {
-        if (context === "heat_style") continue
+        if (context === "heat_style" && !input.heatActivationRequired) continue
         rows.push({
           thickness: thickness as HairThickness,
           need_bucket: bucket,
@@ -757,7 +801,7 @@ const PROVISIONAL_IDENTITY_STATUSES = new Set<
 >(["provisional_identity_conflict", "provisional_formula_conflict", "insufficient_information"])
 
 /**
- * Projects complete Leave-In Standard v1.1 research into today's Product Intake
+ * Projects complete Leave-In Standard v1.2 research into today's Product Intake
  * fields. Pure: no I/O, no clock, no randomness, and the research authority is
  * never mutated. The smaller production projection is never the research record.
  */
@@ -787,6 +831,28 @@ export function projectLeaveInForProduction(input: unknown): LeaveInProductionAd
         `The researched product is not an in-category leave-on conditioning product (${probedBoundary}) and must use the correct category workflow.`,
       ],
       warnings: [],
+      summary: {
+        researchId: boundaryProbe.success ? (boundaryProbe.data.identity.researchId ?? null) : null,
+        productName: boundaryProbe.success
+          ? (boundaryProbe.data.identity.exactProductName ?? null)
+          : null,
+      },
+    }
+  }
+
+  // 1b. v1.1 → v1.2 (P3): a v1.1-stamped envelope carries no heat-activation
+  //     capture. It is refused with an explicit re-stamp reason instead of a
+  //     schema dump, and never defaulted to "not activated".
+  const methodProbe = z
+    .object({ researchMethod: z.object({ policyId: z.string() }).passthrough() })
+    .passthrough()
+    .safeParse(input)
+  if (
+    methodProbe.success &&
+    methodProbe.data.researchMethod.policyId === LEAVE_IN_V1_1_RESEARCH_METHOD.policyId
+  ) {
+    return {
+      ...needsResearch([V1_1_REFUSAL_REASON]),
       summary: {
         researchId: boundaryProbe.success ? (boundaryProbe.data.identity.researchId ?? null) : null,
         productName: boundaryProbe.success
@@ -1049,7 +1115,7 @@ export function projectLeaveInForProduction(input: unknown): LeaveInProductionAd
 
   // AD-6 (2026-09-14): heat_protection_max_c cut over to binary-only. Degree values were
   // unverifiable legacy heuristics; the adapter no longer emits this field at all.
-  const specs: LeaveInSpecsRow = {
+  const baseSpecs: LeaveInBaseSpecsRow = {
     format,
     weight,
     roles,
@@ -1063,11 +1129,27 @@ export function projectLeaveInForProduction(input: unknown): LeaveInProductionAd
     plan_roles: planRoles,
     functional_benefits: functionalBenefits,
   }
-  const fitSpecs: LeaveInFitSpecsRow = {
+  const baseFitSpecs: LeaveInFitSpecsRow = {
     weight,
     conditioner_relationship: conditionerRelationship,
     care_benefits: fitCareBenefits,
   }
+
+  // AD-7 (Leave-In v1.2, T21): the identity capture decides activation. The
+  // shared helper applies I1–I8 (S3 plan §1.4), overriding AD-3/AD-4 when the
+  // product needs heat to work, and refuses I1/I5 violations.
+  const activation: HeatActivationCapture = envelope.identity.heatActivation
+  const activated = applyHeatActivationToLeaveInProjection({
+    specs: baseSpecs,
+    fit: baseFitSpecs,
+    activation,
+  })
+  if (activated.status === "refused") {
+    return needsResearch([`identity.heatActivation: ${activated.reason}`], envelope)
+  }
+  const specs: LeaveInSpecsRow = activated.specs as LeaveInSpecsRow
+  const fitSpecs: LeaveInFitSpecsRow = activated.fit
+  const heatActivationRequired = specs.heat_activation_required
   const eligibility = expandLeaveInEligibility({
     thicknesses: suitableThicknesses,
     roles: specs.roles,
@@ -1132,12 +1214,44 @@ export function projectLeaveInForProduction(input: unknown): LeaveInProductionAd
     eligibility.some((row) => row.need_bucket === "heat_protect")
   ) {
     invariantFailures.push(
-      "invariant a heat_protect bucket requires provides_heat_protection or heat_activation_required",
+      "invariant a heat_protect bucket requires provides_heat_protection (activation is never protection, D-e)",
     )
   }
   if (specs.roles.length === 0) invariantFailures.push("invariant roles must be non-empty")
   if (specs.application_stage.length === 0) {
     invariantFailures.push("invariant application_stage must be non-empty")
+  }
+  // AD-7 invariants (S3 plan §1.4). I4/I7/I8 are covered by the fit row, the
+  // heat_style row check above and requiredProtocolRoles below.
+  if ((specs.heat_activation_route !== null) !== specs.heat_activation_required) {
+    invariantFailures.push(
+      "invariant I6 heat_activation_route is set exactly when heat_activation_required is true",
+    )
+  }
+  if (specs.heat_activation_required) {
+    if (!specs.application_stage.includes("pre_heat")) {
+      invariantFailures.push("invariant I1 heat activation requires application_stage ∋ pre_heat")
+    }
+    if (specs.plan_roles.length !== 1 || specs.plan_roles[0] !== "pre_heat_application") {
+      invariantFailures.push(
+        `invariant I2 heat activation allows plan_roles = [pre_heat_application] only: ${specs.plan_roles.join(", ")}`,
+      )
+    }
+    if (specs.roles.length !== 1 || specs.roles[0] !== "styling_prep") {
+      invariantFailures.push(
+        `invariant I3 heat activation allows roles = [styling_prep] only: ${specs.roles.join(", ")}`,
+      )
+    }
+    if (fitSpecs.conditioner_relationship !== "booster_only") {
+      invariantFailures.push(
+        `invariant I4 heat activation requires conditioner_relationship booster_only: ${fitSpecs.conditioner_relationship}`,
+      )
+    }
+    if (!specs.provides_heat_protection) {
+      invariantFailures.push(
+        "invariant I5 a heat-activated Leave-In projection requires provides_heat_protection",
+      )
+    }
   }
   if (invariantFailures.length > 0) return needsResearch(invariantFailures, envelope)
 
@@ -1167,6 +1281,31 @@ export function projectLeaveInForProduction(input: unknown): LeaveInProductionAd
     smoothingRationale,
     `AD-3a mapping: focus ${[focus.primary, ...focus.secondary].join(" + ")}, care_direction ${careDirection}, repair_support_level ${repairSupportLevel}, smoothing_route ${smoothingRoute} -> ${careBenefits.join(", ")}.`,
   ].join(" ")
+  // AD-7 text (only on an activated projection, so every non-activated
+  // rationale stays exactly as v1.1 wrote it).
+  const activationOverride = heatActivationRequired
+    ? `AD-7 (Leave-In v1.2): heat activation is required (route ${specs.heat_activation_route}), which overrides AD-3/AD-4 — roles = styling_prep only, conditioner_relationship = booster_only, plan_roles = pre_heat_application only (I2–I4).`
+    : null
+  const activationStatements = activation.statements
+    .map(
+      (statement) =>
+        `${statement.kind === "activation_statement" ? "activation statement" : "heat-step direction"} „${statement.quote}" (${statement.sourceTier}, ${statement.sourceUrl}, retrieved ${statement.retrievedAt})`,
+    )
+    .join("; ")
+  const activationCounterSignals = activation.counterSignals.length
+    ? ` Counter-signals (C3–C5, corroboration only, HA-3): ${activation.counterSignals
+        .map((signal) => `„${signal.quote}" (${signal.sourceTier}, ${signal.sourceUrl})`)
+        .join("; ")}.`
+    : ""
+  const activationRationale = heatActivationRequired
+    ? `AD-7 (Leave-In v1.2, T21): transcribed at identity from the manufacturer's own text, never derived from the formula, the INCI or the name (HA-1). required: ${activationStatements}. Both prongs come from a German pack or German-market manufacturer page (HA-2, HA-3); route ${specs.heat_activation_route} (HA-4). Activation is separate from heat protection (D-e, HA-6). Routes to human review (HA-8).${activationCounterSignals}`
+    : `AD-7 (Leave-In v1.2, T21): transcribed at identity from the manufacturer's own text, never derived from the formula, the INCI or the name (HA-1). not_required: no C1/C2 activation statement together with a heat-only heat-step direction was captured (HA-2, HA-3); silence is not_required. Activation is separate from heat protection (D-e, HA-6).${activationCounterSignals}`
+  const activationRouteRationale = heatActivationRequired
+    ? `AD-7 / HA-4: ${specs.heat_activation_route}, transcribed from the tool named in the heat-step direction: ${activation.statements
+        .filter((statement) => statement.kind === "heat_step_direction")
+        .map((statement) => `„${statement.quote}"`)
+        .join("; ")}.`
+    : "AD-7: null — heat activation is not required, and the route is set exactly when it is (I6)."
   const rolesRationale = [
     conditioningRationale,
     persistenceRationale,
@@ -1175,6 +1314,7 @@ export function projectLeaveInForProduction(input: unknown): LeaveInProductionAd
     holdSupport !== "none" || applicationStage.includes("pre_heat")
       ? `styling_prep added: hold_support ${holdSupport}, application_stage ${applicationStage.join(", ")}.`
       : "styling_prep not added: hold_support is none and application_stage carries no pre_heat.",
+    ...(activationOverride ? [activationOverride] : []),
   ].join(" ")
   const eligibilityRationale = [
     thicknessRationale,
@@ -1190,19 +1330,22 @@ export function projectLeaveInForProduction(input: unknown): LeaveInProductionAd
       careBenefitsRationale,
       rolesRationale,
       heatRationale,
+      ...(heatActivationRequired ? [activationRationale] : []),
     ].join(" "),
     "category_specs.product_leave_in_specs.format": `AD-1: the research presentation form and the production \`format\` enum are one shared vocabulary; captured at identity as \`${format}\` and projected without a mapping layer.`,
     "category_specs.product_leave_in_specs.weight": `${weightRationale} Current compatibility mapping: ${weightPotential} -> ${weight}.`,
     "category_specs.product_leave_in_specs.roles": rolesRationale,
     "category_specs.product_leave_in_specs.provides_heat_protection": `${heatRationale} §13.3 carries one binary; the four-state evidence detail stays in the research trace. AD-6 (2026-09-14): degree values (heat_protection_max_c) were cut over — legacy 221-232 °C figures were marketing use-condition parameters, not measured protection levels, and are never written.`,
-    "category_specs.product_leave_in_specs.heat_activation_required":
-      "AD-3: always false. The standard has no research source for heat activation, so the adapter never claims it.",
+    "category_specs.product_leave_in_specs.heat_activation_required": activationRationale,
+    "category_specs.product_leave_in_specs.heat_activation_route": activationRouteRationale,
     "category_specs.product_leave_in_specs.care_benefits": careBenefitsRationale,
     "category_specs.product_leave_in_specs.ingredient_flags": `Deterministic presence flags from the normalized complete INCI: ${ingredientFlags.join(", ") || "none"}. Presence flags do not establish concentration or finished-product performance.`,
     "category_specs.product_leave_in_specs.application_stage": `Transcribed at identity from the verbatim authoritative directions (§2.4, E1), never derived from the formula: ${applicationStage.join(", ")}.`,
     "category_specs.product_leave_in_specs.care_direction": careDirectionRationale,
     "category_specs.product_leave_in_specs.repair_support_level": repairRationale,
-    "category_specs.product_leave_in_specs.plan_roles": `post_wash_leave_in is always emitted; pre_heat_application follows the §13.3 heat binary (${providesHeatProtection}). Emitted: ${planRoles.join(", ")}.`,
+    "category_specs.product_leave_in_specs.plan_roles": heatActivationRequired
+      ? `AD-7 (I2): heat activation is required, so pre_heat_application is the only plan role and post_wash_leave_in is not emitted; the §13.3 heat binary (${providesHeatProtection}) satisfies I5. Emitted: ${specs.plan_roles.join(", ")}.`
+      : `post_wash_leave_in is always emitted; pre_heat_application follows the §13.3 heat binary (${providesHeatProtection}). Emitted: ${planRoles.join(", ")}.`,
     "category_specs.product_leave_in_specs.functional_benefits": `${careBenefitsRationale} AD-3a functional mapping -> ${functionalBenefits.join(", ")}. moisture_softness requires care_direction moisture (AD-3a revision 2026-09-29); care_direction here is ${careDirection}.`,
     "category_specs.product_leave_in_fit_specs": [
       `${weightRationale} fit_specs.weight mirrors specs.weight (${weight}).`,
@@ -1210,7 +1353,9 @@ export function projectLeaveInForProduction(input: unknown): LeaveInProductionAd
       `AD-3a fit mapping -> ${fitCareBenefits.join(", ")}.`,
     ].join(" "),
     "category_specs.product_leave_in_fit_specs.weight": `${weightRationale} fit_specs.weight is required to equal specs.weight; both are ${weight}.`,
-    "category_specs.product_leave_in_fit_specs.conditioner_relationship": `AD-4: conditioning_level ${conditioningLevel} and persistence ${persistence} -> ${conditionerRelationship}. ${conditioningRationale}`,
+    "category_specs.product_leave_in_fit_specs.conditioner_relationship": heatActivationRequired
+      ? `AD-4: conditioning_level ${conditioningLevel} and persistence ${persistence} -> ${conditionerRelationship}; AD-7 (I4) overrides it to ${fitSpecs.conditioner_relationship} because the product needs heat to work. ${conditioningRationale}`
+      : `AD-4: conditioning_level ${conditioningLevel} and persistence ${persistence} -> ${conditionerRelationship}. ${conditioningRationale}`,
     "category_specs.product_leave_in_fit_specs.care_benefits": `AD-3a fit vocabulary: ${fitCareBenefits.join(", ")}. ${focusRationale} ${heatRationale}`,
     "category_specs.product_leave_in_eligibility": eligibilityRationale,
   }
@@ -1250,18 +1395,31 @@ export function projectLeaveInForProduction(input: unknown): LeaveInProductionAd
       `AD-5: ${conditionalThicknesses.join(", ")} carry a non-recommended fit and are excluded from the matcher.`,
     )
   }
+  if (heatActivationRequired) {
+    warnings.push(
+      `heat_activation_required: heat activation is required (route ${specs.heat_activation_route}); every required value routes to human review before approval (HA-8).`,
+    )
+  } else if (activation.counterSignals.length > 0) {
+    warnings.push(
+      "activation_authority_gap: activation wording exists only below C1/C2 and is recorded as a counter-signal; route to human review (HA-3).",
+    )
+  }
 
   return {
     version: LEAVE_IN_PRODUCTION_ADAPTER_VERSION,
     status: "projection_ready",
     productionProjection,
     // Mirrors deriveRequiredProtocolRoles("leave_in", ...) in
-    // src/lib/product-intake/expansion-manifest.ts:115-122. Keep in sync.
+    // src/lib/product-intake/expansion-manifest.ts and requiredProtocolRoles()
+    // in category-validators.ts. Keep in sync.
     // `pre_heat_protection` here is the protocol role, NOT the plan role
     // `pre_heat_application` emitted in product_leave_in_specs.plan_roles.
-    requiredProtocolRoles: providesHeatProtection
-      ? ["post_wash_leave_in", "pre_heat_protection"]
-      : ["post_wash_leave_in"],
+    // AD-7 (I8): an activated product requires the pre-heat protocol only.
+    requiredProtocolRoles:
+      activated.requiredProtocolRoles ??
+      (providesHeatProtection
+        ? ["post_wash_leave_in", "pre_heat_protection"]
+        : ["post_wash_leave_in"]),
     omittedResearchProperties,
     warnings,
     summary: {
@@ -1296,7 +1454,10 @@ export function renderLeaveInProductionMarkdown(outcome: LeaveInProductionAdapte
     `- Format: ${specs.format}`,
     `- Weight: ${specs.weight}`,
     `- Roles: ${specs.roles.join(", ")}`,
-    `- Heat protection: ${specs.provides_heat_protection} (binary only, AD-6; activation required: ${specs.heat_activation_required})`,
+    `- Heat protection: ${specs.provides_heat_protection} (binary only, AD-6)`,
+    specs.heat_activation_required
+      ? `- Heat activation: required (route ${specs.heat_activation_route}, AD-7)`
+      : "- Heat activation: not_required (AD-7)",
     `- Care benefits: ${specs.care_benefits.join(", ")}`,
     `- Functional benefits: ${specs.functional_benefits.join(", ")}`,
     `- Ingredient flags: ${specs.ingredient_flags.join(", ") || "none"}`,

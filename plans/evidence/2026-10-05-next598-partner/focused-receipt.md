@@ -1,0 +1,11 @@
+# Partner access eight-removal proof
+
+Main applied eight independently reviewed consolidations: 84→84→76 AST registrations across sixteen files. Four changed keepers preserve full original assertions on existing calls; 72 unrelated callbacks, five held findings, eighteen SQL declarations and four browser declarations remain unchanged. No source retirement or new scenario/input/call.
+
+Native fifteen-file baseline80, transfer80 and formatted cut72 all passed without failures, skips, cancellations or todos. Twenty actual-owner controls each passed clean1→the intended ERR_ASSERTION at the pinned first assertion→byte-exact source restore→clean1. Main inspected all actual fault diagnostics/frames: C4 observes one forbidden read while result stays none; C6 reaches the moved forbidden collaborator and yields503 versus200; C8 checks first-response202/complete JSON/release-before-mail before handoff parsing. Complete transfer receipt `operator-mutations-transfer-YxWejd`, completion SHA `2fa2455efefaeede6f93cc7190e675c2ac7a71c2e66b0fe04a3c66768c23d083`, unlocked cut. All three actual source owners restored. All sixteen final files equal exact cut or exact Prettier-formatted cut.
+
+The whole packed-refs hash changed while task branch/HEAD and other seven Git metadata pins stayed identical. Main independently verified exact target ref and adopted only that metadata change before execution; static receipt records it. No Git mutation performed by these tools.
+
+Working campaign598 removals: original11892 minus current11294 (10770 Node+524 Playwright); target2379 leaves1781. Net code removed18678 lines:8936 application/tooling+9742 tests/support; docs excluded and49 untracked fixture lines included as additions. Full coverage/CI last verified at585, so this focused checkpoint makes no newer coverage claim. TypeScript passed after Stripe cut/Partner transfer; later integrated CI pending. Native SQL cases ran, but no live mail/Auth/provider/production migration claim. Browser cases unchanged, not rerun here. No publication/production actions.
+
+`artifact-index.json` pins282 archived artifacts. This receipt and loc.json are written afterward beside the index. Source faults, logs, native receipts, immutable proposal, independent review, tools and final formatting comparison preserved. Executable artifacts archived as text.

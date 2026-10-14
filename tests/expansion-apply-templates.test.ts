@@ -95,34 +95,24 @@ test("all 11 templates produce a schema-valid, product-scoped V1 guidance payloa
     )
     assert.equal(payload.protocolFacts.workflowId, undefined, templateId)
     assert.deepEqual(payload.evidence, EVIDENCE, templateId)
-  }
-})
-
-test("TPL-OIL-LEAVEON stamps only the reviewed wash-family day types", () => {
-  const row = buildExpansionProtocolRow("TPL-OIL-LEAVEON", defaultSlots("TPL-OIL-LEAVEON"))
-  const payload = parsePayload("TPL-OIL-LEAVEON", row)
-
-  assert.deepEqual(payload.compatibleDayTypes, [
-    "wash_day",
-    "intensive_care_day",
-    "bond_repair_day",
-    "clarifying_wash_day",
-  ])
-})
-
-test("row role/category come from EXPANSION_TEMPLATE_META, not the payload's semantic role", () => {
-  for (const templateId of EXPANSION_TEMPLATE_IDS) {
-    const row = buildExpansionProtocolRow(templateId, defaultSlots(templateId))
+    // Preserve the source-role vocabulary independently from semantic payload roles.
     const meta = EXPANSION_TEMPLATE_META[templateId]
     assert.equal(row.role, meta.role, templateId)
     assert.equal(row.category, meta.category, templateId)
+    if (templateId === MASK_TEMPLATE_ID) {
+      const maskRow = row
+      assert.equal(maskRow.role, "intensive_conditioning_mask")
+      assert.equal((maskRow.guidance_payload as { role: string }).role, "intensive_care")
+    }
+    if (templateId === "TPL-OIL-LEAVEON") {
+      assert.deepEqual(payload.compatibleDayTypes, [
+        "wash_day",
+        "intensive_care_day",
+        "bond_repair_day",
+        "clarifying_wash_day",
+      ])
+    }
   }
-
-  // The two vocabularies genuinely differ — the mask row is `intensive_conditioning_mask`
-  // while its payload keeps the markdown's semantic `intensive_care`.
-  const maskRow = buildExpansionProtocolRow(MASK_TEMPLATE_ID, defaultSlots(MASK_TEMPLATE_ID))
-  assert.equal(maskRow.role, "intensive_conditioning_mask")
-  assert.equal((maskRow.guidance_payload as { role: string }).role, "intensive_care")
 })
 
 test("§2.4 column ↔ payload invariants hold for all 11 templates", () => {

@@ -3,6 +3,7 @@ import { after, NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import { createClient as createSessionClient } from "@/lib/supabase/server"
 import { checkRateLimit, QUIZ_LEAD_RATE_LIMIT } from "@/lib/rate-limit"
+import { resolveLeadIdentityPolicy } from "@/lib/quiz/lead-identity"
 import { leadSchema } from "@/lib/quiz/validators"
 import { canonicalizeQuizAnswers } from "@/lib/quiz/normalization"
 import type { QuizAnswers } from "@/lib/quiz/types"
@@ -336,6 +337,11 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
       }
 
       const supabase = dependencies.createAdminClient()
+      const identityPolicy = await resolveLeadIdentityPolicy(
+        supabase,
+        deliverableEmail,
+        dependencies.createSessionClient,
+      )
       const funnelTouch = funnelContext
         ? await dependencies.resolvePendingFunnelTouchValue(
             cookieStore.get(FUNNEL_TOUCH_COOKIE)?.value,
@@ -381,7 +387,10 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
 
       if (existingLead) {
         const createdAt = new Date().toISOString()
-        if (existingLead.marketing_consent !== parsed.marketingConsent) {
+        if (
+          identityPolicy.authenticatedSameEmail &&
+          existingLead.marketing_consent !== parsed.marketingConsent
+        ) {
           const { error: updateError } = await supabase
             .from("leads")
             .update({ marketing_consent: parsed.marketingConsent })
@@ -421,6 +430,7 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
           dependencies.scheduleAfter(() =>
             dependencies.syncQuizLeadToCustomerIo({
               createdAt,
+              allowIdentityTraits: identityPolicy.authenticatedSameEmail,
               email: deliverableEmail,
               leadId: existingLead.id,
               marketingConsent: parsed.marketingConsent,
@@ -495,6 +505,7 @@ export function createQuizLeadPostHandler(overrides: Partial<QuizLeadPostDepende
           dependencies.syncQuizLeadToCustomerIo({
             createdAt,
             consentTimestamp: inheritedConsentTimestamp,
+            allowIdentityTraits: identityPolicy.allowIdentityTraits,
             email: deliverableEmail,
             leadId: data.id,
             marketingConsent: parsed.marketingConsent,

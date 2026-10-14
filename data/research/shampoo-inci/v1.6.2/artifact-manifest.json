@@ -1,0 +1,705 @@
+{
+  "schema_version": "shampoo-research-artifact-manifest.v1.6.2",
+  "created_at": "2026-10-12",
+  "policy_id": "shampoo-classification-v1.6.2",
+  "model_version": "shampoo-inci-v1.6.2",
+  "normative_source": {
+    "path": "docs/research/shampoo-inci/v1.6.2/classification-standard.md",
+    "bytes": 165970,
+    "sha256": "c490b3c5a002ba98aa66122f6f44c78782b2eef9dfc75ce33d9fe48aeada71a6",
+    "verification": "tests/shampoo-research-v1-6-2-lock.test.ts"
+  },
+  "base_standard": {
+    "path": "docs/research/shampoo-inci/v1.6.1/classification-standard.md",
+    "bytes": 161617,
+    "sha256": "8bd97d31b433109e0bc79738163a41b3e644de9ab3e7312948ecaddea23d0a29",
+    "verification": "tests/shampoo-research-v1-6-1-lock.test.ts"
+  },
+  "runbook": {
+    "path": "docs/research/shampoo-inci/v1.6.2/runbook.md",
+    "bytes": 17721,
+    "sha256": "2a6ca1bdd0944aaf295af471818302e21f3b74302cdd8f4eeaf6039473b18a78",
+    "verification": "tests/shampoo-research-v1-6-2-lock.test.ts"
+  },
+  "rule_change_ledger": {
+    "path": "docs/research/shampoo-inci/v1.6.2/rule-changes.md",
+    "bytes": 4211,
+    "sha256": "6ad1bbedfa5fda1425d5e4a9d9535b0511504f08acff4ef5fb23b253ee966e65",
+    "verification": "tests/shampoo-research-v1-6-2-lock.test.ts"
+  },
+  "readme": {
+    "path": "docs/research/shampoo-inci/v1.6.2/README.md",
+    "bytes": 4147,
+    "sha256": "bc6c7049aa7e2f3428023bfeca8c3c13fe299de3ba6709e99db307f58bc9b4da",
+    "verification": "tests/shampoo-research-v1-6-2-lock.test.ts"
+  },
+  "rulings_ledger": {
+    "path": "data/research/shampoo-inci/v1.6.2/rulings-ledger.md",
+    "bytes": 2950,
+    "sha256": "f3882b6be997360004f0e2437e64e254d090e5f6c798b6311e53a17a38e4cb1e",
+    "verification": "tests/shampoo-research-v1-6-2-lock.test.ts"
+  },
+  "logic_lock_receipt": {
+    "path": "data/research/shampoo-inci/v1.6.2/v1.6.2-logic-lock-receipt.json",
+    "bytes": 8066,
+    "sha256": "b64e01ca9e386e8e09c8323a651bcc2ef56f60bf7af8d459fa93110ad2ab8727"
+  },
+  "evidence": {
+    "root": "data/research/shampoo-inci/v1.6.2/evidence/",
+    "copied_from": "plans/shampoo-v162/inputs/",
+    "files": 3,
+    "artifacts": [
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/evidence/closed-list-candidates-2026-10-12.md",
+        "bytes": 2972,
+        "sha256": "7459404f7e3214543ab3dac3ffcd8638498a95b5933d57e49396941f2ccc9c35"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/evidence/comfort-route-audit-2026-10-12.md",
+        "bytes": 3123,
+        "sha256": "4023e44f760ca4585730ba0b2b09f035498fa9fa4e062236e1164dd188be872f"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/evidence/sensitive-scalp-levers-2026-10-12.md",
+        "bytes": 3070,
+        "sha256": "0a6e6629085e4f751a6ed4bb5953519e4211e3705c040292d8b440d4edde01f9"
+      }
+    ]
+  },
+  "test_round": {
+    "root": "data/research/shampoo-inci/v1.6.2/test-round/",
+    "copied_from": "plans/shampoo-v162/test/",
+    "files": 120,
+    "key_reports": [
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/pre-registration.md",
+        "bytes": 2458,
+        "sha256": "5859299b7af0721bedb7accfd062ca4bf3eaf4aa7bd234dddf21b1dbc2e4b112"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/pre-registration.json",
+        "bytes": 2817,
+        "sha256": "74cd578c3540fe333b520b9c8d2e4fe0769166ea09d2ab4feee6c002a820a7a3"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/compare-output.txt",
+        "bytes": 179,
+        "sha256": "b138b6cd235d0308eb50130e6d6a54ab5b03a26f25f2bbd2747963fb3dc11c86"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/preregistration-check.txt",
+        "bytes": 993,
+        "sha256": "1f65b2c33a1a950a5d1b6c4838ea7291f96d014f3ea38fd6b5ee6b4ac3595853"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/run-log.md",
+        "bytes": 2882,
+        "sha256": "29a2ebbbaa86c4a8d61c50f8a3bb3db0c1c59819a06c5056f5b09545161c98ec"
+      }
+    ],
+    "note": "Full test-round corpus: packets, kit (formula, reveal, held, both lanes' formula-pass and final records), baseline, pre-registration, comparison and run log.",
+    "artifacts": [
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/baseline-v1.6.json",
+        "bytes": 16375,
+        "sha256": "9f0bdb29fe9e943c9c039e498cef76f6fd4ee02f4401e9e26ed76db8d067074d"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/check-preregistration.py",
+        "bytes": 2775,
+        "sha256": "7ccf3a19ecc299bc716e2add640d337c2f72031b8268268280f2f5324c328126"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/compare-output.txt",
+        "bytes": 179,
+        "sha256": "b138b6cd235d0308eb50130e6d6a54ab5b03a26f25f2bbd2747963fb3dc11c86"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/blind-mapping.json",
+        "bytes": 1749,
+        "sha256": "5a4c08fa27497e75c90ef94154de168dd860e7f1a585f92a7443baeed203d7f8"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/held/build-complete.json",
+        "bytes": 1711,
+        "sha256": "380f618992abb8ca636037972e11cc6f1e0e35c68f2c4535d48477ffa9da6ff4"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/held/lane-a/release-log.json",
+        "bytes": 816,
+        "sha256": "bac114f2fa25721e09328ae3a8d256abd066f2bcf7dc4eb17b0fddf0667d9edb"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/held/lane-a/reveal/VS01.json",
+        "bytes": 1089,
+        "sha256": "70e636d69e5cd691ac789c67b8ce32a4f05b537ba360bd0178dccfbda54a1fdc"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/held/lane-a/reveal/VS02.json",
+        "bytes": 1179,
+        "sha256": "4b9e357fddbcfa32d1a98d10e9a32100b56581e9d449a446fd8eb8ee5ae11d47"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/held/lane-a/reveal/VS03.json",
+        "bytes": 3824,
+        "sha256": "f6617030563adfd53caa7b45cb2ec8e8749d62005d421d4f0c0cca9a4f842f3f"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/held/lane-a/reveal/VS04.json",
+        "bytes": 1372,
+        "sha256": "739dce8d16ee825a5947366dc524d9a1980eb9b4b5dae4f355583aab3c4068a9"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/held/lane-a/reveal/VS05.json",
+        "bytes": 2578,
+        "sha256": "c20281174be546d36618f6231437e6bc023aad86f232b9cffb3236e80ef610db"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/held/lane-a/reveal/VS06.json",
+        "bytes": 1813,
+        "sha256": "6de352f5b8f82f3c48127bf364ed0299bb90a772b4c468ef9ef5962b4f322f24"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/held/lane-a/reveal/VS07.json",
+        "bytes": 3102,
+        "sha256": "26f300bb5bdb602e7f5df0d9db8596db440bb7f8b93cd23107739d05faf6de23"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/held/lane-a/reveal/VS08.json",
+        "bytes": 1457,
+        "sha256": "e11c38ad89bd8c362f33a405dfef1829a43bd082bf8ec65875b2224fbca99c2d"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/held/lane-a/reveal/VS09.json",
+        "bytes": 1307,
+        "sha256": "9b4242007b21dea7c5f4a691b6c516b0a313e25dea95e67d36490e32a45c3e67"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/held/lane-b/release-log.json",
+        "bytes": 816,
+        "sha256": "570f4291e98464d0b9ba493db54530393398326a542f6b5296e72e27b7a9718d"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/held/lane-b/reveal/VS01.json",
+        "bytes": 1089,
+        "sha256": "70e636d69e5cd691ac789c67b8ce32a4f05b537ba360bd0178dccfbda54a1fdc"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/held/lane-b/reveal/VS02.json",
+        "bytes": 1179,
+        "sha256": "4b9e357fddbcfa32d1a98d10e9a32100b56581e9d449a446fd8eb8ee5ae11d47"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/held/lane-b/reveal/VS03.json",
+        "bytes": 3824,
+        "sha256": "f6617030563adfd53caa7b45cb2ec8e8749d62005d421d4f0c0cca9a4f842f3f"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/held/lane-b/reveal/VS04.json",
+        "bytes": 1372,
+        "sha256": "739dce8d16ee825a5947366dc524d9a1980eb9b4b5dae4f355583aab3c4068a9"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/held/lane-b/reveal/VS05.json",
+        "bytes": 2578,
+        "sha256": "c20281174be546d36618f6231437e6bc023aad86f232b9cffb3236e80ef610db"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/held/lane-b/reveal/VS06.json",
+        "bytes": 1813,
+        "sha256": "6de352f5b8f82f3c48127bf364ed0299bb90a772b4c468ef9ef5962b4f322f24"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/held/lane-b/reveal/VS07.json",
+        "bytes": 3102,
+        "sha256": "26f300bb5bdb602e7f5df0d9db8596db440bb7f8b93cd23107739d05faf6de23"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/held/lane-b/reveal/VS08.json",
+        "bytes": 1457,
+        "sha256": "e11c38ad89bd8c362f33a405dfef1829a43bd082bf8ec65875b2224fbca99c2d"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/held/lane-b/reveal/VS09.json",
+        "bytes": 1307,
+        "sha256": "9b4242007b21dea7c5f4a691b6c516b0a313e25dea95e67d36490e32a45c3e67"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/classification-standard.md",
+        "bytes": 159417,
+        "sha256": "39e7eace4bd85310f631c97d25aefb638f2f0e28b6b99af4ac0fd25659d46ce6"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/formula/VS01.json",
+        "bytes": 909,
+        "sha256": "a0a48087eea74704af289241e568344fe1488205a750c7e8169123ef12978ff8"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/formula/VS02.json",
+        "bytes": 869,
+        "sha256": "ed312cfeb0bdc1e0891655c33fabe81b79b4b58376834518a90c5005068ee681"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/formula/VS03.json",
+        "bytes": 847,
+        "sha256": "6eeb037cf5dc5cd6635f50b6a27474a6692e332df0ce66a482ea32ff66835731"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/formula/VS04.json",
+        "bytes": 971,
+        "sha256": "22fd8fc45123fe7829f418fe08a3afb730d7ba9a6dc33898bc3272088c04f2ec"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/formula/VS05.json",
+        "bytes": 837,
+        "sha256": "6d71c993dbdc932ddb5e266dae651626c9631f27cd85c895f434fa1268a2f359"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/formula/VS06.json",
+        "bytes": 1123,
+        "sha256": "c1754b472468bc3d47459b47a9cb289ec76f376d4fc7a9231b5c867d3d4a4575"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/formula/VS07.json",
+        "bytes": 1130,
+        "sha256": "a0e5983984172dbee77fcce413a28dcfbf1e462720f72c885bb9c3fdf1e43239"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/formula/VS08.json",
+        "bytes": 868,
+        "sha256": "49815f2f146b467fca24342969e9a21a9bb09339f78e2bc771d308cba5ede5d6"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/formula/VS09.json",
+        "bytes": 932,
+        "sha256": "5f9d0129123b51ad64b09a060b8ef1d5d8449754eac591da74461b739ae9ce5c"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/out/VS01.json",
+        "bytes": 22033,
+        "sha256": "c7eb57580e00f1fbd5c30790c83712ee46041f6631d283395a58ae9f11f7e9f2"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/out/VS02.json",
+        "bytes": 21716,
+        "sha256": "8e6e5fa9e0d789793142d5d35c0f6fa4ad367722300b70b055874d822c359c00"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/out/VS03.json",
+        "bytes": 22365,
+        "sha256": "43580d810cfe01f49e304b531930f2d091cc54c87954a048ee2cfe0c6f75e6a7"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/out/VS04.json",
+        "bytes": 18415,
+        "sha256": "0e31fec26c2278a55dab0fa2627c606388747f5ddc8afee7363f0b04f767078b"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/out/VS05.json",
+        "bytes": 19001,
+        "sha256": "e0f56c7a3ea79204029241ebfa5062c58ff27b3393ad020d8d4d14351a117c19"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/out/VS06.json",
+        "bytes": 19019,
+        "sha256": "182c4b3234d3ed0c40e785b8ffb92b35367817fe620616935d6b111a931ae515"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/out/VS07.json",
+        "bytes": 20868,
+        "sha256": "33beaf3d76acbc0b16703272a3b99fc78ea615fa2d95299baee90d3acf05e5ef"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/out/VS08.json",
+        "bytes": 18869,
+        "sha256": "eda85955513bb93c13502e6688b53f7786f615c3b8b37e85a900413b9101fd48"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/out/VS09.json",
+        "bytes": 19701,
+        "sha256": "152218504a47d532b246d52fa93616efc639e5b4b08a4c6fb35ea25eac12dabe"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/out/_work/build_final.py",
+        "bytes": 9773,
+        "sha256": "1aef812b6168982735d248816d7f2932c15fe8e281d75203d26ffef916b0b75d"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/out/_work/specs_a.json",
+        "bytes": 64223,
+        "sha256": "611a6f1c98c9b35f81671c43334ce7cedddf65ddbc969c8a56f8ef6e3d3bfce0"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/out/formula-pass/VS01.json",
+        "bytes": 11680,
+        "sha256": "30d9cc25f7dccafad7204fcbac9cb0b24e17831c7786a1fedf33588009fd8822"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/out/formula-pass/VS02.json",
+        "bytes": 10537,
+        "sha256": "12ce06e7804c99a6f230efe04fc071110cf25403780fc0f40c39849891de3279"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/out/formula-pass/VS03.json",
+        "bytes": 10084,
+        "sha256": "cb6de1c129cdd5b3abbb6a07e490cc3af0c4d45ba9c154aba027e0b6feab9060"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/out/formula-pass/VS04.json",
+        "bytes": 9733,
+        "sha256": "07913a137893881badf5a171aac70e4e897847ebd1f1eb5e5972919ffb4a47d2"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/out/formula-pass/VS05.json",
+        "bytes": 10019,
+        "sha256": "f506059ca9b496d82ae3769b9817bd5a60464c552e40bb02590a12ba80a8fef5"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/out/formula-pass/VS06.json",
+        "bytes": 10482,
+        "sha256": "efc3c1525f11b32e3012819c12466b0858e3553cc23c6bbad8a7f99b1df326d5"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/out/formula-pass/VS07.json",
+        "bytes": 11391,
+        "sha256": "6b4ab087d4758e07d05cb891edb0bdcb679f6df8ad3d0aeca18fcf563f477266"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/out/formula-pass/VS08.json",
+        "bytes": 10891,
+        "sha256": "9a714eb83f1c356a85a5af4ffc4764953ff674847867c5171173674ac1325e77"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/out/formula-pass/VS09.json",
+        "bytes": 10256,
+        "sha256": "c35107fba7cff1e203425cb8531c8024c69a6c9d19e9c2d6f0e862afa109a79a"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/reveal/VS01.json",
+        "bytes": 1089,
+        "sha256": "70e636d69e5cd691ac789c67b8ce32a4f05b537ba360bd0178dccfbda54a1fdc"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/reveal/VS02.json",
+        "bytes": 1179,
+        "sha256": "4b9e357fddbcfa32d1a98d10e9a32100b56581e9d449a446fd8eb8ee5ae11d47"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/reveal/VS03.json",
+        "bytes": 3824,
+        "sha256": "f6617030563adfd53caa7b45cb2ec8e8749d62005d421d4f0c0cca9a4f842f3f"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/reveal/VS04.json",
+        "bytes": 1372,
+        "sha256": "739dce8d16ee825a5947366dc524d9a1980eb9b4b5dae4f355583aab3c4068a9"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/reveal/VS05.json",
+        "bytes": 2578,
+        "sha256": "c20281174be546d36618f6231437e6bc023aad86f232b9cffb3236e80ef610db"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/reveal/VS06.json",
+        "bytes": 1813,
+        "sha256": "6de352f5b8f82f3c48127bf364ed0299bb90a772b4c468ef9ef5962b4f322f24"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/reveal/VS07.json",
+        "bytes": 3102,
+        "sha256": "26f300bb5bdb602e7f5df0d9db8596db440bb7f8b93cd23107739d05faf6de23"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/reveal/VS08.json",
+        "bytes": 1457,
+        "sha256": "e11c38ad89bd8c362f33a405dfef1829a43bd082bf8ec65875b2224fbca99c2d"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-a/reveal/VS09.json",
+        "bytes": 1307,
+        "sha256": "9b4242007b21dea7c5f4a691b6c516b0a313e25dea95e67d36490e32a45c3e67"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/classification-standard.md",
+        "bytes": 159417,
+        "sha256": "39e7eace4bd85310f631c97d25aefb638f2f0e28b6b99af4ac0fd25659d46ce6"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/formula/VS01.json",
+        "bytes": 909,
+        "sha256": "a0a48087eea74704af289241e568344fe1488205a750c7e8169123ef12978ff8"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/formula/VS02.json",
+        "bytes": 869,
+        "sha256": "ed312cfeb0bdc1e0891655c33fabe81b79b4b58376834518a90c5005068ee681"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/formula/VS03.json",
+        "bytes": 847,
+        "sha256": "6eeb037cf5dc5cd6635f50b6a27474a6692e332df0ce66a482ea32ff66835731"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/formula/VS04.json",
+        "bytes": 971,
+        "sha256": "22fd8fc45123fe7829f418fe08a3afb730d7ba9a6dc33898bc3272088c04f2ec"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/formula/VS05.json",
+        "bytes": 837,
+        "sha256": "6d71c993dbdc932ddb5e266dae651626c9631f27cd85c895f434fa1268a2f359"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/formula/VS06.json",
+        "bytes": 1123,
+        "sha256": "c1754b472468bc3d47459b47a9cb289ec76f376d4fc7a9231b5c867d3d4a4575"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/formula/VS07.json",
+        "bytes": 1130,
+        "sha256": "a0e5983984172dbee77fcce413a28dcfbf1e462720f72c885bb9c3fdf1e43239"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/formula/VS08.json",
+        "bytes": 868,
+        "sha256": "49815f2f146b467fca24342969e9a21a9bb09339f78e2bc771d308cba5ede5d6"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/formula/VS09.json",
+        "bytes": 932,
+        "sha256": "5f9d0129123b51ad64b09a060b8ef1d5d8449754eac591da74461b739ae9ce5c"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/out/VS01.json",
+        "bytes": 16541,
+        "sha256": "a5af0b85366d8fbe9d1306205adcf117e8c077929e6584891e08ae8eec3fc2da"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/out/VS02.json",
+        "bytes": 15355,
+        "sha256": "366a1cd293e3eb38429086e2ac2d9842527513a648ee24e33f8b04039b7d5f5b"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/out/VS03.json",
+        "bytes": 15590,
+        "sha256": "286b0cc3fbe73f2236dfadd304b973eb11ea72dbd81dc5e07ab624a1aa27f1d2"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/out/VS04.json",
+        "bytes": 13487,
+        "sha256": "3192d9fbdc1506f2e6a0e90fc02313482a53d0dc4007de3df0ca0907da50bccb"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/out/VS05.json",
+        "bytes": 14222,
+        "sha256": "c1422a0f168be59749f601c44d7460892eebae52f6eff7c9c144938e0b8a26e6"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/out/VS06.json",
+        "bytes": 14048,
+        "sha256": "681257640445071193c37190d61eb1ce542f76467b5286abb371d1d9fda29790"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/out/VS07.json",
+        "bytes": 14919,
+        "sha256": "699c3e722ad82dbaeb17f88b55c4ed253bdf098e98be1255c5c264ceb5beef20"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/out/VS08.json",
+        "bytes": 14165,
+        "sha256": "5e47755265c4c1f72eafd67a06f5e8ffe21be05dbc7b22e8f583948785f1dc3d"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/out/VS09.json",
+        "bytes": 14544,
+        "sha256": "aeea7ce9e1650d5bb2e7973484e279316ba1ca28b9c1847cf5918f75137ad518"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/out/_work/build_final.py",
+        "bytes": 7876,
+        "sha256": "b7c75f744f4fcb611d1de87a04d42f1d4cba255670d075933fea0d24104c3bc5"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/out/_work/final_data.py",
+        "bytes": 55592,
+        "sha256": "3cba4172de710b025589501ead5893d486d630c4ccf3a14427637bf789209a03"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/out/_work/fp_before.txt",
+        "bytes": 585,
+        "sha256": "3bab9fccb3f7c924c359d506cc9b0720f805809a6df055040f9e48091e477210"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/out/formula-pass/VS01.json",
+        "bytes": 9157,
+        "sha256": "b2240e0b9f34bed1972dad6faf64af5ed4e270bdda256c50e273c953cf328caf"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/out/formula-pass/VS02.json",
+        "bytes": 8683,
+        "sha256": "24d750ae0c0d9dfb57325fe5259cf0bd501666ed2ace56711424de34f2856d55"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/out/formula-pass/VS03.json",
+        "bytes": 8126,
+        "sha256": "3102e3493415961262ca1ebcae1b2d86ba67584c8190803fddc78a12d216df83"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/out/formula-pass/VS04.json",
+        "bytes": 8090,
+        "sha256": "66ab03ee3cf2710984f00b45433cd77424d66137bb442953176ff851c58ec5ed"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/out/formula-pass/VS05.json",
+        "bytes": 7808,
+        "sha256": "ef3051f6a4c1ee040d4e1c8648942464058f0deb213850b09d23aea4cd48ccbe"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/out/formula-pass/VS06.json",
+        "bytes": 8417,
+        "sha256": "24a5cd26ed0f7869e33fe5d035f0d95b85cfdecdb5b1c7b337f1058cd8d9cacd"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/out/formula-pass/VS07.json",
+        "bytes": 8899,
+        "sha256": "69f108b336d33024c5f861775458b72eb5f5feb318649be706443662bd3cfc66"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/out/formula-pass/VS08.json",
+        "bytes": 8984,
+        "sha256": "05e541f7f680af99aae6d2f0be14b9df03d768c97242a79a86fdade73ad32c1d"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/out/formula-pass/VS09.json",
+        "bytes": 8686,
+        "sha256": "eea0857f5693cb47fc39a4f4c71fa439e8ee594dd0631b0bd0c111673a2b6d73"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/reveal/VS01.json",
+        "bytes": 1089,
+        "sha256": "70e636d69e5cd691ac789c67b8ce32a4f05b537ba360bd0178dccfbda54a1fdc"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/reveal/VS02.json",
+        "bytes": 1179,
+        "sha256": "4b9e357fddbcfa32d1a98d10e9a32100b56581e9d449a446fd8eb8ee5ae11d47"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/reveal/VS03.json",
+        "bytes": 3824,
+        "sha256": "f6617030563adfd53caa7b45cb2ec8e8749d62005d421d4f0c0cca9a4f842f3f"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/reveal/VS04.json",
+        "bytes": 1372,
+        "sha256": "739dce8d16ee825a5947366dc524d9a1980eb9b4b5dae4f355583aab3c4068a9"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/reveal/VS05.json",
+        "bytes": 2578,
+        "sha256": "c20281174be546d36618f6231437e6bc023aad86f232b9cffb3236e80ef610db"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/reveal/VS06.json",
+        "bytes": 1813,
+        "sha256": "6de352f5b8f82f3c48127bf364ed0299bb90a772b4c468ef9ef5962b4f322f24"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/reveal/VS07.json",
+        "bytes": 3102,
+        "sha256": "26f300bb5bdb602e7f5df0d9db8596db440bb7f8b93cd23107739d05faf6de23"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/reveal/VS08.json",
+        "bytes": 1457,
+        "sha256": "e11c38ad89bd8c362f33a405dfef1829a43bd082bf8ec65875b2224fbca99c2d"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/kit/lane-b/reveal/VS09.json",
+        "bytes": 1307,
+        "sha256": "9b4242007b21dea7c5f4a691b6c516b0a313e25dea95e67d36490e32a45c3e67"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/lane-brief.md",
+        "bytes": 5034,
+        "sha256": "3af3fa6d7f86652597565ae3e33284badf485f13b5d785da1f952ab5ea4675e8"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/packets/A03-balea-kopfhaut-sensitive.json",
+        "bytes": 5319,
+        "sha256": "004fbf9c50740a7b99a72c2d466c33e97b60daed30b84df02193d82a12d62b0c"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/packets/A05-balea-ultra-sensitive.json",
+        "bytes": 4153,
+        "sha256": "66a2101b51318497d562cffeeab16bff9312c0cb80bde363b02cafc9da480eed"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/packets/A06-balea-med-anti-schuppen.json",
+        "bytes": 4617,
+        "sha256": "9563c6aa327f2a7249f0149d1d2c228dd193f8eb7bf128fab39ef7e06fb58cd1"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/packets/A21-isana-med-totes-meer.json",
+        "bytes": 6747,
+        "sha256": "98faba8f36ba87e01eb8f80b74b5586f70bc2d4b6314ff916c3af6bd532f1d72"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/packets/A24-isana-sensitiv-baumwoll-kornblume.json",
+        "bytes": 6766,
+        "sha256": "366cacff6adbddce49ea8280bda438049cd9e5d216c62968fca04cc1ecff303f"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/packets/A40-salthouse-anti-juckreiz.json",
+        "bytes": 8214,
+        "sha256": "494a7b38f2b54a3c4f8b37097e590ae16edacd6995e133ae121a70a5a1e4e0b0"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/packets/A43-sante-sensitive-care.json",
+        "bytes": 9761,
+        "sha256": "a3fa5ecdee9f78530525d2d6a51e17676fb85988ab20afc15728a675ca0a2b58"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/packets/G01-guhl-anti-schuppen.json",
+        "bytes": 5586,
+        "sha256": "c5d573e0d6601fbb2a3d0c06e27517a62194584462da91a6ceb30d1afbeec119"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/packets/G03-sebamed-every-day-shampoo.json",
+        "bytes": 5709,
+        "sha256": "23f0c33f658af5d4213d3c88c1f38e52b4842fa65379597655118b6a984bfe03"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/pre-registration.json",
+        "bytes": 2817,
+        "sha256": "74cd578c3540fe333b520b9c8d2e4fe0769166ea09d2ab4feee6c002a820a7a3"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/pre-registration.md",
+        "bytes": 2458,
+        "sha256": "5859299b7af0721bedb7accfd062ca4bf3eaf4aa7bd234dddf21b1dbc2e4b112"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/preregistration-check.txt",
+        "bytes": 993,
+        "sha256": "1f65b2c33a1a950a5d1b6c4838ea7291f96d014f3ea38fd6b5ee6b4ac3595853"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/record-skeleton.json",
+        "bytes": 4372,
+        "sha256": "e72b8dd71428a78cc836be0b66deaa3d0223c91ac9b7271ec28f6845687a4a5e"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/replay-check.py",
+        "bytes": 621,
+        "sha256": "7f5495348bfb9acac58a49ba64710c913488f4dd0c66c05fce64f87a1f1b9533"
+      },
+      {
+        "path": "data/research/shampoo-inci/v1.6.2/test-round/run-log.md",
+        "bytes": 2882,
+        "sha256": "29a2ebbbaa86c4a8d61c50f8a3bb3db0c1c59819a06c5056f5b09545161c98ec"
+      }
+    ]
+  },
+  "production_writes": false
+}

@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: resolveBrandFromText returns an exact brand match without over-matching inside words
+ok 1 - resolveBrandFromText returns an exact brand match without over-matching inside words
+  ---
+  duration_ms: 2.702417
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 205.124542

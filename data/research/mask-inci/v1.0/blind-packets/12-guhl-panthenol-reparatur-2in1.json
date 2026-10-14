@@ -1,0 +1,19 @@
+{
+  "productId": "12-guhl-panthenol-reparatur-2in1",
+  "identity": {
+    "brand": "Guhl",
+    "productName": "Panthenol + Reparatur 2in1 Kur & Spülung",
+    "packSize": "200 ml",
+    "gtinEan": "4072600703403",
+    "market": "DE (dm.de + Rossmann.de + Müller)"
+  },
+  "rawInci": "AQUA, CETEARYL ALCOHOL, BEHENTRIMONIUM CHLORIDE, DIPROPYLENE GLYCOL, CETYL ESTERS, PANTHENOL, TETRASODIUM GLUTAMATE DIACETATE, LACTIC ACID, ETHYLHEXYLGLYCERIN, GLYCINE, AVENA SATIVA KERNEL OIL, PHENOXYETHANOL, PARFUM, VANILLIN",
+  "directions": {
+    "text": "Als Spülung (für sofortige Regeneration): ins gewaschene, nasse Haar einmassieren, kurz einwirken lassen (ca. 30 Sekunden) und gut ausspülen. Als Kur (für Tiefenregeneration): ins gewaschene, nasse Haar einmassieren, 2-3 Minuten einwirken lassen und genießen, dann ausspülen.",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "dual-mode: ~0.5 (as Spülung/conditioner) or 2-3 (as Kur/treatment)",
+    "source": "Aggregated dm.de and guhl.com official copy via web search - not a single verbatim page fetch, but the dual-mode structure is consistent and repeated across every source found.",
+    "confidence": "high (dual-mode structure verified consistently across dm.de, guhl.com, and retailer copy, even without a single raw page fetch)"
+  },
+  "note": "Blind calibration packet. Contains identity, formula of record, and authoritative directions only. No archetype labels, no claims summaries, no prior assessments."
+}

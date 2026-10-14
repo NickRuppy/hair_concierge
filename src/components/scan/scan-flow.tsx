@@ -42,8 +42,7 @@ import {
   type ScanTriggerStorage,
 } from "@/lib/scan/triggers/session-marker"
 import { scanTriggerSheetContext } from "@/lib/scan/triggers/trigger-rules"
-// The app-wide provider is `providers/toast-provider` (mounted in AppRouteProviders);
-// `components/ui/toast`'s hook talks to a second, unmounted store and would no-op.
+// Use the app-wide toast store mounted in AppRouteProviders.
 import { useToast } from "@/providers/toast-provider"
 
 import { ScanActionFooter } from "./scan-action-footer"
@@ -279,7 +278,16 @@ export function ScanFlow({
 
   useEffect(() => {
     scanSessionStartRef.current = performance.now()
-    analytics.track("scan_started", {})
+    let cancelled = false
+    void (async () => {
+      // Let replay cleanup cancel the discarded setup before tracking the visit.
+      await Promise.resolve()
+      if (cancelled) return
+      analytics.track("scan_started", {})
+    })()
+    return () => {
+      cancelled = true
+    }
   }, [analytics])
 
   /**
@@ -425,11 +433,19 @@ export function ScanFlow({
    */
   useEffect(() => {
     if (!merklisteEnabled || tier === "free") return
-    void loadWishlistCount()
+    let cancelled = false
+    void (async () => {
+      await Promise.resolve()
+      if (cancelled) return
+      await loadWishlistCount()
+    })()
     // Fix round 1 (F9): `loadWishlistCount` is a `useCallback` with an empty dependency
     // array, so it is referentially stable — listing it here changes nothing about when
     // this effect re-runs, it just removes the need for the disable comment that used to
     // sit here.
+    return () => {
+      cancelled = true
+    }
   }, [merklisteEnabled, tier, loadWishlistCount])
 
   /**

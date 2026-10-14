@@ -1,0 +1,138 @@
+[
+  {
+    "id": "C1-inclusive-authorization",
+    "candidate": "C1",
+    "file": "src/lib/billing/trial-policy.ts",
+    "sourceSha256": "a88f33d5abfefd705629a0ca8ef739b893dd1908aeec639627916fc815daef02",
+    "from": "parsed.authorizationSucceededAt > nowAt",
+    "to": "parsed.authorizationSucceededAt >= nowAt",
+    "keeperFile": "tests/billing-trial-access-projection.test.ts",
+    "keeperTitle": "bridges the first-collection window at the seven-day boundary and locks when it closes",
+    "expected": "keeper first deepEqual at exact authorization must report awaiting_authorization versus expected trial_active",
+    "phaseAssertions": {
+      "transfer": {
+        "file": "tests/billing-trial-access-projection.test.ts",
+        "title": "bridges the first-collection window at the seven-day boundary and locks when it closes",
+        "line": 47,
+        "start": 1387,
+        "end": 2073,
+        "body": "() => {\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(AUTHORIZED_AT)), {\n    hasAccess: true,\n    phase: \"trial\",\n    reason: \"trial_active\",\n  })\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(TRIAL_END_AT)), {\n    hasAccess: true,\n    phase: \"trial\",\n    reason: \"first_collection_pending\",\n  })\n  const windowEnd = paypalTrialCollectionWindowEnd(paypalTrialCollectionStart(TRIAL_END_AT))\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(windowEnd)), {\n    hasAccess: false,\n    phase: \"locked\",\n    reason: \"trial_expired_without_payment\",\n  })\n}",
+        "declaration": "test(\"bridges the first-collection window at the seven-day boundary and locks when it closes\", () => {\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(AUTHORIZED_AT)), {\n    hasAccess: true,\n    phase: \"trial\",\n    reason: \"trial_active\",\n  })\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(TRIAL_END_AT)), {\n    hasAccess: true,\n    phase: \"trial\",\n    reason: \"first_collection_pending\",\n  })\n  const windowEnd = paypalTrialCollectionWindowEnd(paypalTrialCollectionStart(TRIAL_END_AT))\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(windowEnd)), {\n    hasAccess: false,\n    phase: \"locked\",\n    reason: \"trial_expired_without_payment\",\n  })\n})",
+        "sha256": "b8ad04bb5911f4209bbcbdaa5eda099237c60371e8510d06f06ffcbd6f7fa511"
+      },
+      "cut": {
+        "file": "tests/billing-trial-access-projection.test.ts",
+        "title": "bridges the first-collection window at the seven-day boundary and locks when it closes",
+        "line": 47,
+        "start": 1387,
+        "end": 2073,
+        "body": "() => {\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(AUTHORIZED_AT)), {\n    hasAccess: true,\n    phase: \"trial\",\n    reason: \"trial_active\",\n  })\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(TRIAL_END_AT)), {\n    hasAccess: true,\n    phase: \"trial\",\n    reason: \"first_collection_pending\",\n  })\n  const windowEnd = paypalTrialCollectionWindowEnd(paypalTrialCollectionStart(TRIAL_END_AT))\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(windowEnd)), {\n    hasAccess: false,\n    phase: \"locked\",\n    reason: \"trial_expired_without_payment\",\n  })\n}",
+        "declaration": "test(\"bridges the first-collection window at the seven-day boundary and locks when it closes\", () => {\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(AUTHORIZED_AT)), {\n    hasAccess: true,\n    phase: \"trial\",\n    reason: \"trial_active\",\n  })\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(TRIAL_END_AT)), {\n    hasAccess: true,\n    phase: \"trial\",\n    reason: \"first_collection_pending\",\n  })\n  const windowEnd = paypalTrialCollectionWindowEnd(paypalTrialCollectionStart(TRIAL_END_AT))\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(windowEnd)), {\n    hasAccess: false,\n    phase: \"locked\",\n    reason: \"trial_expired_without_payment\",\n  })\n})",
+        "sha256": "b8ad04bb5911f4209bbcbdaa5eda099237c60371e8510d06f06ffcbd6f7fa511"
+      }
+    },
+    "acceptance": "Main only. Select exact one keeper via anchored escaped --test-name-pattern. Require one pass before; one intended ERR_ASSERTION at keeper expectation after source-only fault; restore owned bytes under CAS; exact one pass afterward. No parser/import/setup/timeout/provider/DB-network failure counts as semantic red."
+  },
+  {
+    "id": "C1-exclusive-end",
+    "candidate": "C1",
+    "file": "src/lib/billing/trial-policy.ts",
+    "sourceSha256": "a88f33d5abfefd705629a0ca8ef739b893dd1908aeec639627916fc815daef02",
+    "from": "if (nowAt < parsed.originalTrialEndAt) {",
+    "to": "if (nowAt <= parsed.originalTrialEndAt) {",
+    "keeperFile": "tests/billing-trial-access-projection.test.ts",
+    "keeperTitle": "bridges the first-collection window at the seven-day boundary and locks when it closes",
+    "expected": "keeper second deepEqual at exact trial end must report trial_active versus expected first_collection_pending",
+    "phaseAssertions": {
+      "transfer": {
+        "file": "tests/billing-trial-access-projection.test.ts",
+        "title": "bridges the first-collection window at the seven-day boundary and locks when it closes",
+        "line": 47,
+        "start": 1387,
+        "end": 2073,
+        "body": "() => {\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(AUTHORIZED_AT)), {\n    hasAccess: true,\n    phase: \"trial\",\n    reason: \"trial_active\",\n  })\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(TRIAL_END_AT)), {\n    hasAccess: true,\n    phase: \"trial\",\n    reason: \"first_collection_pending\",\n  })\n  const windowEnd = paypalTrialCollectionWindowEnd(paypalTrialCollectionStart(TRIAL_END_AT))\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(windowEnd)), {\n    hasAccess: false,\n    phase: \"locked\",\n    reason: \"trial_expired_without_payment\",\n  })\n}",
+        "declaration": "test(\"bridges the first-collection window at the seven-day boundary and locks when it closes\", () => {\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(AUTHORIZED_AT)), {\n    hasAccess: true,\n    phase: \"trial\",\n    reason: \"trial_active\",\n  })\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(TRIAL_END_AT)), {\n    hasAccess: true,\n    phase: \"trial\",\n    reason: \"first_collection_pending\",\n  })\n  const windowEnd = paypalTrialCollectionWindowEnd(paypalTrialCollectionStart(TRIAL_END_AT))\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(windowEnd)), {\n    hasAccess: false,\n    phase: \"locked\",\n    reason: \"trial_expired_without_payment\",\n  })\n})",
+        "sha256": "b8ad04bb5911f4209bbcbdaa5eda099237c60371e8510d06f06ffcbd6f7fa511"
+      },
+      "cut": {
+        "file": "tests/billing-trial-access-projection.test.ts",
+        "title": "bridges the first-collection window at the seven-day boundary and locks when it closes",
+        "line": 47,
+        "start": 1387,
+        "end": 2073,
+        "body": "() => {\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(AUTHORIZED_AT)), {\n    hasAccess: true,\n    phase: \"trial\",\n    reason: \"trial_active\",\n  })\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(TRIAL_END_AT)), {\n    hasAccess: true,\n    phase: \"trial\",\n    reason: \"first_collection_pending\",\n  })\n  const windowEnd = paypalTrialCollectionWindowEnd(paypalTrialCollectionStart(TRIAL_END_AT))\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(windowEnd)), {\n    hasAccess: false,\n    phase: \"locked\",\n    reason: \"trial_expired_without_payment\",\n  })\n}",
+        "declaration": "test(\"bridges the first-collection window at the seven-day boundary and locks when it closes\", () => {\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(AUTHORIZED_AT)), {\n    hasAccess: true,\n    phase: \"trial\",\n    reason: \"trial_active\",\n  })\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(TRIAL_END_AT)), {\n    hasAccess: true,\n    phase: \"trial\",\n    reason: \"first_collection_pending\",\n  })\n  const windowEnd = paypalTrialCollectionWindowEnd(paypalTrialCollectionStart(TRIAL_END_AT))\n  assert.deepEqual(resolveBillingTrialAccess(row(), new Date(windowEnd)), {\n    hasAccess: false,\n    phase: \"locked\",\n    reason: \"trial_expired_without_payment\",\n  })\n})",
+        "sha256": "b8ad04bb5911f4209bbcbdaa5eda099237c60371e8510d06f06ffcbd6f7fa511"
+      }
+    },
+    "acceptance": "Main only. Select exact one keeper via anchored escaped --test-name-pattern. Require one pass before; one intended ERR_ASSERTION at keeper expectation after source-only fault; restore owned bytes under CAS; exact one pass afterward. No parser/import/setup/timeout/provider/DB-network failure counts as semantic red."
+  },
+  {
+    "id": "C2-stripe-first-charge",
+    "candidate": "C2",
+    "file": "src/lib/billing/trial-required-notices.ts",
+    "sourceSha256": "c7b2d3f9b9818a2cd5d72839f6c772c8ceb48b7a5aa4442c0eefdc200837a7fa",
+    "from": "Die erste Zahlung ist zu diesem Zeitpunkt vorgesehen, sofern du nicht vorher kündigst.",
+    "to": "Die erste Zahlung ist nach diesem Zeitpunkt vorgesehen, sofern du nicht vorher kündigst.",
+    "keeperFile": "tests/billing-trial-required-notices.test.ts",
+    "keeperTitle": "contract confirms actual accepted progression, Berlin deadline, cancellation and full withdrawal instruction",
+    "expected": "keeper transferred regex must fail on receipt_text first-charge sentence",
+    "phaseAssertions": {
+      "transfer": {
+        "file": "tests/billing-trial-required-notices.test.ts",
+        "title": "contract confirms actual accepted progression, Berlin deadline, cancellation and full withdrawal instruction",
+        "line": 80,
+        "start": 2763,
+        "end": 4069,
+        "body": "() => {\n  const message = buildTrialRequiredNoticeMessage(\"contract_confirmation\", snapshot)\n  assert.match(message.receipt_text, /Die erste Zahlung ist zu diesem Zeitpunkt vorgesehen/)\n  assert.equal(message.subject, \"Dein Chaarlie-Test ist gestartet\")\n  assert.match(message.receipt_text, /69,99/)\n  assert.match(message.receipt_text, /99,99/)\n  assert.match(message.receipt_text, /21\\. September 2026 um 12:00:00 MESZ/)\n  assert.match(message.receipt_text, /höchstens einem Monat/)\n  assert.match(message.receipt_text, /zeitanteilig erstattet/)\n  assert.match(message.receipt_text, /Muster-Widerrufsformular/)\n  assert.match(message.receipt_text, /binnen 14 Tagen/)\n  assert.match(message.receipt_text, /chaarlie.de\\/kuendigen/)\n  assert.doesNotMatch(message.receipt_text, /price_|coupon_|day.?5|Tag 5/i)\n  assert.match(\n    buildTrialRequiredNoticeMessage(\"contract_confirmation\", {\n      ...snapshot,\n      firstAmountMinor: 9999,\n    }).receipt_text,\n    /erste bezahlte Jahr werden 99,99/,\n  )\n  assert.throws(\n    () =>\n      buildTrialRequiredNoticeMessage(\"contract_confirmation\", {\n        ...snapshot,\n        trialEndAt: \"2026-09-22T10:00:00Z\",\n      }),\n    /Invalid/,\n  )\n}",
+        "declaration": "test(\"contract confirms actual accepted progression, Berlin deadline, cancellation and full withdrawal instruction\", () => {\n  const message = buildTrialRequiredNoticeMessage(\"contract_confirmation\", snapshot)\n  assert.match(message.receipt_text, /Die erste Zahlung ist zu diesem Zeitpunkt vorgesehen/)\n  assert.equal(message.subject, \"Dein Chaarlie-Test ist gestartet\")\n  assert.match(message.receipt_text, /69,99/)\n  assert.match(message.receipt_text, /99,99/)\n  assert.match(message.receipt_text, /21\\. September 2026 um 12:00:00 MESZ/)\n  assert.match(message.receipt_text, /höchstens einem Monat/)\n  assert.match(message.receipt_text, /zeitanteilig erstattet/)\n  assert.match(message.receipt_text, /Muster-Widerrufsformular/)\n  assert.match(message.receipt_text, /binnen 14 Tagen/)\n  assert.match(message.receipt_text, /chaarlie.de\\/kuendigen/)\n  assert.doesNotMatch(message.receipt_text, /price_|coupon_|day.?5|Tag 5/i)\n  assert.match(\n    buildTrialRequiredNoticeMessage(\"contract_confirmation\", {\n      ...snapshot,\n      firstAmountMinor: 9999,\n    }).receipt_text,\n    /erste bezahlte Jahr werden 99,99/,\n  )\n  assert.throws(\n    () =>\n      buildTrialRequiredNoticeMessage(\"contract_confirmation\", {\n        ...snapshot,\n        trialEndAt: \"2026-09-22T10:00:00Z\",\n      }),\n    /Invalid/,\n  )\n})",
+        "sha256": "bebe96a5d7ecc0aabbd08594ab61d44014c6a6f57ab1a6e9e301e8c59d1f0ccb"
+      },
+      "cut": {
+        "file": "tests/billing-trial-required-notices.test.ts",
+        "title": "contract confirms actual accepted progression, Berlin deadline, cancellation and full withdrawal instruction",
+        "line": 80,
+        "start": 2763,
+        "end": 4069,
+        "body": "() => {\n  const message = buildTrialRequiredNoticeMessage(\"contract_confirmation\", snapshot)\n  assert.match(message.receipt_text, /Die erste Zahlung ist zu diesem Zeitpunkt vorgesehen/)\n  assert.equal(message.subject, \"Dein Chaarlie-Test ist gestartet\")\n  assert.match(message.receipt_text, /69,99/)\n  assert.match(message.receipt_text, /99,99/)\n  assert.match(message.receipt_text, /21\\. September 2026 um 12:00:00 MESZ/)\n  assert.match(message.receipt_text, /höchstens einem Monat/)\n  assert.match(message.receipt_text, /zeitanteilig erstattet/)\n  assert.match(message.receipt_text, /Muster-Widerrufsformular/)\n  assert.match(message.receipt_text, /binnen 14 Tagen/)\n  assert.match(message.receipt_text, /chaarlie.de\\/kuendigen/)\n  assert.doesNotMatch(message.receipt_text, /price_|coupon_|day.?5|Tag 5/i)\n  assert.match(\n    buildTrialRequiredNoticeMessage(\"contract_confirmation\", {\n      ...snapshot,\n      firstAmountMinor: 9999,\n    }).receipt_text,\n    /erste bezahlte Jahr werden 99,99/,\n  )\n  assert.throws(\n    () =>\n      buildTrialRequiredNoticeMessage(\"contract_confirmation\", {\n        ...snapshot,\n        trialEndAt: \"2026-09-22T10:00:00Z\",\n      }),\n    /Invalid/,\n  )\n}",
+        "declaration": "test(\"contract confirms actual accepted progression, Berlin deadline, cancellation and full withdrawal instruction\", () => {\n  const message = buildTrialRequiredNoticeMessage(\"contract_confirmation\", snapshot)\n  assert.match(message.receipt_text, /Die erste Zahlung ist zu diesem Zeitpunkt vorgesehen/)\n  assert.equal(message.subject, \"Dein Chaarlie-Test ist gestartet\")\n  assert.match(message.receipt_text, /69,99/)\n  assert.match(message.receipt_text, /99,99/)\n  assert.match(message.receipt_text, /21\\. September 2026 um 12:00:00 MESZ/)\n  assert.match(message.receipt_text, /höchstens einem Monat/)\n  assert.match(message.receipt_text, /zeitanteilig erstattet/)\n  assert.match(message.receipt_text, /Muster-Widerrufsformular/)\n  assert.match(message.receipt_text, /binnen 14 Tagen/)\n  assert.match(message.receipt_text, /chaarlie.de\\/kuendigen/)\n  assert.doesNotMatch(message.receipt_text, /price_|coupon_|day.?5|Tag 5/i)\n  assert.match(\n    buildTrialRequiredNoticeMessage(\"contract_confirmation\", {\n      ...snapshot,\n      firstAmountMinor: 9999,\n    }).receipt_text,\n    /erste bezahlte Jahr werden 99,99/,\n  )\n  assert.throws(\n    () =>\n      buildTrialRequiredNoticeMessage(\"contract_confirmation\", {\n        ...snapshot,\n        trialEndAt: \"2026-09-22T10:00:00Z\",\n      }),\n    /Invalid/,\n  )\n})",
+        "sha256": "bebe96a5d7ecc0aabbd08594ab61d44014c6a6f57ab1a6e9e301e8c59d1f0ccb"
+      }
+    },
+    "acceptance": "Main only. Select exact one keeper via anchored escaped --test-name-pattern. Require one pass before; one intended ERR_ASSERTION at keeper expectation after source-only fault; restore owned bytes under CAS; exact one pass afterward. No parser/import/setup/timeout/provider/DB-network failure counts as semantic red."
+  },
+  {
+    "id": "C3-accepted-offer-readback",
+    "candidate": "C3",
+    "file": "src/lib/billing/trial-admission.ts",
+    "sourceSha256": "00dea2cbb5dad16446ee405f289aa7912c9cb895774653512d549ddea02d0017",
+    "from": "JSON.stringify(accepted) !== JSON.stringify(offer)",
+    "to": "false",
+    "keeperFile": "tests/billing-trial-admission-postgres.test.ts",
+    "keeperTitle": "trial admission adapter creates one immutable enrollment attempt through its real SQL shape",
+    "expected": "keeper first changed annual-offer assert.rejects must fail with Missing expected rejection; later user/provider cases are not the intended oracle",
+    "phaseAssertions": {
+      "transfer": {
+        "file": "tests/billing-trial-admission-postgres.test.ts",
+        "title": "trial admission adapter creates one immutable enrollment attempt through its real SQL shape",
+        "line": 259,
+        "start": 9423,
+        "end": 10775,
+        "body": "async (t) => {\n  const pg = await database(t)\n  const client = pgliteAdmissionClient(pg) as never\n  await pg.query(\"INSERT INTO public.profiles (id) VALUES ($1::uuid)\", [IDS.profile])\n  const input = { id: IDS.first, userId: IDS.profile, provider: \"stripe\" as const, offer: OFFER }\n  assert.equal(await createTrialEnrollment(client, input), IDS.first)\n  assert.equal(await createTrialEnrollment(client, input), IDS.first)\n\n  for (const changed of [\n    {\n      ...input,\n      offer: createTrialOfferSnapshot(\"year\", {\n        monthPriceId: \"price_trial_month\",\n        yearPriceId: \"price_trial_year\",\n        annualCouponId: \"coupon_trial_year\",\n      }),\n    },\n    { ...input, userId: IDS.second },\n    { ...input, provider: \"paypal\" as const },\n  ]) {\n    await assert.rejects(\n      () => createTrialEnrollment(client, changed),\n      /does not match accepted terms/,\n    )\n  }\n  const persisted = await pg.query<{\n    user_id: string | null\n    provider: string\n    accepted_offer: unknown\n  }>(\n    \"SELECT user_id::text, provider, accepted_offer FROM public.trial_enrollments WHERE id = $1::uuid\",\n    [IDS.first],\n  )\n  assert.deepEqual(persisted.rows[0], {\n    user_id: IDS.profile,\n    provider: \"stripe\",\n    accepted_offer: OFFER,\n  })\n}",
+        "declaration": "test(\"trial admission adapter creates one immutable enrollment attempt through its real SQL shape\", async (t) => {\n  const pg = await database(t)\n  const client = pgliteAdmissionClient(pg) as never\n  await pg.query(\"INSERT INTO public.profiles (id) VALUES ($1::uuid)\", [IDS.profile])\n  const input = { id: IDS.first, userId: IDS.profile, provider: \"stripe\" as const, offer: OFFER }\n  assert.equal(await createTrialEnrollment(client, input), IDS.first)\n  assert.equal(await createTrialEnrollment(client, input), IDS.first)\n\n  for (const changed of [\n    {\n      ...input,\n      offer: createTrialOfferSnapshot(\"year\", {\n        monthPriceId: \"price_trial_month\",\n        yearPriceId: \"price_trial_year\",\n        annualCouponId: \"coupon_trial_year\",\n      }),\n    },\n    { ...input, userId: IDS.second },\n    { ...input, provider: \"paypal\" as const },\n  ]) {\n    await assert.rejects(\n      () => createTrialEnrollment(client, changed),\n      /does not match accepted terms/,\n    )\n  }\n  const persisted = await pg.query<{\n    user_id: string | null\n    provider: string\n    accepted_offer: unknown\n  }>(\n    \"SELECT user_id::text, provider, accepted_offer FROM public.trial_enrollments WHERE id = $1::uuid\",\n    [IDS.first],\n  )\n  assert.deepEqual(persisted.rows[0], {\n    user_id: IDS.profile,\n    provider: \"stripe\",\n    accepted_offer: OFFER,\n  })\n})",
+        "sha256": "1984c7d714d8a8515b8a7135980807046e56d11a5b97bdb4fa8ddc521032a24c"
+      },
+      "cut": {
+        "file": "tests/billing-trial-admission-postgres.test.ts",
+        "title": "trial admission adapter creates one immutable enrollment attempt through its real SQL shape",
+        "line": 259,
+        "start": 9423,
+        "end": 10775,
+        "body": "async (t) => {\n  const pg = await database(t)\n  const client = pgliteAdmissionClient(pg) as never\n  await pg.query(\"INSERT INTO public.profiles (id) VALUES ($1::uuid)\", [IDS.profile])\n  const input = { id: IDS.first, userId: IDS.profile, provider: \"stripe\" as const, offer: OFFER }\n  assert.equal(await createTrialEnrollment(client, input), IDS.first)\n  assert.equal(await createTrialEnrollment(client, input), IDS.first)\n\n  for (const changed of [\n    {\n      ...input,\n      offer: createTrialOfferSnapshot(\"year\", {\n        monthPriceId: \"price_trial_month\",\n        yearPriceId: \"price_trial_year\",\n        annualCouponId: \"coupon_trial_year\",\n      }),\n    },\n    { ...input, userId: IDS.second },\n    { ...input, provider: \"paypal\" as const },\n  ]) {\n    await assert.rejects(\n      () => createTrialEnrollment(client, changed),\n      /does not match accepted terms/,\n    )\n  }\n  const persisted = await pg.query<{\n    user_id: string | null\n    provider: string\n    accepted_offer: unknown\n  }>(\n    \"SELECT user_id::text, provider, accepted_offer FROM public.trial_enrollments WHERE id = $1::uuid\",\n    [IDS.first],\n  )\n  assert.deepEqual(persisted.rows[0], {\n    user_id: IDS.profile,\n    provider: \"stripe\",\n    accepted_offer: OFFER,\n  })\n}",
+        "declaration": "test(\"trial admission adapter creates one immutable enrollment attempt through its real SQL shape\", async (t) => {\n  const pg = await database(t)\n  const client = pgliteAdmissionClient(pg) as never\n  await pg.query(\"INSERT INTO public.profiles (id) VALUES ($1::uuid)\", [IDS.profile])\n  const input = { id: IDS.first, userId: IDS.profile, provider: \"stripe\" as const, offer: OFFER }\n  assert.equal(await createTrialEnrollment(client, input), IDS.first)\n  assert.equal(await createTrialEnrollment(client, input), IDS.first)\n\n  for (const changed of [\n    {\n      ...input,\n      offer: createTrialOfferSnapshot(\"year\", {\n        monthPriceId: \"price_trial_month\",\n        yearPriceId: \"price_trial_year\",\n        annualCouponId: \"coupon_trial_year\",\n      }),\n    },\n    { ...input, userId: IDS.second },\n    { ...input, provider: \"paypal\" as const },\n  ]) {\n    await assert.rejects(\n      () => createTrialEnrollment(client, changed),\n      /does not match accepted terms/,\n    )\n  }\n  const persisted = await pg.query<{\n    user_id: string | null\n    provider: string\n    accepted_offer: unknown\n  }>(\n    \"SELECT user_id::text, provider, accepted_offer FROM public.trial_enrollments WHERE id = $1::uuid\",\n    [IDS.first],\n  )\n  assert.deepEqual(persisted.rows[0], {\n    user_id: IDS.profile,\n    provider: \"stripe\",\n    accepted_offer: OFFER,\n  })\n})",
+        "sha256": "1984c7d714d8a8515b8a7135980807046e56d11a5b97bdb4fa8ddc521032a24c"
+      }
+    },
+    "acceptance": "Main only. Select exact one keeper via anchored escaped --test-name-pattern. Require one pass before; one intended ERR_ASSERTION at keeper expectation after source-only fault; restore owned bytes under CAS; exact one pass afterward. No parser/import/setup/timeout/provider/DB-network failure counts as semantic red."
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "executable": "/usr/local/bin/node",
+  "args": [
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-concurrency=1",
+    "tests/personal-plan-journey-access-loader.test.ts",
+    "tests/personal-plan-stage3-release.test.ts",
+    "tests/auth-middleware-personal-plan-routine.test.ts",
+    "tests/freemium-enrollment-admission.test.ts",
+    "tests/personal-plan-trial-stage1-journey.test.ts",
+    "tests/personal-plan-field-test-access.test.ts",
+    "tests/personal-plan-rollout-access.test.ts"
+  ],
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "timeoutMs": 180000,
+  "detached": true
+}

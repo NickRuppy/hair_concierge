@@ -1,0 +1,9 @@
+{
+  "source": "/tmp/test-audit-catalog99-tools-k9e7uyhg/operator-proof.cjs",
+  "fileSHA256": "3ae1bda88ceca8c1dbcf14fa635eda9f9204f2561556730994eb7d74e2f86dc0",
+  "function": "diagnosticValue",
+  "functionSHA256": "1465eb371d52f7133d9e9239e2ec1dd77eb4b9118c0e43312b8400d18b009a65",
+  "copy": "byte-exact",
+  "scannerMessageAndFirstFramePredicate": "byte-exact base plus decodedValues.accepted conjunction; no relaxation",
+  "limits": "Reject truncated HTML even if intended clause is visible; runtime shape remains unobserved."
+}

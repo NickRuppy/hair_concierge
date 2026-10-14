@@ -7,7 +7,6 @@ import {
   getFunnelPackageBySlug,
   resolveDefaultFunnelPackage,
   resolveLegacyResultOfferVariant,
-  resolveOfferVariantForSession,
   validateFunnelPackages,
 } from "../src/lib/funnel/packages"
 import {
@@ -130,16 +129,6 @@ test("structured package definitions reject duplicate keys and slugs", () => {
         { ...base, key: "third_package", slug: "same-slug" },
       ]),
     /Duplicate funnel package slug/,
-  )
-})
-
-test("stored session offer variant wins over the current package mapping", () => {
-  assert.equal(
-    resolveOfferVariantForSession({
-      packageKey: "default_organic",
-      offerVariant: "default",
-    }),
-    "default",
   )
 })
 

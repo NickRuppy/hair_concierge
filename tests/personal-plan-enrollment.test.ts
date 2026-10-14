@@ -321,41 +321,6 @@ function attributedSession(input: { provider: "paypal" | "stripe"; purchaseRefer
   }
 }
 
-test("a current Personal Plan membership resolves through its exact provider purchase and quiz lead", async () => {
-  const admin = client({
-    billing_one_time_purchases: [],
-    billing_subscriptions: [subscription],
-    funnel_sessions: [
-      attributedSession({ provider: "paypal", purchaseReference: "I-PERSONAL-PLAN" }),
-    ],
-    leads: [
-      {
-        id: "44444444-4444-4444-8444-444444444444",
-        quiz_kind: "personal_plan",
-        user_id: "user-1",
-      },
-    ],
-  })
-
-  assert.deepEqual(
-    await findPersonalPlanEnrollmentForUser(admin as never, "user-1", new Date("2026-08-10")),
-    {
-      accessState: "active",
-      sourceId: subscription.id,
-      paidAt: "2026-08-09T12:46:16.000Z",
-      qualifiedAt: "2026-08-09T12:46:16.000Z",
-      artifactLeadId: "44444444-4444-4444-8444-444444444444",
-      quizSourceKind: "personal_plan",
-      sourceKind: "launch_subscription",
-    },
-  )
-  assert.deepEqual(admin.queries.find((query) => query.table === "funnel_sessions")?.predicates, [
-    ["user_id", "user-1"],
-    ["purchase_provider", "paypal"],
-    ["purchase_reference", "I-PERSONAL-PLAN"],
-  ])
-})
-
 test("Stripe launch memberships use the checkout session reference persisted at activation", async () => {
   const stripeSubscription = {
     ...subscription,
@@ -421,7 +386,20 @@ test("the launch membership is selected even when a standard subscription sorts 
     "user-1",
     new Date("2026-08-10"),
   )
-  assert.equal(enrollment.sourceId, subscription.id)
+  assert.deepEqual(enrollment, {
+    accessState: "active",
+    sourceId: subscription.id,
+    paidAt: "2026-08-09T12:46:16.000Z",
+    qualifiedAt: "2026-08-09T12:46:16.000Z",
+    artifactLeadId: "44444444-4444-4444-8444-444444444444",
+    quizSourceKind: "personal_plan",
+    sourceKind: "launch_subscription",
+  })
+  assert.deepEqual(admin.queries.find((query) => query.table === "funnel_sessions")?.predicates, [
+    ["user_id", "user-1"],
+    ["purchase_provider", "paypal"],
+    ["purchase_reference", "I-PERSONAL-PLAN"],
+  ])
 })
 
 test("standard subscriptions and membership purchases without exact Personal Plan attribution fail closed", async () => {
@@ -501,6 +479,42 @@ test("an unapplied field-test relation preserves ordinary non-Personal-Plan enro
   )
 })
 
+test("an unapplied regular-quiz field-test relation preserves ordinary enrollment", async () => {
+  const admin = client(
+    {
+      billing_one_time_purchases: [],
+      billing_subscriptions: [{ ...subscription, metadata: { pricing_catalog: "standard" } }],
+    },
+    {
+      regular_quiz_test_enrollments: {
+        code: "42P01",
+        message: 'relation "regular_quiz_test_enrollments" does not exist',
+      },
+    },
+  )
+  let enrollment: Awaited<ReturnType<typeof findPersonalPlanEnrollmentForUser>> | undefined
+  await assert.doesNotReject(async () => {
+    enrollment = await findPersonalPlanEnrollmentForUser(
+      admin as never,
+      "user-1",
+      new Date("2026-08-10"),
+    )
+  }, "a missing regular-quiz relation must use the ordinary enrollment fallback")
+  assert.deepEqual(enrollment, {
+    accessState: "none",
+    sourceId: null,
+    paidAt: null,
+    qualifiedAt: null,
+    artifactLeadId: null,
+    quizSourceKind: null,
+    sourceKind: null,
+  })
+  assert.equal(
+    admin.queries.some((query) => query.table === "regular_quiz_test_enrollments"),
+    true,
+  )
+})
+
 test("a stale PostgREST partner relationship hint preserves ordinary enrollment", async () => {
   const admin = client(
     {
@@ -570,47 +584,6 @@ test("an active partner grant admits the exact legacy quiz indefinitely without 
       ["revoked_at", null],
     ],
   )
-})
-
-test("a claimed partner invitation without a lead binding or activation never grants access", async () => {
-  const admin = client({
-    billing_one_time_purchases: [],
-    billing_subscriptions: [],
-    partner_access_invitations: [
-      {
-        id: "partner-invitation-unbound",
-        claimed_user_id: "user-1",
-        lead_id: null,
-        activated_at: null,
-        revoked_at: null,
-        current_manual_access_grant_id: "partner-grant-unbound",
-        current_grant: {
-          id: "partner-grant-unbound",
-          user_id: "user-1",
-          reason: "partner",
-          expires_at: null,
-          revoked_at: null,
-          partner_access_invitation_id: "partner-invitation-unbound",
-        },
-      },
-    ],
-  })
-
-  const enrollment = await findPersonalPlanEnrollmentForUser(
-    admin as never,
-    "user-1",
-    new Date("2026-09-13"),
-  )
-
-  assert.deepEqual(enrollment, {
-    accessState: "none",
-    sourceId: null,
-    paidAt: null,
-    qualifiedAt: null,
-    artifactLeadId: null,
-    quizSourceKind: null,
-    sourceKind: null,
-  })
 })
 
 // The user must actually be a claimed partner (a partner_access_invitations

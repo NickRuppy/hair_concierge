@@ -1,0 +1,327 @@
+{
+  "blindId": "VT18",
+  "lane": "lane-b",
+  "phase": "final (post-unblind reconciliation)",
+  "standard": "shampoo-classification-v1.6.1 candidate text (unlocked)",
+  "identity": {
+    "brand": "Aveda",
+    "productName": "Rosemary Mint Purifying Shampoo",
+    "packSize": "250 ml",
+    "market": "DE",
+    "formulaFingerprintSha256": "b0e2b65b9820cb98896157e9be265a953e96246e26b6ba348e8e062356d040ec",
+    "normalization": "ID-2: Water/Aqua/Eau and Vinegar/Acetum/Vinaigre each one entry; normalized one-based positions of the 27-entry list",
+    "completeness": "complete (source tier 2, identity confidence moderate)",
+    "e3ProminenceCutoff": "Fragrance (Parfum) @17 -> positions 1-16 prominent",
+    "identityNotes": []
+  },
+  "formulaFacts": {
+    "surfactantSystem": [
+      "Sodium Coco-Sulfate @2 - strong anionic, alkyl sulfate type, defining anionic",
+      "Babassuamidopropyl Betaine @4 - amphoteric, buffer",
+      "Cocamidopropylamine Oxide @16 - amphoteric, buffer only (C3b), prominent (before Fragrance @17)",
+      "No reinforcing strong anionic"
+    ],
+    "conditioningAndWeightRoutes": {
+      "silicone": [],
+      "cationic_polymer": [
+        "Polyquaternium-4 @12"
+      ],
+      "cationic_conditioner": [
+        "Stearamidopropyl Dimethylamine @10"
+      ],
+      "payload_lipid": [
+        "Helianthus Annuus (Sunflower) Seed Oil @6"
+      ],
+      "weak_refatter": [],
+      "protein_film": [],
+      "film_former": [],
+      "pearlizing_fatty_route_for_C2": [],
+      "humectantContext": [
+        "Glycerin @3"
+      ],
+      "excluded": [
+        "Mentha Piperita (Peppermint) Oil @7 (essential oil, 6.4)",
+        "Menthol @8, Camphor @9 (cooling/fragrance materials)",
+        "Rosmarinus Officinalis Leaf Extract @5 (extract)",
+        "Sodium Gluconate @11 (chelator)",
+        "Vinegar @13, Citric Acid @15 (pH)",
+        "terpene allergens @18-@24 (fragrance)"
+      ]
+    },
+    "actives": [
+      "no recognized anti-dandruff active",
+      "Menthol @8, Camphor @9, Peppermint Oil @7 (cooling/stimulating)"
+    ],
+    "scalpExposureFlags": [
+      "Prominent cooling agents and essential oil: Peppermint Oil @7, Menthol @8, Camphor @9 (CSA counter-signals)",
+      "Fragrance @17 plus terpene allergens",
+      "E4 comfort list: no route",
+      "E4 humectant/refatting routes prominent: Glycerin @3, Sunflower Seed Oil @6"
+    ]
+  },
+  "claimEvidence": [
+    "manufacturer_de wayback 2026-04-16 (moderate): 'Normales bis fettiges Haar wird mit diesem 97% natürlich gewonnenen* klärenden Shampoo sanft gereinigt.' / 'blitzsauber, erfrischt und voller Glanz' / 'Mizellen entfernen sanft Produktrückstände und Verunreinigungen. Weißer Essig trägt zur Reinigung bei.'",
+    "product name (high): 'Rosemary Mint Purifying Shampoo'",
+    "retailers (low): 'reinigt und klärt ... Schmutz, Öl und Produktablagerungen', 'feinem Haar Volumen', 'Silikonfrei'"
+  ],
+  "reconciliation": [
+    "focusPrimary general low -> clarifying moderate (oily-hair + clarifying positioning, F6 compatible).",
+    "usageRole regular low -> regular moderate (alternating loses: formula moderate).",
+    "scalpComfortTarget not_targeted low -> high. 'Weißer Essig' maps to Vinegar @13; 'Mizellen' to the surfactant system. Formula properties unchanged."
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "strong",
+      "rationale": "Moderate by C5: defining anionic Sodium Coco-Sulfate @2 (alkyl sulfate) with two prominent buffers, Babassuamidopropyl Betaine @4 and Cocamidopropylamine Oxide @16, and no reinforcing route. C3b: the amine oxide is the buffer that brings C5 down to moderate (with one buffer C5 gives strong), so confidence is at most moderate and the neighbor is strong (the value without it).",
+      "ruleIds": [
+        "C5",
+        "C3",
+        "C3b",
+        "C4",
+        "N-ALT"
+      ],
+      "counterSignal": "Without the C3b buffer-only Cocamidopropylamine Oxide @16 the C5 chassis would be strong.",
+      "sourceIds": [
+        "formula-pass/VT18.json (hash-pinned blind record)",
+        "stage-A formula packet VT18"
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "rationale": "Moderate: C2 not met (no silicone; Sunflower Oil @6 could take its place, with Polyquaternium-4 @12 and Glycerin @3, but there is no pearlizing/fatty route). Routes: amidoamine conditioner Stearamidopropyl Dimethylamine @10 (cationic at acidic pH, vinegar/citric present), Polyquaternium-4 @12 (light, low-charge polymer), Sunflower Oil @6, Glycerin @3 - noticeable but bounded care. Neighbor high because three distinct conditioning kinds are present.",
+      "ruleIds": [
+        "C2",
+        "5",
+        "N-ALT"
+      ],
+      "counterSignal": "Amidoamine + polyquaternium + oil could be read as multiple complementary systems.",
+      "sourceIds": [
+        "formula-pass/VT18.json (hash-pinned blind record)",
+        "stage-A formula packet VT18"
+      ]
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "high",
+      "evidence": {
+        "silicone": [],
+        "cationic_polymer": [
+          "Polyquaternium-4 @12"
+        ],
+        "cationic_conditioner": [
+          "Stearamidopropyl Dimethylamine @10"
+        ],
+        "payload_lipid": [
+          "material: Helianthus Annuus Seed Oil @6 (before W-line @17)"
+        ],
+        "weak_refatter": [],
+        "protein_film": [],
+        "film_former": [],
+        "reset": [
+          "strong anionic alkyl sulfate: Sodium Coco-Sulfate @2",
+          "amphoteric: Babassuamidopropyl Betaine @4",
+          "amphoteric buffer only: Cocamidopropylamine Oxide @16"
+        ],
+        "humectantContext": [
+          "Glycerin @3"
+        ],
+        "excluded": [
+          "Peppermint Oil @7",
+          "Menthol @8",
+          "Camphor @9",
+          "Rosemary extract @5"
+        ],
+        "unresolved": []
+      },
+      "depositionLoad": "moderate - a liquid oil plus an amidoamine conditioner and a light cationic polymer",
+      "persistence": "moderate - amidoamine and liquid oil are moderately persistent; Polyquaternium-4 is a light, low-charge polymer",
+      "resetCapacity": "moderate - C5 sodium coco-sulfate chassis with two buffers (close to strong)",
+      "counterevidence": "W-RICH holds (material Sunflower Oil @6 converging with cationic deposition @10/@12), which argues for high.",
+      "whyThisBand": "Moderate: plausible deposition from oil + cationic conditioner + cationic polymer leaves noticeable but bounded residue.",
+      "whyNotNeighborBand": "Not high: W-RICH holds but reset is not limited (resetCapacity moderate, alkyl sulfate chassis), and the converging routes are light (liquid oil after an extract, low-charge Polyquaternium-4) and plausibly offset by the sulfate chassis; W-RICH recorded as counter-signal, high as neighbor.",
+      "confidenceLimitingFactor": "W-RICH counter-signal; oil and amidoamine doses unknown.",
+      "rationale": "Moderate: material Sunflower Oil @6 (W-line = Fragrance @17) makes W-RICH hold, but resetCapacity is moderate, so high is reached only if convergence is not offset - judged offset. W1 not applicable (no silicone).",
+      "ruleIds": [
+        "6.6",
+        "W-RICH",
+        "W-LINE",
+        "W1",
+        "W2",
+        "N-ALT"
+      ],
+      "counterSignal": "W-RICH holds (material Sunflower Oil @6 with cationic deposition @10/@12).",
+      "sourceIds": [
+        "formula-pass/VT18.json (hash-pinned blind record)",
+        "stage-A formula packet VT18"
+      ],
+      "wLineRecord": {
+        "wLine": "Fragrance (Parfum) @17",
+        "candidateClasses": [
+          "fragrance"
+        ],
+        "cap": "e3Point @17 (Fragrance (Parfum))",
+        "alphabeticalRun": "none",
+        "skipped": [],
+        "plausibilityOfWLine": "No candidate of classes a-d before the cap; the E3 marker itself is the earliest candidate: (i) cleansing surfactants before; (ii) nothing between. W-line = cap, no fallback code",
+        "codes": [],
+        "payloadLipidMaterial": [
+          "Sunflower Seed Oil @6"
+        ],
+        "payloadLipidNonMaterial": []
+      }
+    },
+    "focusPrimary": {
+      "value": "clarifying",
+      "confidence": "moderate",
+      "neighboringAlternative": "general",
+      "rationale": "Clarifying: manufacturer DE positions it for 'normales bis fettiges Haar' (E2 oily term, v1.6.1) as a 'klärenden Shampoo' whose micelles 'entfernen sanft Produktrückstände'; the product name says 'Purifying'. F6-compatible: cleansing moderate, conditioning moderate, weight moderate.",
+      "ruleIds": [
+        "7.2",
+        "F6",
+        "E2",
+        "CL-SRC"
+      ],
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": [],
+        "limitation": "Not a repair/moisture decision."
+      },
+      "claimRole": "candidate",
+      "counterSignal": "Conditioning routes (amidoamine @10, Polyquaternium-4 @12, Sunflower Oil @6) and W-RICH; cooling botanicals give freshness rather than reset.",
+      "decisionTrace": "Claim direction: oily hair/clarifying reset (manufacturer DE, moderate; name 'Purifying', high corroboration). Formula compatible: F6 met (moderate/moderate/moderate). Route: Sodium Coco-Sulfate @2 chassis + Vinegar @13. Decision: clarifying."
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "moderate",
+      "neighboringAlternative": [
+        "shine"
+      ],
+      "rationale": "Empty: 'voller Glanz' is an outcome of the cleansing result; its only candidate route would be the acid rinse (Vinegar @13, Citric Acid @15), which can never create a secondary shine (F4).",
+      "ruleIds": [
+        "8",
+        "F2",
+        "F4"
+      ],
+      "decisionTrace": "Empty default considered; shine rejected (F4); volume only in low-graded retailer copy. No exception code."
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "moderate",
+      "neighboringAlternative": "alternating",
+      "rationale": "Regular: reset intent is present ('klärenden Shampoo', 'entfernen ... Produktrückstände', oily-hair wording; moderate) but alternating needs cleansingStrength strong and the formula is moderate; no D1, no frequency wording, no dandruff claim.",
+      "ruleIds": [
+        "9",
+        "U1",
+        "U4"
+      ],
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [
+        "alternating: reset intent (U4) present but cleansingStrength moderate (needs strong)"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no E2 sensitive or dry-scalp claim unit.",
+      "ruleIds": [
+        "10",
+        "SC1"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: none of Piroctone Olamine, Climbazole, Selenium Sulfide or Selenium Disulfide in the complete INCI (formula-only; unchanged by the reveal).",
+      "ruleIds": [
+        "11",
+        "DS1"
+      ]
+    }
+  },
+  "projection": {
+    "status": "projected_proposal",
+    "thicknessFit": {
+      "fine": "acceptable",
+      "normal": "ideal",
+      "coarse": "acceptable"
+    },
+    "thicknessFitConfidence": {
+      "fine": "moderate",
+      "normal": "moderate",
+      "coarse": "moderate"
+    },
+    "thicknessRationale": "T1 W moderate, C moderate: fine acceptable, normal ideal, coarse acceptable (oily target; T6 lifts nothing). T4 after T6: W neighbor high would make normal acceptable -> review_thickness_boundary:normal; fine stays acceptable after T6; coarse neighbors would raise it.",
+    "weight": "moderate",
+    "weightConfidence": "moderate",
+    "weightRationale": "W-LIVE: weightPotential moderate projects 1:1 to moderate; confidence = weightPotential confidence.",
+    "scalpTargets": {
+      "primary": {
+        "target": "oily",
+        "confidence": "moderate",
+        "rationale": "S-OILY passes: E2 oily claim 'Normales bis fettiges Haar wird mit diesem ... klärenden Shampoo sanft gereinigt' (manufacturer DE, moderate; 'fettiges Haar' is an oily term in v1.6.1); formula: cleansing moderate, weight moderate (not high), conditioning moderate (not high). Confidence = min(positioning moderate, cleansing/weight/conditioning moderate)."
+      },
+      "secondary": null
+    },
+    "researchCombinationTargets": [],
+    "cleansingIntensity": "regular",
+    "cleansingIntensityConfidence": "moderate",
+    "cleansingIntensityRationale": "I1: cleansingStrength moderate; D1 false -> regular. I3 recomputed with neighbor strong.",
+    "explicitResetPositioning": false,
+    "explicitResetPositioningEvidence": "No D1 stem (tiefenrein, deep clean, clarifying shampoo, detox-reinigung) in the product name or any manufacturer/pack claim; no directions limiting use to occasional resets.",
+    "deepCleanserListing": "not_flagged",
+    "deepCleanserListingConfidence": "moderate",
+    "deepCleanserRationale": "D1 false -> not_flagged (D2).",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "dehydriert-fettig",
+        "scalp_route": "oily",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "dehydriert-fettig",
+        "scalp_route": "oily",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "dehydriert-fettig",
+        "scalp_route": "oily",
+        "cleansing_intensity": "regular",
+        "weight": "moderate",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:normal"
+    ],
+    "informationalNotes": [],
+    "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze (lane cannot see catalog)"
+  },
+  "selfCheck": "6.11/selfCheck: formula fingerprint matches the frozen stage-A packet; claims and identity were hidden during the formula pass and the hash-pinned formula-pass record was not edited after release; no ingredient, family count or position window assigned a band (the W-line only gated payload_lipid legs); W-line derived from the frozen list per W-LINE with every skipped candidate recorded; depositionLoad, persistence and resetCapacity present with rationales; counterevidence and whyNotNeighborBand specific (W2 where it applies); confidence names its limiting factor; N-ALT neighbors consistent with confidences; projection fields derived mechanically (T1, T6, T4, W-LIVE, I1, I3, D1-D3, 13.7, 13.8); no catalog, web or other-lane input.",
+  "uncertainties": [
+    "Packet identityConfidence is moderate; recorded, no formula effect in the blind pass.",
+    "weightPotential moderate vs high (W-RICH with moderate reset); alternative high.",
+    "conditioningLevel moderate vs high: amidoamine + polyquaternium + oil could be read as multiple complementary systems.",
+    "The oily claim relies on the v1.6.1 'fettiges Haar' term ('normales bis fettiges Haar'); under v1.6 it would not qualify and the target would be ordinary with a scalp-less clarifying focus.",
+    "Manufacturer source is a web-archive capture; graded moderate as the packet states."
+  ]
+}

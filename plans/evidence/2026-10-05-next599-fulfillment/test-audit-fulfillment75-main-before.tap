@@ -1,0 +1,411 @@
+TAP version 13
+# Subtest: one-time fulfillment retry claims at most five due jobs and dispatches by stored provider
+ok 1 - one-time fulfillment retry claims at most five due jobs and dispatches by stored provider
+  ---
+  duration_ms: 4.1395
+  ...
+# Subtest: a returned failed job is counted and reported before an otherwise active result
+ok 2 - a returned failed job is counted and reported before an otherwise active result
+  ---
+  duration_ms: 0.827
+  ...
+# Subtest: a returned permanent failure is not counted active after delivery
+ok 3 - a returned permanent failure is not counted active after delivery
+  ---
+  duration_ms: 0.164375
+  ...
+# Subtest: one-time fulfillment retry isolates provider failures and reports count-only stats
+ok 4 - one-time fulfillment retry isolates provider failures and reports count-only stats
+  ---
+  duration_ms: 1.940084
+  ...
+# Subtest: one-time fulfillment retry records provider-vs-database gaps without dispatching
+ok 5 - one-time fulfillment retry records provider-vs-database gaps without dispatching
+  ---
+  duration_ms: 0.208625
+  ...
+# Subtest: a throwing provider dispatcher releases a genuinely unhandled processing claim for retry
+ok 6 - a throwing provider dispatcher releases a genuinely unhandled processing claim for retry
+  ---
+  duration_ms: 0.882458
+  ...
+# Subtest: a stale outer dispatcher release does not overwrite a newer processing lease
+ok 7 - a stale outer dispatcher release does not overwrite a newer processing lease
+  ---
+  duration_ms: 0.87325
+  ...
+# Subtest: a processor-persisted permanent failure survives an outer dispatcher error
+ok 8 - a processor-persisted permanent failure survives an outer dispatcher error
+  ---
+  duration_ms: 0.237667
+  ...
+# Subtest: a processor-persisted retryable verification failure stays retryable
+ok 9 - a processor-persisted retryable verification failure stays retryable
+  ---
+  duration_ms: 0.741167
+  ...
+# Subtest: a throwing purchase lookup immediately releases the claim for retry
+ok 10 - a throwing purchase lookup immediately releases the claim for retry
+  ---
+  duration_ms: 0.744667
+  ...
+# Subtest: one-time fulfillment retry Sentry payload has stable fingerprints and no raw identifiers
+ok 11 - one-time fulfillment retry Sentry payload has stable fingerprints and no raw identifiers
+  ---
+  duration_ms: 0.12975
+  ...
+# Subtest: one-time fulfillment retry captures sanitized Sentry errors
+ok 12 - one-time fulfillment retry captures sanitized Sentry errors
+  ---
+  duration_ms: 0.147125
+  ...
+# Subtest: one-time activation status rejects mixed provider identifiers without caching
+ok 13 - one-time activation status rejects mixed provider identifiers without caching
+  ---
+  duration_ms: 3.907458
+  ...
+# Subtest: one-time activation status maps Stripe paid-pending without returning identifiers
+ok 14 - one-time activation status maps Stripe paid-pending without returning identifiers
+  ---
+  duration_ms: 0.47625
+  ...
+# Subtest: one-time activation status preserves a revoked Stripe purchase
+ok 15 - one-time activation status preserves a revoked Stripe purchase
+  ---
+  duration_ms: 0.442917
+  ...
+# Subtest: one-time activation status retrieves an already-captured PayPal order without capture or recovery
+ok 16 - one-time activation status retrieves an already-captured PayPal order without capture or recovery
+  ---
+  duration_ms: 0.471209
+  ...
+# Subtest: one-time activation status reuses an already-persisted PayPal capture
+ok 17 - one-time activation status reuses an already-persisted PayPal capture
+  ---
+  duration_ms: 0.544083
+  ...
+# Subtest: one-time activation status keeps an uncaptured PayPal order pending without activation
+ok 18 - one-time activation status keeps an uncaptured PayPal order pending without activation
+  ---
+  duration_ms: 0.730209
+  ...
+# Subtest: one-time activation status keeps a transient PayPal user race pending
+ok 19 - one-time activation status keeps a transient PayPal user race pending
+  ---
+  duration_ms: 0.551084
+  ...
+# Subtest: one-time activation status keeps a missing PayPal intent terminal
+ok 20 - one-time activation status keeps a missing PayPal intent terminal
+  ---
+  duration_ms: 0.37225
+  ...
+# Subtest: one-time activation status preserves a revoked PayPal purchase
+ok 21 - one-time activation status preserves a revoked PayPal purchase
+  ---
+  duration_ms: 1.162375
+  ...
+# Subtest: one-time activation status allows the normal fifteen pending polls
+ok 22 - one-time activation status allows the normal fifteen pending polls
+  ---
+  duration_ms: 2.098375
+  ...
+# Subtest: one-time activation status rejects abuse before Stripe or PayPal provider work
+ok 23 - one-time activation status rejects abuse before Stripe or PayPal provider work
+  ---
+  duration_ms: 1.761875
+  ...
+# Subtest: one-time activation status rate-limit keys hash Stripe and PayPal references with request context
+ok 24 - one-time activation status rate-limit keys hash Stripe and PayPal references with request context
+  ---
+  duration_ms: 0.627667
+  ...
+# Subtest: plan-bereit resolves the canonical source from the owned enrollment or pending entitlement
+ok 25 - plan-bereit resolves the canonical source from the owned enrollment or pending entitlement
+  ---
+  duration_ms: 0.749125
+  ...
+# Subtest: paid-pending plan-bereit stays on recovery instead of looping to onboarding or pricing
+ok 26 - paid-pending plan-bereit stays on recovery instead of looping to onboarding or pricing
+  ---
+  duration_ms: 0.168167
+  ...
+# Subtest: paid-pending access chooses recovery before the normal ready client
+ok 27 - paid-pending access chooses recovery before the normal ready client
+  ---
+  duration_ms: 0.201291
+  ...
+# Subtest: paid-pending recovery renders no onboarding, pricing, or duplicate-purchase CTA
+ok 28 - paid-pending recovery renders no onboarding, pricing, or duplicate-purchase CTA
+  ---
+  duration_ms: 6.292166
+  ...
+# Subtest: migration backfills only incomplete paid purchases into the private fulfillment queue
+ok 29 - migration backfills only incomplete paid purchases into the private fulfillment queue
+  ---
+  duration_ms: 1.471666
+  ...
+# Subtest: migration keeps fulfillment jobs service-only
+ok 30 - migration keeps fulfillment jobs service-only
+  ---
+  duration_ms: 0.197708
+  ...
+# Subtest: runbook records read-only counts before migration and verifies pending jobs afterward
+ok 31 - runbook records read-only counts before migration and verifies pending jobs afterward
+  ---
+  duration_ms: 0.224584
+  ...
+# Subtest: defaults to dry-run and performs no activation writes
+ok 32 - defaults to dry-run and performs no activation writes
+  ---
+  duration_ms: 1.375875
+  ...
+# Subtest: expired PayPal reset is dry-run by default and reads the provider before local eligibility
+ok 33 - expired PayPal reset is dry-run by default and reads the provider before local eligibility
+  ---
+  duration_ms: 1.1635
+  ...
+# Subtest: expired PayPal reset requires an exact order confirmation before any provider lookup
+ok 34 - expired PayPal reset requires an exact order confirmation before any provider lookup
+  ---
+  duration_ms: 0.326792
+  ...
+# Subtest: expired PayPal reset rejects any provider state or capture other than voided with no captures
+ok 35 - expired PayPal reset rejects any provider state or capture other than voided with no captures
+  ---
+  duration_ms: 0.211334
+  ...
+# Subtest: expired PayPal reset rejects 404 before local eligibility because provider environment is unproven
+ok 36 - expired PayPal reset rejects 404 before local eligibility because provider environment is unproven
+  ---
+  duration_ms: 0.108583
+  ...
+# Subtest: refuses all recovery modes before provider or database seams while the experiment is enabled
+ok 37 - refuses all recovery modes before provider or database seams while the experiment is enabled
+  ---
+  duration_ms: 0.139125
+  ...
+# Subtest: receipt preserves the verifier's computed canonical-consent proof
+ok 38 - receipt preserves the verifier's computed canonical-consent proof
+  ---
+  duration_ms: 0.12
+  ...
+# Subtest: requires both --apply and exact --confirm-session before applying
+ok 39 - requires both --apply and exact --confirm-session before applying
+  ---
+  duration_ms: 0.141125
+  ...
+# Subtest: applies only when confirmation exactly matches the target
+ok 40 - applies only when confirmation exactly matches the target
+  ---
+  duration_ms: 0.221917
+  ...
+# Subtest: delegates PayPal token verification to provider seam without activating on dry-run
+ok 41 - delegates PayPal token verification to provider seam without activating on dry-run
+  ---
+  duration_ms: 0.309209
+  ...
+# Subtest: keeps apply idempotent by delegating repeated apply to canonical activation
+ok 42 - keeps apply idempotent by delegating repeated apply to canonical activation
+  ---
+  duration_ms: 0.195541
+  ...
+# Subtest: PayPal apply persists a verified capture before canonical activation
+ok 43 - PayPal apply persists a verified capture before canonical activation
+  ---
+  duration_ms: 4.011958
+  ...
+# Subtest: Stripe receipt uses the Checkout Session canonical event key and counts deliveries
+ok 44 - Stripe receipt uses the Checkout Session canonical event key and counts deliveries
+  ---
+  duration_ms: 0.460542
+  ...
+# Subtest: PayPal receipt uses the capture canonical event key and counts deliveries
+ok 45 - PayPal receipt uses the capture canonical event key and counts deliveries
+  ---
+  duration_ms: 0.173375
+  ...
+# Subtest: rejects missing, mismatched, and ambiguous target identifiers
+ok 46 - rejects missing, mismatched, and ambiguous target identifiers
+  ---
+  duration_ms: 0.138083
+  ...
+# Subtest: redacts provider, user, lead, consent, token, session, and email values from output
+ok 47 - redacts provider, user, lead, consent, token, session, and email values from output
+  ---
+  duration_ms: 0.091833
+  ...
+# Subtest: builds the new one-time confirmation payload without labeling context as acceptance
+ok 48 - builds the new one-time confirmation payload without labeling context as acceptance
+  ---
+  duration_ms: 3.538542
+  ...
+# Subtest: historical waiver rows retain their explicit-consent confirmation fields
+ok 49 - historical waiver rows retain their explicit-consent confirmation fields
+  ---
+  duration_ms: 0.5335
+  ...
+# Subtest: uses the configured transactional message ID and trims it
+ok 50 - uses the configured transactional message ID and trims it
+  ---
+  duration_ms: 0.134
+  ...
+# Subtest: fails closed for malformed confirmation input
+ok 51 - fails closed for malformed confirmation input
+  ---
+  duration_ms: 0.586375
+  ...
+# Subtest: returns a stable sent reference only after Customer.io accepts the request
+ok 52 - returns a stable sent reference only after Customer.io accepts the request
+  ---
+  duration_ms: 0.17
+  ...
+# Subtest: propagates Customer.io failures without returning a sent reference
+ok 53 - propagates Customer.io failures without returning a sent reference
+  ---
+  duration_ms: 0.189458
+  ...
+# Subtest: records matching active one-time plan access once
+ok 54 - records matching active one-time plan access once
+  ---
+  duration_ms: 1.2695
+  ...
+# Subtest: does not record first access for a different result lead
+ok 55 - does not record first access for a different result lead
+  ---
+  duration_ms: 0.126916
+  ...
+# Subtest: does not record first access for a pending fulfillment
+ok 56 - does not record first access for a pending fulfillment
+  ---
+  duration_ms: 0.154458
+  ...
+# Subtest: does not record first access for a revoked purchase
+ok 57 - does not record first access for a revoked purchase
+  ---
+  duration_ms: 0.146125
+  ...
+# Subtest: does not record first access for a non-one-time purchase
+ok 58 - does not record first access for a non-one-time purchase
+  ---
+  duration_ms: 0.33425
+  ...
+# Subtest: result rendering keeps the existing client surface while the evidence write is best effort
+ok 59 - result rendering keeps the existing client surface while the evidence write is best effort
+  ---
+  duration_ms: 0.933417
+  ...
+# [checkout-activation] quiz profile linked { userId: 'user-1', hasLeadId: true, durationMs: 0 }
+# [checkout-activation] quiz profile linked { userId: 'user-1', hasLeadId: true, durationMs: 0 }
+# [checkout-activation] quiz profile linked { userId: 'user-1', hasLeadId: true, durationMs: 0 }
+# [checkout-activation] quiz profile linked { userId: 'user-1', hasLeadId: true, durationMs: 0 }
+# [checkout-activation] quiz profile linked { userId: 'user-1', hasLeadId: true, durationMs: 0 }
+# [checkout-activation] quiz profile linked { userId: 'user-1', hasLeadId: true, durationMs: 0 }
+# [checkout-activation] quiz profile linked { userId: 'user-1', hasLeadId: true, durationMs: 0 }
+# [checkout-activation] quiz profile linked { userId: 'user-1', hasLeadId: true, durationMs: 0 }
+# [checkout-activation] quiz profile linked { userId: 'user-1', hasLeadId: true, durationMs: 0 }
+# [checkout-activation] quiz profile linked { userId: 'user-1', hasLeadId: true, durationMs: 0 }
+# [checkout-activation] quiz profile linked { userId: 'user-1', hasLeadId: true, durationMs: 0 }
+# Subtest: canonical Stripe one-time activation sends confirmation, records delivery, and activates access
+ok 60 - canonical Stripe one-time activation sends confirmation, records delivery, and activates access
+  ---
+  duration_ms: 4.87825
+  ...
+# Subtest: one-time activation links the prepared artifact before finalization even when called with deferred linking
+ok 61 - one-time activation links the prepared artifact before finalization even when called with deferred linking
+  ---
+  duration_ms: 0.617833
+  ...
+# Subtest: Stripe finalization binds the prepared artifact when generic profile linking no-ops
+ok 62 - Stripe finalization binds the prepared artifact when generic profile linking no-ops
+  ---
+  duration_ms: 0.825209
+  ...
+# Subtest: confirmation failure leaves the captured Stripe purchase in paid pending for retry
+ok 63 - confirmation failure leaves the captured Stripe purchase in paid pending for retry
+  ---
+  duration_ms: 0.5445
+  ...
+# Subtest: missing prepared locked plan leaves the captured Stripe purchase in paid pending
+ok 64 - missing prepared locked plan leaves the captured Stripe purchase in paid pending
+  ---
+  duration_ms: 0.657833
+  ...
+# Subtest: a null prepared locked plan leaves the captured Stripe purchase undelivered
+ok 65 - a null prepared locked plan leaves the captured Stripe purchase undelivered
+  ---
+  duration_ms: 0.4965
+  ...
+# Subtest: a Stripe one-time session cannot activate a different stored consent
+ok 66 - a Stripe one-time session cannot activate a different stored consent
+  ---
+  duration_ms: 0.342209
+  ...
+# Subtest: a Stripe one-time session cannot activate consent with different lead or funnel metadata
+ok 67 - a Stripe one-time session cannot activate consent with different lead or funnel metadata
+  ---
+  duration_ms: 0.124
+  ...
+# Subtest: missing historical Stripe one-time lead and funnel metadata resolves from bound consent
+ok 68 - missing historical Stripe one-time lead and funnel metadata resolves from bound consent
+  ---
+  duration_ms: 1.154083
+  ...
+# Subtest: present Stripe one-time offer metadata must match the bound consent
+ok 69 - present Stripe one-time offer metadata must match the bound consent
+  ---
+  duration_ms: 0.621708
+  ...
+# Subtest: a fully refunded latest Stripe charge is rejected before one-time fulfillment
+ok 70 - a fully refunded latest Stripe charge is rejected before one-time fulfillment
+  ---
+  duration_ms: 0.22425
+  ...
+# Subtest: a disputed latest Stripe charge is rejected before one-time fulfillment
+ok 71 - a disputed latest Stripe charge is rejected before one-time fulfillment
+  ---
+  duration_ms: 0.099458
+  ...
+# Subtest: user-bound prepared artifact is required before one-time finalization
+ok 72 - user-bound prepared artifact is required before one-time finalization
+  ---
+  duration_ms: 0.696584
+  ...
+# Subtest: Stripe one-time recovery verification is read-only and omits email from refs
+ok 73 - Stripe one-time recovery verification is read-only and omits email from refs
+  ---
+  duration_ms: 0.117
+  ...
+# Subtest: Stripe fulfillment job retry reuses stored Checkout Session validation
+ok 74 - Stripe fulfillment job retry reuses stored Checkout Session validation
+  ---
+  duration_ms: 1.144042
+  ...
+# Subtest: Stripe fulfillment retry marks deterministic provider identity mismatch permanent
+ok 75 - Stripe fulfillment retry marks deterministic provider identity mismatch permanent
+  ---
+  duration_ms: 0.284417
+  ...
+# Subtest: Stripe fulfillment retry keeps provider outages retryable
+ok 76 - Stripe fulfillment retry keeps provider outages retryable
+  ---
+  duration_ms: 0.14425
+  ...
+# Subtest: a sent and delivered activation is idempotent during Stripe replay
+ok 77 - a sent and delivered activation is idempotent during Stripe replay
+  ---
+  duration_ms: 1.135333
+  ...
+# Subtest: an unclaimed prepared one-time session is rejected before account creation
+ok 78 - an unclaimed prepared one-time session is rejected before account creation
+  ---
+  duration_ms: 0.092166
+  ...
+1..78
+# tests 78
+# suites 0
+# pass 78
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2478.002584

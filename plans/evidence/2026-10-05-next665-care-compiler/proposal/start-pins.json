@@ -1,0 +1,124 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "testFiles": [
+    "tests/recommendation-engine-shampoo-cadence.test.ts",
+    "tests/care-balance-frequency-targets.test.ts",
+    "tests/personal-plan-routine-candidate-compiler.test.ts",
+    "tests/personal-plan-routine-cadence.test.ts",
+    "tests/personal-plan/product-previews.test.ts",
+    "tests/personal-plan-exact-catalog-bundle.test.ts",
+    "tests/personal-plan-stage3-contracts.test.ts"
+  ],
+  "pins": [
+    {
+      "file": "tests/recommendation-engine-shampoo-cadence.test.ts",
+      "sha256": "ecd07f7f11e9beccea659305888ed8cb87c2224ac058f5193f0d45a2173eb432",
+      "bytes": 13821
+    },
+    {
+      "file": "tests/care-balance-frequency-targets.test.ts",
+      "sha256": "e6fd7fb6fde941a2677597b8115866fe8b58346a3ac424bcdb9b5d13466dff4a",
+      "bytes": 10763
+    },
+    {
+      "file": "tests/personal-plan-routine-candidate-compiler.test.ts",
+      "sha256": "d1967063160af1b28843b08791ebebf80c9ad95f43bef60dedcc7198c56c5533",
+      "bytes": 28416
+    },
+    {
+      "file": "tests/personal-plan-routine-cadence.test.ts",
+      "sha256": "faf7610672fd7fbd0e2c56d9e2f645a1b34b870a82732d2445038bab914e2729",
+      "bytes": 11362
+    },
+    {
+      "file": "tests/personal-plan/product-previews.test.ts",
+      "sha256": "f622fe85d64116aa02919b49e97243d43c459e6f10c00eacf3668371e62de1f7",
+      "bytes": 43433
+    },
+    {
+      "file": "tests/personal-plan-exact-catalog-bundle.test.ts",
+      "sha256": "8c555106cc39f984c37f1b64a6e766d67e6b0b78022339c4aa4ba8d4a61e6a65",
+      "bytes": 17041
+    },
+    {
+      "file": "tests/personal-plan-stage3-contracts.test.ts",
+      "sha256": "9d2253501c5b17502a56c123e2adea9ef1f19d135e34593cedf441f774de0bc4",
+      "bytes": 21649
+    },
+    {
+      "file": "src/lib/recommendation-engine/shampoo-cadence.ts",
+      "sha256": "5dff9e6d423e674e7e232bdfeece6e344dc6aa5fd64c158fa72ce8a7f5c317c9",
+      "bytes": 8783
+    },
+    {
+      "file": "src/lib/recommendation-engine/runtime.ts",
+      "sha256": "31edfca374f832a31e715583a1b49f8faddad002e2ee70a44c4512bda6aeea41",
+      "bytes": 8007
+    },
+    {
+      "file": "src/lib/recommendation-engine/effective-care-context.ts",
+      "sha256": "336150087c020583754bab880500a60c3526c79cfc9ba9810560fe0ee6796d88",
+      "bytes": 6470
+    },
+    {
+      "file": "src/lib/recommendation-engine/adapters/from-persistence.ts",
+      "sha256": "a65f81e45a0cc1576b64f4f20d7806cfe0fcfaddf2ac21df49459157ff34bb1e",
+      "bytes": 5962
+    },
+    {
+      "file": "src/lib/recommendation-engine/care-balance/frequency-targets.ts",
+      "sha256": "8a7cf237fb19a1a74a02d53d7c52dcc9b2160732eee03c8b67d665d02b78f500",
+      "bytes": 4660
+    },
+    {
+      "file": "src/lib/personal-plan/routine-candidate-compiler.ts",
+      "sha256": "6a19676fa61df0361351609bdf34928f18999186a59b7d00fcd7e725dcc56034",
+      "bytes": 18511
+    },
+    {
+      "file": "src/lib/personal-plan/routine/cadence.ts",
+      "sha256": "0bdcd8ba171ba21dff3570de738996adc65a415b982025a0cd0e7dfec1a3fa0c",
+      "bytes": 7951
+    },
+    {
+      "file": "src/lib/personal-plan/routine/cadence-authority.ts",
+      "sha256": "47963bd799293399568ebefed0eae54de58ff57c966fc6c69302200a689d558f",
+      "bytes": 1595
+    },
+    {
+      "file": "src/lib/personal-plan/product-previews.ts",
+      "sha256": "7c0b484dcb14e2704c5b67aaca17c1e7b5e735c816ec1279530ce5b04f406f0c",
+      "bytes": 13677
+    },
+    {
+      "file": "src/app/api/personal-plan/stage-1/previews/route.ts",
+      "sha256": "d3c200648e5c2f84456418e927b723c5ea108112ada5587f7afb131cdc902f68",
+      "bytes": 3797
+    },
+    {
+      "file": "src/lib/product-intake/catalog-enrichment/stage5-catalog-bundle.ts",
+      "sha256": "a79c452c01525c2e30903759dfc4e36238ef0e266c2cc1b2b377ed4285b1dae7",
+      "bytes": 13510
+    },
+    {
+      "file": "src/lib/personal-plan/products/contracts.ts",
+      "sha256": "bc4291e12db65a3e220c884344255403e4ea3c3eb19d24fb3c5a4605ae011366",
+      "bytes": 52077
+    },
+    {
+      "file": "src/lib/personal-plan/products/authorities.ts",
+      "sha256": "46722afc73e14c5f10b83fd220bc4e5f82c3de001086881190cd1fb769b91e2b",
+      "bytes": 4532
+    },
+    {
+      "file": "src/lib/personal-plan/products/recovery-desired-state.ts",
+      "sha256": "556da32412ee4b65411600a0d7c87e8d556845cac2b5721a5f5c0b870937ff3b",
+      "bytes": 3667
+    },
+    {
+      "file": "tests/recommendation-engine-foundation.fixtures.ts",
+      "sha256": "35965fbf644bd05ce6d34bdceb867bb63aff571eb371604c37b4acb233d119d1",
+      "bytes": 2990
+    }
+  ]
+}

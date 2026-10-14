@@ -1,0 +1,240 @@
+{
+  "slug": "isana-med-ultra-sensitiv-plus-anti-schuppen",
+  "policy": {
+    "candidatePolicyId": "shampoo-classification-v1.6-candidate",
+    "analysisModelVersion": "shampoo-inci-v1.6-candidate",
+    "standardPath": ".worktrees/shampoo-v16/plans/shampoo-v16/v1.6-candidate/classification-standard.md",
+    "status": "Candidate output. Not locked, not production-active; must not feed Product Intake, Production Light, catalog or recommendations (Section 1 / 16).",
+    "processNote": "Single research lane. Not a sealed blind pass: identity and claims were visible in the brief before the formula was analysed (Section 3.1 deviation). Treat as lane-A-style evidence, not a calibrated result."
+  },
+  "identity": {
+    "brand": "ISANA MED (Rossmann private label, Dirk Rossmann GmbH)",
+    "productName": "ISANA MED Ultra Sensitiv+ Anti-Schuppen Shampoo",
+    "packFrontText": "ISANA MED / ULTRA SENSITIV+ / ANTI SCHUPPEN SHAMPOO / Piroctone Olamine / stark & nachhaltig gegen Schuppen / Allergie getestet* / 0% Parfüm, Farbstoffe, Silikon / klinisch getestet, dermatologisch bestätigt",
+    "market": "DE",
+    "packSize": "200 ml",
+    "price": "1,79 EUR (8,95 EUR/L), rossmann.de 2026-10-06",
+    "gtin": ["4068134169129"],
+    "retailerArticleNumber": "Rossmann Art.-Nr. 214539",
+    "captureDate": "2026-10-06",
+    "notToBeConfusedWith": [
+      {"name": "ISANA MED Shampoo Anti Schuppen", "gtin": "4305615629209", "difference": "different formula (Caffeine, Menthol, Parfum, extra anionics)"},
+      {"name": "ISANA MED Shampoo Jeden Tag (Ultra Sensitiv)", "gtin": "4305615629223", "difference": "different formula, no anti-dandruff active"}
+    ],
+    "identityConfidence": "high",
+    "conflicts": [
+      "rossmann.de INCI spells position 5 'Piroctine Olamine'; the pack back photo (Open Beauty Facts) and OBF ingredient text read 'Piroctone Olamine'. Treated as a retailer typo, not a formula conflict; normalized to Piroctone Olamine."
+    ],
+    "reformulationEvidence": "None found. Retailer INCI (2026-10-06) and pack-photo INCI (uploaded 2026-09-08) are identical in order and content."
+  },
+  "formulaSource": {
+    "rawInci": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Piroctone Olamine, Glyceryl Oleate, Coco-Glucoside, Panthenol, Niacinamide, Bisabolol, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Tocopherol, Hydrogenated Vegetable Glycerides Citrate, Sodium Salicylate, Sodium Citrate, Citric Acid, Sodium Benzoate",
+    "rawInciAsShownOnRossmann": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Chloride, Piroctine Olamine, Glyceryl Oleate, Coco-Glucoside, Panthenol, Niacinamide, Bisabolol, Hydroxypropyl Guar Hydroxypropyltrimonium Chloride, Tocopherol, Hydrogenated Vegetable Glycerides Citrate, Sodium Salicylate, Sodium Citrate, Citric Acid, Sodium Benzoate",
+    "positions": {
+      "1": "Aqua", "2": "Sodium Laureth Sulfate", "3": "Cocamidopropyl Betaine", "4": "Sodium Chloride",
+      "5": "Piroctone Olamine", "6": "Glyceryl Oleate", "7": "Coco-Glucoside", "8": "Panthenol",
+      "9": "Niacinamide", "10": "Bisabolol", "11": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "12": "Tocopherol", "13": "Hydrogenated Vegetable Glycerides Citrate", "14": "Sodium Salicylate",
+      "15": "Sodium Citrate", "16": "Citric Acid", "17": "Sodium Benzoate"
+    },
+    "ingredientCount": 17,
+    "fingerprint": {
+      "algorithm": "sha256",
+      "normalization": "INCI split on commas, trimmed, lower-cased, Piroctine->Piroctone corrected, re-joined with ', '",
+      "value": "ad3be55f75b07031a4adf5989aa40b97f367ac39ebfc73a0a87fd8203263ca98"
+    },
+    "completeness": "complete (pack INCI and retailer INCI agree, 17 items)",
+    "sourceTier": "1 (exact German pack evidence for the GTIN, barcode 4068134169129 visible on the back-label photo), corroborated by tier 3 (rossmann.de exact GTIN page)",
+    "sources": [
+      {"id": "S1", "type": "pack back photo (INCI, Wirkung, Hautverträglichkeit, barcode, 200 ml, 12M PAO)", "url": "https://images.openbeautyfacts.org/images/products/406/813/416/9129/ingredients_de.5.full.jpg", "accessed": "2026-10-06", "note": "OBF upload 2026-09-08"},
+      {"id": "S2", "type": "pack front photo", "url": "https://images.openbeautyfacts.org/images/products/406/813/416/9129/front_de.3.full.jpg", "accessed": "2026-10-06"},
+      {"id": "S3", "type": "Open Beauty Facts product record (ingredients_text_de, quantity 200 ml, category Anti-dandruff shampoos)", "url": "https://world.openbeautyfacts.org/api/v2/product/4068134169129.json", "accessed": "2026-10-06"},
+      {"id": "S4", "type": "retailer page, exact GTIN (description, claims, INCI, price)", "url": "https://www.rossmann.de/de/pflege-und-duft-isana-med-ultra-sensitiv-anti-schuppen-shampoo/p/4068134169129", "accessed": "2026-10-06", "note": "read via in-app browser; plain fetch blocked by bot challenge"},
+      {"id": "S5", "type": "range capture (prior step, same day)", "url": "file: scratchpad/isana-med/range.md", "accessed": "2026-10-06"}
+    ],
+    "usageDirections": "Not found. Neither the retailer page nor the back-label photo shows an 'Anwendung' text (the photo may be cropped)."
+  },
+  "blindFormulaPacket": {
+    "surfactantArchitecture": "Primary anionic alkyl ether sulfate (Sodium Laureth Sulfate #2) buffered by amphoteric Cocamidopropyl Betaine #3 and mild nonionic Coco-Glucoside #7; no second anionic, no reset/chelating route. Sodium Chloride #4 is a thickener.",
+    "conditioningDepositionRoutes": "One cationic guar (Hydroxypropyl Guar Hydroxypropyltrimonium Chloride #11, listed after Bisabolol #10, i.e. low level); refatter Glyceryl Oleate #6; Hydrogenated Vegetable Glycerides Citrate #13 (minor emulsifier/refatter). No silicone, no fatty alcohol, no oil, no protein, no pearlizer.",
+    "humectantRefattingClues": "Panthenol #8, Glyceryl Oleate #6, Niacinamide #9; no Glycerin.",
+    "scalpActives": "Piroctone Olamine #5 (recognized anti-dandruff active); comfort routes Panthenol #8, Niacinamide #9, Bisabolol #10; Sodium Salicylate #14 (preservative-range salt, not a counted active).",
+    "exposureFlags": "No Parfum, no essential oil, no menthol/cooling agent. Preservative Sodium Benzoate #17 (+ Sodium Salicylate #14).",
+    "unresolved": "None material."
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate: an early SLES chassis buffered by a betaine and a glucoside, with no second anionic or reset route, is exactly the C1 pattern.",
+      "formulaFacts": [
+        {"ingredient": "Sodium Laureth Sulfate", "position": 2, "role": "primary anionic"},
+        {"ingredient": "Cocamidopropyl Betaine", "position": 3, "role": "amphoteric buffer"},
+        {"ingredient": "Coco-Glucoside", "position": 7, "role": "mild nonionic co-surfactant"},
+        {"ingredient": "Glyceryl Oleate", "position": 6, "role": "refatter counter-signal"}
+      ],
+      "ruleIds": ["C1"],
+      "counterSignals": "SLES is the dominant surfactant and is a genuine strong-cleansing clue; the formula is not a mild amino-acid/glucoside-led system, so it is not 'low' despite the sensitive positioning.",
+      "neighboringAlternative": "strong",
+      "sources": ["S1", "S4"]
+    },
+    "conditioningLevel": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: cleansing-led formula whose only hair-substantive route is a low-level cationic guar; the refatter and panthenol add feel, not meaningful slip.",
+      "formulaFacts": [
+        {"ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride", "position": 11, "role": "cationic polymer, after Bisabolol #10 so plausibly low level"},
+        {"ingredient": "Glyceryl Oleate", "position": 6, "role": "refatter"},
+        {"ingredient": "Panthenol", "position": 8, "role": "humectant"},
+        {"ingredient": "Hydrogenated Vegetable Glycerides Citrate", "position": 13, "role": "minor emulsifier/refatter"}
+      ],
+      "ruleIds": ["Section 5 anchors", "C2 (not triggered: no silicone, no pearlizer/fatty route)"],
+      "counterSignals": "A cationic guar plus a refatter plus panthenol could be read as 'several light routes' = moderate; guar position and absence of silicone/fatty alcohol argue for low.",
+      "neighboringAlternative": "moderate",
+      "sources": ["S1", "S4"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low: one light, late cationic guar and a weak refatter in an effective SLES/betaine base; no silicone, oil, wax or rich 2-in-1 architecture.",
+      "subjudgments": {
+        "depositionLoad": "light",
+        "persistence": "low",
+        "resetCapacity": "moderate",
+        "whyThisBand": "Anchor text: 'One light polymer, weak refatter ... can remain low'. That is the whole deposition story here.",
+        "whyNotNeighborBand": "Moderate needs one meaningfully persistent system or interacting routes; there is no silicone, amodimethicone, oil payload, fatty alcohol or second cationic route."
+      },
+      "formulaFacts": [
+        {"ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride", "position": 11},
+        {"ingredient": "Glyceryl Oleate", "position": 6},
+        {"ingredient": "Sodium Laureth Sulfate", "position": 2, "role": "reset capacity"}
+      ],
+      "ruleIds": ["Section 6 anchors"],
+      "counterSignals": "Cationic guar is a deposition clue (not a moderate floor).",
+      "neighboringAlternative": "none",
+      "neighborNote": "No realistic INCI-only unknown moves this to moderate; recorded as none. A lane that records 'moderate' as neighbour would raise review_thickness_boundary for fine (T4).",
+      "sources": ["S1", "S4"]
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "rationale": "scalp_active: 'Anti Schuppen' is the product's named problem and the formula carries Piroctone Olamine at #5 (decision-table row 'problem-led product with recognized dandruff active and anti-dandruff positioning').",
+      "careDirection": {"verdict": "not_applicable", "moistureRoutes": [], "repairRoutes": [], "sharedConditioningRoutes": [], "limitation": "No length-care positioning; panthenol/niacinamide are claimed in a scalp context."},
+      "claimRole": "candidate",
+      "formulaFacts": [
+        {"ingredient": "Piroctone Olamine", "position": 5},
+        {"ingredient": "Panthenol", "position": 8},
+        {"ingredient": "Niacinamide", "position": 9},
+        {"ingredient": "Bisabolol", "position": 10}
+      ],
+      "counterSignal": "Front-pack 'Panthenol und Niacinamide' and 'Ultra Sensitiv+' could suggest a general mild/care role; neither has length-care positioning, and mildness is not a focus.",
+      "neighboringAlternative": null,
+      "decisionTrace": "Formula: recognized anti-dandruff active plus comfort routes in a moderate SLES/betaine chassis. Claim: name and front pack say Anti Schuppen, 'stark & nachhaltig gegen Schuppen'. Counter-signal (sensitive/mild wording) is absorbed into scalp_active per Appendix A (Vichy Dercos Sensitiv precedent). No competing specialist focus.",
+      "sources": ["S1", "S2", "S4"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Empty: the sensitive-scalp role is part of scalp_active (Appendix A), and there is no distinct moisture/repair/shine/volume positioning with its own route (F2, Section 8).",
+      "counterSignals": "Panthenol/Niacinamide headline could be read as a moisture claim, but it is not a hair-length claim and shares the scalp-comfort route.",
+      "neighboringAlternative": "none",
+      "sources": ["S1", "S2"]
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "high",
+      "rationale": "Treatment: problem-led recognized anti-dandruff active route (Section 9 trigger), positioned 'stark & nachhaltig gegen Schuppen'.",
+      "formulaFacts": [{"ingredient": "Piroctone Olamine", "position": 5}],
+      "ruleIds": ["Section 9"],
+      "counterSignals": "No usage directions found; no daily-use or reset wording. Gentle/sensitive positioning might suggest 'frequent', but there is no explicit frequent-use claim.",
+      "neighboringAlternative": "regular",
+      "sources": ["S1", "S2", "S4"]
+    },
+    "scalpComfortTarget": {
+      "value": "targeted",
+      "confidence": "moderate",
+      "rationale": "Targeted: the product is positioned 'Ultra Sensitiv+', 'sanft zur Kopfhaut', fragrance-free and allergy-tested on very sensitive skin, and the formula backs it with moderate (not strong) cleansing, a refatter and three comfort routes with no fragrance or cooling agent.",
+      "formulaFacts": [
+        {"ingredient": "Glyceryl Oleate", "position": 6, "role": "refatter"},
+        {"ingredient": "Panthenol", "position": 8, "role": "comfort/humectant"},
+        {"ingredient": "Niacinamide", "position": 9, "role": "comfort"},
+        {"ingredient": "Bisabolol", "position": 10, "role": "comfort"},
+        {"note": "no Parfum, no essential oil, no menthol"}
+      ],
+      "ruleIds": ["Section 10"],
+      "counterSignals": "SLES-led chassis; the sensitivity wording names 'sehr sensible Haut' (range boilerplate) rather than 'empfindliche Kopfhaut'; the only scalp-naming phrase is 'sanft zur Kopfhaut'.",
+      "neighboringAlternative": "not_targeted",
+      "sources": ["S1", "S2", "S4"]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Supported: complete INCI contains Piroctone Olamine (#5).",
+      "formulaFacts": [{"ingredient": "Piroctone Olamine", "position": 5}],
+      "ruleIds": ["Section 11"],
+      "counterSignals": "Rossmann spells it 'Piroctine'; pack photo confirms 'Piroctone'. No concentration claim made.",
+      "neighboringAlternative": "none",
+      "sources": ["S1", "S3", "S4"]
+    }
+  },
+  "projection": {
+    "status": "proposal (computable: all eight properties moderate-or-high, no unknown, identity canonical)",
+    "thicknesses": [
+      {"thickness": "fine", "fit": "ideal", "confidence": "high", "rationale": "T1: W low -> fine ideal. T4: W neighbour 'none' -> no boundary flag.", "ruleIds": ["T1", "T4"]},
+      {"thickness": "normal", "fit": "ideal", "confidence": "high", "rationale": "T1: W low -> normal ideal.", "ruleIds": ["T1", "T4"]},
+      {"thickness": "coarse", "fit": "conditional", "confidence": "moderate", "rationale": "T1: W low and C not high -> coarse conditional (usable with a separate conditioner). Open question 3's wider scalp-product rule would need C moderate; C is low, so even that wider rule would not change this. Cautious default applied.", "ruleIds": ["T1", "T5"]}
+    ],
+    "scalpTargets": {
+      "primary": {
+        "target": "dandruff",
+        "bucket": "schuppen",
+        "scalpRoute": "dandruff",
+        "confidence": "high",
+        "rationale": "S-DANDRUFF: E2 dandruff claim in the product name and pack front ('ANTI SCHUPPEN', 'gegen Schuppen'; E1 confidence high) and dandruffSupport supported (high).",
+        "ruleIds": ["S-DANDRUFF", "E1", "E2", "S-PRIMARY"]
+      },
+      "secondary": null,
+      "secondaryRationale": "No secondary. Sensitive: E2 requires a claim naming a scalp condition ('sensible/empfindliche Kopfhaut', 'Juckreiz', 'beruhigt die Kopfhaut'); this product says 'Ultra Sensitiv+' (no scalp named), 'sehr sensible Haut' (range-level boilerplate, E1 excludes) and 'sanft zur Kopfhaut' ('sanft' is listed as non-qualifying). The formula gate would pass (targeted + prominent Panthenol #8 / Niacinamide #9 / Bisabolol #10 before Sodium Salicylate #14, E3/E4), but the positioning gate does not, so P0 keeps it off. No S-FAIL: no E2 sensitive claim was made. Dry: no dry-scalp claim. Oily: none.",
+      "ruleIds": ["S-SECONDARY", "S-SENSITIVE", "E1", "E2", "E3", "E4", "P0"]
+    },
+    "observedCleansingIntensity": {"value": "regular", "confidence": "high", "rationale": "I1: cleansingStrength moderate -> regular. Equals the schuppen bucket's expected intensity (regular), so rows rank as ideal. I3: neighbour 'strong' also maps to regular -> no flag.", "ruleIds": ["I1", "I2", "I3"]},
+    "positioning": {"explicitResetPositioning": false, "confidence": "moderate", "rationale": "D1: no reset lexicon in name or primary claims. Usage directions were not found, so the 'occasional use' branch of D1 could not be checked on the pack; confidence moderate.", "ruleIds": ["D1", "D2", "D3"]},
+    "rows": [
+      {"thickness": "fine", "shampoo_bucket": "schuppen", "scalp_route": "dandruff", "cleansing_intensity": "regular"},
+      {"thickness": "normal", "shampoo_bucket": "schuppen", "scalp_route": "dandruff", "cleansing_intensity": "regular"}
+    ],
+    "requiredProtocolRoles": ["shampoo_dandruff"],
+    "reviewFlags": [],
+    "reviewFlagsNote": "No rule-raised flag. review_live_value_differs not evaluated: live product_shampoo_specs were not read (no DB access in this brief; product believed not in catalog). S-FOCUS consistent (focusPrimary scalp_active).",
+    "informationalWarnings": []
+  },
+  "customerFit": {
+    "separationNote": "Section 15: this is user fit, derived separately; it does not change any property or projection value.",
+    "customer": "Viola: wavy, fine strands, high density, medium length, colored + bleached, elastic test snaps, dry scalp; June 2026 reported dry flakes ('trockene Schuppen'); Oct 3 quiz: no scalp problems. Main issues: dry lengths, frizz, tangling, low shine, lost wave. Routine: this shampoo ~1x/week -> Syoss Intense Glaze lamination mask as conditioner -> Neqi leave-in mist -> Neqi Opulent Oil.",
+    "verdict": "depends",
+    "verdictSummary": "Fine to keep for now; switch to a fragrance-free everyday shampoo for dry/sensitive scalp once the flakes have stayed away. Either way the shampoo is not what is driving her dry, snapping lengths.",
+    "reasons": [
+      {"topic": "Fine strands", "assessment": "Good fit. Low weight potential means it will not weigh down fine, wavy hair (fine = ideal under T1)."},
+      {"topic": "Anti-dandruff active vs her actual flakes", "assessment": "Piroctone olamine is made for classic dandruff. She described dry flakes, and our standard treats dry flakes as a dry-scalp comfort issue, not automatically dandruff. With no scalp complaints in October she does not clearly need the active any more. It does no obvious harm at 1x/week, and her current once-a-week use already works like a maintenance rhythm. If her flakes only stayed away because of this shampoo, that is a reason to keep it."},
+      {"topic": "Cleansing strength on bleached, snapping hair", "assessment": "Moderate cleansing with an SLES base, buffered by betaine and glucoside, so it is not harsh. It is also not the mildest option for very damaged hair. At once a week with a mask afterwards, exposure is low. Weekly washing of dense hair carrying leave-in plus oil needs real cleansing, so a very weak shampoo could leave residue. Practical lever: lather on the scalp only and let the rinse run through the lengths."},
+      {"topic": "Dry scalp", "assessment": "Supportive. No perfume, no menthol, panthenol, niacinamide and bisabolol, and a refatter. This is a sensible pick for a dry, easily irritated scalp."},
+      {"topic": "Lengths (her main problem)", "assessment": "Low conditioning: the shampoo contributes nothing to dry lengths, frizz or tangling. Her mask, leave-in and oil carry that job, so a swap here will not fix the lengths."},
+      {"topic": "Engine view (informational)", "assessment": "Under the v1.6 projection the product would sit only in the fine/normal x dandruff group. With a dry scalp and no current complaint, she would normally be matched to the dry-scalp group, which this product does not serve. That supports 'switch once flakes are gone' rather than 'keep forever'."}
+    ],
+    "callQuestions": [
+      "Are the flakes completely gone, and did they come back when you used a different shampoo? What did they look like: fine, white and dry with a tight feeling, or larger, yellowish and itchy?",
+      "How does your scalp feel 3-6 days after washing: tight or itchy, or fine? Do you lather your lengths too, or only the scalp?",
+      "Right after shampooing, before the mask, do your lengths feel squeaky or rough? Do you use any other shampoo in between?"
+    ],
+    "boundary": "Cosmetic guidance only. If flakes return strongly, or the scalp becomes red, sore or very itchy, suggest she ask a pharmacist or doctor.",
+    "swapDirectionIfNeeded": "A fragrance-free, mild everyday shampoo positioned for dry or sensitive scalp, with a humectant or refatter, without anti-dandruff active, and light enough for fine hair (W low). The same line's 'ISANA MED Shampoo Jeden Tag (Ultra Sensitiv)' (EAN 4305615629223: 0% perfume, Glycerin #3, Panthenol, Allantoin, no anti-dandruff active) is an obvious candidate to check, but it has NOT been classified here."
+  },
+  "openIssues": [
+    "Process: single lane, not blind (claims visible from the brief). Needs a second sealed lane before any use under the v1.6 lock process.",
+    "Standard gap (E2 lexicon): 'Ultra Sensitiv+' in the product name plus 'sanft zur Kopfhaut' does not qualify as a sensitive-scalp claim, so no secondary sensitive target (irritationen/irritated). If Nick rules that a 'Sensitiv' product name on a shampoo counts as a scalp claim, fine+normal x irritationen/irritated/regular rows would be added (supportive, because that bucket expects gentle). Direction: toward_recommending, so the conservative value is kept.",
+    "Usage directions not found (retailer page has none; back-label photo shows none, maybe cropped). D1 occasional-use branch unchecked; explicitResetPositioning=false at moderate confidence.",
+    "conditioningLevel low vs moderate is borderline (guar #11 after Bisabolol). This does not change the projection: coarse stays conditional either way under the cautious T1. Under open question 3's wider scalp-product rule, coarse would become ideal ONLY if conditioning were moderate.",
+    "Retailer INCI typo 'Piroctine Olamine' at #5. Pack confirms Piroctone Olamine.",
+    "Live catalog rows not checked; review_live_value_differs pending."
+  ]
+}

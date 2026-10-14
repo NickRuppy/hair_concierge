@@ -236,7 +236,6 @@ export type ScanFlowAction =
   | { type: "camera_unavailable"; reason: ScanUnavailableReason }
   | { type: "camera_stalled" }
   | { type: "camera_retry" }
-  | { type: "camera_live" }
   /**
    * Fix round 1 (F1): re-seeds the session-wide fatigue budget from `sessionStorage`,
    * dispatched once from `scan-flow.tsx`'s very first mount effect — before any resolve can
@@ -550,7 +549,6 @@ export function scanFlowReducer(state: ScanFlowState, action: ScanFlowAction): S
       return { ...state, camera: { status: "stalled" } }
 
     case "camera_retry":
-    case "camera_live":
       return { ...state, camera: { status: "live" } }
 
     case "fatigue_hydrated":
@@ -602,7 +600,7 @@ function stepForResult(result: ScanClientResolveResult): ScanFlowStep {
 }
 
 /** A step sheet covers the viewfinder. Auxiliary sheets do not change the step. */
-export function isSheetOpen(state: ScanFlowState): boolean {
+function isSheetOpen(state: ScanFlowState): boolean {
   return state.step.kind !== "scanning"
 }
 

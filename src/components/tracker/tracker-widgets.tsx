@@ -28,29 +28,22 @@ function dayAriaLabel(day: WeekStripDay): string {
 }
 
 export function WeekStrip(props: {
-  ariaLabel?: string
   days: WeekStripDay[]
-  getDayAriaLabel?: (day: WeekStripDay, index: number) => string
   selectedDate: string
   onSelect: (date: string) => void
-  readOnly?: boolean
 }) {
   return (
-    <div
-      className="grid grid-cols-8 gap-1"
-      role="tablist"
-      aria-label={props.ariaLabel ?? "Letzte acht Tage"}
-    >
-      {props.days.map((day, index) => {
+    <div className="grid grid-cols-8 gap-1" role="tablist" aria-label="Letzte acht Tage">
+      {props.days.map((day) => {
         const selected = day.date === props.selectedDate
         return (
           <button
             key={day.date}
             type="button"
             role="tab"
-            aria-label={props.getDayAriaLabel?.(day, index) ?? dayAriaLabel(day)}
+            aria-label={dayAriaLabel(day)}
             aria-selected={selected}
-            disabled={props.readOnly || day.isFuture || !day.isEditable}
+            disabled={day.isFuture || !day.isEditable}
             onClick={() => props.onSelect(day.date)}
             className={cn(
               "tracker-day-tab flex min-h-[66px] min-w-0 flex-col items-center justify-center rounded-[14px] border text-xs",
@@ -58,11 +51,9 @@ export function WeekStrip(props: {
                 ? "border-[var(--brand-plum)] bg-[var(--brand-plum-ice)] text-[var(--brand-plum-dark)]"
                 : "border-transparent",
               day.isToday && !selected ? "bg-card" : "",
-              props.readOnly
-                ? "cursor-default"
-                : day.isFuture || !day.isEditable
-                  ? "opacity-40"
-                  : "hover:border-[var(--brand-plum-light)] hover:bg-[var(--brand-plum-ice)]",
+              day.isFuture || !day.isEditable
+                ? "opacity-40"
+                : "hover:border-[var(--brand-plum-light)] hover:bg-[var(--brand-plum-ice)]",
             )}
           >
             <span className="text-[11px] text-muted-foreground">

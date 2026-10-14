@@ -5,49 +5,6 @@ import { renderToStaticMarkup } from "react-dom/server"
 
 import { QuizOptionCard } from "../src/components/quiz/quiz-option-card"
 
-test("quiz option card centers the icon row against single-line labels", () => {
-  const html = renderToStaticMarkup(
-    <QuizOptionCard icon="product-shampoo" label="Shampoo" active={false} onClick={() => {}} />,
-  )
-
-  assert.match(html, /grid-cols-\[auto_minmax\(0,1fr\)_auto\]/)
-  assert.match(html, /\bitems-center\b/)
-  assert.doesNotMatch(html, /\bitems-start\b/)
-})
-
-test("quiz option card centers descriptive rows against the full text block", () => {
-  const html = renderToStaticMarkup(
-    <QuizOptionCard
-      icon="hair-wavy"
-      label="Wellig"
-      description="Bildet eine S-Kurve, keine 3D-Windung"
-      active={false}
-      onClick={() => {}}
-    />,
-  )
-
-  assert.match(html, /grid-cols-\[auto_minmax\(0,1fr\)_auto\]/)
-  assert.match(html, /\bitems-center\b/)
-  assert.doesNotMatch(html, /\bitems-start\b/)
-})
-
-test("quiz option card reserves a fixed right action rail for trailing info", () => {
-  const html = renderToStaticMarkup(
-    <QuizOptionCard
-      icon="product-conditioner"
-      label="Conditioner"
-      active={false}
-      onClick={() => {}}
-      trailing={<button type="button">i</button>}
-    />,
-  )
-
-  assert.match(html, /grid-cols-\[auto_minmax\(0,1fr\)_auto\]/)
-  assert.match(html, /min-w-\[4\.25rem\]/)
-  assert.match(html, /\bjustify-end\b/)
-  assert.match(html, /<p id="[^"]+" class="break-words hyphens-auto/)
-})
-
 test("quiz option card keeps trailing info outside the selectable card button", async () => {
   const html = renderToStaticMarkup(
     <QuizOptionCard
@@ -78,6 +35,13 @@ test("quiz option card keeps trailing info outside the selectable card button", 
   assert.match(source, /aria-describedby=\{open \? popupId : undefined\}/)
   assert.match(html, /\bfocus-visible:ring-inset\b/)
   assert.match(html, /\baria-pressed="false"/)
+
+  assert.match(html, /grid-cols-\[auto_minmax\(0,1fr\)_auto\]/)
+  assert.match(html, /\bitems-center\b/)
+  assert.doesNotMatch(html, /\bitems-start\b/)
+  assert.match(html, /min-w-\[4\.25rem\]/)
+  assert.match(html, /\bjustify-end\b/)
+  assert.match(html, /<p id="[^"]+" class="break-words hyphens-auto/)
 })
 
 test("grid image cards use the compact mobile footer while keeping their description accessible", () => {
@@ -131,37 +95,19 @@ test("grid portrait cards fit the complete silhouette to the fixed media height"
   assert.match(html, /data-hair-portrait-art="true"/)
   assert.match(html, /class="relative block h-full w-full object-contain"/)
   assert.match(html, /alt=""/)
-})
 
-test("grid portrait cards reserve breathing room around the complete portrait composition", () => {
-  const html = renderToStaticMarkup(
-    <QuizOptionCard
-      label="Sehr lang"
-      description="Taille oder länger."
-      active={false}
-      onClick={() => {}}
-      visual={{
-        kind: "portrait",
-        alt: "Haarlängen-Illustration",
-        config: {
-          kind: "personalized",
-          density: "medium",
-          length: "very_long",
-          naturalRootPattern: "wavy",
-          treatedLengthPattern: "wavy",
-          treatmentState: "none",
-        },
-      }}
-      visualLayout="grid"
-    />,
-  )
-
-  // The image and shared shoulder outline must shrink as one composition, so
-  // long portraits retain a visible margin before the label footer.
   assert.match(
     html,
     /class="flex h-full w-full items-center justify-center scale-\[0\.9\]" data-hair-portrait-art="true"/,
   )
+  assert.match(html, /data-hair-length-card="true" data-selection-variant="regular"/)
+  assert.match(html, /h-\[184px\]/)
+  assert.match(html, /h-\[140px\]/)
+  assert.match(html, /\[@media\(max-height:700px\)\]:h-\[152px\]/)
+  assert.match(html, /<svg aria-hidden="true"/)
+  assert.match(html, /<img alt=""/)
+  assert.match(html, /aria-pressed="false"/)
+  assert.match(html, /aria-describedby="[^"]+"/)
 })
 
 test("thumbnail image cards keep their explanatory description visible on mobile", () => {

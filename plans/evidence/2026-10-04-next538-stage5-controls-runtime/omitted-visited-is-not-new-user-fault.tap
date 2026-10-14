@@ -1,0 +1,98 @@
+TAP version 13
+# Subtest: Personal Plan navigation always exposes the same five tabs in the signed order, regardless of stage access
+not ok 1 - Personal Plan navigation always exposes the same five tabs in the signed order, regardless of stage access
+  ---
+  duration_ms: 3.63225
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-stage5-navigation.test.tsx:2:1684'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    ... Skipped lines
+    
+      {
+        hasPendingRoutineProposal: false,
+        hasRoutineAccess: false,
+        items: [
+          {
+    ...
+        tier: 'premium',
+    +   unvisitedNavSurfaces: Set(1) {
+    +     'chat'
+    +   }
+    -   unvisitedNavSurfaces: Set(0) {}
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    kind: 'personal_plan'
+    hasPendingRoutineProposal: false
+    items:
+      0:
+        key: 'chat'
+        href: '/chat'
+        label: 'Chat'
+      1:
+        key: 'routine'
+        href: '/routine'
+        label: 'Routine'
+      2:
+        key: 'scan'
+        href: '/scan'
+        label: 'Scan'
+      3:
+        key: 'application'
+        href: '/anwendung'
+        label: 'Anwendung'
+      4:
+        key: 'profile'
+        href: '/profile'
+        label: 'Profil'
+    unvisitedNavSurfaces:
+    hasRoutineAccess: false
+    tier: 'premium'
+  actual:
+    kind: 'personal_plan'
+    items:
+      0:
+        key: 'chat'
+        href: '/chat'
+        label: 'Chat'
+      1:
+        key: 'routine'
+        href: '/routine'
+        label: 'Routine'
+      2:
+        key: 'scan'
+        href: '/scan'
+        label: 'Scan'
+      3:
+        key: 'application'
+        href: '/anwendung'
+        label: 'Anwendung'
+      4:
+        key: 'profile'
+        href: '/profile'
+        label: 'Profil'
+    hasPendingRoutineProposal: false
+    unvisitedNavSurfaces:
+    hasRoutineAccess: false
+    tier: 'premium'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-stage5-navigation.test.tsx:49:12)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 484.755625

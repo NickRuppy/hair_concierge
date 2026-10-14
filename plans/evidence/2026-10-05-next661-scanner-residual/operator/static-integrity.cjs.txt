@@ -1,0 +1,15 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),crypto=require('node:crypto');
+const D=__dirname,P='/tmp/test-audit-scanner-residual119',sha=b=>crypto.createHash('sha256').update(b).digest('hex'),read=p=>JSON.parse(fs.readFileSync(p));
+const old=read(D+'/template-originals/operator-pins.json'),pins=read(D+'/operator-pins.json');
+const parsed=[];for(const n of fs.readdirSync(D).filter(n=>n.endsWith('.cjs'))){new vm.Script(fs.readFileSync(D+'/'+n,'utf8'),{filename:n});parsed.push(n)}
+const prefix=s=>s.slice(0,s.indexOf('function validateTransferReceipt('));if(prefix(fs.readFileSync(D+'/operator-proof.cjs','utf8'))!==prefix(fs.readFileSync(D+'/template-originals/operator-proof.cjs','utf8')))throw Error('Strict decoder/FIRST outer frame policy changed');
+if(JSON.stringify(pins.original76Guards)!==JSON.stringify(read(P+'/readsets.json')))throw Error('Original76 repinned');
+for(const k of ['head','branch','gitDir','commonDir','node','typescriptVersion','metadataPolicy','identityFiles'])if(JSON.stringify(pins[k])!==JSON.stringify(old[k]))throw Error('Existing identity/policy drift '+k);
+for(const p of old.dependencies)if(!pins.dependencies.some(q=>JSON.stringify(p)===JSON.stringify(q)))throw Error('Existing installed dependency changed');
+if(JSON.stringify(old.dependencyTrees)!==JSON.stringify(pins.dependencyTrees))throw Error('Existing distributions changed');
+const d=read(D+'/known-dormant-cut-disposition.json'),closure=read(D+'/operator-selected-closure.json');
+for(const f of d.files){if(old.readset.find(x=>x.file===f.file)?.sha!==f.priorTemplateSha256||pins.original76Guards.some(x=>x.file===f.file))throw Error('Dormant disposition invalid');const current=pins.readset.find(x=>x.file===f.file);if(f.file.includes('journey-access-loader')){if(current||closure.localFiles.includes(f.file))throw Error('Unconsumed journey pin')}else if(current?.sha!==f.currentAcceptedSha256||!closure.localFiles.includes(f.file))throw Error('Known cut not captured exactly')}
+const controls=read(D+'/operator-controls-normalized.json');if(controls.length!==18||new Set(controls.map(x=>x.mutatedSha256)).size!==18)throw Error('18 unique controls');
+for(const c of controls)if(sha(fs.readFileSync(c.fullMutantPath))!==c.mutatedSha256)throw Error('Full mutant drift');
+console.log(JSON.stringify({status:'PASS_STATIC',pinsSHA:sha(fs.readFileSync(D+'/operator-pins.json')),parsedToolFiles:parsed,original76GuardsUnchanged:true,templateIdentityRuntimeDependenciesUnchanged:true,strictProofPredicateDecoderByteIdentical:true,knownAcceptedDormantCutExplicit:true,sourceControls:18,typescriptParsedByChecks:16,sqlTextRecipes:2,repositoryWrites:0,children:0,ownerImports:0,nativeRuns:0},null,2));

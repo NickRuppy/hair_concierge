@@ -1,14 +1,23 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import type { Stage3AuthoritySemanticIntent } from "../src/lib/personal-plan/products/authority/contracts"
+import type {
+  Stage3AuthorityEvaluation,
+  Stage3AuthoritySemanticIntent,
+} from "../src/lib/personal-plan/products/authority/contracts"
+import type { Stage3FitComparison } from "../src/lib/personal-plan/products/fit-comparison"
 import type { Stage3DecisionReviewProjection } from "../src/lib/personal-plan/products/gateway"
+import type { Stage3ReviewDraftChoice } from "../src/lib/personal-plan/products/review-draft"
 import {
   clearDependentHeatReviewStateOnOilChange,
   isCurrentStage3PreviewGeneration,
+  mergeStage3PreviewBundles,
   reconcileStage3PreviewProjection,
+  retainStage3ChoicesAllowedByBundles,
   shouldRefreshStage3Preview,
+  stage3DecisionIntentStillAllowed,
   stage3ProjectedFinalDecisionIntents,
+  type Stage3PreviewReviewBundle,
 } from "../src/components/personal-plan-products/stage3-preview-projection"
 
 const oilKey = "decision:oil:leave_on_fibre_conditioning:gap"
@@ -195,4 +204,154 @@ test("changing leave-on Oil clears a previously answered Heat choice before auto
   assert.deepEqual(state.order, [oilKey, conditionerKey])
   assert.ok(state.choices[oilKey])
   assert.ok(state.choices[conditionerKey])
+})
+
+/* ------------------------------------------------ budget: whole-proposal projection */
+
+const CONDITIONER = "decision:conditioner:conditioner_rinse_out:gap"
+const MASK = "decision:mask:intensive_conditioning_mask:gap"
+
+function bundle(
+  subjectKey: string,
+  category: Stage3AuthorityEvaluation["category"],
+  alternatives: string[],
+  budget: Partial<Stage3FitComparison> = {},
+): Stage3PreviewReviewBundle {
+  return {
+    authorityEvaluation: {
+      status: "known",
+      category,
+      subjectKey,
+      verdict: "unknown",
+      criteria: [],
+      allowedActions: ["leave_uncovered"],
+      recommendation: null,
+      productFactFingerprint: null,
+      recommendationFactFingerprint: null,
+      coverageRuleIds: ["rule"],
+    } as Stage3AuthorityEvaluation,
+    fitComparison: {
+      subjectKey,
+      alternatives: alternatives.map((productId) => ({
+        productId,
+        factFingerprint: `facts:${productId}`,
+      })),
+      ...budget,
+    } as unknown as Stage3FitComparison,
+  }
+}
+
+function replacement(
+  subjectKey: string,
+  productId: string,
+): Extract<Stage3ReviewDraftChoice, { kind: "decision" }> {
+  return {
+    kind: "decision",
+    intent: {
+      type: "resolve_decision",
+      subjectKey,
+      action: "select_replacement",
+      selectedCandidateId: productId,
+      selectedCandidateFactFingerprint: `facts:${productId}`,
+    },
+  }
+}
+
+test("without a budget only Oil choices refresh the projection (unchanged behaviour)", () => {
+  const choices = { [CONDITIONER]: replacement(CONDITIONER, "x") }
+  assert.equal(
+    shouldRefreshStage3Preview({
+      choices,
+      leaveOnOilDecisionKeys: new Set([oilKey]),
+      changedDecisionKeys: [CONDITIONER],
+    }),
+    false,
+  )
+  assert.equal(
+    shouldRefreshStage3Preview({
+      choices,
+      leaveOnOilDecisionKeys: new Set([oilKey]),
+      changedDecisionKeys: [CONDITIONER],
+      budgetActive: false,
+    }),
+    false,
+  )
+})
+
+test("with a budget every changed product decision refreshes; dispositions alone do not", () => {
+  assert.equal(
+    shouldRefreshStage3Preview({
+      choices: { [CONDITIONER]: replacement(CONDITIONER, "x") },
+      leaveOnOilDecisionKeys: new Set(),
+      changedDecisionKeys: [CONDITIONER],
+      budgetActive: true,
+    }),
+    true,
+  )
+  assert.equal(
+    shouldRefreshStage3Preview({
+      choices: {
+        "disposition:1": { kind: "inventory_disposition", dispositionKey: "disposition:1" },
+      },
+      leaveOnOilDecisionKeys: new Set(),
+      changedDecisionKeys: ["disposition:1"],
+      budgetActive: true,
+    }),
+    false,
+  )
+})
+
+test("merging: without a budget only Heat is replaced; with a budget every role bundle is", () => {
+  const current = new Map([
+    [CONDITIONER, bundle(CONDITIONER, "conditioner", ["a", "x"], { defaultProductId: "a" })],
+    [MASK, bundle(MASK, "mask", ["m1", "m2"], { defaultProductId: "m2" })],
+    [heatKey, bundle(heatKey, "heat_protectant", ["h1"])],
+  ])
+  const projection = {
+    status: "ready" as const,
+    autoResolvedIntents: [],
+    bundles: [
+      bundle(MASK, "mask", ["m1", "m2"], {
+        defaultProductId: "m1",
+        budgetNotice: "allowance_used_elsewhere",
+      }),
+      bundle(heatKey, "heat_protectant", ["h2"]),
+    ],
+  }
+  const plain = mergeStage3PreviewBundles({ current, projection, budgetActive: false })
+  assert.equal(plain.get(MASK)?.fitComparison.defaultProductId, "m2")
+  assert.equal(plain.get(heatKey)?.fitComparison.alternatives[0]?.productId, "h2")
+
+  const budgeted = mergeStage3PreviewBundles({ current, projection, budgetActive: true })
+  assert.equal(budgeted.get(MASK)?.fitComparison.defaultProductId, "m1")
+  assert.equal(budgeted.get(MASK)?.fitComparison.budgetNotice, "allowance_used_elsewhere")
+  assert.equal(budgeted.get(heatKey)?.fitComparison.alternatives[0]?.productId, "h2")
+  // A role the projection did not return keeps its bundle.
+  assert.equal(budgeted.get(CONDITIONER)?.fitComparison.defaultProductId, "a")
+})
+
+test("retaining: own choices survive a new default; only a no-longer-offered one is dropped", () => {
+  const reviews = new Map([
+    [CONDITIONER, bundle(CONDITIONER, "conditioner", ["a", "x"], { defaultProductId: "a" })],
+    [MASK, bundle(MASK, "mask", ["m1"], { defaultProductId: "m1" })],
+  ])
+  const choices = {
+    [CONDITIONER]: replacement(CONDITIONER, "x"),
+    [MASK]: replacement(MASK, "m2"),
+    "disposition:1": {
+      kind: "inventory_disposition" as const,
+      dispositionKey: "disposition:1",
+    },
+  }
+  assert.equal(stage3DecisionIntentStillAllowed(reviews, choices[CONDITIONER].intent), true)
+  assert.equal(stage3DecisionIntentStillAllowed(reviews, choices[MASK].intent), false)
+
+  const retained = retainStage3ChoicesAllowedByBundles({
+    choices,
+    order: [CONDITIONER, MASK, "disposition:1"],
+    reviews,
+  })
+  assert.deepEqual(Object.keys(retained.choices), [CONDITIONER, "disposition:1"])
+  assert.deepEqual(retained.order, [CONDITIONER, "disposition:1"])
+  assert.deepEqual(retained.droppedKeys, [MASK])
 })

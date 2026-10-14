@@ -1,0 +1,58 @@
+{
+  "status": "STATIC_READY_CONDITIONAL_MAIN_ONLY",
+  "directory": "/tmp/test-audit-free67-tools-phkvfcm3",
+  "proposalManifestSHA256": "c93ab0f88ad471a0bddda81ebeef2db9b5c0cccecbbbb20b039bc000e9c041a1",
+  "proposalHandoffSHA256": "5437899e0ab6a8da0c6a4841c1e96503e08e6c07ec6b59394794a7271ab5ca30",
+  "pinsSHA256": "9fbdea960d87acb674473172b4d6d797f49496d8b8faafad0aad0b24cb4f6ad5",
+  "artifactHashesSHA256": "e84bc241eea802d6b6ec52baac87548c5251f4ab925c7763d5a427f88c15662c",
+  "counts": {
+    "before": 67,
+    "transfer": 67,
+    "cut": 66
+  },
+  "literalRuntimeCounts": {
+    "before": 68,
+    "transfer": 68,
+    "cut": 67
+  },
+  "controls": 2,
+  "selectedRegistrationsPerControl": 1,
+  "flagIterationsWithinSelectedRegistration": 2,
+  "phaseSnapshots": 21,
+  "unrelatedCallbacksByteExact": 65,
+  "heldFUnchanged": 1,
+  "assertionSites": {
+    "before": 193,
+    "transfer": 194,
+    "cut": 193
+  },
+  "original247GuardsPreserved": true,
+  "nonTestReadset": 240,
+  "nativeLocalClosure": 231,
+  "dependencyFiles": 5018,
+  "dependencyTrees": 32,
+  "proofDecoderAndFirstFramePredicateByteIdentical": true,
+  "syntheticShapeChecks": 72,
+  "staticPreloads": "editor, controls, integrity, parser attestation all PASS; zero attempted writes/children/owner imports/network",
+  "metadataDisposition": "Only main-approved exact packed target policy; historical raw SHA preserved, no whole-file historical diff claim. Prior shared-config policy unchanged.",
+  "repositoryWrites": 0,
+  "nativeRuns": 0,
+  "ownerImports": 0,
+  "childrenStarted": 0,
+  "networkCalls": 0,
+  "removalCredit": 0,
+  "limits": "Semantic/independent acceptance, full native before68/transfer68/cut67, both actual source controls and broader proof remain main-owned. No actual fault or native runtime was run by this agent. Free must integrate before dormant source cleanup because release, rollout-access and journey-access-loader are exact frozen guards.",
+  "keyHashes": {
+    "README.md": "b200c0e6b744be4c00ebdc86cad88a2a37109102aadf8d8de5ad508fa0e5ff9d",
+    "template-delta.patch": "7f8efa59fced4524916464c94de3e750800508b54e47462f31e4c978d1bb1197",
+    "operator-guard.cjs": "1b4b20d2ddd513790e3ce880ae0217b627ac3b58ac16bf55271282ea000d42ea",
+    "operator-edit.cjs": "6b45132ad37e1583695c047469e6232b286a0619ed8d2db3a335432ef0455d6c",
+    "operator-run-controls.cjs": "b883327d047f4152cfdcaa1dddd9a81c4d6c93ae540ac191e3430a582d8b0a91",
+    "operator-proof.cjs": "9784400ba6f2ce2fb4ecc35e1027ffb3351e978f00ae087ecfd180ba09e88d15",
+    "operator-controls-normalized.json": "e48dac970d7d135d96ea72add1a40ad4cf1d5de075030e0b951a66971700a30b",
+    "static-editor-receipt.txt": "412b5bf61faf2afc4634a035a673d112cb62b185c9949a24480c3209d5c7fe8b",
+    "static-controls-receipt.txt": "0d992495d875e23c4833b71900a569ba96fdcdfa693b995dad6074ff7fd97e9c",
+    "static-integrity-receipt.txt": "b97fd470434ea380c75a9b5cfc6f07cef5f1f2dac9b936932a5cc11717f00dbd",
+    "proof-attestation-receipt.txt": "3848e47640b0604b3ae0802582c9a703e2da800e67589734c1ce605f86ab0a99"
+  }
+}

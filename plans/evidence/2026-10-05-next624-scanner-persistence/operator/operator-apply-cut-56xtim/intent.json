@@ -1,0 +1,47 @@
+{
+  "mode": "cut",
+  "from": "transfer",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA": "e17df846d1944a146f0f760dbd16d77c404a1d1cafea73b9fefedf12a8b8fcb3",
+  "prerequisite": {
+    "dir": "/tmp/test-audit-scanner46-tools-xrqyw5u6/operator-mutations-transfer-Nt8yyG",
+    "completionSHA": "46897612a2b296c6443c040c16886b8f8c20d0d9864d981f97b880949bcf33ba",
+    "verified": 7,
+    "logFiles": 21,
+    "phase": "transfer"
+  },
+  "files": [
+    {
+      "file": "tests/scan-resolve-event-log.test.ts",
+      "before": "8c6cdd84752d9ba41ca0d0879271796a838b602a23b4927874838df0e8e8aeba",
+      "after": "00316a1edf13965567845b2513b846a94d7ab3074f2fff05f5452ca87b0fce0e"
+    },
+    {
+      "file": "tests/scan-resolve-events-migration.test.ts",
+      "before": "c1bd907dcb9ed28c82f6d0196f6531c4fab7ab02b255061b45c2fd2f59089189",
+      "after": "bbf36aaadfe6ef1d0c335267e6f584a4eddce708820af1cf8887867c1b3aff8f"
+    },
+    {
+      "file": "tests/scan-resolve-auto-save.test.ts",
+      "before": "a1e6007c5d222f0de76fc8d91ccad753d8c9884dd8d156a24945eb72e47ae8cf",
+      "after": "de4d4d0a8bf10bcec4edcf2543e7fb759d06bce3e98f22d4e8e882d4a0fe4dba"
+    },
+    {
+      "file": "tests/scan-wishlist-auto-save-postgres.test.ts",
+      "before": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9",
+      "after": "64ec32019ac1062d89784e2b0eafbee6a2d010c945931859abbbee2cdc6859c9"
+    },
+    {
+      "file": "tests/scan-wishlist-route.test.ts",
+      "before": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a",
+      "after": "cc6a7a188a313b693b53fd504eca2b442d9c9698187ecc44bec457218a3bfa5a"
+    },
+    {
+      "file": "tests/scan-resolve-route.test.ts",
+      "before": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add",
+      "after": "594bc52914b266a18f8a31ab60f849ef8ea56bd8b23ccf2a0647d26a73c79add"
+    }
+  ]
+}

@@ -252,51 +252,6 @@ test("AgentV2TerminalAnswerSchema accepts a product recommendation payload", () 
   assert.equal(AgentV2TerminalAnswerSchema.parse(value).answer_mode, "product_recommendation")
 })
 
-test("AgentV2TerminalAnswerSchema accepts text-only product assessment payload", () => {
-  const value = {
-    answer_mode: "product_assessment",
-    interpreted_intent: "User asks whether a named shampoo suits them.",
-    request_interpretation: requestInterpretation({
-      primary_intent: "product_recommendation",
-      product_request_kind: "product_detail",
-      care_category: "shampoo",
-      requested_product_count: 1,
-      count_policy: "exact",
-      evidence_quote: "Passt Syoss Volume Shampoo zu mir?",
-      specific_product_candidate: true,
-    }),
-    confidence: 0.91,
-    extracted_constraints: emptyExtractedConstraints(),
-    missing_information: [],
-    safety_flags: [],
-    tool_grounding: {
-      used_guidance_package_ids: ["base.product_recommendation.v1", "category.shampoo.v1"],
-      used_product_tool: true,
-      used_routine_tool: false,
-      product_ids: ["prod_syoss_volume"],
-      routine_step_ids: [],
-      hard_rule_ids: [],
-    },
-    routine_context: {
-      active: false,
-      routine_layer: null,
-      step_id: null,
-      category: null,
-      return_path: [],
-    },
-    pending_followup_action: null,
-    session_memory_writes: [],
-    payload: {
-      assessment_kind: "fit",
-      assessed_product_ids: ["prod_syoss_volume"],
-      user_facing_answer_de:
-        "Danke fürs Auswählen. Syoss Volume Shampoo kann zu feinem Haar passen, wenn es am Ansatz gut reinigt und die Längen nicht beschwert.",
-    },
-  }
-
-  assert.equal(AgentV2TerminalAnswerSchema.parse(value).answer_mode, "product_assessment")
-})
-
 test("AgentV2TerminalAnswerSchema rejects product assessment with too many products", () => {
   const result = AgentV2TerminalAnswerSchema.safeParse({
     answer_mode: "product_assessment",

@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: a module-driven recompute activates the successor immediately instead of proposing it
+not ok 1 - a module-driven recompute activates the successor immediately instead of proposing it
+  ---
+  duration_ms: 775.099958
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-refinement-recompute-activation-migration.test.ts:2:5755'
+  failureType: 'testCodeFailure'
+  error: |-
+    confirmed within the same transaction, not just proposed
+    + actual - expected
+    
+    + '5221cc09-85f8-49c2-8663-36f33dc86f89'
+    - null
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: ~
+  actual: '5221cc09-85f8-49c2-8663-36f33dc86f89'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-refinement-recompute-activation-migration.test.ts:299:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1035.735584

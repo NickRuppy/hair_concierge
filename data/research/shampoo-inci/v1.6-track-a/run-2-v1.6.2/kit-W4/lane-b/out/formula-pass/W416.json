@@ -1,0 +1,163 @@
+{
+  "blindId": "W416",
+  "inciFingerprintSha256": "ad0a21d7dce660496131f9d83955fa89e099faca051e206bf1fb5766c6231d8b",
+  "lane": "lane-b",
+  "phase": "formula-pass (blind, stage A only)",
+  "standard": "shampoo-classification-v1.6.2",
+  "identity": {
+    "packSize": "250 ml",
+    "formulaSourceTier": 2,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "high",
+    "normalization": "Packet list already one entry per ingredient; positions are normalized one-based positions (ID-2).",
+    "e3ProminenceCutoff": "Parfum @25; prominent = positions 1-24"
+  },
+  "formulaFacts": {
+    "surfactants": {
+      "strongAnionicEtherSulfonate": ["Sodium Laureth Sulfate @2 (defining anionic)"],
+      "strongAnionicAlkylSulfate": [],
+      "mildAnionic": [],
+      "amphoteric": ["Cocamidopropyl Betaine @3 (prominent buffer)"],
+      "nonionicCleansing": ["Coco-Glucoside @4 (prominent buffer)"],
+      "notCleansingNotBuffer": ["Sorbitan Caprylate @8 (preservative booster/emulsifier)", "Tetrasodium Glutamate Diacetate @10 (chelator)", "Sodium Chloride @18", "Lactic Acid @5", "Citric Acid @19"],
+      "reinforcingRoutes": [],
+      "c1c5c6Reading": "C1: ether-sulfate defining anionic, two prominent buffers, no reinforcing route"
+    },
+    "conditioningRoutes": {
+      "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6 (prominent)"],
+      "payload_lipid": [],
+      "weak_refatter": ["Glyceryl Oleate @7", "Lecithin @17", "Tocopheryl Acetate @21 (trace)"],
+      "silicone": [],
+      "pearlizing_fatty_route": [],
+      "humectants": ["Panthenol @9", "Glycerin @13"],
+      "notHumectantRoute": ["Alcohol @15"]
+    },
+    "wLine": {
+      "wLine": "Panthenol @9",
+      "wLineClasses": ["sub1_active"],
+      "cap": "e3Point @25 (Parfum)",
+      "alphabeticalRun": "none (longest ascending run 15-18, 4 entries)",
+      "candidatesTested": ["Panthenol @9: (i) SLES @2, betaine @3, Coco-Glucoside @4 before it ok; (ii) no cleansing surfactant, alkanolamide or pearlizing wax between @10 and the cap -> plausible"],
+      "skipped": [],
+      "codes": [],
+      "payloadLipidMaterial": [],
+      "payloadLipidNonMaterial": []
+    },
+    "actives": {
+      "dandruffActives": [],
+      "comfortRoutesE4Prominent": ["Panthenol @9"],
+      "humectantRefattingRoutesE4Prominent": ["Glyceryl Oleate @7", "Panthenol @9", "Glycerin @13"],
+      "coolingAgents": ["Menthol @11 (prominent)"],
+      "essentialOils": [],
+      "otherActives": ["Caffeine @12", "Biotin @22", "Dimethylhydroxy Dihydroflavone @16 (flavonoid active)", "Rosmarinus Officinalis Leaf Extract @14"],
+      "fragranceMaterials": ["Parfum @25", "Limonene @26", "Linalool @27", "Tetramethyl Acetyloctahydronaphthalenes @28"],
+      "other": ["Leuconostoc/Radish Root Ferment Filtrate @20 (preservative-type ferment; not on the W-line list)"]
+    },
+    "scalpGateFormulaFacts": {
+      "CSA": "met via prominent E4 comfort route Panthenol @9 and humectant/refatting routes (Glyceryl Oleate @7, Glycerin @13); counter-signal prominent Menthol @11",
+      "MB": "not met: Sodium Laureth Sulfate @2 prominent strong anionic",
+      "S-SENSITIVE formula half": "comfort route Panthenol @9 -> would pass if targeted (menthol counter-signal caps targeted at moderate)",
+      "S-DRY formula half": "humectant routes -> would pass if targeted",
+      "S-OILY formula clause": "cleansing moderate, weight low, conditioning moderate -> clause passes"
+    }
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Moderate: C1 chassis, Sodium Laureth Sulfate @2 defining anionic buffered by prominent Cocamidopropyl Betaine @3 and Coco-Glucoside @4, no reinforcing strong anionic.",
+      "ruleIds": ["C3", "C4", "C1"]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "neighboringAlternative": "low",
+      "rationale": "Moderate: one meaningful cationic route (prominent Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6) plus light refatting routes (Glyceryl Oleate @7, Lecithin @17) and humectants (Panthenol @9, Glycerin @13). C2 not met (no silicone, payload lipid or pearlizer). Counter-signal: every route is light and the formula reads scalp/active-led (menthol, caffeine, biotin), so it could be low.",
+      "ruleIds": ["Section 5 anchors", "C2"]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "neighboringAlternative": "moderate",
+      "evidence": {
+        "cationic_polymer": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6"],
+        "payload_lipid": [],
+        "weak_refatter": ["Glyceryl Oleate @7", "Lecithin @17", "Tocopheryl Acetate @21", "Tocopherol @23 (trace antioxidant)"],
+        "silicone": [],
+        "protein_film": [],
+        "film_former": [],
+        "cationic_conditioner": [],
+        "reset": ["Sodium Laureth Sulfate @2", "Cocamidopropyl Betaine @3", "Coco-Glucoside @4"],
+        "humectantContext": ["Panthenol @9", "Glycerin @13"],
+        "excluded": ["Sorbitan Caprylate @8 (preservative booster/emulsifier)", "Menthol @11, Caffeine @12, Biotin @22, Dimethylhydroxy Dihydroflavone @16 (actives)", "Rosmarinus Officinalis Leaf Extract @14, Leuconostoc/Radish Root Ferment Filtrate @20 (extracts)", "Alcohol @15", "Parfum @25 and fragrance materials", "Tetrasodium Glutamate Diacetate @10, Lactic Acid @5, Citric Acid @19, Sodium Chloride @18, Sodium Benzoate @24"],
+        "unresolved": []
+      },
+      "wLineRecord": "wLine Panthenol @9 (sub1_active); cap e3Point @25; no alphabetical run; no skipped candidates; no codes; no payload_lipid present.",
+      "depositionLoad": "light: one guar plus weak refatters (glyceryl oleate, lecithin, tocopherols).",
+      "persistence": "low: no silicone, lipid or film; refatters are light and weakly retained.",
+      "resetCapacity": "moderate: C1 SLES/betaine/glucoside chassis.",
+      "counterevidence": "Two deposition families (cationic_polymer, weak_refatter) are prominent.",
+      "whyThisBand": "A single guar with light refatters facing an effective sulfate chassis does not plausibly reduce movement or lift.",
+      "whyNotNeighborBand": "Not moderate (W2): the second family is only weak_refatter (glyceryl oleate, lecithin, tocopherols), which with humectants is light and low-persistence; the one cationic route is a single guar and the moderate C1 reset faces only these light routes.",
+      "confidenceLimitingFactor": "Guar dose and glyceryl oleate amount unknown; two prominent families keep moderate realistic.",
+      "rationale": "Low: guar plus weak refatters against moderate C1 reset; W2 reason recorded; W-line @9 gates nothing (no payload_lipid).",
+      "ruleIds": ["6.3", "6.6", "W2", "W-LINE", "N-ALT"]
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "low",
+      "neighboringAlternative": "scalp_active",
+      "provisional": true,
+      "careDirection": {
+        "verdict": "nonspecific",
+        "moistureRoutes": ["Panthenol @9", "Glycerin @13", "Glyceryl Oleate @7"],
+        "repairRoutes": [],
+        "sharedConditioningRoutes": ["Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @6"],
+        "limitation": "Light humectant/refatter routes only; no damage-care cluster."
+      },
+      "claimRole": "not_applicable",
+      "counterSignal": "Blind pass. Caffeine @12, Biotin @22, flavonoid @16 and rosemary suggest hair-loss/growth positioning (out of scope, F5); menthol suggests a refresh/scalp role.",
+      "decisionTrace": "Blind: claim direction null; formula nonspecific; scalp_active possible with SC1 positioning (CSA met); provisional general.",
+      "rationale": "Provisional general (claim-dependent; formula-only).",
+      "ruleIds": ["3.1", "7.2", "7.3", "F5"]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "neighboringAlternative": ["scalp_active"],
+      "provisional": true,
+      "decisionTrace": "Empty default considered; no claims visible.",
+      "rationale": "Provisional empty (claim-dependent).",
+      "ruleIds": ["Section 8"]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "neighboringAlternative": "frequent",
+      "provisional": true,
+      "triggerCode": "none",
+      "triggerEvidence": [],
+      "losingTriggers": [],
+      "rationale": "Provisional regular (default); moderate formula cannot be alternating; no dandruff active; caffeine/hair-loss positioning never fires treatment (U3, F5).",
+      "ruleIds": ["Section 9", "U3"]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "neighboringAlternative": "targeted",
+      "provisional": true,
+      "rationale": "Provisional not_targeted (claims hidden). Formula half: CSA met via listed prominent comfort route Panthenol @9 (and humectant/refatting routes); MB not met (SLES @2); counter-signal prominent Menthol @11.",
+      "ruleIds": ["Section 10", "CSA", "MB", "E4", "SC1"]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not supported: no recognized anti-dandruff active in the complete INCI.",
+      "ruleIds": ["Section 11"]
+    }
+  },
+  "unresolvedMaterialIngredients": [],
+  "notes": ["Claim-dependent properties are provisional."]
+}

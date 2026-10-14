@@ -1,0 +1,13 @@
+{
+  "phase": "transfer",
+  "counts": {
+    "before": 44,
+    "transfer": 44,
+    "cut": 42
+  },
+  "changed": [
+    "tests/sentry-client-runtime.test.ts"
+  ],
+  "sourceWrites": 0,
+  "testsRun": 0
+}

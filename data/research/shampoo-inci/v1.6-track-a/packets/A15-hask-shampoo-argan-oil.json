@@ -1,0 +1,62 @@
+{
+  "slot": "A15",
+  "productId": "17b6d50e-ca5b-4f66-bdd7-39bd19afe748",
+  "name": "Hask Shampoo Argan Oil",
+  "brand": "Hask",
+  "packSize": "355 ml (catalog row; GTIN 071164343166)",
+  "gtins": [
+    "071164343166"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/1475016/hask-shampoo-argan-oil",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "GTIN: 071164343166 (dm-Artikelnummer 1475016; 'Shampoo Argan Oil, 355 ml'); page status 'Nicht lieferbar'",
+      "inciVerbatim": "Aqua/Water/Eau, Sodium C14-16 olefin sulfonate, Cocamide MIPA, Cocamidopropyl betaine, Glycerin, Sodium chloride, Parfum/Fragrance, Glycol distearate, Argania spinosa (argan) kernel oil, Hydrolyzed keratin, Panthenol, Polyquaternium-10, Dicaprylyl ether, Decyl glucoside, Glyceryl oleate, Phenoxyethanol, Methylchloroisothiazolinone, Methylisothiazolinone, Citric acid, Polyquaternium-7, Magnesium chloride, Potassium sorbate, Benzoic acid, Magnesium nitrate, Sodium acetate, Sodium benzoate, Sodium hydroxide, Polyquaternium-55, Isopropanolamine, Caprylyl glycol, Benzyl benzoate, Limonene",
+      "claimsVerbatim": "Ohne Sulfate, Parabene und künstliche Farbstoffe | Versorgt das Haar mit wertvollen Nährstoffen und intensiver Feuchtigkeit | Reinigt und pflegt das Haar geschmeidig weich und lässt es wunderschön glänzen | Entwirrt und zähmt selbst widerspenstiges Haar | Das HASK Shampoo Argan Oil mit kostbarem Arganöl versorgt trockenes, strapaziertes und geschädigtes Haar mit wertvollen Nährstoffen und intensiver Feuchtigkeit. Es reinigt und pflegt das Haar geschmeidig weich und lässt es wunderschön glänzen. Dabei entwirrt und zähmt es selbst widerspenstiges Haar.",
+      "directionsVerbatim": "(none on page)"
+    },
+    {
+      "url": "https://www.dm.de/p/d/3123206/hask-shampoo-repair-argan-oil",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de (DIFFERENT SKU: 473 ml, successor 'repair + argan oil')",
+      "sourceKind": "retailer",
+      "gtinShown": "GTIN: 071164341469 (dm-Artikelnummer 3123206; 'Shampoo repair + argan oil, 473 ml'); page status 'Nicht lieferbar', price reduced 8,95 -> 5,95 EUR",
+      "inciVerbatim": "Ingredients: Aqua/Water/Eau, Sodium C14-16 olefin sulfonate, Cocamide MIPA, Sodium chloride, Cocamidopropyl betaine, Glycerin, Argania spinosa (argan) kernel oil, Panthenol, Polyquaternium-10, Polyquaternium-7, Glycol distearate, Dicaprylyl ether, Decyl glucoside, Glyceryl oleate, Citric acid, Sodium hydroxide, Sodium salicylate, Sodium benzoate, Trisodium ethylenediamine disuccinate, Isopropanolamine, Parfum/Fragrance, Benzoic acid, Benzyl benzoate, Citrus aurantium peel oil, Limonene",
+      "claimsVerbatim": "Pflegendes Shampoo | Mit Arganöl | Für trockenes und geschädigtes Haar | Gegen Haarbruch | Vegan | Das Shampoo repair + argan oil von HASK wurde speziell für die Bedürfnisse von trockenem und strapaziertem Haar entwickelt. Die Formel, angereichert mit Arganöl, kann dabei unterstützen, das Haar zu reparieren. Es versorgt das Haar intensiv mit Feuchtigkeit und kann Haarbruch sowie Spliss entgegenwirken. Das Haar fühlt sich nach der Anwendung gekräftigt an. Das Shampoo verleiht ein geschmeidiges und gepflegtes Haargefühl vom Ansatz bis in die Spitzen. | Wirkung: Pflege | Produkteigenschaften: ohne Silikone, ohne Sulfat",
+      "directionsVerbatim": "Auf das nasse Haar auftragen, einmassieren, aufschäumen und gründlich ausspülen. Ideal für die tägliche Haarwäsche."
+    },
+    {
+      "url": "https://haskbeauty.com/products/repair-arganoil-shampoo",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_foreign (US; current 'Repair + Argan Oil Shampoo', 16 fl oz line, NOT the 355 ml GTIN)",
+      "sourceKind": "manufacturer_foreign",
+      "gtinShown": "none shown; page is the current repair + argan oil line (matches the 473 ml dm list)",
+      "inciVerbatim": "Aqua/Water/Eau, Sodium C14-16 olefin sulfonate, Cocamide MIPA, Sodium chloride, Cocamidopropyl betaine, Glycerin, Argania spinosa (argan) kernel oil, Panthenol, Polyquaternium-10, Polyquaternium-7, Glycol distearate, Dicaprylyl ether, Decyl glucoside, Glyceryl oleate, Citric acid, Sodium hydroxide, Sodium salicylate, Sodium benzoate, Trisodium ethylenediamine disuccinate, Isopropanolamine, Parfum/Fragrance, Benzoic acid, Benzyl benzoate, Citrus aurantium peel oil, Limonene",
+      "claimsVerbatim": "Infused with argan oil, this shampoo gently cleanses hair while helping to repair breakage and smooth split ends. | Sulfate-free argan oil shampoo that repairs damage, adds shine, and tames frizz for silky-smooth, manageable hair. | BEST FOR: Dry or damaged hair | Free of sulfates, parabens, phthalates, silicone, gluten, drying alcohol and artificial colors. Vegan, cruelty free and color-safe.",
+      "directionsVerbatim": "Apply to wet hair, massage into a lather and rinse thoroughly. Ideal for daily use."
+    }
+  ],
+  "conflicts": [
+    "SKU/formula conflict: the catalog row (355 ml, GTIN 071164343166) lists on dm.de a formula WITH Hydrolyzed keratin, Phenoxyethanol, Methylchloroisothiazolinone, Methylisothiazolinone, Polyquaternium-55, Caprylyl glycol (and no Sodium salicylate / Trisodium ethylenediamine disuccinate / Citrus aurantium peel oil), whereas the 473 ml SKU (GTIN 071164341469) and haskbeauty.com list a different, MCI/MI-free formula.",
+    "The v1.3/v1.4 packet for this catalog row (data/research/shampoo-inci/v1.3/products/hask-argan-oil/formula-source.json, fingerprint 332844d4...) recorded packSize 473 ml / GTIN 071164341469 and the 473 ml formula - i.e. the earlier capture belongs to a different SKU than the catalog row.",
+    "Claim vs INCI: dm 355 ml claims 'Ohne Sulfate, Parabene und künstliche Farbstoffe'; list contains Sodium C14-16 olefin sulfonate (a sulfonate, not a sulfate) and Methylchloroisothiazolinone/Methylisothiazolinone (not parabens) - no direct contradiction, but 'ohne Sulfate' is marketing-defined. dm 473 ml 'Ohne Sulfat' same remark.",
+    "Third-party/international retailers show both formulas under UPC 071164343166 (Vitacost: one page with hydrolyzed keratin + MCI/MI, another without; Woolworths AU without) - formula varies by production run/region; not used as evidence."
+  ],
+  "canonicalInci": null,
+  "canonicalReason": "Not frozen: the catalog SKU (355 ml, GTIN 071164343166) has exactly one German source (dm.de 1475016, currently 'Nicht lieferbar'); no manufacturer DE/EU page, no second GTIN-anchored German retailer (Rossmann has no Hask shampoo listing; GTIN-URL 0071164343166 returns 'nichts gefunden'; Müller/Douglas/Budni not found), and international listings for the same UPC conflict. The only verified-current formula is for the successor/other SKU 473 ml (GTIN 071164341469), which is also 'Nicht lieferbar' on dm.",
+  "inciFingerprintSha256": null,
+  "normalization": "Canonical list = one entry per ingredient exactly as published on the winning source (case and punctuation kept in canonicalInci; trailing period stripped; bullet/asterisk/comma separators dropped; split synonym entries such as 'Aqua (Water, Eau)' kept as one item). Fingerprint: per ingredient lower-case, trim, collapse internal whitespace; join with '|'; sha256 of the UTF-8 string. Earlier v1.3/v1.4 fingerprints were computed over comma-joined lists and are not comparable.",
+  "identityConfidence": "low",
+  "formulaCompleteness": "not_known_complete",
+  "formulaSourceTier": 4,
+  "status": "blocked",
+  "blockReason": "Catalog SKU appears delisted/unavailable in DE and its only German source is a single unavailable dm listing with a formula differing from the 473 ml successor; earlier v1.4 formula was captured from the 473 ml SKU, not from this catalog row. Needs Nick: confirm which pack (355 ml old vs 473 ml 'repair + argan oil') the catalog row should represent, or delist/replace the row.",
+  "notes": [
+    "Candidate formula A (355 ml, dm 1475016, single retailer, unavailable): 32 entries as in sources[0]. Candidate formula B (473 ml, dm 3123206 + haskbeauty.com US, 25 entries): as in sources[1]/[2]; fingerprint of B over the dm list: 424834f10d54e500a9cbe027b1abcf4e97415145af2bac0e7e17abac49e29973",
+    "If Nick re-points the row to the 473 ml GTIN 071164341469, formula B would qualify as tier 3-ish (dm exact GTIN + US manufacturer page of the same line; no DE manufacturer page found) -> frozen_with_conflict at best.",
+    "Both dm Hask shampoo listings show 'Nicht lieferbar' on 2026-10-09 (473 ml price reduced 8,95 -> 5,95 EUR, possible clearance/range exit)."
+  ]
+}

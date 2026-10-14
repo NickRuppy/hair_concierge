@@ -1,0 +1,42 @@
+{
+  "templatePins": "ffb6b2428bdceb285246596cafeba5e3b1a6870ec0ce885b875531178b10f0cd",
+  "proofPolicy": "Refinement37 final strict decoded message and FIRST outer assertion frame; unchanged predicate",
+  "files": [
+    {
+      "file": "operator-guard.cjs",
+      "template": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-guard.cjs",
+      "templateSHA256": "fc5f27d3c7f0c9f6e226b91e542c6db5d3e3e746af454aeacf2415c20e01f168",
+      "preparedTemplateSHA256": "6b6849974e1ca3a8a5c7e9be3a7c1c688e03a815c34f317547c0883560e739ba"
+    },
+    {
+      "file": "operator-edit.cjs",
+      "template": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-edit.cjs",
+      "templateSHA256": "a5a57635cbbef3a27fc3ea9d4abb78e8f99db142ff900979f3942e827187c67c",
+      "preparedTemplateSHA256": "b0b8201e892e682ea4b931853146cb277d373e608228e7bf46f9c173d31f427e"
+    },
+    {
+      "file": "operator-run-controls.cjs",
+      "template": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-run-controls.cjs",
+      "templateSHA256": "1bc3271bd6a646e60482390708f7571c27b5201d8729d050ef5937a124b2f8fd",
+      "preparedTemplateSHA256": "19b5ac021458a8d8c21a9d9dacb76dc5792a77dd40ae60a346760f4fd54008d2"
+    },
+    {
+      "file": "operator-proof.cjs",
+      "template": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-proof.cjs",
+      "templateSHA256": "6aec16c6468794c9d3b87d69b21b4661e3082a3d48ed44caaaf7c4cf7346eecf",
+      "preparedTemplateSHA256": "9784400ba6f2ce2fb4ecc35e1027ffb3351e978f00ae087ecfd180ba09e88d15"
+    },
+    {
+      "file": "operator-readonly-preload.cjs",
+      "template": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-readonly-preload.cjs",
+      "templateSHA256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+      "preparedTemplateSHA256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e"
+    },
+    {
+      "file": "proof-attestation.cjs",
+      "template": "/tmp/test-audit-refinement37-tools-5ce9vx77/proof-attestation.cjs",
+      "templateSHA256": "3a689b380987267a37926c527eee829ce6c4a86c105a818cabf06393a72f782b",
+      "preparedTemplateSHA256": "e93ef378ec8c2bac28f8617710c4edf661857c7d6988faa1d6b4f2cd2db4ae48"
+    }
+  ]
+}

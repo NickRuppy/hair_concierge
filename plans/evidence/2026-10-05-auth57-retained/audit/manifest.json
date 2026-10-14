@@ -1,0 +1,270 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "kind": "NO CUT; all three phases intentionally byte-identical",
+  "files": [
+    {
+      "file": "tests/auth-confirm-replay.test.ts",
+      "sha256": "a16844e55372f363aa5f94e6999867aeec5654efdf96299cf47d7e5781a810af",
+      "lineCount": 351,
+      "sites": 14,
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/before/tests/auth-confirm-replay.test.ts.txt",
+          "sha256": "a16844e55372f363aa5f94e6999867aeec5654efdf96299cf47d7e5781a810af",
+          "sites": 14
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/transfer/tests/auth-confirm-replay.test.ts.txt",
+          "sha256": "a16844e55372f363aa5f94e6999867aeec5654efdf96299cf47d7e5781a810af",
+          "sites": 14
+        },
+        "cut": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/cut/tests/auth-confirm-replay.test.ts.txt",
+          "sha256": "a16844e55372f363aa5f94e6999867aeec5654efdf96299cf47d7e5781a810af",
+          "sites": 14
+        }
+      }
+    },
+    {
+      "file": "tests/auth-middleware-query-cleanup.test.ts",
+      "sha256": "f3d694d58efb8f857770ef1bd54c4e7404717594f8ad6da7fd6eeaca2a4cbdb8",
+      "lineCount": 54,
+      "sites": 4,
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/before/tests/auth-middleware-query-cleanup.test.ts.txt",
+          "sha256": "f3d694d58efb8f857770ef1bd54c4e7404717594f8ad6da7fd6eeaca2a4cbdb8",
+          "sites": 4
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/transfer/tests/auth-middleware-query-cleanup.test.ts.txt",
+          "sha256": "f3d694d58efb8f857770ef1bd54c4e7404717594f8ad6da7fd6eeaca2a4cbdb8",
+          "sites": 4
+        },
+        "cut": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/cut/tests/auth-middleware-query-cleanup.test.ts.txt",
+          "sha256": "f3d694d58efb8f857770ef1bd54c4e7404717594f8ad6da7fd6eeaca2a4cbdb8",
+          "sites": 4
+        }
+      }
+    },
+    {
+      "file": "tests/auth-middleware-replay.test.ts",
+      "sha256": "84e49620009837392f66629cf084bb84aabad18f0e60910126a71efb1fd5cc0e",
+      "lineCount": 122,
+      "sites": 8,
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/before/tests/auth-middleware-replay.test.ts.txt",
+          "sha256": "84e49620009837392f66629cf084bb84aabad18f0e60910126a71efb1fd5cc0e",
+          "sites": 8
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/transfer/tests/auth-middleware-replay.test.ts.txt",
+          "sha256": "84e49620009837392f66629cf084bb84aabad18f0e60910126a71efb1fd5cc0e",
+          "sites": 8
+        },
+        "cut": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/cut/tests/auth-middleware-replay.test.ts.txt",
+          "sha256": "84e49620009837392f66629cf084bb84aabad18f0e60910126a71efb1fd5cc0e",
+          "sites": 8
+        }
+      }
+    },
+    {
+      "file": "tests/auth-unauthenticated-redirect.test.ts",
+      "sha256": "011f1fc7b03972391d5a75e0597f93b977047eb6376f93255ca158d9c5e30175",
+      "lineCount": 51,
+      "sites": 4,
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/before/tests/auth-unauthenticated-redirect.test.ts.txt",
+          "sha256": "011f1fc7b03972391d5a75e0597f93b977047eb6376f93255ca158d9c5e30175",
+          "sites": 4
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/transfer/tests/auth-unauthenticated-redirect.test.ts.txt",
+          "sha256": "011f1fc7b03972391d5a75e0597f93b977047eb6376f93255ca158d9c5e30175",
+          "sites": 4
+        },
+        "cut": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/cut/tests/auth-unauthenticated-redirect.test.ts.txt",
+          "sha256": "011f1fc7b03972391d5a75e0597f93b977047eb6376f93255ca158d9c5e30175",
+          "sites": 4
+        }
+      }
+    },
+    {
+      "file": "tests/quiz-email-return-browser.spec.ts",
+      "sha256": "f9105766485689988f066e32f7568f68f3bbed48cc35c707fb7a776953c34116",
+      "lineCount": 212,
+      "sites": 6,
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/before/tests/quiz-email-return-browser.spec.ts.txt",
+          "sha256": "f9105766485689988f066e32f7568f68f3bbed48cc35c707fb7a776953c34116",
+          "sites": 6
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/transfer/tests/quiz-email-return-browser.spec.ts.txt",
+          "sha256": "f9105766485689988f066e32f7568f68f3bbed48cc35c707fb7a776953c34116",
+          "sites": 6
+        },
+        "cut": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/cut/tests/quiz-email-return-browser.spec.ts.txt",
+          "sha256": "f9105766485689988f066e32f7568f68f3bbed48cc35c707fb7a776953c34116",
+          "sites": 6
+        }
+      }
+    },
+    {
+      "file": "tests/quiz-email-return-choice.test.ts",
+      "sha256": "755b4d7808f1d6fd69c54aa5ff8af509a13d4d171ac98dc4fa9a45c6909c218c",
+      "lineCount": 116,
+      "sites": 2,
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/before/tests/quiz-email-return-choice.test.ts.txt",
+          "sha256": "755b4d7808f1d6fd69c54aa5ff8af509a13d4d171ac98dc4fa9a45c6909c218c",
+          "sites": 2
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/transfer/tests/quiz-email-return-choice.test.ts.txt",
+          "sha256": "755b4d7808f1d6fd69c54aa5ff8af509a13d4d171ac98dc4fa9a45c6909c218c",
+          "sites": 2
+        },
+        "cut": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/cut/tests/quiz-email-return-choice.test.ts.txt",
+          "sha256": "755b4d7808f1d6fd69c54aa5ff8af509a13d4d171ac98dc4fa9a45c6909c218c",
+          "sites": 2
+        }
+      }
+    },
+    {
+      "file": "tests/quiz-email-return-credential.test.ts",
+      "sha256": "32ddc15cd8935497c142ec08ff8bd5dce75ab035c9f4a716117435fe24e0b263",
+      "lineCount": 234,
+      "sites": 8,
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/before/tests/quiz-email-return-credential.test.ts.txt",
+          "sha256": "32ddc15cd8935497c142ec08ff8bd5dce75ab035c9f4a716117435fe24e0b263",
+          "sites": 8
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/transfer/tests/quiz-email-return-credential.test.ts.txt",
+          "sha256": "32ddc15cd8935497c142ec08ff8bd5dce75ab035c9f4a716117435fe24e0b263",
+          "sites": 8
+        },
+        "cut": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/cut/tests/quiz-email-return-credential.test.ts.txt",
+          "sha256": "32ddc15cd8935497c142ec08ff8bd5dce75ab035c9f4a716117435fe24e0b263",
+          "sites": 8
+        }
+      }
+    },
+    {
+      "file": "tests/quiz-email-return-entry.test.ts",
+      "sha256": "95212f04f53d17f495a903231eb2495d2d6d1f0939503918ce417222eee880c9",
+      "lineCount": 83,
+      "sites": 2,
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/before/tests/quiz-email-return-entry.test.ts.txt",
+          "sha256": "95212f04f53d17f495a903231eb2495d2d6d1f0939503918ce417222eee880c9",
+          "sites": 2
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/transfer/tests/quiz-email-return-entry.test.ts.txt",
+          "sha256": "95212f04f53d17f495a903231eb2495d2d6d1f0939503918ce417222eee880c9",
+          "sites": 2
+        },
+        "cut": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/cut/tests/quiz-email-return-entry.test.ts.txt",
+          "sha256": "95212f04f53d17f495a903231eb2495d2d6d1f0939503918ce417222eee880c9",
+          "sites": 2
+        }
+      }
+    },
+    {
+      "file": "tests/quiz-email-return-postgres.test.ts",
+      "sha256": "6a4ed1927d46800fc81d7411bfb4b6409ca877cfc696216ea901bd02ac068fe0",
+      "lineCount": 99,
+      "sites": 1,
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/before/tests/quiz-email-return-postgres.test.ts.txt",
+          "sha256": "6a4ed1927d46800fc81d7411bfb4b6409ca877cfc696216ea901bd02ac068fe0",
+          "sites": 1
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/transfer/tests/quiz-email-return-postgres.test.ts.txt",
+          "sha256": "6a4ed1927d46800fc81d7411bfb4b6409ca877cfc696216ea901bd02ac068fe0",
+          "sites": 1
+        },
+        "cut": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/cut/tests/quiz-email-return-postgres.test.ts.txt",
+          "sha256": "6a4ed1927d46800fc81d7411bfb4b6409ca877cfc696216ea901bd02ac068fe0",
+          "sites": 1
+        }
+      }
+    },
+    {
+      "file": "tests/quiz-email-return-selection.test.ts",
+      "sha256": "67b77db34c94ed5bb7a8739a274c5f6af64a27cea2502de6bacd66673d5c639b",
+      "lineCount": 87,
+      "sites": 3,
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/before/tests/quiz-email-return-selection.test.ts.txt",
+          "sha256": "67b77db34c94ed5bb7a8739a274c5f6af64a27cea2502de6bacd66673d5c639b",
+          "sites": 3
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/transfer/tests/quiz-email-return-selection.test.ts.txt",
+          "sha256": "67b77db34c94ed5bb7a8739a274c5f6af64a27cea2502de6bacd66673d5c639b",
+          "sites": 3
+        },
+        "cut": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/cut/tests/quiz-email-return-selection.test.ts.txt",
+          "sha256": "67b77db34c94ed5bb7a8739a274c5f6af64a27cea2502de6bacd66673d5c639b",
+          "sites": 3
+        }
+      }
+    },
+    {
+      "file": "tests/result-email-return-page.test.ts",
+      "sha256": "8fb62e830b6db97f7294345822305a3570b12669e1b2944b52c3ccca536cc2ba",
+      "lineCount": 225,
+      "sites": 5,
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/before/tests/result-email-return-page.test.ts.txt",
+          "sha256": "8fb62e830b6db97f7294345822305a3570b12669e1b2944b52c3ccca536cc2ba",
+          "sites": 5
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/transfer/tests/result-email-return-page.test.ts.txt",
+          "sha256": "8fb62e830b6db97f7294345822305a3570b12669e1b2944b52c3ccca536cc2ba",
+          "sites": 5
+        },
+        "cut": {
+          "path": "/tmp/test-audit-auth-replay57/snapshots/cut/tests/result-email-return-page.test.ts.txt",
+          "sha256": "8fb62e830b6db97f7294345822305a3570b12669e1b2944b52c3ccca536cc2ba",
+          "sites": 5
+        }
+      }
+    }
+  ],
+  "counts": {
+    "before": 57,
+    "transfer": 57,
+    "cut": 57,
+    "unchangedCallbacks": 57,
+    "browser": 6,
+    "optInPostgres": 1
+  },
+  "runtimeExecuted": false
+}

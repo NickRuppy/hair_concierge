@@ -1,0 +1,576 @@
+[
+  {
+    "id": "C1-headline",
+    "owner": "src/lib/scan/verdict-labels.ts",
+    "ownerSha256": "badd8bce5f663a04afd98b11c8c3d30883d4d449bc6747cb18f95ad7be6d1b0c",
+    "mutatedSha256": "2f45c1f4c7ae7209e13dd8bc0b908d4757496f0ee14494ecd9ad78e6e86fce95",
+    "anchor": "export const SCAN_UNKNOWN_HEADLINE = \"Danke dir – das ist neu für uns!\"",
+    "replacement": "export const SCAN_UNKNOWN_HEADLINE = \"Danke dir – wir prüfen es!\"",
+    "scope": "SCAN_UNKNOWN_HEADLINE",
+    "occurrences": 1,
+    "testFile": "tests/scan-unknown-flow-ui.test.tsx",
+    "testName": "ScanUnknownFlow: the bridge line sits under the headline, above the subline",
+    "operator": "match",
+    "errorCode": "ERR_ASSERTION",
+    "oracles": {
+      "transfer": {
+        "line": 281,
+        "assertion": "assert.match(markup, /Danke dir – das ist neu für uns!/)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "callbackSha256": "512450b6c695bf9be91dfa328cff1af98f5a49544287b01cb5f8df3bef390c6b",
+        "testFileSha256": "d38009049b28480a4e7c2ffef32a0bb32c1aebf214b330f7e676833e3c87f965"
+      },
+      "cut": {
+        "line": 273,
+        "assertion": "assert.match(markup, /Danke dir – das ist neu für uns!/)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "callbackSha256": "512450b6c695bf9be91dfa328cff1af98f5a49544287b01cb5f8df3bef390c6b",
+        "testFileSha256": "6499eb523845759c4eb4fdb263ca1ec0fac0154750fb1458187212dbafaf68bf"
+      }
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^ScanUnknownFlow:\\ the\\ bridge\\ line\\ sits\\ under\\ the\\ headline,\\ above\\ the\\ subline$",
+      "tests/scan-unknown-flow-ui.test.tsx"
+    ],
+    "required": "Main-only exact1 selected keeper, no skipped/cancelled/todo, exit1 and first intended assertion frame/operator/message; byte-exact restore then exact1 clean pass. Unrun."
+  },
+  {
+    "id": "C1-subline",
+    "owner": "src/lib/scan/verdict-labels.ts",
+    "ownerSha256": "badd8bce5f663a04afd98b11c8c3d30883d4d449bc6747cb18f95ad7be6d1b0c",
+    "mutatedSha256": "2334d916d86fdcab442c8177b6171b4a1ee40ea8d416a9dc97c530917afe85bf",
+    "anchor": "export const SCAN_UNKNOWN_SUBLINE = \"Wir nehmen es auf. Dein Ergebnis kommt in den Chat.\"",
+    "replacement": "export const SCAN_UNKNOWN_SUBLINE = \"Wir nehmen es auf. Es folgt später.\"",
+    "scope": "SCAN_UNKNOWN_SUBLINE",
+    "occurrences": 1,
+    "testFile": "tests/scan-unknown-flow-ui.test.tsx",
+    "testName": "ScanUnknownFlow: the bridge line sits under the headline, above the subline",
+    "operator": "match",
+    "errorCode": "ERR_ASSERTION",
+    "oracles": {
+      "transfer": {
+        "line": 282,
+        "assertion": "assert.match(markup, /Wir nehmen es auf\\. Dein Ergebnis kommt in den Chat\\./)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "callbackSha256": "512450b6c695bf9be91dfa328cff1af98f5a49544287b01cb5f8df3bef390c6b",
+        "testFileSha256": "d38009049b28480a4e7c2ffef32a0bb32c1aebf214b330f7e676833e3c87f965"
+      },
+      "cut": {
+        "line": 274,
+        "assertion": "assert.match(markup, /Wir nehmen es auf\\. Dein Ergebnis kommt in den Chat\\./)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "callbackSha256": "512450b6c695bf9be91dfa328cff1af98f5a49544287b01cb5f8df3bef390c6b",
+        "testFileSha256": "6499eb523845759c4eb4fdb263ca1ec0fac0154750fb1458187212dbafaf68bf"
+      }
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^ScanUnknownFlow:\\ the\\ bridge\\ line\\ sits\\ under\\ the\\ headline,\\ above\\ the\\ subline$",
+      "tests/scan-unknown-flow-ui.test.tsx"
+    ],
+    "required": "Main-only exact1 selected keeper, no skipped/cancelled/todo, exit1 and first intended assertion frame/operator/message; byte-exact restore then exact1 clean pass. Unrun."
+  },
+  {
+    "id": "C1-question",
+    "owner": "src/lib/scan/verdict-labels.ts",
+    "ownerSha256": "badd8bce5f663a04afd98b11c8c3d30883d4d449bc6747cb18f95ad7be6d1b0c",
+    "mutatedSha256": "42643ae9b66a7b1380338f4f693b7b1555cdb1d4dfda8ee594116fee5c4eca63",
+    "anchor": "export const SCAN_UNKNOWN_QUESTION = \"Wobei benutzt du es?\"",
+    "replacement": "export const SCAN_UNKNOWN_QUESTION = \"Welche Kategorie?\"",
+    "scope": "SCAN_UNKNOWN_QUESTION",
+    "occurrences": 1,
+    "testFile": "tests/scan-unknown-flow-ui.test.tsx",
+    "testName": "ScanUnknownFlow: the bridge line sits under the headline, above the subline",
+    "operator": "match",
+    "errorCode": "ERR_ASSERTION",
+    "oracles": {
+      "transfer": {
+        "line": 283,
+        "assertion": "assert.match(markup, /Wobei benutzt du es\\?/)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "callbackSha256": "512450b6c695bf9be91dfa328cff1af98f5a49544287b01cb5f8df3bef390c6b",
+        "testFileSha256": "d38009049b28480a4e7c2ffef32a0bb32c1aebf214b330f7e676833e3c87f965"
+      },
+      "cut": {
+        "line": 275,
+        "assertion": "assert.match(markup, /Wobei benutzt du es\\?/)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "callbackSha256": "512450b6c695bf9be91dfa328cff1af98f5a49544287b01cb5f8df3bef390c6b",
+        "testFileSha256": "6499eb523845759c4eb4fdb263ca1ec0fac0154750fb1458187212dbafaf68bf"
+      }
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^ScanUnknownFlow:\\ the\\ bridge\\ line\\ sits\\ under\\ the\\ headline,\\ above\\ the\\ subline$",
+      "tests/scan-unknown-flow-ui.test.tsx"
+    ],
+    "required": "Main-only exact1 selected keeper, no skipped/cancelled/todo, exit1 and first intended assertion frame/operator/message; byte-exact restore then exact1 clean pass. Unrun."
+  },
+  {
+    "id": "C2-input",
+    "owner": "src/components/scan/scan-unknown-flow.tsx",
+    "ownerSha256": "a4c0e6d23c85476d17016dcb488641ca10e3c3059fab53596f1f8f5fd95b5754",
+    "mutatedSha256": "a4feff5810bae356ececbcf535030c3865536143dfb53ceb16762f1c485701c5",
+    "anchor": "<div className=\"flex flex-col gap-4\">",
+    "replacement": "<div className=\"flex flex-col gap-4\">\n      <input aria-label=\"audit field\" />",
+    "scope": "ScanUnknownFlow",
+    "occurrences": 1,
+    "testFile": "tests/scan-unknown-flow-ui.test.tsx",
+    "testName": "ScanUnknownFlow: the bridge line sits under the headline, above the subline",
+    "operator": "deepStrictEqual",
+    "errorCode": "ERR_ASSERTION",
+    "oracles": {
+      "transfer": {
+        "line": 285,
+        "assertion": "assert.deepEqual(inputs, [])",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "callbackSha256": "512450b6c695bf9be91dfa328cff1af98f5a49544287b01cb5f8df3bef390c6b",
+        "testFileSha256": "d38009049b28480a4e7c2ffef32a0bb32c1aebf214b330f7e676833e3c87f965"
+      },
+      "cut": {
+        "line": 277,
+        "assertion": "assert.deepEqual(inputs, [])",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "callbackSha256": "512450b6c695bf9be91dfa328cff1af98f5a49544287b01cb5f8df3bef390c6b",
+        "testFileSha256": "6499eb523845759c4eb4fdb263ca1ec0fac0154750fb1458187212dbafaf68bf"
+      }
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^ScanUnknownFlow:\\ the\\ bridge\\ line\\ sits\\ under\\ the\\ headline,\\ above\\ the\\ subline$",
+      "tests/scan-unknown-flow-ui.test.tsx"
+    ],
+    "required": "Main-only exact1 selected keeper, no skipped/cancelled/todo, exit1 and first intended assertion frame/operator/message; byte-exact restore then exact1 clean pass. Unrun."
+  },
+  {
+    "id": "C2-brand",
+    "owner": "src/components/scan/scan-unknown-flow.tsx",
+    "ownerSha256": "a4c0e6d23c85476d17016dcb488641ca10e3c3059fab53596f1f8f5fd95b5754",
+    "mutatedSha256": "f67f4e606a76c6aa78a4848e5b0004ec1ab60a22e90184d6070b6ab5992cde57",
+    "anchor": "<div className=\"flex flex-col gap-4\">",
+    "replacement": "<div className=\"flex flex-col gap-4\">\n      <p>Marke</p>",
+    "scope": "ScanUnknownFlow",
+    "occurrences": 1,
+    "testFile": "tests/scan-unknown-flow-ui.test.tsx",
+    "testName": "ScanUnknownFlow: the bridge line sits under the headline, above the subline",
+    "operator": "doesNotMatch",
+    "errorCode": "ERR_ASSERTION",
+    "oracles": {
+      "transfer": {
+        "line": 286,
+        "assertion": "assert.doesNotMatch(markup, /Marke/)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "callbackSha256": "512450b6c695bf9be91dfa328cff1af98f5a49544287b01cb5f8df3bef390c6b",
+        "testFileSha256": "d38009049b28480a4e7c2ffef32a0bb32c1aebf214b330f7e676833e3c87f965"
+      },
+      "cut": {
+        "line": 278,
+        "assertion": "assert.doesNotMatch(markup, /Marke/)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "callbackSha256": "512450b6c695bf9be91dfa328cff1af98f5a49544287b01cb5f8df3bef390c6b",
+        "testFileSha256": "6499eb523845759c4eb4fdb263ca1ec0fac0154750fb1458187212dbafaf68bf"
+      }
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^ScanUnknownFlow:\\ the\\ bridge\\ line\\ sits\\ under\\ the\\ headline,\\ above\\ the\\ subline$",
+      "tests/scan-unknown-flow-ui.test.tsx"
+    ],
+    "required": "Main-only exact1 selected keeper, no skipped/cancelled/todo, exit1 and first intended assertion frame/operator/message; byte-exact restore then exact1 clean pass. Unrun."
+  },
+  {
+    "id": "C2-product",
+    "owner": "src/components/scan/scan-unknown-flow.tsx",
+    "ownerSha256": "a4c0e6d23c85476d17016dcb488641ca10e3c3059fab53596f1f8f5fd95b5754",
+    "mutatedSha256": "55343044f87d5dab9243616a60944b8b62f4ba13253cfc45958d85e81e5a3584",
+    "anchor": "<div className=\"flex flex-col gap-4\">",
+    "replacement": "<div className=\"flex flex-col gap-4\">\n      <p>Produktname</p>",
+    "scope": "ScanUnknownFlow",
+    "occurrences": 1,
+    "testFile": "tests/scan-unknown-flow-ui.test.tsx",
+    "testName": "ScanUnknownFlow: the bridge line sits under the headline, above the subline",
+    "operator": "doesNotMatch",
+    "errorCode": "ERR_ASSERTION",
+    "oracles": {
+      "transfer": {
+        "line": 287,
+        "assertion": "assert.doesNotMatch(markup, /Produktname/)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "callbackSha256": "512450b6c695bf9be91dfa328cff1af98f5a49544287b01cb5f8df3bef390c6b",
+        "testFileSha256": "d38009049b28480a4e7c2ffef32a0bb32c1aebf214b330f7e676833e3c87f965"
+      },
+      "cut": {
+        "line": 279,
+        "assertion": "assert.doesNotMatch(markup, /Produktname/)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "callbackSha256": "512450b6c695bf9be91dfa328cff1af98f5a49544287b01cb5f8df3bef390c6b",
+        "testFileSha256": "6499eb523845759c4eb4fdb263ca1ec0fac0154750fb1458187212dbafaf68bf"
+      }
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^ScanUnknownFlow:\\ the\\ bridge\\ line\\ sits\\ under\\ the\\ headline,\\ above\\ the\\ subline$",
+      "tests/scan-unknown-flow-ui.test.tsx"
+    ],
+    "required": "Main-only exact1 selected keeper, no skipped/cancelled/todo, exit1 and first intended assertion frame/operator/message; byte-exact restore then exact1 clean pass. Unrun."
+  },
+  {
+    "id": "C2-submit",
+    "owner": "src/components/scan/scan-unknown-flow.tsx",
+    "ownerSha256": "a4c0e6d23c85476d17016dcb488641ca10e3c3059fab53596f1f8f5fd95b5754",
+    "mutatedSha256": "0db019a1271ead6105d2be8d36fbfe4694fabfc2e5c663ec3bead92d1e355f4d",
+    "anchor": "<div className=\"flex flex-col gap-4\">",
+    "replacement": "<div className=\"flex flex-col gap-4\">\n      <p>Zur Prüfung einreichen</p>",
+    "scope": "ScanUnknownFlow",
+    "occurrences": 1,
+    "testFile": "tests/scan-unknown-flow-ui.test.tsx",
+    "testName": "ScanUnknownFlow: the bridge line sits under the headline, above the subline",
+    "operator": "doesNotMatch",
+    "errorCode": "ERR_ASSERTION",
+    "oracles": {
+      "transfer": {
+        "line": 288,
+        "assertion": "assert.doesNotMatch(markup, /Zur Prüfung einreichen/)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "callbackSha256": "512450b6c695bf9be91dfa328cff1af98f5a49544287b01cb5f8df3bef390c6b",
+        "testFileSha256": "d38009049b28480a4e7c2ffef32a0bb32c1aebf214b330f7e676833e3c87f965"
+      },
+      "cut": {
+        "line": 280,
+        "assertion": "assert.doesNotMatch(markup, /Zur Prüfung einreichen/)",
+        "keeperSha256": "272523e18953b0c9444bca79d206eace5b02435bb712cd02611f1bc303cf7902",
+        "callbackSha256": "512450b6c695bf9be91dfa328cff1af98f5a49544287b01cb5f8df3bef390c6b",
+        "testFileSha256": "6499eb523845759c4eb4fdb263ca1ec0fac0154750fb1458187212dbafaf68bf"
+      }
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^ScanUnknownFlow:\\ the\\ bridge\\ line\\ sits\\ under\\ the\\ headline,\\ above\\ the\\ subline$",
+      "tests/scan-unknown-flow-ui.test.tsx"
+    ],
+    "required": "Main-only exact1 selected keeper, no skipped/cancelled/todo, exit1 and first intended assertion frame/operator/message; byte-exact restore then exact1 clean pass. Unrun."
+  },
+  {
+    "id": "C3-brand",
+    "owner": "src/components/scan/scan-search-sheet.tsx",
+    "ownerSha256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "mutatedSha256": "0b6a70280366371e245a99e488219f41f41aca308b034172e34e70075ec27abd",
+    "anchor": "const RESEARCH_INTAKE_BRAND_LABEL = \"Marke\"",
+    "replacement": "const RESEARCH_INTAKE_BRAND_LABEL = \"Firma\"",
+    "scope": "RESEARCH_INTAKE_BRAND_LABEL",
+    "occurrences": 1,
+    "testFile": "tests/scan-research-intake-form-ui.test.tsx",
+    "testName": "ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)",
+    "operator": "match",
+    "errorCode": "ERR_ASSERTION",
+    "oracles": {
+      "transfer": {
+        "line": 139,
+        "assertion": "assert.match(markup, /Marke/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "callbackSha256": "b1fd38ad82366a73364144424b4297bf8dfa46f80dd98cd0773d009529b4f16d",
+        "testFileSha256": "dce07ca36f7520d19358c7638d5ed6e3810231d73b17cfed6e16f24d874782cb"
+      },
+      "cut": {
+        "line": 127,
+        "assertion": "assert.match(markup, /Marke/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "callbackSha256": "b1fd38ad82366a73364144424b4297bf8dfa46f80dd98cd0773d009529b4f16d",
+        "testFileSha256": "dc77712486ab2f8271baf9232b1ae30e79bbc1c508f30611654f21661500e01a"
+      }
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^ScanResearchIntakeForm:\\ entering\\ the\\ intake\\ state\\ moves\\ focus\\ to\\ the\\ Marke\\ field\\ \\(task\\ 6\\ a11y\\)$",
+      "tests/scan-research-intake-form-ui.test.tsx"
+    ],
+    "required": "Main-only exact1 selected keeper, no skipped/cancelled/todo, exit1 and first intended assertion frame/operator/message; byte-exact restore then exact1 clean pass. Unrun."
+  },
+  {
+    "id": "C3-product",
+    "owner": "src/components/scan/scan-search-sheet.tsx",
+    "ownerSha256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "mutatedSha256": "f185dcd6e4c128715de90a0d09b8ef79d6fa3a2c411bf380fd9aec752184c0fb",
+    "anchor": "const RESEARCH_INTAKE_PRODUCT_LABEL = \"Produktname\"",
+    "replacement": "const RESEARCH_INTAKE_PRODUCT_LABEL = \"Artikelname\"",
+    "scope": "RESEARCH_INTAKE_PRODUCT_LABEL",
+    "occurrences": 1,
+    "testFile": "tests/scan-research-intake-form-ui.test.tsx",
+    "testName": "ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)",
+    "operator": "match",
+    "errorCode": "ERR_ASSERTION",
+    "oracles": {
+      "transfer": {
+        "line": 140,
+        "assertion": "assert.match(markup, /Produktname/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "callbackSha256": "b1fd38ad82366a73364144424b4297bf8dfa46f80dd98cd0773d009529b4f16d",
+        "testFileSha256": "dce07ca36f7520d19358c7638d5ed6e3810231d73b17cfed6e16f24d874782cb"
+      },
+      "cut": {
+        "line": 128,
+        "assertion": "assert.match(markup, /Produktname/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "callbackSha256": "b1fd38ad82366a73364144424b4297bf8dfa46f80dd98cd0773d009529b4f16d",
+        "testFileSha256": "dc77712486ab2f8271baf9232b1ae30e79bbc1c508f30611654f21661500e01a"
+      }
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^ScanResearchIntakeForm:\\ entering\\ the\\ intake\\ state\\ moves\\ focus\\ to\\ the\\ Marke\\ field\\ \\(task\\ 6\\ a11y\\)$",
+      "tests/scan-research-intake-form-ui.test.tsx"
+    ],
+    "required": "Main-only exact1 selected keeper, no skipped/cancelled/todo, exit1 and first intended assertion frame/operator/message; byte-exact restore then exact1 clean pass. Unrun."
+  },
+  {
+    "id": "C3-question",
+    "owner": "src/components/scan/scan-search-sheet.tsx",
+    "ownerSha256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "mutatedSha256": "ce7d06dfd0c75ad289014cbc91294c6309f3a76efef14473f71a0b1b8e0596d0",
+    "anchor": "const RESEARCH_INTAKE_CATEGORY_LABEL = \"Was ist es?\"",
+    "replacement": "const RESEARCH_INTAKE_CATEGORY_LABEL = \"Welche Art?\"",
+    "scope": "RESEARCH_INTAKE_CATEGORY_LABEL",
+    "occurrences": 1,
+    "testFile": "tests/scan-research-intake-form-ui.test.tsx",
+    "testName": "ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)",
+    "operator": "match",
+    "errorCode": "ERR_ASSERTION",
+    "oracles": {
+      "transfer": {
+        "line": 141,
+        "assertion": "assert.match(markup, /Was ist es\\?/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "callbackSha256": "b1fd38ad82366a73364144424b4297bf8dfa46f80dd98cd0773d009529b4f16d",
+        "testFileSha256": "dce07ca36f7520d19358c7638d5ed6e3810231d73b17cfed6e16f24d874782cb"
+      },
+      "cut": {
+        "line": 129,
+        "assertion": "assert.match(markup, /Was ist es\\?/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "callbackSha256": "b1fd38ad82366a73364144424b4297bf8dfa46f80dd98cd0773d009529b4f16d",
+        "testFileSha256": "dc77712486ab2f8271baf9232b1ae30e79bbc1c508f30611654f21661500e01a"
+      }
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^ScanResearchIntakeForm:\\ entering\\ the\\ intake\\ state\\ moves\\ focus\\ to\\ the\\ Marke\\ field\\ \\(task\\ 6\\ a11y\\)$",
+      "tests/scan-research-intake-form-ui.test.tsx"
+    ],
+    "required": "Main-only exact1 selected keeper, no skipped/cancelled/todo, exit1 and first intended assertion frame/operator/message; byte-exact restore then exact1 clean pass. Unrun."
+  },
+  {
+    "id": "C3-helper",
+    "owner": "src/components/scan/scan-search-sheet.tsx",
+    "ownerSha256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "mutatedSha256": "6ef0ff9dfc75df41706cf61bb108c65d33b7c2a3fb4917b5ebe276cfce9b9ddb",
+    "anchor": "const RESEARCH_INTAKE_CATEGORY_HELPER = \"Tippe die Kategorie an – das reicht uns schon.\"",
+    "replacement": "const RESEARCH_INTAKE_CATEGORY_HELPER = \"Wähle eine Kategorie.\"",
+    "scope": "RESEARCH_INTAKE_CATEGORY_HELPER",
+    "occurrences": 1,
+    "testFile": "tests/scan-research-intake-form-ui.test.tsx",
+    "testName": "ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)",
+    "operator": "match",
+    "errorCode": "ERR_ASSERTION",
+    "oracles": {
+      "transfer": {
+        "line": 142,
+        "assertion": "assert.match(markup, /Tippe die Kategorie an – das reicht uns schon\\./)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "callbackSha256": "b1fd38ad82366a73364144424b4297bf8dfa46f80dd98cd0773d009529b4f16d",
+        "testFileSha256": "dce07ca36f7520d19358c7638d5ed6e3810231d73b17cfed6e16f24d874782cb"
+      },
+      "cut": {
+        "line": 130,
+        "assertion": "assert.match(markup, /Tippe die Kategorie an – das reicht uns schon\\./)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "callbackSha256": "b1fd38ad82366a73364144424b4297bf8dfa46f80dd98cd0773d009529b4f16d",
+        "testFileSha256": "dc77712486ab2f8271baf9232b1ae30e79bbc1c508f30611654f21661500e01a"
+      }
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^ScanResearchIntakeForm:\\ entering\\ the\\ intake\\ state\\ moves\\ focus\\ to\\ the\\ Marke\\ field\\ \\(task\\ 6\\ a11y\\)$",
+      "tests/scan-research-intake-form-ui.test.tsx"
+    ],
+    "required": "Main-only exact1 selected keeper, no skipped/cancelled/todo, exit1 and first intended assertion frame/operator/message; byte-exact restore then exact1 clean pass. Unrun."
+  },
+  {
+    "id": "C3-back",
+    "owner": "src/components/scan/scan-search-sheet.tsx",
+    "ownerSha256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "mutatedSha256": "f154f43f446a86f8623c049671ec64e419547339074f534f4b19c2774e8b3234",
+    "anchor": "const RESEARCH_INTAKE_BACK_LABEL = \"Zurück\"",
+    "replacement": "const RESEARCH_INTAKE_BACK_LABEL = \"Abbrechen\"",
+    "scope": "RESEARCH_INTAKE_BACK_LABEL",
+    "occurrences": 1,
+    "testFile": "tests/scan-research-intake-form-ui.test.tsx",
+    "testName": "ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)",
+    "operator": "match",
+    "errorCode": "ERR_ASSERTION",
+    "oracles": {
+      "transfer": {
+        "line": 143,
+        "assertion": "assert.match(markup, /Zurück/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "callbackSha256": "b1fd38ad82366a73364144424b4297bf8dfa46f80dd98cd0773d009529b4f16d",
+        "testFileSha256": "dce07ca36f7520d19358c7638d5ed6e3810231d73b17cfed6e16f24d874782cb"
+      },
+      "cut": {
+        "line": 131,
+        "assertion": "assert.match(markup, /Zurück/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "callbackSha256": "b1fd38ad82366a73364144424b4297bf8dfa46f80dd98cd0773d009529b4f16d",
+        "testFileSha256": "dc77712486ab2f8271baf9232b1ae30e79bbc1c508f30611654f21661500e01a"
+      }
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^ScanResearchIntakeForm:\\ entering\\ the\\ intake\\ state\\ moves\\ focus\\ to\\ the\\ Marke\\ field\\ \\(task\\ 6\\ a11y\\)$",
+      "tests/scan-research-intake-form-ui.test.tsx"
+    ],
+    "required": "Main-only exact1 selected keeper, no skipped/cancelled/todo, exit1 and first intended assertion frame/operator/message; byte-exact restore then exact1 clean pass. Unrun."
+  },
+  {
+    "id": "C3-retailer",
+    "owner": "src/components/scan/scan-search-sheet.tsx",
+    "ownerSha256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "mutatedSha256": "7eb9860089002ed9856bd151a477292e8b32ece019e9473b565cba3ae78e11dc",
+    "anchor": "const RESEARCH_INTAKE_BACK_LABEL = \"Zurück\"",
+    "replacement": "const RESEARCH_INTAKE_BACK_LABEL = \"Zurück dm\"",
+    "scope": "RESEARCH_INTAKE_BACK_LABEL",
+    "occurrences": 1,
+    "testFile": "tests/scan-research-intake-form-ui.test.tsx",
+    "testName": "ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)",
+    "operator": "doesNotMatch",
+    "errorCode": "ERR_ASSERTION",
+    "oracles": {
+      "transfer": {
+        "line": 145,
+        "assertion": "assert.doesNotMatch(markup, /\\bdm\\b/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "callbackSha256": "b1fd38ad82366a73364144424b4297bf8dfa46f80dd98cd0773d009529b4f16d",
+        "testFileSha256": "dce07ca36f7520d19358c7638d5ed6e3810231d73b17cfed6e16f24d874782cb"
+      },
+      "cut": {
+        "line": 133,
+        "assertion": "assert.doesNotMatch(markup, /\\bdm\\b/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "callbackSha256": "b1fd38ad82366a73364144424b4297bf8dfa46f80dd98cd0773d009529b4f16d",
+        "testFileSha256": "dc77712486ab2f8271baf9232b1ae30e79bbc1c508f30611654f21661500e01a"
+      }
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^ScanResearchIntakeForm:\\ entering\\ the\\ intake\\ state\\ moves\\ focus\\ to\\ the\\ Marke\\ field\\ \\(task\\ 6\\ a11y\\)$",
+      "tests/scan-research-intake-form-ui.test.tsx"
+    ],
+    "required": "Main-only exact1 selected keeper, no skipped/cancelled/todo, exit1 and first intended assertion frame/operator/message; byte-exact restore then exact1 clean pass. Unrun."
+  },
+  {
+    "id": "C4-alert",
+    "owner": "src/components/scan/scan-search-sheet.tsx",
+    "ownerSha256": "1fe6348841ac1fcb72d8d840508d7dc01038211e57612f9e8ed308add73668aa",
+    "mutatedSha256": "66249551640d6a49b753a4c6c1ce139197d14c9a162a24a4273db196f300f93e",
+    "anchor": "{error ? (",
+    "replacement": "{true ? (",
+    "scope": "ScanResearchIntakeForm",
+    "occurrences": 1,
+    "testFile": "tests/scan-research-intake-form-ui.test.tsx",
+    "testName": "ScanResearchIntakeForm: entering the intake state moves focus to the Marke field (task 6 a11y)",
+    "operator": "doesNotMatch",
+    "errorCode": "ERR_ASSERTION",
+    "oracles": {
+      "transfer": {
+        "line": 146,
+        "assertion": "assert.doesNotMatch(markup, /role=\"alert\"/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "callbackSha256": "b1fd38ad82366a73364144424b4297bf8dfa46f80dd98cd0773d009529b4f16d",
+        "testFileSha256": "dce07ca36f7520d19358c7638d5ed6e3810231d73b17cfed6e16f24d874782cb"
+      },
+      "cut": {
+        "line": 134,
+        "assertion": "assert.doesNotMatch(markup, /role=\"alert\"/)",
+        "keeperSha256": "9d5e77064b2a116d98240120b55229f308ded4380923179f339d786f70300b4a",
+        "callbackSha256": "b1fd38ad82366a73364144424b4297bf8dfa46f80dd98cd0773d009529b4f16d",
+        "testFileSha256": "dc77712486ab2f8271baf9232b1ae30e79bbc1c508f30611654f21661500e01a"
+      }
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^ScanResearchIntakeForm:\\ entering\\ the\\ intake\\ state\\ moves\\ focus\\ to\\ the\\ Marke\\ field\\ \\(task\\ 6\\ a11y\\)$",
+      "tests/scan-research-intake-form-ui.test.tsx"
+    ],
+    "required": "Main-only exact1 selected keeper, no skipped/cancelled/todo, exit1 and first intended assertion frame/operator/message; byte-exact restore then exact1 clean pass. Unrun."
+  }
+]

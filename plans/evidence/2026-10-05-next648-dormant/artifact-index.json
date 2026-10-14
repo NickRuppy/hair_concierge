@@ -1,0 +1,2432 @@
+[
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/README.md",
+    "archived": "proposal/README.md",
+    "sha256": "2235be854b0d481ff8a2e0c2f2a26dbc03114cf7b43a03785dbdabb9d66f53e2",
+    "bytes": 1899
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/all-code-named-references.json",
+    "archived": "proposal/all-code-named-references.json",
+    "sha256": "09fbf7cb470cc5a56fd95d78b4550cf3f8ba01a5ccafa6876d317ac0ff067161",
+    "bytes": 24206
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/assertion-accounting.json",
+    "archived": "proposal/assertion-accounting.json",
+    "sha256": "407b604fcc90c6153e8c92cb5a6418b4d8d8daeb2084eea1e03a40005334893a",
+    "bytes": 170966
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/candidates.json",
+    "archived": "proposal/candidates.json",
+    "sha256": "fccc8a7594c1575301283956fc706e1b66aae28d0671b41f367db8d9ac368250",
+    "bytes": 6381
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/closure-inventory.json",
+    "archived": "proposal/closure-inventory.json",
+    "sha256": "6554ed74a7f3a7d695947d172ec667524b01c76e570fb72009feeaaca58c54fd",
+    "bytes": 20612
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/complete-ledger.json",
+    "archived": "proposal/complete-ledger.json",
+    "sha256": "a5519c3c79e7eecdb5e539d516a670a34b210874dd6cbbe5e69f673a7978f01b",
+    "bytes": 190935
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/complete-ledger.md",
+    "archived": "proposal/complete-ledger.md",
+    "sha256": "fbd3fd6c42d0400bbc7d66253da00c705278909cc30484a8d4cfc8c6f87e2e33",
+    "bytes": 28556
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/complete.diff",
+    "archived": "proposal/complete.diff",
+    "sha256": "64a5e6bb036eb75e638335488800afd38df527dac50803d26e2ce1899ddd8bfe",
+    "bytes": 22232
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/controls.json",
+    "archived": "proposal/controls.json",
+    "sha256": "98374e239a524d90d5626f534b7b1aca8601f668d9df35a38dd45b788e807646",
+    "bytes": 33789
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/final-static-check.json",
+    "archived": "proposal/final-static-check.json",
+    "sha256": "ee9557fcefce38c5f12cf211b13b5b58786ae7a61a6a70551047d3e1bf3c9e1b",
+    "bytes": 1485
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/finalize.cjs",
+    "archived": "proposal/finalize.cjs.txt",
+    "sha256": "d39f2d0cf586d9e6cd5425e7917788de3c8bb4e9401c7f3aba13557153276599",
+    "bytes": 17400
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/handoff-receipt.json",
+    "archived": "proposal/handoff-receipt.json",
+    "sha256": "27022c8ca786c797b324faaa62f961491bc36b469147051b2d282d1a64f61fc1",
+    "bytes": 11597
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/history-retirement.txt",
+    "archived": "proposal/history-retirement.txt",
+    "sha256": "33c1be15cef8dda89eccef69fcdb4de47011b652391379441b4a5a7a9344c919",
+    "bytes": 8200
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/layer-plan.md",
+    "archived": "proposal/layer-plan.md",
+    "sha256": "bd97ba306828c752cb8ad14e8608b4eaf0e894c8abf93ac06b426ed3e4351a94",
+    "bytes": 12206
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/manifest.json",
+    "archived": "proposal/manifest.json",
+    "sha256": "02516c9596630d774f74679bf46ee68270740b7df26ec658184c9bd3ae4cc8ef",
+    "bytes": 190331
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/prepare.cjs",
+    "archived": "proposal/prepare.cjs.txt",
+    "sha256": "31ae01e941d17314ef95e19aa7e105e812956c70bd27d66e30d1be349874001f",
+    "bytes": 9551
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/read-scope.json",
+    "archived": "proposal/read-scope.json",
+    "sha256": "dc249be0a01fa3118cbf46377a1dc01edbe8daad7089e64fb2ecae3fc773a389",
+    "bytes": 13121
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "archived": "proposal/snapshots/before/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+    "bytes": 21991
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/src/lib/personal-plan/release.ts.txt",
+    "archived": "proposal/snapshots/before/src/lib/personal-plan/release.ts.txt",
+    "sha256": "92d24c0e4c010e20e13f75db0c561cf9da8f490a17de4a0e4cbbf10691a8d55c",
+    "bytes": 3346
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/src/lib/personal-plan/rollout-access.ts.txt",
+    "archived": "proposal/snapshots/before/src/lib/personal-plan/rollout-access.ts.txt",
+    "sha256": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+    "bytes": 4691
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/tests/auth-middleware-personal-plan-routine.test.ts.txt",
+    "archived": "proposal/snapshots/before/tests/auth-middleware-personal-plan-routine.test.ts.txt",
+    "sha256": "772d32f6e8bce05037c324ea7b11a9260d75c99c54bc00e6e4c13588e7129e24",
+    "bytes": 42307
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/tests/freemium-enrollment-admission.test.ts.txt",
+    "archived": "proposal/snapshots/before/tests/freemium-enrollment-admission.test.ts.txt",
+    "sha256": "fcc6c0f7c564fa5078c7c81823991341ab1859d414d6e00c33f72c369b8a2389",
+    "bytes": 10249
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/tests/personal-plan-field-test-access.test.ts.txt",
+    "archived": "proposal/snapshots/before/tests/personal-plan-field-test-access.test.ts.txt",
+    "sha256": "9b6b6880e409e68a531f1d281dbbc19054ec4cee05535f48e21df67a6b0b0e8a",
+    "bytes": 5892
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/tests/personal-plan-journey-access-loader.test.ts.txt",
+    "archived": "proposal/snapshots/before/tests/personal-plan-journey-access-loader.test.ts.txt",
+    "sha256": "16b77c5f68870a0cda0ea86910b26408cae10f85f2213d6f8b219a74ff832e67",
+    "bytes": 36647
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/tests/personal-plan-rollout-access.test.ts.txt",
+    "archived": "proposal/snapshots/before/tests/personal-plan-rollout-access.test.ts.txt",
+    "sha256": "108669d5b64d304c772e0a3b5878b19b18cc69a407b5792574f0b9b0c192dd41",
+    "bytes": 6398
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/tests/personal-plan-stage3-release.test.ts.txt",
+    "archived": "proposal/snapshots/before/tests/personal-plan-stage3-release.test.ts.txt",
+    "sha256": "d25fd6ac50e6ba5a09c3870b83ae55cbc729a72b55cb0329b2d6c414b4dc2f1e",
+    "bytes": 6797
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/before/tests/personal-plan-trial-stage1-journey.test.ts.txt",
+    "archived": "proposal/snapshots/before/tests/personal-plan-trial-stage1-journey.test.ts.txt",
+    "sha256": "ce32342ee184872e96bc13191d0f5dc25d0d863a8acaa477e4ccd8df62bf9fc0",
+    "bytes": 13002
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "archived": "proposal/snapshots/cut/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+    "bytes": 20849
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/src/lib/personal-plan/release.ts.txt",
+    "archived": "proposal/snapshots/cut/src/lib/personal-plan/release.ts.txt",
+    "sha256": "7fff03697221fa4281c0a3756c3cfab618460c536e60cb05e060e38d2693fdd0",
+    "bytes": 2571
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/src/lib/personal-plan/rollout-access.ts.txt",
+    "archived": "proposal/snapshots/cut/src/lib/personal-plan/rollout-access.ts.txt",
+    "sha256": "b4efd27a848a803c60848cf16ac8b9d0c845ae22dabb84a09cc912472eeb206c",
+    "bytes": 187
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/tests/auth-middleware-personal-plan-routine.test.ts.txt",
+    "archived": "proposal/snapshots/cut/tests/auth-middleware-personal-plan-routine.test.ts.txt",
+    "sha256": "772d32f6e8bce05037c324ea7b11a9260d75c99c54bc00e6e4c13588e7129e24",
+    "bytes": 42307
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/tests/freemium-enrollment-admission.test.ts.txt",
+    "archived": "proposal/snapshots/cut/tests/freemium-enrollment-admission.test.ts.txt",
+    "sha256": "30e53eaa8a77054424780676bd341ea6aeb7821c652d36ea69faa8440c20b3e1",
+    "bytes": 10181
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/tests/personal-plan-field-test-access.test.ts.txt",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-field-test-access.test.ts.txt",
+    "sha256": "0701492072d7229a19c832017a5d46b708be3785a7839e9325eee3e5d1a7e963",
+    "bytes": 5820
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/tests/personal-plan-journey-access-loader.test.ts.txt",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-journey-access-loader.test.ts.txt",
+    "sha256": "7a18014ae40a06640e9fa54354a1109fd613986858c53c7ff072144ed175b6c8",
+    "bytes": 35233
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/tests/personal-plan-rollout-access.test.ts.txt",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-rollout-access.test.ts.txt",
+    "sha256": "3f9f358536dc36b6197100414281d55315a8c0d65b098c1433676edf925a1d18",
+    "bytes": 1905
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/tests/personal-plan-stage3-release.test.ts.txt",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-stage3-release.test.ts.txt",
+    "sha256": "b875712849799021f740e63ef79e82e8eadd355b09df66a62d12031c605a7bec",
+    "bytes": 6087
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/cut/tests/personal-plan-trial-stage1-journey.test.ts.txt",
+    "archived": "proposal/snapshots/cut/tests/personal-plan-trial-stage1-journey.test.ts.txt",
+    "sha256": "1af6fcb04a9e0d8e864fdcd1760bb325130fa3bea7f8104bb44996933679feb2",
+    "bytes": 12925
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "archived": "proposal/snapshots/transfer/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+    "bytes": 21991
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/src/lib/personal-plan/release.ts.txt",
+    "archived": "proposal/snapshots/transfer/src/lib/personal-plan/release.ts.txt",
+    "sha256": "92d24c0e4c010e20e13f75db0c561cf9da8f490a17de4a0e4cbbf10691a8d55c",
+    "bytes": 3346
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/src/lib/personal-plan/rollout-access.ts.txt",
+    "archived": "proposal/snapshots/transfer/src/lib/personal-plan/rollout-access.ts.txt",
+    "sha256": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+    "bytes": 4691
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/tests/auth-middleware-personal-plan-routine.test.ts.txt",
+    "archived": "proposal/snapshots/transfer/tests/auth-middleware-personal-plan-routine.test.ts.txt",
+    "sha256": "772d32f6e8bce05037c324ea7b11a9260d75c99c54bc00e6e4c13588e7129e24",
+    "bytes": 42307
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/tests/freemium-enrollment-admission.test.ts.txt",
+    "archived": "proposal/snapshots/transfer/tests/freemium-enrollment-admission.test.ts.txt",
+    "sha256": "fcc6c0f7c564fa5078c7c81823991341ab1859d414d6e00c33f72c369b8a2389",
+    "bytes": 10249
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/tests/personal-plan-field-test-access.test.ts.txt",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-field-test-access.test.ts.txt",
+    "sha256": "9b6b6880e409e68a531f1d281dbbc19054ec4cee05535f48e21df67a6b0b0e8a",
+    "bytes": 5892
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/tests/personal-plan-journey-access-loader.test.ts.txt",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-journey-access-loader.test.ts.txt",
+    "sha256": "16b77c5f68870a0cda0ea86910b26408cae10f85f2213d6f8b219a74ff832e67",
+    "bytes": 36647
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/tests/personal-plan-rollout-access.test.ts.txt",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-rollout-access.test.ts.txt",
+    "sha256": "108669d5b64d304c772e0a3b5878b19b18cc69a407b5792574f0b9b0c192dd41",
+    "bytes": 6398
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/tests/personal-plan-stage3-release.test.ts.txt",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-stage3-release.test.ts.txt",
+    "sha256": "d25fd6ac50e6ba5a09c3870b83ae55cbc729a72b55cb0329b2d6c414b4dc2f1e",
+    "bytes": 6797
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/snapshots/transfer/tests/personal-plan-trial-stage1-journey.test.ts.txt",
+    "archived": "proposal/snapshots/transfer/tests/personal-plan-trial-stage1-journey.test.ts.txt",
+    "sha256": "ce32342ee184872e96bc13191d0f5dc25d0d863a8acaa477e4ccd8df62bf9fc0",
+    "bytes": 13002
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/source-call-topology.json",
+    "archived": "proposal/source-call-topology.json",
+    "sha256": "1cd36121078af90a5314ed8bf54a654dcfa56ed83e5224aeebe52013a9427721",
+    "bytes": 15543
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/start-pins.json",
+    "archived": "proposal/start-pins.json",
+    "sha256": "bfb2cd651ce85865f173e4c5008d73aa60028b6138ef5ce77c07812698ac5320",
+    "bytes": 3145
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/static-check.json",
+    "archived": "proposal/static-check.json",
+    "sha256": "302e9096d3a74a68d7244706a2840e552d278ce1d74845d938ea0975ad7f81fc",
+    "bytes": 587
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-closure/validate.cjs",
+    "archived": "proposal/validate.cjs.txt",
+    "sha256": "fb11b5c814a97a562c849b38cee1ecd14d3ee9bf3607673427c4c5e7f1438463",
+    "bytes": 4963
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/HANDOFF.json",
+    "archived": "original-operator-kit/HANDOFF.json",
+    "sha256": "81f5fae1a921ffcd8f031aa200cf24ddcbf813785226bba65566d95c6954ec3f",
+    "bytes": 3040
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/README.md",
+    "archived": "original-operator-kit/README.md",
+    "sha256": "d8bfab2f6a910f58eec250dcc855ca3782f666a3e1f8ea87ad231be8646e892b",
+    "bytes": 10577
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/artifact-hashes.json",
+    "archived": "original-operator-kit/artifact-hashes.json",
+    "sha256": "d5c46444e1dc03e99c7914cc1799ecedfc4f9776daf3ea4679fe4176cf35c6f2",
+    "bytes": 3993
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/finalization-receipt.json",
+    "archived": "original-operator-kit/finalization-receipt.json",
+    "sha256": "375bbe6f07167808bd8b0f939b9dcfca7a16cee709ed123b2d51bbf97b9abc02",
+    "bytes": 612
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/finalize-tools.cjs",
+    "archived": "original-operator-kit/finalize-tools.cjs.txt",
+    "sha256": "24caa731f1f0d97fec5af9c7d2447dcbd97c3c8a5dc02e57869627b4caf49415",
+    "bytes": 3420
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/operator-controls-normalized.json",
+    "archived": "original-operator-kit/operator-controls-normalized.json",
+    "sha256": "195675a867e124405f3c44c7911b36e81d6e95b30f6036d43fecde5a7229a289",
+    "bytes": 75601
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/operator-edit.cjs",
+    "archived": "original-operator-kit/operator-edit.cjs.txt",
+    "sha256": "b00b6faa05e357af61e03e31339cde7f81295543c0394e23851218648eaba43d",
+    "bytes": 3841
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/operator-evidence.json",
+    "archived": "original-operator-kit/operator-evidence.json",
+    "sha256": "3a1dc75def4ae7704b727e39c0fd5b31c0e18942ae39a79e986e99f17fd9c13f",
+    "bytes": 190559
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/operator-guard.cjs",
+    "archived": "original-operator-kit/operator-guard.cjs.txt",
+    "sha256": "670bd6218880850540b643edb442b43434eb2ffef317c8804ff53a54f2a0ec4a",
+    "bytes": 12065
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/operator-phase-edits.json",
+    "archived": "original-operator-kit/operator-phase-edits.json",
+    "sha256": "6b7951e50802680345f5927b2d84b48b71850ec7dde3dc7a468fce54c73ba3d0",
+    "bytes": 18667
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/operator-pins.json",
+    "archived": "original-operator-kit/operator-pins.json",
+    "sha256": "76ba7677d1cd5e8d202cc00f1ce81757e25b5eaf5d18f7aadc2f18cc9a8ff847",
+    "bytes": 1608625
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/operator-proof.cjs",
+    "archived": "original-operator-kit/operator-proof.cjs.txt",
+    "sha256": "983b77bc48c3394a445951d803ba3c732e2746db2ed82a72b4366d2939da7a6f",
+    "bytes": 7155
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/operator-readonly-preload.cjs",
+    "archived": "original-operator-kit/operator-readonly-preload.cjs.txt",
+    "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/operator-run-cohort.cjs",
+    "archived": "original-operator-kit/operator-run-cohort.cjs.txt",
+    "sha256": "edc7ffeae8b6a1ef7d2c93e13b0689235f7b5a03a02f690d888d383d1aae330b",
+    "bytes": 4529
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/operator-run-controls.cjs",
+    "archived": "original-operator-kit/operator-run-controls.cjs.txt",
+    "sha256": "54fdd1a882a28bfd8b04720184603c1ed01b16877167000b13e996cbb4a635c3",
+    "bytes": 8170
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/operator-selected-closure.json",
+    "archived": "original-operator-kit/operator-selected-closure.json",
+    "sha256": "2ec344c0f727534e7d909a5ffebd580164f5a8aefab07e56fa48dbbabe195784",
+    "bytes": 346515
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/operator-verify.cjs",
+    "archived": "original-operator-kit/operator-verify.cjs.txt",
+    "sha256": "e03fcc6d595e045afd37aeab401164c542b80c1338f4f40e312333b9b359a6b0",
+    "bytes": 1140
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/pre-finalization-pins.json",
+    "archived": "original-operator-kit/pre-finalization-pins.json",
+    "sha256": "f5e80b3913eec100e58a097a4a880797a77873ced3378eb7686aa79788a2dc7d",
+    "bytes": 1608476
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/preparation-receipt.json",
+    "archived": "original-operator-kit/preparation-receipt.json",
+    "sha256": "c9d3e0513462c1a257f27022a9f1cecbb712dcde76120e1de8206fb5c1c6f171",
+    "bytes": 511
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/prepare-pins.cjs",
+    "archived": "original-operator-kit/prepare-pins.cjs.txt",
+    "sha256": "a697b0f0488fec6822cc4a5ef6cf24ca08c67c02ebea2172894597b79607f2c7",
+    "bytes": 12673
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/prepare-tools.py",
+    "archived": "original-operator-kit/prepare-tools.py.txt",
+    "sha256": "29b2ededacd9d20a1ea854a064ed17f5261dc63d1aeb0d56f65d21eb012a5852",
+    "bytes": 18267
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/proof-attestation-final.txt",
+    "archived": "original-operator-kit/proof-attestation-final.txt",
+    "sha256": "5b3765c723ed2ad2e91e09b3d035dff40906ff90e79f595d2501c8139aa03e41",
+    "bytes": 423
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/proof-attestation-receipt.txt",
+    "archived": "original-operator-kit/proof-attestation-receipt.txt",
+    "sha256": "32d04a5bf1f60a81e745abd64b5a9c2a94d9b1ed5ed5b01954c64e3e1cb34ec6",
+    "bytes": 128
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/proof-attestation.cjs",
+    "archived": "original-operator-kit/proof-attestation.cjs.txt",
+    "sha256": "5ba6e8133c53f9fae5432031395cb28ab5484a2b9efe9a56a9c24029e1d8fd73",
+    "bytes": 4238
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/static-cohort-final.txt",
+    "archived": "original-operator-kit/static-cohort-final.txt",
+    "sha256": "a0a2d9a140e7314b8d1d837cb421a970ff25c4ad2b8d186e12675ac6dcd18465",
+    "bytes": 675
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/static-cohort-receipt.txt",
+    "archived": "original-operator-kit/static-cohort-receipt.txt",
+    "sha256": "a0a2d9a140e7314b8d1d837cb421a970ff25c4ad2b8d186e12675ac6dcd18465",
+    "bytes": 675
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/static-controls-final.txt",
+    "archived": "original-operator-kit/static-controls-final.txt",
+    "sha256": "c8c1ad1bf35b3ebb34a69523a8be3e8ae0dd77f72007cea9f9e52c3845329e5b",
+    "bytes": 414
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/static-controls-receipt.txt",
+    "archived": "original-operator-kit/static-controls-receipt.txt",
+    "sha256": "c8c1ad1bf35b3ebb34a69523a8be3e8ae0dd77f72007cea9f9e52c3845329e5b",
+    "bytes": 414
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/static-editor-final.txt",
+    "archived": "original-operator-kit/static-editor-final.txt",
+    "sha256": "427848ddbd2cc459afe1784f46a11f6b1f616ab1a99b2e6149b954984d750bc5",
+    "bytes": 466
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/static-editor-receipt.txt",
+    "archived": "original-operator-kit/static-editor-receipt.txt",
+    "sha256": "427848ddbd2cc459afe1784f46a11f6b1f616ab1a99b2e6149b954984d750bc5",
+    "bytes": 466
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/static-integrity-receipt.txt",
+    "archived": "original-operator-kit/static-integrity-receipt.txt",
+    "sha256": "bfa44b3896d8bf942483552497087499842f0a6d440b3eca3002c4856245f456",
+    "bytes": 563
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/static-integrity.cjs",
+    "archived": "original-operator-kit/static-integrity.cjs.txt",
+    "sha256": "b4166a431130d48797988fe2d26181b02ad3d1b61894665816112231d7ce630c",
+    "bytes": 3138
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/static-verifier-final.txt",
+    "archived": "original-operator-kit/static-verifier-final.txt",
+    "sha256": "c0e12a3cdfe07d39b12e1899baefc510c05ef87e56786536eccfaa26febaa4ef",
+    "bytes": 205
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/template-delta.patch",
+    "archived": "original-operator-kit/template-delta.patch",
+    "sha256": "535536c382bca96d9f91d1cd0e8861242075fa4a3732759cfccbc6a1024d70dc",
+    "bytes": 94241
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/template-originals/operator-edit.cjs",
+    "archived": "original-operator-kit/template-originals/operator-edit.cjs.txt",
+    "sha256": "a5a57635cbbef3a27fc3ea9d4abb78e8f99db142ff900979f3942e827187c67c",
+    "bytes": 3640
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/template-originals/operator-guard.cjs",
+    "archived": "original-operator-kit/template-originals/operator-guard.cjs.txt",
+    "sha256": "fc5f27d3c7f0c9f6e226b91e542c6db5d3e3e746af454aeacf2415c20e01f168",
+    "bytes": 13904
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/template-originals/operator-proof.cjs",
+    "archived": "original-operator-kit/template-originals/operator-proof.cjs.txt",
+    "sha256": "6aec16c6468794c9d3b87d69b21b4661e3082a3d48ed44caaaf7c4cf7346eecf",
+    "bytes": 5736
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/template-originals/operator-readonly-preload.cjs",
+    "archived": "original-operator-kit/template-originals/operator-readonly-preload.cjs.txt",
+    "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/template-originals/operator-run-controls.cjs",
+    "archived": "original-operator-kit/template-originals/operator-run-controls.cjs.txt",
+    "sha256": "1bc3271bd6a646e60482390708f7571c27b5201d8729d050ef5937a124b2f8fd",
+    "bytes": 8053
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/template-originals/prepare-pins.cjs",
+    "archived": "original-operator-kit/template-originals/prepare-pins.cjs.txt",
+    "sha256": "fa00ebe6d04616d0433f8e9007c2d0ba492ba4dcf780486ec804e7e78be0c019",
+    "bytes": 14689
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/template-originals/proof-attestation.cjs",
+    "archived": "original-operator-kit/template-originals/proof-attestation.cjs.txt",
+    "sha256": "3a689b380987267a37926c527eee829ce6c4a86c105a818cabf06393a72f782b",
+    "bytes": 4029
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-tools-5cm3auh1/template-provenance.json",
+    "archived": "original-operator-kit/template-provenance.json",
+    "sha256": "d7eb3545fd0603b561e4f87535a06af0ccbce583591d6dd2b9264234d76ab155",
+    "bytes": 838
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/HANDOFF.json",
+    "archived": "used-operator-kit/HANDOFF.json",
+    "sha256": "ffceca33a5faa6b78f74cbdec88096ea6d630a649beb24765df708b327549125",
+    "bytes": 237
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/README.md",
+    "archived": "used-operator-kit/README.md",
+    "sha256": "d8bfab2f6a910f58eec250dcc855ca3782f666a3e1f8ea87ad231be8646e892b",
+    "bytes": 10577
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/finalization-receipt.json",
+    "archived": "used-operator-kit/finalization-receipt.json",
+    "sha256": "375bbe6f07167808bd8b0f939b9dcfca7a16cee709ed123b2d51bbf97b9abc02",
+    "bytes": 612
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/finalize-tools.cjs",
+    "archived": "used-operator-kit/finalize-tools.cjs.txt",
+    "sha256": "24caa731f1f0d97fec5af9c7d2447dcbd97c3c8a5dc02e57869627b4caf49415",
+    "bytes": 3420
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-apply-cut-wjSBX5/intent.json",
+    "archived": "used-operator-kit/operator-apply-cut-wjSBX5/intent.json",
+    "sha256": "3d7064b3bd482338eab3da66e1c2e41c129031aa4cd3ab804ab590f8e8966805",
+    "bytes": 3302
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-apply-cut-wjSBX5/originals/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "used-operator-kit/operator-apply-cut-wjSBX5/originals/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+    "bytes": 21991
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-apply-cut-wjSBX5/originals/src/lib/personal-plan/release.ts",
+    "archived": "used-operator-kit/operator-apply-cut-wjSBX5/originals/src/lib/personal-plan/release.ts.txt",
+    "sha256": "92d24c0e4c010e20e13f75db0c561cf9da8f490a17de4a0e4cbbf10691a8d55c",
+    "bytes": 3346
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-apply-cut-wjSBX5/originals/src/lib/personal-plan/rollout-access.ts",
+    "archived": "used-operator-kit/operator-apply-cut-wjSBX5/originals/src/lib/personal-plan/rollout-access.ts.txt",
+    "sha256": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+    "bytes": 4691
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-apply-cut-wjSBX5/originals/tests/auth-middleware-personal-plan-routine.test.ts",
+    "archived": "used-operator-kit/operator-apply-cut-wjSBX5/originals/tests/auth-middleware-personal-plan-routine.test.ts.txt",
+    "sha256": "772d32f6e8bce05037c324ea7b11a9260d75c99c54bc00e6e4c13588e7129e24",
+    "bytes": 42307
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-apply-cut-wjSBX5/originals/tests/freemium-enrollment-admission.test.ts",
+    "archived": "used-operator-kit/operator-apply-cut-wjSBX5/originals/tests/freemium-enrollment-admission.test.ts.txt",
+    "sha256": "fcc6c0f7c564fa5078c7c81823991341ab1859d414d6e00c33f72c369b8a2389",
+    "bytes": 10249
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-apply-cut-wjSBX5/originals/tests/personal-plan-field-test-access.test.ts",
+    "archived": "used-operator-kit/operator-apply-cut-wjSBX5/originals/tests/personal-plan-field-test-access.test.ts.txt",
+    "sha256": "9b6b6880e409e68a531f1d281dbbc19054ec4cee05535f48e21df67a6b0b0e8a",
+    "bytes": 5892
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-apply-cut-wjSBX5/originals/tests/personal-plan-journey-access-loader.test.ts",
+    "archived": "used-operator-kit/operator-apply-cut-wjSBX5/originals/tests/personal-plan-journey-access-loader.test.ts.txt",
+    "sha256": "16b77c5f68870a0cda0ea86910b26408cae10f85f2213d6f8b219a74ff832e67",
+    "bytes": 36647
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-apply-cut-wjSBX5/originals/tests/personal-plan-rollout-access.test.ts",
+    "archived": "used-operator-kit/operator-apply-cut-wjSBX5/originals/tests/personal-plan-rollout-access.test.ts.txt",
+    "sha256": "108669d5b64d304c772e0a3b5878b19b18cc69a407b5792574f0b9b0c192dd41",
+    "bytes": 6398
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-apply-cut-wjSBX5/originals/tests/personal-plan-stage3-release.test.ts",
+    "archived": "used-operator-kit/operator-apply-cut-wjSBX5/originals/tests/personal-plan-stage3-release.test.ts.txt",
+    "sha256": "d25fd6ac50e6ba5a09c3870b83ae55cbc729a72b55cb0329b2d6c414b4dc2f1e",
+    "bytes": 6797
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-apply-cut-wjSBX5/originals/tests/personal-plan-trial-stage1-journey.test.ts",
+    "archived": "used-operator-kit/operator-apply-cut-wjSBX5/originals/tests/personal-plan-trial-stage1-journey.test.ts.txt",
+    "sha256": "ce32342ee184872e96bc13191d0f5dc25d0d863a8acaa477e4ccd8df62bf9fc0",
+    "bytes": 13002
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-apply-cut-wjSBX5/receipt.json",
+    "archived": "used-operator-kit/operator-apply-cut-wjSBX5/receipt.json",
+    "sha256": "3ff288a418d38eef025b55a4ae8a183936762649ce9392aaeed29e7e830582a2",
+    "bytes": 2642
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-cut-Yl383O/all-originals/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "used-operator-kit/operator-cohort-cut-Yl383O/all-originals/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+    "bytes": 20849
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-cut-Yl383O/all-originals/src/lib/personal-plan/release.ts",
+    "archived": "used-operator-kit/operator-cohort-cut-Yl383O/all-originals/src/lib/personal-plan/release.ts.txt",
+    "sha256": "7fff03697221fa4281c0a3756c3cfab618460c536e60cb05e060e38d2693fdd0",
+    "bytes": 2571
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-cut-Yl383O/all-originals/src/lib/personal-plan/rollout-access.ts",
+    "archived": "used-operator-kit/operator-cohort-cut-Yl383O/all-originals/src/lib/personal-plan/rollout-access.ts.txt",
+    "sha256": "b4efd27a848a803c60848cf16ac8b9d0c845ae22dabb84a09cc912472eeb206c",
+    "bytes": 187
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-cut-Yl383O/all-originals/tests/auth-middleware-personal-plan-routine.test.ts",
+    "archived": "used-operator-kit/operator-cohort-cut-Yl383O/all-originals/tests/auth-middleware-personal-plan-routine.test.ts.txt",
+    "sha256": "772d32f6e8bce05037c324ea7b11a9260d75c99c54bc00e6e4c13588e7129e24",
+    "bytes": 42307
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-cut-Yl383O/all-originals/tests/freemium-enrollment-admission.test.ts",
+    "archived": "used-operator-kit/operator-cohort-cut-Yl383O/all-originals/tests/freemium-enrollment-admission.test.ts.txt",
+    "sha256": "30e53eaa8a77054424780676bd341ea6aeb7821c652d36ea69faa8440c20b3e1",
+    "bytes": 10181
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-cut-Yl383O/all-originals/tests/personal-plan-field-test-access.test.ts",
+    "archived": "used-operator-kit/operator-cohort-cut-Yl383O/all-originals/tests/personal-plan-field-test-access.test.ts.txt",
+    "sha256": "0701492072d7229a19c832017a5d46b708be3785a7839e9325eee3e5d1a7e963",
+    "bytes": 5820
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-cut-Yl383O/all-originals/tests/personal-plan-journey-access-loader.test.ts",
+    "archived": "used-operator-kit/operator-cohort-cut-Yl383O/all-originals/tests/personal-plan-journey-access-loader.test.ts.txt",
+    "sha256": "7a18014ae40a06640e9fa54354a1109fd613986858c53c7ff072144ed175b6c8",
+    "bytes": 35233
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-cut-Yl383O/all-originals/tests/personal-plan-rollout-access.test.ts",
+    "archived": "used-operator-kit/operator-cohort-cut-Yl383O/all-originals/tests/personal-plan-rollout-access.test.ts.txt",
+    "sha256": "3f9f358536dc36b6197100414281d55315a8c0d65b098c1433676edf925a1d18",
+    "bytes": 1905
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-cut-Yl383O/all-originals/tests/personal-plan-stage3-release.test.ts",
+    "archived": "used-operator-kit/operator-cohort-cut-Yl383O/all-originals/tests/personal-plan-stage3-release.test.ts.txt",
+    "sha256": "b875712849799021f740e63ef79e82e8eadd355b09df66a62d12031c605a7bec",
+    "bytes": 6087
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-cut-Yl383O/all-originals/tests/personal-plan-trial-stage1-journey.test.ts",
+    "archived": "used-operator-kit/operator-cohort-cut-Yl383O/all-originals/tests/personal-plan-trial-stage1-journey.test.ts.txt",
+    "sha256": "1af6fcb04a9e0d8e864fdcd1760bb325130fa3bea7f8104bb44996933679feb2",
+    "bytes": 12925
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-cut-Yl383O/cohort-full.command.json",
+    "archived": "used-operator-kit/operator-cohort-cut-Yl383O/cohort-full.command.json",
+    "sha256": "b3ef729db420367d862776136afc9935da8c5c7d5299737d25413943c2b01bb5",
+    "bytes": 680
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-cut-Yl383O/cohort-full.tap",
+    "archived": "used-operator-kit/operator-cohort-cut-Yl383O/cohort-full.tap",
+    "sha256": "44010102e014e1dd2979a3e77cf1655dd09c559176d1c306da88e2874399a0ef",
+    "bytes": 24362
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-cut-Yl383O/complete.json",
+    "archived": "used-operator-kit/operator-cohort-cut-Yl383O/complete.json",
+    "sha256": "d6ac36f3bf6574397606431f3f0065932a67b4a81d82bfdfdca478d73ab5507c",
+    "bytes": 1602
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-cut-Yl383O/receipt.json",
+    "archived": "used-operator-kit/operator-cohort-cut-Yl383O/receipt.json",
+    "sha256": "7964fbb2663edcba7c5fe0d89c646bc212c4b2a108f6fb162bc2371847bcabbb",
+    "bytes": 482
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-transfer-tqGAqi/all-originals/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "used-operator-kit/operator-cohort-transfer-tqGAqi/all-originals/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+    "bytes": 21991
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-transfer-tqGAqi/all-originals/src/lib/personal-plan/release.ts",
+    "archived": "used-operator-kit/operator-cohort-transfer-tqGAqi/all-originals/src/lib/personal-plan/release.ts.txt",
+    "sha256": "92d24c0e4c010e20e13f75db0c561cf9da8f490a17de4a0e4cbbf10691a8d55c",
+    "bytes": 3346
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-transfer-tqGAqi/all-originals/src/lib/personal-plan/rollout-access.ts",
+    "archived": "used-operator-kit/operator-cohort-transfer-tqGAqi/all-originals/src/lib/personal-plan/rollout-access.ts.txt",
+    "sha256": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+    "bytes": 4691
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-transfer-tqGAqi/all-originals/tests/auth-middleware-personal-plan-routine.test.ts",
+    "archived": "used-operator-kit/operator-cohort-transfer-tqGAqi/all-originals/tests/auth-middleware-personal-plan-routine.test.ts.txt",
+    "sha256": "772d32f6e8bce05037c324ea7b11a9260d75c99c54bc00e6e4c13588e7129e24",
+    "bytes": 42307
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-transfer-tqGAqi/all-originals/tests/freemium-enrollment-admission.test.ts",
+    "archived": "used-operator-kit/operator-cohort-transfer-tqGAqi/all-originals/tests/freemium-enrollment-admission.test.ts.txt",
+    "sha256": "fcc6c0f7c564fa5078c7c81823991341ab1859d414d6e00c33f72c369b8a2389",
+    "bytes": 10249
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-transfer-tqGAqi/all-originals/tests/personal-plan-field-test-access.test.ts",
+    "archived": "used-operator-kit/operator-cohort-transfer-tqGAqi/all-originals/tests/personal-plan-field-test-access.test.ts.txt",
+    "sha256": "9b6b6880e409e68a531f1d281dbbc19054ec4cee05535f48e21df67a6b0b0e8a",
+    "bytes": 5892
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-transfer-tqGAqi/all-originals/tests/personal-plan-journey-access-loader.test.ts",
+    "archived": "used-operator-kit/operator-cohort-transfer-tqGAqi/all-originals/tests/personal-plan-journey-access-loader.test.ts.txt",
+    "sha256": "16b77c5f68870a0cda0ea86910b26408cae10f85f2213d6f8b219a74ff832e67",
+    "bytes": 36647
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-transfer-tqGAqi/all-originals/tests/personal-plan-rollout-access.test.ts",
+    "archived": "used-operator-kit/operator-cohort-transfer-tqGAqi/all-originals/tests/personal-plan-rollout-access.test.ts.txt",
+    "sha256": "108669d5b64d304c772e0a3b5878b19b18cc69a407b5792574f0b9b0c192dd41",
+    "bytes": 6398
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-transfer-tqGAqi/all-originals/tests/personal-plan-stage3-release.test.ts",
+    "archived": "used-operator-kit/operator-cohort-transfer-tqGAqi/all-originals/tests/personal-plan-stage3-release.test.ts.txt",
+    "sha256": "d25fd6ac50e6ba5a09c3870b83ae55cbc729a72b55cb0329b2d6c414b4dc2f1e",
+    "bytes": 6797
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-transfer-tqGAqi/all-originals/tests/personal-plan-trial-stage1-journey.test.ts",
+    "archived": "used-operator-kit/operator-cohort-transfer-tqGAqi/all-originals/tests/personal-plan-trial-stage1-journey.test.ts.txt",
+    "sha256": "ce32342ee184872e96bc13191d0f5dc25d0d863a8acaa477e4ccd8df62bf9fc0",
+    "bytes": 13002
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-transfer-tqGAqi/cohort-full.command.json",
+    "archived": "used-operator-kit/operator-cohort-transfer-tqGAqi/cohort-full.command.json",
+    "sha256": "b3ef729db420367d862776136afc9935da8c5c7d5299737d25413943c2b01bb5",
+    "bytes": 680
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-transfer-tqGAqi/cohort-full.tap",
+    "archived": "used-operator-kit/operator-cohort-transfer-tqGAqi/cohort-full.tap",
+    "sha256": "e072d6e3c16b232b4b49dd804ab1d6eaabc74208efaa96d341990189b7340409",
+    "bytes": 25560
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-transfer-tqGAqi/complete.json",
+    "archived": "used-operator-kit/operator-cohort-transfer-tqGAqi/complete.json",
+    "sha256": "32e89a2c36cde73c351921357dbc0c89b90f10b17d4808564d8f6def8eb3d272",
+    "bytes": 1608
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-cohort-transfer-tqGAqi/receipt.json",
+    "archived": "used-operator-kit/operator-cohort-transfer-tqGAqi/receipt.json",
+    "sha256": "db15f8f135e81444d23f37eda52e9b2c92c888f987b980eec0588c49921c3f09",
+    "bytes": 489
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-controls-normalized.json",
+    "archived": "used-operator-kit/operator-controls-normalized.json",
+    "sha256": "195675a867e124405f3c44c7911b36e81d6e95b30f6036d43fecde5a7229a289",
+    "bytes": 75601
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-edit.cjs",
+    "archived": "used-operator-kit/operator-edit.cjs.txt",
+    "sha256": "7117aa27b21ba9aaee0d969f724a3fa33c58837890fa29512e4f236a106d36d8",
+    "bytes": 3841
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-evidence.json",
+    "archived": "used-operator-kit/operator-evidence.json",
+    "sha256": "3a1dc75def4ae7704b727e39c0fd5b31c0e18942ae39a79e986e99f17fd9c13f",
+    "bytes": 190559
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-guard.cjs",
+    "archived": "used-operator-kit/operator-guard.cjs.txt",
+    "sha256": "902bf01a62c55d5b0b9a5cb49d37161139f6bd452c16b76f8fbbba12683c54a2",
+    "bytes": 12214
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P1/originals/src/lib/personal-plan/rollout-access.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P1/originals/src/lib/personal-plan/rollout-access.ts.txt",
+    "sha256": "b4efd27a848a803c60848cf16ac8b9d0c845ae22dabb84a09cc912472eeb206c",
+    "bytes": 187
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P1-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P1-after.command.json",
+    "sha256": "1055aef67c9a7bd944dfcfa2c0baa71f6b57810e482499e26f6a2e32c63674fc",
+    "bytes": 451
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P1-after.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P1-after.tap",
+    "sha256": "ff856f76432f97fcd15c8ccffb219e0fba66bf0616569e6e9a6b9ae978ce13b7",
+    "bytes": 311
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P1-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P1-before.command.json",
+    "sha256": "1055aef67c9a7bd944dfcfa2c0baa71f6b57810e482499e26f6a2e32c63674fc",
+    "bytes": 451
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P1-before.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P1-before.tap",
+    "sha256": "2b138095ea50595590296ac6994744b4d79eab2dc0093fab8bf0a8ddac2281ad",
+    "bytes": 310
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P1-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P1-fault.command.json",
+    "sha256": "1055aef67c9a7bd944dfcfa2c0baa71f6b57810e482499e26f6a2e32c63674fc",
+    "bytes": 451
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P1-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P1-fault.tap",
+    "sha256": "11ef880f95a53c1721aadd15b20930f53a6a62b95f52fa7a6e9eab314b95bd21",
+    "bytes": 963
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P10/originals/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P10/originals/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+    "bytes": 20849
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P10-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P10-after.command.json",
+    "sha256": "251f137adb0e08f3e6c3e0524ab54f2d9f01fff335676ca6c61e3f27cf8d149a",
+    "bytes": 469
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P10-after.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P10-after.tap",
+    "sha256": "dbec46dcfc212c1c3e39cbf1a8e8769ed1fafb61373e94e04cf8b6314c3a5747",
+    "bytes": 341
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P10-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P10-before.command.json",
+    "sha256": "251f137adb0e08f3e6c3e0524ab54f2d9f01fff335676ca6c61e3f27cf8d149a",
+    "bytes": 469
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P10-before.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P10-before.tap",
+    "sha256": "c8b8760fe9e6453742d028461a0edf69ac3c289e8f0258ca334f1cf3d390c801",
+    "bytes": 341
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P10-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P10-fault.command.json",
+    "sha256": "251f137adb0e08f3e6c3e0524ab54f2d9f01fff335676ca6c61e3f27cf8d149a",
+    "bytes": 469
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P10-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P10-fault.tap",
+    "sha256": "54d2fab3b91c911cfecd24332429ba16422e5741d812024cfdd88bf555ca4aad",
+    "bytes": 1005
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P11/originals/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P11/originals/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+    "bytes": 20849
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P11-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P11-after.command.json",
+    "sha256": "5ecb6b2bc377dbf4e811a8ef0e2a72e776d38c2313e01818a698329f21bbff0f",
+    "bytes": 473
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P11-after.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P11-after.tap",
+    "sha256": "154bc4b62bd2381ce3004f01c6abfc95d5f938cc30b95c5f728e1ce4812589e9",
+    "bytes": 340
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P11-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P11-before.command.json",
+    "sha256": "5ecb6b2bc377dbf4e811a8ef0e2a72e776d38c2313e01818a698329f21bbff0f",
+    "bytes": 473
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P11-before.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P11-before.tap",
+    "sha256": "c6c2851a592773e685de10e8fac795084f55b5b7a962860b026ee715ce0b2430",
+    "bytes": 342
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P11-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P11-fault.command.json",
+    "sha256": "5ecb6b2bc377dbf4e811a8ef0e2a72e776d38c2313e01818a698329f21bbff0f",
+    "bytes": 473
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P11-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P11-fault.tap",
+    "sha256": "3c3f4ef921aad5fda3dd50854299baaf99344d7d58f776e894aa54eab289d8f3",
+    "bytes": 994
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P12/originals/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P12/originals/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+    "bytes": 20849
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P12-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P12-after.command.json",
+    "sha256": "5ecb6b2bc377dbf4e811a8ef0e2a72e776d38c2313e01818a698329f21bbff0f",
+    "bytes": 473
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P12-after.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P12-after.tap",
+    "sha256": "c481f0a858b07b734694dd9b9b7f7c4df2e2150516a70a36d430211875984373",
+    "bytes": 339
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P12-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P12-before.command.json",
+    "sha256": "5ecb6b2bc377dbf4e811a8ef0e2a72e776d38c2313e01818a698329f21bbff0f",
+    "bytes": 473
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P12-before.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P12-before.tap",
+    "sha256": "4d021fe976c6014e3aef4c960a3fcad043660a2bc1242b4da775cdb9911916dc",
+    "bytes": 338
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P12-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P12-fault.command.json",
+    "sha256": "5ecb6b2bc377dbf4e811a8ef0e2a72e776d38c2313e01818a698329f21bbff0f",
+    "bytes": 473
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P12-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P12-fault.tap",
+    "sha256": "e110f0ab486a9c66c002913f1df2d6d26a9195ae08de10400f7730a0923980a1",
+    "bytes": 994
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P13/originals/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P13/originals/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+    "bytes": 20849
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P13-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P13-after.command.json",
+    "sha256": "5ecb6b2bc377dbf4e811a8ef0e2a72e776d38c2313e01818a698329f21bbff0f",
+    "bytes": 473
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P13-after.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P13-after.tap",
+    "sha256": "af4fdaf43400fd1379e74ea83ae605e27f20067dac2714b45bef69d589732162",
+    "bytes": 341
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P13-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P13-before.command.json",
+    "sha256": "5ecb6b2bc377dbf4e811a8ef0e2a72e776d38c2313e01818a698329f21bbff0f",
+    "bytes": 473
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P13-before.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P13-before.tap",
+    "sha256": "256b80b3217a003303b0148e13fdd7cc04bd08aef38b604cc326e53bb4dd2b01",
+    "bytes": 341
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P13-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P13-fault.command.json",
+    "sha256": "5ecb6b2bc377dbf4e811a8ef0e2a72e776d38c2313e01818a698329f21bbff0f",
+    "bytes": 473
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P13-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P13-fault.tap",
+    "sha256": "4bc35144d6170f2d71259ab26a0d657298b6fdd1f878015d9354ddf41f40ba9a",
+    "bytes": 994
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P14/originals/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P14/originals/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+    "bytes": 20849
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P14-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P14-after.command.json",
+    "sha256": "5ecb6b2bc377dbf4e811a8ef0e2a72e776d38c2313e01818a698329f21bbff0f",
+    "bytes": 473
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P14-after.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P14-after.tap",
+    "sha256": "d715782314769ec00044f6c2bb50f561e5ee95fa0d8d3855dec70b54ae1ad1e9",
+    "bytes": 340
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P14-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P14-before.command.json",
+    "sha256": "5ecb6b2bc377dbf4e811a8ef0e2a72e776d38c2313e01818a698329f21bbff0f",
+    "bytes": 473
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P14-before.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P14-before.tap",
+    "sha256": "a8f5dec2c2e4aa35eed6de86fb6aa2c0923a435004deb0306e1eac704087509c",
+    "bytes": 341
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P14-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P14-fault.command.json",
+    "sha256": "5ecb6b2bc377dbf4e811a8ef0e2a72e776d38c2313e01818a698329f21bbff0f",
+    "bytes": 473
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P14-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P14-fault.tap",
+    "sha256": "3513dbea6fb017efc84bab36ac1992a16efce9ab29bdf6a72c441bc237a33e10",
+    "bytes": 994
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P2/originals/src/lib/personal-plan/rollout-access.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P2/originals/src/lib/personal-plan/rollout-access.ts.txt",
+    "sha256": "b4efd27a848a803c60848cf16ac8b9d0c845ae22dabb84a09cc912472eeb206c",
+    "bytes": 187
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P2-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P2-after.command.json",
+    "sha256": "1055aef67c9a7bd944dfcfa2c0baa71f6b57810e482499e26f6a2e32c63674fc",
+    "bytes": 451
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P2-after.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P2-after.tap",
+    "sha256": "97ce9383b9f10426c0bc30067577ff3a902b7e05c0e9448065180ef59bf185d7",
+    "bytes": 310
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P2-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P2-before.command.json",
+    "sha256": "1055aef67c9a7bd944dfcfa2c0baa71f6b57810e482499e26f6a2e32c63674fc",
+    "bytes": 451
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P2-before.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P2-before.tap",
+    "sha256": "bc90667062d4f6a3f833c6144d4a7357218ff3eb9a8f4e57c40f3b28e5df4a68",
+    "bytes": 311
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P2-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P2-fault.command.json",
+    "sha256": "1055aef67c9a7bd944dfcfa2c0baa71f6b57810e482499e26f6a2e32c63674fc",
+    "bytes": 451
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P2-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P2-fault.tap",
+    "sha256": "7db12c38f0cabc781749ccf328030414aca7a0e2b45eb481cb940ad9a3603793",
+    "bytes": 1038
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P3/originals/src/lib/personal-plan/release.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P3/originals/src/lib/personal-plan/release.ts.txt",
+    "sha256": "7fff03697221fa4281c0a3756c3cfab618460c536e60cb05e060e38d2693fdd0",
+    "bytes": 2571
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P3-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P3-after.command.json",
+    "sha256": "9728538c703fdd3d1367c8cbb43df0e102e48cfb53a2d8639a11b9e9701f8fea",
+    "bytes": 458
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P3-after.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P3-after.tap",
+    "sha256": "6aebd4ff09918879c7afb9ab7c53d0d797e45b3f9cc36df09a5fdb0c70064c14",
+    "bytes": 323
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P3-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P3-before.command.json",
+    "sha256": "9728538c703fdd3d1367c8cbb43df0e102e48cfb53a2d8639a11b9e9701f8fea",
+    "bytes": 458
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P3-before.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P3-before.tap",
+    "sha256": "c4a4dd1214a9e4827482bf9c90d2ba2b170301b720f88c1a88fd76f29b80abac",
+    "bytes": 324
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P3-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P3-fault.command.json",
+    "sha256": "9728538c703fdd3d1367c8cbb43df0e102e48cfb53a2d8639a11b9e9701f8fea",
+    "bytes": 458
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P3-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P3-fault.tap",
+    "sha256": "a58fa5f07690b7ced7459c1bbe19397bb48225761abf1239854393d361a2283a",
+    "bytes": 1085
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P4/originals/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P4/originals/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+    "bytes": 20849
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P4-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P4-after.command.json",
+    "sha256": "5f60678473684ed5bb335428ac2672962510b8f98923ad79185c8127a341c056",
+    "bytes": 478
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P4-after.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P4-after.tap",
+    "sha256": "3ecc5068fbe311e9d8f4cf240bce968ac45b3654818c4a9e352589ea77ae6c54",
+    "bytes": 351
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P4-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P4-before.command.json",
+    "sha256": "5f60678473684ed5bb335428ac2672962510b8f98923ad79185c8127a341c056",
+    "bytes": 478
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P4-before.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P4-before.tap",
+    "sha256": "70c0b4d8326df7e98ca1db3c19305d0fb73c7074a8461a20787e7bba194b02b4",
+    "bytes": 352
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P4-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P4-fault.command.json",
+    "sha256": "5f60678473684ed5bb335428ac2672962510b8f98923ad79185c8127a341c056",
+    "bytes": 478
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P4-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P4-fault.tap",
+    "sha256": "3802af966c310bde4b165fb587226bc34909d996e5871c3fbf76a031f096d50b",
+    "bytes": 1118
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P5/originals/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P5/originals/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+    "bytes": 20849
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P5-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P5-after.command.json",
+    "sha256": "5ecb6b2bc377dbf4e811a8ef0e2a72e776d38c2313e01818a698329f21bbff0f",
+    "bytes": 473
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P5-after.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P5-after.tap",
+    "sha256": "a1dddf637cbdd05bc23fbe05fb21c1c5cd1034b4e53be853e53583ffed81090e",
+    "bytes": 341
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P5-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P5-before.command.json",
+    "sha256": "5ecb6b2bc377dbf4e811a8ef0e2a72e776d38c2313e01818a698329f21bbff0f",
+    "bytes": 473
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P5-before.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P5-before.tap",
+    "sha256": "ab552773b7ebba275b2e3515eafce1c3b3f69bcc158e3e000bc919db25738ba5",
+    "bytes": 340
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P5-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P5-fault.command.json",
+    "sha256": "5ecb6b2bc377dbf4e811a8ef0e2a72e776d38c2313e01818a698329f21bbff0f",
+    "bytes": 473
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P5-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P5-fault.tap",
+    "sha256": "1061d9cb4971b5999320224982307c7ad723d70b3e7e43d0fe335f72f36cb5f3",
+    "bytes": 1553
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P6/originals/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P6/originals/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+    "bytes": 20849
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P6-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P6-after.command.json",
+    "sha256": "5f60678473684ed5bb335428ac2672962510b8f98923ad79185c8127a341c056",
+    "bytes": 478
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P6-after.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P6-after.tap",
+    "sha256": "86ad33190644624e90f9ded25e90a5e70bcb25749e1ffb6321c4a9866a052ff3",
+    "bytes": 351
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P6-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P6-before.command.json",
+    "sha256": "5f60678473684ed5bb335428ac2672962510b8f98923ad79185c8127a341c056",
+    "bytes": 478
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P6-before.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P6-before.tap",
+    "sha256": "044515311812f7b7a3580810a92f3045d7d8c758dd2cf8277780e4ebbd1ee784",
+    "bytes": 351
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P6-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P6-fault.command.json",
+    "sha256": "5f60678473684ed5bb335428ac2672962510b8f98923ad79185c8127a341c056",
+    "bytes": 478
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P6-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P6-fault.tap",
+    "sha256": "f109a1a6df09204933d6a4918820a19522a50327426e2fb6bd111324ff6dbdbd",
+    "bytes": 1119
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P7/originals/src/lib/personal-plan/enrollment.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P7/originals/src/lib/personal-plan/enrollment.ts.txt",
+    "sha256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "bytes": 17762
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P7-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P7-after.command.json",
+    "sha256": "801b49db0e1df5b080fb01f98dfa88769537a66ec77366b8b9995053ca6500d4",
+    "bytes": 458
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P7-after.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P7-after.tap",
+    "sha256": "19caa47e70fcf071d98c44b0b7de446b10d4939ba1b53774352d389fa6fdc0c6",
+    "bytes": 319
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P7-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P7-before.command.json",
+    "sha256": "801b49db0e1df5b080fb01f98dfa88769537a66ec77366b8b9995053ca6500d4",
+    "bytes": 458
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P7-before.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P7-before.tap",
+    "sha256": "6d9a89b6bf8a05df934cf4590de7c67acd9a475fb13a47e1d605e460a67d85e2",
+    "bytes": 318
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P7-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P7-fault.command.json",
+    "sha256": "801b49db0e1df5b080fb01f98dfa88769537a66ec77366b8b9995053ca6500d4",
+    "bytes": 458
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P7-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P7-fault.tap",
+    "sha256": "b50d56be3b874129e58ff1f5478422aff74d88c1580375f9f132c73610c1a96a",
+    "bytes": 1013
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P8/originals/src/lib/personal-plan/enrollment.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P8/originals/src/lib/personal-plan/enrollment.ts.txt",
+    "sha256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "bytes": 17762
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P8-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P8-after.command.json",
+    "sha256": "801b49db0e1df5b080fb01f98dfa88769537a66ec77366b8b9995053ca6500d4",
+    "bytes": 458
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P8-after.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P8-after.tap",
+    "sha256": "9e2542c93e245e9a1a16630cc26dd5844e55c09efe9ecf2550b7bbc4c26ee369",
+    "bytes": 317
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P8-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P8-before.command.json",
+    "sha256": "801b49db0e1df5b080fb01f98dfa88769537a66ec77366b8b9995053ca6500d4",
+    "bytes": 458
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P8-before.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P8-before.tap",
+    "sha256": "a56f301609a18cbdbd0d55344a71866aede6e61f9465a3469e8273a74c2bf0a2",
+    "bytes": 319
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P8-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P8-fault.command.json",
+    "sha256": "801b49db0e1df5b080fb01f98dfa88769537a66ec77366b8b9995053ca6500d4",
+    "bytes": 458
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P8-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P8-fault.tap",
+    "sha256": "1f5092aa36bcc3322aab93d54126888c04fa97b21c3d76881f7edafbf19ff554",
+    "bytes": 1015
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P9/originals/src/lib/personal-plan/enrollment.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P9/originals/src/lib/personal-plan/enrollment.ts.txt",
+    "sha256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "bytes": 17762
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P9-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P9-after.command.json",
+    "sha256": "b22bc5704d8619a4e4fb5ba31862cced677a3f9fabccc3a7cffabf24b59ce153",
+    "bytes": 472
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P9-after.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P9-after.tap",
+    "sha256": "5ec0af7fa7bc01bd77ee10f373899ab652bd8694dc051c57757b9e77894f64e0",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P9-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P9-before.command.json",
+    "sha256": "b22bc5704d8619a4e4fb5ba31862cced677a3f9fabccc3a7cffabf24b59ce153",
+    "bytes": 472
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P9-before.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P9-before.tap",
+    "sha256": "1eb144ee325fcdcb72f21b8e702cde242bf2411c6079b195bcbe64cbfa254e84",
+    "bytes": 347
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P9-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P9-fault.command.json",
+    "sha256": "b22bc5704d8619a4e4fb5ba31862cced677a3f9fabccc3a7cffabf24b59ce153",
+    "bytes": 472
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/P9-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/P9-fault.tap",
+    "sha256": "928c41915a76dd1a09795356f67eb8ba40549a1655694fb1ccedeadb5e0da43f",
+    "bytes": 1867
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/all-originals/src/lib/personal-plan/enrollment.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/all-originals/src/lib/personal-plan/enrollment.ts.txt",
+    "sha256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "bytes": 17762
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/all-originals/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/all-originals/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+    "bytes": 20849
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/all-originals/src/lib/personal-plan/release.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/all-originals/src/lib/personal-plan/release.ts.txt",
+    "sha256": "7fff03697221fa4281c0a3756c3cfab618460c536e60cb05e060e38d2693fdd0",
+    "bytes": 2571
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/all-originals/src/lib/personal-plan/rollout-access.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/all-originals/src/lib/personal-plan/rollout-access.ts.txt",
+    "sha256": "b4efd27a848a803c60848cf16ac8b9d0c845ae22dabb84a09cc912472eeb206c",
+    "bytes": 187
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/all-originals/tests/auth-middleware-personal-plan-routine.test.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/all-originals/tests/auth-middleware-personal-plan-routine.test.ts.txt",
+    "sha256": "772d32f6e8bce05037c324ea7b11a9260d75c99c54bc00e6e4c13588e7129e24",
+    "bytes": 42307
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/all-originals/tests/freemium-enrollment-admission.test.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/all-originals/tests/freemium-enrollment-admission.test.ts.txt",
+    "sha256": "30e53eaa8a77054424780676bd341ea6aeb7821c652d36ea69faa8440c20b3e1",
+    "bytes": 10181
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/all-originals/tests/personal-plan-field-test-access.test.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/all-originals/tests/personal-plan-field-test-access.test.ts.txt",
+    "sha256": "0701492072d7229a19c832017a5d46b708be3785a7839e9325eee3e5d1a7e963",
+    "bytes": 5820
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/all-originals/tests/personal-plan-journey-access-loader.test.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/all-originals/tests/personal-plan-journey-access-loader.test.ts.txt",
+    "sha256": "7a18014ae40a06640e9fa54354a1109fd613986858c53c7ff072144ed175b6c8",
+    "bytes": 35233
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/all-originals/tests/personal-plan-rollout-access.test.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/all-originals/tests/personal-plan-rollout-access.test.ts.txt",
+    "sha256": "3f9f358536dc36b6197100414281d55315a8c0d65b098c1433676edf925a1d18",
+    "bytes": 1905
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/all-originals/tests/personal-plan-stage3-release.test.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/all-originals/tests/personal-plan-stage3-release.test.ts.txt",
+    "sha256": "b875712849799021f740e63ef79e82e8eadd355b09df66a62d12031c605a7bec",
+    "bytes": 6087
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/all-originals/tests/personal-plan-trial-stage1-journey.test.ts",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/all-originals/tests/personal-plan-trial-stage1-journey.test.ts.txt",
+    "sha256": "1af6fcb04a9e0d8e864fdcd1760bb325130fa3bea7f8104bb44996933679feb2",
+    "bytes": 12925
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/complete.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/complete.json",
+    "sha256": "2c12d4f1225a587a4ef0ab9079db6e80823d15262819a1d0ce34430aa7d0f0c5",
+    "bytes": 71385
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/intent.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/intent.json",
+    "sha256": "fc87a060829ccc7302a5fb16b4d85d85f126f4ac77c8171e1259550307f26e91",
+    "bytes": 1601
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-cut-YOEFlI/receipt.json",
+    "archived": "used-operator-kit/operator-mutations-cut-YOEFlI/receipt.json",
+    "sha256": "355d6d1a3ffef6e76daf9b1abe4c198094b1e7d3a53eafc8667c67ba096bc03c",
+    "bytes": 1583010
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P1/originals/src/lib/personal-plan/rollout-access.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P1/originals/src/lib/personal-plan/rollout-access.ts.txt",
+    "sha256": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+    "bytes": 4691
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P1-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P1-after.command.json",
+    "sha256": "1055aef67c9a7bd944dfcfa2c0baa71f6b57810e482499e26f6a2e32c63674fc",
+    "bytes": 451
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P1-after.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P1-after.tap",
+    "sha256": "61f01eecacf620a1272c80d8108181575b9700073fce2500a2da858e063bc700",
+    "bytes": 308
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P1-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P1-before.command.json",
+    "sha256": "1055aef67c9a7bd944dfcfa2c0baa71f6b57810e482499e26f6a2e32c63674fc",
+    "bytes": 451
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P1-before.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P1-before.tap",
+    "sha256": "0eea6f62b2ff8347a00525bbc68658f5133a987deb6b9e35a63409ee5568184b",
+    "bytes": 311
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P1-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P1-fault.command.json",
+    "sha256": "1055aef67c9a7bd944dfcfa2c0baa71f6b57810e482499e26f6a2e32c63674fc",
+    "bytes": 451
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P1-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P1-fault.tap",
+    "sha256": "cb823c8e99c57debc81e2818c76b6b3877de7ded3ac791aa56db39cd5be9b967",
+    "bytes": 963
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P10/originals/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P10/originals/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+    "bytes": 21991
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P10-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P10-after.command.json",
+    "sha256": "251f137adb0e08f3e6c3e0524ab54f2d9f01fff335676ca6c61e3f27cf8d149a",
+    "bytes": 469
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P10-after.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P10-after.tap",
+    "sha256": "f037a187fae3adcd2462be486e20f81e7702c96e48584f361bb5e0825e0e35b0",
+    "bytes": 340
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P10-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P10-before.command.json",
+    "sha256": "251f137adb0e08f3e6c3e0524ab54f2d9f01fff335676ca6c61e3f27cf8d149a",
+    "bytes": 469
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P10-before.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P10-before.tap",
+    "sha256": "a6291521f09dff1a268e5b45532d0cacf54d6bc589411af61d31ef268d9dc994",
+    "bytes": 341
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P10-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P10-fault.command.json",
+    "sha256": "251f137adb0e08f3e6c3e0524ab54f2d9f01fff335676ca6c61e3f27cf8d149a",
+    "bytes": 469
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P10-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P10-fault.tap",
+    "sha256": "80a741bff65c56478c3fa347b1e1b2f2d4a699ad37d32df24b1e5e62bd889908",
+    "bytes": 1006
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P11/originals/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P11/originals/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+    "bytes": 21991
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P11-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P11-after.command.json",
+    "sha256": "ba4b1a7560777e9150838964ba4a523807d0a2881ec68429f459b4c5394fbc22",
+    "bytes": 476
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P11-after.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P11-after.tap",
+    "sha256": "cab274ae487346f0800bfe6c5a433e841734adbbe3e25eb12705713deccb3286",
+    "bytes": 347
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P11-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P11-before.command.json",
+    "sha256": "ba4b1a7560777e9150838964ba4a523807d0a2881ec68429f459b4c5394fbc22",
+    "bytes": 476
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P11-before.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P11-before.tap",
+    "sha256": "57b7a58c03917de2448a3f812fc840fa4589e7d4c9c53f8adb578a82021d7b38",
+    "bytes": 348
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P11-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P11-fault.command.json",
+    "sha256": "ba4b1a7560777e9150838964ba4a523807d0a2881ec68429f459b4c5394fbc22",
+    "bytes": 476
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P11-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P11-fault.tap",
+    "sha256": "2ec4a71a6e53a9e697a16efec94c20c662b7395b45d62a4a45036d880a2558eb",
+    "bytes": 1000
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P12/originals/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P12/originals/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+    "bytes": 21991
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P12-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P12-after.command.json",
+    "sha256": "ba4b1a7560777e9150838964ba4a523807d0a2881ec68429f459b4c5394fbc22",
+    "bytes": 476
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P12-after.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P12-after.tap",
+    "sha256": "4e9ee306af2ecdda029109cb8214a847c416bc4fec71060a86fd4628914e0c8c",
+    "bytes": 347
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P12-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P12-before.command.json",
+    "sha256": "ba4b1a7560777e9150838964ba4a523807d0a2881ec68429f459b4c5394fbc22",
+    "bytes": 476
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P12-before.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P12-before.tap",
+    "sha256": "c26ee36aabc2baf37458a016597d3e1ea65d00ab6f4c51035ce407ed8526e180",
+    "bytes": 347
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P12-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P12-fault.command.json",
+    "sha256": "ba4b1a7560777e9150838964ba4a523807d0a2881ec68429f459b4c5394fbc22",
+    "bytes": 476
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P12-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P12-fault.tap",
+    "sha256": "21dcb741aafe67f0fb19837a6daa58669cc015a11d012e885d661b438cd076a0",
+    "bytes": 1000
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P13/originals/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P13/originals/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+    "bytes": 21991
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P13-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P13-after.command.json",
+    "sha256": "ba4b1a7560777e9150838964ba4a523807d0a2881ec68429f459b4c5394fbc22",
+    "bytes": 476
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P13-after.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P13-after.tap",
+    "sha256": "4b8b45d311ffdf4909c5891f00a7e70773bd4715eda48b776cbf543ca09947c0",
+    "bytes": 347
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P13-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P13-before.command.json",
+    "sha256": "ba4b1a7560777e9150838964ba4a523807d0a2881ec68429f459b4c5394fbc22",
+    "bytes": 476
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P13-before.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P13-before.tap",
+    "sha256": "ef48464264ba387bfd398fe20214dd52d93b53745b70ec469694ce4b38617717",
+    "bytes": 347
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P13-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P13-fault.command.json",
+    "sha256": "ba4b1a7560777e9150838964ba4a523807d0a2881ec68429f459b4c5394fbc22",
+    "bytes": 476
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P13-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P13-fault.tap",
+    "sha256": "19041ae0525e86d09b6d20d86537bc99506a4fe940bf7d0d0cead83aea876735",
+    "bytes": 1000
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P14/originals/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P14/originals/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+    "bytes": 21991
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P14-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P14-after.command.json",
+    "sha256": "ba4b1a7560777e9150838964ba4a523807d0a2881ec68429f459b4c5394fbc22",
+    "bytes": 476
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P14-after.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P14-after.tap",
+    "sha256": "ccd6f1c43e6dc4ec62ebef7b5e1e1c5d803cce8da46bc8ea5c94bd01288066b8",
+    "bytes": 347
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P14-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P14-before.command.json",
+    "sha256": "ba4b1a7560777e9150838964ba4a523807d0a2881ec68429f459b4c5394fbc22",
+    "bytes": 476
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P14-before.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P14-before.tap",
+    "sha256": "13bf97580a32efa5f42d60819932961a8d1f66315621d86495650c55a3936efe",
+    "bytes": 347
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P14-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P14-fault.command.json",
+    "sha256": "ba4b1a7560777e9150838964ba4a523807d0a2881ec68429f459b4c5394fbc22",
+    "bytes": 476
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P14-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P14-fault.tap",
+    "sha256": "197e6295b50f2ef9d78f861e89369c7a570e30c803d8c26618c10d14df70c889",
+    "bytes": 1002
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P2/originals/src/lib/personal-plan/rollout-access.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P2/originals/src/lib/personal-plan/rollout-access.ts.txt",
+    "sha256": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+    "bytes": 4691
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P2-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P2-after.command.json",
+    "sha256": "1055aef67c9a7bd944dfcfa2c0baa71f6b57810e482499e26f6a2e32c63674fc",
+    "bytes": 451
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P2-after.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P2-after.tap",
+    "sha256": "5a9f2b4e50480c0ee059f9587f5cd771ecd03f737bd49a366f05d790e7e058af",
+    "bytes": 311
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P2-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P2-before.command.json",
+    "sha256": "1055aef67c9a7bd944dfcfa2c0baa71f6b57810e482499e26f6a2e32c63674fc",
+    "bytes": 451
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P2-before.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P2-before.tap",
+    "sha256": "b2c1a40e73b2f8d27440f6658e7a341a0c49be2492904f9b7da3a63562cdaf2e",
+    "bytes": 311
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P2-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P2-fault.command.json",
+    "sha256": "1055aef67c9a7bd944dfcfa2c0baa71f6b57810e482499e26f6a2e32c63674fc",
+    "bytes": 451
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P2-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P2-fault.tap",
+    "sha256": "73f477ed88e786ac59b5f45891a900e391a8bb8024090de3e4249adc3e6274d0",
+    "bytes": 1038
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P3/originals/src/lib/personal-plan/release.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P3/originals/src/lib/personal-plan/release.ts.txt",
+    "sha256": "92d24c0e4c010e20e13f75db0c561cf9da8f490a17de4a0e4cbbf10691a8d55c",
+    "bytes": 3346
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P3-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P3-after.command.json",
+    "sha256": "9728538c703fdd3d1367c8cbb43df0e102e48cfb53a2d8639a11b9e9701f8fea",
+    "bytes": 458
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P3-after.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P3-after.tap",
+    "sha256": "13056d989af7d30a68e5a7b7d6f028eef4d06ac6f21090bfed9e011fdb412d78",
+    "bytes": 325
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P3-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P3-before.command.json",
+    "sha256": "9728538c703fdd3d1367c8cbb43df0e102e48cfb53a2d8639a11b9e9701f8fea",
+    "bytes": 458
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P3-before.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P3-before.tap",
+    "sha256": "784f91d73c7fe2cd26384ae62d1d59a9676b92ac4d3b094a3af3b89d29622cf1",
+    "bytes": 325
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P3-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P3-fault.command.json",
+    "sha256": "9728538c703fdd3d1367c8cbb43df0e102e48cfb53a2d8639a11b9e9701f8fea",
+    "bytes": 458
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P3-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P3-fault.tap",
+    "sha256": "5df287a1c67919c803059b5402dcd153a309fcaf26756d5ba3217ef5e3263b20",
+    "bytes": 1085
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P4/originals/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P4/originals/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+    "bytes": 21991
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P4-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P4-after.command.json",
+    "sha256": "5f60678473684ed5bb335428ac2672962510b8f98923ad79185c8127a341c056",
+    "bytes": 478
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P4-after.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P4-after.tap",
+    "sha256": "4835c796f953a545631c10647af4d72a9055812f927caceed409654c45563a00",
+    "bytes": 351
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P4-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P4-before.command.json",
+    "sha256": "5f60678473684ed5bb335428ac2672962510b8f98923ad79185c8127a341c056",
+    "bytes": 478
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P4-before.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P4-before.tap",
+    "sha256": "091f21e52f4bc894f7487ddf00bcd269bba0e057d6e251c26504d695e37c4eda",
+    "bytes": 352
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P4-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P4-fault.command.json",
+    "sha256": "5f60678473684ed5bb335428ac2672962510b8f98923ad79185c8127a341c056",
+    "bytes": 478
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P4-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P4-fault.tap",
+    "sha256": "9ed1ca3e05bc84a0a1c60703316d5f914e18611e5c78116ede16917cfffebc11",
+    "bytes": 1120
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P5/originals/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P5/originals/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+    "bytes": 21991
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P5-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P5-after.command.json",
+    "sha256": "ba4b1a7560777e9150838964ba4a523807d0a2881ec68429f459b4c5394fbc22",
+    "bytes": 476
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P5-after.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P5-after.tap",
+    "sha256": "4e82ab3c2138193e1954ccc3e6445f3b93b0b4305802a4f1cbe78c33a5038327",
+    "bytes": 347
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P5-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P5-before.command.json",
+    "sha256": "ba4b1a7560777e9150838964ba4a523807d0a2881ec68429f459b4c5394fbc22",
+    "bytes": 476
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P5-before.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P5-before.tap",
+    "sha256": "a8f748b395048038837f26edebe77049d4f6c2457ea1110b95c729ebd630702a",
+    "bytes": 347
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P5-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P5-fault.command.json",
+    "sha256": "ba4b1a7560777e9150838964ba4a523807d0a2881ec68429f459b4c5394fbc22",
+    "bytes": 476
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P5-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P5-fault.tap",
+    "sha256": "0a155080ca91caaa5112ee2a565fd3ff72fbba3ef959faed87df4e9df18563bf",
+    "bytes": 1559
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P6/originals/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P6/originals/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+    "bytes": 21991
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P6-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P6-after.command.json",
+    "sha256": "5f60678473684ed5bb335428ac2672962510b8f98923ad79185c8127a341c056",
+    "bytes": 478
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P6-after.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P6-after.tap",
+    "sha256": "81dd6711dc013981f148e76d125fa0eb12184fd3b28488fd50e6ae5586b8ae76",
+    "bytes": 350
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P6-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P6-before.command.json",
+    "sha256": "5f60678473684ed5bb335428ac2672962510b8f98923ad79185c8127a341c056",
+    "bytes": 478
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P6-before.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P6-before.tap",
+    "sha256": "66a4676df2e5f0dce727fe7d3e60525b74176dfabed7739891b9d514ee113f82",
+    "bytes": 351
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P6-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P6-fault.command.json",
+    "sha256": "5f60678473684ed5bb335428ac2672962510b8f98923ad79185c8127a341c056",
+    "bytes": 478
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P6-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P6-fault.tap",
+    "sha256": "4faf0fc586e4bc45d962632fead64bc5c50dce4a6918bb7d8884734d7777a344",
+    "bytes": 1117
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P7/originals/src/lib/personal-plan/enrollment.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P7/originals/src/lib/personal-plan/enrollment.ts.txt",
+    "sha256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "bytes": 17762
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P7-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P7-after.command.json",
+    "sha256": "801b49db0e1df5b080fb01f98dfa88769537a66ec77366b8b9995053ca6500d4",
+    "bytes": 458
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P7-after.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P7-after.tap",
+    "sha256": "6128698329ec0a5741cec19b4d8596227dece2b2b7e1577dc604b4b917d4e1ff",
+    "bytes": 317
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P7-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P7-before.command.json",
+    "sha256": "801b49db0e1df5b080fb01f98dfa88769537a66ec77366b8b9995053ca6500d4",
+    "bytes": 458
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P7-before.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P7-before.tap",
+    "sha256": "8dcba204e77da85c623822edd7064f5292f7b2db89775b51ae9e38ba1d4cbb5e",
+    "bytes": 319
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P7-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P7-fault.command.json",
+    "sha256": "801b49db0e1df5b080fb01f98dfa88769537a66ec77366b8b9995053ca6500d4",
+    "bytes": 458
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P7-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P7-fault.tap",
+    "sha256": "e9286a3aaa7aed5bf5568efd90228f3ba19010b91e10165f72dbc6c5924c40e3",
+    "bytes": 1016
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P8/originals/src/lib/personal-plan/enrollment.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P8/originals/src/lib/personal-plan/enrollment.ts.txt",
+    "sha256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "bytes": 17762
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P8-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P8-after.command.json",
+    "sha256": "801b49db0e1df5b080fb01f98dfa88769537a66ec77366b8b9995053ca6500d4",
+    "bytes": 458
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P8-after.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P8-after.tap",
+    "sha256": "9d51cab28f6a64e6ce6a9e86dcfc6ab532d9e526096d34a694ebeb1f90c4f27c",
+    "bytes": 319
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P8-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P8-before.command.json",
+    "sha256": "801b49db0e1df5b080fb01f98dfa88769537a66ec77366b8b9995053ca6500d4",
+    "bytes": 458
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P8-before.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P8-before.tap",
+    "sha256": "de0df4eebefa89a35cdde0d2c7656c36f25741a2e300a4972ed588b0d87b7ed0",
+    "bytes": 319
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P8-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P8-fault.command.json",
+    "sha256": "801b49db0e1df5b080fb01f98dfa88769537a66ec77366b8b9995053ca6500d4",
+    "bytes": 458
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P8-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P8-fault.tap",
+    "sha256": "5fca0df796ed2d0e9b2743c3166b0fb1bebbfe9fdcb6a4b0553a9939da5f059d",
+    "bytes": 1016
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P9/originals/src/lib/personal-plan/enrollment.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P9/originals/src/lib/personal-plan/enrollment.ts.txt",
+    "sha256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "bytes": 17762
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P9-after.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P9-after.command.json",
+    "sha256": "b22bc5704d8619a4e4fb5ba31862cced677a3f9fabccc3a7cffabf24b59ce153",
+    "bytes": 472
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P9-after.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P9-after.tap",
+    "sha256": "7c1ea16233dad13aac1ac6e4630bf8a6f928d6fc7d1cc4e56df604e2c4a5ddc7",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P9-before.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P9-before.command.json",
+    "sha256": "b22bc5704d8619a4e4fb5ba31862cced677a3f9fabccc3a7cffabf24b59ce153",
+    "bytes": 472
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P9-before.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P9-before.tap",
+    "sha256": "329d8eb34e1884daf06b289de1cddea6810887eb5f60a8174af8d6549fa1c397",
+    "bytes": 346
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P9-fault.command.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P9-fault.command.json",
+    "sha256": "b22bc5704d8619a4e4fb5ba31862cced677a3f9fabccc3a7cffabf24b59ce153",
+    "bytes": 472
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/P9-fault.tap",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/P9-fault.tap",
+    "sha256": "8d930d7101026d089721d38d57c624ad0adf8822ee477afa88ce6a73338d716b",
+    "bytes": 1867
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/all-originals/src/lib/personal-plan/enrollment.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/all-originals/src/lib/personal-plan/enrollment.ts.txt",
+    "sha256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "bytes": 17762
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/all-originals/src/lib/personal-plan/journey-access-loader.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/all-originals/src/lib/personal-plan/journey-access-loader.ts.txt",
+    "sha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+    "bytes": 21991
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/all-originals/src/lib/personal-plan/release.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/all-originals/src/lib/personal-plan/release.ts.txt",
+    "sha256": "92d24c0e4c010e20e13f75db0c561cf9da8f490a17de4a0e4cbbf10691a8d55c",
+    "bytes": 3346
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/all-originals/src/lib/personal-plan/rollout-access.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/all-originals/src/lib/personal-plan/rollout-access.ts.txt",
+    "sha256": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+    "bytes": 4691
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/all-originals/tests/auth-middleware-personal-plan-routine.test.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/all-originals/tests/auth-middleware-personal-plan-routine.test.ts.txt",
+    "sha256": "772d32f6e8bce05037c324ea7b11a9260d75c99c54bc00e6e4c13588e7129e24",
+    "bytes": 42307
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/all-originals/tests/freemium-enrollment-admission.test.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/all-originals/tests/freemium-enrollment-admission.test.ts.txt",
+    "sha256": "fcc6c0f7c564fa5078c7c81823991341ab1859d414d6e00c33f72c369b8a2389",
+    "bytes": 10249
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/all-originals/tests/personal-plan-field-test-access.test.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/all-originals/tests/personal-plan-field-test-access.test.ts.txt",
+    "sha256": "9b6b6880e409e68a531f1d281dbbc19054ec4cee05535f48e21df67a6b0b0e8a",
+    "bytes": 5892
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/all-originals/tests/personal-plan-journey-access-loader.test.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/all-originals/tests/personal-plan-journey-access-loader.test.ts.txt",
+    "sha256": "16b77c5f68870a0cda0ea86910b26408cae10f85f2213d6f8b219a74ff832e67",
+    "bytes": 36647
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/all-originals/tests/personal-plan-rollout-access.test.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/all-originals/tests/personal-plan-rollout-access.test.ts.txt",
+    "sha256": "108669d5b64d304c772e0a3b5878b19b18cc69a407b5792574f0b9b0c192dd41",
+    "bytes": 6398
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/all-originals/tests/personal-plan-stage3-release.test.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/all-originals/tests/personal-plan-stage3-release.test.ts.txt",
+    "sha256": "d25fd6ac50e6ba5a09c3870b83ae55cbc729a72b55cb0329b2d6c414b4dc2f1e",
+    "bytes": 6797
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/all-originals/tests/personal-plan-trial-stage1-journey.test.ts",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/all-originals/tests/personal-plan-trial-stage1-journey.test.ts.txt",
+    "sha256": "ce32342ee184872e96bc13191d0f5dc25d0d863a8acaa477e4ccd8df62bf9fc0",
+    "bytes": 13002
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/complete.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/complete.json",
+    "sha256": "f048bb7e29026d6cba39074071da5b00ef330068cd4f70c562459d229f682610",
+    "bytes": 71390
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/intent.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/intent.json",
+    "sha256": "a4be60a440fb0e5474c3c1a4dfc8ad32fcc92552f037e2d2b13738a79a913c25",
+    "bytes": 1606
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-mutations-transfer-orEm4A/receipt.json",
+    "archived": "used-operator-kit/operator-mutations-transfer-orEm4A/receipt.json",
+    "sha256": "089a931c25846ad792893914a7e1567517b38dbc6c6354d9c7b441baf39987cf",
+    "bytes": 1583306
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-phase-edits.json",
+    "archived": "used-operator-kit/operator-phase-edits.json",
+    "sha256": "6b7951e50802680345f5927b2d84b48b71850ec7dde3dc7a468fce54c73ba3d0",
+    "bytes": 18667
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-pins.json",
+    "archived": "used-operator-kit/operator-pins.json",
+    "sha256": "1d93d7ae5effb128241fa0e24922e385b618f25d362ff6966bd0ffda03293af6",
+    "bytes": 1614548
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-proof.cjs",
+    "archived": "used-operator-kit/operator-proof.cjs.txt",
+    "sha256": "983b77bc48c3394a445951d803ba3c732e2746db2ed82a72b4366d2939da7a6f",
+    "bytes": 7155
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-readonly-preload.cjs",
+    "archived": "used-operator-kit/operator-readonly-preload.cjs.txt",
+    "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-run-cohort.cjs",
+    "archived": "used-operator-kit/operator-run-cohort.cjs.txt",
+    "sha256": "f54ef3a19268801d177da67ffb5683542bded377c77d7af3f4f459987ec09956",
+    "bytes": 4529
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-run-controls.cjs",
+    "archived": "used-operator-kit/operator-run-controls.cjs.txt",
+    "sha256": "5cc31b47aafaeb04e42b5234d49303999c06932948e690a005dcd4cb1e5f2dd9",
+    "bytes": 8170
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-selected-closure.json",
+    "archived": "used-operator-kit/operator-selected-closure.json",
+    "sha256": "2ec344c0f727534e7d909a5ffebd580164f5a8aefab07e56fa48dbbabe195784",
+    "bytes": 346515
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/operator-verify.cjs",
+    "archived": "used-operator-kit/operator-verify.cjs.txt",
+    "sha256": "fc266000c6a2e94b325c811e6e7e111024ded3b051d14d9a6ca5d51449cfa487",
+    "bytes": 1140
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/packed-policy-code.diff",
+    "archived": "used-operator-kit/packed-policy-code.diff",
+    "sha256": "027971f2b3491481de54aab3734aa022b1114edeef73eb27de16481086327d70",
+    "bytes": 4404
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/packed-policy-disposition.json",
+    "archived": "used-operator-kit/packed-policy-disposition.json",
+    "sha256": "3c4384e2708ea1d492e1a9c6300ccdf8ed7f99dcf8236a47e4dc97c4e795c172",
+    "bytes": 429
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/pre-finalization-pins.json",
+    "archived": "used-operator-kit/pre-finalization-pins.json",
+    "sha256": "f5e80b3913eec100e58a097a4a880797a77873ced3378eb7686aa79788a2dc7d",
+    "bytes": 1608476
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/preparation-receipt.json",
+    "archived": "used-operator-kit/preparation-receipt.json",
+    "sha256": "c9d3e0513462c1a257f27022a9f1cecbb712dcde76120e1de8206fb5c1c6f171",
+    "bytes": 511
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/prepare-pins.cjs",
+    "archived": "used-operator-kit/prepare-pins.cjs.txt",
+    "sha256": "a697b0f0488fec6822cc4a5ef6cf24ca08c67c02ebea2172894597b79607f2c7",
+    "bytes": 12673
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/prepare-tools.py",
+    "archived": "used-operator-kit/prepare-tools.py.txt",
+    "sha256": "29b2ededacd9d20a1ea854a064ed17f5261dc63d1aeb0d56f65d21eb012a5852",
+    "bytes": 18267
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/proof-attestation-final.txt",
+    "archived": "used-operator-kit/proof-attestation-final.txt",
+    "sha256": "5b3765c723ed2ad2e91e09b3d035dff40906ff90e79f595d2501c8139aa03e41",
+    "bytes": 423
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/proof-attestation-receipt.txt",
+    "archived": "used-operator-kit/proof-attestation-receipt.txt",
+    "sha256": "32d04a5bf1f60a81e745abd64b5a9c2a94d9b1ed5ed5b01954c64e3e1cb34ec6",
+    "bytes": 128
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/proof-attestation.cjs",
+    "archived": "used-operator-kit/proof-attestation.cjs.txt",
+    "sha256": "5ba6e8133c53f9fae5432031395cb28ab5484a2b9efe9a56a9c24029e1d8fd73",
+    "bytes": 4238
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/static-cohort-final.txt",
+    "archived": "used-operator-kit/static-cohort-final.txt",
+    "sha256": "a0a2d9a140e7314b8d1d837cb421a970ff25c4ad2b8d186e12675ac6dcd18465",
+    "bytes": 675
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/static-cohort-receipt.txt",
+    "archived": "used-operator-kit/static-cohort-receipt.txt",
+    "sha256": "a0a2d9a140e7314b8d1d837cb421a970ff25c4ad2b8d186e12675ac6dcd18465",
+    "bytes": 675
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/static-controls-final.txt",
+    "archived": "used-operator-kit/static-controls-final.txt",
+    "sha256": "c8c1ad1bf35b3ebb34a69523a8be3e8ae0dd77f72007cea9f9e52c3845329e5b",
+    "bytes": 414
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/static-controls-receipt.txt",
+    "archived": "used-operator-kit/static-controls-receipt.txt",
+    "sha256": "c8c1ad1bf35b3ebb34a69523a8be3e8ae0dd77f72007cea9f9e52c3845329e5b",
+    "bytes": 414
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/static-editor-final.txt",
+    "archived": "used-operator-kit/static-editor-final.txt",
+    "sha256": "427848ddbd2cc459afe1784f46a11f6b1f616ab1a99b2e6149b954984d750bc5",
+    "bytes": 466
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/static-editor-receipt.txt",
+    "archived": "used-operator-kit/static-editor-receipt.txt",
+    "sha256": "427848ddbd2cc459afe1784f46a11f6b1f616ab1a99b2e6149b954984d750bc5",
+    "bytes": 466
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/static-integrity-receipt.txt",
+    "archived": "used-operator-kit/static-integrity-receipt.txt",
+    "sha256": "bfa44b3896d8bf942483552497087499842f0a6d440b3eca3002c4856245f456",
+    "bytes": 563
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/static-integrity.cjs",
+    "archived": "used-operator-kit/static-integrity.cjs.txt",
+    "sha256": "b4166a431130d48797988fe2d26181b02ad3d1b61894665816112231d7ce630c",
+    "bytes": 3138
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/static-verifier-final.txt",
+    "archived": "used-operator-kit/static-verifier-final.txt",
+    "sha256": "c0e12a3cdfe07d39b12e1899baefc510c05ef87e56786536eccfaa26febaa4ef",
+    "bytes": 205
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/template-delta.patch",
+    "archived": "used-operator-kit/template-delta.patch",
+    "sha256": "535536c382bca96d9f91d1cd0e8861242075fa4a3732759cfccbc6a1024d70dc",
+    "bytes": 94241
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/template-originals/operator-edit.cjs",
+    "archived": "used-operator-kit/template-originals/operator-edit.cjs.txt",
+    "sha256": "a5a57635cbbef3a27fc3ea9d4abb78e8f99db142ff900979f3942e827187c67c",
+    "bytes": 3640
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/template-originals/operator-guard.cjs",
+    "archived": "used-operator-kit/template-originals/operator-guard.cjs.txt",
+    "sha256": "fc5f27d3c7f0c9f6e226b91e542c6db5d3e3e746af454aeacf2415c20e01f168",
+    "bytes": 13904
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/template-originals/operator-proof.cjs",
+    "archived": "used-operator-kit/template-originals/operator-proof.cjs.txt",
+    "sha256": "6aec16c6468794c9d3b87d69b21b4661e3082a3d48ed44caaaf7c4cf7346eecf",
+    "bytes": 5736
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/template-originals/operator-readonly-preload.cjs",
+    "archived": "used-operator-kit/template-originals/operator-readonly-preload.cjs.txt",
+    "sha256": "bbcf122fd2491ee761c60ac2ec1ef739a9538614d22408571bca728b3bf2367e",
+    "bytes": 3036
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/template-originals/operator-run-controls.cjs",
+    "archived": "used-operator-kit/template-originals/operator-run-controls.cjs.txt",
+    "sha256": "1bc3271bd6a646e60482390708f7571c27b5201d8729d050ef5937a124b2f8fd",
+    "bytes": 8053
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/template-originals/prepare-pins.cjs",
+    "archived": "used-operator-kit/template-originals/prepare-pins.cjs.txt",
+    "sha256": "fa00ebe6d04616d0433f8e9007c2d0ba492ba4dcf780486ec804e7e78be0c019",
+    "bytes": 14689
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/template-originals/proof-attestation.cjs",
+    "archived": "used-operator-kit/template-originals/proof-attestation.cjs.txt",
+    "sha256": "3a689b380987267a37926c527eee829ce6c4a86c105a818cabf06393a72f782b",
+    "bytes": 4029
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-packed-policy-h3ba9sqi/template-provenance.json",
+    "archived": "used-operator-kit/template-provenance.json",
+    "sha256": "d7eb3545fd0603b561e4f87535a06af0ccbce583591d6dd2b9264234d76ab155",
+    "bytes": 838
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-independent-preservation.md",
+    "archived": "independent/test-audit-dormant-rollout-independent-preservation.md",
+    "sha256": "7a1b7628df73ff1c1641c5a8569a545daa7a5ae48fd0c5aad56cc85385aa5e0a",
+    "bytes": 14707
+  },
+  {
+    "original": "/tmp/test-audit-dormant-rollout-independent-static.json",
+    "archived": "independent-static/test-audit-dormant-rollout-independent-static.json",
+    "sha256": "8694643e8e303df64aa0782e751e70a32da3584cbf32ed9dade78b720d81df6b",
+    "bytes": 12084
+  },
+  {
+    "original": "/tmp/test-audit-packed-refs-relevant-policy-9crva_8q/actual-static-checks.json",
+    "archived": "packed-refs-policy/actual-static-checks.json",
+    "sha256": "b1267bf6eadf8e9861fbe24686d5f287aea16aaa96b30e9419dd41611169ff80",
+    "bytes": 151
+  },
+  {
+    "original": "/tmp/test-audit-packed-refs-relevant-policy-9crva_8q/disposition.json",
+    "archived": "packed-refs-policy/disposition.json",
+    "sha256": "903587ed8a72b5f2955c0355a69770c7a4dceffe6a1c39a2eccd55f235d19103",
+    "bytes": 1050
+  },
+  {
+    "original": "/tmp/test-audit-packed-refs-relevant-policy-9crva_8q/policy.cjs",
+    "archived": "packed-refs-policy/policy.cjs.txt",
+    "sha256": "b1622277836750342cc6efe96c11bdf140d36fc7b76e7356d1c25869ab887bcd",
+    "bytes": 1585
+  }
+]

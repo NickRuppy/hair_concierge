@@ -1,0 +1,250 @@
+--- a/tests/agent-v2-product-tool-context.spec.ts
++++ b/tests/agent-v2-product-tool-context.spec.ts
+@@ -7,21 +7,6 @@
+ } from "../src/lib/agent-v2/runtime/product-tool-context"
+ import { inferOilPurposeFromMessage } from "../src/lib/oil/purpose"
+ 
+-test("direct product messages are passed through unchanged", () => {
+-  const latestMessage = "Welches Öl passt für Glanz und Frizz?"
+-
+-  assert.equal(
+-    buildAgentV2ProductToolMessage({
+-      latestMessage,
+-      recentMessages: [
+-        { role: "user", content: "Ich suche etwas für die Längen." },
+-        { role: "assistant", content: "Dann schauen wir auf Finish-Produkte." },
+-      ],
+-    }),
+-    latestMessage,
+-  )
+-})
+-
+ test("direct asks with a named object stay unchanged even with referential wording", () => {
+   const latestMessage = "Welches Tiefenreinigungsshampoo passt dann?"
+ 
+--- a/tests/agent-v2-pending-followup-action.spec.ts
++++ b/tests/agent-v2-pending-followup-action.spec.ts
+@@ -7,7 +7,6 @@
+ } from "../src/lib/agent-v2/contracts"
+ import {
+   doesRoutineCallMatchPendingAction,
+-  isPendingRoutineMutation,
+   legacyRoutineActionToFollowup,
+   readPendingFollowupAction,
+   resolvePendingRoutineMutationPolicy,
+@@ -162,29 +161,6 @@
+     },
+   )
+   assert.equal(readPendingFollowupAction({ pending_followup_action: { kind: "bogus" } }), null)
+-})
+-
+-test("isPendingRoutineMutation only accepts routine mutation actions", () => {
+-  assert.equal(
+-    isPendingRoutineMutation({
+-      kind: "routine_mutation",
+-      category: null,
+-      routine_layer: null,
+-      routine_action: "simplify",
+-      source: "assistant_offer",
+-    }),
+-    true,
+-  )
+-  assert.equal(
+-    isPendingRoutineMutation({
+-      kind: "product_recommendation",
+-      category: "mask",
+-      routine_layer: null,
+-      routine_action: null,
+-      source: "assistant_offer",
+-    }),
+-    false,
+-  )
+ })
+ 
+ test("doesRoutineCallMatchPendingAction matches category, layer, and action", () => {
+--- a/tests/agent-v2-contracts.spec.ts
++++ b/tests/agent-v2-contracts.spec.ts
+@@ -252,51 +252,6 @@
+   assert.equal(AgentV2TerminalAnswerSchema.parse(value).answer_mode, "product_recommendation")
+ })
+ 
+-test("AgentV2TerminalAnswerSchema accepts text-only product assessment payload", () => {
+-  const value = {
+-    answer_mode: "product_assessment",
+-    interpreted_intent: "User asks whether a named shampoo suits them.",
+-    request_interpretation: requestInterpretation({
+-      primary_intent: "product_recommendation",
+-      product_request_kind: "product_detail",
+-      care_category: "shampoo",
+-      requested_product_count: 1,
+-      count_policy: "exact",
+-      evidence_quote: "Passt Syoss Volume Shampoo zu mir?",
+-      specific_product_candidate: true,
+-    }),
+-    confidence: 0.91,
+-    extracted_constraints: emptyExtractedConstraints(),
+-    missing_information: [],
+-    safety_flags: [],
+-    tool_grounding: {
+-      used_guidance_package_ids: ["base.product_recommendation.v1", "category.shampoo.v1"],
+-      used_product_tool: true,
+-      used_routine_tool: false,
+-      product_ids: ["prod_syoss_volume"],
+-      routine_step_ids: [],
+-      hard_rule_ids: [],
+-    },
+-    routine_context: {
+-      active: false,
+-      routine_layer: null,
+-      step_id: null,
+-      category: null,
+-      return_path: [],
+-    },
+-    pending_followup_action: null,
+-    session_memory_writes: [],
+-    payload: {
+-      assessment_kind: "fit",
+-      assessed_product_ids: ["prod_syoss_volume"],
+-      user_facing_answer_de:
+-        "Danke fürs Auswählen. Syoss Volume Shampoo kann zu feinem Haar passen, wenn es am Ansatz gut reinigt und die Längen nicht beschwert.",
+-    },
+-  }
+-
+-  assert.equal(AgentV2TerminalAnswerSchema.parse(value).answer_mode, "product_assessment")
+-})
+-
+ test("AgentV2TerminalAnswerSchema rejects product assessment with too many products", () => {
+   const result = AgentV2TerminalAnswerSchema.safeParse({
+     answer_mode: "product_assessment",
+--- a/tests/chat-product-mentions.test.tsx
++++ b/tests/chat-product-mentions.test.tsx
+@@ -4,10 +4,7 @@
+ import { renderToStaticMarkup } from "react-dom/server"
+ 
+ import { ChatMessage } from "@/components/chat/chat-message"
+-import {
+-  ProductIntakeCard,
+-  ProductIntakeSubmittedState,
+-} from "@/components/chat/product-intake-card"
++import { ProductIntakeCard } from "@/components/chat/product-intake-card"
+ import { ProductLookupClarificationCard } from "@/components/chat/product-lookup-clarification-card"
+ import {
+   applyChatStreamEventToMessages,
+@@ -312,6 +309,7 @@
+   assert.match(html, /Syoss Intense Curls/)
+   assert.match(html, /Auswählen/)
+   assert.doesNotMatch(html, /<button[^>]*\sdisabled(?:=""|>| )[^>]*>[\s\S]*Auswählen/)
++  assert.doesNotMatch(html, /<img\b/)
+ })
+ 
+ test("assistant product lookup clarification disables selection on the streaming message", () => {
+@@ -451,7 +449,13 @@
+         }) as ReactElement,
+     )
+ 
+-    const buttons = findButtons(harness.render())
++    const initial = harness.render()
++    const initialHtml = renderToStaticMarkup(initial)
++    assert.match(initialHtml, /Foto hochladen/)
++    assert.match(initialHtml, /Daten eingeben/)
++    assert.doesNotMatch(initialHtml, /Danke für dein Produkt/)
++    assert.doesNotMatch(initialHtml, /Wir haben es noch nicht sicher in unserer Datenbank/)
++    const buttons = findButtons(initial)
+     const submitButton = buttons.find((button) =>
+       textContent(button).includes("Produkt einreichen"),
+     )
+@@ -677,6 +681,13 @@
+   assert.match(html, /Danke, wir prüfen dein Produkt\./)
+   assert.doesNotMatch(html, /Produkt einreichen/)
+   assert.doesNotMatch(html, /Foto hochladen/)
++  assert.match(html, /role="status"/)
++  assert.match(html, /aria-live="polite"/)
++  assert.match(html, /Wir melden uns hier im Chat/)
++  assert.doesNotMatch(html, /Daten eingeben/)
++  assert.doesNotMatch(html, /Kategorie/)
++  assert.doesNotMatch(html, /Häufigkeit/)
++  assert.doesNotMatch(html, /Jean &amp; Len/)
+ })
+ 
+ test("product intake card renders resolved review state after approval", () => {
+@@ -701,6 +712,8 @@
+   assert.match(html, /Produkt gespeichert\./)
+   assert.doesNotMatch(html, /Produkt einreichen/)
+   assert.doesNotMatch(html, /Danke, wir prüfen dein Produkt\./)
++  assert.match(html, /Du kannst dazu jetzt direkt weiterfragen\./)
++  assert.doesNotMatch(html, /Foto hochladen/)
+ })
+ 
+ test("assistant product lookup clarification suppresses recommendation cards", () => {
+@@ -719,17 +732,6 @@
+   assert.doesNotMatch(html, /Balea Professional Ultimate Volume/)
+ })
+ 
+-test("normal product intake offers render as an action card without duplicate helper copy", () => {
+-  const html = renderToStaticMarkup(
+-    <ProductIntakeCard offer={createProductIntakeOffer()} conversationId="conversation-1" />,
+-  )
+-
+-  assert.match(html, /Foto hochladen/)
+-  assert.match(html, /Daten eingeben/)
+-  assert.doesNotMatch(html, /Danke für dein Produkt/)
+-  assert.doesNotMatch(html, /Wir haben es noch nicht sicher in unserer Datenbank/)
+-})
+-
+ test("photo product intake marks barcode optional unless explicitly requested", () => {
+   const html = renderToStaticMarkup(
+     <ProductIntakeCard
+@@ -772,32 +774,8 @@
+ 
+   assert.match(html, /Wir brauchen noch eine Ergänzung/)
+   assert.match(html, /Ergänze bitte: Vorderseitenfoto, Produktname/)
+-})
+-
+-test("pending product intake submitted state collapses the editable form", () => {
+-  const html = renderToStaticMarkup(<ProductIntakeSubmittedState status="pending_review" />)
+-
+-  assert.match(html, /role="status"/)
+-  assert.match(html, /aria-live="polite"/)
+-  assert.match(html, /Danke, wir prüfen dein Produkt\./)
+-  assert.match(html, /Wir melden uns hier im Chat/)
+-  assert.doesNotMatch(html, /Foto hochladen/)
+-  assert.doesNotMatch(html, /Daten eingeben/)
+-  assert.doesNotMatch(html, /Kategorie/)
+-  assert.doesNotMatch(html, /Häufigkeit/)
+-  assert.doesNotMatch(html, /Jean &amp; Len/)
+-  assert.doesNotMatch(html, /Produkt einreichen/)
+ })
+ 
+-test("matched product intake submitted state renders compact saved copy", () => {
+-  const html = renderToStaticMarkup(<ProductIntakeSubmittedState status="matched" />)
+-
+-  assert.match(html, /Produkt gespeichert\./)
+-  assert.match(html, /Du kannst dazu jetzt direkt weiterfragen\./)
+-  assert.doesNotMatch(html, /Foto hochladen/)
+-  assert.doesNotMatch(html, /Produkt einreichen/)
+-})
+-
+ test("product selection helper detects already streamed selection messages", () => {
+   const message = createAssistantMessage("Alles klar, ich bewerte Syoss Intense Curls.", [])
+   message.message_context = {
+@@ -919,20 +897,6 @@
+   assert.doesNotMatch(html, />Syoss Intense Curls</)
+ })
+ 
+-test("assistant product lookup clarification renders a category fallback without an image url", () => {
+-  const html = renderToStaticMarkup(
+-    <ProductLookupClarificationCard
+-      clarification={createProductLookupClarification()}
+-      conversationId="conversation-1"
+-      assistantMessageId="message-clarification-1"
+-      onSelectProduct={() => {}}
+-    />,
+-  )
+-
+-  assert.doesNotMatch(html, /<img\b/)
+-  assert.match(html, /Syoss Intense Curls/)
+-})
+-
+ test("assistant product lookup clarification candidate names can wrap instead of truncating", () => {
+   const clarification = createProductLookupClarificationWithDisplayData()
+   clarification.candidates[0].name =

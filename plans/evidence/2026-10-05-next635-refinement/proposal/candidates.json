@@ -1,0 +1,664 @@
+[
+  {
+    "id": "C1",
+    "mark": "C",
+    "status": "CONDITIONAL_MAIN_REVIEW_AND_RUNTIME_PROOF",
+    "file": "tests/personal-plan/refinement/refinement-status.test.ts",
+    "donor": {
+      "name": "a fresh plan with no draft: both modules open, progress 2/4, banner points at products",
+      "line": 35,
+      "start": 1187,
+      "end": 2071,
+      "body": "test(\"a fresh plan with no draft: both modules open, progress 2/4, banner points at products\", () => {\n  const result = buildRefinementStatusResponse({\n    moduleStatusInput: {\n      triggerContext: TRIGGER_CONTEXT,\n      answers: {},\n      completedQuestionIds: [] as Stage2QuestionId[],\n      answerProvenance: {},\n    },\n    moduleProjections: {},\n    bannerDismissals: NO_DISMISSALS,\n  })\n\n  assert.equal(refinementStatusResponseSchema.safeParse(result).success, true)\n  assert.deepEqual(\n    result.modules.map((m) => [m.module, m.status]),\n    [\n      [\"products\", \"open\"],\n      [\"habits\", \"open\"],\n    ],\n  )\n  assert.ok(result.modules[0].openQuestionCount > 0)\n  assert.deepEqual(result.progress, { completedSteps: 2, totalSteps: 4 })\n  assert.equal(result.module1HandedOff, false)\n  assert.deepEqual(result.banner, { visible: true, module: \"products\", dismissed: false })\n})",
+      "sha256": "a5a07b72e0b3d1db9b7b8fa1673601f5da82460272aacf9cb016a0e22afd0a10",
+      "assertions": [
+        {
+          "line": 47,
+          "text": "assert.equal(refinementStatusResponseSchema.safeParse(result).success, true)"
+        },
+        {
+          "line": 48,
+          "text": "assert.deepEqual(\n    result.modules.map((m) => [m.module, m.status]),\n    [\n      [\"products\", \"open\"],\n      [\"habits\", \"open\"],\n    ],\n  )"
+        },
+        {
+          "line": 55,
+          "text": "assert.ok(result.modules[0].openQuestionCount > 0)"
+        },
+        {
+          "line": 56,
+          "text": "assert.deepEqual(result.progress, { completedSteps: 2, totalSteps: 4 })"
+        },
+        {
+          "line": 57,
+          "text": "assert.equal(result.module1HandedOff, false)"
+        },
+        {
+          "line": 58,
+          "text": "assert.deepEqual(result.banner, { visible: true, module: \"products\", dismissed: false })"
+        }
+      ]
+    },
+    "keeperFile": "tests/personal-plan-refinement-status-route.test.ts",
+    "keeperBefore": {
+      "name": "fresh plan with no refinement draft: both modules open, progress 2/4",
+      "line": 118,
+      "start": 3899,
+      "end": 4633,
+      "body": "test(\"fresh plan with no refinement draft: both modules open, progress 2/4\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(res.headers.get(\"Cache-Control\"), \"no-store\")\n  assert.deepEqual(\n    body.modules.map((m: { module: string; status: string }) => [m.module, m.status]),\n    [\n      [\"products\", \"open\"],\n      [\"habits\", \"open\"],\n    ],\n  )\n  assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })\n  assert.equal(body.module1HandedOff, false)\n  assert.deepEqual(body.banner, { visible: true, module: \"products\", dismissed: false })\n})",
+      "sha256": "bad81e5552ef7653a71b1712db928cefe5526ca580c095de6a1a0db2d71d0288",
+      "assertions": [
+        {
+          "line": 125,
+          "text": "assert.equal(res.status, 200)"
+        },
+        {
+          "line": 126,
+          "text": "assert.equal(res.headers.get(\"Cache-Control\"), \"no-store\")"
+        },
+        {
+          "line": 127,
+          "text": "assert.deepEqual(\n    body.modules.map((m: { module: string; status: string }) => [m.module, m.status]),\n    [\n      [\"products\", \"open\"],\n      [\"habits\", \"open\"],\n    ],\n  )"
+        },
+        {
+          "line": 134,
+          "text": "assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })"
+        },
+        {
+          "line": 135,
+          "text": "assert.equal(body.module1HandedOff, false)"
+        },
+        {
+          "line": 136,
+          "text": "assert.deepEqual(body.banner, { visible: true, module: \"products\", dismissed: false })"
+        }
+      ]
+    },
+    "keeperAfter": {
+      "name": "fresh plan with no refinement draft: both modules open, progress 2/4",
+      "line": 118,
+      "start": 3899,
+      "end": 4736,
+      "body": "test(\"fresh plan with no refinement draft: both modules open, progress 2/4\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(res.headers.get(\"Cache-Control\"), \"no-store\")\n  assert.deepEqual(\n    body.modules.map((m: { module: string; status: string }) => [m.module, m.status]),\n    [\n      [\"products\", \"open\"],\n      [\"habits\", \"open\"],\n    ],\n  )\n  assert.ok(body.modules[0].openQuestionCount > 0, \"fresh products module must expose open questions\")\n  assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })\n  assert.equal(body.module1HandedOff, false)\n  assert.deepEqual(body.banner, { visible: true, module: \"products\", dismissed: false })\n})",
+      "sha256": "a246f2dbedb3e6f1e615e06c94807cff136623c8858a0bd5492e170f83eb729a",
+      "assertions": [
+        {
+          "line": 125,
+          "text": "assert.equal(res.status, 200)"
+        },
+        {
+          "line": 126,
+          "text": "assert.equal(res.headers.get(\"Cache-Control\"), \"no-store\")"
+        },
+        {
+          "line": 127,
+          "text": "assert.deepEqual(\n    body.modules.map((m: { module: string; status: string }) => [m.module, m.status]),\n    [\n      [\"products\", \"open\"],\n      [\"habits\", \"open\"],\n    ],\n  )"
+        },
+        {
+          "line": 134,
+          "text": "assert.ok(body.modules[0].openQuestionCount > 0, \"fresh products module must expose open questions\")"
+        },
+        {
+          "line": 135,
+          "text": "assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })"
+        },
+        {
+          "line": 136,
+          "text": "assert.equal(body.module1HandedOff, false)"
+        },
+        {
+          "line": 137,
+          "text": "assert.deepEqual(body.banner, { visible: true, module: \"products\", dismissed: false })"
+        }
+      ]
+    },
+    "summary": "Fresh model -> existing actual HTTP fresh plan",
+    "equivalence": "Same derived trigger context; draft null maps to {},[],{},{} and empty dismissal Set. Exactly equal builder arguments. Schema parse already inside builder; successful200 plus public literals owns acceptance, no extra schema invocation.",
+    "assertionUnion": "Two ordered open module pairs; products open count >0; progress2/4; handofffalse; visible products banner; valid response schema. Only open count observation is new.",
+    "newInputs": 0,
+    "newOwnerCalls": 0,
+    "newRows": 0,
+    "newDeclarations": 0,
+    "sourceCleanup": null,
+    "history": "Status/model/module/provenance introduced e6eb60fd; presentation introduced4bdda99a, current owner still active. No retirement inferred."
+  },
+  {
+    "id": "C2",
+    "mark": "C",
+    "status": "CONDITIONAL_MAIN_REVIEW_AND_RUNTIME_PROOF",
+    "file": "tests/personal-plan/refinement/refinement-status.test.ts",
+    "donor": {
+      "name": "partial products answers: products stays open with the correct open-question count",
+      "line": 61,
+      "start": 2073,
+      "end": 2892,
+      "body": "test(\"partial products answers: products stays open with the correct open-question count\", () => {\n  const result = buildRefinementStatusResponse({\n    moduleStatusInput: {\n      triggerContext: TRIGGER_CONTEXT,\n      answers: { currentProductCategories: [\"shampoo\"] },\n      completedQuestionIds: [\"current_product_categories\"] as Stage2QuestionId[],\n      answerProvenance: { current_product_categories: \"user\" },\n    },\n    moduleProjections: {},\n    bannerDismissals: NO_DISMISSALS,\n  })\n\n  const products = result.modules.find((m) => m.module === \"products\")\n  assert.equal(products?.status, \"open\")\n  // products path here is [current_product_categories, wet_wash_frequency]; one answered.\n  assert.equal(products?.openQuestionCount, 1)\n  assert.deepEqual(result.progress, { completedSteps: 2, totalSteps: 4 })\n})",
+      "sha256": "8eff4ac7acb31e68b21ca44d5e653e08b9759b557ba0e81492eb6a1814c666ba",
+      "assertions": [
+        {
+          "line": 74,
+          "text": "assert.equal(products?.status, \"open\")"
+        },
+        {
+          "line": 76,
+          "text": "assert.equal(products?.openQuestionCount, 1)"
+        },
+        {
+          "line": 77,
+          "text": "assert.deepEqual(result.progress, { completedSteps: 2, totalSteps: 4 })"
+        }
+      ]
+    },
+    "keeperFile": "tests/personal-plan-refinement-status-route.test.ts",
+    "keeperBefore": {
+      "name": "partial products user-answers: products open with the correct open-question count",
+      "line": 139,
+      "start": 4635,
+      "end": 5640,
+      "body": "test(\"partial products user-answers: products open with the correct open-question count\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    personal_plan_refinement_drafts: [\n      {\n        personal_plan_id: ids.plan,\n        base_initial_need_version_id: ids.initialNeed,\n        status: \"in_progress\",\n        answers: { currentProductCategories: [\"shampoo\"] },\n        completed_question_ids: [\"current_product_categories\"],\n        answer_provenance: { current_product_categories: \"user\" },\n        module_projections: {},\n        updated_at: \"2026-08-20T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  const products = body.modules.find((m: { module: string }) => m.module === \"products\")\n  assert.equal(products.status, \"open\")\n  assert.equal(products.openQuestionCount, 1)\n  assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })\n})",
+      "sha256": "f1454bc0bd680f377be7ca39d9b0f2affeb1b42b0652f98c2583c2aa243eec32",
+      "assertions": [
+        {
+          "line": 158,
+          "text": "assert.equal(res.status, 200)"
+        },
+        {
+          "line": 160,
+          "text": "assert.equal(products.status, \"open\")"
+        },
+        {
+          "line": 161,
+          "text": "assert.equal(products.openQuestionCount, 1)"
+        },
+        {
+          "line": 162,
+          "text": "assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })"
+        }
+      ]
+    },
+    "keeperAfter": {
+      "name": "partial products user-answers: products open with the correct open-question count",
+      "line": 140,
+      "start": 4738,
+      "end": 5743,
+      "body": "test(\"partial products user-answers: products open with the correct open-question count\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    personal_plan_refinement_drafts: [\n      {\n        personal_plan_id: ids.plan,\n        base_initial_need_version_id: ids.initialNeed,\n        status: \"in_progress\",\n        answers: { currentProductCategories: [\"shampoo\"] },\n        completed_question_ids: [\"current_product_categories\"],\n        answer_provenance: { current_product_categories: \"user\" },\n        module_projections: {},\n        updated_at: \"2026-08-20T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  const products = body.modules.find((m: { module: string }) => m.module === \"products\")\n  assert.equal(products.status, \"open\")\n  assert.equal(products.openQuestionCount, 1)\n  assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })\n})",
+      "sha256": "f1454bc0bd680f377be7ca39d9b0f2affeb1b42b0652f98c2583c2aa243eec32",
+      "assertions": [
+        {
+          "line": 159,
+          "text": "assert.equal(res.status, 200)"
+        },
+        {
+          "line": 161,
+          "text": "assert.equal(products.status, \"open\")"
+        },
+        {
+          "line": 162,
+          "text": "assert.equal(products.openQuestionCount, 1)"
+        },
+        {
+          "line": 163,
+          "text": "assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })"
+        }
+      ]
+    },
+    "summary": "Partial model -> existing actual HTTP partial draft",
+    "equivalence": "Exact same trigger, currentProductCategories shampoo, completed current_product_categories user, no projections/dismissals. Fake query returns row; real source loader, provenance/path/build/schema execute.",
+    "assertionUnion": "products statusopen, openQuestionCount1, progress2/4 already exact.",
+    "newInputs": 0,
+    "newOwnerCalls": 0,
+    "newRows": 0,
+    "newDeclarations": 0,
+    "sourceCleanup": null,
+    "history": "Status/model/module/provenance introduced e6eb60fd; presentation introduced4bdda99a, current owner still active. No retirement inferred."
+  },
+  {
+    "id": "C3",
+    "mark": "C",
+    "status": "CONDITIONAL_MAIN_REVIEW_AND_RUNTIME_PROOF",
+    "file": "tests/personal-plan/refinement/refinement-status.test.ts",
+    "donor": {
+      "name": "products module complete via lineage: 3/4 and the handoff marker is surfaced",
+      "line": 80,
+      "start": 2894,
+      "end": 4172,
+      "body": "test(\"products module complete via lineage: 3/4 and the handoff marker is surfaced\", () => {\n  const productsAnswers: PersonalPlanRefinementAnswersV1 = {\n    currentProductCategories: [\"shampoo\"],\n    wetWashFrequency: \"daily_1x\",\n  }\n  const moduleProjections: Stage2ModuleProjections = {\n    products: { needVersionId: \"need-v2\", projectedAtRevision: 1, stage3Handoff: true },\n  }\n\n  const result = buildRefinementStatusResponse({\n    moduleStatusInput: {\n      triggerContext: TRIGGER_CONTEXT,\n      answers: productsAnswers,\n      completedQuestionIds: [\n        \"current_product_categories\",\n        \"wet_wash_frequency\",\n      ] as Stage2QuestionId[],\n      answerProvenance: { current_product_categories: \"user\", wet_wash_frequency: \"user\" },\n    },\n    moduleProjections,\n    bannerDismissals: NO_DISMISSALS,\n  })\n\n  assert.equal(result.modules.find((m) => m.module === \"products\")?.status, \"complete\")\n  assert.equal(result.modules.find((m) => m.module === \"habits\")?.status, \"open\")\n  assert.deepEqual(result.progress, { completedSteps: 3, totalSteps: 4 })\n  assert.equal(result.module1HandedOff, true)\n  // The next open module is habits now, and it has never been dismissed.\n  assert.deepEqual(result.banner, { visible: true, module: \"habits\", dismissed: false })\n})",
+      "sha256": "18c6041d890beef7b701be673f6bb981c4e49c43674fd3684050706369908e30",
+      "assertions": [
+        {
+          "line": 103,
+          "text": "assert.equal(result.modules.find((m) => m.module === \"products\")?.status, \"complete\")"
+        },
+        {
+          "line": 104,
+          "text": "assert.equal(result.modules.find((m) => m.module === \"habits\")?.status, \"open\")"
+        },
+        {
+          "line": 105,
+          "text": "assert.deepEqual(result.progress, { completedSteps: 3, totalSteps: 4 })"
+        },
+        {
+          "line": 106,
+          "text": "assert.equal(result.module1HandedOff, true)"
+        },
+        {
+          "line": 108,
+          "text": "assert.deepEqual(result.banner, { visible: true, module: \"habits\", dismissed: false })"
+        }
+      ]
+    },
+    "keeperFile": "tests/personal-plan-refinement-status-route.test.ts",
+    "keeperBefore": {
+      "name": "products module complete via lineage: 3/4 and the handoff marker is set",
+      "line": 165,
+      "start": 5642,
+      "end": 6991,
+      "body": "test(\"products module complete via lineage: 3/4 and the handoff marker is set\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    personal_plan_refinement_drafts: [\n      {\n        personal_plan_id: ids.plan,\n        base_initial_need_version_id: ids.initialNeed,\n        status: \"in_progress\",\n        answers: { currentProductCategories: [\"shampoo\"], wetWashFrequency: \"daily\" },\n        completed_question_ids: [\"current_product_categories\", \"wet_wash_frequency\"],\n        answer_provenance: { current_product_categories: \"user\", wet_wash_frequency: \"user\" },\n        module_projections: {\n          products: { needVersionId: \"need-v2\", projectedAtRevision: 1, stage3Handoff: true },\n        },\n        updated_at: \"2026-08-20T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(\n    body.modules.find((m: { module: string }) => m.module === \"products\").status,\n    \"complete\",\n  )\n  assert.equal(body.modules.find((m: { module: string }) => m.module === \"habits\").status, \"open\")\n  assert.deepEqual(body.progress, { completedSteps: 3, totalSteps: 4 })\n  assert.equal(body.module1HandedOff, true)\n  assert.deepEqual(body.banner, { visible: true, module: \"habits\", dismissed: false })\n})",
+      "sha256": "974961a1b80cd15af0e79c4db7195db243b9e0e483f3fad7cf40e1fac6997f58",
+      "assertions": [
+        {
+          "line": 186,
+          "text": "assert.equal(res.status, 200)"
+        },
+        {
+          "line": 187,
+          "text": "assert.equal(\n    body.modules.find((m: { module: string }) => m.module === \"products\").status,\n    \"complete\",\n  )"
+        },
+        {
+          "line": 191,
+          "text": "assert.equal(body.modules.find((m: { module: string }) => m.module === \"habits\").status, \"open\")"
+        },
+        {
+          "line": 192,
+          "text": "assert.deepEqual(body.progress, { completedSteps: 3, totalSteps: 4 })"
+        },
+        {
+          "line": 193,
+          "text": "assert.equal(body.module1HandedOff, true)"
+        },
+        {
+          "line": 194,
+          "text": "assert.deepEqual(body.banner, { visible: true, module: \"habits\", dismissed: false })"
+        }
+      ]
+    },
+    "keeperAfter": {
+      "name": "products module complete via lineage: 3/4 and the handoff marker is set",
+      "line": 166,
+      "start": 5745,
+      "end": 7094,
+      "body": "test(\"products module complete via lineage: 3/4 and the handoff marker is set\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    personal_plan_refinement_drafts: [\n      {\n        personal_plan_id: ids.plan,\n        base_initial_need_version_id: ids.initialNeed,\n        status: \"in_progress\",\n        answers: { currentProductCategories: [\"shampoo\"], wetWashFrequency: \"daily\" },\n        completed_question_ids: [\"current_product_categories\", \"wet_wash_frequency\"],\n        answer_provenance: { current_product_categories: \"user\", wet_wash_frequency: \"user\" },\n        module_projections: {\n          products: { needVersionId: \"need-v2\", projectedAtRevision: 1, stage3Handoff: true },\n        },\n        updated_at: \"2026-08-20T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(\n    body.modules.find((m: { module: string }) => m.module === \"products\").status,\n    \"complete\",\n  )\n  assert.equal(body.modules.find((m: { module: string }) => m.module === \"habits\").status, \"open\")\n  assert.deepEqual(body.progress, { completedSteps: 3, totalSteps: 4 })\n  assert.equal(body.module1HandedOff, true)\n  assert.deepEqual(body.banner, { visible: true, module: \"habits\", dismissed: false })\n})",
+      "sha256": "974961a1b80cd15af0e79c4db7195db243b9e0e483f3fad7cf40e1fac6997f58",
+      "assertions": [
+        {
+          "line": 187,
+          "text": "assert.equal(res.status, 200)"
+        },
+        {
+          "line": 188,
+          "text": "assert.equal(\n    body.modules.find((m: { module: string }) => m.module === \"products\").status,\n    \"complete\",\n  )"
+        },
+        {
+          "line": 192,
+          "text": "assert.equal(body.modules.find((m: { module: string }) => m.module === \"habits\").status, \"open\")"
+        },
+        {
+          "line": 193,
+          "text": "assert.deepEqual(body.progress, { completedSteps: 3, totalSteps: 4 })"
+        },
+        {
+          "line": 194,
+          "text": "assert.equal(body.module1HandedOff, true)"
+        },
+        {
+          "line": 195,
+          "text": "assert.deepEqual(body.banner, { visible: true, module: \"habits\", dismissed: false })"
+        }
+      ]
+    },
+    "summary": "Products complete model -> actual HTTP lineage result",
+    "equivalence": "daily_1x donor valid; daily route invalid and re-assumed weekly_2x. Frequency never affects getOrderedQuestionIds; user IDs/provenance, product categories, context and projection are identical. Returned states depend on ordered IDs plus user set, not resolved frequency. No validity/answer output asserted by donor.",
+    "assertionUnion": "productscomplete, habitsopen, progress3/4, handofftrue, visible habits banner already exact.",
+    "newInputs": 0,
+    "newOwnerCalls": 0,
+    "newRows": 0,
+    "newDeclarations": 0,
+    "sourceCleanup": null,
+    "history": "Status/model/module/provenance introduced e6eb60fd; presentation introduced4bdda99a, current owner still active. No retirement inferred."
+  },
+  {
+    "id": "C4",
+    "mark": "C",
+    "status": "CONDITIONAL_MAIN_REVIEW_AND_RUNTIME_PROOF",
+    "file": "tests/personal-plan/refinement/refinement-status.test.ts",
+    "donor": {
+      "name": "both modules complete: 4/4, no open module left, banner not visible",
+      "line": 111,
+      "start": 4174,
+      "end": 5579,
+      "body": "test(\"both modules complete: 4/4, no open module left, banner not visible\", () => {\n  const answers: PersonalPlanRefinementAnswersV1 = {\n    currentProductCategories: [\"shampoo\"],\n    wetWashFrequency: \"daily_1x\",\n    towel: { material: \"no_towel\" },\n    dryingRoutes: [],\n    additionalHeatTools: [],\n    nightProtection: [],\n  }\n  const completedQuestionIds: Stage2QuestionId[] = [\n    \"current_product_categories\",\n    \"wet_wash_frequency\",\n    \"towel_handling\",\n    \"drying_routes\",\n    \"additional_heat_tools\",\n    \"night_protection\",\n  ]\n  const moduleProjections: Stage2ModuleProjections = {\n    products: { needVersionId: \"need-v2\", projectedAtRevision: 1, stage3Handoff: true },\n    habits: { needVersionId: \"need-v3\", projectedAtRevision: 2, stage3Handoff: false },\n  }\n\n  const result = buildRefinementStatusResponse({\n    moduleStatusInput: {\n      triggerContext: TRIGGER_CONTEXT,\n      answers,\n      completedQuestionIds,\n      answerProvenance: Object.fromEntries(completedQuestionIds.map((id) => [id, \"user\"])),\n    },\n    moduleProjections,\n    bannerDismissals: NO_DISMISSALS,\n  })\n\n  assert.deepEqual(\n    result.modules.map((m) => m.status),\n    [\"complete\", \"complete\"],\n  )\n  assert.deepEqual(result.progress, { completedSteps: 4, totalSteps: 4 })\n  assert.equal(result.module1HandedOff, true)\n  assert.deepEqual(result.banner, { visible: false, module: null, dismissed: false })\n})",
+      "sha256": "a68dfc7e59b871674a49ad17d604e20f3931e22d88ddac498f92c8491f7aedba",
+      "assertions": [
+        {
+          "line": 144,
+          "text": "assert.deepEqual(\n    result.modules.map((m) => m.status),\n    [\"complete\", \"complete\"],\n  )"
+        },
+        {
+          "line": 148,
+          "text": "assert.deepEqual(result.progress, { completedSteps: 4, totalSteps: 4 })"
+        },
+        {
+          "line": 149,
+          "text": "assert.equal(result.module1HandedOff, true)"
+        },
+        {
+          "line": 150,
+          "text": "assert.deepEqual(result.banner, { visible: false, module: null, dismissed: false })"
+        }
+      ]
+    },
+    "keeperFile": "tests/personal-plan-refinement-status-route.test.ts",
+    "keeperBefore": {
+      "name": "both modules complete: 4/4",
+      "line": 197,
+      "start": 6993,
+      "end": 8583,
+      "body": "test(\"both modules complete: 4/4\", async () => {\n  const answers = {\n    currentProductCategories: [\"shampoo\"],\n    wetWashFrequency: \"daily\",\n    towel: { material: \"no_towel\" },\n    dryingRoutes: [],\n    additionalHeatTools: [],\n    nightProtection: [],\n  }\n  const completedQuestionIds = [\n    \"current_product_categories\",\n    \"wet_wash_frequency\",\n    \"towel_handling\",\n    \"drying_routes\",\n    \"additional_heat_tools\",\n    \"night_protection\",\n  ]\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    personal_plan_refinement_drafts: [\n      {\n        personal_plan_id: ids.plan,\n        base_initial_need_version_id: ids.initialNeed,\n        status: \"complete\",\n        answers,\n        completed_question_ids: completedQuestionIds,\n        answer_provenance: Object.fromEntries(completedQuestionIds.map((id) => [id, \"user\"])),\n        module_projections: {\n          products: { needVersionId: \"need-v2\", projectedAtRevision: 1, stage3Handoff: true },\n          habits: { needVersionId: \"need-v3\", projectedAtRevision: 2, stage3Handoff: false },\n        },\n        updated_at: \"2026-08-21T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.deepEqual(\n    body.modules.map((m: { status: string }) => m.status),\n    [\"complete\", \"complete\"],\n  )\n  assert.deepEqual(body.progress, { completedSteps: 4, totalSteps: 4 })\n  assert.equal(body.module1HandedOff, true)\n  assert.deepEqual(body.banner, { visible: false, module: null, dismissed: false })\n})",
+      "sha256": "3586d769766ff39e1819555a96a17c0364f2b328097d001ec07483f68793c0b2",
+      "assertions": [
+        {
+          "line": 235,
+          "text": "assert.equal(res.status, 200)"
+        },
+        {
+          "line": 236,
+          "text": "assert.deepEqual(\n    body.modules.map((m: { status: string }) => m.status),\n    [\"complete\", \"complete\"],\n  )"
+        },
+        {
+          "line": 240,
+          "text": "assert.deepEqual(body.progress, { completedSteps: 4, totalSteps: 4 })"
+        },
+        {
+          "line": 241,
+          "text": "assert.equal(body.module1HandedOff, true)"
+        },
+        {
+          "line": 242,
+          "text": "assert.deepEqual(body.banner, { visible: false, module: null, dismissed: false })"
+        }
+      ]
+    },
+    "keeperAfter": {
+      "name": "both modules complete: 4/4",
+      "line": 198,
+      "start": 7096,
+      "end": 8686,
+      "body": "test(\"both modules complete: 4/4\", async () => {\n  const answers = {\n    currentProductCategories: [\"shampoo\"],\n    wetWashFrequency: \"daily\",\n    towel: { material: \"no_towel\" },\n    dryingRoutes: [],\n    additionalHeatTools: [],\n    nightProtection: [],\n  }\n  const completedQuestionIds = [\n    \"current_product_categories\",\n    \"wet_wash_frequency\",\n    \"towel_handling\",\n    \"drying_routes\",\n    \"additional_heat_tools\",\n    \"night_protection\",\n  ]\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    personal_plan_refinement_drafts: [\n      {\n        personal_plan_id: ids.plan,\n        base_initial_need_version_id: ids.initialNeed,\n        status: \"complete\",\n        answers,\n        completed_question_ids: completedQuestionIds,\n        answer_provenance: Object.fromEntries(completedQuestionIds.map((id) => [id, \"user\"])),\n        module_projections: {\n          products: { needVersionId: \"need-v2\", projectedAtRevision: 1, stage3Handoff: true },\n          habits: { needVersionId: \"need-v3\", projectedAtRevision: 2, stage3Handoff: false },\n        },\n        updated_at: \"2026-08-21T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.deepEqual(\n    body.modules.map((m: { status: string }) => m.status),\n    [\"complete\", \"complete\"],\n  )\n  assert.deepEqual(body.progress, { completedSteps: 4, totalSteps: 4 })\n  assert.equal(body.module1HandedOff, true)\n  assert.deepEqual(body.banner, { visible: false, module: null, dismissed: false })\n})",
+      "sha256": "3586d769766ff39e1819555a96a17c0364f2b328097d001ec07483f68793c0b2",
+      "assertions": [
+        {
+          "line": 236,
+          "text": "assert.equal(res.status, 200)"
+        },
+        {
+          "line": 237,
+          "text": "assert.deepEqual(\n    body.modules.map((m: { status: string }) => m.status),\n    [\"complete\", \"complete\"],\n  )"
+        },
+        {
+          "line": 241,
+          "text": "assert.deepEqual(body.progress, { completedSteps: 4, totalSteps: 4 })"
+        },
+        {
+          "line": 242,
+          "text": "assert.equal(body.module1HandedOff, true)"
+        },
+        {
+          "line": 243,
+          "text": "assert.deepEqual(body.banner, { visible: false, module: null, dismissed: false })"
+        }
+      ]
+    },
+    "summary": "Both complete model -> actual HTTP complete draft",
+    "equivalence": "Same six user IDs/provenance, no_towel, empty drying/tools/night, categories, context and projections. Only daily_1x vs daily differs; same frequency validity repair caveat as C3; ordered path and completion sets identical.",
+    "assertionUnion": "ordered two complete states, progress4/4, handofftrue, invisible/null/undismissed banner already exact.",
+    "newInputs": 0,
+    "newOwnerCalls": 0,
+    "newRows": 0,
+    "newDeclarations": 0,
+    "sourceCleanup": null,
+    "history": "Status/model/module/provenance introduced e6eb60fd; presentation introduced4bdda99a, current owner still active. No retirement inferred."
+  },
+  {
+    "id": "C5",
+    "mark": "C",
+    "status": "CONDITIONAL_MAIN_REVIEW_AND_RUNTIME_PROOF",
+    "file": "tests/personal-plan/refinement/refinement-status.test.ts",
+    "donor": {
+      "name": "banner: dismissing the current open module hides it without affecting the module list",
+      "line": 175,
+      "start": 6377,
+      "end": 6956,
+      "body": "test(\"banner: dismissing the current open module hides it without affecting the module list\", () => {\n  const result = buildRefinementStatusResponse({\n    moduleStatusInput: {\n      triggerContext: TRIGGER_CONTEXT,\n      answers: {},\n      completedQuestionIds: [] as Stage2QuestionId[],\n      answerProvenance: {},\n    },\n    moduleProjections: {},\n    bannerDismissals: dismissals(\"products\"),\n  })\n\n  assert.deepEqual(result.banner, { visible: false, module: \"products\", dismissed: true })\n  assert.equal(result.modules.find((m) => m.module === \"products\")?.status, \"open\")\n})",
+      "sha256": "2fdf1dbe087dc9368a3a5fc4e0af5f76092b2093bf9e230a83c73f9986965651",
+      "assertions": [
+        {
+          "line": 187,
+          "text": "assert.deepEqual(result.banner, { visible: false, module: \"products\", dismissed: true })"
+        },
+        {
+          "line": 188,
+          "text": "assert.equal(result.modules.find((m) => m.module === \"products\")?.status, \"open\")"
+        }
+      ]
+    },
+    "keeperFile": "tests/personal-plan-refinement-status-route.test.ts",
+    "keeperBefore": {
+      "name": "banner reflects a stored dismissal for the current open module",
+      "line": 245,
+      "start": 8585,
+      "end": 9173,
+      "body": "test(\"banner reflects a stored dismissal for the current open module\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    [PERSONAL_PLAN_UI_LIFECYCLE_MARKS_TABLE]: [\n      {\n        user_id: ids.user,\n        kind: \"module_banner_dismissed\",\n        subject: \"products\",\n        marked_at: \"2026-08-20T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.deepEqual(body.banner, { visible: false, module: \"products\", dismissed: true })\n})",
+      "sha256": "80cf00d350bd46e98ea7546aff853d52e91aa7cf238e0c1a0b587127e141787e",
+      "assertions": [
+        {
+          "line": 260,
+          "text": "assert.equal(res.status, 200)"
+        },
+        {
+          "line": 261,
+          "text": "assert.deepEqual(body.banner, { visible: false, module: \"products\", dismissed: true })"
+        }
+      ]
+    },
+    "keeperAfter": {
+      "name": "banner reflects a stored dismissal for the current open module",
+      "line": 246,
+      "start": 8688,
+      "end": 9377,
+      "body": "test(\"banner reflects a stored dismissal for the current open module\", async () => {\n  const res = await handlersFor({\n    personal_plans: [planRow()],\n    personal_plan_need_versions: [needVersionRow()],\n    [PERSONAL_PLAN_UI_LIFECYCLE_MARKS_TABLE]: [\n      {\n        user_id: ids.user,\n        kind: \"module_banner_dismissed\",\n        subject: \"products\",\n        marked_at: \"2026-08-20T00:00:00.000Z\",\n      },\n    ],\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.deepEqual(body.banner, { visible: false, module: \"products\", dismissed: true })\n  assert.equal(body.modules.find((m: { module: string }) => m.module === \"products\").status, \"open\")\n})",
+      "sha256": "77289bcdf398868005f31dce5a2a5ebeb0ca345e24a43936211e38dfbcbba9eb",
+      "assertions": [
+        {
+          "line": 261,
+          "text": "assert.equal(res.status, 200)"
+        },
+        {
+          "line": 262,
+          "text": "assert.deepEqual(body.banner, { visible: false, module: \"products\", dismissed: true })"
+        },
+        {
+          "line": 263,
+          "text": "assert.equal(body.modules.find((m: { module: string }) => m.module === \"products\").status, \"open\")"
+        }
+      ]
+    },
+    "summary": "Dismissed model -> actual HTTP stored dismissal",
+    "equivalence": "Same empty draft inputs and derived context; real lifecycle load maps existing user/kind/product mark into exact dismissedModules Set(products). Time inert in repository read.",
+    "assertionUnion": "hidden products banner dismissedtrue already asserted; transfer products stillopen assertion.",
+    "newInputs": 0,
+    "newOwnerCalls": 0,
+    "newRows": 0,
+    "newDeclarations": 0,
+    "sourceCleanup": null,
+    "history": "Status/model/module/provenance introduced e6eb60fd; presentation introduced4bdda99a, current owner still active. No retirement inferred."
+  },
+  {
+    "id": "D1",
+    "mark": "D",
+    "status": "CONDITIONAL_MAIN_REVIEW_AND_RUNTIME_PROOF",
+    "file": "tests/personal-plan/refinement/module-status.test.ts",
+    "donor": {
+      "name": "an untouched draft runs on assumptions",
+      "line": 90,
+      "start": 3068,
+      "end": 3333,
+      "body": "test(\"an untouched draft runs on assumptions\", () => {\n  const input = {\n    triggerContext: TRIGGER_CONTEXT,\n    answers: {},\n    completedQuestionIds: [] as Stage2QuestionId[],\n    answerProvenance: {},\n  }\n\n  assert.equal(stage2AssumptionsActive(input), true)\n})",
+      "sha256": "446fbaf5b301bf457e7da79f5b0113bbb1e22c8b03ac1272777971be732e4d35",
+      "assertions": [
+        {
+          "line": 98,
+          "text": "assert.equal(stage2AssumptionsActive(input), true)"
+        }
+      ]
+    },
+    "keeperFile": "tests/personal-plan/refinement/module-status.test.ts",
+    "keeperBefore": {
+      "name": "a fully auto-accepted draft leaves both modules open and assumptions active",
+      "line": 44,
+      "start": 1457,
+      "end": 1967,
+      "body": "test(\"a fully auto-accepted draft leaves both modules open and assumptions active\", () => {\n  const { answers, completedQuestionIds } = defaults()\n  const input = {\n    triggerContext: TRIGGER_CONTEXT,\n    answers,\n    completedQuestionIds,\n    answerProvenance: buildAssumedAnswerProvenance(completedQuestionIds),\n  }\n\n  const states = stage2ModuleStates(input)\n  assert.equal(states.products.status, \"open\")\n  assert.equal(states.habits.status, \"open\")\n  assert.equal(stage2AssumptionsActive(input), true)\n})",
+      "sha256": "954c9646b451e08f3b856d97c9bb17d093b190fbb70ca48c92a2e0b842a80148",
+      "assertions": [
+        {
+          "line": 54,
+          "text": "assert.equal(states.products.status, \"open\")"
+        },
+        {
+          "line": 55,
+          "text": "assert.equal(states.habits.status, \"open\")"
+        },
+        {
+          "line": 56,
+          "text": "assert.equal(stage2AssumptionsActive(input), true)"
+        }
+      ]
+    },
+    "keeperAfter": {
+      "name": "a fully auto-accepted draft leaves both modules open and assumptions active",
+      "line": 44,
+      "start": 1457,
+      "end": 1967,
+      "body": "test(\"a fully auto-accepted draft leaves both modules open and assumptions active\", () => {\n  const { answers, completedQuestionIds } = defaults()\n  const input = {\n    triggerContext: TRIGGER_CONTEXT,\n    answers,\n    completedQuestionIds,\n    answerProvenance: buildAssumedAnswerProvenance(completedQuestionIds),\n  }\n\n  const states = stage2ModuleStates(input)\n  assert.equal(states.products.status, \"open\")\n  assert.equal(states.habits.status, \"open\")\n  assert.equal(stage2AssumptionsActive(input), true)\n})",
+      "sha256": "954c9646b451e08f3b856d97c9bb17d093b190fbb70ca48c92a2e0b842a80148",
+      "assertions": [
+        {
+          "line": 54,
+          "text": "assert.equal(states.products.status, \"open\")"
+        },
+        {
+          "line": 55,
+          "text": "assert.equal(states.habits.status, \"open\")"
+        },
+        {
+          "line": 56,
+          "text": "assert.equal(stage2AssumptionsActive(input), true)"
+        }
+      ]
+    },
+    "summary": "Untouched assumptions boolean duplicate",
+    "equivalence": "Untouched [] user IDs and fully defaulted all-assumed IDs both reduce to userAnsweredQuestionIds=[]; selectStage2Answers(...,[])={} regardless stored answers. Same context, fixed point and status; wrapper boolsame. Retained autoaccepted keeper also asserts both module statuses.",
+    "assertionUnion": "stage2AssumptionsActive(input) true already exact on same post-selection input.",
+    "newInputs": 0,
+    "newOwnerCalls": 0,
+    "newRows": 0,
+    "newDeclarations": 0,
+    "sourceCleanup": null,
+    "history": "Status/model/module/provenance introduced e6eb60fd; presentation introduced4bdda99a, current owner still active. No retirement inferred."
+  },
+  {
+    "id": "D2",
+    "mark": "D",
+    "status": "CONDITIONAL_MAIN_REVIEW_AND_RUNTIME_PROOF",
+    "file": "tests/personal-plan-refinement-presentation-route.test.ts",
+    "donor": {
+      "name": "routineProducts is null without an active routine",
+      "line": 315,
+      "start": 9752,
+      "end": 10392,
+      "body": "test(\"routineProducts is null without an active routine\", async () => {\n  const client = makeClient({\n    personal_plans: [\n      {\n        id: ids.plan,\n        user_id: ids.user,\n        revision: 1,\n        source_revision: 1,\n        current_refined_need_version_id: null,\n        active_routine_version_id: null,\n        pending_routine_proposal_id: null,\n      },\n    ],\n  })\n\n  const res = await createRefinementPresentationRouteHandlers({\n    getUserId: async () => ids.user,\n    client: () => client as never,\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(body.routineProducts, null)\n})",
+      "sha256": "d94cbe8d916ce8aa660cbe50d178b3c6f83a2ba93ba4474ada06b3c4a193ab5d",
+      "assertions": [
+        {
+          "line": 336,
+          "text": "assert.equal(res.status, 200)"
+        },
+        {
+          "line": 337,
+          "text": "assert.equal(body.routineProducts, null)"
+        }
+      ]
+    },
+    "keeperFile": "tests/personal-plan-refinement-presentation-route.test.ts",
+    "keeperBefore": {
+      "name": "returns null answers when no complete draft matches the pointer",
+      "line": 213,
+      "start": 6420,
+      "end": 7532,
+      "body": "test(\"returns null answers when no complete draft matches the pointer\", async () => {\n  const client = makeClient({\n    personal_plans: [\n      {\n        id: ids.plan,\n        user_id: ids.user,\n        revision: 1,\n        source_revision: 1,\n        current_refined_need_version_id: ids.refined,\n        active_routine_version_id: null,\n        pending_routine_proposal_id: null,\n      },\n    ],\n    personal_plan_refinement_drafts: [\n      {\n        id: \"draft-other\",\n        personal_plan_id: ids.plan,\n        status: \"complete\",\n        result_refined_need_version_id: ids.staleRefined,\n        answers: { towel: { material: \"handtuch\" } },\n        completed_question_ids: [\"towel_handling\"],\n        updated_at: \"2026-08-10T00:00:00.000Z\",\n      },\n    ],\n  })\n\n  const res = await createRefinementPresentationRouteHandlers({\n    getUserId: async () => ids.user,\n    client: () => client as never,\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(body.answers, null)\n  assert.deepEqual(body.completedQuestionIds, [])\n  assert.equal(body.routineProducts, null)\n})",
+      "sha256": "f105c2ebabac5c1c3d97bc3a98e94f3af89a1800bd4d45e4ef9a23d5a9e550ea",
+      "assertions": [
+        {
+          "line": 245,
+          "text": "assert.equal(res.status, 200)"
+        },
+        {
+          "line": 246,
+          "text": "assert.equal(body.answers, null)"
+        },
+        {
+          "line": 247,
+          "text": "assert.deepEqual(body.completedQuestionIds, [])"
+        },
+        {
+          "line": 248,
+          "text": "assert.equal(body.routineProducts, null)"
+        }
+      ]
+    },
+    "keeperAfter": {
+      "name": "returns null answers when no complete draft matches the pointer",
+      "line": 213,
+      "start": 6420,
+      "end": 7532,
+      "body": "test(\"returns null answers when no complete draft matches the pointer\", async () => {\n  const client = makeClient({\n    personal_plans: [\n      {\n        id: ids.plan,\n        user_id: ids.user,\n        revision: 1,\n        source_revision: 1,\n        current_refined_need_version_id: ids.refined,\n        active_routine_version_id: null,\n        pending_routine_proposal_id: null,\n      },\n    ],\n    personal_plan_refinement_drafts: [\n      {\n        id: \"draft-other\",\n        personal_plan_id: ids.plan,\n        status: \"complete\",\n        result_refined_need_version_id: ids.staleRefined,\n        answers: { towel: { material: \"handtuch\" } },\n        completed_question_ids: [\"towel_handling\"],\n        updated_at: \"2026-08-10T00:00:00.000Z\",\n      },\n    ],\n  })\n\n  const res = await createRefinementPresentationRouteHandlers({\n    getUserId: async () => ids.user,\n    client: () => client as never,\n  }).GET()\n  const body = await res.json()\n\n  assert.equal(res.status, 200)\n  assert.equal(body.answers, null)\n  assert.deepEqual(body.completedQuestionIds, [])\n  assert.equal(body.routineProducts, null)\n})",
+      "sha256": "f105c2ebabac5c1c3d97bc3a98e94f3af89a1800bd4d45e4ef9a23d5a9e550ea",
+      "assertions": [
+        {
+          "line": 245,
+          "text": "assert.equal(res.status, 200)"
+        },
+        {
+          "line": 246,
+          "text": "assert.equal(body.answers, null)"
+        },
+        {
+          "line": 247,
+          "text": "assert.deepEqual(body.completedQuestionIds, [])"
+        },
+        {
+          "line": 248,
+          "text": "assert.equal(body.routineProducts, null)"
+        }
+      ]
+    },
+    "summary": "No-active presentation subset duplicate",
+    "equivalence": "Both existing route calls have active_routine_version_id=null and pendingproposal=null, equal plan revision/source revision/ID/user. Current refined pointer differs but is never read by loadPersonalPlanRoutineView; completed draft lookup yields null in keeper. Both return answersnull and view.activeVersionnull. Extra discarded stale draft row cannot affect routine list.",
+    "assertionUnion": "status200 and routineProductsnull already literal assertions.",
+    "newInputs": 0,
+    "newOwnerCalls": 0,
+    "newRows": 0,
+    "newDeclarations": 0,
+    "sourceCleanup": null,
+    "history": "Status/model/module/provenance introduced e6eb60fd; presentation introduced4bdda99a, current owner still active. No retirement inferred."
+  }
+]

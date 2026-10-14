@@ -1,0 +1,136 @@
+# Mask v1.0 property set (v0 — ruled shape, pre-calibration)
+
+> **Amended by the round-1 rule rulings (R1–R9, Nick, 2026-09-14 —
+> `plans/mask-inci/round1-rule-rulings.md`; operationalized in Standard v0.2):**
+> R1 restates F1's principle as "no MODE is profiled twice" (a multi-mode product may hold one
+> profile per engine). R5 extends the D5 moisture-focus guard with the lipid-led disqualifier
+> (focus only; care_direction untouched). R6 supersedes this file's D6 note "`balanced` is
+> never a neither-bucket": `balanced` now carries two readings (both-substantive OR
+> neither-dominant, aligned with leave-in T19) — it remains never an *uncertainty* bucket.
+> R9 makes fields 7–9 (thickness/damage/texture) echo fields: derived, displayed as
+> annotations, not independently reviewed; still in the envelope and projections. Where this
+> file and Standard v0.2 diverge, the rulings ledger governs.
+
+Status: ruled by Nick 2026-09-04 (Phase 2 checkpoint); values and thresholds remain provisional
+until the first calibration set is reviewed ("first set, then adjust" caveat).
+Charter: `00_category_charter.md`. Evidence basis: `planning-evidence/2026-09-04-mask-formulation-evidence.md`.
+
+## Ruled shape: conditioner-parity nine-field comparison profile
+
+The Mask comparison profile keeps the Conditioner v1.6 nine-field shape and vocabulary,
+re-anchored within the mask category. Anchors and thresholds are earned per property in the
+Phase 3 standard; nothing is copied silently.
+
+| # | Property | Values | Decision type | Projects to (fixed targets) |
+|---|---|---|---|---|
+| 1 | `conditioning_level` | low / moderate / high | structured judgment | `product_mask_specs.concentration` (low/medium/high) |
+| 2 | `weight_potential` | low / moderate / high | structured judgment | `weight` (light/medium/rich) |
+| 3 | `care_direction` | protein / moisture / balanced | structured judgment | `balance_direction` |
+| 4 | `repair_support_level` | low / medium / high | structured judgment; `high` gated on deterministic named bond chemistry | `repair_support_level` |
+| 5 | `primary_focus` | conditioner focus vocabulary **+ `moisture`** (ruled by Nick 2026-09-04) | structured judgment (forced headline) | via benefits mapping |
+| 6 | `secondary_focus` | 0–2 values from the same vocabulary | structured judgment | via benefits mapping |
+| 7 | `hair_thickness_fit` | subset of fine/normal/coarse | derived deterministic policy from weight | `suitable_thicknesses` |
+| 8 | `damage_fit` | subset of healthy/moderately_damaged/highly_damaged | derived policy (specialist-route rule) | research-only (no current consumer) |
+| 9 | `texture_fit` | subset of straight/wavy/curly/coily | derived policy | research-only (no current consumer) |
+
+`ingredient_flags` (silicones/polymers/oils/proteins/humectants) are deterministic presence
+flags from the normalized complete INCI and project directly; they are not a judgment field.
+
+### D1 ruling — `concentration` semantics
+
+`concentration` is the mask twin of Conditioner's `conditioning_level`: overall
+conditioning/treatment intensity relative to the mask category, from structural INCI position
+only (cationic count and rank, fatty-alcohol rank, lipid-above-tail breadth). Ingredients after
+the fragrance/preservative block contribute nothing. Extremes require multiple independent
+structural signals; unresolvable cases fall back to moderate + `uncertain_fields` (NEQI
+fallback pattern). Repair stays owned by `repair_support_level`. Note (production, not
+research): matching currently consumes `concentration` as a repair-need proxy
+(`mask_concentration_is_temporary_repair_level_proxy`); whether production later matches
+repair need against `repair_support_level` instead is a production-policy question outside
+this project.
+
+### D5 ruling — `moisture` focus value (Nick, 2026-09-04)
+
+The mask focus vocabulary is Conditioner v1.6's eight values plus `moisture`:
+`moisture / lightness / detangling / smoothing / repair / shine / curl_support / color_care / general`.
+Guard (tested 2026-09-04 on four real formulas): glycerin alone never qualifies — `moisture`
+requires at least two further distinct humectants above the fragrance/preservative tail
+(panthenol, hyaluronate, aloe, urea, glycols, betaine, sodium PCA, …) and no richer
+special-purpose route winning. Intensive conditioning alone never qualifies (category
+baseline). Discrimination evidence: Balea Aqua Hyaluron 3in1 (4 humectants above tail, no
+protein/bond/silicone routes) and Guhl 30 sek Feuchtigkeit (3 humectants, no competing route)
+clear it; Gliss Bonding (glycerin #3 but repair routes win) and Pantene Bond (no cluster)
+correctly fail. E2 wording: "humectant-forward comparative direction", never proven hydration.
+Provenance (corrected 2026-09-04): **Shampoo Focus v1.5** already carries `moisture` as a
+primary/secondary focus in its research overlay — approved by Nick 2026-09-03
+(`plans/scan-db-expansion/research/shampoo-v14/focus-v15-amendment-plan.md`,
+`src/lib/shampoo/focus-v15.ts`); the v1.4 holdout-v3 clarification folding moisture into
+repair/general is superseded by it at research level. Production Light stays frozen on v1.4
+and rejects `moisture` — a deliberate scope boundary, symmetric with Mask, where the moisture
+focus also does not project into `functional_benefits` and reaches production only via
+`balance_direction`. Conditioner v1.6 and the leave-in v0.3 draft still have no moisture
+focus; leave-in production `care_benefits` carries `moisture` live on 30 products.
+Phase 3 input: adopt the v1.5 formula-first repair/moisture boundary discipline — coherent
+cluster over hero token; exact-product claims may break a genuinely dual-supported tie but can
+never convert nonspecific formula evidence into a specialist focus. The v1.5 pilot's Elvital
+Hydra Hyaluronic call (moisture, moderate confidence, humectant not early) is consistent with
+this guard's above-the-tail requirement.
+Adapter note: `moisture` focus has no counterpart in `functional_benefits` (fixed vocabulary);
+the moisture identity projects through `balance_direction`, so no adapter change is needed.
+
+### D6 ruling — `care_direction` is always populated (Nick, 2026-09-04)
+
+Strict conditioner-v1.6 semantics, no empty value and no redefinition: `protein` needs a
+material protein/peptide/keratin film route, `moisture` covers a coherent conditioning/
+humectant/emollient base without a dominant protein route, and `balanced` remains reserved for
+a substantive mixed protein-plus-moisture architecture — never a "neither" middle bucket
+(shared production vocabulary; `balanced` bridge-matches in the fit layer). Gloss/lamination
+masks classify by the care base they actually carry — evidence: L'Oréal Glycolic Gloss
+treatment and Balea Glow & Shine Laminier-Kur both run a conventional cetearyl/behentrimonium/
+amodimethicone conditioning base under the acid route, so they land in `moisture` (or higher if
+a protein route is material, e.g. Balea's keratin) with the gloss identity carried by the
+`shine` focus. A `none` value was considered and withdrawn as unnecessary.
+
+### D2 ruling — benefits via hierarchy
+
+`primary_focus`/`secondary_focus` are researched with the Conditioner focus discipline
+(shared-mechanism gates, distinctiveness thresholds, anti-double-counting; shine never a free
+add-on of the smoothing film). The adapter derives flat `functional_benefits` deterministically
+from hierarchy + supported capabilities: smoothing → `smoothing_frizz_control`, detangling →
+`detangling_slip`, shine → `shine`. Gloss/lamination masks (charter F4) route through the shine
+threshold with claim corroboration; there is no separate lamination property (evidence §7).
+
+### D4 ruling — overload handling
+
+Heavy protein payload is trace evidence + an internal counter-signal (confidence cap on
+`care_direction`, human-review trigger). It is never a comparison field or user-facing verdict.
+Parked out of scope (Nick, 2026-09-04): a routine-level protein-stacking heads-up (warning when
+protein-focused products combine across one routine) belongs to the production/fit layer as its
+own later decision.
+
+## Trace-level additions (beneath the comparison profile)
+
+- `bond_route` ∈ { maleate, gluconamide, peptide, none } — deterministic, by named INCI above
+  the sub-1% tail. Citric acid, "Bond" naming, and hydrolyzed protein alone never qualify.
+  Gates `repair_support_level: high`.
+- Protein-payload counter-signal record (per D4).
+- `multi_use` envelope flag + uncovered modes (charter F1).
+
+## Explicitly protocol-only (zero classification credit — evidence-inherited)
+
+Dwell time (7-second segment marked unknown, never extrapolated), heat assist, cadence,
+amount. All remain sourced protocol metadata under TPL-MASK/P5.
+
+## Not formula-inferable (trace-only or absent)
+
+Buildup/cumulative residue, dwell efficacy, heat benefit, penetration depth, rinse behavior,
+and the mask-vs-conditioner category itself (metadata/directions decide at G0, per evidence §1).
+
+## Watch-list for the first-set review (Nick's iterate caveat)
+
+1. `damage_fit` — possibly fully derivable from conditioning level + repair route; could become
+   a computed row.
+2. `primary_focus: lightness` — may go unused in this category (Nick acknowledged 2026-09-04).
+
+`texture_fit` is off the watch-list: Nick ruled 2026-09-04 that it is needed down the line for
+user-profile matching even though mask matching does not consume it today.

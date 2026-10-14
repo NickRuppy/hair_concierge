@@ -1,0 +1,1527 @@
+[
+  {
+    "id": "P1",
+    "file": "src/lib/personal-plan/rollout-access.ts",
+    "from": "  void _client\n  return true",
+    "to": "  void _client\n  return false",
+    "phases": {
+      "transfer": {
+        "sourceSha256": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+        "mutatedSha256": "32f9eec4d83cddcf5676f5511f6923c44c6cca3a37190c12ded90bb76cfa4cc1"
+      },
+      "cut": {
+        "sourceSha256": "b4efd27a848a803c60848cf16ac8b9d0c845ae22dabb84a09cc912472eeb206c",
+        "mutatedSha256": "bcd23b486de5a6eeaa682194b97d9599c7b2366d2ae33321152381aaac9987f0"
+      }
+    },
+    "test": {
+      "file": "tests/personal-plan-rollout-access.test.ts",
+      "names": {
+        "transfer": "released Personal Plan access no longer reads internal rollout state",
+        "cut": "released Personal Plan access no longer reads internal rollout state"
+      }
+    },
+    "commands": {
+      "transfer": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^released Personal Plan access no longer reads internal rollout state$",
+        "tests/personal-plan-rollout-access.test.ts"
+      ],
+      "cut": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^released Personal Plan access no longer reads internal rollout state$",
+        "tests/personal-plan-rollout-access.test.ts"
+      ]
+    },
+    "oracles": {
+      "transfer": {
+        "startLine": 70,
+        "text": "assert.equal(\n    await isPersonalPlanAppV1AllowedForUser(\"customer-1\", customer.client as never),\n    true,\n  )",
+        "keeperSha256": "68d4c7745fdf5f90d198f633669fb7d4d56a65887fc05fe4fe29aa4c188a5177",
+        "testFileSha256": "108669d5b64d304c772e0a3b5878b19b18cc69a407b5792574f0b9b0c192dd41"
+      },
+      "cut": {
+        "startLine": 69,
+        "text": "assert.equal(\n    await isPersonalPlanAppV1AllowedForUser(\"customer-1\", customer.client as never),\n    true,\n  )",
+        "keeperSha256": "68d4c7745fdf5f90d198f633669fb7d4d56a65887fc05fe4fe29aa4c188a5177",
+        "testFileSha256": "3f9f358536dc36b6197100414281d55315a8c0d65b098c1433676edf925a1d18"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\nfalse !== true",
+      "false",
+      "true"
+    ],
+    "intendedAssertion": "assert.equal(\n    await isPersonalPlanAppV1AllowedForUser(\"customer-1\", customer.client as never),\n    true,\n  )",
+    "diagnosticLimit": "Complete pinned Node AssertionError formatting from existing fixture outcome, plus every original frozen diagnostic fragment; runtime proof still required.",
+    "originalControl": {
+      "id": "P1",
+      "status": "UNRUN; statically unique and TS parsed only",
+      "source": "src/lib/personal-plan/rollout-access.ts",
+      "anchor": "  void _client\n  return true",
+      "replacement": "  void _client\n  return false",
+      "testFile": "tests/personal-plan-rollout-access.test.ts",
+      "phases": {
+        "transfer": {
+          "sourceSHA": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+          "mutantSHA": "32f9eec4d83cddcf5676f5511f6923c44c6cca3a37190c12ded90bb76cfa4cc1",
+          "keeperTitle": "released Personal Plan access no longer reads internal rollout state",
+          "firstIntendedAssertionLine": 70,
+          "firstIntendedAssertion": "assert.equal(\n    await isPersonalPlanAppV1AllowedForUser(\"customer-1\", customer.client as never),\n    true,\n  )"
+        },
+        "cut": {
+          "sourceSHA": "b4efd27a848a803c60848cf16ac8b9d0c845ae22dabb84a09cc912472eeb206c",
+          "mutantSHA": "bcd23b486de5a6eeaa682194b97d9599c7b2366d2ae33321152381aaac9987f0",
+          "keeperTitle": "released Personal Plan access no longer reads internal rollout state",
+          "firstIntendedAssertionLine": 69,
+          "firstIntendedAssertion": "assert.equal(\n    await isPersonalPlanAppV1AllowedForUser(\"customer-1\", customer.client as never),\n    true,\n  )"
+        }
+      },
+      "oracle": {
+        "code": "ERR_ASSERTION",
+        "operator": "strictEqual",
+        "decodedMessageIncludes": [
+          "false",
+          "true"
+        ],
+        "firstTestFrame": "exact testFile and phase-specific firstIntendedAssertionLine",
+        "selectedKeeperPassesClean": 1,
+        "selectedKeeperFailsMutant": 1,
+        "skip": 0,
+        "cancelled": 0,
+        "todo": 0
+      },
+      "why": "Released helper denial changes the existing customer result; no mock result mutation.",
+      "proofProtocol": "Main only: verify original source/test/readset hashes; run exact one keeper clean; mutate actual source under common lock/CAS; run exact keeper and require intended ERR_ASSERTION/operator/decoded fragments/first test frame; restore byte-exact in finally; run exact keeper clean; hash TAP/command receipts. No setup/type/import failures count."
+    }
+  },
+  {
+    "id": "P2",
+    "file": "src/lib/personal-plan/rollout-access.ts",
+    "from": "  void _client\n  return true",
+    "to": "  void _client\n  ;(_client as { from: (table: string) => unknown } | undefined)?.from(\"profiles\")\n  return true",
+    "phases": {
+      "transfer": {
+        "sourceSha256": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+        "mutatedSha256": "909c613d28c6caba4c5f13bbbbda2d117d8e1aea1a217e99f6004ccecec0361c"
+      },
+      "cut": {
+        "sourceSha256": "b4efd27a848a803c60848cf16ac8b9d0c845ae22dabb84a09cc912472eeb206c",
+        "mutatedSha256": "873f62236dc865de4f6ac207636b770a1d90c351ad14e4aeda844bf41a29ca01"
+      }
+    },
+    "test": {
+      "file": "tests/personal-plan-rollout-access.test.ts",
+      "names": {
+        "transfer": "released Personal Plan access no longer reads internal rollout state",
+        "cut": "released Personal Plan access no longer reads internal rollout state"
+      }
+    },
+    "commands": {
+      "transfer": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^released Personal Plan access no longer reads internal rollout state$",
+        "tests/personal-plan-rollout-access.test.ts"
+      ],
+      "cut": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^released Personal Plan access no longer reads internal rollout state$",
+        "tests/personal-plan-rollout-access.test.ts"
+      ]
+    },
+    "oracles": {
+      "transfer": {
+        "startLine": 74,
+        "text": "assert.deepEqual(customer.calls, [])",
+        "keeperSha256": "68d4c7745fdf5f90d198f633669fb7d4d56a65887fc05fe4fe29aa4c188a5177",
+        "testFileSha256": "108669d5b64d304c772e0a3b5878b19b18cc69a407b5792574f0b9b0c192dd41"
+      },
+      "cut": {
+        "startLine": 73,
+        "text": "assert.deepEqual(customer.calls, [])",
+        "keeperSha256": "68d4c7745fdf5f90d198f633669fb7d4d56a65887fc05fe4fe29aa4c188a5177",
+        "testFileSha256": "3f9f358536dc36b6197100414281d55315a8c0d65b098c1433676edf925a1d18"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   'from:profiles'\n+ ]\n- []",
+      "from:profiles"
+    ],
+    "intendedAssertion": "assert.deepEqual(customer.calls, [])",
+    "diagnosticLimit": "Complete pinned Node AssertionError formatting from existing fixture outcome, plus every original frozen diagnostic fragment; runtime proof still required.",
+    "originalControl": {
+      "id": "P2",
+      "status": "UNRUN; statically unique and TS parsed only",
+      "source": "src/lib/personal-plan/rollout-access.ts",
+      "anchor": "  void _client\n  return true",
+      "replacement": "  void _client\n  ;(_client as { from: (table: string) => unknown } | undefined)?.from(\"profiles\")\n  return true",
+      "testFile": "tests/personal-plan-rollout-access.test.ts",
+      "phases": {
+        "transfer": {
+          "sourceSHA": "9306631fdc038a40b467a9e90735e62899694609c799642f056faf415b72da1c",
+          "mutantSHA": "909c613d28c6caba4c5f13bbbbda2d117d8e1aea1a217e99f6004ccecec0361c",
+          "keeperTitle": "released Personal Plan access no longer reads internal rollout state",
+          "firstIntendedAssertionLine": 74,
+          "firstIntendedAssertion": "assert.deepEqual(customer.calls, [])"
+        },
+        "cut": {
+          "sourceSHA": "b4efd27a848a803c60848cf16ac8b9d0c845ae22dabb84a09cc912472eeb206c",
+          "mutantSHA": "873f62236dc865de4f6ac207636b770a1d90c351ad14e4aeda844bf41a29ca01",
+          "keeperTitle": "released Personal Plan access no longer reads internal rollout state",
+          "firstIntendedAssertionLine": 73,
+          "firstIntendedAssertion": "assert.deepEqual(customer.calls, [])"
+        }
+      },
+      "oracle": {
+        "code": "ERR_ASSERTION",
+        "operator": "deepStrictEqual",
+        "decodedMessageIncludes": [
+          "from:profiles"
+        ],
+        "firstTestFrame": "exact testFile and phase-specific firstIntendedAssertionLine",
+        "selectedKeeperPassesClean": 1,
+        "selectedKeeperFailsMutant": 1,
+        "skip": 0,
+        "cancelled": 0,
+        "todo": 0
+      },
+      "why": "Actual surviving helper consults the supplied client. Positive result still passes; existing zero-query assertion must fail.",
+      "proofProtocol": "Main only: verify original source/test/readset hashes; run exact one keeper clean; mutate actual source under common lock/CAS; run exact keeper and require intended ERR_ASSERTION/operator/decoded fragments/first test frame; restore byte-exact in finally; run exact keeper clean; hash TAP/command receipts. No setup/type/import failures count."
+    }
+  },
+  {
+    "id": "P3",
+    "file": "src/lib/personal-plan/release.ts",
+    "from": "  void _environment\n  return \"all\"",
+    "to": "  void _environment\n  return \"internal\" as \"all\"",
+    "phases": {
+      "transfer": {
+        "sourceSha256": "92d24c0e4c010e20e13f75db0c561cf9da8f490a17de4a0e4cbbf10691a8d55c",
+        "mutatedSha256": "d83298413b257f62db2388ff475137440ee7f6e6d3d7a272a59d249ff8668f95"
+      },
+      "cut": {
+        "sourceSha256": "7fff03697221fa4281c0a3756c3cfab618460c536e60cb05e060e38d2693fdd0",
+        "mutatedSha256": "8aa0b5a2f140760093b586f149fd9fba9e3626f4c55236573340abb6c70cc2cb"
+      }
+    },
+    "test": {
+      "file": "tests/personal-plan-stage3-release.test.ts",
+      "names": {
+        "transfer": "the released Personal Plan rollout is all and ignores obsolete cohort flags",
+        "cut": "the released Personal Plan rollout is all and ignores obsolete cohort flags"
+      }
+    },
+    "commands": {
+      "transfer": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^the released Personal Plan rollout is all and ignores obsolete cohort flags$",
+        "tests/personal-plan-stage3-release.test.ts"
+      ],
+      "cut": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^the released Personal Plan rollout is all and ignores obsolete cohort flags$",
+        "tests/personal-plan-stage3-release.test.ts"
+      ]
+    },
+    "oracles": {
+      "transfer": {
+        "startLine": 42,
+        "text": "assert.equal(resolvePersonalPlanAppV1Rollout({}), \"all\")",
+        "keeperSha256": "39ddc8625e1069f53bef6ddfae82f5591a8c1a73d010be87c667db4ea2a1d8d5",
+        "testFileSha256": "d25fd6ac50e6ba5a09c3870b83ae55cbc729a72b55cb0329b2d6c414b4dc2f1e"
+      },
+      "cut": {
+        "startLine": 40,
+        "text": "assert.equal(resolvePersonalPlanAppV1Rollout({}), \"all\")",
+        "keeperSha256": "9ce5f37063d766062a8ecd9782421469ba94b0c1aeaa42b8ff404f1ba70d42a0",
+        "testFileSha256": "b875712849799021f740e63ef79e82e8eadd355b09df66a62d12031c605a7bec"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\n'internal' !== 'all'",
+      "internal",
+      "all"
+    ],
+    "intendedAssertion": "assert.equal(resolvePersonalPlanAppV1Rollout({}), \"all\")",
+    "diagnosticLimit": "Complete pinned Node AssertionError formatting from existing fixture outcome, plus every original frozen diagnostic fragment; runtime proof still required.",
+    "originalControl": {
+      "id": "P3",
+      "status": "UNRUN; statically unique and TS parsed only",
+      "source": "src/lib/personal-plan/release.ts",
+      "anchor": "  void _environment\n  return \"all\"",
+      "replacement": "  void _environment\n  return \"internal\" as \"all\"",
+      "testFile": "tests/personal-plan-stage3-release.test.ts",
+      "phases": {
+        "transfer": {
+          "sourceSHA": "92d24c0e4c010e20e13f75db0c561cf9da8f490a17de4a0e4cbbf10691a8d55c",
+          "mutantSHA": "d83298413b257f62db2388ff475137440ee7f6e6d3d7a272a59d249ff8668f95",
+          "keeperTitle": "the released Personal Plan rollout is all and ignores obsolete cohort flags",
+          "firstIntendedAssertionLine": 42,
+          "firstIntendedAssertion": "assert.equal(resolvePersonalPlanAppV1Rollout({}), \"all\")"
+        },
+        "cut": {
+          "sourceSHA": "7fff03697221fa4281c0a3756c3cfab618460c536e60cb05e060e38d2693fdd0",
+          "mutantSHA": "8aa0b5a2f140760093b586f149fd9fba9e3626f4c55236573340abb6c70cc2cb",
+          "keeperTitle": "the released Personal Plan rollout is all and ignores obsolete cohort flags",
+          "firstIntendedAssertionLine": 40,
+          "firstIntendedAssertion": "assert.equal(resolvePersonalPlanAppV1Rollout({}), \"all\")"
+        }
+      },
+      "oracle": {
+        "code": "ERR_ASSERTION",
+        "operator": "strictEqual",
+        "decodedMessageIncludes": [
+          "internal",
+          "all"
+        ],
+        "firstTestFrame": "exact testFile and phase-specific firstIntendedAssertionLine",
+        "selectedKeeperPassesClean": 1,
+        "selectedKeeperFailsMutant": 1,
+        "skip": 0,
+        "cancelled": 0,
+        "todo": 0
+      },
+      "why": "First existing empty-environment default assertion sees the changed real resolver; cast keeps the deliberate semantic fault type-coherent.",
+      "proofProtocol": "Main only: verify original source/test/readset hashes; run exact one keeper clean; mutate actual source under common lock/CAS; run exact keeper and require intended ERR_ASSERTION/operator/decoded fragments/first test frame; restore byte-exact in finally; run exact keeper clean; hash TAP/command receipts. No setup/type/import failures count."
+    }
+  },
+  {
+    "id": "P4",
+    "file": "src/lib/personal-plan/journey-access-loader.ts",
+    "from": "      prefix.appEnabled &&",
+    "to": "      true &&",
+    "phases": {
+      "transfer": {
+        "sourceSha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+        "mutatedSha256": "8cb5d23bd9dc95d37888b9d36cf82a614eb276033488ed8d0dfad106aadc21e9"
+      },
+      "cut": {
+        "sourceSha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+        "mutatedSha256": "81caa8b9fcc2892e375e4ba8f669d3a797f1f0cb3504bd623e8cc37671e0c634"
+      }
+    },
+    "test": {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "names": {
+        "transfer": "Stage 2 access remains fail-closed for incomplete owner source facts and throws on reads",
+        "cut": "Stage 2 access remains fail-closed for incomplete owner source facts and throws on reads"
+      }
+    },
+    "commands": {
+      "transfer": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^Stage 2 access remains fail-closed for incomplete owner source facts and throws on reads$",
+        "tests/personal-plan-journey-access-loader.test.ts"
+      ],
+      "cut": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^Stage 2 access remains fail-closed for incomplete owner source facts and throws on reads$",
+        "tests/personal-plan-journey-access-loader.test.ts"
+      ]
+    },
+    "oracles": {
+      "transfer": {
+        "startLine": 348,
+        "text": "assert.deepEqual(\n    await loadPersonalPlanStage2AccessWithDeps(deps({ appEnabled: () => false }), \"owner-1\"),\n    { allowed: false },\n  )",
+        "keeperSha256": "1934ae8cc5216f9f63b0c042170438209d85a12ce301acfa523813ca506ccf06",
+        "testFileSha256": "16b77c5f68870a0cda0ea86910b26408cae10f85f2213d6f8b219a74ff832e67"
+      },
+      "cut": {
+        "startLine": 331,
+        "text": "assert.deepEqual(\n    await loadPersonalPlanStage2AccessWithDeps(deps({ appEnabled: () => false }), \"owner-1\"),\n    { allowed: false },\n  )",
+        "keeperSha256": "1934ae8cc5216f9f63b0c042170438209d85a12ce301acfa523813ca506ccf06",
+        "testFileSha256": "7a18014ae40a06640e9fa54354a1109fd613986858c53c7ff072144ed175b6c8"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   allowed: true\n-   allowed: false\n  }",
+      "allowed: true",
+      "allowed: false"
+    ],
+    "intendedAssertion": "assert.deepEqual(\n    await loadPersonalPlanStage2AccessWithDeps(deps({ appEnabled: () => false }), \"owner-1\"),\n    { allowed: false },\n  )",
+    "diagnosticLimit": "Complete pinned Node AssertionError formatting from existing fixture outcome, plus every original frozen diagnostic fragment; runtime proof still required.",
+    "originalControl": {
+      "id": "P4",
+      "status": "UNRUN; statically unique and TS parsed only",
+      "source": "src/lib/personal-plan/journey-access-loader.ts",
+      "anchor": "      prefix.appEnabled &&",
+      "replacement": "      true &&",
+      "testFile": "tests/personal-plan-journey-access-loader.test.ts",
+      "phases": {
+        "transfer": {
+          "sourceSHA": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+          "mutantSHA": "8cb5d23bd9dc95d37888b9d36cf82a614eb276033488ed8d0dfad106aadc21e9",
+          "keeperTitle": "Stage 2 access remains fail-closed for incomplete owner source facts and throws on reads",
+          "firstIntendedAssertionLine": 348,
+          "firstIntendedAssertion": "assert.deepEqual(\n    await loadPersonalPlanStage2AccessWithDeps(deps({ appEnabled: () => false }), \"owner-1\"),\n    { allowed: false },\n  )"
+        },
+        "cut": {
+          "sourceSHA": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+          "mutantSHA": "81caa8b9fcc2892e375e4ba8f669d3a797f1f0cb3504bd623e8cc37671e0c634",
+          "keeperTitle": "Stage 2 access remains fail-closed for incomplete owner source facts and throws on reads",
+          "firstIntendedAssertionLine": 331,
+          "firstIntendedAssertion": "assert.deepEqual(\n    await loadPersonalPlanStage2AccessWithDeps(deps({ appEnabled: () => false }), \"owner-1\"),\n    { allowed: false },\n  )"
+        }
+      },
+      "oracle": {
+        "code": "ERR_ASSERTION",
+        "operator": "deepStrictEqual",
+        "decodedMessageIncludes": [
+          "allowed: true",
+          "allowed: false"
+        ],
+        "firstTestFrame": "exact testFile and phase-specific firstIntendedAssertionLine",
+        "selectedKeeperPassesClean": 1,
+        "selectedKeeperFailsMutant": 1,
+        "skip": 0,
+        "cancelled": 0,
+        "todo": 0
+      },
+      "why": "Existing appEnabled=false input remains a meaningful independent gate after selector removal.",
+      "proofProtocol": "Main only: verify original source/test/readset hashes; run exact one keeper clean; mutate actual source under common lock/CAS; run exact keeper and require intended ERR_ASSERTION/operator/decoded fragments/first test frame; restore byte-exact in finally; run exact keeper clean; hash TAP/command receipts. No setup/type/import failures count."
+    }
+  },
+  {
+    "id": "P5",
+    "file": "src/lib/personal-plan/journey-access-loader.ts",
+    "from": "  const prefix = await loadJourneyAuthorizationPrefixWithDeps(deps, userId)\n",
+    "to": "  const prefix = await loadJourneyAuthorizationPrefixWithDeps(deps, userId, deps)\n",
+    "phases": {
+      "transfer": {
+        "sourceSha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+        "mutatedSha256": "adbabcb74a6f7d07ddb7cf1cf64db2cf41c8466f49b794d414cdc983ead5b07e"
+      },
+      "cut": {
+        "sourceSha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+        "mutatedSha256": "de5850f9d1354c9f999acd8b69c146359b47d90f4875df5e5b07b9bfd35fd564"
+      }
+    },
+    "test": {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "names": {
+        "transfer": "Stage 2 access keeps the app rollout gate and stops before later-stage authority reads",
+        "cut": "Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing"
+      }
+    },
+    "commands": {
+      "transfer": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^Stage 2 access keeps the app rollout gate and stops before later-stage authority reads$",
+        "tests/personal-plan-journey-access-loader.test.ts"
+      ],
+      "cut": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing$",
+        "tests/personal-plan-journey-access-loader.test.ts"
+      ]
+    },
+    "oracles": {
+      "transfer": {
+        "startLine": 344,
+        "text": "assert.deepEqual(timings, [])",
+        "keeperSha256": "2f9ad94127f72f7ec95260ab7ca8a5a8d04ee9d72ad7e17ec6ca387425625174",
+        "testFileSha256": "16b77c5f68870a0cda0ea86910b26408cae10f85f2213d6f8b219a74ff832e67"
+      },
+      "cut": {
+        "startLine": 327,
+        "text": "assert.deepEqual(timings, [])",
+        "keeperSha256": "5b286e6d6c8eaebd6a1c69146846fa15afc0e934895b37b1eb106d19a695b11c",
+        "testFileSha256": "7a18014ae40a06640e9fa54354a1109fd613986858c53c7ff072144ed175b6c8"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:",
+      "stage3_access_entitlement",
+      "eligible",
+      "operation: 'stage3_access_entitlement'",
+      "operation: 'stage3_access_artifact_plan'",
+      "outcome: 'ready'"
+    ],
+    "intendedAssertion": "assert.deepEqual(timings, [])",
+    "diagnosticLimit": "Existing performance.now durations vary: pinned stable decoded diagnostic fields plus exact operator/FIRST assertion; no new clock or fixture added.",
+    "originalControl": {
+      "id": "P5",
+      "status": "UNRUN; statically unique and TS parsed only",
+      "source": "src/lib/personal-plan/journey-access-loader.ts",
+      "anchor": "  const prefix = await loadJourneyAuthorizationPrefixWithDeps(deps, userId)\n",
+      "replacement": "  const prefix = await loadJourneyAuthorizationPrefixWithDeps(deps, userId, deps)\n",
+      "testFile": "tests/personal-plan-journey-access-loader.test.ts",
+      "phases": {
+        "transfer": {
+          "sourceSHA": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+          "mutantSHA": "adbabcb74a6f7d07ddb7cf1cf64db2cf41c8466f49b794d414cdc983ead5b07e",
+          "keeperTitle": "Stage 2 access keeps the app rollout gate and stops before later-stage authority reads",
+          "firstIntendedAssertionLine": 344,
+          "firstIntendedAssertion": "assert.deepEqual(timings, [])"
+        },
+        "cut": {
+          "sourceSHA": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+          "mutantSHA": "de5850f9d1354c9f999acd8b69c146359b47d90f4875df5e5b07b9bfd35fd564",
+          "keeperTitle": "Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing",
+          "firstIntendedAssertionLine": 327,
+          "firstIntendedAssertion": "assert.deepEqual(timings, [])"
+        }
+      },
+      "oracle": {
+        "code": "ERR_ASSERTION",
+        "operator": "deepStrictEqual",
+        "decodedMessageIncludes": [
+          "stage3_access_entitlement",
+          "eligible"
+        ],
+        "firstTestFrame": "exact testFile and phase-specific firstIntendedAssertionLine",
+        "selectedKeeperPassesClean": 1,
+        "selectedKeeperFailsMutant": 1,
+        "skip": 0,
+        "cancelled": 0,
+        "todo": 0
+      },
+      "why": "Passing the timing reporter through the narrow Stage2 owner emits actual entitlement/artifact timings. Earlier positive and no-later-read assertions remain true; empty timing assertion is intended first failure.",
+      "proofProtocol": "Main only: verify original source/test/readset hashes; run exact one keeper clean; mutate actual source under common lock/CAS; run exact keeper and require intended ERR_ASSERTION/operator/decoded fragments/first test frame; restore byte-exact in finally; run exact keeper clean; hash TAP/command receipts. No setup/type/import failures count."
+    }
+  },
+  {
+    "id": "P6",
+    "file": "src/lib/personal-plan/journey-access-loader.ts",
+    "from": "      : Boolean(cutoff && parsed.getTime() >= cutoff.getTime())",
+    "to": "      : true",
+    "phases": {
+      "transfer": {
+        "sourceSha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+        "mutatedSha256": "0a1c36e45271cff7420559798c6e9d701da3b5c12c12ca41c4ddfb22de1e3950"
+      },
+      "cut": {
+        "sourceSha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+        "mutatedSha256": "94769af1daded05674f1a02d3c72fb52a4bb4b5f4ce61edbf93fc31f44f80996"
+      }
+    },
+    "test": {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "names": {
+        "transfer": "Stage 2 access remains fail-closed for incomplete owner source facts and throws on reads",
+        "cut": "Stage 2 access remains fail-closed for incomplete owner source facts and throws on reads"
+      }
+    },
+    "commands": {
+      "transfer": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^Stage 2 access remains fail-closed for incomplete owner source facts and throws on reads$",
+        "tests/personal-plan-journey-access-loader.test.ts"
+      ],
+      "cut": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^Stage 2 access remains fail-closed for incomplete owner source facts and throws on reads$",
+        "tests/personal-plan-journey-access-loader.test.ts"
+      ]
+    },
+    "oracles": {
+      "transfer": {
+        "startLine": 368,
+        "text": "assert.deepEqual(\n    await loadPersonalPlanStage2AccessWithDeps(\n      deps({\n        loadEntitlement: async () => ({\n          accessState: \"active\",\n          qualifiedAt: \"2026-07-31T23:59:59Z\",\n          artifactLeadId: \"lead-1\",\n        }),\n      }),\n      \"owner-1\",\n    ),\n    { allowed: false },\n  )",
+        "keeperSha256": "1934ae8cc5216f9f63b0c042170438209d85a12ce301acfa523813ca506ccf06",
+        "testFileSha256": "16b77c5f68870a0cda0ea86910b26408cae10f85f2213d6f8b219a74ff832e67"
+      },
+      "cut": {
+        "startLine": 351,
+        "text": "assert.deepEqual(\n    await loadPersonalPlanStage2AccessWithDeps(\n      deps({\n        loadEntitlement: async () => ({\n          accessState: \"active\",\n          qualifiedAt: \"2026-07-31T23:59:59Z\",\n          artifactLeadId: \"lead-1\",\n        }),\n      }),\n      \"owner-1\",\n    ),\n    { allowed: false },\n  )",
+        "keeperSha256": "1934ae8cc5216f9f63b0c042170438209d85a12ce301acfa523813ca506ccf06",
+        "testFileSha256": "7a18014ae40a06640e9fa54354a1109fd613986858c53c7ff072144ed175b6c8"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   allowed: true\n-   allowed: false\n  }",
+      "allowed: true",
+      "allowed: false"
+    ],
+    "intendedAssertion": "assert.deepEqual(\n    await loadPersonalPlanStage2AccessWithDeps(\n      deps({\n        loadEntitlement: async () => ({\n          accessState: \"active\",\n          qualifiedAt: \"2026-07-31T23:59:59Z\",\n          artifactLeadId: \"lead-1\",\n        }),\n      }),\n      \"owner-1\",\n    ),\n    { allowed: false },\n  )",
+    "diagnosticLimit": "Complete pinned Node AssertionError formatting from existing fixture outcome, plus every original frozen diagnostic fragment; runtime proof still required.",
+    "originalControl": {
+      "id": "P6",
+      "status": "UNRUN; statically unique and TS parsed only",
+      "source": "src/lib/personal-plan/journey-access-loader.ts",
+      "anchor": "      : Boolean(cutoff && parsed.getTime() >= cutoff.getTime())",
+      "replacement": "      : true",
+      "testFile": "tests/personal-plan-journey-access-loader.test.ts",
+      "phases": {
+        "transfer": {
+          "sourceSHA": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+          "mutantSHA": "0a1c36e45271cff7420559798c6e9d701da3b5c12c12ca41c4ddfb22de1e3950",
+          "keeperTitle": "Stage 2 access remains fail-closed for incomplete owner source facts and throws on reads",
+          "firstIntendedAssertionLine": 368,
+          "firstIntendedAssertion": "assert.deepEqual(\n    await loadPersonalPlanStage2AccessWithDeps(\n      deps({\n        loadEntitlement: async () => ({\n          accessState: \"active\",\n          qualifiedAt: \"2026-07-31T23:59:59Z\",\n          artifactLeadId: \"lead-1\",\n        }),\n      }),\n      \"owner-1\",\n    ),\n    { allowed: false },\n  )"
+        },
+        "cut": {
+          "sourceSHA": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+          "mutantSHA": "94769af1daded05674f1a02d3c72fb52a4bb4b5f4ce61edbf93fc31f44f80996",
+          "keeperTitle": "Stage 2 access remains fail-closed for incomplete owner source facts and throws on reads",
+          "firstIntendedAssertionLine": 351,
+          "firstIntendedAssertion": "assert.deepEqual(\n    await loadPersonalPlanStage2AccessWithDeps(\n      deps({\n        loadEntitlement: async () => ({\n          accessState: \"active\",\n          qualifiedAt: \"2026-07-31T23:59:59Z\",\n          artifactLeadId: \"lead-1\",\n        }),\n      }),\n      \"owner-1\",\n    ),\n    { allowed: false },\n  )"
+        }
+      },
+      "oracle": {
+        "code": "ERR_ASSERTION",
+        "operator": "deepStrictEqual",
+        "decodedMessageIncludes": [
+          "allowed: true",
+          "allowed: false"
+        ],
+        "firstTestFrame": "exact testFile and phase-specific firstIntendedAssertionLine",
+        "selectedKeeperPassesClean": 1,
+        "selectedKeeperFailsMutant": 1,
+        "skip": 0,
+        "cancelled": 0,
+        "todo": 0
+      },
+      "why": "Existing pre-cutoff active paid fixture must remain denied; earlier app-disabled and non-active rows still deny.",
+      "proofProtocol": "Main only: verify original source/test/readset hashes; run exact one keeper clean; mutate actual source under common lock/CAS; run exact keeper and require intended ERR_ASSERTION/operator/decoded fragments/first test frame; restore byte-exact in finally; run exact keeper clean; hash TAP/command receipts. No setup/type/import failures count."
+    }
+  },
+  {
+    "id": "P7",
+    "file": "src/lib/personal-plan/enrollment.ts",
+    "from": "    grant.revoked_at !== null ||",
+    "to": "    false ||",
+    "phases": {
+      "transfer": {
+        "sourceSha256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+        "mutatedSha256": "560a3ce17ca5e69deb013e375f5e45f894b098481bd4173c5d46900714c0f346"
+      },
+      "cut": {
+        "sourceSha256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+        "mutatedSha256": "560a3ce17ca5e69deb013e375f5e45f894b098481bd4173c5d46900714c0f346"
+      }
+    },
+    "test": {
+      "file": "tests/personal-plan-field-test-access.test.ts",
+      "names": {
+        "transfer": "expired, revoked, or manually revoked field-test enrollment fails closed",
+        "cut": "expired, revoked, or manually revoked field-test enrollment fails closed"
+      }
+    },
+    "commands": {
+      "transfer": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^expired, revoked, or manually revoked field-test enrollment fails closed$",
+        "tests/personal-plan-field-test-access.test.ts"
+      ],
+      "cut": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^expired, revoked, or manually revoked field-test enrollment fails closed$",
+        "tests/personal-plan-field-test-access.test.ts"
+      ]
+    },
+    "oracles": {
+      "transfer": {
+        "startLine": 125,
+        "text": "assert.equal(enrollment.sourceKind, null)",
+        "keeperSha256": "f3412bf5df5f3974424a12c9fe7a3183bdf2dec3fc7c3098e117c531cf364591",
+        "testFileSha256": "9b6b6880e409e68a531f1d281dbbc19054ec4cee05535f48e21df67a6b0b0e8a"
+      },
+      "cut": {
+        "startLine": 125,
+        "text": "assert.equal(enrollment.sourceKind, null)",
+        "keeperSha256": "f3412bf5df5f3974424a12c9fe7a3183bdf2dec3fc7c3098e117c531cf364591",
+        "testFileSha256": "0701492072d7229a19c832017a5d46b708be3785a7839e9325eee3e5d1a7e963"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'field_test'\n- null",
+      "field_test",
+      "null"
+    ],
+    "intendedAssertion": "assert.equal(enrollment.sourceKind, null)",
+    "diagnosticLimit": "Complete pinned Node AssertionError formatting from existing fixture outcome, plus every original frozen diagnostic fragment; runtime proof still required.",
+    "originalControl": {
+      "id": "P7",
+      "status": "UNRUN; statically unique and TS parsed only",
+      "source": "src/lib/personal-plan/enrollment.ts",
+      "anchor": "    grant.revoked_at !== null ||",
+      "replacement": "    false ||",
+      "testFile": "tests/personal-plan-field-test-access.test.ts",
+      "phases": {
+        "transfer": {
+          "sourceSHA": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+          "mutantSHA": "560a3ce17ca5e69deb013e375f5e45f894b098481bd4173c5d46900714c0f346",
+          "keeperTitle": "expired, revoked, or manually revoked field-test enrollment fails closed",
+          "firstIntendedAssertionLine": 125,
+          "firstIntendedAssertion": "assert.equal(enrollment.sourceKind, null)"
+        },
+        "cut": {
+          "sourceSHA": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+          "mutantSHA": "560a3ce17ca5e69deb013e375f5e45f894b098481bd4173c5d46900714c0f346",
+          "keeperTitle": "expired, revoked, or manually revoked field-test enrollment fails closed",
+          "firstIntendedAssertionLine": 125,
+          "firstIntendedAssertion": "assert.equal(enrollment.sourceKind, null)"
+        }
+      },
+      "oracle": {
+        "code": "ERR_ASSERTION",
+        "operator": "strictEqual",
+        "decodedMessageIncludes": [
+          "field_test",
+          "null"
+        ],
+        "firstTestFrame": "exact testFile and phase-specific firstIntendedAssertionLine",
+        "selectedKeeperPassesClean": 1,
+        "selectedKeeperFailsMutant": 1,
+        "skip": 0,
+        "cancelled": 0,
+        "todo": 0
+      },
+      "why": "Existing third loop row has a revoked tester grant. Actual enrollment checker omission must yield field_test at the first sourceKind assertion; the earlier expired/revoked-enrollment rows remain denied.",
+      "proofProtocol": "Main only: verify original source/test/readset hashes; run exact one keeper clean; mutate actual source under common lock/CAS; run exact keeper and require intended ERR_ASSERTION/operator/decoded fragments/first test frame; restore byte-exact in finally; run exact keeper clean; hash TAP/command receipts. No setup/type/import failures count."
+    }
+  },
+  {
+    "id": "P8",
+    "file": "src/lib/personal-plan/enrollment.ts",
+    "from": "    !enrollmentExpiresAt ||",
+    "to": "    false ||",
+    "phases": {
+      "transfer": {
+        "sourceSha256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+        "mutatedSha256": "e59d74d59feac9ce613b4fc137291ee18c63616497d5ece6f182360163253166"
+      },
+      "cut": {
+        "sourceSha256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+        "mutatedSha256": "e59d74d59feac9ce613b4fc137291ee18c63616497d5ece6f182360163253166"
+      }
+    },
+    "test": {
+      "file": "tests/personal-plan-field-test-access.test.ts",
+      "names": {
+        "transfer": "expired, revoked, or manually revoked field-test enrollment fails closed",
+        "cut": "expired, revoked, or manually revoked field-test enrollment fails closed"
+      }
+    },
+    "commands": {
+      "transfer": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^expired, revoked, or manually revoked field-test enrollment fails closed$",
+        "tests/personal-plan-field-test-access.test.ts"
+      ],
+      "cut": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^expired, revoked, or manually revoked field-test enrollment fails closed$",
+        "tests/personal-plan-field-test-access.test.ts"
+      ]
+    },
+    "oracles": {
+      "transfer": {
+        "startLine": 125,
+        "text": "assert.equal(enrollment.sourceKind, null)",
+        "keeperSha256": "f3412bf5df5f3974424a12c9fe7a3183bdf2dec3fc7c3098e117c531cf364591",
+        "testFileSha256": "9b6b6880e409e68a531f1d281dbbc19054ec4cee05535f48e21df67a6b0b0e8a"
+      },
+      "cut": {
+        "startLine": 125,
+        "text": "assert.equal(enrollment.sourceKind, null)",
+        "keeperSha256": "f3412bf5df5f3974424a12c9fe7a3183bdf2dec3fc7c3098e117c531cf364591",
+        "testFileSha256": "0701492072d7229a19c832017a5d46b708be3785a7839e9325eee3e5d1a7e963"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'field_test'\n- null",
+      "field_test",
+      "null"
+    ],
+    "intendedAssertion": "assert.equal(enrollment.sourceKind, null)",
+    "diagnosticLimit": "Complete pinned Node AssertionError formatting from existing fixture outcome, plus every original frozen diagnostic fragment; runtime proof still required.",
+    "originalControl": {
+      "id": "P8",
+      "status": "UNRUN; statically unique and TS parsed only",
+      "source": "src/lib/personal-plan/enrollment.ts",
+      "anchor": "    !enrollmentExpiresAt ||",
+      "replacement": "    false ||",
+      "testFile": "tests/personal-plan-field-test-access.test.ts",
+      "phases": {
+        "transfer": {
+          "sourceSHA": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+          "mutantSHA": "e59d74d59feac9ce613b4fc137291ee18c63616497d5ece6f182360163253166",
+          "keeperTitle": "expired, revoked, or manually revoked field-test enrollment fails closed",
+          "firstIntendedAssertionLine": 125,
+          "firstIntendedAssertion": "assert.equal(enrollment.sourceKind, null)"
+        },
+        "cut": {
+          "sourceSHA": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+          "mutantSHA": "e59d74d59feac9ce613b4fc137291ee18c63616497d5ece6f182360163253166",
+          "keeperTitle": "expired, revoked, or manually revoked field-test enrollment fails closed",
+          "firstIntendedAssertionLine": 125,
+          "firstIntendedAssertion": "assert.equal(enrollment.sourceKind, null)"
+        }
+      },
+      "oracle": {
+        "code": "ERR_ASSERTION",
+        "operator": "strictEqual",
+        "decodedMessageIncludes": [
+          "field_test",
+          "null"
+        ],
+        "firstTestFrame": "exact testFile and phase-specific firstIntendedAssertionLine",
+        "selectedKeeperPassesClean": 1,
+        "selectedKeeperFailsMutant": 1,
+        "skip": 0,
+        "cancelled": 0,
+        "todo": 0
+      },
+      "why": "Existing first loop row is already expired at the fixed clock. Actual live enrollment checker must fail the first sourceKind assertion without fixture changes.",
+      "proofProtocol": "Main only: verify original source/test/readset hashes; run exact one keeper clean; mutate actual source under common lock/CAS; run exact keeper and require intended ERR_ASSERTION/operator/decoded fragments/first test frame; restore byte-exact in finally; run exact keeper clean; hash TAP/command receipts. No setup/type/import failures count."
+    }
+  },
+  {
+    "id": "P9",
+    "file": "src/lib/personal-plan/enrollment.ts",
+    "from": "    sourceKind: \"field_test\",",
+    "to": "    sourceKind: \"trial\",",
+    "phases": {
+      "transfer": {
+        "sourceSha256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+        "mutatedSha256": "c7125f505644c96498c7c0feab6e9cd2be62271ff201e3d3c50a17b143df812e"
+      },
+      "cut": {
+        "sourceSha256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+        "mutatedSha256": "c7125f505644c96498c7c0feab6e9cd2be62271ff201e3d3c50a17b143df812e"
+      }
+    },
+    "test": {
+      "file": "tests/personal-plan-field-test-access.test.ts",
+      "names": {
+        "transfer": "an active field-test enrollment uses its activation time without inventing paid access",
+        "cut": "an active field-test enrollment uses its activation time without inventing paid access"
+      }
+    },
+    "commands": {
+      "transfer": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^an active field-test enrollment uses its activation time without inventing paid access$",
+        "tests/personal-plan-field-test-access.test.ts"
+      ],
+      "cut": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^an active field-test enrollment uses its activation time without inventing paid access$",
+        "tests/personal-plan-field-test-access.test.ts"
+      ]
+    },
+    "oracles": {
+      "transfer": {
+        "startLine": 70,
+        "text": "assert.deepEqual(enrollment, {\n    accessState: \"active\",\n    sourceId: activeEnrollment.id,\n    paidAt: null,\n    qualifiedAt: activeEnrollment.activated_at,\n    artifactLeadId: activeEnrollment.lead_id,\n    quizSourceKind: \"personal_plan\",\n    sourceKind: \"field_test\",\n  })",
+        "keeperSha256": "0cf9cec1e1bfa8f4178aa0e539748568267c2b73248d404a5982048738975432",
+        "testFileSha256": "9b6b6880e409e68a531f1d281dbbc19054ec4cee05535f48e21df67a6b0b0e8a"
+      },
+      "cut": {
+        "startLine": 70,
+        "text": "assert.deepEqual(enrollment, {\n    accessState: \"active\",\n    sourceId: activeEnrollment.id,\n    paidAt: null,\n    qualifiedAt: activeEnrollment.activated_at,\n    artifactLeadId: activeEnrollment.lead_id,\n    quizSourceKind: \"personal_plan\",\n    sourceKind: \"field_test\",\n  })",
+        "keeperSha256": "0cf9cec1e1bfa8f4178aa0e539748568267c2b73248d404a5982048738975432",
+        "testFileSha256": "0701492072d7229a19c832017a5d46b708be3785a7839e9325eee3e5d1a7e963"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    accessState: 'active',\n    artifactLeadId: '22222222-2222-4222-8222-222222222222',\n    paidAt: null,\n    qualifiedAt: '2026-08-10T11:00:00.000Z',\n    quizSourceKind: 'personal_plan',\n    sourceId: '11111111-1111-4111-8111-111111111111',\n+   sourceKind: 'trial'\n-   sourceKind: 'field_test'\n  }",
+      "field_test",
+      "trial"
+    ],
+    "intendedAssertion": "assert.deepEqual(enrollment, {\n    accessState: \"active\",\n    sourceId: activeEnrollment.id,\n    paidAt: null,\n    qualifiedAt: activeEnrollment.activated_at,\n    artifactLeadId: activeEnrollment.lead_id,\n    quizSourceKind: \"personal_plan\",\n    sourceKind: \"field_test\",\n  })",
+    "diagnosticLimit": "Complete pinned Node AssertionError formatting from existing fixture outcome, plus every original frozen diagnostic fragment; runtime proof still required.",
+    "originalControl": {
+      "id": "P9",
+      "status": "UNRUN; statically unique and TS parsed only",
+      "source": "src/lib/personal-plan/enrollment.ts",
+      "anchor": "    sourceKind: \"field_test\",",
+      "replacement": "    sourceKind: \"trial\",",
+      "testFile": "tests/personal-plan-field-test-access.test.ts",
+      "phases": {
+        "transfer": {
+          "sourceSHA": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+          "mutantSHA": "c7125f505644c96498c7c0feab6e9cd2be62271ff201e3d3c50a17b143df812e",
+          "keeperTitle": "an active field-test enrollment uses its activation time without inventing paid access",
+          "firstIntendedAssertionLine": 70,
+          "firstIntendedAssertion": "assert.deepEqual(enrollment, {\n    accessState: \"active\",\n    sourceId: activeEnrollment.id,\n    paidAt: null,\n    qualifiedAt: activeEnrollment.activated_at,\n    artifactLeadId: activeEnrollment.lead_id,\n    quizSourceKind: \"personal_plan\",\n    sourceKind: \"field_test\",\n  })"
+        },
+        "cut": {
+          "sourceSHA": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+          "mutantSHA": "c7125f505644c96498c7c0feab6e9cd2be62271ff201e3d3c50a17b143df812e",
+          "keeperTitle": "an active field-test enrollment uses its activation time without inventing paid access",
+          "firstIntendedAssertionLine": 70,
+          "firstIntendedAssertion": "assert.deepEqual(enrollment, {\n    accessState: \"active\",\n    sourceId: activeEnrollment.id,\n    paidAt: null,\n    qualifiedAt: activeEnrollment.activated_at,\n    artifactLeadId: activeEnrollment.lead_id,\n    quizSourceKind: \"personal_plan\",\n    sourceKind: \"field_test\",\n  })"
+        }
+      },
+      "oracle": {
+        "code": "ERR_ASSERTION",
+        "operator": "deepStrictEqual",
+        "decodedMessageIncludes": [
+          "field_test",
+          "trial"
+        ],
+        "firstTestFrame": "exact testFile and phase-specific firstIntendedAssertionLine",
+        "selectedKeeperPassesClean": 1,
+        "selectedKeeperFailsMutant": 1,
+        "skip": 0,
+        "cancelled": 0,
+        "todo": 0
+      },
+      "why": "Existing complete active enrollment object checks activation time, null paidAt, exact source/lead and source discriminator. No old helper fixture is treated as equivalent.",
+      "proofProtocol": "Main only: verify original source/test/readset hashes; run exact one keeper clean; mutate actual source under common lock/CAS; run exact keeper and require intended ERR_ASSERTION/operator/decoded fragments/first test frame; restore byte-exact in finally; run exact keeper clean; hash TAP/command receipts. No setup/type/import failures count."
+    }
+  },
+  {
+    "id": "P10",
+    "file": "src/lib/personal-plan/journey-access-loader.ts",
+    "from": "  return sourceKind === \"field_test\" ||",
+    "to": "  return sourceKind === \"trial\" ||",
+    "phases": {
+      "transfer": {
+        "sourceSha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+        "mutatedSha256": "3031099815939dceb8040845364f7c8c72daf642a286a62b0b9ab702baacfb33"
+      },
+      "cut": {
+        "sourceSha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+        "mutatedSha256": "9fc06da1c8883f72a10f8d3fa71b8a6e031c78aeb2cd9ffaceb658f029538f3c"
+      }
+    },
+    "test": {
+      "file": "tests/personal-plan-field-test-access.test.ts",
+      "names": {
+        "transfer": "field-test activation qualifies Stage 1 and the journey without a payment timestamp",
+        "cut": "field-test activation qualifies Stage 1 and the journey without a payment timestamp"
+      }
+    },
+    "commands": {
+      "transfer": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^field-test activation qualifies Stage 1 and the journey without a payment timestamp$",
+        "tests/personal-plan-field-test-access.test.ts"
+      ],
+      "cut": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^field-test activation qualifies Stage 1 and the journey without a payment timestamp$",
+        "tests/personal-plan-field-test-access.test.ts"
+      ]
+    },
+    "oracles": {
+      "transfer": {
+        "startLine": 177,
+        "text": "assert.notEqual(journey.kind, \"legacy\")",
+        "keeperSha256": "802db3f6e3700e4eeff58154fe2febe7ed5ccb6b990cd2905bf158db31890cdf",
+        "testFileSha256": "9b6b6880e409e68a531f1d281dbbc19054ec4cee05535f48e21df67a6b0b0e8a"
+      },
+      "cut": {
+        "startLine": 175,
+        "text": "assert.notEqual(journey.kind, \"legacy\")",
+        "keeperSha256": "f98d8510a7def62e8513f9cc3c9125bfca6908a171f27b39a615a963730719e6",
+        "testFileSha256": "0701492072d7229a19c832017a5d46b708be3785a7839e9325eee3e5d1a7e963"
+      }
+    },
+    "expectedOperator": "notStrictEqual",
+    "errorMessageIncludes": [
+      "Expected \"actual\" to be strictly unequal to:\n\n'legacy'",
+      "legacy"
+    ],
+    "intendedAssertion": "assert.notEqual(journey.kind, \"legacy\")",
+    "diagnosticLimit": "Complete pinned Node AssertionError formatting from existing fixture outcome, plus every original frozen diagnostic fragment; runtime proof still required.",
+    "originalControl": {
+      "id": "P10",
+      "status": "UNRUN; statically unique and TS parsed only",
+      "source": "src/lib/personal-plan/journey-access-loader.ts",
+      "anchor": "  return sourceKind === \"field_test\" ||",
+      "replacement": "  return sourceKind === \"trial\" ||",
+      "testFile": "tests/personal-plan-field-test-access.test.ts",
+      "phases": {
+        "transfer": {
+          "sourceSHA": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+          "mutantSHA": "3031099815939dceb8040845364f7c8c72daf642a286a62b0b9ab702baacfb33",
+          "keeperTitle": "field-test activation qualifies Stage 1 and the journey without a payment timestamp",
+          "firstIntendedAssertionLine": 177,
+          "firstIntendedAssertion": "assert.notEqual(journey.kind, \"legacy\")"
+        },
+        "cut": {
+          "sourceSHA": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+          "mutantSHA": "9fc06da1c8883f72a10f8d3fa71b8a6e031c78aeb2cd9ffaceb658f029538f3c",
+          "keeperTitle": "field-test activation qualifies Stage 1 and the journey without a payment timestamp",
+          "firstIntendedAssertionLine": 175,
+          "firstIntendedAssertion": "assert.notEqual(journey.kind, \"legacy\")"
+        }
+      },
+      "oracle": {
+        "code": "ERR_ASSERTION",
+        "operator": "notStrictEqual",
+        "decodedMessageIncludes": [
+          "legacy"
+        ],
+        "firstTestFrame": "exact testFile and phase-specific firstIntendedAssertionLine",
+        "selectedKeeperPassesClean": 1,
+        "selectedKeeperFailsMutant": 1,
+        "skip": 0,
+        "cancelled": 0,
+        "todo": 0
+      },
+      "why": "Existing field-test activation predates its cutoff; deleting only the field-test cohort exception makes actual journey return legacy. Existing Stage1 assertion executes first unchanged.",
+      "proofProtocol": "Main only: verify original source/test/readset hashes; run exact one keeper clean; mutate actual source under common lock/CAS; run exact keeper and require intended ERR_ASSERTION/operator/decoded fragments/first test frame; restore byte-exact in finally; run exact keeper clean; hash TAP/command receipts. No setup/type/import failures count."
+    }
+  },
+  {
+    "id": "P11",
+    "file": "src/lib/personal-plan/journey-access-loader.ts",
+    "from": "  return {\n    allowed:\n      prefix.appEnabled &&",
+    "to": "  try { await deps.loadCurrentRefinedNeed(userId, prefix.plan!.id, prefix.plan!.currentRefinedNeedVersionId!) } catch { /* isolate the forbidden-read assertion */ }\n  return {\n    allowed:\n      prefix.appEnabled &&",
+    "phases": {
+      "transfer": {
+        "sourceSha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+        "mutatedSha256": "b0e484ba2365598e9fab44e93f57d743b2b11c6550b23e1fd157cab36a3d2ac6"
+      },
+      "cut": {
+        "sourceSha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+        "mutatedSha256": "ec35518b5f7e5ef44af71ad663a0888ee384f50737043948e202b7dac8743b65"
+      }
+    },
+    "test": {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "names": {
+        "transfer": "Stage 2 access keeps the app rollout gate and stops before later-stage authority reads",
+        "cut": "Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing"
+      }
+    },
+    "commands": {
+      "transfer": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^Stage 2 access keeps the app rollout gate and stops before later-stage authority reads$",
+        "tests/personal-plan-journey-access-loader.test.ts"
+      ],
+      "cut": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing$",
+        "tests/personal-plan-journey-access-loader.test.ts"
+      ]
+    },
+    "oracles": {
+      "transfer": {
+        "startLine": 340,
+        "text": "assert.equal(refinedReads, 0)",
+        "keeperSha256": "2f9ad94127f72f7ec95260ab7ca8a5a8d04ee9d72ad7e17ec6ca387425625174",
+        "testFileSha256": "16b77c5f68870a0cda0ea86910b26408cae10f85f2213d6f8b219a74ff832e67"
+      },
+      "cut": {
+        "startLine": 323,
+        "text": "assert.equal(refinedReads, 0)",
+        "keeperSha256": "5b286e6d6c8eaebd6a1c69146846fa15afc0e934895b37b1eb106d19a695b11c",
+        "testFileSha256": "7a18014ae40a06640e9fa54354a1109fd613986858c53c7ff072144ed175b6c8"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\n1 !== 0",
+      "1",
+      "0"
+    ],
+    "intendedAssertion": "assert.equal(refinedReads, 0)",
+    "diagnosticLimit": "Complete pinned Node AssertionError formatting from existing fixture outcome, plus every original frozen diagnostic fragment; runtime proof still required.",
+    "originalControl": {
+      "id": "P11",
+      "status": "UNRUN; statically unique and TS parsed only",
+      "source": "src/lib/personal-plan/journey-access-loader.ts",
+      "anchor": "  return {\n    allowed:\n      prefix.appEnabled &&",
+      "replacement": "  try { await deps.loadCurrentRefinedNeed(userId, prefix.plan!.id, prefix.plan!.currentRefinedNeedVersionId!) } catch { /* isolate the forbidden-read assertion */ }\n  return {\n    allowed:\n      prefix.appEnabled &&",
+      "testFile": "tests/personal-plan-journey-access-loader.test.ts",
+      "phases": {
+        "transfer": {
+          "sourceSHA": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+          "mutantSHA": "b0e484ba2365598e9fab44e93f57d743b2b11c6550b23e1fd157cab36a3d2ac6",
+          "keeperTitle": "Stage 2 access keeps the app rollout gate and stops before later-stage authority reads",
+          "firstIntendedAssertionLine": 340,
+          "firstIntendedAssertion": "assert.equal(refinedReads, 0)"
+        },
+        "cut": {
+          "sourceSHA": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+          "mutantSHA": "ec35518b5f7e5ef44af71ad663a0888ee384f50737043948e202b7dac8743b65",
+          "keeperTitle": "Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing",
+          "firstIntendedAssertionLine": 323,
+          "firstIntendedAssertion": "assert.equal(refinedReads, 0)"
+        }
+      },
+      "oracle": {
+        "code": "ERR_ASSERTION",
+        "operator": "strictEqual",
+        "decodedMessageIncludes": [
+          "1",
+          "0"
+        ],
+        "firstTestFrame": "exact testFile and phase-specific firstIntendedAssertionLine",
+        "selectedKeeperPassesClean": 1,
+        "selectedKeeperFailsMutant": 1,
+        "skip": 0,
+        "cancelled": 0,
+        "todo": 0
+      },
+      "why": "Actual Stage2 owner invokes a forbidden dependency once. The deliberate probe catches its existing trap error solely to require the independent zero-read counter assertion as the first failure; it does not alter the fixture or substitute a mock result. This is an assertion-sensitivity probe, not proof that ordinary uncaught regressions return ERR_ASSERTION.",
+      "proofProtocol": "Main only: verify original source/test/readset hashes; run exact one keeper clean; mutate actual source under common lock/CAS; run exact keeper and require intended ERR_ASSERTION/operator/decoded fragments/first test frame; restore byte-exact in finally; run exact keeper clean; hash TAP/command receipts. No setup/type/import failures count."
+    }
+  },
+  {
+    "id": "P12",
+    "file": "src/lib/personal-plan/journey-access-loader.ts",
+    "from": "  return {\n    allowed:\n      prefix.appEnabled &&",
+    "to": "  try { await deps.loadCurrentProductDraft(userId, prefix.plan!.id, prefix.plan!.currentRefinedNeedVersionId!) } catch { /* isolate the forbidden-read assertion */ }\n  return {\n    allowed:\n      prefix.appEnabled &&",
+    "phases": {
+      "transfer": {
+        "sourceSha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+        "mutatedSha256": "8a1b9e534d8b80ed4403857e1c1f31e6690c5ed1c6b7dff02378edb6c4387144"
+      },
+      "cut": {
+        "sourceSha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+        "mutatedSha256": "12294663f21838acdbafa997b276161d7cb2aafe214015933e25088c7ffcb0e4"
+      }
+    },
+    "test": {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "names": {
+        "transfer": "Stage 2 access keeps the app rollout gate and stops before later-stage authority reads",
+        "cut": "Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing"
+      }
+    },
+    "commands": {
+      "transfer": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^Stage 2 access keeps the app rollout gate and stops before later-stage authority reads$",
+        "tests/personal-plan-journey-access-loader.test.ts"
+      ],
+      "cut": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing$",
+        "tests/personal-plan-journey-access-loader.test.ts"
+      ]
+    },
+    "oracles": {
+      "transfer": {
+        "startLine": 341,
+        "text": "assert.equal(draftReads, 0)",
+        "keeperSha256": "2f9ad94127f72f7ec95260ab7ca8a5a8d04ee9d72ad7e17ec6ca387425625174",
+        "testFileSha256": "16b77c5f68870a0cda0ea86910b26408cae10f85f2213d6f8b219a74ff832e67"
+      },
+      "cut": {
+        "startLine": 324,
+        "text": "assert.equal(draftReads, 0)",
+        "keeperSha256": "5b286e6d6c8eaebd6a1c69146846fa15afc0e934895b37b1eb106d19a695b11c",
+        "testFileSha256": "7a18014ae40a06640e9fa54354a1109fd613986858c53c7ff072144ed175b6c8"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\n1 !== 0",
+      "1",
+      "0"
+    ],
+    "intendedAssertion": "assert.equal(draftReads, 0)",
+    "diagnosticLimit": "Complete pinned Node AssertionError formatting from existing fixture outcome, plus every original frozen diagnostic fragment; runtime proof still required.",
+    "originalControl": {
+      "id": "P12",
+      "status": "UNRUN; statically unique and TS parsed only",
+      "source": "src/lib/personal-plan/journey-access-loader.ts",
+      "anchor": "  return {\n    allowed:\n      prefix.appEnabled &&",
+      "replacement": "  try { await deps.loadCurrentProductDraft(userId, prefix.plan!.id, prefix.plan!.currentRefinedNeedVersionId!) } catch { /* isolate the forbidden-read assertion */ }\n  return {\n    allowed:\n      prefix.appEnabled &&",
+      "testFile": "tests/personal-plan-journey-access-loader.test.ts",
+      "phases": {
+        "transfer": {
+          "sourceSHA": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+          "mutantSHA": "8a1b9e534d8b80ed4403857e1c1f31e6690c5ed1c6b7dff02378edb6c4387144",
+          "keeperTitle": "Stage 2 access keeps the app rollout gate and stops before later-stage authority reads",
+          "firstIntendedAssertionLine": 341,
+          "firstIntendedAssertion": "assert.equal(draftReads, 0)"
+        },
+        "cut": {
+          "sourceSHA": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+          "mutantSHA": "12294663f21838acdbafa997b276161d7cb2aafe214015933e25088c7ffcb0e4",
+          "keeperTitle": "Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing",
+          "firstIntendedAssertionLine": 324,
+          "firstIntendedAssertion": "assert.equal(draftReads, 0)"
+        }
+      },
+      "oracle": {
+        "code": "ERR_ASSERTION",
+        "operator": "strictEqual",
+        "decodedMessageIncludes": [
+          "1",
+          "0"
+        ],
+        "firstTestFrame": "exact testFile and phase-specific firstIntendedAssertionLine",
+        "selectedKeeperPassesClean": 1,
+        "selectedKeeperFailsMutant": 1,
+        "skip": 0,
+        "cancelled": 0,
+        "todo": 0
+      },
+      "why": "Actual Stage2 owner invokes a forbidden dependency once. The deliberate probe catches its existing trap error solely to require the independent zero-read counter assertion as the first failure; it does not alter the fixture or substitute a mock result. This is an assertion-sensitivity probe, not proof that ordinary uncaught regressions return ERR_ASSERTION.",
+      "proofProtocol": "Main only: verify original source/test/readset hashes; run exact one keeper clean; mutate actual source under common lock/CAS; run exact keeper and require intended ERR_ASSERTION/operator/decoded fragments/first test frame; restore byte-exact in finally; run exact keeper clean; hash TAP/command receipts. No setup/type/import failures count."
+    }
+  },
+  {
+    "id": "P13",
+    "file": "src/lib/personal-plan/journey-access-loader.ts",
+    "from": "  return {\n    allowed:\n      prefix.appEnabled &&",
+    "to": "  try { deps.stage3Enabled() } catch { /* isolate the forbidden-read assertion */ }\n  return {\n    allowed:\n      prefix.appEnabled &&",
+    "phases": {
+      "transfer": {
+        "sourceSha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+        "mutatedSha256": "2ef34f6c19b312bf4627dafcd2842647550b61a16d8c32dcc2347ce1c972a1a5"
+      },
+      "cut": {
+        "sourceSha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+        "mutatedSha256": "2c923b248b0cb11b27ba3c7157bb3f786d15ea5e3f3e18d13ced622aad804c32"
+      }
+    },
+    "test": {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "names": {
+        "transfer": "Stage 2 access keeps the app rollout gate and stops before later-stage authority reads",
+        "cut": "Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing"
+      }
+    },
+    "commands": {
+      "transfer": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^Stage 2 access keeps the app rollout gate and stops before later-stage authority reads$",
+        "tests/personal-plan-journey-access-loader.test.ts"
+      ],
+      "cut": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing$",
+        "tests/personal-plan-journey-access-loader.test.ts"
+      ]
+    },
+    "oracles": {
+      "transfer": {
+        "startLine": 342,
+        "text": "assert.equal(stage3Reads, 0)",
+        "keeperSha256": "2f9ad94127f72f7ec95260ab7ca8a5a8d04ee9d72ad7e17ec6ca387425625174",
+        "testFileSha256": "16b77c5f68870a0cda0ea86910b26408cae10f85f2213d6f8b219a74ff832e67"
+      },
+      "cut": {
+        "startLine": 325,
+        "text": "assert.equal(stage3Reads, 0)",
+        "keeperSha256": "5b286e6d6c8eaebd6a1c69146846fa15afc0e934895b37b1eb106d19a695b11c",
+        "testFileSha256": "7a18014ae40a06640e9fa54354a1109fd613986858c53c7ff072144ed175b6c8"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\n1 !== 0",
+      "1",
+      "0"
+    ],
+    "intendedAssertion": "assert.equal(stage3Reads, 0)",
+    "diagnosticLimit": "Complete pinned Node AssertionError formatting from existing fixture outcome, plus every original frozen diagnostic fragment; runtime proof still required.",
+    "originalControl": {
+      "id": "P13",
+      "status": "UNRUN; statically unique and TS parsed only",
+      "source": "src/lib/personal-plan/journey-access-loader.ts",
+      "anchor": "  return {\n    allowed:\n      prefix.appEnabled &&",
+      "replacement": "  try { deps.stage3Enabled() } catch { /* isolate the forbidden-read assertion */ }\n  return {\n    allowed:\n      prefix.appEnabled &&",
+      "testFile": "tests/personal-plan-journey-access-loader.test.ts",
+      "phases": {
+        "transfer": {
+          "sourceSHA": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+          "mutantSHA": "2ef34f6c19b312bf4627dafcd2842647550b61a16d8c32dcc2347ce1c972a1a5",
+          "keeperTitle": "Stage 2 access keeps the app rollout gate and stops before later-stage authority reads",
+          "firstIntendedAssertionLine": 342,
+          "firstIntendedAssertion": "assert.equal(stage3Reads, 0)"
+        },
+        "cut": {
+          "sourceSHA": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+          "mutantSHA": "2c923b248b0cb11b27ba3c7157bb3f786d15ea5e3f3e18d13ced622aad804c32",
+          "keeperTitle": "Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing",
+          "firstIntendedAssertionLine": 325,
+          "firstIntendedAssertion": "assert.equal(stage3Reads, 0)"
+        }
+      },
+      "oracle": {
+        "code": "ERR_ASSERTION",
+        "operator": "strictEqual",
+        "decodedMessageIncludes": [
+          "1",
+          "0"
+        ],
+        "firstTestFrame": "exact testFile and phase-specific firstIntendedAssertionLine",
+        "selectedKeeperPassesClean": 1,
+        "selectedKeeperFailsMutant": 1,
+        "skip": 0,
+        "cancelled": 0,
+        "todo": 0
+      },
+      "why": "Actual Stage2 owner invokes a forbidden dependency once. The deliberate probe catches its existing trap error solely to require the independent zero-read counter assertion as the first failure; it does not alter the fixture or substitute a mock result. This is an assertion-sensitivity probe, not proof that ordinary uncaught regressions return ERR_ASSERTION.",
+      "proofProtocol": "Main only: verify original source/test/readset hashes; run exact one keeper clean; mutate actual source under common lock/CAS; run exact keeper and require intended ERR_ASSERTION/operator/decoded fragments/first test frame; restore byte-exact in finally; run exact keeper clean; hash TAP/command receipts. No setup/type/import failures count."
+    }
+  },
+  {
+    "id": "P14",
+    "file": "src/lib/personal-plan/journey-access-loader.ts",
+    "from": "  return {\n    allowed:\n      prefix.appEnabled &&",
+    "to": "  try { deps.stage4Enabled() } catch { /* isolate the forbidden-read assertion */ }\n  return {\n    allowed:\n      prefix.appEnabled &&",
+    "phases": {
+      "transfer": {
+        "sourceSha256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+        "mutatedSha256": "e95da178d1d8cc634b4dcc7b51478134a60ec9e6cc6cc32902989070beddcb32"
+      },
+      "cut": {
+        "sourceSha256": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+        "mutatedSha256": "046a5fc041e98475fa63988b1827b8249d15370d1aef180751fd3b141064db55"
+      }
+    },
+    "test": {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "names": {
+        "transfer": "Stage 2 access keeps the app rollout gate and stops before later-stage authority reads",
+        "cut": "Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing"
+      }
+    },
+    "commands": {
+      "transfer": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^Stage 2 access keeps the app rollout gate and stops before later-stage authority reads$",
+        "tests/personal-plan-journey-access-loader.test.ts"
+      ],
+      "cut": [
+        "node",
+        "--import",
+        "./tests/server-only-register.cjs",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "--test-name-pattern=^Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing$",
+        "tests/personal-plan-journey-access-loader.test.ts"
+      ]
+    },
+    "oracles": {
+      "transfer": {
+        "startLine": 343,
+        "text": "assert.equal(stage4Reads, 0)",
+        "keeperSha256": "2f9ad94127f72f7ec95260ab7ca8a5a8d04ee9d72ad7e17ec6ca387425625174",
+        "testFileSha256": "16b77c5f68870a0cda0ea86910b26408cae10f85f2213d6f8b219a74ff832e67"
+      },
+      "cut": {
+        "startLine": 326,
+        "text": "assert.equal(stage4Reads, 0)",
+        "keeperSha256": "5b286e6d6c8eaebd6a1c69146846fa15afc0e934895b37b1eb106d19a695b11c",
+        "testFileSha256": "7a18014ae40a06640e9fa54354a1109fd613986858c53c7ff072144ed175b6c8"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\n1 !== 0",
+      "1",
+      "0"
+    ],
+    "intendedAssertion": "assert.equal(stage4Reads, 0)",
+    "diagnosticLimit": "Complete pinned Node AssertionError formatting from existing fixture outcome, plus every original frozen diagnostic fragment; runtime proof still required.",
+    "originalControl": {
+      "id": "P14",
+      "status": "UNRUN; statically unique and TS parsed only",
+      "source": "src/lib/personal-plan/journey-access-loader.ts",
+      "anchor": "  return {\n    allowed:\n      prefix.appEnabled &&",
+      "replacement": "  try { deps.stage4Enabled() } catch { /* isolate the forbidden-read assertion */ }\n  return {\n    allowed:\n      prefix.appEnabled &&",
+      "testFile": "tests/personal-plan-journey-access-loader.test.ts",
+      "phases": {
+        "transfer": {
+          "sourceSHA": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+          "mutantSHA": "e95da178d1d8cc634b4dcc7b51478134a60ec9e6cc6cc32902989070beddcb32",
+          "keeperTitle": "Stage 2 access keeps the app rollout gate and stops before later-stage authority reads",
+          "firstIntendedAssertionLine": 343,
+          "firstIntendedAssertion": "assert.equal(stage4Reads, 0)"
+        },
+        "cut": {
+          "sourceSHA": "0a6ea1788bb81272837dc85f303099da19d2867175a8bfa2905e685daeaf6ddd",
+          "mutantSHA": "046a5fc041e98475fa63988b1827b8249d15370d1aef180751fd3b141064db55",
+          "keeperTitle": "Stage 2 access stops before later-stage authority reads and emits no Stage 3 timing",
+          "firstIntendedAssertionLine": 326,
+          "firstIntendedAssertion": "assert.equal(stage4Reads, 0)"
+        }
+      },
+      "oracle": {
+        "code": "ERR_ASSERTION",
+        "operator": "strictEqual",
+        "decodedMessageIncludes": [
+          "1",
+          "0"
+        ],
+        "firstTestFrame": "exact testFile and phase-specific firstIntendedAssertionLine",
+        "selectedKeeperPassesClean": 1,
+        "selectedKeeperFailsMutant": 1,
+        "skip": 0,
+        "cancelled": 0,
+        "todo": 0
+      },
+      "why": "Actual Stage2 owner invokes a forbidden dependency once. The deliberate probe catches its existing trap error solely to require the independent zero-read counter assertion as the first failure; it does not alter the fixture or substitute a mock result. This is an assertion-sensitivity probe, not proof that ordinary uncaught regressions return ERR_ASSERTION.",
+      "proofProtocol": "Main only: verify original source/test/readset hashes; run exact one keeper clean; mutate actual source under common lock/CAS; run exact keeper and require intended ERR_ASSERTION/operator/decoded fragments/first test frame; restore byte-exact in finally; run exact keeper clean; hash TAP/command receipts. No setup/type/import failures count."
+    }
+  }
+]

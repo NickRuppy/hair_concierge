@@ -1,0 +1,62 @@
+[
+  {
+    "original": "/tmp/test-audit-next607-repaired-ci.log",
+    "archive": "test-audit-next607-repaired-ci.log",
+    "sha256": "1b6c3f8b8d06888dc816f2482333ec101fd0453a48d03cd98fcb6d8845ee79f6",
+    "bytes": 1603
+  },
+  {
+    "original": "/tmp/test-audit-next607-repaired-ci2.log",
+    "archive": "test-audit-next607-repaired-ci2.log",
+    "sha256": "9b79ba16af69dc3692279d49271160d843f3178427f2d9b8373b8034d7537d72",
+    "bytes": 12817
+  },
+  {
+    "original": "/tmp/test-audit-next607-repaired-ci3.log",
+    "archive": "test-audit-next607-repaired-ci3.log",
+    "sha256": "ec9d1671d44ce4c72ff023096668e71489ef45c7c7561bad126f84675b3a1903",
+    "bytes": 12387
+  },
+  {
+    "original": "/tmp/test-audit-authorization-null-metadata-main-before.ts.txt",
+    "archive": "test-audit-authorization-null-metadata-main-before.ts.txt",
+    "sha256": "1bfa635dc1f781b784f3c3f89c7dd1a6008d924e61aaf8f5693e7735f8a401ef",
+    "bytes": 84097
+  },
+  {
+    "original": "/tmp/test-audit-authorization-null-metadata-main-receipt.json",
+    "archive": "test-audit-authorization-null-metadata-main-receipt.json",
+    "sha256": "9afbdda7c1d4dc61ebd388a7bed9d71ea478e3861c6e4c129a84393b3f24751a",
+    "bytes": 932
+  },
+  {
+    "original": "/tmp/test-audit-authorization-unused-private-wrapper-main-before.ts.txt",
+    "archive": "test-audit-authorization-unused-private-wrapper-main-before.ts.txt",
+    "sha256": "a434f0834ffe2b082557d0f2f40f89e7dcbd7a94efbff83a1bbc4410ba35ca71",
+    "bytes": 84001
+  },
+  {
+    "original": "/tmp/test-audit-authorization-unused-private-wrapper-main-receipt.json",
+    "archive": "test-audit-authorization-unused-private-wrapper-main-receipt.json",
+    "sha256": "f384c94bd26306c9df4e82b6e398458ccf9697b5554b406cb3171283649907b4",
+    "bytes": 1189
+  },
+  {
+    "original": "/tmp/test-audit-607-coverage-attribution.md",
+    "archive": "test-audit-607-coverage-attribution.md",
+    "sha256": "db5829ddefdc9eda6369a00f60dcd02ccd1e98dad1bd2078002513f5be481f48",
+    "bytes": 10292
+  },
+  {
+    "original": "/tmp/test-audit-607-coverage-attribution.json",
+    "archive": "test-audit-607-coverage-attribution.json",
+    "sha256": "9144c2dd054f655b01c34f8cdae5b557723ca196c770eea6a8e7ec898ae66c90",
+    "bytes": 684274
+  },
+  {
+    "original": "/tmp/test-audit-next607-shared-config-disposition.json",
+    "archive": "test-audit-next607-shared-config-disposition.json",
+    "sha256": "38f962fed8680aaa75a2723158c25d37669e4042e44164d878a6556463143705",
+    "bytes": 2428
+  }
+]

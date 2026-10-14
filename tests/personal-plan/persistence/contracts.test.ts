@@ -2,15 +2,11 @@ import assert from "node:assert/strict"
 import test from "node:test"
 
 import {
-  createNeedVersionDecoderRegistry,
-  decodeNeedVersionSnapshot,
   hashPersonalPlanNeedVersionInput,
-  needVersionRowSchema,
   userProductSchema,
 } from "../../../src/lib/personal-plan/persistence"
-import { parseRoutineProposalStageResult } from "../../../src/lib/personal-plan/routine-proposal-stager"
 
-const INITIAL_ID = "initial-version"
+import { parseRoutineProposalStageResult } from "../../../src/lib/personal-plan/routine-proposal-stager"
 
 test("need-version hashes normalize object order without erasing array semantics", () => {
   const left = hashPersonalPlanNeedVersionInput({
@@ -48,50 +44,6 @@ test("refined need-version hashes remain separated by their initial parent", () 
   assert.notEqual(
     hashPersonalPlanNeedVersionInput({ ...input, parentNeedVersionId: "initial-a" }),
     hashPersonalPlanNeedVersionInput({ ...input, parentNeedVersionId: "initial-b" }),
-  )
-})
-
-test("need-version decoders dispatch only their registered schema and computation pair", () => {
-  const registry = createNeedVersionDecoderRegistry([
-    {
-      schemaVersion: 1,
-      computationVersion: "stage1-v1",
-      decodeInput: (value) =>
-        value === "input" ? { ok: true as const, value } : { ok: false as const },
-      decodeOutput: (value) =>
-        value === "output" ? { ok: true as const, value } : { ok: false as const },
-    },
-  ])
-  const row = needVersionRowSchema.parse({
-    id: INITIAL_ID,
-    userId: "user",
-    personalPlanId: "plan",
-    kind: "initial",
-    parentNeedVersionId: null,
-    preparedArtifactSourceId: null,
-    schemaVersion: 1,
-    computationVersion: "stage1-v1",
-    inputHash: "a".repeat(64),
-    inputSnapshot: "input",
-    outputSnapshot: "output",
-    createdAt: "2026-08-08T10:00:00.000Z",
-  })
-
-  assert.deepEqual(decodeNeedVersionSnapshot(registry, row), {
-    ok: true,
-    input: "input",
-    output: "output",
-  })
-  assert.deepEqual(
-    decodeNeedVersionSnapshot(registry, { ...row, computationVersion: "future-v2" }),
-    {
-      ok: false,
-      error: {
-        code: "unsupported_snapshot_version",
-        schemaVersion: 1,
-        computationVersion: "future-v2",
-      },
-    },
   )
 })
 

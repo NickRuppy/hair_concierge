@@ -1,0 +1,43 @@
+{
+  "status": "CONDITIONAL_READ_ONLY_DISCOVERY",
+  "packet": "/tmp/test-audit-free-provisioning67",
+  "manifestSHA256": "c93ab0f88ad471a0bddda81ebeef2db9b5c0cccecbbbb20b039bc000e9c041a1",
+  "artifactHashesSHA256": "1c46dea2a5aeecb35a2bf4cbd380a1d97f5bcce4bcd8253247b20504f1ae0ca0",
+  "counts": {
+    "before": 67,
+    "transfer": 67,
+    "cut": 66
+  },
+  "runtimeCounts": {
+    "before": 68,
+    "transfer": 68,
+    "cut": 67
+  },
+  "marks": {
+    "R": 65,
+    "F": 1,
+    "C": 1,
+    "D": 0
+  },
+  "controls": 2,
+  "sourceCleanupFiles": 0,
+  "readsetPins": 247,
+  "snapshots": 21,
+  "unrelatedCallbacks": 65,
+  "actualNativeRuns": 0,
+  "repositoryWrites": 0,
+  "ownerImports": 0,
+  "childrenStarted": 0,
+  "removalCredit": 0,
+  "keyHashes": {
+    "README.md": "139533bd7a4a133e55a1fd51e1ecfc19d2e72d8cfa4adddd16778e2b97bc35ef",
+    "layer-plan.md": "2913b3f237dfe8a6cb9609ec8d24b212c18c76077e0ebacd35258e61f80c65dc",
+    "complete-ledger.md": "d8d7b248b4beca44268e4ef32ca3cdfa44b539e95817a07d50e4ce19489632fc",
+    "ledger.json": "0cc76f11a6e375b0a2d6baaaff81b61219945dff1eb3416624f8631d14f0d5d7",
+    "candidates.json": "d452f00b5aa5982b2ca02f7fece8422612b3471932b40789c3f939fe1df2aec8",
+    "controls.json": "301beb3e0a4c440cc25c23c01db8d74c0d49a327188500bedb489c6107e2da3d",
+    "complete.diff": "71013a46aaed739dc4b5ce22a4bb454d263830088cb7fed5c53fcaecd3335cfd",
+    "read-depth.md": "a17a6c086068a87b79568c82d1f2ca4f9d39d0bd05aaf54520201a236c98539e",
+    "final-static-receipt.txt": "501526f0f5506939604b9e1a8d85adc4a8232a273d18f5ed4a7866f13802279a"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "executable": "/usr/local/bin/node",
+  "args": [
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-concurrency=1",
+    "tests/free-registration-screen.test.tsx",
+    "tests/free-registration-recovery-terminal.test.ts",
+    "tests/free-snapshot-provisioning-acceptance.test.ts",
+    "tests/freemium-sheet-checkout-contract.test.ts",
+    "tests/freemium-plan-provisioning.test.ts",
+    "tests/freemium-cutover-journey.test.ts",
+    "tests/personal-plan/persistence/free-snapshot-service.test.ts"
+  ],
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning"
+}

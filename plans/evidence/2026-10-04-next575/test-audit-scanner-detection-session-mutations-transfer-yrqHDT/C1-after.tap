@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: createScanSessionState: returns a fresh object each call — mutating one does not leak into the next
+ok 1 - createScanSessionState: returns a fresh object each call — mutating one does not leak into the next
+  ---
+  duration_ms: 0.859833
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 162.800041

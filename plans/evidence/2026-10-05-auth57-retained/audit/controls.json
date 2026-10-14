@@ -1,0 +1,100 @@
+{
+  "executed": false,
+  "noCutRequiredControls": [],
+  "separateWrapperControls": [
+    {
+      "id": "W1-auth-query-clear",
+      "anchor": "if (sourcePathname === \"/auth\") {\n    url.search = \"\"",
+      "replacement": "if (sourcePathname === \"/auth\") {\n    // fault: retain source auth query",
+      "oracles": [
+        {
+          "file": "tests/auth-middleware-replay.test.ts",
+          "title": "authenticated auth routing strips auth-only error and token query material",
+          "firstAssertionLine": 17,
+          "code": "ERR_ASSERTION",
+          "operator": "strictEqual",
+          "decodedMessageFragments": [
+            "https://chaarlie.de/chat",
+            "error=link_expired"
+          ],
+          "native": "node"
+        },
+        {
+          "file": "tests/auth-post-checkout-routes.spec.ts",
+          "title": "authenticated auth cleanup cannot resurrect an expired-link screen through Back or Forward",
+          "firstAssertionLine": 169,
+          "matcher": "toBe",
+          "decodedMessageFragments": [
+            "/chat",
+            "error=link_expired"
+          ],
+          "native": "chromium-playwright",
+          "note": "Playwright matcher error, not Node ERR_ASSERTION. Must inspect intended first assertion at169; navigation/setup errors do not count."
+        }
+      ],
+      "source": "src/lib/supabase/middleware.ts",
+      "sourceSha256": "b46773cf21b880cb35d2967d4a882be1c5c59c53f2416607b60d3cb8a4c862a7",
+      "anchorOccurrences": 1,
+      "mutatedSha256": "41c4170aa86f3e3ee8b2876cf7a1c392dcc97146bdba333bbd827cdaa62bf854",
+      "parseDiagnostics": 0,
+      "executed": false,
+      "scope": "Separate zero-count wrapper closure diagnostics only; original first-frame lines must be rederived after actual retarget text is fixed.",
+      "proofRequirement": "Exactly one selected title per native run, clean pass then intended actual-owner red, restore all source bytes then clean pass; no skip/cancel/todo/setup/import failure accepted. Parent execution only."
+    },
+    {
+      "id": "W1-onboarding-lead",
+      "anchor": "if (redirectPath === \"/onboarding\" && leadId) {\n      url.searchParams.set(\"lead\", leadId)\n    }",
+      "replacement": "if (redirectPath === \"/onboarding\" && leadId) {\n      // fault: omit allowed lead\n    }",
+      "oracles": [
+        {
+          "file": "tests/auth-middleware-replay.test.ts",
+          "title": "authenticated auth routing keeps the allowed onboarding lead while removing auth-only query material",
+          "firstAssertionLine": 26,
+          "code": "ERR_ASSERTION",
+          "operator": "strictEqual",
+          "decodedMessageFragments": [
+            "https://chaarlie.de/onboarding",
+            "lead=lead-1"
+          ],
+          "native": "node"
+        }
+      ],
+      "source": "src/lib/supabase/middleware.ts",
+      "sourceSha256": "b46773cf21b880cb35d2967d4a882be1c5c59c53f2416607b60d3cb8a4c862a7",
+      "anchorOccurrences": 1,
+      "mutatedSha256": "30e8f1d959a163530f690010677d132adaf4b5ecc393ac5367c91b6281fb4983",
+      "parseDiagnostics": 0,
+      "executed": false,
+      "scope": "Separate zero-count wrapper closure diagnostics only; original first-frame lines must be rederived after actual retarget text is fixed.",
+      "proofRequirement": "Exactly one selected title per native run, clean pass then intended actual-owner red, restore all source bytes then clean pass; no skip/cancel/todo/setup/import failure accepted. Parent execution only."
+    },
+    {
+      "id": "W1-ordinary-query-preservation",
+      "anchor": "  if (redirectPath === \"/onboarding\") {\n    if (leadId) {",
+      "replacement": "  url.search = \"\" // fault: strip ordinary route query\n  if (redirectPath === \"/onboarding\") {\n    if (leadId) {",
+      "oracles": [
+        {
+          "file": "tests/auth-middleware-replay.test.ts",
+          "title": "non-auth app routing does not silently strip ordinary route query parameters",
+          "firstAssertionLine": 35,
+          "code": "ERR_ASSERTION",
+          "operator": "strictEqual",
+          "decodedMessageFragments": [
+            "https://chaarlie.de/quiz",
+            "reason=attention"
+          ],
+          "native": "node"
+        }
+      ],
+      "source": "src/lib/supabase/middleware.ts",
+      "sourceSha256": "b46773cf21b880cb35d2967d4a882be1c5c59c53f2416607b60d3cb8a4c862a7",
+      "anchorOccurrences": 1,
+      "mutatedSha256": "277a7fe92503841d224b5e4344e70299400620ce7396ad870b945c05f594e875",
+      "parseDiagnostics": 0,
+      "executed": false,
+      "scope": "Separate zero-count wrapper closure diagnostics only; original first-frame lines must be rederived after actual retarget text is fixed.",
+      "proofRequirement": "Exactly one selected title per native run, clean pass then intended actual-owner red, restore all source bytes then clean pass; no skip/cancel/todo/setup/import failure accepted. Parent execution only."
+    }
+  ],
+  "limits": "No control proves declared cut preservation because no cuts are proposed. No mutation/runtime outcomes claimed. Browser original169 and Node17/26/35 must be recomputed for any eventual caller retarget snapshots."
+}

@@ -1,0 +1,55 @@
+TAP version 13
+# Subtest: an active field-test enrollment uses its activation time without inventing paid access
+not ok 1 - an active field-test enrollment uses its activation time without inventing paid access
+  ---
+  duration_ms: 2.803417
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-field-test-access.test.ts:2:2387'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        accessState: 'active',
+        artifactLeadId: '22222222-2222-4222-8222-222222222222',
+        paidAt: null,
+        qualifiedAt: '2026-08-10T11:00:00.000Z',
+        quizSourceKind: 'personal_plan',
+        sourceId: '11111111-1111-4111-8111-111111111111',
+    +   sourceKind: 'trial'
+    -   sourceKind: 'field_test'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    accessState: 'active'
+    sourceId: '11111111-1111-4111-8111-111111111111'
+    paidAt: ~
+    qualifiedAt: '2026-08-10T11:00:00.000Z'
+    artifactLeadId: '22222222-2222-4222-8222-222222222222'
+    quizSourceKind: 'personal_plan'
+    sourceKind: 'field_test'
+  actual:
+    accessState: 'active'
+    sourceId: '11111111-1111-4111-8111-111111111111'
+    paidAt: ~
+    qualifiedAt: '2026-08-10T11:00:00.000Z'
+    artifactLeadId: '22222222-2222-4222-8222-222222222222'
+    quizSourceKind: 'personal_plan'
+    sourceKind: 'trial'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan-field-test-access.test.ts:70:10)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 318.717167

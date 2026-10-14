@@ -3,7 +3,6 @@ import test from "node:test"
 
 import { computeNeedPlan } from "../../src/lib/personal-plan/compute-stage1"
 import type { PersonalPlanQuizSubmissionEnvelope } from "../../src/lib/personal-plan-quiz/types"
-import { canonicalizeInitialSnapshotPayload } from "../../src/lib/personal-plan/types"
 import { COMPLETE_V3_PLAN_ENVELOPE } from "./fixtures"
 
 const neutralEnvelope: PersonalPlanQuizSubmissionEnvelope = {
@@ -56,8 +55,8 @@ test("canonical quiz-only computation is byte-stable apart from createdAt", () =
   assert.equal(second.status, "ready")
   if (first.status !== "ready" || second.status !== "ready") return
   assert.deepEqual(
-    canonicalizeInitialSnapshotPayload(first.snapshot),
-    canonicalizeInitialSnapshotPayload(second.snapshot),
+    { ...first.snapshot, createdAt: undefined },
+    { ...second.snapshot, createdAt: undefined },
   )
 })
 
@@ -141,4 +140,36 @@ test("refined projection does not defer a known Shampoo frequency", () => {
   if (result.status !== "ready") return
   assert.ok(!result.snapshot.assessments.resetLoad.missingInputs.includes("shampoo_frequency"))
   assert.ok(!result.snapshot.deferredFacts.includes("shampoo_frequency"))
+})
+
+test("Hair Tools: the persisted snapshot stays tools-off; Stage-1 cards are a read-time decoration", async () => {
+  const { withStage1ToolCards } = await import("../../src/lib/personal-plan/tools/read-view")
+  const result = computeNeedPlan({
+    rawEnvelope: COMPLETE_V3_PLAN_ENVELOPE,
+    artifactId: "55555555-5555-4555-8555-555555555555",
+    projection: "initial_quiz",
+    computationVersion: "stage1-v1",
+    createdAt: "2026-08-07T12:00:00.000Z",
+  })
+  assert.equal(result.status, "ready")
+  if (result.status !== "ready") return
+  // No producer writes a Tool field: not on the snapshot, not in decisions/renderedOrder.
+  for (const key of ["stage1ToolCards", "toolPlan", "toolAssets"]) {
+    assert.equal(key in result.snapshot, false, key)
+  }
+  assert.equal(
+    result.snapshot.renderedOrder.some((category) => String(category).startsWith("tool")),
+    false,
+  )
+  const before = JSON.stringify(result.snapshot)
+  const decorated = withStage1ToolCards(result.snapshot, {
+    facts: { careHabits: null, fieldProvenance: undefined },
+    hasOptionalPage: true,
+  }) as typeof result.snapshot
+  assert.ok(decorated.stage1ToolCards, "the read-time view adds the presentation-only field")
+  assert.equal(decorated.inputHash, result.snapshot.inputHash, "inputHash untouched")
+  assert.equal(JSON.stringify(result.snapshot), before, "the computed snapshot is never mutated")
+  const { stage1ToolCards: _cards, ...rest } = decorated
+  void _cards
+  assert.deepEqual(rest, result.snapshot)
 })

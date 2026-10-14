@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "mask-inci-capture-v1",
+  "productNumber": 11,
+  "role": "primary",
+  "archetypeSlots": ["10 - gloss/lamination treatment (F4, claim-gated)"],
+  "identity": {
+    "brand": "L'Oréal Paris Elvital",
+    "productName": "Glycolic Gloss, 5-Minuten Haar-Laminierung",
+    "packSize": "200 ml",
+    "gtinEan": "3600524128500",
+    "eanSourceNote": "Proposal figure, dm.de + Rossmann.de agree per the URL slugs (both blocked on direct fetch this pass).",
+    "market": "DE (dm.de + Rossmann.de + Müller)"
+  },
+  "rawInci": "AQUA/WATER, CETEARYL ALCOHOL, COCAMIDOPROPYL BETAINE, BEHENTRIMONIUM CHLORIDE, PROPYLENE GLYCOL, AMODIMETHICONE, CI 17200/RED 33, CI 19140/YELLOW 5, COCOS NUCIFERA OIL/COCONUT OIL, SODIUM CHLORIDE, HYDROXYPROPYL GUAR, HYDROXYCITRONELLAL, PHENOXYETHANOL, PPG-1 TRIDECETH-6, ETHANOLAMINE, TRIDECETH-6, POLYQUATERNIUM-37, LIMONENE, LINALOOL, ISOPROPYL ALCOHOL, PROPYLENE GLYCOL DICAPRYLATE/DICAPRATE, CAPRYLYL GLYCOL, ACRYLATES/STEARYL METHACRYLATE COPOLYMER, SORBITAN OLEATE, CETRIMONIUM CHLORIDE, CITRIC ACID, EDTA, HEXYL CINNAMAL, GLYCOLIC ACID, PARFUM/FRAGRANCE",
+  "inciSource": {
+    "url": "aggregated: douglas.de/de/p/5011301009, rossmann.de listing copy, parfumdreams.de listing copy (via web search)",
+    "accessDate": "2026-09-04",
+    "tier": "retailer-aggregated (moderate confidence - direct dm.de and Rossmann.de fetches both blocked this pass; not a single-page verbatim fetch)",
+    "notes": "Glycolic Acid confirmed present near the tail of the list - supports the F4 claim-gated archetype (glycolic acid claim present in both name and formula). Recommend a direct verbatim re-fetch at freeze time if dm.de/Rossmann.de become reachable."
+  },
+  "directions": {
+    "text": "Großzügige Menge auf feuchtes Haar auftragen, um es von den Wurzeln bis in die Spitzen brillant zu versiegeln. 5 Minuten einwirken lassen, gründlich ausspülen.",
+    "contactTimeFound": true,
+    "contactTimeMinutes": "5 (also embedded directly in the product's own name, '5-Minuten Haar-Laminierung')",
+    "source": "Aggregated loreal-paris.de brand descriptions via web search - not a single verbatim page fetch, but the figure is also the branded product name itself.",
+    "confidence": "moderate-high"
+  },
+  "claims": [
+    "19% Gloss-Complex mit Glykolsäure",
+    "versiegelt die Haaroberfläche mit intensivem, langanhaltendem Glanz",
+    "erstes Haar-Laminierungs-Produkt von L'Oréal Paris für zuhause",
+    "für stumpfes, poröses Haar"
+  ],
+  "conflicts": [],
+  "status": "captured",
+  "statusNotes": "INCI and directions both moderate-high confidence via aggregated retailer/brand sources; both dm.de and Rossmann.de were unreachable by direct fetch this pass, so a freeze-time re-verification against a primary page is recommended if either source becomes fetchable."
+}

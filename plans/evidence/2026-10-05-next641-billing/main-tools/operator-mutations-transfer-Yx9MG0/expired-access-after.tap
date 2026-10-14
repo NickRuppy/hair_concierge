@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: active entitlement just beyond the 24h expiry grace reports expired
+ok 1 - active entitlement just beyond the 24h expiry grace reports expired
+  ---
+  duration_ms: 0.727541
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 192.126583

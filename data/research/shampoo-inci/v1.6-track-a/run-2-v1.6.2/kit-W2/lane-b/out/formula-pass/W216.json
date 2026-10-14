@@ -1,0 +1,254 @@
+{
+ "blindId": "W216",
+ "inciFingerprintSha256": "94fe3179afde0532b888bd864b5349e95d5dd1ef42d540de3d9088be2987388e",
+ "phase": "formula-pass (blind, stage A only; no reveal opened)",
+ "standard": "shampoo-classification-v1.6.2",
+ "lane": "lane-b",
+ "identity": {
+  "packSize": "200 ml",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 1,
+  "identityConfidence": "high",
+  "normalization": "No synonym or split entries; normalized positions = packet positions (ID-2).",
+  "e3ProminenceCutoff": "No Parfum/Fragrance declared; E3 preservative fallback = Sodium Salicylate @14 (first listed of the seven; Sodium Benzoate @17 is later); prominent = positions 1-13."
+ },
+ "formulaFacts": {
+  "surfactants": {
+   "definingAnionic": "Sodium Laureth Sulfate @2 (strong anionic, ether type)",
+   "reinforcingRoutes": [],
+   "buffers": [
+    "Cocamidopropyl Betaine @3 (amphoteric)",
+    "Coco-Glucoside @7 (nonionic glucoside)"
+   ],
+   "notCleansing": [],
+   "c3aOrC3b": "none"
+  },
+  "conditioningRoutes": {
+   "cationic_polymer": [
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @11"
+   ],
+   "weak_refatter": [
+    "Glyceryl Oleate @6",
+    "Hydrogenated Vegetable Glycerides Citrate @13"
+   ],
+   "payload_lipid": [],
+   "silicone": [],
+   "pearlizing": []
+  },
+  "humectants": [
+   "Panthenol @8"
+  ],
+  "actives": [
+   "Piroctone Olamine @5 (recognized anti-dandruff active)",
+   "Panthenol @8",
+   "Niacinamide @9",
+   "Bisabolol @10",
+   "Tocopherol @12"
+  ],
+  "recognizedDandruffActives": [
+   "Piroctone Olamine @5"
+  ],
+  "exposure": {
+   "fragrance": "none declared (no Parfum, no allergens)",
+   "coolingAgents": [],
+   "essentialOils": []
+  },
+  "csa": {
+   "listedComfortRoutesProminent": [
+    "Panthenol @8",
+    "Niacinamide @9",
+    "Bisabolol @10"
+   ],
+   "listedHumectantRefattingRoutesProminent": [
+    "Glyceryl Oleate @6",
+    "Panthenol @8"
+   ],
+   "mildBase": "no: prominent Sodium Laureth Sulfate @2",
+   "csaHolds": true
+  },
+  "preservativesAndOther": [
+   "Sodium Chloride @4",
+   "Sodium Salicylate @14",
+   "Sodium Citrate @15",
+   "Citric Acid @16",
+   "Sodium Benzoate @17"
+  ]
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Moderate: C1 - defining anionic Sodium Laureth Sulfate @2 with prominent buffers Cocamidopropyl Betaine @3 and Coco-Glucoside @7, no reinforcing route.",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "E3"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "Moderate: one meaningful system (prominent cationic HPG-HPTC @11) plus light routes (Glyceryl Oleate @6, Hydrogenated Vegetable Glycerides Citrate @13, Panthenol @8). C2 not met (no silicone, payload lipid or pearlizer). Counter-signal: a single guar with weak refatters may give little slip; neighbor low.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "E3",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "Low: a single cationic guar plus weak refatter esters against an effective C1 reset; no silicone, payload lipid, protein or film former.",
+   "ruleIds": [
+    "6.6",
+    "W-LINE",
+    "W2",
+    "W3",
+    "N-ALT"
+   ],
+   "evidence": {
+    "cationic_polymer": [
+     "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride @11"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [
+     "Glyceryl Oleate @6",
+     "Hydrogenated Vegetable Glycerides Citrate @13"
+    ],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Sodium Laureth Sulfate @2",
+     "Cocamidopropyl Betaine @3",
+     "Coco-Glucoside @7"
+    ],
+    "humectantContext": [
+     "Panthenol @8"
+    ],
+    "excluded": [
+     "Piroctone Olamine @5, Niacinamide @9, Bisabolol @10, Tocopherol @12 (actives)"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": {
+     "position": 8,
+     "inci": "Panthenol",
+     "classes": [
+      "sub1_active"
+     ]
+    },
+    "cap": {
+     "e3Point": 14
+    },
+    "alphabeticalRun": null,
+    "skipped": [
+     "w_line_skipped:Piroctone Olamine@5 (clause ii: Coco-Glucoside@7 cleansing surfactant listed after it before the cap)"
+    ],
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "light",
+   "persistence": "low",
+   "resetCapacity": "moderate",
+   "counterevidence": "Two families (cationic_polymer + weak_refatter, W2).",
+   "whyThisBand": "One light cationic polymer plus weak refatters; nothing converges toward a persistent deposit.",
+   "whyNotNeighborBand": "Not moderate: the only families are one guar polymer (@11, after the sub-1 % zone marked by Panthenol @8) and weak_refatter esters, facing a moderate SLES/betaine/glucoside reset (W2 reason: weak refatters plus one light polymer).",
+   "confidenceLimitingFactor": "Guar deposition could be noticeable on fine hair; INCI-only."
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "low",
+   "neighboringAlternative": "scalp_active",
+   "rationale": "Provisional, formula-only (claims hidden, 3.1): no exact-product claim is visible, so no focus candidate exists and 7.2 (\"unsupported/absent claims\") gives general. Formula care-direction verdict: nonspecific. Neighbor scalp_active: Piroctone Olamine @5 plus prominent Panthenol/Niacinamide/Bisabolol make an anti-dandruff or scalp-comfort positioning the most plausible specialist role. Final focus is decided only after the reveal (3.2, 7.2, F1-F7).",
+   "ruleIds": [
+    "3.1",
+    "7.2",
+    "7.3",
+    "F1",
+    "N-ALT"
+   ],
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "Panthenol @8"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "HPG-HPTC @11",
+     "Glyceryl Oleate @6"
+    ],
+    "limitation": "Light generic conditioning; no coherent repair or moisture cluster."
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "No claim visible in the blind pass; formula verdict only. Light generic conditioning; no coherent repair or moisture cluster.",
+   "decisionTrace": "Blind: claim direction null; formula verdict nonspecific; decision reason: no candidate claim, provisional general."
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "low",
+   "neighboringAlternative": [
+    "scalp_active"
+   ],
+   "rationale": "Provisional, formula-only: secondary needs distinct exact-product positioning (Section 8), which is hidden in the blind pass; empty default.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3",
+    "N-ALT"
+   ],
+   "decisionTrace": "Empty default considered; no claims visible; no secondary selected."
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "low",
+   "neighboringAlternative": "frequent",
+   "rationale": "Provisional, formula-only: usage triggers need moderate/high-graded claims or directions (Section 9, CL-SRC), hidden in the blind pass; default regular. Neighbor: cleansingStrength is not strong, so explicit frequency wording (U2) could fire frequent.",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U4",
+    "CL-SRC",
+    "N-ALT"
+   ],
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": []
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "low",
+   "neighboringAlternative": "targeted",
+   "rationale": "Provisional, formula-only: positioning (SC1) is hidden, so the default is not_targeted. CSA holds via prominent listed comfort routes Panthenol @8, Niacinamide @9, Bisabolol @10 and refatting route Glyceryl Oleate @6; fragrance-free (supportive signal only); MB does not apply (prominent SLES @2). A sensitive/dry-scalp claim graded moderate/high would make it targeted.",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "MB",
+    "SC1",
+    "E4",
+    "N-ALT"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Supported: the complete INCI contains Piroctone Olamine @5, a recognized anti-dandruff active (Section 11). Formula-only; whether a dandruff target is projected depends on a dandruff claim (S-DANDRUFF, R17.3), hidden in the blind pass.",
+   "ruleIds": [
+    "11",
+    "S-DANDRUFF",
+    "R17.3"
+   ]
+  }
+ },
+ "unresolvedMaterialIngredients": []
+}

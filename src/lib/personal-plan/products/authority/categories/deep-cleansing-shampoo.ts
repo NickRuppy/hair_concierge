@@ -1,4 +1,7 @@
+import { compareRankableCandidates, type RankableCandidate } from "../../candidate-ranking"
+import { candidateDimensionCoverage } from "../../comparison-dimensions"
 import type { Stage3CriterionResult } from "../../contracts"
+import { evaluateGateCriteria } from "../fit-criteria"
 import type {
   Stage3AuthorityEvaluation,
   Stage3AuthorityInput,
@@ -45,7 +48,10 @@ function evaluateProduct(
         "Eine bekannte Reaktion verhindert die Empfehlung.",
       ),
     )
-  if (!product.isActive || product.lifecycleStatus !== "active")
+  if (
+    !product.isActive ||
+    (product.lifecycleStatus !== null && product.lifecycleStatus !== "active")
+  )
     criteria.push(
       criterion(
         "deep_cleansing.lifecycle",
@@ -85,12 +91,27 @@ function evaluateProduct(
         : "Das Protokoll ist nicht vollständig verifiziert.",
     ),
   )
-  const verdict = criteria.some((entry) => entry.result === "fail")
-    ? ("mismatch" as const)
-    : criteria.some((entry) => entry.result === "unknown")
-      ? ("unknown" as const)
-      : ("ideal" as const)
-  return { criteria, verdict }
+  // This is an S2 ranking signal, never a gate: a general cleanser stays Passt.
+  const scalpOiliness = input.selectionProfile.scalpOiliness
+  if (
+    input.role === "residue_reset" &&
+    scalpOiliness !== null &&
+    product.spec.targetScalpTypes?.includes(scalpOiliness)
+  )
+    criteria.push(
+      criterion(
+        "deep_cleansing.scalp_target",
+        "Kopfhauttyp",
+        "pass",
+        "Passt zu deinem Kopfhauttyp.",
+      ),
+    )
+  const missing = commonUnknownFacts(
+    { ...input, productFacts: product },
+    { requiresSuitableThickness: false },
+  )
+  missing.push(...criteria.filter((row) => row.result === "unknown").map((row) => row.criterionId))
+  return evaluateGateCriteria(input, product, criteria, missing)
 }
 
 export function evaluateDeepCleansingAuthority(
@@ -113,10 +134,30 @@ export function evaluateDeepCleansingAuthority(
   if (!input.productFacts) {
     const candidate = input.recommendationCandidates
       .filter((item) => item.recommendable && item.isActive && item.lifecycleStatus === "active")
-      .find((item) => evaluateProduct(input, item)?.verdict === "ideal")
+      .flatMap((item) => {
+        const assessment = evaluateProduct(input, item)
+        return assessment?.verdict === "ideal"
+          ? [
+              {
+                item,
+                rank: {
+                  verdict: assessment.verdict,
+                  targetMatchCount: candidateDimensionCoverage(
+                    sharedInput,
+                    item,
+                    assessment.criteria,
+                  ).matches,
+                  cautionCount: 0,
+                  catalogSortOrder: item.catalogSortOrder,
+                  priceEur: item.priceEur ?? null,
+                  productId: item.productId,
+                } satisfies RankableCandidate,
+              },
+            ]
+          : []
+      })
+      .sort((left, right) => compareRankableCandidates(left.rank, right.rank))[0]?.item
     return knownEvaluation(sharedInput, {
-      // A recommendation can be ideal; an absent owned product cannot be.
-      // Keep the uncovered state explicit when the catalog yields no candidate.
       verdict: candidate ? "ideal" : "unknown",
       criteria: [],
       allowedActions: candidate ? ["plan_recommendation", "leave_uncovered"] : ["leave_uncovered"],
@@ -125,19 +166,20 @@ export function evaluateDeepCleansingAuthority(
       recommendationFactFingerprint: candidate?.factFingerprint ?? null,
     })
   }
-  const missing = commonUnknownFacts(sharedInput)
-  if (missing.length > 0) return unknownEvaluation(sharedInput, missing)
   const assessment = evaluateProduct(input, input.productFacts)
   if (!assessment) return unsupportedEvaluation(sharedInput, "deep_cleansing_target_unavailable")
-  if (assessment.verdict === "unknown") {
-    return unknownEvaluation(
-      sharedInput,
-      assessment.criteria
-        .filter((entry) => entry.result === "unknown")
-        .map((entry) => entry.criterionId),
-      assessment.criteria,
-    )
-  }
+  if (assessment.verdict === "unknown")
+    return unknownEvaluation(sharedInput, assessment.missing, assessment.criteria)
+  const replacement =
+    assessment.verdict === "mismatch"
+      ? evaluateDeepCleansingAuthority({
+          ...input,
+          productFacts: null,
+          capturedProductId: null,
+          subjectIdentity: null,
+        })
+      : null
+  const recommendation = replacement?.status === "known" ? replacement.recommendation : null
   return knownEvaluation(sharedInput, {
     verdict: assessment.verdict,
     criteria: assessment.criteria,
@@ -145,10 +187,13 @@ export function evaluateDeepCleansingAuthority(
       assessment.verdict === "ideal"
         ? ["keep_owned"]
         : assessment.verdict === "mismatch"
-          ? ["acknowledge_override"]
+          ? recommendation
+            ? ["acknowledge_override", "plan_recommendation", "leave_uncovered"]
+            : ["acknowledge_override", "leave_uncovered"]
           : ["leave_uncovered"],
-    recommendation: null,
+    recommendation,
     productFactFingerprint: input.productFacts.factFingerprint,
-    recommendationFactFingerprint: null,
+    recommendationFactFingerprint:
+      replacement?.status === "known" ? replacement.recommendationFactFingerprint : null,
   })
 }

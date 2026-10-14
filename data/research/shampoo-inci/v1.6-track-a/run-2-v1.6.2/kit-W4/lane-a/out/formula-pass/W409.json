@@ -1,0 +1,229 @@
+{
+ "blindId": "W409",
+ "inciFingerprintSha256": "c9faf0a554eb9cfc104111236fb4f01e3302870bca19e9218540a49a7ddb83bb",
+ "lane": "lane-a",
+ "phase": "1-blind-formula-pass",
+ "policyId": "shampoo-classification-v1.6.2",
+ "formulaBlock": {
+  "packSize": "250 ml",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high",
+  "normalization": "Packet list already normalized (synonym variants are single entries); positions cited are normalized one-based positions (ID-2), identical to the packet order.",
+  "normalizedInci": [
+   "1. AQUA",
+   "2. SODIUM LAURETH SULFATE",
+   "3. COCAMIDOPROPYL BETAINE",
+   "4. SODIUM CHLORIDE",
+   "5. GLYCERIN",
+   "6. HYDROLYZED KERATIN",
+   "7. GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+   "8. ZINC SULFATE",
+   "9. MENTHOL",
+   "10. CITRIC ACID",
+   "11. PARFUM",
+   "12. SODIUM BENZOATE"
+  ],
+  "e3Point": "PARFUM@11 (fragrance marker); prominent = positions 1-10"
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`moderate` by C1: defining anionic Sodium Laureth Sulfate@2, prominent buffer Cocamidopropyl Betaine@3, no reinforcing strong anionic. Zinc Sulfate@8 is an inorganic salt (no route).",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4",
+    "E3"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "`moderate`: one meaningful conditioning system — prominent cationic Guar Hydroxypropyltrimonium Chloride@7 — with light routes Hydrolyzed Keratin@6 and humectant Glycerin@5. C2 not met (no early silicone, no payload lipid, no pearlizing/fatty route). Neighbor `low`: short cleansing-led formula whose only slip route is one guar.",
+   "ruleIds": [
+    "5",
+    "C2",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "cationic_polymer": [
+     "Guar Hydroxypropyltrimonium Chloride@7"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [],
+    "silicone": [],
+    "protein_film": [
+     "Hydrolyzed Keratin@6"
+    ],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "anionic: Sodium Laureth Sulfate@2",
+     "amphoteric: Cocamidopropyl Betaine@3"
+    ],
+    "humectantContext": [
+     "Glycerin@5"
+    ],
+    "excluded": [
+     "Zinc Sulfate@8 (inorganic salt, no deposition role)",
+     "Menthol@9 (cooling agent)",
+     "Sodium Chloride@4, Citric Acid@10"
+    ],
+    "unresolved": []
+   },
+   "wLineRecord": {
+    "wLine": "11 PARFUM",
+    "candidateClasses": [
+     "fragrance"
+    ],
+    "cap": "e3Point 11 (Parfum)",
+    "alphabeticalRun": "none",
+    "skipped": [],
+    "testedCandidate": "Parfum@11 is the only candidate up to the cap (Glycerin, Zinc Sulfate and Menthol are on none of the lists a-c): (i) Sodium Laureth Sulfate@2 before it; (ii) nothing between it and the cap -> plausible; W-line = cap",
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "light — one guar and one hydrolyzed protein; no silicone, no lipid, no refatter.",
+   "persistence": "low — hydrolyzed keratin is a water-soluble, weakly retained film in rinse-off; a single guar.",
+   "resetCapacity": "moderate — C1 ether-sulfate chassis with a betaine buffer.",
+   "counterevidence": "Two deposition families (cationic_polymer, protein_film), both prominent (@6, @7).",
+   "whyThisBand": "Two light, low-persistence routes in a short 12-entry formula with an effective ordinary reset.",
+   "whyNotNeighborBand": "Not `moderate` (W2 specific evidence): the second family is a hydrolyzed protein, a low-molecular, water-soluble film that rinses largely away, and the only other route is one guar; there is no silicone, lipid, refatter or film former to make their combined residue noticeable, and the buffered sulfate reset faces only these light routes.",
+   "confidenceLimitingFactor": "two families present (W2) and their doses unknown; guar charge density unknown.",
+   "rationale": "`low`: light protein + single guar under an ordinary reset; W2 reasoning names why their combination stays below noticeable. Neighbor `moderate`.",
+   "ruleIds": [
+    "6.6",
+    "W2",
+    "W-LINE",
+    "W3",
+    "N-ALT"
+   ]
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "low",
+   "neighboringAlternative": "repair",
+   "provisional": true,
+   "careDirection": {
+    "verdict": "nonspecific (provisional)",
+    "moistureRoutes": [
+     "Glycerin@5"
+    ],
+    "repairRoutes": [
+     "Hydrolyzed Keratin@6"
+    ],
+    "sharedConditioningRoutes": [
+     "Guar Hydroxypropyltrimonium Chloride@7"
+    ],
+    "limitation": "one protein token and one humectant: neither cluster is coherent on its own"
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Claims are hidden in the blind pass; focus is claim-led (7.2) and cannot be set from the formula alone.",
+   "decisionTrace": "Blind pass: claim direction null (hidden). Placeholder `general` (7.1 honest fallback) until reveal; formula routes recorded for reconciliation (3.2).",
+   "rationale": "Provisional (formula-only): `general` because no claim is visible; the formula care-direction verdict is recorded before claims (7.3) and the neighbor names the most plausible formula-compatible focus.",
+   "ruleIds": [
+    "3.1",
+    "7.2",
+    "7.3",
+    "F1",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "low",
+   "neighboringAlternative": [
+    "repair"
+   ],
+   "provisional": true,
+   "decisionTrace": "Blind pass: empty default considered; no distinct positioning visible (claims hidden), so no secondary can be selected (Section 8).",
+   "rationale": "Provisional (formula-only): `[]` — Section 8 requires distinct exact-product positioning, which is hidden in the blind pass.",
+   "ruleIds": [
+    "3.1",
+    "8",
+    "N-ALT"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "low",
+   "neighboringAlternative": "frequent",
+   "provisional": true,
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Provisional (formula-only): default `regular` (Section 9); every non-default trigger needs a moderate/high-graded claim or direction, all hidden in the blind pass. cleansingStrength `moderate` fixes which triggers remain possible: `frequent` possible with U2 wording; `alternating` impossible (not strong); `treatment` impossible (no active).",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "CL-SRC"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "low",
+   "neighboringAlternative": "targeted",
+   "provisional": true,
+   "csaRoute": "humectant/refatting list: Glycerin@5 (prominent); comfort list: none prominent",
+   "mildBase": "excluded — Sodium Laureth Sulfate@2 is a prominent strong anionic",
+   "rationale": "Provisional `not_targeted` (positioning half SC1 hidden in the blind pass). Formula half CSA is MET via listed prominent route(s): humectant/refatting list: Glycerin@5 (prominent); comfort list: none prominent. MB: excluded — Sodium Laureth Sulfate@2 is a prominent strong anionic. Counter-signal: prominent cooling agent Menthol@9 -> a `targeted` value would be at most moderate (neighbor not_targeted). S-SENSITIVE would fail (no prominent comfort route, no MB); S-DRY formula route present. If reveal shows a moderate/high-graded E2 sensitive or dry-scalp unit, the value becomes `targeted`.",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "MB",
+    "E3",
+    "E4",
+    "SC1"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "`not_supported`: the complete INCI contains none of Piroctone Olamine, Climbazole, Selenium Sulfide or Selenium Disulfide (Section 11, DS1).",
+   "ruleIds": [
+    "11",
+    "DS1",
+    "ID-1"
+   ]
+  }
+ },
+ "formulaFacts": {
+  "surfactants": [
+   "Sodium Laureth Sulfate@2 strong anionic ether type (defining)",
+   "Cocamidopropyl Betaine@3 amphoteric (buffer)"
+  ],
+  "conditioningRoutes": [
+   "cationic: Guar Hydroxypropyltrimonium Chloride@7",
+   "protein: Hydrolyzed Keratin@6",
+   "humectant: Glycerin@5"
+  ],
+  "comfortRoutes": "E4 comfort list: none; E4 humectant/refatting: Glycerin@5 (prominent)",
+  "actives": [
+   "Zinc Sulfate@8 (not a recognized dandruff active)",
+   "Menthol@9"
+  ],
+  "exposureFlags": [
+   "Parfum@11",
+   "Menthol@9 (prominent cooling agent)"
+  ],
+  "preservatives": [
+   "Sodium Benzoate@12"
+  ]
+ },
+ "unresolvedMaterialIngredients": [],
+ "notes": []
+}

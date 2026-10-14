@@ -1,0 +1,220 @@
+{
+  "blindId": "T310",
+  "inciFingerprintSha256": "105e7ebd0649e688f2427321a0648b9945d539dd1a158dcf0640d02303771f67",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "'Aqua (Water, Eau)' one entry; 'Parfum (Fragrance)' one entry. E3: Parfum at 18; prominent = 1-17.",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "rawInciCount": 20
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: SLES (2) defining, buffered by Cocamidopropyl Betaine (4) and Coco-Glucoside (10) -> moderate.",
+      "neighboringAlternative": "none",
+      "counterSignal": "None material."
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "C2 met with a payload lipid in place of the silicone: prominent Hydrogenated Castor Oil (9) + cationic guar (6) + pearlizing Glycol Distearate (12) + humectant Panthenol (7); also W-RICH.",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "No silicone; Hydrogenated Castor Oil next to Glycol Distearate/Laureth-4/Coco-Glucoside/Glyceryl Oleate likely belongs to a pearlizing/opacifier blend at low level, so care may be bounded (moderate)."
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "W-RICH (waxy Hydrogenated Castor Oil 9 + guar 6) with a moderate C1 reset -> not limited reset; plausible bounded residue -> moderate.",
+      "neighboringAlternative": "high",
+      "counterSignal": "W-RICH and a waxy lipid with a prominent guar plus two weak refatters.",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "prominent guar + waxy lipid + weak refatters"
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "hydrogenated (waxy) lipid is more substantive"
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES + betaine + glucoside"
+        }
+      },
+      "whyThisBand": "Converging guar + lipid routes; effective reset bounds the residue.",
+      "whyNotNeighborBand": "high needs weak reset with W-RICH or multiple persistent systems not offset; reset is moderate and there is no silicone. low would understate guar + waxy lipid convergence (W2).",
+      "evidenceByFamily": {
+        "cationic_polymer": [
+          [
+            "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+            6
+          ]
+        ],
+        "payload_lipid": [
+          [
+            "Hydrogenated Castor Oil",
+            9
+          ]
+        ],
+        "weak_refatter": [
+          [
+            "Glyceryl Oleate",
+            11
+          ],
+          [
+            "PEG-7 Glyceryl Cocoate",
+            15
+          ]
+        ],
+        "context_humectant": [
+          [
+            "Panthenol",
+            7
+          ]
+        ],
+        "excluded": [
+          [
+            "Glycol Distearate",
+            12,
+            "pearlizer"
+          ],
+          [
+            "Laureth-4",
+            14,
+            "thickener"
+          ],
+          [
+            "Propylene Glycol",
+            13,
+            "solvent"
+          ],
+          [
+            "Aloe Barbadensis Leaf Extract",
+            8,
+            "extract"
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            4
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Coco-Glucoside",
+            10
+          ]
+        ],
+        "unresolved": []
+      }
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Piroctone Olamine (5) present.",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "low",
+      "rationale": "Piroctone Olamine (5); needs an E2 dandruff claim."
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low"
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "rationale": "treatment needs dandruff claim (U3)."
+    },
+    "scalpComfortTarget": {
+      "value": "unknown",
+      "confidence": "low",
+      "rationale": "CSA passes (Panthenol 7 comfort; Hydrogenated Castor Oil 9, Glyceryl Oleate 11, PEG-7 Glyceryl Cocoate 15 humectant/refatting)."
+    }
+  },
+  "careDirection": {
+    "verdict": "not_applicable",
+    "rationale": "Active-led formula."
+  },
+  "formulaGateFacts": {
+    "csa": "pass",
+    "promComfortRoute": true,
+    "promHumectantRoute": true,
+    "sOilyFormulaClause": "fail (conditioning high)"
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 2,
+      "role": "defining anionic, ether type"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 4,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Piroctone Olamine",
+      "position": 5,
+      "role": "recognized anti-dandruff active"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 6,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 7,
+      "role": "E4 comfort route; humectant"
+    },
+    {
+      "ingredient": "Aloe Barbadensis Leaf Extract",
+      "position": 8,
+      "role": "extract, not a humectant route"
+    },
+    {
+      "ingredient": "Hydrogenated Castor Oil",
+      "position": 9,
+      "role": "payload_lipid (waxy, 6.3)"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 10,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Glyceryl Oleate",
+      "position": 11,
+      "role": "weak_refatter"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 12,
+      "role": "pearlizing route; excluded for weight"
+    },
+    {
+      "ingredient": "Laureth-4",
+      "position": 14,
+      "role": "low-ethoxylate thickener, not a route"
+    },
+    {
+      "ingredient": "PEG-7 Glyceryl Cocoate",
+      "position": 15,
+      "role": "weak_refatter"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

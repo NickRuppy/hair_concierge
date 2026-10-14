@@ -1,0 +1,24 @@
+{
+  "status": "read-only complete; no cuts",
+  "counts": {
+    "R": 17,
+    "F": 3,
+    "C": 0,
+    "D": 0
+  },
+  "phases": [
+    20,
+    20,
+    20
+  ],
+  "pins": {
+    "manifest.json": "7331701521f4810b8fce14b0d7c90130ae4f52dfe35420b684059a8918e073c0",
+    "ledger.json": "0409abc241a3df7624f49ae4a4279a8d50042d526b91b022e71480946a8dad95",
+    "layer-plan.md": "8aecc0415e7ee2e80a2e4dcaa87c4ae0ef00296c63fcd3861077d7e9237092c6",
+    "gap-probes.json": "ce9dc1e81898670ef7cea5a9dfaabbd96b18c63cdfdb65124b5e5045f464eda0"
+  },
+  "readsetVerified": 36,
+  "snapshotsVerified": 6,
+  "executions": 0,
+  "repoWrites": 0
+}

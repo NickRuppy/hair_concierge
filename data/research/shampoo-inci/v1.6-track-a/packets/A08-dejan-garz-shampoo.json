@@ -1,0 +1,89 @@
+{
+  "slot": "A08",
+  "productId": "1f51a69f-c946-4898-9091-2fd2c59fb467",
+  "name": "Dejan Garz The Foundation Shampoo (catalog: Dejan Garz Shampoo)",
+  "brand": "Dejan Garz",
+  "packSize": "300 ml",
+  "gtins": [
+    "4270004570106"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dejangarz.com/products/shampoo",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "manufacturer_de",
+      "sourceKind": "manufacturer_de",
+      "gtinShown": "none on page (300 ml shown; page title 'The Foundation Shampoo'; accordion 'Inhaltsstoffe')",
+      "inciVerbatim": "Aqua • Sodium Laureth Sulfate • Cocamidopropyl Betaine • Glycerin • Coco-Glucoside • Panthenol • Salicylic Acid • Glyceryl Oleate • Sodium Hyaluronate • Hydroxypropyl Guar Hydroxypropyltrimonium Chloride • Hydrogenated Palm Glycerides Citrate • Quaternium-80 • Propylene Glycol • Tocopherol • Lecithin • Ascorbyl Palmitate • Citric Acid • Sodium Chloride • Sodium Benzoate • Potassium Sorbate • Parfum • Hexyl Cinnamal • Linalool",
+      "claimsVerbatim": "Das Foundation Shampoo | Effektive Reinigung | Mein Shampoo ist ein Leichtgewicht, das mit Panthenol und Glycerin Feuchtigkeit spendet, ohne deine Kopfhaut auszutrocknen. Perfekt für alle Haartypen! Damit dein Haar genau das bekommt, was es braucht - natürliche Reinigung. | Deep Hydration | All Hair Types | Lightweight Formula | Regulates Oil Production on the Scalp | Anti Frizz | Geeignet für alle Haartypen, von dünn bis dick, für eine effektive Reinigung.",
+      "directionsVerbatim": "Eine kleine Menge Shampoo in die Hand geben, aufschäumen, auf dem ganzen Kopf verteilen, sanft in die Kopfhaut einmassieren und gründlich ausspülen. | Verwende das Shampoo bei jeder Haarwäsche, um dein Haar und deine Kopfhaut frisch und sauber zu halten."
+    },
+    {
+      "url": "https://www.dm.de/p/d/3063729/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "4270004570106 (dm-Artikelnummer 3063729; 'Shampoo The Foundation, 300 ml'; online 'Momentan nicht lieferbar' at retrieval)",
+      "inciVerbatim": "INGREDIENTS: AQUA, SODIUM LAURETH SULFATE, COCAMIDOPROPYL BETAINE, GLYCERIN, COCO-GLUCOSIDE, PANTHENOL, SALICYLIC ACID, GLYCERYL OLEATE, SODIUM HYALURONATE, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, HYDROGENATED PALM GLYCERIDES CITRATE, QUATERNIUM- 80, PROPYLENE GLYCOL, TOCOPHEROL, LECITHIN, ASCOBYL PALMITATE, CITRIC ACID, SODIUM CHLORIDE, SODIUM BENZOATE, POTASSIUM SORBATE, PARFUM, HEXYL CINNAMAL, LINALOOL.",
+      "claimsVerbatim": "Sanfte & gründliche Reinigung für ein frisches Haargefühl | Rückfettender Wirkstoffkomplex schützt die Kopfhaut während der Anwendung | Befreit effektiv von Stylingrückständen & Verschmutzungen | Zero-Gravity-Conditioning-Effekt minimiert Frizz am Haaransatz | Wirkung: Pflege, leichte Kämmbarkeit, Anti-Frizz | Produkteigenschaften: vegan | Haartyp: alle Haartypen",
+      "directionsVerbatim": "Anwendung: Trage eine kleine Menge auf die Kopfhaut auf und schäume sie in kreisenden Bewegungen auf. Die Reinigung der Haarlängen während des Abspülens der Kopfhaut mit Wasser reicht aus! Anschließend ist der Conditioner Pflicht."
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-dejan-garz-the-foundation-shampoo/p/4270004570106",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "gtinShown": "4270004570106 (URL + schema.org sku; Rossmann Artikelnummer 208798; 300 ml)",
+      "inciVerbatim": "AQUA, SODIUM LAURETH SULFATE, COCAMIDOPROPYL BETAINE, GLYCERIN, COCO-GLUCOSIDE, PANTHENOL, SALICYLIC ACID, GLYCERYL OLEATE, SODIUM HYALURONATE, HYDROXYPROPYL GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, HYDROGENATED PALM GLYCERIDES CITRATE, QUATERNIUM- 80, PROPYLENE GLYCOL, TOCOPHEROL, LECITHIN, ASCOBYL PALMITATE, CITRIC ACID, SODIUM CHLORIDE, SODIUM BENZOATE, POTASSIUM SORBATE, PARFUM, HEXYL CINNAMAL, LINALOOL.",
+      "claimsVerbatim": "Die ausbalanciert reinigende Formulierung befreit das Haar von Stylingrückständen und Verschmutzungen, ohne es zu strapazieren. | Es besitzt einen Zero-Gravity-Conditioning- Effekt, der gegen Frizz am Haaransatz wirkt. | Ein rückfettender Wirkstoff Komplex schont die Kopfhaut während der Reinigung. | sanfte & gründliche Reinigung für ein frisches Haargefühl | minimiert Frizz am Haaransatz",
+      "directionsVerbatim": "(section 'Anwendung und Gebrauch' present but empty)"
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "inci_typo_between_sources",
+      "quote": "manufacturer: 'Ascorbyl Palmitate' vs dm and Rossmann: 'ASCOBYL PALMITATE'; dm/Rossmann also 'QUATERNIUM- 80' (space) vs manufacturer 'Quaternium-80'",
+      "resolution": "Non-material. Same list length (23) and order in all three sources; the retailer strings are one shared supplier-feed typo/space. Manufacturer spelling used."
+    }
+  ],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Betaine",
+    "Glycerin",
+    "Coco-Glucoside",
+    "Panthenol",
+    "Salicylic Acid",
+    "Glyceryl Oleate",
+    "Sodium Hyaluronate",
+    "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+    "Hydrogenated Palm Glycerides Citrate",
+    "Quaternium-80",
+    "Propylene Glycol",
+    "Tocopherol",
+    "Lecithin",
+    "Ascorbyl Palmitate",
+    "Citric Acid",
+    "Sodium Chloride",
+    "Sodium Benzoate",
+    "Potassium Sorbate",
+    "Parfum",
+    "Hexyl Cinnamal",
+    "Linalool"
+  ],
+  "canonicalReason": "Manufacturer DE page (dejangarz.com) shows the full 23-item list for 'The Foundation Shampoo' 300 ml; dm.de and Rossmann (both GTIN 4270004570106) agree on order and content except a shared typo (Ascobyl / 'Quaternium- 80'). Unchanged vs v1.3 capture (2026-08-10, manufacturer page). Manufacturer spelling adopted.",
+  "inciFingerprintSha256": "571fec0717ab082a937b7fcadf0e886dc73b356c7d45f4c33fb1fbcde5b83742",
+  "normalization": "Split the canonical INCI on ',' (or '|' / '•' separators where the source uses them; dm renders a non-breaking hyphen as '|' inside names, e.g. 'COCO|GLUCOSIDE' = 'Coco-Glucoside'); per ingredient: trim, collapse internal whitespace, merge split synonym entries (e.g. 'Aqua (Water, Eau)' stays one item), strip trailing full stop; canonicalInci keeps the published capitalisation/asterisks; for the hash each item is lower-cased; items joined with '|' and sha256 over the UTF-8 string.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Catalog name 'Dejan Garz Shampoo' = 'The Foundation Shampoo' (300 ml, GTIN 4270004570106, same as v1.3 formula-source). Not 'The Sensitive' shampoo (dm 12,95 EUR, separate product).",
+    "Manufacturer page itself shows no GTIN; GTIN anchored by dm + Rossmann.",
+    "dm.de showed the shampoo as 'Momentan nicht lieferbar' (online) on 2026-10-09 while the conditioner etc. are 'Lieferbar'; Rossmann lists it as lieferbar. Not a delisting, just worth watching.",
+    "Claim-INCI check: Panthenol, Glycerin, Sodium Hyaluronate present; 'rückfettend' complex = Glyceryl Oleate / Hydrogenated Palm Glycerides Citrate / Lecithin (no named ingredient missing). Page claims 'natürliche Reinigung' on a Sodium Laureth Sulfate base - marketing wording, not an ingredient claim. No conflict.",
+    "Manufacturer page claim 'Regulates Oil Production on the Scalp' is a benefit claim without a named active; Salicylic Acid is present (position 7)."
+  ]
+}

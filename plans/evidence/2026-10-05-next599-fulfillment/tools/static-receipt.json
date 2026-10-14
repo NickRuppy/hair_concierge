@@ -1,0 +1,71 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA256": "c03eb01e9d76ae5743ec83f15a64de8a486803caf7f1ce4e0dc37478be4f59d9",
+  "checks": {
+    "editor-check.log": {
+      "sha256": "a3dc76b187be51a2a65d846f8c7a8848c24446c8bfbe0105f694e9c44fbf5ace",
+      "exitCode": 0,
+      "result": {
+        "mode": "check",
+        "phase": "before",
+        "counts": {
+          "before": 75,
+          "transfer": 75,
+          "cut": 74
+        },
+        "unrelatedCallbacks": 73,
+        "unchangedRetainedCallbacks": 73,
+        "parsedPhaseFiles": 24,
+        "sourceControlsParsed": 6,
+        "readsetGuards": 140,
+        "dependencyFiles": 88,
+        "repositoryWrites": 0,
+        "childrenStarted": 0
+      },
+      "preload": {
+        "staticReadOnlyEnforced": true,
+        "attemptedWrites": 0,
+        "attemptedChildren": 0
+      }
+    },
+    "controls-check.log": {
+      "sha256": "6d35ad11e44064af7f8bddf08dfabffa64f53554093e9b68dcda0b43863d697f",
+      "exitCode": 0,
+      "result": {
+        "mode": "check",
+        "phase": "before",
+        "controls": 6,
+        "allUniqueOwnersParsed": true,
+        "allControlsParsed": true,
+        "phaseOracles": "exact assertion startLine and text in transfer/cut",
+        "selectedTestCount": 1,
+        "repositoryWrites": 0,
+        "runtimeRuns": 0,
+        "childrenStarted": 0
+      },
+      "preload": {
+        "staticReadOnlyEnforced": true,
+        "attemptedWrites": 0,
+        "attemptedChildren": 0
+      }
+    }
+  },
+  "originalReadset49Unchanged": true,
+  "all8CurrentBeforeHashesMatch": true,
+  "prospectiveCounts": {
+    "before": 75,
+    "transfer": 75,
+    "cut": 74
+  },
+  "untouchedCallbacks": 73,
+  "heldFUnchanged": 10,
+  "controls": 6,
+  "runtimeExecution": "NOT RUN",
+  "ownerImports": 0,
+  "repositoryWrites": 0,
+  "logsWrittenOnlyUnderTmp": true,
+  "toolHashesSHA256": "6b3707b23ca18e72585fbb699294f0594ea857ccd22203cc2c193ae8056f4d99",
+  "metadataDispositionSHA256": "d3db02a31682800f63ef7f67a271481cad2eac4d483d273bc657f1703b06a97f"
+}

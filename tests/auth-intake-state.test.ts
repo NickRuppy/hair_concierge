@@ -4,7 +4,6 @@ import test from "node:test"
 import {
   canBypassLegacyOnboardingForPersonalPlanRoutine,
   getAuthenticatedAppRedirect,
-  hasQuizDiagnostics,
   isPersonalPlanOnboardingBypassRoute,
   resolveIntakeState,
 } from "../src/lib/auth/intake-state"
@@ -21,25 +20,6 @@ const completeQuizProfile = {
   concerns: ["dryness"],
 }
 
-test("hasQuizDiagnostics returns false when hair profile is missing", () => {
-  assert.equal(hasQuizDiagnostics(null), false)
-})
-
-test("hasQuizDiagnostics accepts a completed no-issue scalp answer", () => {
-  assert.equal(hasQuizDiagnostics({ ...completeQuizProfile, scalp_condition: null }), true)
-})
-
-test("hasQuizDiagnostics requires every other quiz-written field", () => {
-  const missingDensityProfile: Partial<typeof completeQuizProfile> = { ...completeQuizProfile }
-  delete missingDensityProfile.density
-
-  assert.equal(hasQuizDiagnostics(missingDensityProfile), false)
-  assert.equal(hasQuizDiagnostics({ ...completeQuizProfile, density: null }), false)
-  assert.equal(hasQuizDiagnostics({ ...completeQuizProfile, chemical_treatment: [] }), false)
-  assert.equal(hasQuizDiagnostics({ ...completeQuizProfile, concerns: null }), false)
-  assert.equal(hasQuizDiagnostics({ ...completeQuizProfile, concerns: undefined }), false)
-})
-
 test("resolveIntakeState returns ready when onboarding is already completed", () => {
   assert.equal(resolveIntakeState({ onboarding_completed: true }, null), "ready")
 })
@@ -49,10 +29,6 @@ test("resolveIntakeState returns needs_onboarding for quiz-complete users", () =
     resolveIntakeState({ onboarding_completed: false }, completeQuizProfile),
     "needs_onboarding",
   )
-})
-
-test("resolveIntakeState returns needs_quiz for quizless users", () => {
-  assert.equal(resolveIntakeState({ onboarding_completed: false }, null), "needs_quiz")
 })
 
 // partner-access-robust: an existing account claiming a partner invitation
@@ -151,19 +127,6 @@ test("Personal Plan access without a pending or active routine remains blocked",
       personalPlanRoutineAccess: {
         hasActivePersonalPlanEntitlement: true,
         pendingRoutineProposalId: null,
-        activeRoutineVersionId: null,
-      },
-    }),
-    "/onboarding",
-  )
-})
-
-test("field-test metadata without active app access does not bypass legacy onboarding", () => {
-  assert.equal(
-    getAuthenticatedAppRedirect("/routine", "needs_onboarding", {
-      personalPlanRoutineAccess: {
-        hasActivePersonalPlanEntitlement: false,
-        pendingRoutineProposalId: "proposal-1",
         activeRoutineVersionId: null,
       },
     }),

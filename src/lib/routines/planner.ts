@@ -2537,40 +2537,4 @@ export function buildRoutinePlan(
   }
 }
 
-export function buildRoutineRetrievalSubqueries(message: string, plan: RoutinePlan): string[] {
-  const focusSummary = plan.primary_focuses
-    .filter((focus) => !(focus.kind === "topic" && (focus.code === "cwc" || focus.code === "owc")))
-    .slice(0, 2)
-    .map((focus) => focus.label)
-    .join(" ")
-
-  const queries = new Set<string>([message])
-
-  if (plan.compare_cwc_owc) {
-    queries.add("CWC")
-    queries.add("OWC")
-  }
-
-  for (const topic of plan.active_topics) {
-    const query = focusSummary ? `${topic.label} ${focusSummary}` : topic.label
-    queries.add(query)
-  }
-
-  for (const section of plan.sections) {
-    for (const slot of section.slots) {
-      if (!slot.product_query) continue
-      queries.add(slot.product_query)
-    }
-  }
-
-  return [...queries].slice(0, 7)
-}
-
-export function getRoutineAutofillSlots(plan: RoutinePlan): RoutineSlotAdvice[] {
-  return plan.sections
-    .flatMap((section) => section.slots)
-    .filter((slot) => slot.product_linkable && (slot.action === "add" || slot.action === "upgrade"))
-    .sort((a, b) => a.attachment_priority - b.attachment_priority)
-}
-
 export { detectStylingProductKind, ROUTINE_TOPIC_LABELS }

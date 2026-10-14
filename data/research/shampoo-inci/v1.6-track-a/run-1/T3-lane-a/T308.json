@@ -1,0 +1,708 @@
+{
+  "blindId": "T308",
+  "inciFingerprintSha256": "67f890bcc445fdb931de50ce96290cf6c902dfc338f8ebebd46019bf413d661f",
+  "identity": {
+    "productName": "ISANA Shampoo Sensitiv Baumwoll- & Kornblume (Rossmann: 'ISANA Shampoo Sensitiv')",
+    "brand": "ISANA",
+    "market": "DE",
+    "formulaBlock": {
+      "normalization": "No split synonym entries. E3: Parfum at 6; prominent = 1-5.",
+      "formulaCompleteness": "complete",
+      "formulaSourceTier": 1,
+      "identityConfidence": "high",
+      "rawInciCount": 26
+    }
+  },
+  "claimSources": [
+    {
+      "id": "S1",
+      "sourceKind": "pack_back",
+      "grade": "moderate"
+    },
+    {
+      "id": "S2",
+      "sourceKind": "manufacturer_de",
+      "grade": "moderate"
+    },
+    {
+      "id": "S3",
+      "sourceKind": "retailer",
+      "grade": "low"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: SLES (2) defining, buffered by Cocamidopropyl Betaine (3); Coco-Glucoside (8) is after Parfum and not counted -> moderate.",
+      "neighboringAlternative": "none",
+      "counterSignal": "Only one counted buffer; does not move C1.",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T308"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic, ether type"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Parfum",
+          "position": 6,
+          "role": "E3 marker"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 7,
+          "role": "weak_refatter (after Parfum)"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 8,
+          "role": "glucoside, not prominent"
+        },
+        {
+          "ingredient": "PEG-3 Distearate",
+          "position": 9,
+          "role": "pearlizer/thickener, excluded"
+        },
+        {
+          "ingredient": "Hydrolyzed Wheat Protein",
+          "position": 10,
+          "role": "protein_film"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 12,
+          "role": "humectant/comfort, not prominent"
+        },
+        {
+          "ingredient": "Niacinamide",
+          "position": 13,
+          "role": "comfort list, not prominent"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 15,
+          "role": "cationic_polymer, late"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 18,
+          "role": "humectant, late"
+        },
+        {
+          "ingredient": "Hydrogenated Palm Glycerides Citrate",
+          "position": 25,
+          "role": "weak_refatter, trace"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Several light routes, all after Parfum: weak refatter (Glyceryl Oleate 7), protein (Hydrolyzed Wheat Protein 10), pearlizer (PEG-3 Distearate 9), guar (15), panthenol/glycerin.",
+      "neighboringAlternative": "low",
+      "counterSignal": "Everything conditioning sits after Parfum (6); could be cleansing-led with little slip (low).",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T308"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic, ether type"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Parfum",
+          "position": 6,
+          "role": "E3 marker"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 7,
+          "role": "weak_refatter (after Parfum)"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 8,
+          "role": "glucoside, not prominent"
+        },
+        {
+          "ingredient": "PEG-3 Distearate",
+          "position": 9,
+          "role": "pearlizer/thickener, excluded"
+        },
+        {
+          "ingredient": "Hydrolyzed Wheat Protein",
+          "position": 10,
+          "role": "protein_film"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 12,
+          "role": "humectant/comfort, not prominent"
+        },
+        {
+          "ingredient": "Niacinamide",
+          "position": 13,
+          "role": "comfort list, not prominent"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 15,
+          "role": "cationic_polymer, late"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 18,
+          "role": "humectant, late"
+        },
+        {
+          "ingredient": "Hydrogenated Palm Glycerides Citrate",
+          "position": 25,
+          "role": "weak_refatter, trace"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Three light families (weak refatter, late protein, late guar) all after Parfum, facing an effective C1 reset.",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "Three distinct deposition families present (W2).",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "every deposition route is after Parfum"
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "protein, guar and refatter are light, low-retention routes"
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES + betaine"
+        }
+      },
+      "whyThisBand": "Only light/late routes; no persistent system.",
+      "whyNotNeighborBand": "W2: the three families (Glyceryl Oleate 7, Hydrolyzed Wheat Protein 10, guar 15) are all after Parfum at trace-like levels and face a moderate SLES reset; no silicone or payload lipid.",
+      "evidenceByFamily": {
+        "weak_refatter": [
+          [
+            "Glyceryl Oleate",
+            7
+          ],
+          [
+            "Hydrogenated Palm Glycerides Citrate",
+            25
+          ]
+        ],
+        "protein_film": [
+          [
+            "Hydrolyzed Wheat Protein",
+            10
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+            15
+          ]
+        ],
+        "context_humectant": [
+          [
+            "Panthenol",
+            12
+          ],
+          [
+            "Glycerin",
+            18
+          ],
+          [
+            "Pantolactone",
+            20
+          ]
+        ],
+        "excluded": [
+          [
+            "PEG-3 Distearate",
+            9,
+            "pearlizer/thickener"
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Laureth Sulfate",
+            2
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Betaine",
+            3
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Coco-Glucoside",
+            8
+          ]
+        ],
+        "unresolved": []
+      },
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T308"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic, ether type"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Parfum",
+          "position": 6,
+          "role": "E3 marker"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 7,
+          "role": "weak_refatter (after Parfum)"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 8,
+          "role": "glucoside, not prominent"
+        },
+        {
+          "ingredient": "PEG-3 Distearate",
+          "position": 9,
+          "role": "pearlizer/thickener, excluded"
+        },
+        {
+          "ingredient": "Hydrolyzed Wheat Protein",
+          "position": 10,
+          "role": "protein_film"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 12,
+          "role": "humectant/comfort, not prominent"
+        },
+        {
+          "ingredient": "Niacinamide",
+          "position": 13,
+          "role": "comfort list, not prominent"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 15,
+          "role": "cationic_polymer, late"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 18,
+          "role": "humectant, late"
+        },
+        {
+          "ingredient": "Hydrogenated Palm Glycerides Citrate",
+          "position": 25,
+          "role": "weak_refatter, trace"
+        }
+      ],
+      "formulaIdentifiers": {
+        "inciFingerprintSha256": "67f890bcc445fdb931de50ce96290cf6c902dfc338f8ebebd46019bf413d661f",
+        "sourceTier": 1,
+        "captureDate": "per frozen packet (not shown to lane)"
+      },
+      "confidenceLimitingFactor": "INCI-only: concentrations, charge density and deposition unknown"
+    },
+    "focusPrimary": {
+      "value": "general",
+      "confidence": "moderate",
+      "rationale": "Sensitive-scalp positioning ('fuer empfindliche Kopfhaut & normales Haar', S2) cannot carry scalp_active because scalpComfortTarget is not_targeted (CSA fails); 'Sensitiv'/'besonders sanft' is mildness; no lengths claim -> general.",
+      "counterSignal": "The product is clearly positioned for sensitive scalp.",
+      "neighboringAlternative": "scalp_active",
+      "formulaFacts": [
+        {
+          "ingredient": "Panthenol",
+          "position": 12
+        }
+      ],
+      "claimRole": "not_applicable",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedRoutes": [],
+        "limitation": "No lengths-care claim."
+      },
+      "decisionTrace": {
+        "claimDirection": "sensitive scalp",
+        "formulaCompatible": "no (not_targeted: no prominent E4 route)",
+        "compatibleRoute": "none",
+        "decisionReason": "-> general."
+      },
+      "sourceIds": [
+        "S1 pack back photo (moderate); S2 manufacturer_de Rossmann (moderate); S3 Rossmann DK (low)"
+      ]
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "Nothing qualifies.",
+      "counterSignal": "None.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "claims": [],
+        "routes": [],
+        "exception": null
+      },
+      "sourceIds": [
+        "S1 pack back photo (moderate); S2 manufacturer_de Rossmann (moderate); S3 Rossmann DK (low)"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "Default.",
+      "counterSignal": "None.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [],
+      "decisionTrace": {
+        "default": "regular",
+        "trigger": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "No trigger."
+      },
+      "sourceIds": [
+        "S1 pack back photo (moderate); S2 manufacturer_de Rossmann (moderate); S3 Rossmann DK (low)"
+      ]
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "SC1 positioning exists (S2 bullet 'fuer empfindliche Kopfhaut & normales Haar', moderate; 'auch bei empfindlicher Kopfhaut bestens geeignet' is tolerance wording) but CSA fails: the prominent zone is positions 1-5 (Parfum 6) and contains no E4 route; Panthenol 12, Niacinamide 13, Glyceryl Oleate 7 are after Parfum. Missing route named.",
+      "counterSignal": "None.",
+      "neighboringAlternative": "none",
+      "formulaFacts": [
+        {
+          "ingredient": "Panthenol",
+          "position": 12
+        },
+        {
+          "ingredient": "Niacinamide",
+          "position": 13
+        }
+      ],
+      "sourceIds": [
+        "S1 pack back photo (moderate); S2 manufacturer_de Rossmann (moderate); S3 Rossmann DK (low)"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none",
+      "blindToFinal": "unchanged",
+      "sourceIds": [
+        "formula packet T308"
+      ]
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "not_applicable",
+      "moistureRoutes": [],
+      "repairRoutes": [],
+      "sharedRoutes": [],
+      "limitation": "No lengths-care claim."
+    },
+    "claimRole": "not_applicable",
+    "counterSignal": "The product is clearly positioned for sensitive scalp.",
+    "neighboringAlternative": "scalp_active",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "sensitive scalp",
+        "formulaCompatible": "no (not_targeted: no prominent E4 route)",
+        "compatibleRoute": "none",
+        "decisionReason": "-> general."
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "claims": [],
+        "routes": [],
+        "exception": null
+      },
+      "usageRole": {
+        "default": "regular",
+        "trigger": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "No trigger."
+      }
+    }
+  },
+  "weightRecord": {
+    "value": "low",
+    "confidence": "moderate",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "light",
+        "rationale": "every deposition route is after Parfum"
+      },
+      "persistence": {
+        "value": "low",
+        "rationale": "protein, guar and refatter are light, low-retention routes"
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C1 SLES + betaine"
+      }
+    },
+    "evidenceByFamily": {
+      "weak_refatter": [
+        [
+          "Glyceryl Oleate",
+          7
+        ],
+        [
+          "Hydrogenated Palm Glycerides Citrate",
+          25
+        ]
+      ],
+      "protein_film": [
+        [
+          "Hydrolyzed Wheat Protein",
+          10
+        ]
+      ],
+      "cationic_polymer": [
+        [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          15
+        ]
+      ],
+      "context_humectant": [
+        [
+          "Panthenol",
+          12
+        ],
+        [
+          "Glycerin",
+          18
+        ],
+        [
+          "Pantolactone",
+          20
+        ]
+      ],
+      "excluded": [
+        [
+          "PEG-3 Distearate",
+          9,
+          "pearlizer/thickener"
+        ]
+      ],
+      "anionic_surfactant": [
+        [
+          "Sodium Laureth Sulfate",
+          2
+        ]
+      ],
+      "amphoteric_surfactant": [
+        [
+          "Cocamidopropyl Betaine",
+          3
+        ]
+      ],
+      "nonionic_surfactant": [
+        [
+          "Coco-Glucoside",
+          8
+        ]
+      ],
+      "unresolved": []
+    },
+    "whyThisBand": "Only light/late routes; no persistent system.",
+    "whyNotNeighborBand": "W2: the three families (Glyceryl Oleate 7, Hydrolyzed Wheat Protein 10, guar 15) are all after Parfum at trace-like levels and face a moderate SLES reset; no silicone or payload lipid.",
+    "counterSignal": "Three distinct deposition families present (W2).",
+    "neighboringAlternative": "moderate",
+    "formulaIdentifiers": {
+      "inciFingerprintSha256": "67f890bcc445fdb931de50ce96290cf6c902dfc338f8ebebd46019bf413d661f",
+      "sourceTier": 1,
+      "captureDate": "per frozen packet (not shown to lane)"
+    },
+    "confidenceLimitingFactor": "INCI-only: concentrations, charge density and deposition unknown"
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1 (fine, W low) = ideal; ordinary target, T6 n/a; T4: neighbor would lower the tier -> review_thickness_boundary"
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1 (normal, W low) = ideal; ordinary target, T6 n/a"
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1 (coarse, W low, C moderate) = acceptable; ordinary target, T6 n/a"
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential low -> light."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "bucket": "normal",
+        "route": "balanced",
+        "confidence": "moderate",
+        "rationale": "S-ORDINARY way 4: E2 sensitive unit (S2 'fuer empfindliche Kopfhaut', moderate) fails the S-SENSITIVE formula gate (not targeted; no prominent comfort route); nothing else passes -> review_specialist_gate_failed."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate, D1 False -> regular."
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "evidence": "No D1 wording."
+    },
+    "explicitResetPositioning": false,
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "confidence": "moderate",
+      "rationale": "D2 not met: D1 false"
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "display": "green"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "display": "green"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable",
+        "display": "amber"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_specialist_gate_failed",
+        "detail": "target sensitive; formula gate failed: scalpComfortTarget not_targeted (CSA) and no prominent E4 comfort route (Panthenol 12/Niacinamide 13 after Parfum 6); no prominent unlisted candidate"
+      },
+      {
+        "code": "review_thickness_boundary",
+        "detail": "fine"
+      }
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "catalogDependent": "review_live_value_differs not computed in lane (live rows unseen)."
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "general (provisional, low)",
+      "final": "general",
+      "evidence": "Sensitive-scalp positioning ('fuer empfindliche Kopfhaut & normales Haar', S2) cannot carry scalp_active because scalpComfortTarget is not_targeted (CSA fails); 'Sensitiv'/'besonders sanft' is mildness; no lengths claim -> general."
+    },
+    {
+      "property": "focusSecondary",
+      "blind": "[] (provisional)",
+      "final": [],
+      "evidence": "Nothing qualifies."
+    },
+    {
+      "property": "usageRole",
+      "blind": "regular (provisional)",
+      "final": "regular",
+      "evidence": "Default."
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blind": "unknown (positioning hidden)",
+      "final": "not_targeted",
+      "evidence": "SC1 positioning exists (S2 bullet 'fuer empfindliche Kopfhaut & normales Haar', moderate; 'auch bei empfindlicher Kopfhaut bestens geeignet' is tolerance wording) but CSA fails: the prominent zone is positions 1-5 (Parfum 6) and contains no E4 route; Panthenol 12, Niacinamide 13, Glyceryl Oleate 7 are after Parfum. Missing route named."
+    },
+    {
+      "property": "cleansingStrength/conditioningLevel/weightPotential/dandruffSupport",
+      "blind": "frozen",
+      "final": "unchanged",
+      "evidence": "Claims cannot assign these (3.2); no revealed formula conflict."
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "noComparisonWithEarlierValues": true
+  },
+  "uncertainties": [
+    {
+      "reading": "'fuer empfindliche Kopfhaut & normales Haar' as positioning vs suitability",
+      "chosen": "positioning (E2a 'fuer ...') -> S-FAIL review",
+      "alternative": "tolerance wording -> plain ordinary (way 1), no flag"
+    }
+  ]
+}

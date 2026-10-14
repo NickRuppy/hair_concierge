@@ -1,0 +1,15 @@
+TAP version 13
+# Subtest: auxiliary_closed with cancelSubmit: reopening and submitting again still works (a fresh token owns the flow)
+ok 1 - auxiliary_closed with cancelSubmit: reopening and submitting again still works (a fresh token owns the flow)
+  ---
+  duration_ms: 1.142875
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 171.78675

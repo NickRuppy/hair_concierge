@@ -1,0 +1,18 @@
+{
+  "productionTooling": {
+    "added": 62,
+    "deleted": 8964,
+    "paths": 114,
+    "netRemoved": 8902
+  },
+  "testsSupport": {
+    "added": 2760,
+    "deleted": 11306,
+    "paths": 212,
+    "netRemoved": 8546
+  },
+  "untrackedIncluded": [
+    "tests/paypal-trial-plan.fixtures.ts"
+  ],
+  "netRemoved": 17448
+}

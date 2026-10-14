@@ -1,0 +1,418 @@
+{
+ "blindId": "W210",
+ "standard": "shampoo-classification-v1.6.2",
+ "lane": "lane-b",
+ "identity": {
+  "brand": "ISANA",
+  "productName": "ISANA MED Shampoo Anti Schuppen, 200 ml",
+  "packSize": "200 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "ed76225ec79293dce5791880a50de40ba3ca27ba02c5e1e885ebed5214948b83",
+  "normalization": "No synonym or split entries; normalized positions = packet positions (ID-2).",
+  "completeness": "complete (packet; formula source tier 1, identity confidence high)",
+  "e3ProminenceCutoff": "Parfum @21; prominent = positions 1-20 (E3)."
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "strong",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "rationale": "Strong: C1 - defining anionic Sodium Laureth Sulfate @2 plus prominent reinforcing strong anionics (Sodium Laureth-8 Sulfate @14, Magnesium Laureth Sulfate @16, Magnesium Laureth-8 Sulfate @17, Sodium Oleth Sulfate @19, Magnesium Oleth Sulfate @20), all before Parfum @21; a reinforcing route gives strong regardless of the buffers (Cocamidopropyl Betaine @3, Coco-Glucoside @5, Sodium Cocoyl Glutamate @6). Counter-signal: the reinforcing ether sulfates are listed late (after Glycerin, Menthol), i.e. a small magnesium/oleth sulfate co-blend in a well-buffered SLES base; confidence moderate, neighbor moderate (value stays at the convention).",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C3b",
+    "C4",
+    "E3",
+    "N-ALT"
+   ],
+   "counterSignal": "Reinforcing ether sulfates are listed late (@14-20) in a well-buffered SLES base; the value stays at the C1 convention.",
+   "formulaFacts": {
+    "definingAnionic": "Sodium Laureth Sulfate @2 (strong anionic, ether type)",
+    "reinforcingRoutes": [
+     "Sodium Laureth-8 Sulfate @14 (strong ether type, C3b high-EO counter-signal)",
+     "Magnesium Laureth Sulfate @16 (strong ether type)",
+     "Magnesium Laureth-8 Sulfate @17 (strong ether type, C3b)",
+     "Sodium Oleth Sulfate @19 (alkyl ether sulfate, strong ether type by chemistry)",
+     "Magnesium Oleth Sulfate @20 (alkyl ether sulfate, strong ether type by chemistry)"
+    ],
+    "buffers": [
+     "Cocamidopropyl Betaine @3 (amphoteric)",
+     "Coco-Glucoside @5 (nonionic glucoside)",
+     "Sodium Cocoyl Glutamate @6 (mild anionic)"
+    ],
+    "notCleansing": [
+     "Glycol Distearate @15 (pearlizing wax)",
+     "Laureth-4 @18 (low-ethoxylate thickener)"
+    ],
+    "c3aOrC3b": "C3b laureth-8 sulfates @14, @17 kept as strong ether-type anionics; they do not decide the value (Magnesium Laureth Sulfate @16 and the oleth sulfates @19-20 reinforce without them), so the C3b confidence limit does not apply."
+   }
+  },
+  "conditioningLevel": {
+   "value": "low",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Low: cleansing-led architecture with no cationic polymer, silicone or payload lipid; only the weak refatter Glyceryl Oleate @7, the pearlizer Glycol Distearate @15 and humectants (Panthenol @10, Glycerin @13). C2 not met (no early silicone/lipid and no cationic polymer).",
+   "ruleIds": [
+    "5",
+    "C2",
+    "E3"
+   ],
+   "counterSignal": "No cationic or silicone.",
+   "formulaFacts": {
+    "weak_refatter": [
+     "Glyceryl Oleate @7",
+     "Hydrogenated Vegetable Glycerides Citrate @22"
+    ],
+    "pearlizing": [
+     "Glycol Distearate @15 (prominent)"
+    ],
+    "cationic_polymer": [],
+    "silicone": [],
+    "payload_lipid": []
+   }
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "evidence": {
+    "cationic_polymer": [],
+    "payload_lipid": [],
+    "weak_refatter": [
+     "Glyceryl Oleate @7",
+     "Hydrogenated Vegetable Glycerides Citrate @22"
+    ],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Sodium Laureth Sulfate @2",
+     "Cocamidopropyl Betaine @3",
+     "Coco-Glucoside @5",
+     "Sodium Cocoyl Glutamate @6",
+     "Sodium Laureth-8 Sulfate @14",
+     "Magnesium Laureth Sulfate @16",
+     "Magnesium Laureth-8 Sulfate @17",
+     "Sodium Oleth Sulfate @19",
+     "Magnesium Oleth Sulfate @20"
+    ],
+    "humectantContext": [
+     "Panthenol @10",
+     "Glycerin @13"
+    ],
+    "excluded": [
+     "Glycol Distearate @15 (pearlizing wax, 6.4)",
+     "Piroctone Olamine @8, Sodium Salicylate @9, Caffeine @11, Menthol @12, Tocopherol @23 (actives)",
+     "Laureth-4 @18"
+    ],
+    "unresolved": []
+   },
+   "depositionLoad": "light",
+   "persistence": "low",
+   "resetCapacity": "strong",
+   "counterevidence": "None material: weak refatters only; the pearlizer is excluded from weight.",
+   "whyThisBand": "Only weak_refatter deposition exists and the reset is broad and strong.",
+   "whyNotNeighborBand": "Not moderate: there is no meaningful depositing system at all - the only family is weak_refatter (W2 does not apply: one family), facing a strong multi-anionic reset.",
+   "confidenceLimitingFactor": "none material",
+   "rationale": "Low: no persistent deposition family - only weak refatter esters (Glyceryl Oleate @7, Hydrogenated Vegetable Glycerides Citrate @22) - against a broad multi-ether-sulfate reset.",
+   "ruleIds": [
+    "6.6",
+    "W-LINE",
+    "W2",
+    "W3",
+    "N-ALT"
+   ],
+   "wLineRecord": {
+    "wLine": {
+     "position": 21,
+     "inci": "Parfum",
+     "classes": [
+      "fragrance"
+     ]
+    },
+    "cap": {
+     "e3Point": 21
+    },
+    "alphabeticalRun": null,
+    "skipped": [
+     "w_line_skipped:Piroctone Olamine@8 (clause ii: Sodium Laureth-8 Sulfate@14 and further cleansing surfactants @16-20, Glycol Distearate@15 after it before the cap)",
+     "w_line_skipped:Sodium Salicylate@9 (clause ii: same entries @14-20)",
+     "w_line_skipped:Panthenol@10 (clause ii: same entries @14-20)",
+     "w_line_skipped:Caffeine@11 (clause ii: same entries @14-20)"
+    ],
+    "codes": [],
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "counterSignal": "None material: weak refatters only; the pearlizer is excluded from weight.",
+   "formulaIdentifiers": {
+    "fingerprint": "ed76225ec79293dce5791880a50de40ba3ca27ba02c5e1e885ebed5214948b83",
+    "sourceTier": 1,
+    "captureDate": "not in stage-A packet (packet field absent)"
+   }
+  },
+  "focusPrimary": {
+   "value": "scalp_active",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Scalp_active: problem-led anti-dandruff product with a recognized active (7.2).",
+   "ruleIds": [
+    "7.1",
+    "7.2",
+    "S-DANDRUFF"
+   ],
+   "counterSignal": "Oily-hair and caffeine/menthol claims compete; caffeine hair-root wording is hair-loss-adjacent and not a focus route (F5).",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "Panthenol @10",
+     "Glycerin @13"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Glyceryl Oleate @7"
+    ],
+    "limitation": "Low-conditioning anti-dandruff formula."
+   },
+   "claimRole": "candidate",
+   "decisionTrace": "Claim direction anti-dandruff (name \"Anti Schuppen\", high; pack back and manufacturer \"Anti Schuppenformel mit Piroctone Olamine\", moderate). Formula: Piroctone Olamine @8 supported. Decision: scalp_active."
+  },
+  "focusSecondary": {
+   "value": [
+    "clarifying"
+   ],
+   "confidence": "moderate",
+   "neighboringAlternative": [],
+   "rationale": "Clarifying (secondary): separately positioned oily-hair cleansing with an independent, F6-compatible surfactant route (Section 8, F3, F6).",
+   "ruleIds": [
+    "8",
+    "F3",
+    "F6",
+    "N-ALT"
+   ],
+   "counterSignal": "see trace",
+   "decisionTrace": "Empty default considered. \"reinigt schnell fettendes Haar\" (pack back, moderate) is distinct oily-scalp positioning; independent route = the broad multi-ether-sulfate cleansing chassis (SLES @2 plus reinforcing sulfates @14-20), not cited by the dandruff route (Piroctone Olamine); F6 compatible (strong cleansing, conditioning low, weight low). One value, no exception needed."
+  },
+  "usageRole": {
+   "value": "treatment",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Treatment: recognized active plus a qualifying dandruff claim (U3); U1 precedence over alternating.",
+   "ruleIds": [
+    "9",
+    "U1",
+    "U2",
+    "U3",
+    "U4",
+    "CL-SRC",
+    "F-TRACE",
+    "N-ALT"
+   ],
+   "counterSignal": "see losing triggers",
+   "triggerCode": "recognized_active_problem_led",
+   "triggerEvidence": [
+    "Piroctone Olamine @8",
+    "\"Anti Schuppen\" in the product name (high); \"Anti Schuppenformel mit Piroctone Olamine\" (pack back, moderate)"
+   ],
+   "losingTriggers": [
+    "strong_plus_reset_intent: cleansingStrength strong and reset intent \"reinigt schnell fettendes Haar\" (E2 oily lexicon, pack back moderate) - loses to treatment by U1"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "moderate",
+   "neighboringAlternative": "targeted",
+   "rationale": "Not targeted: no separate sensitive/dry-scalp unit - \"Coffein & Menthol gegen trockene Kopfhaut\" is the consecutive list entry after \"Piroctone Olamine wirkt nachhaltig gegen Schuppen\" and is bundled (E2b), so not SC1. CSA holds (Panthenol @10, Glycerin @13) with counter-signals strong cleansing and prominent Menthol @12.",
+   "ruleIds": [
+    "10",
+    "SC1",
+    "E2b",
+    "CSA",
+    "N-ALT"
+   ],
+   "counterSignal": "cleansingStrength strong; Menthol @12 prominent."
+  },
+  "dandruffSupport": {
+   "value": "supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Supported: the complete INCI contains Piroctone Olamine @8, a recognized anti-dandruff active (Section 11). Formula-only; whether a dandruff target is projected depends on a dandruff claim (S-DANDRUFF, R17.3), hidden in the blind pass.",
+   "ruleIds": [
+    "11",
+    "S-DANDRUFF",
+    "R17.3"
+   ],
+   "counterSignal": "none (mechanical lookup, Section 11)"
+  }
+ },
+ "projection": {
+  "status": "proposal",
+  "thicknessFit": {
+   "fine": "ideal",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "high",
+   "normal": "high",
+   "coarse": "high"
+  },
+  "thicknessRationale": "T1 with W=low (high, neighbor none), C=low (high, neighbor none); T6 scalp-concern floor applies to targets ['dandruff']; T4 checked against N-ALT neighbors after T6. ",
+  "weight": "light",
+  "weightConfidence": "high",
+  "weightRationale": "W-LIVE: weightPotential low -> weight light, confidence = weightPotential confidence.",
+  "scalpTargets": {
+   "primary": {
+    "target": "dandruff",
+    "confidence": "high",
+    "rationale": "S-DANDRUFF passes: dandruff claim in the product name (high) and on the pack back (moderate); dandruffSupport supported (Piroctone Olamine @8). Primary (R17.1); no secondary target (R17.2)."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [
+   "oily"
+  ],
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "moderate",
+  "cleansingIntensityRationale": "I1: cleansingStrength strong, D1 false -> regular. I3 checked with neighbor moderate against each projected bucket expectation (schuppen expects regular).",
+  "explicitResetPositioning": false,
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "No D1 term in the product name, a manufacturer/pack claim or usage directions (13.6). D2 not met -> not_flagged.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "schuppen",
+    "scalp_route": "dandruff",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "schuppen",
+    "scalp_route": "dandruff",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "schuppen",
+    "scalp_route": "dandruff",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_dandruff"
+  ],
+  "reviewFlags": [],
+  "informationalNotes": [
+   "suits_dandruff_with_oily_scalp: \"reinigt schnell fettendes Haar\" (pack back, moderate) + S-OILY clause passed (cleansingStrength strong, weightPotential low, conditioningLevel low). Research-only; combination confidence moderate."
+  ],
+  "catalogDependent": "review_live_value_differs and any deep-cleanser record id are resolved by the orchestrator after freeze (13.9, D2 lane visibility); not computed in the lane."
+ },
+ "formulaFacts": {
+  "surfactants": {
+   "definingAnionic": "Sodium Laureth Sulfate @2 (strong anionic, ether type)",
+   "reinforcingRoutes": [
+    "Sodium Laureth-8 Sulfate @14 (strong ether type, C3b high-EO counter-signal)",
+    "Magnesium Laureth Sulfate @16 (strong ether type)",
+    "Magnesium Laureth-8 Sulfate @17 (strong ether type, C3b)",
+    "Sodium Oleth Sulfate @19 (alkyl ether sulfate, strong ether type by chemistry)",
+    "Magnesium Oleth Sulfate @20 (alkyl ether sulfate, strong ether type by chemistry)"
+   ],
+   "buffers": [
+    "Cocamidopropyl Betaine @3 (amphoteric)",
+    "Coco-Glucoside @5 (nonionic glucoside)",
+    "Sodium Cocoyl Glutamate @6 (mild anionic)"
+   ],
+   "notCleansing": [
+    "Glycol Distearate @15 (pearlizing wax)",
+    "Laureth-4 @18 (low-ethoxylate thickener)"
+   ],
+   "c3aOrC3b": "C3b laureth-8 sulfates @14, @17 kept as strong ether-type anionics; they do not decide the value (Magnesium Laureth Sulfate @16 and the oleth sulfates @19-20 reinforce without them), so the C3b confidence limit does not apply."
+  },
+  "conditioningRoutes": {
+   "weak_refatter": [
+    "Glyceryl Oleate @7",
+    "Hydrogenated Vegetable Glycerides Citrate @22"
+   ],
+   "pearlizing": [
+    "Glycol Distearate @15 (prominent)"
+   ],
+   "cationic_polymer": [],
+   "silicone": [],
+   "payload_lipid": []
+  },
+  "humectants": [
+   "Panthenol @10",
+   "Glycerin @13"
+  ],
+  "actives": [
+   "Piroctone Olamine @8 (recognized anti-dandruff active)",
+   "Sodium Salicylate @9",
+   "Panthenol @10",
+   "Caffeine @11 (hair-loss-type ingredient, F5)",
+   "Menthol @12 (cooling)",
+   "Tocopherol @23"
+  ],
+  "recognizedDandruffActives": [
+   "Piroctone Olamine @8"
+  ],
+  "exposure": {
+   "fragrance": "Parfum @21 (no allergens declared)",
+   "coolingAgents": [
+    "Menthol @12 (prominent)"
+   ],
+   "essentialOils": []
+  },
+  "csa": {
+   "listedComfortRoutesProminent": [
+    "Panthenol @10"
+   ],
+   "listedHumectantRefattingRoutesProminent": [
+    "Glyceryl Oleate @7",
+    "Panthenol @10",
+    "Glycerin @13"
+   ],
+   "mildBase": "no: prominent strong anionics Sodium Laureth Sulfate @2 and further ether sulfates @14-20",
+   "csaHolds": true,
+   "counterSignals": [
+    "cleansingStrength strong",
+    "Menthol @12 prominent cooling agent"
+   ]
+  },
+  "preservativesAndOther": [
+   "Sodium Chloride @4",
+   "Citric Acid @24",
+   "Sodium Citrate @25",
+   "Propylene Glycol @26",
+   "Formic Acid @27",
+   "Sodium Benzoate @28",
+   "Potassium Sorbate @29"
+  ]
+ },
+ "unresolvedMaterialIngredients": [],
+ "reconciliation": {
+  "formulaPassFile": "out/formula-pass/W210.json (hash-pinned, unchanged)",
+  "blindToFinalChanges": [
+   "focusPrimary general (provisional, neighbor scalp_active) -> scalp_active (high).",
+   "focusSecondary [] (low) -> [\"clarifying\"] (moderate): oily-hair positioning revealed with an independent surfactant route.",
+   "usageRole regular (low, neighbor alternating) -> treatment (high).",
+   "scalpComfortTarget not_targeted (low) -> not_targeted (moderate): dry-scalp wording bundled.",
+   "No formula-derived property changed."
+  ]
+ },
+ "selfCheck": "6.11: fingerprint ed76225ec79293dce5791880a50de40ba3ca27ba02c5e1e885ebed5214948b83 matches the stage-A packet and the formula pass; claims and identity were hidden during the formula judgment (formula pass frozen before the reveal); no ingredient, family count or position window assigned the weight band (the W-line only gated payload_lipid legs); W-line derived from the frozen list as W-LINE states, skipped candidates recorded; depositionLoad/persistence/resetCapacity present with rationales; counterevidence and whyNotNeighborBand specific (W2 addressed where two or more families); confidence names its limiting factor; no comparison with any earlier or live value was made in the lane. Projection flags recomputed mechanically from this record (T4/I3 via N-ALT).",
+ "uncertainties": [
+  "\"Coffein & Menthol gegen trockene Kopfhaut\" read as bundled (consecutive list entry next to the dandruff unit): bundled dryness wording feeds no combination. If read as a separate dry unit, S-DRY would pass (Glycerin @13) but dry and oily together are contradictory, so neither would be recorded (contradictory_scalp_states).",
+  "\"Coffein hilft die Haarwurzel zu stärken\" read as hair-root strengthening, not explicit hair-loss positioning; hair_loss_claim_not_evaluated not recorded (informational only).",
+  "Secondary clarifying is a judgment; alternative [] (the oily wording is a sub-feature of the dandruff path). It projects nothing either way.",
+  "I3: intensity regular matches schuppen; neighbor moderate also gives regular -> no flag."
+ ]
+}

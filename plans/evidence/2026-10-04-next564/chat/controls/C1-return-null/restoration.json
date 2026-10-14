@@ -1,0 +1,7 @@
+{
+  "restored": true,
+  "action": "owned mutant restored",
+  "sha256": "dad4d98013840fc99bfac1d9d839f04e23c9196534e9a0f04004c7e3b403aab2",
+  "source": "src/lib/chat-runtime/user-memory.ts",
+  "allPinnedGuardsMatch": true
+}

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { readFileSync } from "node:fs"
 
 import {
   compileApplicationViewV2 as compileApplicationViewV2Impl,
@@ -16,6 +17,47 @@ const compileApplicationViewV2 = compileApplicationViewV2Impl
 
 const productId = "30000000-0000-4000-8000-000000000001"
 const shampooProductId = "30000000-0000-4000-8000-000000000002"
+
+test("actual reviewed P08 packet compiles wet application, wait, shampoo, joint rinse then aftercare", () => {
+  const packet = JSON.parse(
+    readFileSync(
+      new URL(
+        "../data/research/bondbuilder-inci/v1.0/recommendation-promotion-2026-10-07-premiere/P08.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  )
+  const selected = input("bondbuilder", "bond_repair") as unknown as Parameters<
+    typeof compileApplicationViewV2
+  >[0]["input"]
+  selected.routineItems[1]!.productId = packet.productId
+  selected.routineItems[1]!.productName = packet.profile.identity.product_name
+  const result = compileApplicationViewV2({
+    input: selected,
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: [
+      supportingShampooPointer(),
+      productApplicationPointerV2Schema.parse(packet.protocolV2),
+    ],
+  })
+  assert.deepEqual(result.pointerIssues, [])
+  const day = result.days.find((entry) => entry.key === "bond_repair_day")!
+  const copies = day.outerSequence.flatMap((entry) =>
+    entry.kind === "product" ? entry.block.steps : [],
+  )
+  const at = (key: string) => copies.findIndex((step) => step.stepKey === key)
+  assert.ok(at("distribute") >= 0)
+  assert.ok(at("wait") > at("distribute"))
+  assert.ok(
+    copies.findIndex((step, index) => index > at("wait") && step.action === "apply_product") >
+      at("wait"),
+  )
+  assert.ok(copies.findIndex((step) => step.action === "rinse") > at("wait"))
+  assert.ok(at("conditioner-after") > copies.findIndex((step) => step.action === "rinse"))
+  assert.match(copies.map((step) => step.copyDe).join(" "), /feuchten Längen einmassieren/)
+  assert.equal(day.isPartial, false)
+})
 
 test("verified Bondbuilder workflows preserve minimum contact and finished dilution at the compiler boundary", () => {
   const parsed = productApplicationPointerV2Schema.safeParse({
@@ -251,59 +293,131 @@ test("optional Conditioner follows the complete treatment wait and its absence n
   }
 })
 
-test("Première layers the normal Shampoo after five minutes without an intervening rinse or wetting", () => {
-  const result = compileApplicationViewV2({
-    input: input("bondbuilder", "bond_repair"),
-    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
-    productPointers: [
-      supportingShampooPointer(),
-      pointer({
-        scope: { kind: "product", category: "bondbuilder", productId },
-        sourceRole: "specialized_bond_treatment",
-        role: "bond_repair",
-        workflowId: "bondbuilder_verified_product",
-        applicationFamily: "pre_shampoo_single_treatment",
-        facts: {
-          ...pointer().facts,
-          applicationState: "damp_hair",
-          applicationArea: "hair_lengths_ends",
-          rinse: "follow_with_shampoo",
-          contactTime: { kind: "seconds", seconds: 300 },
-          shampooAfterTreatment: "layer_without_rinsing",
-        },
-        exactSteps: [
-          { stepKey: "apply", action: "apply_product", copyDe: "In feuchte Längen einarbeiten." },
-          {
-            stepKey: "wait",
-            action: "wait",
-            copyDe: "5 Minuten einwirken lassen. Nicht ausspülen.",
-          },
-        ],
-      }),
-    ],
-  })
-  const day = result.days.find((d) => d.key === "bond_repair_day")!
-  assert.deepEqual(
-    day.productBlocks.map((b) => b.productId),
-    [productId, shampooProductId],
-  )
-  const steps = day.outerSequence.flatMap((e) =>
-    e.kind === "product"
-      ? e.block.steps
-      : e.kind === "state_transition"
-        ? [{ action: "section", copyDe: e.copyDe }]
-        : [],
-  )
-  assert.doesNotMatch(steps.map((s) => s.copyDe).join(" "), /anfeuchten/)
-  const applyIndices = steps.flatMap((s, i) => (s.action === "apply_product" ? [i] : []))
-  assert.equal(applyIndices.length, 2)
-  assert.ok(steps.findIndex((s) => s.action === "wait") < applyIndices[1])
-  assert.ok(steps.findIndex((s) => s.action === "rinse") > applyIndices[1])
-  assert.match(
-    steps.map((s) => s.copyDe).join(" "),
-    /direkt auf die noch nicht ausgespülte Behandlung/,
-  )
-})
+for (const after of ["required", "recommended", "optional"] as const) {
+  for (const includeShampoo of [true, false]) {
+    for (const includeConditioner of [true, false]) {
+      test(`Layered treatment keeps ${after} aftercare after the shampoo rinse (shampoo=${includeShampoo}, conditioner=${includeConditioner})`, () => {
+        const conditionerId = "30000000-0000-4000-8000-000000000003"
+        const aftercareCopy =
+          after === "optional"
+            ? "Danach kannst du Conditioner verwenden oder diesen Schritt weglassen."
+            : "Danach mit Conditioner fortfahren und ihn wie gewohnt ausspülen."
+        const applicationInput = input("bondbuilder", "bond_repair") as unknown as {
+          routineItems: Array<Record<string, unknown>>
+        }
+        if (!includeShampoo)
+          applicationInput.routineItems = applicationInput.routineItems.filter(
+            (item) => item.role !== "cleanse",
+          )
+        if (includeConditioner)
+          applicationInput.routineItems.push({
+            itemId: "conditioner",
+            productId: conditionerId,
+            productName: "Usual conditioner",
+            category: "conditioner",
+            role: "condition",
+            inclusion: "included",
+            availability: "owned",
+            executable: true,
+            catalogFacts: {},
+          })
+        const result = compileApplicationViewV2({
+          input: applicationInput as never,
+          familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+          productPointers: [
+            ...(includeShampoo ? [supportingShampooPointer()] : []),
+            ...(includeConditioner
+              ? [
+                  pointer({
+                    scope: { kind: "product", category: "conditioner", productId: conditionerId },
+                    sourceRole: "conditioner_rinse_out",
+                    role: "condition",
+                    applicationFamily: "standard_rinse_out_conditioning",
+                  }),
+                ]
+              : []),
+            pointer({
+              scope: { kind: "product", category: "bondbuilder", productId },
+              sourceRole: "specialized_bond_treatment",
+              role: "bond_repair",
+              workflowId: "bondbuilder_verified_product",
+              applicationFamily: "pre_shampoo_single_treatment",
+              facts: {
+                ...pointer().facts,
+                applicationState: "damp_hair",
+                applicationArea: "hair_lengths_ends",
+                rinse: "follow_with_shampoo",
+                contactTime: { kind: "seconds", seconds: 300 },
+                shampooAfterTreatment: "layer_without_rinsing",
+                conditionerSequence: { before: "not_stated", after, minimumWaitSeconds: null },
+              },
+              exactSteps: [
+                {
+                  stepKey: "apply",
+                  action: "apply_product",
+                  copyDe: "In feuchte Längen einarbeiten.",
+                },
+                {
+                  stepKey: "wait",
+                  action: "wait",
+                  copyDe: "5 Minuten einwirken lassen. Nicht ausspülen.",
+                },
+                { stepKey: "conditioner-after", action: "section", copyDe: aftercareCopy },
+              ],
+            }),
+          ],
+        })
+        assert.deepEqual(result.pointerIssues, [])
+        const day = result.days.find((d) => d.key === "bond_repair_day")!
+        assert.ok(day)
+        if (after === "required" && !includeConditioner) {
+          assert.equal(
+            day.productBlocks.some((block) => block.productId === productId),
+            false,
+          )
+          assert.equal(day.isPartial, true)
+          return
+        }
+        assert.deepEqual(
+          day.productBlocks.map((b) => b.productId),
+          [
+            productId,
+            ...(includeShampoo ? [shampooProductId] : []),
+            ...(includeConditioner ? [conditionerId] : []),
+          ],
+        )
+        const steps = day.outerSequence.flatMap((e) =>
+          e.kind === "product"
+            ? e.block.steps
+            : e.kind === "state_transition"
+              ? [{ action: "section", copyDe: e.copyDe }]
+              : [],
+        )
+        assert.equal(steps.filter((step) => step.copyDe === aftercareCopy).length, 1)
+        if (!includeShampoo) {
+          assert.ok(day.productBlocks[0].steps.some((step) => step.copyDe === aftercareCopy))
+          return
+        }
+        assert.doesNotMatch(steps.map((s) => s.copyDe).join(" "), /anfeuchten/)
+        const applyIndices = steps.flatMap((s, i) => (s.action === "apply_product" ? [i] : []))
+        assert.equal(applyIndices.length, includeConditioner ? 3 : 2)
+        assert.ok(steps.findIndex((s) => s.action === "wait") < applyIndices[1])
+        const shampooRinseIndex = steps.findIndex((s) => s.action === "rinse")
+        assert.ok(shampooRinseIndex > applyIndices[1])
+        const aftercareIndex = steps.findIndex((step) => step.copyDe === aftercareCopy)
+        assert.ok(
+          aftercareIndex > shampooRinseIndex,
+          "aftercare must follow the joint shampoo/treatment rinse",
+        )
+        if (includeConditioner) assert.ok(applyIndices[2] > aftercareIndex)
+        assert.match(
+          steps.map((s) => s.copyDe).join(" "),
+          /direkt auf die noch nicht ausgespülte Behandlung/,
+        )
+      })
+    }
+  }
+}
 
 test("V2 compiler renders OGX through canonical shampoo copy only", () => {
   const result = compileApplicationViewV2({
@@ -561,12 +675,18 @@ test("V2 compiler selects canonical damp or dry heat copy for each heat event", 
   })
 
   assert.deepEqual(result.pointerIssues, [])
-  const copies = result.days
-    .find(({ key }) => key === "styling_day")
-    ?.productBlocks.filter((block) => block.productId === productId)
-    .flatMap((block) => block.steps.map(({ copyDe }) => copyDe))
-  assert.deepEqual(copies, [
+  const copies = (key: string) =>
+    result.days
+      .find((day) => day.key === key)
+      ?.productBlocks.filter((block) => block.productId === productId)
+      .flatMap((block) => block.steps.map(({ copyDe }) => copyDe))
+  // Each heat event on its own days (Nomi consult finish T6): with required reapplication the
+  // wash day protects before the dryer AND before the iron; the Styling-Tag only has the iron.
+  assert.deepEqual(copies("wash_day"), [
     "Gleichmäßig auf handtuchtrockenem Haar verteilen. Erst danach föhnen oder stylen.",
+    "Gleichmäßig auf vollständig trockenem Haar verteilen. Erst danach das heiße Tool verwenden.",
+  ])
+  assert.deepEqual(copies("styling_day"), [
     "Gleichmäßig auf vollständig trockenem Haar verteilen. Erst danach das heiße Tool verwenden.",
   ])
 })
@@ -1109,5 +1229,370 @@ test("V2 compiler groups researched dry and damp refresh methods under one produ
   assert.deepEqual(
     blocks[0]?.steps.filter(({ action }) => action === "section").map(({ copyDe }) => copyDe),
     ["Nach dem Anfeuchten (empfohlen)", "Auf trockenem Haar"],
+  )
+})
+
+test("verified overnight Bondbuilder treatment stays a standalone Bond-Repair step", () => {
+  const overnight = {
+    ...pointer(),
+    scope: { kind: "product" as const, category: "bondbuilder" as const, productId },
+    sourceRole: "specialized_bond_treatment",
+    role: "bond_repair",
+    workflowId: "bondbuilder_verified_product",
+    applicationFamily: "overnight_leave_in_treatment",
+    facts: {
+      ...pointer().facts,
+      applicationState: "dry_hair",
+      applicationArea: "hair_lengths_ends",
+      rinse: "leave_in",
+      contactTime: null,
+      overnightAllowed: true,
+      conditionerPolicy: "not_applicable",
+    },
+    exactSteps: [
+      {
+        stepKey: "apply",
+        action: "apply_product",
+        copyDe: "Abends in die trockenen Längen und Spitzen geben und über Nacht im Haar lassen.",
+      },
+    ],
+  }
+  const parsed = productApplicationPointerV2Schema.safeParse(overnight)
+  assert.equal(parsed.success, true)
+  if (!parsed.success) return
+
+  const result = compileApplicationViewV2({
+    input: input("bondbuilder", "bond_repair"),
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: [parsed.data],
+  })
+  assert.deepEqual(result.pointerIssues, [
+    { productId: shampooProductId, role: "cleanse", reason: "missing_pointer" },
+  ])
+  const day = result.days.find(({ key }) => key === "bond_repair_day")!
+  assert.deepEqual(
+    day.productBlocks.map((block) => block.productId),
+    [productId],
+  )
+  const visible = day.outerSequence.flatMap((entry) =>
+    entry.kind === "product"
+      ? entry.block.steps.map((step) => `${step.action}:${step.copyDe}`)
+      : entry.kind === "state_transition"
+        ? [`transition:${entry.copyDe}`]
+        : [],
+  )
+  assert.doesNotMatch(visible.join(" "), /anfeuchten|ausspülen|Shampoo/i)
+
+  for (const invalid of [
+    {
+      ...overnight,
+      facts: {
+        ...overnight.facts,
+        conditionerSequence: {
+          before: "not_stated",
+          after: "recommended",
+          minimumWaitSeconds: null,
+        },
+      },
+    },
+    {
+      ...overnight,
+      facts: { ...overnight.facts, contactTime: { kind: "seconds", seconds: 600 } },
+    },
+    {
+      ...overnight,
+      facts: { ...overnight.facts, rinse: "rinse_out" },
+      exactSteps: [
+        ...overnight.exactSteps,
+        { stepKey: "rinse", action: "rinse", copyDe: "Ausspülen." },
+      ],
+    },
+  ])
+    assert.equal(productApplicationPointerV2Schema.safeParse(invalid).success, false)
+})
+
+test("a rinse-out mask gets its intensive care day: shampoo, then the timed mask (shared templates)", () => {
+  // Regression (Nomi consult finish T5): the V2 standard cleanse template is wash-day only, so
+  // `intensive_care_day` (requires cleanse + intensive_care) never formed and every rinse-out
+  // mask silently lost its instructions.
+  const result = compileApplicationViewV2({
+    input: input("mask", "intensive_care"),
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: [
+      supportingShampooPointer(),
+      pointer({
+        scope: { kind: "product", category: "mask", productId },
+        sourceRole: "intensive_conditioning_mask",
+        role: "intensive_care",
+        applicationFamily: "post_shampoo_rinse_out_mask",
+        facts: {
+          ...pointer().facts,
+          applicationArea: "hair_lengths_ends",
+          contactTime: { kind: "seconds", seconds: 300 },
+          conditionerPolicy: "replaces_conditioner",
+        },
+      }),
+    ],
+  })
+  assert.deepEqual(result.pointerIssues, [])
+  const day = result.days.find(({ key }) => key === "intensive_care_day")
+  assert.ok(day, "intensive care day compiles")
+  assert.deepEqual(
+    day.productBlocks.map((block) => block.productId),
+    [shampooProductId, productId],
+  )
+  // The wash day keeps the shampoo, without the mask.
+  const wash = result.days.find(({ key }) => key === "wash_day")
+  assert.deepEqual(
+    wash?.productBlocks.map((block) => block.productId),
+    [shampooProductId],
+  )
+})
+
+test("without a mask in the routine the shampoo stays wash-day only", () => {
+  const result = compileApplicationViewV2({
+    input: input("shampoo", "cleanse"),
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: [pointer()],
+  })
+  assert.equal(
+    result.days.some(({ key }) => key === "intensive_care_day"),
+    false,
+  )
+})
+
+// ---------------------------------------------------------------------------------------------
+// S3 §5.1 — reviewed exact workflow `heat_activated_verified_product` (T3.7).
+
+const dryShampooProductId = "30000000-0000-4000-8000-000000000003"
+
+const NEQI_STEPS = [
+  {
+    stepKey: "section",
+    action: "section" as const,
+    copyDe: "Das handtuchtrockene Haar in Partien teilen – es sollte nicht mehr nass sein.",
+  },
+  {
+    stepKey: "apply",
+    action: "apply_product" as const,
+    copyDe: "Das Spray großzügig und gleichmäßig auf jede Partie sprühen.",
+  },
+  {
+    stepKey: "activate",
+    action: "tool" as const,
+    copyDe: "Jede Partie mit Hitze und unter Spannung föhnen. Erst die Wärme aktiviert das Spray.",
+  },
+]
+
+function heatActivatedPointer(state: "damp_hair" | "dry_hair", exactSteps = NEQI_STEPS) {
+  return pointer({
+    scope: { kind: "product", category: "leave_in", productId },
+    sourceRole: "pre_heat_protection",
+    role: "heat_protection",
+    applicationFamily: state === "damp_hair" ? "pre_heat_damp" : "pre_heat_dry",
+    facts: {
+      ...pointer().facts,
+      applicationState: state,
+      applicationArea: "hair_lengths_ends",
+      rinse: "leave_in",
+      heat: {
+        supportedStates: [state],
+        activationRequired: true,
+        maximumClaimedTemperatureC: null,
+        reapplication: "each_separate_heat_event",
+      },
+    },
+    workflowId: "heat_activated_verified_product",
+    exactSteps,
+  })
+}
+
+function dryShampooPointer() {
+  return pointer({
+    scope: { kind: "product", category: "dry_shampoo", productId: dryShampooProductId },
+    sourceRole: "root_refresh_bridge",
+    role: "refresh",
+    applicationFamily: "aerosol_spray",
+    facts: { ...pointer().facts, applicationState: "dry_hair", rinse: "leave_in" },
+  })
+}
+
+function heatActivatedInput(
+  heatEvents: Array<{ id: string; tool: string; route: string }>,
+  options: { role?: string; sourceRoutineRole?: string; withDryShampoo?: boolean } = {},
+) {
+  const base = input("leave_in", options.role ?? "heat_protection") as never as {
+    routineItems: Array<Record<string, unknown>>
+    profile: Record<string, unknown>
+  }
+  const heatItem = base.routineItems.find((item) => item.productId === productId)!
+  heatItem.catalogFacts = {
+    heatActivationRequired: true,
+    heatActivationRoute: "airflow_shaping",
+  }
+  if (options.sourceRoutineRole) heatItem.sourceRoutineRole = options.sourceRoutineRole
+  if (options.withDryShampoo) {
+    base.routineItems.push({
+      itemId: "item-dry-shampoo",
+      productId: dryShampooProductId,
+      productName: "Trockenshampoo",
+      category: "dry_shampoo",
+      role: "refresh",
+      inclusion: "included",
+      availability: "owned",
+      executable: true,
+      applicationInstanceKey: "item-dry-shampoo",
+      catalogFacts: {},
+    })
+  }
+  base.profile = { heatEvents }
+  return base as never
+}
+
+const heatBlocks = (result: ReturnType<typeof compileApplicationViewV2>, key: string) =>
+  result.days
+    .find((day) => day.key === key)
+    ?.productBlocks.filter((block) => block.productId === productId) ?? []
+
+test("heat_activated_verified_product compiles to damp_hair_protection with the three Neqi steps on a wash day with a hair-dryer event", () => {
+  const composed = composeProductApplicationProtocolsV2(
+    heatActivatedPointer("damp_hair"),
+    SHARED_APPLICATION_TEMPLATES_V2,
+  )
+  assert.equal(composed.status, "resolved")
+  assert.ok(composed.status === "resolved")
+  assert.equal(composed.protocols.length, 1)
+  assert.equal(composed.protocols[0]!.applicationFamily, "damp_hair_protection")
+  assert.equal(composed.protocols[0]!.sequence.anchor, "damp_leave_on")
+  assert.deepEqual(composed.protocols[0]!.requirements.requiredProfileFacts, ["heatEvents"])
+  assert.deepEqual(composed.protocols[0]!.compatibleDayTypes, [
+    "wash_day",
+    "intensive_care_day",
+    "bond_repair_day",
+    "clarifying_wash_day",
+    "styling_day",
+  ])
+
+  const result = compileApplicationViewV2({
+    input: heatActivatedInput([{ id: "dryer", tool: "hair_dryer", route: "airflow_shaping" }], {
+      sourceRoutineRole: "pre_heat_application",
+    }),
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: [supportingShampooPointer(), heatActivatedPointer("damp_hair")],
+  })
+  assert.deepEqual(result.pointerIssues, [])
+  const wash = heatBlocks(result, "wash_day")
+  assert.equal(wash.length, 1)
+  assert.deepEqual(wash[0]!.steps, NEQI_STEPS)
+  assert.deepEqual(wash[0]!.heatEventIds, ["dryer"])
+  for (const key of ["refresh_day", "between_wash_care_day"]) {
+    assert.equal(heatBlocks(result, key).length, 0, key)
+  }
+})
+
+test("generic activated dry variant appears only on refresh days with a blow-dry event", () => {
+  const dryVariant = heatActivatedPointer("dry_hair", [
+    {
+      stepKey: "apply-between-washes",
+      action: "apply_product",
+      copyDe: "Zwischen den Haarwäschen gegen Frizz: die Creme im trockenen Haar verteilen.",
+    },
+    {
+      stepKey: "activate",
+      action: "tool",
+      copyDe: "Danach föhnen – erst die Wärme aktiviert die Pflege.",
+    },
+  ])
+  const pointers = [
+    supportingShampooPointer(),
+    dryShampooPointer(),
+    heatActivatedPointer("damp_hair"),
+    dryVariant,
+  ]
+  const blowDry = compileApplicationViewV2({
+    input: heatActivatedInput([{ id: "dryer", tool: "hair_dryer", route: "airflow_shaping" }], {
+      withDryShampoo: true,
+    }),
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: pointers,
+  })
+  assert.deepEqual(blowDry.pointerIssues, [])
+  const refresh = heatBlocks(blowDry, "refresh_day")
+  assert.equal(refresh.length, 1)
+  assert.deepEqual(
+    refresh[0]!.steps.map((step) => step.stepKey),
+    ["apply-between-washes", "activate"],
+  )
+  for (const day of blowDry.days) {
+    if (day.key === "refresh_day") continue
+    assert.equal(
+      heatBlocks(blowDry, day.key).some((block) =>
+        block.steps.some((step) => step.stepKey === "apply-between-washes"),
+      ),
+      false,
+      day.key,
+    )
+  }
+  // A direct-heat event alone never reaches the airflow-activated dry variant.
+  const ironOnly = compileApplicationViewV2({
+    input: heatActivatedInput(
+      [{ id: "iron", tool: "straightener", route: "direct_contact_heat" }],
+      {
+        withDryShampoo: true,
+      },
+    ),
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: pointers,
+  })
+  assert.equal(heatBlocks(ironOnly, "refresh_day").length, 0)
+})
+
+test("no universal between-wash methods for activated products", () => {
+  // A frozen routine may still carry an activated product as its post-wash Leave-in (S3 Q1):
+  // its sourced post-wash row stays, but no generic between-wash copy is synthesised for it.
+  const postWash = pointer({
+    scope: { kind: "product", category: "leave_in", productId },
+    sourceRole: "post_wash_leave_in",
+    role: "leave_in",
+    applicationFamily: "post_wash_damp_conditioning",
+    facts: {
+      ...pointer().facts,
+      applicationState: "damp_hair",
+      applicationArea: "hair_lengths_ends",
+      rinse: "leave_in",
+    },
+  })
+  const result = compileApplicationViewV2({
+    input: heatActivatedInput([], { role: "leave_in" }),
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: [supportingShampooPointer(), postWash],
+  })
+  assert.deepEqual(result.pointerIssues, [])
+  assert.equal(heatBlocks(result, "wash_day").length, 1)
+  for (const key of ["refresh_day", "between_wash_care_day"]) {
+    assert.equal(heatBlocks(result, key).length, 0, key)
+  }
+})
+
+test("straightener-only profile yields no Neqi occurrence", () => {
+  const result = compileApplicationViewV2({
+    input: heatActivatedInput(
+      [{ id: "iron", tool: "straightener", route: "direct_contact_heat" }],
+      {
+        sourceRoutineRole: "pre_heat_application",
+      },
+    ),
+    familyTemplates: SHARED_APPLICATION_TEMPLATES_V2,
+    productPointers: [supportingShampooPointer(), heatActivatedPointer("damp_hair")],
+  })
+  assert.equal(
+    result.days.some((day) =>
+      day.outerSequence.some(
+        (entry) =>
+          (entry.kind === "product" || entry.kind === "unresolved_product") &&
+          entry.block.productId === productId,
+      ),
+    ),
+    false,
   )
 })

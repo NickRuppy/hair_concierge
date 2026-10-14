@@ -6,17 +6,12 @@ import { renderToStaticMarkup } from "react-dom/server"
 import { PartnerInvitationCard } from "../src/app/partner/einladung/partner-invitation-client"
 import { shouldClearQuizDraft } from "../src/lib/partner-access/quiz-context"
 
-test("creator invitation keeps the approved concise identity and account-creation copy", () => {
+test("creator invitation greets a full-name account by first name", () => {
   const html = renderToStaticMarkup(
-    <PartnerInvitationCard
-      email="lea@example.test"
-      mode="ready"
-      name="Lea"
-      onChangeEmail={() => {}}
-      onContinue={() => {}}
-    />,
+    <PartnerInvitationCard email="lea@example.test" mode="ready" name="Lea Sommer" />,
   )
   assert.match(html, /Hi Lea, dein Zugang ist bereit\./)
+  assert.doesNotMatch(html, /Hi Lea Sommer/)
   assert.match(html, /lea@example\.test/)
   assert.match(html, /Nicht deine E-Mail\? Ändern/)
   assert.match(html, /Los geht’s/)
@@ -25,14 +20,6 @@ test("creator invitation keeps the approved concise identity and account-creatio
     /Damit erstellst du dein Chaarlie Konto mit dieser E-Mail\. Hast du schon eins, startest du damit neu\./,
   )
   assert.doesNotMatch(html, /Abo|Zahlung|lebenslang|Produkttest|kostenlos/i)
-})
-
-test("creator invitation greets a full-name account by first name", () => {
-  const html = renderToStaticMarkup(
-    <PartnerInvitationCard email="lea@example.test" mode="ready" name="Lea Sommer" />,
-  )
-  assert.match(html, /Hi Lea, dein Zugang ist bereit\./)
-  assert.doesNotMatch(html, /Hi Lea Sommer/)
 })
 
 test("email correction stays inline and short", () => {

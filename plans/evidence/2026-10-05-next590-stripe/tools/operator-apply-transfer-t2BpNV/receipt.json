@@ -1,0 +1,35 @@
+{
+  "mode": "transfer",
+  "from": "before",
+  "phase": "transfer",
+  "counts": {
+    "before": 128,
+    "transfer": 128,
+    "cut": 123
+  },
+  "pinsSHA": "2b8a775ac83ec817b274a8e881aa782e011f7109065645b947208414b53eff8c",
+  "prerequisite": null,
+  "changed": [
+    "tests/stripe-trial-invoice.test.ts",
+    "tests/stripe-trial-account-activation.test.ts",
+    "tests/stripe-trial-authorization.test.ts"
+  ],
+  "allTestHashes": {
+    "tests/stripe-trial-invoice.test.ts": "6d0cb2013d4c46a2c2ecc544934238e882f231897d2ef33168439fd90976a31d",
+    "tests/stripe-trial-account-activation.test.ts": "b501af7ceb20a13b51776bc55659f9d911b0c1e44a81bd0ed042afd6fb9e8fb2",
+    "tests/stripe-trial-subscription-lifecycle.test.ts": "fa5206bb4626cdb32c5c6a7f4e1d18c0f19522d98aa34ec881fc26c06c524651",
+    "tests/stripe-trial-continuation.test.ts": "2adaa26b3787d1b866360f06f5a7b5325701bc673cddd106a9e43c40a52dc036",
+    "tests/stripe-trial-authorization.test.ts": "2892f7bd5e3ec2e4e8f9888d89b6a3d4808c9a19603eede5fa8d305a5a391f35",
+    "tests/stripe-trial-checkout.test.ts": "b7ca67b634e0381d0a60a56fa1b2f977a9e43530868b4719b1dffa58e1f95292",
+    "tests/stripe-trial-continuation-reconcile.test.ts": "2fb3d2e2b1813994b02b581dbe0e338f8b18b5802d827274af28fbe49789d250",
+    "tests/stripe-trial-management.test.ts": "fdcc0443934d110adc0adbaa2e3b003432ebef2cc5efa7b745bba3e6ac0d2855",
+    "tests/stripe-trial-cancellation.test.ts": "aa683f1e596ff838934812921ce7d2baf5ea081ff8a2db515ab9ec9255705767",
+    "tests/stripe-trial-prior-paid-history.test.ts": "6b24bb9eae7e2fb3b1c2ece6f43532d809b64766cceae626c6d81eef81ad87f7",
+    "tests/stripe-trial-checkout-route.test.ts": "9ecb370408c14ef478200373ac33bc74b583294b23da2f7e18681ab2a187d571",
+    "tests/stripe-trial-checkout-session-params.test.ts": "a6924fe6bcff65baecb70a7845d7293c4190c76cd6fad0a16fa1ff1ff51e9066",
+    "tests/stripe-trial-catalog.test.ts": "7d69cb89ee4618f690fcfd1d542a569959716a0cf9754867edcef152219ad2e7"
+  },
+  "sourceWrites": 0,
+  "testsRun": 0,
+  "originals": "/tmp/test-audit-stripe-trial128-tools-ptnotcxj/operator-apply-transfer-t2BpNV/originals"
+}

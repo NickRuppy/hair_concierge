@@ -1,0 +1,612 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "scope": "Welcome41: C2 D2 source-layer proposals; no new inputs or production changes",
+  "counts": {
+    "before": 41,
+    "transfer": 41,
+    "cut": 37
+  },
+  "sourceAndDependencyGuards": {
+    "src/app/welcome/page.tsx": "e6c5c768deee6f4f304e1dc5a4ed27ba8c0a186938069fec0c579ed560fda24e",
+    "src/app/welcome/welcome-client.tsx": "2f877931f7c2808f67448d6d10d0a9357c2fd3665c37f3b9d49efb43a630288a",
+    "src/app/welcome/checkout-return-analytics.tsx": "4fab997f44da9c7a4cc394e1fb1e8b71d20ed6c7d1a4cd769ec5b45954c5c677",
+    "src/app/welcome/checkout-recovery-panel.tsx": "9e0b4124121cdeec83d7ed5b968c78614e0f425173f04976cca0c6c2a74dd01f",
+    "src/app/welcome/return-recovery.ts": "b3423a24db110ad4b548367fb72d5cfd29d4563982cd6d39481bd10d3166fd34",
+    "src/lib/auth/checkout-recovery-classification.ts": "dfbeab9ceb96c29248f4a0ba1fea329a32046173050cd2d2c68a93cc3de68625",
+    "src/lib/auth/checkout-activation-outcome.ts": "23cd9f0bdbebe849abab313f2ce8dc418e0c3c5f1c4021714af7c904c60bee73",
+    "src/lib/auth/password-policy.ts": "443c18952f1e58d301b8a83aecd6bc298d9579da2ee0e76edae3e784bcf98100",
+    "package.json": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59",
+    ".github/workflows/ci.yml": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+    "tsconfig.json": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd"
+  },
+  "files": [
+    {
+      "file": "tests/welcome-email-display.test.tsx",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-welcome-static-staging-KxP8jA/before/tests/welcome-email-display.test.tsx",
+          "sha256": "cb522ce336266f04f7680e16921b02c19bc26ce75449feb439cea7594a54d54f",
+          "count": 20
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-welcome-static-staging-KxP8jA/transfer/tests/welcome-email-display.test.tsx",
+          "sha256": "cb522ce336266f04f7680e16921b02c19bc26ce75449feb439cea7594a54d54f",
+          "count": 20
+        },
+        "cut": {
+          "path": "/tmp/test-audit-welcome-static-staging-KxP8jA/cut/tests/welcome-email-display.test.tsx",
+          "sha256": "2bae6041956f8b106ae68b7e77b971d65ee0f0dd026fa769be5bf36960772b55",
+          "count": 17
+        }
+      },
+      "expectedDeclarations": {
+        "before": [
+          {
+            "title": "PayPal welcome passes Chaarlie and provider subscriber emails separately",
+            "bodySha256": "7fdc735d1e00a868bae1fc1f16cf5172dcc72c630500e587188a551ba777ea02"
+          },
+          {
+            "title": "PayPal welcome uses a hashed analytics id instead of the activation token",
+            "bodySha256": "a9df5c046c7c055bb66e4975c14bb6e08ce2510fe169ddbc72cd6a4c4a162d15"
+          },
+          {
+            "title": "PayPal pending polling depends on the stable token instead of the activationSource object",
+            "bodySha256": "830ca7adb34319e883bfa7ed05d24c135d436f5c9b451df1051f4f19093aa8d5"
+          },
+          {
+            "title": "terminal PayPal activation polling reports a typed payment failure without the token",
+            "bodySha256": "5de010a647848db5ee63e2f53804a65bb8c3f3884125abcd29eab02c168b9f12"
+          },
+          {
+            "title": "welcome labels the account email as Chaarlie-E-Mail",
+            "bodySha256": "74eb91b7a79cab549897083a06abc428859af481d88e7a4eb1e3e70cb92c61f3"
+          },
+          {
+            "title": "welcome only shows PayPal-E-Mail when it differs from Chaarlie email",
+            "bodySha256": "71895b2eab64f9c8b2afb115816d81ad367efd9ff0f02b46fbd77c60aa546383"
+          },
+          {
+            "title": "one-time welcome recovery selects the order activator and neutral access copy",
+            "bodySha256": "16153ec061a06c4695f8c7c2757e16fd9da3015f4501d706f05590aac8df59e5"
+          },
+          {
+            "title": "one-time pending polls the provider-neutral activation status route",
+            "bodySha256": "946482d86adb27a1d998dd68d61dbaa76d8701a85c6c862a5c67cb7f3b1d23ae"
+          },
+          {
+            "title": "Stripe one-time welcome renders paid-pending instead of activation choices",
+            "bodySha256": "fcfd21572c680aec1608d61e2a1f4a7271c6058f134b40db4f00d4b58f3121ba"
+          },
+          {
+            "title": "authenticated Stripe and PayPal one-time returns pass their derived Personal Plan destination to the shared redirect contract",
+            "bodySha256": "3c6569a354838e7f435ed2a45512813c80242898dfdb7b6bc6dfacdf2e6a4527"
+          },
+          {
+            "title": "one-time activation errors render a safe support or revoked state instead of repricing",
+            "bodySha256": "f1e0eb889f75e4f01f9cbd8b8d58edb4b6cae1c487641789974ade5417a2a987"
+          },
+          {
+            "title": "paid Stripe checkout_one_time_invalid verification failures recover to pending support instead of pricing",
+            "bodySha256": "343ed6e3168eb154517c377cc3c109bb34ac1377f2b3f1e7495dc3e49f513843"
+          },
+          {
+            "title": "a paid Stripe verification failure preserves the revoked return state",
+            "bodySha256": "a67970872372f261c8ef35cbc21b14e0f6466cf57c0431407ef072e4980d7a55"
+          },
+          {
+            "title": "unpaid or non-payment Stripe verification failures expose safe recovery without repricing",
+            "bodySha256": "9f43bc039d20cda115a8643aa35025733f07e40d54809bf60077f2089b5dd5dc"
+          },
+          {
+            "title": "PayPal one-time pending and revoked returns do not require an account",
+            "bodySha256": "454eff928d9d31ff2eb2a32804c2346d47de4b2160b407e1af2d00db52a6d13a"
+          },
+          {
+            "title": "one-time pending accepts pending states, reloads active, and blocks permanent states",
+            "bodySha256": "e054e87729213fbfe6485f13b0e9490f7018ea5c8b77f4b03627b61e57915fed"
+          },
+          {
+            "title": "retryable support can poll again while revoked and terminal failure stay support-only",
+            "bodySha256": "01ea159ed9f47f813b204d1107b114dedd08c40a50a05e5b55a48fc9bd950d5c"
+          },
+          {
+            "title": "one-time pending timeout is support-safe and never offers repurchase",
+            "bodySha256": "21e040bc1da5147f1bb613ced685bfc16147cfb58b9bb67793e0651e8e108e6a"
+          },
+          {
+            "title": "one-time pending renders the approved calm copy and progress labels",
+            "bodySha256": "644f6af94ae8acdb47f56e8194c860c5c3b003ea56734cbaf3def407485f0103"
+          },
+          {
+            "title": "checkout return analytics does not emit completion events without server purchase truth",
+            "bodySha256": "0767a7a5a202932d80a050e8f05d0603fba1ee770179ad92b385eac903d0efac"
+          }
+        ],
+        "transfer": [
+          {
+            "title": "PayPal welcome passes Chaarlie and provider subscriber emails separately",
+            "bodySha256": "7fdc735d1e00a868bae1fc1f16cf5172dcc72c630500e587188a551ba777ea02"
+          },
+          {
+            "title": "PayPal welcome uses a hashed analytics id instead of the activation token",
+            "bodySha256": "a9df5c046c7c055bb66e4975c14bb6e08ce2510fe169ddbc72cd6a4c4a162d15"
+          },
+          {
+            "title": "PayPal pending polling depends on the stable token instead of the activationSource object",
+            "bodySha256": "830ca7adb34319e883bfa7ed05d24c135d436f5c9b451df1051f4f19093aa8d5"
+          },
+          {
+            "title": "terminal PayPal activation polling reports a typed payment failure without the token",
+            "bodySha256": "5de010a647848db5ee63e2f53804a65bb8c3f3884125abcd29eab02c168b9f12"
+          },
+          {
+            "title": "welcome labels the account email as Chaarlie-E-Mail",
+            "bodySha256": "74eb91b7a79cab549897083a06abc428859af481d88e7a4eb1e3e70cb92c61f3"
+          },
+          {
+            "title": "welcome only shows PayPal-E-Mail when it differs from Chaarlie email",
+            "bodySha256": "71895b2eab64f9c8b2afb115816d81ad367efd9ff0f02b46fbd77c60aa546383"
+          },
+          {
+            "title": "one-time welcome recovery selects the order activator and neutral access copy",
+            "bodySha256": "16153ec061a06c4695f8c7c2757e16fd9da3015f4501d706f05590aac8df59e5"
+          },
+          {
+            "title": "one-time pending polls the provider-neutral activation status route",
+            "bodySha256": "946482d86adb27a1d998dd68d61dbaa76d8701a85c6c862a5c67cb7f3b1d23ae"
+          },
+          {
+            "title": "Stripe one-time welcome renders paid-pending instead of activation choices",
+            "bodySha256": "fcfd21572c680aec1608d61e2a1f4a7271c6058f134b40db4f00d4b58f3121ba"
+          },
+          {
+            "title": "authenticated Stripe and PayPal one-time returns pass their derived Personal Plan destination to the shared redirect contract",
+            "bodySha256": "3c6569a354838e7f435ed2a45512813c80242898dfdb7b6bc6dfacdf2e6a4527"
+          },
+          {
+            "title": "one-time activation errors render a safe support or revoked state instead of repricing",
+            "bodySha256": "f1e0eb889f75e4f01f9cbd8b8d58edb4b6cae1c487641789974ade5417a2a987"
+          },
+          {
+            "title": "paid Stripe checkout_one_time_invalid verification failures recover to pending support instead of pricing",
+            "bodySha256": "343ed6e3168eb154517c377cc3c109bb34ac1377f2b3f1e7495dc3e49f513843"
+          },
+          {
+            "title": "a paid Stripe verification failure preserves the revoked return state",
+            "bodySha256": "a67970872372f261c8ef35cbc21b14e0f6466cf57c0431407ef072e4980d7a55"
+          },
+          {
+            "title": "unpaid or non-payment Stripe verification failures expose safe recovery without repricing",
+            "bodySha256": "9f43bc039d20cda115a8643aa35025733f07e40d54809bf60077f2089b5dd5dc"
+          },
+          {
+            "title": "PayPal one-time pending and revoked returns do not require an account",
+            "bodySha256": "454eff928d9d31ff2eb2a32804c2346d47de4b2160b407e1af2d00db52a6d13a"
+          },
+          {
+            "title": "one-time pending accepts pending states, reloads active, and blocks permanent states",
+            "bodySha256": "e054e87729213fbfe6485f13b0e9490f7018ea5c8b77f4b03627b61e57915fed"
+          },
+          {
+            "title": "retryable support can poll again while revoked and terminal failure stay support-only",
+            "bodySha256": "01ea159ed9f47f813b204d1107b114dedd08c40a50a05e5b55a48fc9bd950d5c"
+          },
+          {
+            "title": "one-time pending timeout is support-safe and never offers repurchase",
+            "bodySha256": "21e040bc1da5147f1bb613ced685bfc16147cfb58b9bb67793e0651e8e108e6a"
+          },
+          {
+            "title": "one-time pending renders the approved calm copy and progress labels",
+            "bodySha256": "644f6af94ae8acdb47f56e8194c860c5c3b003ea56734cbaf3def407485f0103"
+          },
+          {
+            "title": "checkout return analytics does not emit completion events without server purchase truth",
+            "bodySha256": "0767a7a5a202932d80a050e8f05d0603fba1ee770179ad92b385eac903d0efac"
+          }
+        ],
+        "cut": [
+          {
+            "title": "PayPal welcome passes Chaarlie and provider subscriber emails separately",
+            "bodySha256": "7fdc735d1e00a868bae1fc1f16cf5172dcc72c630500e587188a551ba777ea02"
+          },
+          {
+            "title": "PayPal welcome uses a hashed analytics id instead of the activation token",
+            "bodySha256": "a9df5c046c7c055bb66e4975c14bb6e08ce2510fe169ddbc72cd6a4c4a162d15"
+          },
+          {
+            "title": "PayPal pending polling depends on the stable token instead of the activationSource object",
+            "bodySha256": "830ca7adb34319e883bfa7ed05d24c135d436f5c9b451df1051f4f19093aa8d5"
+          },
+          {
+            "title": "welcome only shows PayPal-E-Mail when it differs from Chaarlie email",
+            "bodySha256": "71895b2eab64f9c8b2afb115816d81ad367efd9ff0f02b46fbd77c60aa546383"
+          },
+          {
+            "title": "one-time welcome recovery selects the order activator and neutral access copy",
+            "bodySha256": "16153ec061a06c4695f8c7c2757e16fd9da3015f4501d706f05590aac8df59e5"
+          },
+          {
+            "title": "one-time pending polls the provider-neutral activation status route",
+            "bodySha256": "946482d86adb27a1d998dd68d61dbaa76d8701a85c6c862a5c67cb7f3b1d23ae"
+          },
+          {
+            "title": "Stripe one-time welcome renders paid-pending instead of activation choices",
+            "bodySha256": "fcfd21572c680aec1608d61e2a1f4a7271c6058f134b40db4f00d4b58f3121ba"
+          },
+          {
+            "title": "authenticated Stripe and PayPal one-time returns pass their derived Personal Plan destination to the shared redirect contract",
+            "bodySha256": "3c6569a354838e7f435ed2a45512813c80242898dfdb7b6bc6dfacdf2e6a4527"
+          },
+          {
+            "title": "one-time activation errors render a safe support or revoked state instead of repricing",
+            "bodySha256": "f1e0eb889f75e4f01f9cbd8b8d58edb4b6cae1c487641789974ade5417a2a987"
+          },
+          {
+            "title": "paid Stripe checkout_one_time_invalid verification failures recover to pending support instead of pricing",
+            "bodySha256": "343ed6e3168eb154517c377cc3c109bb34ac1377f2b3f1e7495dc3e49f513843"
+          },
+          {
+            "title": "unpaid or non-payment Stripe verification failures expose safe recovery without repricing",
+            "bodySha256": "9f43bc039d20cda115a8643aa35025733f07e40d54809bf60077f2089b5dd5dc"
+          },
+          {
+            "title": "PayPal one-time pending and revoked returns do not require an account",
+            "bodySha256": "454eff928d9d31ff2eb2a32804c2346d47de4b2160b407e1af2d00db52a6d13a"
+          },
+          {
+            "title": "one-time pending accepts pending states, reloads active, and blocks permanent states",
+            "bodySha256": "e054e87729213fbfe6485f13b0e9490f7018ea5c8b77f4b03627b61e57915fed"
+          },
+          {
+            "title": "retryable support can poll again while revoked and terminal failure stay support-only",
+            "bodySha256": "01ea159ed9f47f813b204d1107b114dedd08c40a50a05e5b55a48fc9bd950d5c"
+          },
+          {
+            "title": "one-time pending timeout is support-safe and never offers repurchase",
+            "bodySha256": "21e040bc1da5147f1bb613ced685bfc16147cfb58b9bb67793e0651e8e108e6a"
+          },
+          {
+            "title": "one-time pending renders the approved calm copy and progress labels",
+            "bodySha256": "644f6af94ae8acdb47f56e8194c860c5c3b003ea56734cbaf3def407485f0103"
+          },
+          {
+            "title": "checkout return analytics does not emit completion events without server purchase truth",
+            "bodySha256": "0767a7a5a202932d80a050e8f05d0603fba1ee770179ad92b385eac903d0efac"
+          }
+        ]
+      }
+    },
+    {
+      "file": "tests/welcome-plan-opening-bridge.test.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-welcome-static-staging-KxP8jA/before/tests/welcome-plan-opening-bridge.test.ts",
+          "sha256": "2770e2bbe87d60c3d0575e2d241552b20ce74c637d5074e49631fbddf49bd7d0",
+          "count": 3
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-welcome-static-staging-KxP8jA/transfer/tests/welcome-plan-opening-bridge.test.ts",
+          "sha256": "2770e2bbe87d60c3d0575e2d241552b20ce74c637d5074e49631fbddf49bd7d0",
+          "count": 3
+        },
+        "cut": {
+          "path": "/tmp/test-audit-welcome-static-staging-KxP8jA/cut/tests/welcome-plan-opening-bridge.test.ts",
+          "sha256": "2770e2bbe87d60c3d0575e2d241552b20ce74c637d5074e49631fbddf49bd7d0",
+          "count": 3
+        }
+      },
+      "expectedDeclarations": {
+        "before": [
+          {
+            "title": "plan-bereit redirects paint the opening frame and stamp the beat marker",
+            "bodySha256": "22d4bf82e27894fae6d614450ef1c6008a33cd29141b2b635a73b6dacfa0609d"
+          },
+          {
+            "title": "activation-ready plan-start redirects share the choreography instead of the Weiterleitung flash",
+            "bodySha256": "9080c68769fe14eca410a332eaa55b72e0ee0ae620522a7639afc008d9861443"
+          },
+          {
+            "title": "other redirect targets keep the generic confirmation screen and no-JS keeps a real link",
+            "bodySha256": "e07afd5c94da8ad992b48d3c632c40cdd98248f1f2edcc5c46182e0130e43e9e"
+          }
+        ],
+        "transfer": [
+          {
+            "title": "plan-bereit redirects paint the opening frame and stamp the beat marker",
+            "bodySha256": "22d4bf82e27894fae6d614450ef1c6008a33cd29141b2b635a73b6dacfa0609d"
+          },
+          {
+            "title": "activation-ready plan-start redirects share the choreography instead of the Weiterleitung flash",
+            "bodySha256": "9080c68769fe14eca410a332eaa55b72e0ee0ae620522a7639afc008d9861443"
+          },
+          {
+            "title": "other redirect targets keep the generic confirmation screen and no-JS keeps a real link",
+            "bodySha256": "e07afd5c94da8ad992b48d3c632c40cdd98248f1f2edcc5c46182e0130e43e9e"
+          }
+        ],
+        "cut": [
+          {
+            "title": "plan-bereit redirects paint the opening frame and stamp the beat marker",
+            "bodySha256": "22d4bf82e27894fae6d614450ef1c6008a33cd29141b2b635a73b6dacfa0609d"
+          },
+          {
+            "title": "activation-ready plan-start redirects share the choreography instead of the Weiterleitung flash",
+            "bodySha256": "9080c68769fe14eca410a332eaa55b72e0ee0ae620522a7639afc008d9861443"
+          },
+          {
+            "title": "other redirect targets keep the generic confirmation screen and no-JS keeps a real link",
+            "bodySha256": "e07afd5c94da8ad992b48d3c632c40cdd98248f1f2edcc5c46182e0130e43e9e"
+          }
+        ]
+      }
+    },
+    {
+      "file": "tests/welcome-activation-return.test.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-welcome-static-staging-KxP8jA/before/tests/welcome-activation-return.test.ts",
+          "sha256": "b4714af57b0a0ddc7206d437e9efbdd0937d9a500daf6512138929b43ea2cd06",
+          "count": 7
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-welcome-static-staging-KxP8jA/transfer/tests/welcome-activation-return.test.ts",
+          "sha256": "b4714af57b0a0ddc7206d437e9efbdd0937d9a500daf6512138929b43ea2cd06",
+          "count": 7
+        },
+        "cut": {
+          "path": "/tmp/test-audit-welcome-static-staging-KxP8jA/cut/tests/welcome-activation-return.test.ts",
+          "sha256": "bb7cbb49734764f14c569a7b40745fdc513ae6ac235c5867134d8ca2132baad3",
+          "count": 6
+        }
+      },
+      "expectedDeclarations": {
+        "before": [
+          {
+            "title": "persisted Stripe trial denial renders before account writes or destination reads for signed-in and anonymous returns",
+            "bodySha256": "ce7c709459f4fbd1cc5969671464b4e74840a7559a99fa40f5a28ba7c8932504"
+          },
+          {
+            "title": "the preflight guard is sensitive to an in-memory bypass",
+            "bodySha256": "b304633489dc0d99aa28492ca9e76ec7131889ac932d631f1841d95fe5def3f1"
+          },
+          {
+            "title": "Stripe verification failures keep paid one-time returns pending and classify terminal failures",
+            "bodySha256": "8a89daacd50dc841694c6db3706955dfb9f1d5db956a9716cab925950ceb3be0"
+          },
+          {
+            "title": "PayPal recovery duplicate uses a terminal panel while legacy duplicate retains its existing client mode",
+            "bodySha256": "f67347d5fa4b6977858cc4e2b6d1656b5a7eacbd85d953420af95b3dfaf712b3"
+          },
+          {
+            "title": "invalid PayPal token and failures render safe terminal panels without raw provider errors",
+            "bodySha256": "faafe635dad5d963cdf06e0776b8b5914dd5005a71f6c3fff9c0fd83b168f902"
+          },
+          {
+            "title": "incomplete and unpaid Stripe returns allow finishing the same checkout",
+            "bodySha256": "98b4ecee06cab42d261a3171b801985b80b3c030d1a50d03206ba59ff2854c43"
+          },
+          {
+            "title": "inactive PayPal returns offer support instead of retrying a terminal checkout",
+            "bodySha256": "474171f34579fc00930ce75fcbbdc07fd153163664fb774f9420d40b85f2a656"
+          }
+        ],
+        "transfer": [
+          {
+            "title": "persisted Stripe trial denial renders before account writes or destination reads for signed-in and anonymous returns",
+            "bodySha256": "ce7c709459f4fbd1cc5969671464b4e74840a7559a99fa40f5a28ba7c8932504"
+          },
+          {
+            "title": "the preflight guard is sensitive to an in-memory bypass",
+            "bodySha256": "b304633489dc0d99aa28492ca9e76ec7131889ac932d631f1841d95fe5def3f1"
+          },
+          {
+            "title": "Stripe verification failures keep paid one-time returns pending and classify terminal failures",
+            "bodySha256": "8a89daacd50dc841694c6db3706955dfb9f1d5db956a9716cab925950ceb3be0"
+          },
+          {
+            "title": "PayPal recovery duplicate uses a terminal panel while legacy duplicate retains its existing client mode",
+            "bodySha256": "f67347d5fa4b6977858cc4e2b6d1656b5a7eacbd85d953420af95b3dfaf712b3"
+          },
+          {
+            "title": "invalid PayPal token and failures render safe terminal panels without raw provider errors",
+            "bodySha256": "faafe635dad5d963cdf06e0776b8b5914dd5005a71f6c3fff9c0fd83b168f902"
+          },
+          {
+            "title": "incomplete and unpaid Stripe returns allow finishing the same checkout",
+            "bodySha256": "98b4ecee06cab42d261a3171b801985b80b3c030d1a50d03206ba59ff2854c43"
+          },
+          {
+            "title": "inactive PayPal returns offer support instead of retrying a terminal checkout",
+            "bodySha256": "474171f34579fc00930ce75fcbbdc07fd153163664fb774f9420d40b85f2a656"
+          }
+        ],
+        "cut": [
+          {
+            "title": "persisted Stripe trial denial renders before account writes or destination reads for signed-in and anonymous returns",
+            "bodySha256": "ce7c709459f4fbd1cc5969671464b4e74840a7559a99fa40f5a28ba7c8932504"
+          },
+          {
+            "title": "Stripe verification failures keep paid one-time returns pending and classify terminal failures",
+            "bodySha256": "8a89daacd50dc841694c6db3706955dfb9f1d5db956a9716cab925950ceb3be0"
+          },
+          {
+            "title": "PayPal recovery duplicate uses a terminal panel while legacy duplicate retains its existing client mode",
+            "bodySha256": "f67347d5fa4b6977858cc4e2b6d1656b5a7eacbd85d953420af95b3dfaf712b3"
+          },
+          {
+            "title": "invalid PayPal token and failures render safe terminal panels without raw provider errors",
+            "bodySha256": "faafe635dad5d963cdf06e0776b8b5914dd5005a71f6c3fff9c0fd83b168f902"
+          },
+          {
+            "title": "incomplete and unpaid Stripe returns allow finishing the same checkout",
+            "bodySha256": "98b4ecee06cab42d261a3171b801985b80b3c030d1a50d03206ba59ff2854c43"
+          },
+          {
+            "title": "inactive PayPal returns offer support instead of retrying a terminal checkout",
+            "bodySha256": "474171f34579fc00930ce75fcbbdc07fd153163664fb774f9420d40b85f2a656"
+          }
+        ]
+      }
+    },
+    {
+      "file": "tests/welcome-activation-outcomes.spec.ts",
+      "phases": {
+        "before": {
+          "path": "/tmp/test-audit-welcome-static-staging-KxP8jA/before/tests/welcome-activation-outcomes.spec.ts",
+          "sha256": "c3325ff91decf7de3246882e0b6be84fb6abc0a2d0480b675fdef7e2e60002f3",
+          "count": 11
+        },
+        "transfer": {
+          "path": "/tmp/test-audit-welcome-static-staging-KxP8jA/transfer/tests/welcome-activation-outcomes.spec.ts",
+          "sha256": "e77b44b4d81eb42a0906f5ea5c233d7d3493c5c234421b8ba6182dffe60d7c44",
+          "count": 11
+        },
+        "cut": {
+          "path": "/tmp/test-audit-welcome-static-staging-KxP8jA/cut/tests/welcome-activation-outcomes.spec.ts",
+          "sha256": "e77b44b4d81eb42a0906f5ea5c233d7d3493c5c234421b8ba6182dffe60d7c44",
+          "count": 11
+        }
+      },
+      "expectedDeclarations": {
+        "before": [
+          {
+            "title": "verified terminal denial replaces activation choices and links to real recovery destinations",
+            "bodySha256": "d5114a55697caa8ae96010dd026cbd1df6eda1f96f2688e0e39d4b74d310fe16"
+          },
+          {
+            "title": "`${provider} post denial uses trusted code rather than server exception text`",
+            "bodySha256": "4253d3ee8597b9431fc884816ac746b4047fd6fa8f663fdbaf650037ec579564"
+          },
+          {
+            "title": "email send failure keeps password input and allows a successful resend",
+            "bodySha256": "f1bb63d1b403447029c55cd3496c064740fce35ebcc8ffd4917d67f3c3e6245c"
+          },
+          {
+            "title": "used activation claim leads to normal login without offering another activation attempt",
+            "bodySha256": "dc57bee59d76a03c372a847c27aed9ba7dda0e1c3dd5b9be5e64f05581bd28ed"
+          },
+          {
+            "title": "PayPal terminal polling outcome stops pending and exposes support",
+            "bodySha256": "36e8c627c9479284d766ac814c78f1a2906e04746ee5fea160c570793605912a"
+          },
+          {
+            "title": "password saved but sign-in failed offers login with the new password",
+            "bodySha256": "767a9ec4dcee80047650748630b93f89c0e1025683b3c89744b7610ce26de76d"
+          },
+          {
+            "title": "`${code} retains both password fields and supports retry`",
+            "bodySha256": "75a773fb1b976d03d9fd5b93d3964657e9760f99ee3a9b9f1093dc951caa4bc9"
+          },
+          {
+            "title": "all terminal recovery states remove resubmission and private account details",
+            "bodySha256": "162394fa611df3834e35718aab84b58417a8d3ac3f3cacf6da31c03103c06292"
+          },
+          {
+            "title": "PayPal pending POST continues status checking and handles a non-2xx terminal result",
+            "bodySha256": "8ed0d74a6cc6f5877686400e2dbe4282e8365592ed6b6a68d976619a6433be45"
+          },
+          {
+            "title": "pending refresh preserves the same return reference",
+            "bodySha256": "36415ccb16b1d816ab4addb73bdad9985a33a966e2d0300c4afa30f6eb8a4cf8"
+          },
+          {
+            "title": "PayPal poll timeout replaces the spinner with status-retry feedback",
+            "bodySha256": "6918e7186641b5d5668a8c148abf245e4af866c1c3b7c90700c0f95945d87360"
+          }
+        ],
+        "transfer": [
+          {
+            "title": "verified terminal denial replaces activation choices and links to real recovery destinations",
+            "bodySha256": "d5114a55697caa8ae96010dd026cbd1df6eda1f96f2688e0e39d4b74d310fe16"
+          },
+          {
+            "title": "`${provider} post denial uses trusted code rather than server exception text`",
+            "bodySha256": "4253d3ee8597b9431fc884816ac746b4047fd6fa8f663fdbaf650037ec579564"
+          },
+          {
+            "title": "email send failure keeps password input and allows a successful resend",
+            "bodySha256": "51d499eba51aa78b189a523443fa3cf5fd2fe1d27ed164a832376d797bed23f3"
+          },
+          {
+            "title": "used activation claim leads to normal login without offering another activation attempt",
+            "bodySha256": "dc57bee59d76a03c372a847c27aed9ba7dda0e1c3dd5b9be5e64f05581bd28ed"
+          },
+          {
+            "title": "PayPal terminal polling outcome stops pending and exposes support",
+            "bodySha256": "36e8c627c9479284d766ac814c78f1a2906e04746ee5fea160c570793605912a"
+          },
+          {
+            "title": "password saved but sign-in failed offers login with the new password",
+            "bodySha256": "767a9ec4dcee80047650748630b93f89c0e1025683b3c89744b7610ce26de76d"
+          },
+          {
+            "title": "`${code} retains both password fields and supports retry`",
+            "bodySha256": "75a773fb1b976d03d9fd5b93d3964657e9760f99ee3a9b9f1093dc951caa4bc9"
+          },
+          {
+            "title": "all terminal recovery states remove resubmission and private account details",
+            "bodySha256": "162394fa611df3834e35718aab84b58417a8d3ac3f3cacf6da31c03103c06292"
+          },
+          {
+            "title": "PayPal pending POST continues status checking and handles a non-2xx terminal result",
+            "bodySha256": "8ed0d74a6cc6f5877686400e2dbe4282e8365592ed6b6a68d976619a6433be45"
+          },
+          {
+            "title": "pending refresh preserves the same return reference",
+            "bodySha256": "36415ccb16b1d816ab4addb73bdad9985a33a966e2d0300c4afa30f6eb8a4cf8"
+          },
+          {
+            "title": "PayPal poll timeout replaces the spinner with status-retry feedback",
+            "bodySha256": "3aff64ab25099a6c77f216e5a129cdf728a77dd2a00a454472cd03d5ce8e3ef8"
+          }
+        ],
+        "cut": [
+          {
+            "title": "verified terminal denial replaces activation choices and links to real recovery destinations",
+            "bodySha256": "d5114a55697caa8ae96010dd026cbd1df6eda1f96f2688e0e39d4b74d310fe16"
+          },
+          {
+            "title": "`${provider} post denial uses trusted code rather than server exception text`",
+            "bodySha256": "4253d3ee8597b9431fc884816ac746b4047fd6fa8f663fdbaf650037ec579564"
+          },
+          {
+            "title": "email send failure keeps password input and allows a successful resend",
+            "bodySha256": "51d499eba51aa78b189a523443fa3cf5fd2fe1d27ed164a832376d797bed23f3"
+          },
+          {
+            "title": "used activation claim leads to normal login without offering another activation attempt",
+            "bodySha256": "dc57bee59d76a03c372a847c27aed9ba7dda0e1c3dd5b9be5e64f05581bd28ed"
+          },
+          {
+            "title": "PayPal terminal polling outcome stops pending and exposes support",
+            "bodySha256": "36e8c627c9479284d766ac814c78f1a2906e04746ee5fea160c570793605912a"
+          },
+          {
+            "title": "password saved but sign-in failed offers login with the new password",
+            "bodySha256": "767a9ec4dcee80047650748630b93f89c0e1025683b3c89744b7610ce26de76d"
+          },
+          {
+            "title": "`${code} retains both password fields and supports retry`",
+            "bodySha256": "75a773fb1b976d03d9fd5b93d3964657e9760f99ee3a9b9f1093dc951caa4bc9"
+          },
+          {
+            "title": "all terminal recovery states remove resubmission and private account details",
+            "bodySha256": "162394fa611df3834e35718aab84b58417a8d3ac3f3cacf6da31c03103c06292"
+          },
+          {
+            "title": "PayPal pending POST continues status checking and handles a non-2xx terminal result",
+            "bodySha256": "8ed0d74a6cc6f5877686400e2dbe4282e8365592ed6b6a68d976619a6433be45"
+          },
+          {
+            "title": "pending refresh preserves the same return reference",
+            "bodySha256": "36415ccb16b1d816ab4addb73bdad9985a33a966e2d0300c4afa30f6eb8a4cf8"
+          },
+          {
+            "title": "PayPal poll timeout replaces the spinner with status-retry feedback",
+            "bodySha256": "3aff64ab25099a6c77f216e5a129cdf728a77dd2a00a454472cd03d5ce8e3ef8"
+          }
+        ]
+      }
+    }
+  ]
+}

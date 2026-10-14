@@ -1,0 +1,21 @@
+{
+  "blindId": "W103",
+  "productName": "hair biology Shampoo Revitalize & Soothe (Meno Balance)",
+  "brand": "Hair Biology (Procter & Gamble)",
+  "positioningSources": [
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Bei dünner werdendem, trockenem Haar & trockener Kopfhaut | Shampoo mit ausgewogenem pH-Wert für dichtes, volleres Haar | Spendet trockenem Haar Feuchtigkeit | Beruhigt die aus dem Gleichgewicht geratene Kopfhaut | Das sanfte hair biology Shampoo Revitalize & Soothe ist für den täglichen Gebrauch geeignet. Es spendet trockenem Haar Feuchtigkeit und beruhigt die aus dem Gleichgewicht geratene Kopfhaut, ohne das Haar zu beschweren. Entdecken Sie die Hair Biology Meno Balance Pflegeserie, die auf die biologischen Bedürfnisse der Frau in den Wechseljahren zugeschnitten ist. | Wirkung: Pflege, Feuchtigkeit",
+      "directionsVerbatim": "Anwendung: Auf das nasse Haar auftragen, aufschäumen und gründlich ausspülen. Danach die Revitalize & Soothe Pflegespülung verwenden."
+    },
+    {
+      "sourceType": "retailer_shop_apotheke_at (Austrian, non-German)",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "für dünner werdendes, trockenes Haar und trockene Kopfhaut | Spendet trockenem Haar Feuchtigkeit und beruhigt die aus dem Gleichgewicht geratene Kopfhaut | Revitalize & Soothe Shampoo mit ausgewogenem pH-Wert für dichtes, volleres Haar | Mit Pro-V, Vitamin B3 und weißem Tee | 0 % Farbstoffe und Mineralöle",
+      "directionsVerbatim": "(not captured)"
+    }
+  ]
+}

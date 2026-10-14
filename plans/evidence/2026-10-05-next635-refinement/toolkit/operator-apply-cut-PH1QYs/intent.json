@@ -1,0 +1,42 @@
+{
+  "mode": "cut",
+  "from": "transfer",
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA": "ffb6b2428bdceb285246596cafeba5e3b1a6870ec0ce885b875531178b10f0cd",
+  "prerequisite": {
+    "dir": "/tmp/test-audit-refinement37-tools-5ce9vx77/operator-mutations-transfer-eNiJl7",
+    "completionSHA": "775e7a57ebf26e3e7da0ecd10d20fadf4a817edee7a4c166385851f1749db0aa",
+    "verified": 13,
+    "logFiles": 39,
+    "phase": "transfer"
+  },
+  "files": [
+    {
+      "file": "tests/personal-plan/refinement/module-status.test.ts",
+      "before": "279643c605895bd33b1a7f66f5e9a1e423e565689be834fb020bb7db59f3cfa7",
+      "after": "3b1eee6eec64647981ea91b6d2b921df324c247930a63102053de6cefc59c67f"
+    },
+    {
+      "file": "tests/personal-plan/refinement/refinement-status.test.ts",
+      "before": "ff763cb8c12fdb24e771951c306d2eb8d7ac5c3d09c2b264dd0627ed28a85c12",
+      "after": "6dd0545d97d80dc8548167d99a85b5752de90b11c2e3468ee0cbeffcf75815d0"
+    },
+    {
+      "file": "tests/personal-plan-refinement-answer-provenance-migration.test.ts",
+      "before": "217adbb7848224154c56df114d4403aeceddbd3441fa6584ed88273a0414b76a",
+      "after": "217adbb7848224154c56df114d4403aeceddbd3441fa6584ed88273a0414b76a"
+    },
+    {
+      "file": "tests/personal-plan-refinement-presentation-route.test.ts",
+      "before": "b829abbe2a409006725f60b00dcae90a304068050a752f7215bab0f5bd30a0be",
+      "after": "0b1c469904918e19bb964040d41df3f67f94711868e09863c4d45f411572802b"
+    },
+    {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "before": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a",
+      "after": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+    }
+  ]
+}

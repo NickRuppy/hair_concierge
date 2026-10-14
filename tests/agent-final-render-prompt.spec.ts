@@ -1,11 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 
-import {
-  AGENTIC_TOOL_LOOP_PROMPT,
-  AGENTIC_CONTEXTUAL_COMPOSER_PROMPT,
-  AGENT_FINAL_RENDER_PROMPT,
-} from "../src/lib/agent/orchestrator/prompt"
 import { buildAgenticAnswerContext } from "../src/lib/agent/orchestrator/agentic-answer-context"
 import type { AgenticAnswerCapsuleId } from "../src/lib/agent/orchestrator/agentic-answer-context"
 import type { SelectedProductsProjection } from "../src/lib/agent/tools/select-products"
@@ -29,92 +24,6 @@ function createSelectedProductsProjection(
     ...overrides,
   }
 }
-
-test("agentic tool-loop prompt lets current intent win over prior state", () => {
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /aktuelle Nutzerfrage semantisch/)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /aktuelle Nutzerwunsch hat Vorrang/)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /conversation_state hilft nur.*mehrdeutig/i)
-})
-
-test("agentic tool-loop prompt requires tool-sourced products and terminal answers", () => {
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /Nutze select_products/)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /Erfinde keine Produkte und keine Produktclaims/)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /Nutze submit_final_answer fuer jede finale Antwort/)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /fachlich nah beieinander/)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /lass es mich wissen/)
-})
-
-test("agentic tool-loop prompt hides internal labels", () => {
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /Antworte natuerlich auf Deutsch/)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /interne Labels/i)
-})
-
-test("agentic tool-loop prompt treats answer context as composition guidance", () => {
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /answer_context/)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /Kompositionsbriefing/)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /keine Vorlage/)
-})
-
-test("agentic tool-loop prompt treats consultation brief as candidate context", () => {
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /consultation_brief/)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /candidate context/i)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /not a route/i)
-})
-
-test("agentic tool-loop prompt is organized by priority sections", () => {
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /# Rolle und Auftrag/)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /# Prioritaet und Quellen/)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /# Tool-Entscheidung/)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /# Antwort-Komposition/)
-})
-
-test("agentic tool-loop prompt prioritizes conversational fit before guidance", () => {
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /latest_user_message.*vorherige Assistant-Nachricht/i)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /Gespraechsform vor Wissensform/i)
-  assert.match(AGENTIC_TOOL_LOOP_PROMPT, /nicht als eigenstaendigen Kategorieartikel/i)
-})
-
-test("agentic contextual composer prompt preserves tool authority", () => {
-  assert.match(AGENTIC_CONTEXTUAL_COMPOSER_PROMPT, /Tool-Fakten/)
-  assert.match(AGENTIC_CONTEXTUAL_COMPOSER_PROMPT, /answer_context/)
-  assert.match(AGENTIC_CONTEXTUAL_COMPOSER_PROMPT, /keine starre Vorlage/)
-  assert.match(AGENTIC_CONTEXTUAL_COMPOSER_PROMPT, /Erfinde keine Produkte/)
-})
-
-test("agentic answer context selects conditioner recommendation capsules", () => {
-  const context = buildAgenticAnswerContext({
-    latestUserMessage: "was fuer einen conditioner brauche ich",
-    selectedProducts: {
-      category: "conditioner",
-      decision: "recommended",
-      product_response_policy: "recommend",
-      policy_reason: "Conditioner folgt Gewicht und Balance.",
-      profile_basis: ["Haardicke: Mittel", "Protein-/Feuchtigkeitsbalance: Proteinmangel"],
-      category_guidance: "Conditioner ist der Pflegeanker.",
-      products: [],
-      comparison_facts: null,
-      missing_info: [],
-      unsupported_requested_signals: [],
-    },
-    routinePlan: null,
-    toolCalls: [
-      {
-        name: "select_products",
-        input: { category: "conditioner", userJob: "product_pick" },
-      },
-    ],
-    conversationState: null,
-  })
-
-  assert.deepEqual(context.capsule_ids.slice(0, 3), [
-    "global.natural_consultant",
-    "product.recommendation_shape",
-    "category.conditioner.recommend",
-  ])
-  assert.equal(context.capsule_ids.includes("followup.proactive_next_step"), false)
-  assert.match(context.instructions.join("\n"), /welcher Typ Conditioner/i)
-  assert.match(context.instructions.join("\n"), /fachlich nah beieinander/i)
-})
 
 test("agentic answer context selects recommendation capsules for every selected parity category", () => {
   const cases: Array<{
@@ -250,19 +159,6 @@ test("agentic answer context discourages generic endings and asks sharp scalp fo
   assert.match(context.instructions.join("\n"), /lass es mich wissen/i)
   assert.match(context.instructions.join("\n"), /fettige\/gelbliche Schuppen/i)
   assert.match(context.instructions.join("\n"), /trockene kleine Schueppchen/i)
-})
-
-test("agentic answer context asks conceptual comparisons to end decisively", () => {
-  const context = buildAgenticAnswerContext({
-    latestUserMessage: "Soll ich eine Maske oder ein Oel nehmen?",
-    selectedProducts: null,
-    routinePlan: null,
-    toolCalls: [{ name: "load_advisor_guidance", input: { categories: ["mask", "oil"] } }],
-    conversationState: null,
-  })
-
-  assert.ok(context.capsule_ids.includes("category.conceptual_topology"))
-  assert.match(context.instructions.join("\n"), /in deinem Fall eher X zuerst/i)
 })
 
 test("agentic answer context treats not-included category followups as routine transitions", () => {
@@ -713,109 +609,4 @@ test("agentic answer context uses active category state for pronoun-only concept
   assert.ok(context.capsule_ids.includes("category.conceptual_topology"))
   assert.match(context.instructions.join("\n"), /direkte Antwort/)
   assert.match(context.instructions.join("\n"), /naechster Schritt/)
-})
-
-test("production final render prompt does not require the conversation context packet", () => {
-  assert.doesNotMatch(AGENT_FINAL_RENDER_PROMPT, /packet\.conversation_context/)
-  assert.doesNotMatch(AGENT_FINAL_RENDER_PROMPT, /move_hint=/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /aktuelle Nutzer-Delta/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /nicht.*komplette.*Thema.*neu/i)
-})
-
-test("final render prompt uses the rewritten section hierarchy", () => {
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /# Rolle und Aufgabe/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /# Prioritaet und Quellen/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /# Globale Regeln/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /# Product-Response-Policies/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /# Claim-Grounding/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /# Kategorie-Regeln/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /# Antwortform/)
-})
-
-test("production final render prompt keeps internal labels hidden without context-packet labels", () => {
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /Interne Labels/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /nie in der Nutzerantwort ausgeben/i)
-  assert.doesNotMatch(AGENT_FINAL_RENDER_PROMPT, /conversation_context/)
-})
-
-test("final render prompt supports recommend-with-caveat policy", () => {
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /recommend_with_caveat/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /Produkte.*nennen.*Caveat|Caveat.*Produkte/i)
-})
-
-test("final render prompt requires concrete endings and sharper scalp followups", () => {
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /fettige\/gelbliche Schuppen/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /trockene kleine Schueppchen/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /Vermeide generische Abschlusssaetze/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /konkreten Option/)
-})
-
-test("final render prompt keeps pre-wash oil away from scalp-treatment claims", () => {
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /Bei Pre-Wash-Oel/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /Laengen und Spitzen/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /Nicht sagen, dass Oel die Kopfhaut beruhigt/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /Schuppen\/Juckreiz loest/)
-})
-
-test("final render prompt ties conceptual oil comparisons back to the user", () => {
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /konzeptuellen Oel-Vergleichen/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /kurzen \"in deinem Fall\"-Satz/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /Pre-Wash/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /Finish-Oel/)
-})
-
-test("final render prompt preserves all selected product options in order", () => {
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /alle Produkte aus selected_products\.products/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /gegebenen Reihenfolge/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /nicht eigenmaechtig von drei Tool-Produkten auf zwei/)
-})
-
-test("final render prompt hides internal fallback markers from users", () => {
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /intern mit "Fallback:" markiert/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /nie in der Nutzerantwort ausgeben/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /schwaecheren Optionen nur nachgeordnet/)
-})
-
-test("final render prompt preserves spray versus cream leave-in comparisons", () => {
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /Spray-vs-Creme-Leave-in/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /Ersetze das Spray nicht durch eine Lotion/)
-})
-
-test("final render prompt explains the one-less-product value of integrated leave-in heat protection", () => {
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /verwende im Einstieg ausdruecklich/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /ein Produkt weniger/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /Zwei-in-eins-Route/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /separaten Hitzeschutz behalten/)
-})
-
-test("final render prompt requires profile deviation notices up front", () => {
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /Pflicht: Wenn selected_products\.profile_basis/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /Profil-Hinweis:/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /ersten Antwortsatz/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /nicht als dauerhaft gespeicherte Profilkorrektur/)
-})
-
-test("final render prompt gives conceptual split-end mask answers enough substance", () => {
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /konzeptuellen Spliss-Fragen zu Masken/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /3-5 kurzen Saetzen/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /physischer Faserschaden/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /sichtbaren Spliss schneiden lassen/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /Keine Produktliste/)
-})
-
-test("final render prompt keeps dry shampoo as a narrow bridge with hard-no guardrails", () => {
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /Bei Trockenshampoo/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /Between-Wash-Bruecke/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /reinigt die Kopfhaut nicht/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /spaeter ausgewaschen/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /keine Trockenshampoo-Produkte erfinden/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /keine Ersatzprodukte wie Babypuder/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /Auch ohne selected_products/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /route\.product_category=dry_shampoo/)
-})
-
-test("final render prompt deduplicates the mandatory dry-shampoo caveat", () => {
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /Trockenshampoo-Caveat/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /nur einmal pro Antwort/)
-  assert.match(AGENT_FINAL_RENDER_PROMPT, /nicht unter jedem Produkt wiederholen/)
 })

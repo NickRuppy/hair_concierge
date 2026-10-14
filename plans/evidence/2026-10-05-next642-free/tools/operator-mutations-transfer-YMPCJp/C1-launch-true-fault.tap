@@ -1,0 +1,35 @@
+TAP version 13
+# Subtest: the submitted price id equals the price the sheet rendered, both flag states
+not ok 1 - the submitted price id equals the price the sheet rendered, both flag states
+  ---
+  duration_ms: 1.7855
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/freemium-sheet-checkout-contract.test.ts:2:2572'
+  failureType: 'testCodeFailure'
+  error: |-
+    premium_sheet must submit the standard catalog (launch flag: true)
+    + actual - expected
+    
+    + 'personal_plan_launch_v1'
+    - 'standard'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'standard'
+  actual: 'personal_plan_launch_v1'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/freemium-sheet-checkout-contract.test.ts:67:12)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 784.423

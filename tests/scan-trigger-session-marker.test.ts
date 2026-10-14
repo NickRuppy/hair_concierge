@@ -23,18 +23,6 @@ const TWENTY_NINE_MINUTES = 29 * 60 * 1000
 
 // --- recordScanSession (localStorage record) ---------------------------------------
 
-test("recordScanSession: the first call on fresh storage is session 1", () => {
-  const storage = createMemoryScanTriggerStorage()
-  assert.equal(recordScanSession(storage, 1_000), 1)
-  assert.ok(storage.getItem(SCAN_SESSION_RECORD_KEY))
-})
-
-test("recordScanSession: a call more than 30 minutes later is session 2", () => {
-  const storage = createMemoryScanTriggerStorage()
-  recordScanSession(storage, 1_000)
-  assert.equal(recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES), 2)
-})
-
 test("recordScanSession: a call within 30 minutes stays the SAME session (no increment)", () => {
   const storage = createMemoryScanTriggerStorage()
   recordScanSession(storage, 1_000)
@@ -45,8 +33,12 @@ test("recordScanSession: a call within 30 minutes stays the SAME session (no inc
 
 test("recordScanSession: the count keeps climbing across further 30-minute gaps", () => {
   const storage = createMemoryScanTriggerStorage()
-  recordScanSession(storage, 1_000)
-  recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES)
+  assert.equal(recordScanSession(storage, 1_000), 1)
+  assert.ok(
+    storage.getItem(SCAN_SESSION_RECORD_KEY),
+    "fresh session must persist the session record",
+  )
+  assert.equal(recordScanSession(storage, 1_000 + THIRTY_ONE_MINUTES), 2)
   assert.equal(recordScanSession(storage, 1_000 + 2 * THIRTY_ONE_MINUTES), 3)
 })
 

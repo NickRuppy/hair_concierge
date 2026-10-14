@@ -1,0 +1,15 @@
+{
+  "control": "D1-required-thickness",
+  "status": "FAIL_CLOSED_UNRESOLVED",
+  "owner": "src/lib/personal-plan-quiz/persistence.ts:29",
+  "ownerSHA256": "9783d531cfaf8ed1b8d91b133b030758fd2bf3c128b5eee10cd4b0e6f5883335",
+  "mutation": "required thickness enum becomes optional; exact frozen one-line recipe unchanged",
+  "intendedSelectedKeeper": "mask-missing-thickness: required Mask target input fails closed at the shared parser",
+  "transferFirstAssertion": 87,
+  "cutFirstAssertion": 77,
+  "sourceReturn": "src/lib/personal-plan/input.ts:147-150 returns {ok:true,envelope:parsed.data} on successful schema validation",
+  "fixture": "tests/personal-plan/fixtures.ts COMPLETE_V3_PLAN_ENVELOPE; the existing loop passes thickness undefined",
+  "unknown": "Complete decoded Node deepStrictEqual success-payload message has not been observed or asserted from owner execution. No fabricated exact actual envelope or error text.",
+  "machinePolicy": "diagnosticReady:false forces intended() rejection. Unselected all-control run refuses before any child. An explicitly root-selected capture retains timeout/owned restore/final clean but still cannot pass this control, complete18 receipt or authorize cut.",
+  "requiredNext": "Root-reviewed diagnostic representation in a NEW immutable kit version, followed by actual qualified18 control proof. No automatic probe."
+}

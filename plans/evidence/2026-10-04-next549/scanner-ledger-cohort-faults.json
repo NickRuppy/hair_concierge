@@ -1,0 +1,218 @@
+[
+  {
+    "id": "C1",
+    "file": "scripts/scanner-catalog-coverage/build-existing-coverage-ledger.ts",
+    "sourceSha256": "d66dd1418b5c9cbd0a1e747b92a5842ca97d1d8d1836f63b2ee9d57cae8d6c50",
+    "from": "linked_baseline_products: 38 as const,",
+    "to": "linked_baseline_products: 37 as const,",
+    "mutatedSha256": "aaf9fb63abcd8075a2f9275d023e968680868d9eed8fb1e0233392dcb4984649",
+    "kind": "typescript-owner",
+    "regression": "Linked baseline summary count wrongly projected.",
+    "test": {
+      "file": "tests/scanner-catalog-coverage-existing-ledger.test.ts",
+      "name": "research lanes are complete, category-disjoint, and stable"
+    },
+    "oracles": {
+      "transfer": {
+        "assertion": "assert.equal(first.reconciliation.linked_baseline_products, 38)",
+        "startLine": 84,
+        "endLine": 84
+      },
+      "cut": {
+        "assertion": "assert.equal(first.reconciliation.linked_baseline_products, 38)",
+        "startLine": 67,
+        "endLine": 67
+      }
+    },
+    "status": "Static-only proposal; never executed. Requires exact keeper green,actual ERR_ASSERTION in pinned assertion,byte-exact restore,green."
+  },
+  {
+    "id": "C2",
+    "file": "scripts/scanner-catalog-coverage/build-phase1a-ledger.ts",
+    "sourceSha256": "596b13aba49602429f2d6681140b6ab4bd946755cfc74abb1d8f5529f419996d",
+    "from": "strict_blockers: readiness.blockers,",
+    "to": "strict_blockers: [\"missing_presentation_image\"],",
+    "mutatedSha256": "2ed5b1e05e94427ed6d2787aaba75f3c4597d35ccbe894f74252afe06abf254f",
+    "kind": "typescript-owner",
+    "regression": "Blocked output falsely appears among selected strict-ready rows.",
+    "test": {
+      "file": "tests/scanner-catalog-coverage-phase1a-ledger.test.ts",
+      "name": "Phase 1A content fingerprint is stable across capture times"
+    },
+    "oracles": {
+      "transfer": {
+        "assertion": "assert.ok(\n      selected.every(\n        (row) =>\n          row.catalog_readiness.strict_status === \"ready_for_ean_research\" &&\n          row.catalog_readiness.strict_blockers.length === 0 &&\n          row.catalog_readiness.static_blockers.length === 0,\n      ),\n      category,\n    )",
+        "startLine": 94,
+        "endLine": 102
+      },
+      "cut": {
+        "assertion": "assert.ok(\n      selected.every(\n        (row) =>\n          row.catalog_readiness.strict_status === \"ready_for_ean_research\" &&\n          row.catalog_readiness.strict_blockers.length === 0 &&\n          row.catalog_readiness.static_blockers.length === 0,\n      ),\n      category,\n    )",
+        "startLine": 46,
+        "endLine": 54
+      }
+    },
+    "status": "Static-only proposal; never executed. Requires exact keeper green,actual ERR_ASSERTION in pinned assertion,byte-exact restore,green."
+  },
+  {
+    "id": "C3",
+    "file": "scripts/scanner-catalog-coverage/build-phase1a-ledger.ts",
+    "sourceSha256": "596b13aba49602429f2d6681140b6ab4bd946755cfc74abb1d8f5529f419996d",
+    "from": "packages: pilot.packages,",
+    "to": "packages: pilot.packages.slice(1),",
+    "mutatedSha256": "a604235f6e722e3f7972dfa889046db15d053fca59879ef7d0beb0bad4761367",
+    "kind": "typescript-owner",
+    "regression": "Pilot package evidence is truncated after selection.",
+    "test": {
+      "file": "tests/scanner-catalog-coverage-phase1a-ledger.test.ts",
+      "name": "Phase 1A content fingerprint is stable across capture times"
+    },
+    "oracles": {
+      "transfer": {
+        "assertion": "assert.equal(\n    pilotRows.reduce((sum, row) => sum + (row.pilot_gtin_evidence?.packages.length ?? 0), 0),\n    22,\n  )",
+        "startLine": 112,
+        "endLine": 115
+      },
+      "cut": {
+        "assertion": "assert.equal(\n    pilotRows.reduce((sum, row) => sum + (row.pilot_gtin_evidence?.packages.length ?? 0), 0),\n    22,\n  )",
+        "startLine": 64,
+        "endLine": 67
+      }
+    },
+    "status": "Static-only proposal; never executed. Requires exact keeper green,actual ERR_ASSERTION in pinned assertion,byte-exact restore,green."
+  },
+  {
+    "id": "C4",
+    "file": "scripts/scanner-catalog-coverage/build-phase1b-ledger.ts",
+    "sourceSha256": "e44c648923106515fce105e13d2f7f5c1927caf9a0787592fa0baecb1ab30ed8",
+    "from": "catalog_intake_ready: false,",
+    "to": "catalog_intake_ready: true,",
+    "mutatedSha256": "354957d424de17dca013a94228a7c28f4c772be8771dc291f1d7e285e9770429",
+    "kind": "typescript-owner",
+    "regression": "Research candidates are incorrectly labeled intake-ready.",
+    "test": {
+      "file": "tests/scanner-catalog-coverage-phase1b-ledger.test.ts",
+      "name": "Phase 1B and the 25-product frozen pilot fingerprints are stable across capture times"
+    },
+    "oracles": {
+      "transfer": {
+        "assertion": "assert.ok(\n      rows.every(\n        (row) =>\n          row.catalog_readiness.research_only &&\n          !row.catalog_readiness.catalog_intake_ready &&\n          !row.catalog_readiness.scan_result_ready,\n      ),\n      category,\n    )",
+        "startLine": 147,
+        "endLine": 155
+      },
+      "cut": {
+        "assertion": "assert.ok(\n      rows.every(\n        (row) =>\n          row.catalog_readiness.research_only &&\n          !row.catalog_readiness.catalog_intake_ready &&\n          !row.catalog_readiness.scan_result_ready,\n      ),\n      category,\n    )",
+        "startLine": 69,
+        "endLine": 77
+      }
+    },
+    "status": "Static-only proposal; never executed. Requires exact keeper green,actual ERR_ASSERTION in pinned assertion,byte-exact restore,green."
+  },
+  {
+    "id": "C5",
+    "file": "scripts/scanner-catalog-coverage/build-phase1b-ledger.ts",
+    "sourceSha256": "e44c648923106515fce105e13d2f7f5c1927caf9a0787592fa0baecb1ab30ed8",
+    "from": "pdp_urls: sourcePdpUrls(candidate),",
+    "to": "pdp_urls: [],",
+    "mutatedSha256": "46086d5519c71bd647e6e43cbd0ed78682408e18da1256d22ce538f5cd2c311e",
+    "kind": "typescript-owner",
+    "regression": "Output row loses its exact-PDP evidence.",
+    "test": {
+      "file": "tests/scanner-catalog-coverage-phase1b-ledger.test.ts",
+      "name": "Phase 1B and the 25-product frozen pilot fingerprints are stable across capture times"
+    },
+    "oracles": {
+      "transfer": {
+        "assertion": "assert.ok(\n    first.rows.every(\n      (row) => row.sources.pdp_urls.length > 0 && row.sources.pdp_urls.every(isExactRetailerPdp),\n    ), \"every row retains nonempty exact PDP evidence\",\n  )",
+        "startLine": 162,
+        "endLine": 166
+      },
+      "cut": {
+        "assertion": "assert.ok(\n    first.rows.every(\n      (row) => row.sources.pdp_urls.length > 0 && row.sources.pdp_urls.every(isExactRetailerPdp),\n    ), \"every row retains nonempty exact PDP evidence\",\n  )",
+        "startLine": 84,
+        "endLine": 88
+      }
+    },
+    "status": "Static-only proposal; never executed. Requires exact keeper green,actual ERR_ASSERTION in pinned assertion,byte-exact restore,green."
+  },
+  {
+    "id": "C6",
+    "file": "data/scanner-catalog-coverage/2026-08-26/retailer-specialist-candidates.json",
+    "sourceSha256": "2ce75e32a84313db37eab8afa7bed17bddd1297f4c1c1c95c9c514b9b3c25207",
+    "from": "https://www.rossmann.de/de/pflege-und-duft-got2b-trockenshampoo-trocken-waesche-extra-frisch/p/4015100800203",
+    "to": "https://www.rossmann.de/de/pflege-und-duft-got2b-trockenshampoo-trocken-waesche-anderes-produkt/p/4015100800203",
+    "mutatedSha256": "7d62c060230e12ad3b7b7df0c7a994ca1518b8f8be11e171970e89bd0e562130",
+    "kind": "json-data",
+    "regression": "A retained exact dry-shampoo identity correction points to a different product route.",
+    "test": {
+      "file": "tests/scanner-catalog-coverage-phase1b-ledger.test.ts",
+      "name": "Phase 1B and the 25-product frozen pilot fingerprints are stable across capture times"
+    },
+    "oracles": {
+      "transfer": {
+        "assertion": "assert.equal(candidate.sources[0].url, expectedUrl, candidate.candidate_id)",
+        "startLine": 192,
+        "endLine": 192
+      },
+      "cut": {
+        "assertion": "assert.equal(candidate.sources[0].url, expectedUrl, candidate.candidate_id)",
+        "startLine": 114,
+        "endLine": 114
+      }
+    },
+    "status": "Static-only proposal; never executed. Requires exact keeper green,actual ERR_ASSERTION in pinned assertion,byte-exact restore,green."
+  },
+  {
+    "id": "C7",
+    "file": "data/scanner-catalog-coverage/2026-08-26/retailer-specialist-candidates.json",
+    "sourceSha256": "2ce75e32a84313db37eab8afa7bed17bddd1297f4c1c1c95c9c514b9b3c25207",
+    "from": "\"url\": \"https://www.rossmann.de/de/pflege-und-duft-syoss-foehnschutz-spray-keratin-volume/p/4015100860160\"",
+    "to": "\"url\": \"https://www.rossmann.de/de/pflege-und-duft-syoss-foehnschutz-spray-anderes-produkt/p/4015100860160\"",
+    "mutatedSha256": "85b832ff5ce2df2aa5f28cae432c13c9c129e631cc70c6cad0f41c8594b15abb",
+    "kind": "json-data",
+    "regression": "Specific heat-protectant evidence points to a different product route.",
+    "test": {
+      "file": "tests/scanner-catalog-coverage-phase1b-ledger.test.ts",
+      "name": "Phase 1B and the 25-product frozen pilot fingerprints are stable across capture times"
+    },
+    "oracles": {
+      "transfer": {
+        "assertion": "assert.ok(\n    heat.sources.pdp_urls.some((url) =>\n      url.includes(\"syoss-foehnschutz-spray-keratin-volume/p/4015100860160\"),\n    ), \"heat005 retains the exact Rossmann product route\",\n  )",
+        "startLine": 199,
+        "endLine": 203
+      },
+      "cut": {
+        "assertion": "assert.ok(\n    heat.sources.pdp_urls.some((url) =>\n      url.includes(\"syoss-foehnschutz-spray-keratin-volume/p/4015100860160\"),\n    ), \"heat005 retains the exact Rossmann product route\",\n  )",
+        "startLine": 121,
+        "endLine": 125
+      }
+    },
+    "status": "Static-only proposal; never executed. Requires exact keeper green,actual ERR_ASSERTION in pinned assertion,byte-exact restore,green."
+  },
+  {
+    "id": "C8",
+    "file": "scripts/scanner-catalog-coverage/live-baseline-export.ts",
+    "sourceSha256": "f10367982e221aec2aba4c3bcfcdd651e7d4be7ee36f4d0e08bf3c6a87c9a634",
+    "from": "    \"created_at\",\n",
+    "to": "",
+    "mutatedSha256": "988409383f61dab7c899bf09a8f368aacd87218865d2071b2c32b12c2d2b2b12",
+    "kind": "typescript-owner",
+    "regression": "Export leaks fact metadata instead of the whitelisted fact projection.",
+    "test": {
+      "file": "tests/scanner-catalog-coverage-live-baseline.test.ts",
+      "name": "baseline is deterministic, supported-active-only, and reconciles barcode rows"
+    },
+    "oracles": {
+      "transfer": {
+        "assertion": "assert.deepEqual(first.products[0]?.category_primary_facts, {\n    product_shampoo_specs: [{ shampoo_bucket: \"normal\" }],\n  })",
+        "startLine": 114,
+        "endLine": 116
+      },
+      "cut": {
+        "assertion": "assert.deepEqual(first.products[0]?.category_primary_facts, {\n    product_shampoo_specs: [{ shampoo_bucket: \"normal\" }],\n  })",
+        "startLine": 114,
+        "endLine": 116
+      }
+    },
+    "status": "Static-only proposal; never executed. Requires exact keeper green,actual ERR_ASSERTION in pinned assertion,byte-exact restore,green."
+  }
+]

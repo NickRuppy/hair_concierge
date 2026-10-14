@@ -1,0 +1,31 @@
+TAP version 13
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 1 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 1 }
+# [checkout-activation] step { label: 'profiles.upsertSubscription', durationMs: 0 }
+# [checkout-activation] quiz profile linked {
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   hasLeadId: false,
+#   durationMs: 0
+# }
+# [checkout-activation] account ensured {
+#   sessionHash: 'efc96b584968',
+#   userId: '00000000-0000-4000-8000-000000000002',
+#   profileLinkMode: 'await',
+#   durationMs: 3
+# }
+# [checkout-activation] step { label: 'stripe.subscriptions.retrieve', durationMs: 0 }
+# [checkout-activation] step { label: 'billing.upsertSubscription', durationMs: 1 }
+# Subtest: competing subscription insert is adopted only for the same immutable account
+ok 1 - competing subscription insert is adopted only for the same immutable account
+  ---
+  duration_ms: 4.988
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 851.718917

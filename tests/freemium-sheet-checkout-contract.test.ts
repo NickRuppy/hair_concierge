@@ -37,16 +37,6 @@ const sheetRequest = {
   returnPath: "/scan",
 }
 
-test("the submitted catalog is standard for the sheet in BOTH launch-pricing states", () => {
-  for (const launchPricingEnabled of [false, true]) {
-    assert.equal(
-      resolveCheckoutPricingCatalog({ source: "premium_sheet", launchPricingEnabled }),
-      "standard",
-      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,
-    )
-  }
-})
-
 test("the flag still moves every other source — the pin is the sheet's, not a global change", () => {
   for (const source of ["pricing_page", "quiz_result_offer"] as const) {
     assert.equal(resolveCheckoutPricingCatalog({ source, launchPricingEnabled: false }), "standard")
@@ -64,6 +54,11 @@ test("the submitted price id equals the price the sheet rendered, both flag stat
       source: "premium_sheet",
       launchPricingEnabled,
     })
+    assert.equal(
+      catalog,
+      "standard",
+      `premium_sheet must submit the standard catalog (launch flag: ${launchPricingEnabled})`,
+    )
     for (const row of premiumSheetPlans()) {
       const plan = getStripePricingPlan(row.interval, catalog)
       assert.equal(

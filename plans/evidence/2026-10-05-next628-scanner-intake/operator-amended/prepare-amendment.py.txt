@@ -1,0 +1,79 @@
+"""One-shot fresh TMP-only command amendment. Never imports owners or starts children.
+Preserves all original source/identity/dependency/proposal pins and old failed receipts.
+Does not rerun old preparers. Existing output files cause immediate refusal.
+"""
+from pathlib import Path
+import hashlib, json, copy, difflib, re
+D=Path('/tmp/test-audit-scanner-intake26-isolation-dml82bss')
+O=Path('/tmp/test-audit-scanner-intake26-tools-y8mclofg')
+OR=str(O.resolve())
+OLD_PIN='bfbedb7adb1865d0cc2ada97d9e74fe934645326654e6001273713495e390a5c'
+FLAG='--experimental-test-isolation=none'
+sha=lambda b:hashlib.sha256(b).hexdigest()
+def read(p):return Path(p).read_bytes()
+def write(rel,b):
+ p=D/rel
+ assert p.parent.resolve().is_relative_to(D.resolve()),str(p)
+ with p.open('xb') as f:f.write(b)
+def js(x):return (json.dumps(x,indent=2,ensure_ascii=False)+'\n').encode()
+def once(s,a,b):
+ assert s.count(a)==1,a
+ return s.replace(a,b)
+assert D.resolve().parent==Path('/tmp').resolve()
+raw=read(O/'operator-pins.json');assert sha(raw)==OLD_PIN
+old=json.loads(raw)
+for p,h in old['artifactHashes'].items():assert sha(read(p))==h,'Original artifact drift: '+p
+for p,h in old['entrypointTemplateHashes'].items():
+ assert sha(re.sub(r"const PIN_SHA='[a-f0-9]{64}'","const PIN_SHA='PIN_SHA_PLACEHOLDER'",read(p).decode()).encode())==h
+names=['operator-pins.json','operator-guard.cjs','operator-proof.cjs','operator-readonly-preload.cjs','operator-edit.cjs','operator-run-controls.cjs','operator-evidence.json','operator-candidates.json','operator-controls-normalized.json','operator-selected-closure.json']
+(D/'originals').mkdir()
+originals={}
+for name in names:
+ b=read(O/name);write('originals/'+name,b);originals[name]=sha(b)
+for name in ['operator-proof.cjs','operator-readonly-preload.cjs','operator-evidence.json','operator-candidates.json','operator-selected-closure.json']:
+ write(name,read(O/name))
+guard=read(O/'operator-guard.cjs').decode()
+guard=once(guard,"const BASE = '/tmp/test-audit-scanner-intake26-tools-y8mclofg/operator'","const BASE = '/tmp/test-audit-scanner-intake26-isolation-dml82bss/operator'")
+guard=once(guard,"'tsx','--test','--test-name-pattern=^'","'tsx','--test','--experimental-test-isolation=none','--test-name-pattern=^'")
+write('operator-guard.cjs',guard.encode())
+controls=json.loads(read(O/'operator-controls-normalized.json'));assert len(controls)==14
+old_controls=copy.deepcopy(controls)
+for c in controls:
+ command=c['command'];assert command.count('--test')==1 and FLAG not in command
+ command.insert(command.index('--test')+1,FLAG)
+for a,b in zip(old_controls,controls):
+ x=copy.deepcopy(b);x['command'].remove(FLAG);assert x==a
+write('operator-controls-normalized.json',js(controls))
+failed=O/'operator-mutations-transfer-qkt535'
+failed_hashes={str(p):sha(read(p)) for p in sorted(failed.rglob('*')) if p.is_file()}
+assert 'Intended assertion not proved: C2-input' in read(failed/'failure.json').decode()
+assert not (failed/'complete.json').exists()
+diag={str(p):sha(read(p)) for p in [Path('/tmp/test-audit-symbol-native-diagnostic.'+e) for e in ('cjs','command.json','tap')]}
+provenance={'kind':'Command amendment only; original failed proof remains rejected','oldDirectory':str(O),'oldPinsSHA256':OLD_PIN,'originalSnapshots':originals,'failedReceiptHashes':failed_hashes,'parentDiagnosticHashes':diag,'commandFlag':FLAG,'changedControlFields':['command for all14'],'sourceMutationDescriptorsChanged':False,'proofDecoderByteIdentical':True,'identityReadsetDependencyPinsPreserved':True,'proposalPhasesPreserved':True,'requiredCurrentPhase':'transfer','rerunRequired':'All14 fresh clean/fault/restore/clean; old partial run cannot authorize cut'}
+write('amendment-provenance.json',js(provenance))
+entrypoints={}
+for name in ['operator-edit.cjs','operator-run-controls.cjs']:
+ text=once(read(O/name).decode(),"const PIN_SHA='"+OLD_PIN+"'","const PIN_SHA='PIN_SHA_PLACEHOLDER'")
+ entrypoints[name]=text
+pins=copy.deepcopy(old)
+# Keep every original immutable artifact and original entrypoint attestation, adding
+# new-tool artifacts. No source, dependency, Git metadata, runtime or config is repinned.
+for p,h in failed_hashes.items():pins['artifactHashes'][p]=h
+for p,h in diag.items():pins['artifactHashes'][p]=h
+for name in ['operator-guard.cjs','operator-proof.cjs','operator-readonly-preload.cjs','operator-evidence.json','operator-candidates.json','operator-controls-normalized.json','operator-selected-closure.json','prepare-amendment.py','amendment-provenance.json']:
+ pins['artifactHashes'][str(D/name)]=sha(read(D/name))
+for p in sorted((D/'originals').iterdir()):pins['artifactHashes'][str(p)]=sha(read(p))
+for name,text in entrypoints.items():pins['entrypointTemplateHashes'][str(D/name)]=sha(text.encode())
+for key in old:
+ if key not in ('artifactHashes','entrypointTemplateHashes'):assert pins[key]==old[key],key
+for p,h in old['artifactHashes'].items():assert pins['artifactHashes'][p]==h
+for p,h in old['entrypointTemplateHashes'].items():assert pins['entrypointTemplateHashes'][p]==h
+pinbytes=js(pins);newpin=sha(pinbytes);write('operator-pins.json',pinbytes)
+for name,text in entrypoints.items():write(name,text.replace("const PIN_SHA='PIN_SHA_PLACEHOLDER'","const PIN_SHA='"+newpin+"'").encode())
+diff=''
+for name in ['operator-guard.cjs','operator-controls-normalized.json','operator-edit.cjs','operator-run-controls.cjs']:
+ diff+=''.join(difflib.unified_diff(read(O/name).decode().splitlines(True),read(D/name).decode().splitlines(True),fromfile=str(O/name),tofile=str(D/name)))
+write('bounded-delta.patch',diff.encode())
+# Explicit comparison receipt avoids portraying an expanded tool artifact list as repinned owner data.
+write('amendment-check.json',js({'newPinsSHA256':newpin,'oldPinsSHA256':OLD_PIN,'controls':14,'sourceDescriptorsAndOraclesUnchanged':True,'exactCommandOnlyDelta':FLAG,'identicalPinFields':[k for k in old if k not in ('artifactHashes','entrypointTemplateHashes')],'oldArtifactHashesRetained':len(old['artifactHashes']),'oldEntrypointTemplatesRetained':len(old['entrypointTemplateHashes']),'failedReceiptFilesPinned':len(failed_hashes),'proofSHA256':sha(read(D/'operator-proof.cjs')),'preloadSHA256':sha(read(D/'operator-readonly-preload.cjs')),'repositoryWrites':0,'childrenStarted':0,'ownerTestImports':0,'runtimeTests':0}))
+print(json.dumps({'directory':str(D),'pinsSHA256':newpin,'fourteenCommandsAmended':True,'allOriginalPinsPreserved':True}))

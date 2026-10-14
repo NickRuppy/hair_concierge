@@ -132,10 +132,7 @@ for (const [name, Composition] of COMPOSITIONS) {
       `gated ${name} must issue zero requests, got ${JSON.stringify(calls)}`,
     )
     assert.ok(result.length > 0, "the composition renders something")
-  })
 
-  test(`gated ${name} renders no form and no submit control`, () => {
-    const { result } = renderComposition(Composition)
     // A mutation needs a transport: fetch (trapped above) or a form. Neither exists.
     assert.doesNotMatch(result, /<form/i)
     assert.doesNotMatch(result, /type="submit"/i)

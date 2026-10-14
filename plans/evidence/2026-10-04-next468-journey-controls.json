@@ -1,0 +1,695 @@
+[
+  {
+    "id": "module-dismissal-positive",
+    "file": "src/lib/personal-plan/lifecycle/repository.ts",
+    "anchor": {
+      "kind": "function",
+      "scope": "isModuleBannerDismissed",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "return state.dismissedModules.has(module)",
+    "to": "return false",
+    "test": {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "dismissing one module leaves the other module's banner un-dismissed (per-module independence, i.e. the reappear-once mechanism)"
+    },
+    "intendedAssertion": "The already-retained products membership true becomes false.",
+    "donors": [
+      "D1"
+    ],
+    "sourceSHA256": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^dismissing one module leaves the other module's banner un-dismissed \\(per-module independence, i\\.e\\. the reappear-once mechanism\\)$",
+      "tests/personal-plan-lifecycle-marks.test.ts"
+    ],
+    "staticFileOccurrences": 1,
+    "sensitivityLimit": "Static owner-function anchor and full-file TS parse only. Not executed. Main must inspect intended assertion red, clean before/after, and exact byte restoration. No DB/provider/browser proof."
+  },
+  {
+    "id": "empty-dismissals-invented-habits",
+    "file": "src/lib/personal-plan/lifecycle/repository.ts",
+    "anchor": {
+      "kind": "function",
+      "scope": "loadModuleBannerDismissals",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "return { dismissedModules }",
+    "to": "return { dismissedModules: dismissedModules.size === 0 ? new Set<Stage2Module>([\"habits\"]) : dismissedModules }",
+    "test": {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "dismissals are scoped per user: another user's dismissal never hides this user's banner"
+    },
+    "intendedAssertion": "Transferred exact empty array fails [habits] != []; existing products false alone would pass.",
+    "donors": [
+      "C1"
+    ],
+    "sourceSHA256": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^dismissals are scoped per user: another user's dismissal never hides this user's banner$",
+      "tests/personal-plan-lifecycle-marks.test.ts"
+    ],
+    "staticFileOccurrences": 1,
+    "sensitivityLimit": "Static owner-function anchor and full-file TS parse only. Not executed. Main must inspect intended assertion red, clean before/after, and exact byte restoration. No DB/provider/browser proof."
+  },
+  {
+    "id": "dismissal-owner-filter-removed",
+    "file": "src/lib/personal-plan/lifecycle/repository.ts",
+    "anchor": {
+      "kind": "function",
+      "scope": "selectSubjects",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": ".eq(\"user_id\", userId)",
+    "to": ".eq(\"user_id\", \"22222222-2222-4222-8222-222222222222\")",
+    "test": {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "dismissals are scoped per user: another user's dismissal never hides this user's banner"
+    },
+    "intendedAssertion": "Actual query selects foreign products row; retained membership false fails, not a mock-manufactured denial.",
+    "donors": [
+      "C1"
+    ],
+    "sourceSHA256": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^dismissals are scoped per user: another user's dismissal never hides this user's banner$",
+      "tests/personal-plan-lifecycle-marks.test.ts"
+    ],
+    "staticFileOccurrences": 1,
+    "sensitivityLimit": "Static owner-function anchor and full-file TS parse only. Not executed. Main must inspect intended assertion red, clean before/after, and exact byte restoration. No DB/provider/browser proof."
+  },
+  {
+    "id": "nav-success-marked-unavailable",
+    "file": "src/lib/personal-plan/lifecycle/repository.ts",
+    "anchor": {
+      "kind": "function",
+      "scope": "loadVisitedNavSurfaces",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "return { visitedSurfaces, available: true }",
+    "to": "return { visitedSurfaces, available: false }",
+    "test": {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "nav-visited state is independent per module-banner state: the two kinds never leak into each other"
+    },
+    "intendedAssertion": "Transferred available true fails while exact profile set still survives.",
+    "donors": [
+      "C2"
+    ],
+    "sourceSHA256": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^nav-visited state is independent per module-banner state: the two kinds never leak into each other$",
+      "tests/personal-plan-lifecycle-marks.test.ts"
+    ],
+    "staticFileOccurrences": 1,
+    "sensitivityLimit": "Static owner-function anchor and full-file TS parse only. Not executed. Main must inspect intended assertion red, clean before/after, and exact byte restoration. No DB/provider/browser proof."
+  },
+  {
+    "id": "nav-positive-membership-lost",
+    "file": "src/lib/personal-plan/lifecycle/repository.ts",
+    "anchor": {
+      "kind": "function",
+      "scope": "isNavSurfaceVisited",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "return state.visitedSurfaces.has(surface)",
+    "to": "return false",
+    "test": {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "nav-visited state is independent per module-banner state: the two kinds never leak into each other"
+    },
+    "intendedAssertion": "Transferred profile true fails while underlying set is unchanged.",
+    "donors": [
+      "C2"
+    ],
+    "sourceSHA256": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^nav-visited state is independent per module-banner state: the two kinds never leak into each other$",
+      "tests/personal-plan-lifecycle-marks.test.ts"
+    ],
+    "staticFileOccurrences": 1,
+    "sensitivityLimit": "Static owner-function anchor and full-file TS parse only. Not executed. Main must inspect intended assertion red, clean before/after, and exact byte restoration. No DB/provider/browser proof."
+  },
+  {
+    "id": "nav-negative-membership-lost",
+    "file": "src/lib/personal-plan/lifecycle/repository.ts",
+    "anchor": {
+      "kind": "function",
+      "scope": "isNavSurfaceVisited",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "return state.visitedSurfaces.has(surface)",
+    "to": "return true",
+    "test": {
+      "file": "tests/personal-plan-lifecycle-marks.test.ts",
+      "name": "nav-visited state is independent per module-banner state: the two kinds never leak into each other"
+    },
+    "intendedAssertion": "Transferred application false fails after profile true succeeds.",
+    "donors": [
+      "C2"
+    ],
+    "sourceSHA256": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^nav-visited state is independent per module-banner state: the two kinds never leak into each other$",
+      "tests/personal-plan-lifecycle-marks.test.ts"
+    ],
+    "staticFileOccurrences": 1,
+    "sensitivityLimit": "Static owner-function anchor and full-file TS parse only. Not executed. Main must inspect intended assertion red, clean before/after, and exact byte restoration. No DB/provider/browser proof."
+  },
+  {
+    "id": "journey-frontier-stage4-label",
+    "file": "src/lib/personal-plan/journey-access.ts",
+    "anchor": {
+      "kind": "function",
+      "scope": "resolvePersonalPlanJourneyAccess",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": ": stage4Ready\n      ? \"stage4\"",
+    "to": ": stage4Ready\n      ? \"stage3\"",
+    "test": {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "full journey access reports non-identifying Stage 3 sub-phase timings in dependency order"
+    },
+    "intendedAssertion": "Transferred frontier stage4 fails stage3; timing and personal_plan kind remain intact.",
+    "donors": [
+      "C3"
+    ],
+    "sourceSHA256": "abf839a86f4c28178223b97d43fed5d579e7317a78f8d8e95ccf29f7fcec2baf",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^full journey access reports non-identifying Stage 3 sub-phase timings in dependency order$",
+      "tests/personal-plan-journey-access-loader.test.ts"
+    ],
+    "staticFileOccurrences": 1,
+    "sensitivityLimit": "Static owner-function anchor and full-file TS parse only. Not executed. Main must inspect intended assertion red, clean before/after, and exact byte restoration. No DB/provider/browser proof."
+  },
+  {
+    "id": "journey-stage3-allowed-lost",
+    "file": "src/lib/personal-plan/journey-access.ts",
+    "anchor": {
+      "kind": "function",
+      "scope": "resolvePersonalPlanJourneyAccess",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "stage3: stage3Ready,",
+    "to": "stage3: false,",
+    "test": {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "full journey access reports non-identifying Stage 3 sub-phase timings in dependency order"
+    },
+    "intendedAssertion": "Transferred allowed.stage3 true fails; frontier derives original readiness and remains stage4.",
+    "donors": [
+      "C3"
+    ],
+    "sourceSHA256": "abf839a86f4c28178223b97d43fed5d579e7317a78f8d8e95ccf29f7fcec2baf",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^full journey access reports non-identifying Stage 3 sub-phase timings in dependency order$",
+      "tests/personal-plan-journey-access-loader.test.ts"
+    ],
+    "staticFileOccurrences": 1,
+    "sensitivityLimit": "Static owner-function anchor and full-file TS parse only. Not executed. Main must inspect intended assertion red, clean before/after, and exact byte restoration. No DB/provider/browser proof."
+  },
+  {
+    "id": "journey-stage4-allowed-lost",
+    "file": "src/lib/personal-plan/journey-access.ts",
+    "anchor": {
+      "kind": "function",
+      "scope": "resolvePersonalPlanJourneyAccess",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "stage4: stage4Ready,",
+    "to": "stage4: false,",
+    "test": {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "full journey access reports non-identifying Stage 3 sub-phase timings in dependency order"
+    },
+    "intendedAssertion": "Transferred allowed.stage4 true fails while frontier remains stage4.",
+    "donors": [
+      "C3"
+    ],
+    "sourceSHA256": "abf839a86f4c28178223b97d43fed5d579e7317a78f8d8e95ccf29f7fcec2baf",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^full journey access reports non-identifying Stage 3 sub-phase timings in dependency order$",
+      "tests/personal-plan-journey-access-loader.test.ts"
+    ],
+    "staticFileOccurrences": 1,
+    "sensitivityLimit": "Static owner-function anchor and full-file TS parse only. Not executed. Main must inspect intended assertion red, clean before/after, and exact byte restoration. No DB/provider/browser proof."
+  },
+  {
+    "id": "narrow-stage2-starts-reporting",
+    "file": "src/lib/personal-plan/journey-access-loader.ts",
+    "anchor": {
+      "kind": "function",
+      "scope": "loadPersonalPlanStage2AccessWithDeps",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "loadJourneyAuthorizationPrefixWithDeps(deps, userId)",
+    "to": "loadJourneyAuthorizationPrefixWithDeps(deps, userId, deps)",
+    "test": {
+      "file": "tests/personal-plan-journey-access-loader.test.ts",
+      "name": "Stage 2 access keeps the app rollout gate and stops before later-stage authority reads"
+    },
+    "intendedAssertion": "Transferred exact [] timings fails on actual prefix emissions; access and zero later-stage reads remain valid.",
+    "donors": [
+      "C4"
+    ],
+    "sourceSHA256": "a20c271cf3237827c42a68b0beff2d6c416b93e24bd3a8f88b7c724f36f4354d",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^Stage 2 access keeps the app rollout gate and stops before later-stage authority reads$",
+      "tests/personal-plan-journey-access-loader.test.ts"
+    ],
+    "staticFileOccurrences": 1,
+    "sensitivityLimit": "Static owner-function anchor and full-file TS parse only. Not executed. Main must inspect intended assertion red, clean before/after, and exact byte restoration. No DB/provider/browser proof."
+  },
+  {
+    "id": "launch-access-state",
+    "file": "src/lib/personal-plan/enrollment.ts",
+    "anchor": {
+      "kind": "function",
+      "scope": "findPersonalPlanEnrollmentForUser",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "return {\n            accessState: \"active\",\n            sourceId: subscription.id,\n            paidAt,\n            qualifiedAt: paidAt,\n            artifactLeadId: leadId,\n            quizSourceKind,\n            sourceKind: \"launch_subscription\",\n          }",
+    "to": "return {\n            accessState: \"none\",\n            sourceId: subscription.id,\n            paidAt,\n            qualifiedAt: paidAt,\n            artifactLeadId: leadId,\n            quizSourceKind,\n            sourceKind: \"launch_subscription\",\n          }",
+    "test": {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "the launch membership is selected even when a standard subscription sorts ahead of it"
+    },
+    "intendedAssertion": "Full emitted enrollment object fails only the access-state field for the real selected launch subscription; fixed expected values are independent of the owner.",
+    "donors": [
+      "C5"
+    ],
+    "sourceSHA256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^the launch membership is selected even when a standard subscription sorts ahead of it$",
+      "tests/personal-plan-enrollment.test.ts"
+    ],
+    "staticFileOccurrences": 1,
+    "sensitivityLimit": "Static owner-function anchor and full-file TS parse only. Not executed. Main must inspect intended assertion red, clean before/after, and exact byte restoration. No DB/provider/browser proof."
+  },
+  {
+    "id": "launch-source-id",
+    "file": "src/lib/personal-plan/enrollment.ts",
+    "anchor": {
+      "kind": "function",
+      "scope": "findPersonalPlanEnrollmentForUser",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "return {\n            accessState: \"active\",\n            sourceId: subscription.id,\n            paidAt,\n            qualifiedAt: paidAt,\n            artifactLeadId: leadId,\n            quizSourceKind,\n            sourceKind: \"launch_subscription\",\n          }",
+    "to": "return {\n            accessState: \"active\",\n            sourceId: \"wrong-source\",\n            paidAt,\n            qualifiedAt: paidAt,\n            artifactLeadId: leadId,\n            quizSourceKind,\n            sourceKind: \"launch_subscription\",\n          }",
+    "test": {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "the launch membership is selected even when a standard subscription sorts ahead of it"
+    },
+    "intendedAssertion": "Full emitted enrollment object fails only the source-id field for the real selected launch subscription; fixed expected values are independent of the owner.",
+    "donors": [
+      "C5"
+    ],
+    "sourceSHA256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^the launch membership is selected even when a standard subscription sorts ahead of it$",
+      "tests/personal-plan-enrollment.test.ts"
+    ],
+    "staticFileOccurrences": 1,
+    "sensitivityLimit": "Static owner-function anchor and full-file TS parse only. Not executed. Main must inspect intended assertion red, clean before/after, and exact byte restoration. No DB/provider/browser proof."
+  },
+  {
+    "id": "launch-paid-at",
+    "file": "src/lib/personal-plan/enrollment.ts",
+    "anchor": {
+      "kind": "function",
+      "scope": "findPersonalPlanEnrollmentForUser",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "return {\n            accessState: \"active\",\n            sourceId: subscription.id,\n            paidAt,\n            qualifiedAt: paidAt,\n            artifactLeadId: leadId,\n            quizSourceKind,\n            sourceKind: \"launch_subscription\",\n          }",
+    "to": "return {\n            accessState: \"active\",\n            sourceId: subscription.id,\n            paidAt: null,\n            qualifiedAt: paidAt,\n            artifactLeadId: leadId,\n            quizSourceKind,\n            sourceKind: \"launch_subscription\",\n          }",
+    "test": {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "the launch membership is selected even when a standard subscription sorts ahead of it"
+    },
+    "intendedAssertion": "Full emitted enrollment object fails only the paid-at field for the real selected launch subscription; fixed expected values are independent of the owner.",
+    "donors": [
+      "C5"
+    ],
+    "sourceSHA256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^the launch membership is selected even when a standard subscription sorts ahead of it$",
+      "tests/personal-plan-enrollment.test.ts"
+    ],
+    "staticFileOccurrences": 1,
+    "sensitivityLimit": "Static owner-function anchor and full-file TS parse only. Not executed. Main must inspect intended assertion red, clean before/after, and exact byte restoration. No DB/provider/browser proof."
+  },
+  {
+    "id": "launch-qualified-at",
+    "file": "src/lib/personal-plan/enrollment.ts",
+    "anchor": {
+      "kind": "function",
+      "scope": "findPersonalPlanEnrollmentForUser",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "return {\n            accessState: \"active\",\n            sourceId: subscription.id,\n            paidAt,\n            qualifiedAt: paidAt,\n            artifactLeadId: leadId,\n            quizSourceKind,\n            sourceKind: \"launch_subscription\",\n          }",
+    "to": "return {\n            accessState: \"active\",\n            sourceId: subscription.id,\n            paidAt,\n            qualifiedAt: null,\n            artifactLeadId: leadId,\n            quizSourceKind,\n            sourceKind: \"launch_subscription\",\n          }",
+    "test": {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "the launch membership is selected even when a standard subscription sorts ahead of it"
+    },
+    "intendedAssertion": "Full emitted enrollment object fails only the qualified-at field for the real selected launch subscription; fixed expected values are independent of the owner.",
+    "donors": [
+      "C5"
+    ],
+    "sourceSHA256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^the launch membership is selected even when a standard subscription sorts ahead of it$",
+      "tests/personal-plan-enrollment.test.ts"
+    ],
+    "staticFileOccurrences": 1,
+    "sensitivityLimit": "Static owner-function anchor and full-file TS parse only. Not executed. Main must inspect intended assertion red, clean before/after, and exact byte restoration. No DB/provider/browser proof."
+  },
+  {
+    "id": "launch-lead-id",
+    "file": "src/lib/personal-plan/enrollment.ts",
+    "anchor": {
+      "kind": "function",
+      "scope": "findPersonalPlanEnrollmentForUser",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "return {\n            accessState: \"active\",\n            sourceId: subscription.id,\n            paidAt,\n            qualifiedAt: paidAt,\n            artifactLeadId: leadId,\n            quizSourceKind,\n            sourceKind: \"launch_subscription\",\n          }",
+    "to": "return {\n            accessState: \"active\",\n            sourceId: subscription.id,\n            paidAt,\n            qualifiedAt: paidAt,\n            artifactLeadId: \"wrong-lead\",\n            quizSourceKind,\n            sourceKind: \"launch_subscription\",\n          }",
+    "test": {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "the launch membership is selected even when a standard subscription sorts ahead of it"
+    },
+    "intendedAssertion": "Full emitted enrollment object fails only the lead-id field for the real selected launch subscription; fixed expected values are independent of the owner.",
+    "donors": [
+      "C5"
+    ],
+    "sourceSHA256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^the launch membership is selected even when a standard subscription sorts ahead of it$",
+      "tests/personal-plan-enrollment.test.ts"
+    ],
+    "staticFileOccurrences": 1,
+    "sensitivityLimit": "Static owner-function anchor and full-file TS parse only. Not executed. Main must inspect intended assertion red, clean before/after, and exact byte restoration. No DB/provider/browser proof."
+  },
+  {
+    "id": "launch-quiz-source",
+    "file": "src/lib/personal-plan/enrollment.ts",
+    "anchor": {
+      "kind": "function",
+      "scope": "findPersonalPlanEnrollmentForUser",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "return {\n            accessState: \"active\",\n            sourceId: subscription.id,\n            paidAt,\n            qualifiedAt: paidAt,\n            artifactLeadId: leadId,\n            quizSourceKind,\n            sourceKind: \"launch_subscription\",\n          }",
+    "to": "return {\n            accessState: \"active\",\n            sourceId: subscription.id,\n            paidAt,\n            qualifiedAt: paidAt,\n            artifactLeadId: leadId,\n            quizSourceKind: \"legacy\",\n            sourceKind: \"launch_subscription\",\n          }",
+    "test": {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "the launch membership is selected even when a standard subscription sorts ahead of it"
+    },
+    "intendedAssertion": "Full emitted enrollment object fails only the quiz-source field for the real selected launch subscription; fixed expected values are independent of the owner.",
+    "donors": [
+      "C5"
+    ],
+    "sourceSHA256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^the launch membership is selected even when a standard subscription sorts ahead of it$",
+      "tests/personal-plan-enrollment.test.ts"
+    ],
+    "staticFileOccurrences": 1,
+    "sensitivityLimit": "Static owner-function anchor and full-file TS parse only. Not executed. Main must inspect intended assertion red, clean before/after, and exact byte restoration. No DB/provider/browser proof."
+  },
+  {
+    "id": "launch-source-kind",
+    "file": "src/lib/personal-plan/enrollment.ts",
+    "anchor": {
+      "kind": "function",
+      "scope": "findPersonalPlanEnrollmentForUser",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "return {\n            accessState: \"active\",\n            sourceId: subscription.id,\n            paidAt,\n            qualifiedAt: paidAt,\n            artifactLeadId: leadId,\n            quizSourceKind,\n            sourceKind: \"launch_subscription\",\n          }",
+    "to": "return {\n            accessState: \"active\",\n            sourceId: subscription.id,\n            paidAt,\n            qualifiedAt: paidAt,\n            artifactLeadId: leadId,\n            quizSourceKind,\n            sourceKind: \"one_time\",\n          }",
+    "test": {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "the launch membership is selected even when a standard subscription sorts ahead of it"
+    },
+    "intendedAssertion": "Full emitted enrollment object fails only the source-kind field for the real selected launch subscription; fixed expected values are independent of the owner.",
+    "donors": [
+      "C5"
+    ],
+    "sourceSHA256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^the launch membership is selected even when a standard subscription sorts ahead of it$",
+      "tests/personal-plan-enrollment.test.ts"
+    ],
+    "staticFileOccurrences": 1,
+    "sensitivityLimit": "Static owner-function anchor and full-file TS parse only. Not executed. Main must inspect intended assertion red, clean before/after, and exact byte restoration. No DB/provider/browser proof."
+  },
+  {
+    "id": "launch-correlation-user",
+    "file": "src/lib/personal-plan/enrollment.ts",
+    "anchor": {
+      "kind": "function",
+      "scope": "findPersonalPlanEnrollmentForUser",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": ".from(\"funnel_sessions\")\n        .select(\"lead_id,purchase_completed_at\")\n        .eq(\"user_id\", userId)\n        .eq(\"purchase_provider\", subscription.provider)\n        .eq(\"purchase_reference\", purchaseReference)",
+    "to": ".from(\"funnel_sessions\")\n        .select(\"lead_id,purchase_completed_at\")\n        .eq(\"user_id\", \"wrong-user\")\n        .eq(\"purchase_provider\", subscription.provider)\n        .eq(\"purchase_reference\", purchaseReference)",
+    "test": {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "the launch membership is selected even when a standard subscription sorts ahead of it"
+    },
+    "intendedAssertion": "Changing real user query loses the attributed session and full active enrollment assertion fails; transferred exact query receipt additionally preserves original predicate union.",
+    "donors": [
+      "C5"
+    ],
+    "sourceSHA256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^the launch membership is selected even when a standard subscription sorts ahead of it$",
+      "tests/personal-plan-enrollment.test.ts"
+    ],
+    "staticFileOccurrences": 1,
+    "sensitivityLimit": "Static owner-function anchor and full-file TS parse only. Not executed. Main must inspect intended assertion red, clean before/after, and exact byte restoration. No DB/provider/browser proof."
+  },
+  {
+    "id": "launch-correlation-provider",
+    "file": "src/lib/personal-plan/enrollment.ts",
+    "anchor": {
+      "kind": "function",
+      "scope": "findPersonalPlanEnrollmentForUser",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": ".from(\"funnel_sessions\")\n        .select(\"lead_id,purchase_completed_at\")\n        .eq(\"user_id\", userId)\n        .eq(\"purchase_provider\", subscription.provider)\n        .eq(\"purchase_reference\", purchaseReference)",
+    "to": ".from(\"funnel_sessions\")\n        .select(\"lead_id,purchase_completed_at\")\n        .eq(\"user_id\", userId)\n        .eq(\"purchase_provider\", \"stripe\")\n        .eq(\"purchase_reference\", purchaseReference)",
+    "test": {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "the launch membership is selected even when a standard subscription sorts ahead of it"
+    },
+    "intendedAssertion": "Changing real provider query loses the attributed session and full active enrollment assertion fails; transferred exact query receipt additionally preserves original predicate union.",
+    "donors": [
+      "C5"
+    ],
+    "sourceSHA256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^the launch membership is selected even when a standard subscription sorts ahead of it$",
+      "tests/personal-plan-enrollment.test.ts"
+    ],
+    "staticFileOccurrences": 1,
+    "sensitivityLimit": "Static owner-function anchor and full-file TS parse only. Not executed. Main must inspect intended assertion red, clean before/after, and exact byte restoration. No DB/provider/browser proof."
+  },
+  {
+    "id": "launch-correlation-reference",
+    "file": "src/lib/personal-plan/enrollment.ts",
+    "anchor": {
+      "kind": "function",
+      "scope": "findPersonalPlanEnrollmentForUser",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": ".from(\"funnel_sessions\")\n        .select(\"lead_id,purchase_completed_at\")\n        .eq(\"user_id\", userId)\n        .eq(\"purchase_provider\", subscription.provider)\n        .eq(\"purchase_reference\", purchaseReference)",
+    "to": ".from(\"funnel_sessions\")\n        .select(\"lead_id,purchase_completed_at\")\n        .eq(\"user_id\", userId)\n        .eq(\"purchase_provider\", subscription.provider)\n        .eq(\"purchase_reference\", \"wrong-reference\")",
+    "test": {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "the launch membership is selected even when a standard subscription sorts ahead of it"
+    },
+    "intendedAssertion": "Changing real reference query loses the attributed session and full active enrollment assertion fails; transferred exact query receipt additionally preserves original predicate union.",
+    "donors": [
+      "C5"
+    ],
+    "sourceSHA256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^the launch membership is selected even when a standard subscription sorts ahead of it$",
+      "tests/personal-plan-enrollment.test.ts"
+    ],
+    "staticFileOccurrences": 1,
+    "sensitivityLimit": "Static owner-function anchor and full-file TS parse only. Not executed. Main must inspect intended assertion red, clean before/after, and exact byte restoration. No DB/provider/browser proof."
+  },
+  {
+    "id": "unbound-partner-admitted",
+    "file": "src/lib/personal-plan/enrollment.ts",
+    "anchor": {
+      "kind": "function",
+      "scope": "findPersonalPlanEnrollmentForUser",
+      "expectedOccurrences": 1,
+      "phase": "current"
+    },
+    "from": "typeof partner.lead_id === \"string\" &&\n    typeof partner.activated_at === \"string\" &&",
+    "to": "true &&\n    true &&",
+    "test": {
+      "file": "tests/personal-plan-enrollment.test.ts",
+      "name": "a claimed partner's revoked tester enrollments never resurrect the old tester lead"
+    },
+    "intendedAssertion": "Existing full empty enrollment rejects active partner with null lead/date after both missing-field guards are bypassed. Neither original nor keeper isolates each guard alone: both inputs have BOTH null.",
+    "donors": [
+      "C6"
+    ],
+    "sourceSHA256": "69e0277a87a57643587b07a9e6d421a07f030c037c61109222780173ce8980e3",
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-name-pattern=^a claimed partner's revoked tester enrollments never resurrect the old tester lead$",
+      "tests/personal-plan-enrollment.test.ts"
+    ],
+    "staticFileOccurrences": 1,
+    "sensitivityLimit": "Static owner-function anchor and full-file TS parse only. Not executed. Main must inspect intended assertion red, clean before/after, and exact byte restoration. No DB/provider/browser proof."
+  }
+]

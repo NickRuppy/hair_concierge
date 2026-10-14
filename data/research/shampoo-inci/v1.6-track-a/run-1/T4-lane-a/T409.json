@@ -1,0 +1,500 @@
+{
+  "blindId": "T409",
+  "inciFingerprintSha256": "d781cb2007e39fd64fe62e6bd73b3c65117915bcde182f6daf8d22763dfca1dc",
+  "identity": {
+    "brand": "L'Oréal Paris",
+    "productName": "Ultimate Shampoo (catalog) = L'Oréal Paris Elvital Glycolic Gloss Shampoo, 200 ml",
+    "market": "DE",
+    "packSize": "200 ml",
+    "formulaSourceTier": 4,
+    "formulaCompleteness": "complete",
+    "identityConfidence": "moderate",
+    "normalization": [
+      "Aqua/Water one entry; normalized positions = packet positions.",
+      "E3 cut: Parfum at 8; prominent = 2-7.",
+      "Source tier 4, identity confidence moderate: formula marked complete; no conflict visible, so no confidence cap applied."
+    ]
+  },
+  "sourcesUsed": {
+    "formula": "formula/T409.json (fingerprint d781cb2007e39fd64fe62e6bd73b3c65117915bcde182f6daf8d22763dfca1dc, source tier 4, completeness complete)",
+    "positioning": [
+      "reveal/T409.json#positioningSources[0] (retailer, packet grade low)",
+      "reveal/T409.json#positioningSources[1] (retailer, packet grade low)",
+      "reveal/T409.json#positioningSources[2] (manufacturer_de, packet grade moderate)"
+    ]
+  },
+  "claimGrading": {
+    "dm.de": "low",
+    "rossmann.de": "low",
+    "manufacturer_de (different SKU)": "not evidence for this product"
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "general (provisional)",
+      "final": "general",
+      "evidence": "retailer shine claims",
+      "reason": "CL-SRC low"
+    },
+    {
+      "property": "cleansingStrength/conditioningLevel/weightPotential/dandruffSupport",
+      "blind": "see formula-pass",
+      "final": "unchanged",
+      "evidence": "formula-only properties; no material formula conflict exposed by the reveal"
+    }
+  ],
+  "cleansingStrength": {
+    "value": "moderate",
+    "confidence": "high",
+    "rationale": "C1: defining anionic Sodium C14-16 Olefin Sulfonate (2) (ether/sulfonate type) with prominent buffer(s) Cocamidopropyl Betaine (5), Sodium Lauroyl Sarcosinate (7) and no prominent reinforcing strong anionic -> moderate. Cocamide MEA (3) is a foam booster (no route); Coco-Betaine (12) after Parfum. Unchanged after unblinding: claims never set cleansing strength (Section 4, 3.2).",
+    "formulaFacts": [
+      {
+        "ingredient": "Sodium C14-16 Olefin Sulfonate",
+        "position": 2,
+        "role": "defining anionic (sulfonate)"
+      },
+      {
+        "ingredient": "Cocamide MEA",
+        "position": 3,
+        "role": "foam booster"
+      },
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 5,
+        "role": "buffer"
+      },
+      {
+        "ingredient": "Sodium Lauroyl Sarcosinate",
+        "position": 7,
+        "role": "buffer (mild anionic)"
+      },
+      {
+        "ingredient": "Carbomer",
+        "position": 28,
+        "role": "anionic thickener"
+      }
+    ],
+    "counterSignal": [
+      "none material"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "formula/T409.json (fingerprint d781cb2007e39fd64fe62e6bd73b3c65117915bcde182f6daf8d22763dfca1dc, source tier 4, completeness complete)"
+    ]
+  },
+  "conditioningLevel": {
+    "value": "low",
+    "confidence": "moderate",
+    "rationale": "Cleansing-led: cationic polymers HP Guar HPTC (16) and Polyquaternium-7 (20) are both after Parfum (8) and the preservative; Glycol Distearate (6) and Glycerin (4) are the only prominent care routes. Little substantive slip. Unchanged after unblinding: claims never raise or lower conditioning (3.2, C7).",
+    "formulaFacts": [
+      {
+        "ingredient": "Glycerin",
+        "position": 4,
+        "role": "humectant, E4"
+      },
+      {
+        "ingredient": "Glycol Distearate",
+        "position": 6,
+        "role": "pearlizer"
+      },
+      {
+        "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+        "position": 16,
+        "role": "cationic polymer (late)"
+      },
+      {
+        "ingredient": "Polyquaternium-7",
+        "position": 20,
+        "role": "cationic polymer (late)"
+      }
+    ],
+    "counterSignal": [
+      "two cationic polymers present (late)",
+      "prominent glycerin and pearlizer"
+    ],
+    "neighboringAlternative": "moderate",
+    "sources": [
+      "formula/T409.json (fingerprint d781cb2007e39fd64fe62e6bd73b3c65117915bcde182f6daf8d22763dfca1dc, source tier 4, completeness complete)"
+    ]
+  },
+  "weightPotential": {
+    "value": "low",
+    "confidence": "high",
+    "rationale": "low: one family (cationic polymers) at trace positions facing an ordinary-to-efficient AOS reset. Unchanged after unblinding (claims cannot decide the band, 6.5).",
+    "neighboringAlternative": "none",
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "light",
+        "rationale": "Only two late cationic polymers (16, 20) of one family."
+      },
+      "persistence": {
+        "value": "low",
+        "rationale": "Trace polymers; nothing persistent."
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C1 AOS chassis buffered by betaine and sarcosinate; AOS is an efficient remover."
+      }
+    },
+    "extractedEvidenceByFamily": {
+      "cationic_polymer": [
+        [
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          16
+        ],
+        [
+          "Polyquaternium-7",
+          20
+        ]
+      ],
+      "silicone": [],
+      "payload_lipid": [],
+      "weak_refatter": [],
+      "protein_film": [],
+      "film_former": [],
+      "anionic_surfactant": [
+        [
+          "Sodium C14-16 Olefin Sulfonate",
+          2
+        ],
+        [
+          "Sodium Lauroyl Sarcosinate",
+          7
+        ]
+      ],
+      "amphoteric_surfactant": [
+        [
+          "Cocamidopropyl Betaine",
+          5
+        ],
+        [
+          "Coco-Betaine",
+          12
+        ]
+      ],
+      "humectant_context": [
+        [
+          "Glycerin",
+          4
+        ],
+        [
+          "Hexylene Glycol",
+          9
+        ],
+        [
+          "Propylene Glycol",
+          27
+        ]
+      ]
+    },
+    "excludedIngredients": [
+      [
+        "Glycol Distearate",
+        6,
+        "pearlizer"
+      ],
+      [
+        "PEG-55 Propylene Glycol Oleate",
+        18,
+        "PEG thickener"
+      ],
+      [
+        "Carbomer",
+        28,
+        "anionic acrylate thickener (6.4)"
+      ],
+      [
+        "Cocamide MEA",
+        3,
+        "thickener"
+      ],
+      [
+        "Salicylic Acid",
+        19,
+        "acid, not deposition"
+      ],
+      [
+        "Citrus Limon Peel Oil",
+        33,
+        "essential oil"
+      ]
+    ],
+    "whyThisBand": "low: one family (cationic polymers) at trace positions facing an ordinary-to-efficient AOS reset.",
+    "whyNotNeighborBand": "Not moderate: single late family, no silicone/lipid/protein; no plausible noticeable residue.",
+    "counterEvidence": [],
+    "confidenceLimitingFactor": "Complete formula; recognition gaps immaterial (identity confidence moderate noted, formula complete).",
+    "formulaFacts": [
+      {
+        "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+        "position": 16,
+        "family": "cationic_polymer"
+      },
+      {
+        "ingredient": "Polyquaternium-7",
+        "position": 20,
+        "family": "cationic_polymer"
+      },
+      {
+        "ingredient": "Sodium C14-16 Olefin Sulfonate",
+        "position": 2,
+        "family": "anionic_surfactant"
+      },
+      {
+        "ingredient": "Sodium Lauroyl Sarcosinate",
+        "position": 7,
+        "family": "anionic_surfactant"
+      },
+      {
+        "ingredient": "Cocamidopropyl Betaine",
+        "position": 5,
+        "family": "amphoteric_surfactant"
+      },
+      {
+        "ingredient": "Coco-Betaine",
+        "position": 12,
+        "family": "amphoteric_surfactant"
+      },
+      {
+        "ingredient": "Glycerin",
+        "position": 4,
+        "family": "humectant_context"
+      },
+      {
+        "ingredient": "Hexylene Glycol",
+        "position": 9,
+        "family": "humectant_context"
+      },
+      {
+        "ingredient": "Propylene Glycol",
+        "position": 27,
+        "family": "humectant_context"
+      }
+    ],
+    "counterSignal": [
+      "none material"
+    ],
+    "canonicalFormula": {
+      "fingerprint": "d781cb2007e39fd64fe62e6bd73b3c65117915bcde182f6daf8d22763dfca1dc",
+      "sourceTier": 4,
+      "completeness": "complete",
+      "identityConfidence": "moderate",
+      "captureDate": "not stated in packet",
+      "normalization": "Aqua/Water one entry; normalized positions = packet positions."
+    },
+    "unresolvedFacts": [],
+    "sources": [
+      "formula/T409.json (fingerprint d781cb2007e39fd64fe62e6bd73b3c65117915bcde182f6daf8d22763dfca1dc, source tier 4, completeness complete)"
+    ]
+  },
+  "focusPrimary": {
+    "value": "general",
+    "confidence": "moderate",
+    "rationale": "All usable shine claims ('Glanz', 'spiegelglatt', 'für stumpfes und glanzloses Haar') are retailer copy (low); the manufacturer page belongs to a different SKU (300 ml, sulfate-based) and is not evidence. A low claim can be a candidate only with independent formula support; the only shine route is acids (Glycolic Acid last at 35, Citric 31; F4), which is not independent support. -> general.",
+    "formulaFacts": [
+      {
+        "ingredient": "Glycolic Acid",
+        "position": 35
+      }
+    ],
+    "counterSignal": [
+      "consistent shine positioning across retailers"
+    ],
+    "neighboringAlternative": "shine",
+    "sources": [
+      "reveal positioning sources",
+      "formula packet"
+    ]
+  },
+  "focusSecondary": {
+    "value": [],
+    "confidence": "high",
+    "rationale": "No qualifying positioning.",
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources"
+    ]
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "not_applicable"
+    },
+    "claimRole": "not_applicable",
+    "counterSignal": [
+      "consistent shine positioning across retailers"
+    ],
+    "neighboringAlternative": "shine",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "shine (retailer, low)",
+        "formulaCompatible": true,
+        "compatibleRoute": "acidic pH only (F4)",
+        "decisionReason": "low-graded claim without independent formula verdict -> general"
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [],
+        "independentRoutes": [],
+        "whyDistinctFromPrimary": "none",
+        "exceptionCode": null
+      },
+      "usageRole": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [],
+        "losingTriggers": [],
+        "rationale": "No moderate/high trigger."
+      }
+    }
+  },
+  "usageRole": {
+    "value": "regular",
+    "confidence": "high",
+    "rationale": "No moderate/high trigger.",
+    "triggerCode": "none",
+    "triggerEvidence": [],
+    "losingTriggers": [],
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources"
+    ]
+  },
+  "scalpComfortTarget": {
+    "value": "not_targeted",
+    "confidence": "high",
+    "rationale": "No E2 unit.",
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "neighboringAlternative": "none",
+    "sources": [
+      "reveal positioning sources",
+      "formula packet"
+    ]
+  },
+  "dandruffSupport": {
+    "value": "not_supported",
+    "confidence": "high",
+    "rationale": "Complete INCI contains neither Piroctone Olamine nor Climbazole (Section 11) -> not_supported. Salicylic Acid (19) alone does not count (Section 11).",
+    "neighboringAlternative": "none",
+    "formulaFacts": [],
+    "counterSignal": [
+      "none"
+    ],
+    "sources": [
+      "formula/T409.json (fingerprint d781cb2007e39fd64fe62e6bd73b3c65117915bcde182f6daf8d22763dfca1dc, source tier 4, completeness complete)"
+    ]
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "high",
+        "rationale": "T1: W low -> ideal. T2: thickness/texture claims do not change fit."
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "high",
+        "rationale": "T1: W low -> ideal. T2: thickness/texture claims do not change fit."
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W low, C low -> acceptable. T2: thickness/texture claims do not change fit."
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "high",
+      "rationale": "W-LIVE: weightPotential low -> 1:1 projection; confidence = weightPotential confidence."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "confidence": "moderate",
+        "rationale": "S-ORDINARY way 1; the only manufacturer source is for a different SKU, so the packet effectively has retailer copy only -> moderate."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate -> regular. I3: neighbor none (high confidence, no boundary check)"
+    },
+    "positioning": {
+      "explicitResetPositioning": false,
+      "confidence": "high",
+      "rationale": "D1: no D1 stem (tiefenrein / deep clean / clarifying shampoo / detox-reinigung) in name or manufacturer/pack claims, no occasional-use directions."
+    },
+    "explicitResetPositioning": false,
+    "deepCleanserListing": "not_flagged",
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [],
+    "researchCombinationTargets": []
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsAndPriorLabelsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": "Complete formula; recognition gaps immaterial (identity confidence moderate noted, formula complete).",
+    "comparisonWithEarlierValuesOnlyOutsideLane": true,
+    "formulaPropertiesChangedAfterUnblinding": false
+  },
+  "uncertainties": [
+    {
+      "reading": "no confidence cap for identity moderate (no material conflict visible, ID-3)",
+      "alternative": "cap formula properties at moderate"
+    },
+    {
+      "reading": "focus general",
+      "alternative": "shine (moderate cap) if Glycolic Acid is accepted as an independent smoothing route"
+    },
+    {
+      "reading": "manufacturer page for the sulfate-based 300 ml SKU is a different formula, not a conflict with this frozen sulfate-free INCI (ID-3: no effect)",
+      "alternative": "none"
+    }
+  ]
+}

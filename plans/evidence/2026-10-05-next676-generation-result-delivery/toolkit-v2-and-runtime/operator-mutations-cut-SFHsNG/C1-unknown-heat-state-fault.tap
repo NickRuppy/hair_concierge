@@ -1,0 +1,48 @@
+TAP version 13
+# Subtest: INITIAL-02: quiz-led Shampoo cadence keeps current behavior unknown
+not ok 1 - INITIAL-02: quiz-led Shampoo cadence keeps current behavior unknown
+  ---
+  duration_ms: 2.02375
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan/needs.test.ts:2:1582'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        events: [],
+        knowledgeState: 'unknown',
+        sourceFacts: [],
+    +   state: 'absent'
+    -   state: 'unknown'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    knowledgeState: 'unknown'
+    state: 'unknown'
+    events:
+    sourceFacts:
+  actual:
+    knowledgeState: 'unknown'
+    state: 'absent'
+    events:
+    sourceFacts:
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/personal-plan/needs.test.ts:39:10)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 319.88675

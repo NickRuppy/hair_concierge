@@ -1,0 +1,56 @@
+from final_lib import build, summary
+from helpers import *
+recs=[]
+# ---------------- T307
+recs.append(build("T307",{
+ "identity":{"productName":"Lavera Basis Sensitiv (Pflegeshampoo basis sensitive Hydrate & Care)","brand":"Lavera","market":"DE","packSize":"250 ml","identityConfidence":"high"},
+ "claims":[{"unit":"Pflegeshampoo basis sensitive Hydrate & Care (name)","source":"name","grade":"high","reading":"'Hydrate' = moisture role in name; 'basis sensitive' non-scalp name words (F7)"},
+  {"unit":"Spendet intensive Feuchtigkeit / Hyaluron ... hilft Trockenheit spürbar zu mildern / Für normales und trockenes Haar","source":"manufacturer_de","grade":"moderate","reading":"moisture (lengths); not dry-scalp"},
+  {"unit":"Sanft zur Kopfhaut / Schont empfindliche Kopfhaut / pH-hautneutrale Formel","source":"manufacturer_de","grade":"moderate","reading":"sparing/protective wording (E2a) - not positioning"},
+  {"unit":"Bio-Aloe Vera ist bekannt dafür, die Kopfhaut zu beruhigen","source":"manufacturer_de","grade":"moderate","reading":"ingredient-reputation sentence (E2a) - not positioning"},
+  {"unit":"Für die extra Portion Feuchtigkeit – Tag für Tag.","source":"manufacturer_de","grade":"moderate","reading":"'Tag für Tag' not a listed U2 term"}],
+ "focusPrimary":F("moisture","high","'Hydrate' in the product name (high) plus manufacturer moisture claims; formula moisture_supported (Glycerin 4, Sodium Hyaluronate 10, Betaine 17 with sunflower oil, cetearyl alcohol, guar) -> moisture (F1).","none","All care routes after Citric Acid (7); rinse-off.",
+   {"verdict":"moisture_supported","moistureRoutes":["Glycerin 4","Sodium Hyaluronate 10","Betaine 17"],"sharedConditioningRoutes":["Helianthus Annuus Seed Oil 11","Cetearyl Alcohol 15","PCA Glyceryl Oleate 16","Guar Hydroxypropyltrimonium Chloride 21"],"repairRoutes":[],"limitation":"Rinse-off; routes after citric acid."},"candidate",
+   {"primary":{"claimDirection":"moisture","formulaCompatible":True,"compatibleRoute":"Glycerin 4 + Sodium Hyaluronate 10 + emollients","decisionReason":"name-led compatible moisture claim"}},["reveal:name","reveal:manufacturer_de","formula"]),
+ "focusSecondary":S([],"high","Mildness/sensitive wording is not a focus (7.2); no other positioned job.","none","-",{"emptyDefaultConsidered":True,"selected":[],"matchingClaims":[],"independentRoutes":[]},["reveal:manufacturer_de"]),
+ "usageRole":U("regular","moderate","No U2 term ('Tag für Tag' is not listed); moderate cleansing; no D1/dandruff.","frequent","'Tag für Tag' is close to 'für jeden Tag'.","none",[],[],["reveal:manufacturer_de"]),
+ "scalpComfortTarget":SC("not_targeted","high","SC1 not met: 'Schont empfindliche Kopfhaut' and 'Sanft zur Kopfhaut' are sparing wording, the aloe sentence is ingredient reputation (E2a), and 'sensitiv' in the name does not name the scalp.","none","CSA formula half would pass.",["reveal:manufacturer_de"]),
+ "targets":{"primary":{"target":"ordinary","confidence":"high","rationale":"S-ORDINARY way 1: no qualifying E2 claim unit (sparing, reputation and lengths-dryness wording excluded); manufacturer source -> high."},"secondary":None},
+ "d1":D1F(),
+ "changes":[{"property":"focusPrimary","blind":"moisture (low)","final":"moisture (high)","evidence":"name 'Hydrate & Care'","reason":"claim confirms formula verdict"},{"property":"scalpComfortTarget","blind":"not_targeted (low)","final":"not_targeted (high)","evidence":"sparing/reputation wording only","reason":"SC1 fails"},{"property":"usageRole","blind":"regular (low)","final":"regular (moderate)","evidence":"'Tag für Tag'","reason":"not a U2 term"},{"property":"focusSecondary","blind":"[] (low)","final":"[] (high)","evidence":"-","reason":"-"}],
+ "uncertainties":[{"reading":"'Tag für Tag' not treated as U2 frequency wording.","alternative":"frequent (cleansing moderate)"},{"reading":"conditioningLevel high via C2 with payload lipid (all routes after citric acid).","alternative":"moderate"}]}))
+# ---------------- T308
+recs.append(build("T308",{
+ "identity":{"productName":"ISANA Shampoo Sensitiv Baumwoll- & Kornblume","brand":"ISANA","market":"DE","packSize":"300 ml","identityConfidence":"high"},
+ "claims":[{"unit":"für empfindliche Kopfhaut & normales Haar","source":"manufacturer_de","grade":"moderate","reading":"E2 sensitive 'für ...' unit -> SC1 positioning"},
+  {"unit":"... ist es auch bei empfindlicher Kopfhaut bestens geeignet","source":"pack_back / manufacturer","grade":"moderate","reading":"tolerance wording (E2a) - not positioning"},
+  {"unit":"mit beruhigenden Inhaltsstoffen sowie Panthenol","source":"pack_back","grade":"moderate","reading":"no scalp state named"},
+  {"unit":"Sensitiv (name)","source":"name","grade":"high","reading":"non-scalp name word; counts only with the scalp unit above"}],
+ "focusPrimary":F("general","moderate","Sensitive-scalp positioning exists (SC1), but scalp_active needs scalpComfortTarget targeted and CSA fails (no prominent E4 route; Parfum at 6). No lengths-care claim beyond mild care; formula nonspecific -> general.","scalp_active","Explicit 'für empfindliche Kopfhaut' positioning.",{"verdict":"nonspecific","limitation":"Late protein/panthenol/guar only."},"not_applicable",
+   {"primary":{"claimDirection":"sensitive scalp","formulaCompatible":False,"compatibleRoute":"none (CSA fails)","decisionReason":"scalp role incompatible; honest fallback"}},["reveal:manufacturer_de","formula"]),
+ "focusSecondary":S([],"moderate","No compatible secondary.",["scalp_active"],"-",{"emptyDefaultConsidered":True,"selected":[],"matchingClaims":["sensitive scalp"],"independentRoutes":[]},["reveal:manufacturer_de"]),
+ "usageRole":U("regular","high","No trigger.","none","-","none",[],[],["reveal:manufacturer_de"]),
+ "scalpComfortTarget":SC("not_targeted","high","Positioning half met (manufacturer 'für empfindliche Kopfhaut' + name 'Sensitiv'), but CSA fails: Panthenol (12), Niacinamide (13), Glyceryl Oleate (7), Glycerin (18) are all after Parfum (6), so no prominent E4 route -> not_targeted (CSA); S-SENSITIVE fails (S-FAIL).","none","Claimed 'beruhigende Inhaltsstoffe sowie Panthenol' - present but non-prominent.",["reveal:manufacturer_de","formula"]),
+ "targets":{"primary":{"target":"ordinary","confidence":"moderate","rationale":"S-ORDINARY way 4: claimed sensitive target fails the S-SENSITIVE formula gate (scalpComfortTarget not_targeted via CSA; no prominent comfort route); nothing else passes -> ordinary + review_specialist_gate_failed."},"secondary":None},
+ "d1":D1F(),
+ "flags":[{"code":"review_specialist_gate_failed","detail":"sensitive: S-SENSITIVE formula gate failed (CSA: no prominent E4 route; Panthenol 12/Niacinamide 13 after Parfum 6). No prominent unlisted route candidate."}],
+ "changes":[{"property":"focusPrimary","blind":"general (low)","final":"general (moderate)","evidence":"sensitive-scalp positioning","reason":"scalp_active incompatible (CSA)"},{"property":"scalpComfortTarget","blind":"not_targeted (moderate)","final":"not_targeted (high)","evidence":"SC1 met, CSA fails","reason":"formula half decisive"},{"property":"usageRole","blind":"regular (low)","final":"regular (high)","evidence":"-","reason":"-"},{"property":"focusSecondary","blind":"[] (low)","final":"[] (moderate)","evidence":"-","reason":"-"}],
+ "uncertainties":[{"reading":"'für empfindliche Kopfhaut & normales Haar' read as qualifying 'für ...' positioning.","alternative":"Read as tolerance wording -> S-ORDINARY way 1 (high), no S-FAIL flag."}]}))
+# ---------------- T309
+recs.append(build("T309",{
+ "identity":{"productName":"ISANA MED Shampoo Jeden Tag (Ultra Sensitiv)","brand":"ISANA","market":"DE","packSize":"200 ml","identityConfidence":"high"},
+ "claims":[{"unit":"Das ISANA Med Shampoo berücksichtigt die besonderen Bedürfnisse sehr sensibler und empfindlicher Kopfhaut.","source":"manufacturer_de","grade":"moderate","reading":"E2 sensitive (product designed for sensitive scalp) -> SC1"},
+  {"unit":"hautberuhigende Formel","source":"manufacturer_de","grade":"moderate","reading":"does not name the scalp"},
+  {"unit":"schützt Kopfhaut und Haar vor Austrocknung","source":"manufacturer_de","grade":"moderate","reading":"protective wording - not dry-scalp positioning"},
+  {"unit":"Jeden Tag (product name)","source":"name","grade":"high","reading":"U2 'für jeden Tag' frequency wording (pack-front record does not show it)"},
+  {"unit":"ULTRA SENSITIV / 0% Parfüm","source":"pack_front","grade":"high","reading":"non-scalp name word; fragrance-free supportive signal"}],
+ "focusPrimary":F("scalp_active","moderate","Sensitive-scalp positioning (manufacturer, moderate; with name word 'Ultra Sensitiv') + scalpComfortTarget targeted -> scalp_active.","general","Positioning sentence is a 'berücksichtigt die Bedürfnisse' formulation, moderate grade.",NA,"candidate",
+   {"primary":{"claimDirection":"sensitive scalp","formulaCompatible":True,"compatibleRoute":"Panthenol 8, Allantoin 9, Glycerin 3","decisionReason":"explicit sensitive-scalp role, targeted"}},["reveal:manufacturer_de","formula"]),
+ "focusSecondary":S([],"moderate","No lengths-care positioning.",["moisture"],"'schützt ... Haar vor Austrocknung'.",{"emptyDefaultConsidered":True,"selected":[],"matchingClaims":[],"independentRoutes":[]},["reveal:manufacturer_de"]),
+ "usageRole":U("frequent","moderate","U2 'Jeden Tag' in the product name + cleansingStrength moderate -> frequent.","regular","The captured pack-front text does not show 'Jeden Tag'; name taken from the frozen identity.","explicit_frequent_non_strong",["product name 'ISANA MED Shampoo Jeden Tag'"],[],["reveal:name"]),
+ "scalpComfortTarget":SC("targeted","moderate","SC1: manufacturer unit for 'sehr sensibler und empfindlicher Kopfhaut' (moderate) with name word 'Ultra Sensitiv'. CSA: prominent Panthenol (8), Allantoin (9), Glycerin (3), Glyceryl Oleate (7); no fragrance, no cooling agents.","not_targeted","Positioning only moderate.",["reveal:manufacturer_de","formula"]),
+ "targets":{"primary":{"target":"sensitive","confidence":"moderate","rationale":"S-SENSITIVE: E2 sensitive claim (manufacturer, moderate) + targeted (moderate) + prominent comfort routes Panthenol (8), Allantoin (9). Cleansing moderate. Confidence = min(E1 moderate, scalpComfortTarget moderate)."},"secondary":None},
+ "d1":D1F(),
+ "changes":[{"property":"focusPrimary","blind":"scalp_active (low)","final":"scalp_active (moderate)","evidence":"manufacturer sensitive-scalp unit","reason":"SC1 + CSA"},{"property":"scalpComfortTarget","blind":"targeted (low)","final":"targeted (moderate)","evidence":"same","reason":"positioning confirmed"},{"property":"usageRole","blind":"regular (low)","final":"frequent (moderate)","evidence":"name 'Jeden Tag'","reason":"U2"},{"property":"focusSecondary","blind":"[] (low)","final":"[] (moderate)","evidence":"-","reason":"-"}],
+ "uncertainties":[{"reading":"'berücksichtigt die besonderen Bedürfnisse sehr sensibler und empfindlicher Kopfhaut' read as for-the-scalp-state positioning.","alternative":"Read as non-qualifying -> SC1 fails, not_targeted, focus general, target ordinary way 1."},{"reading":"'Jeden Tag' from the frozen product name fires U2.","alternative":"regular if the name word is not on pack."}]}))
+for r in recs: print(summary(r))

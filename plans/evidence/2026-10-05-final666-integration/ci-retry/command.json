@@ -1,0 +1,8 @@
+{
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "argv": [
+    "npm",
+    "run",
+    "ci:verify"
+  ]
+}

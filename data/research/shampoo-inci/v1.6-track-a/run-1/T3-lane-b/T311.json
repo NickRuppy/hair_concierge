@@ -1,0 +1,486 @@
+{
+  "blindId": "T311",
+  "inciFingerprintSha256": "2c79251eb5b8c7ff1b1f626154c752255ac0d7d43384f1ee90d444652876c9bf",
+  "policy": "shampoo-classification-v1.6",
+  "identity": {
+    "productName": "Guhl Anti Schuppen",
+    "brand": "Guhl",
+    "market": "DE",
+    "packSize": "250 ml",
+    "identityConfidence": "high"
+  },
+  "normalizationNote": "No split synonym entries; packet positions are normalized positions.",
+  "claimUnitsReviewed": [
+    {
+      "unit": "Anti Schuppen (name)",
+      "source": "name",
+      "grade": "high",
+      "reading": "E2 dandruff"
+    },
+    {
+      "unit": "Bei Schuppen und juckender Kopfhaut",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "reading": "dandruff unit with itch (absorbed)"
+    },
+    {
+      "unit": "Befreie dich ... von Schuppen und einer juckenden, spannenden Kopfhaut.",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "reading": "dandruff unit with itch/tension"
+    },
+    {
+      "unit": "Deine juckende Kopfhaut wird beruhigt und das Spannungsgefühl reduziert.",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "reading": "comfort unit directly after a dandruff sentence in the same paragraph -> bundled (E2b)"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic Sodium Laureth Sulfate (2); prominent buffers Cocamidopropyl Betaine (3), Coco-Glucoside (4); no reinforcing route. E3 point Parfum (19).",
+      "neighboringAlternative": "none",
+      "counterSignal": "None material.",
+      "sourceIds": [
+        "formula:2c79251eb5b8"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 4,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Piroctone Olamine",
+          "position": 6,
+          "role": "recognized anti-dandruff active"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 7,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 9,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Zinc PCA",
+          "position": 11,
+          "role": "sebum-regulating"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 12,
+          "role": "E4 comfort"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 14,
+          "role": "humectant"
+        },
+        {
+          "ingredient": "Parfum",
+          "position": 19,
+          "role": "E3 point"
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "One meaningful system: Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (9) with weak refatter Glyceryl Oleate (7) and humectants Panthenol (12), Glycerin (14). No silicone, lipid or pearlizer; C2 not met.",
+      "neighboringAlternative": "low",
+      "counterSignal": "Single cationic route; otherwise cleansing-led.",
+      "sourceIds": [
+        "formula:2c79251eb5b8"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 4,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Piroctone Olamine",
+          "position": 6,
+          "role": "recognized anti-dandruff active"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 7,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 9,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Zinc PCA",
+          "position": 11,
+          "role": "sebum-regulating"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 12,
+          "role": "E4 comfort"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 14,
+          "role": "humectant"
+        },
+        {
+          "ingredient": "Parfum",
+          "position": 19,
+          "role": "E3 point"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Single cationic guar (9) plus a weak refatter (7) facing ordinary C1 reset.",
+      "neighboringAlternative": "moderate",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "Guar + Glyceryl Oleate."
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "No persistent system."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 SLES + two buffers."
+        }
+      },
+      "whyThisBand": "Light routes, ordinary reset.",
+      "whyNotNeighborBand": "W2: only a single light polymer plus a weak_refatter and humectants; no silicone, lipid or film, so combined residue is below noticeable.",
+      "counterSignal": "Guar mid-list.",
+      "excluded": [
+        "Sorbitan Caprylate (8): preservative booster/solubilizer",
+        "Zinc PCA (11): sebum-regulating salt",
+        "Tetrasodium Glutamate Diacetate (13): chelator"
+      ],
+      "sourceIds": [
+        "formula:2c79251eb5b8"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "role": "defining anionic"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 3,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 4,
+          "role": "buffer"
+        },
+        {
+          "ingredient": "Piroctone Olamine",
+          "position": 6,
+          "role": "recognized anti-dandruff active"
+        },
+        {
+          "ingredient": "Glyceryl Oleate",
+          "position": 7,
+          "role": "weak_refatter"
+        },
+        {
+          "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+          "position": 9,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Zinc PCA",
+          "position": 11,
+          "role": "sebum-regulating"
+        },
+        {
+          "ingredient": "Panthenol",
+          "position": 12,
+          "role": "E4 comfort"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 14,
+          "role": "humectant"
+        },
+        {
+          "ingredient": "Parfum",
+          "position": 19,
+          "role": "E3 point"
+        }
+      ]
+    },
+    "dandruffSupport": {
+      "value": "supported",
+      "confidence": "high",
+      "rationale": "Complete INCI contains Piroctone Olamine (6).",
+      "neighboringAlternative": "none",
+      "sourceIds": [
+        "formula:2c79251eb5b8"
+      ],
+      "counterSignal": "Mechanical INCI check (Section 11); botanicals, salicylic acid or claims never change it.",
+      "formulaFacts": []
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "high",
+      "rationale": "Anti-dandruff name + Piroctone Olamine (6) -> scalp_active.",
+      "neighboringAlternative": "none",
+      "counterSignal": "-",
+      "careDirection": {
+        "verdict": "not_applicable",
+        "limitation": "Problem-led dandruff role."
+      },
+      "claimRole": "candidate",
+      "decisionTrace": {
+        "primary": {
+          "claimDirection": "dandruff",
+          "formulaCompatible": true,
+          "compatibleRoute": "Piroctone Olamine 6",
+          "decisionReason": "problem-led with recognized active"
+        }
+      },
+      "sourceIds": [
+        "reveal:name",
+        "formula"
+      ],
+      "formulaFacts": []
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "rationale": "No lengths-care positioning.",
+      "neighboringAlternative": "none",
+      "counterSignal": "-",
+      "decisionTrace": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingClaims": [],
+        "independentRoutes": []
+      },
+      "sourceIds": [
+        "reveal:manufacturer_de"
+      ],
+      "formulaFacts": []
+    },
+    "usageRole": {
+      "value": "treatment",
+      "confidence": "high",
+      "rationale": "dandruffSupport supported + name dandruff claim -> treatment.",
+      "neighboringAlternative": "none",
+      "counterSignal": "-",
+      "decisionTrace": {
+        "default": "regular",
+        "triggerCode": "recognized_active_problem_led",
+        "triggerEvidence": [
+          "name 'Anti Schuppen'",
+          "Piroctone Olamine (6)"
+        ],
+        "losingTriggers": [],
+        "rationale": "dandruffSupport supported + name dandruff claim -> treatment."
+      },
+      "sourceIds": [
+        "reveal:name",
+        "formula"
+      ],
+      "formulaFacts": []
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "rationale": "No SC1 unit: all itch/tension wording is inside or bundled with dandruff units (E2a/E2b). CSA formula half passes (Panthenol 12, Glyceryl Oleate 7).",
+      "neighboringAlternative": "none",
+      "counterSignal": "Bundled soothing wording.",
+      "sourceIds": [
+        "reveal:manufacturer_de"
+      ],
+      "formulaFacts": []
+    }
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "scalp_active (low)",
+      "final": "scalp_active (high)",
+      "evidence": "name",
+      "reason": "dandruff claim"
+    },
+    {
+      "property": "usageRole",
+      "blind": "treatment (low)",
+      "final": "treatment (high)",
+      "evidence": "name",
+      "reason": "U3"
+    },
+    {
+      "property": "scalpComfortTarget",
+      "blind": "not_targeted (low)",
+      "final": "not_targeted (high)",
+      "evidence": "bundled wording",
+      "reason": "no SC1"
+    },
+    {
+      "property": "focusSecondary",
+      "blind": "[] (low)",
+      "final": "[] (high)",
+      "evidence": "-",
+      "reason": "-"
+    }
+  ],
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "t1Fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal. Confidence = lowest T1 input (moderate). T4: neighbor weightPotential=moderate would give acceptable"
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "t1Fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal. Confidence = lowest T1 input (moderate). T4: neighbor weightPotential=moderate would give ideal"
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "t1Fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W low, C moderate -> acceptable. Confidence = lowest T1 input (moderate). T4: neighbor weightPotential=moderate would give acceptable; neighbor conditioningLevel=low would give acceptable"
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential low -> 1:1."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "dandruff",
+        "confidence": "high",
+        "rationale": "S-DANDRUFF: name claim (high) + dandruffSupport supported (high); no secondary (R17.2)."
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate -> regular."
+    },
+    "explicitResetPositioning": {
+      "value": false,
+      "confidence": "high",
+      "rationale": "D1: no tiefenrein/deep clean/clarifying shampoo/detox-reinigung stem and no occasional-use direction in name or manufacturer/pack claims (n/a)."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged"
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "liveVerdictExpectation": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "liveVerdictExpectation": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "schuppen",
+        "scalp_route": "dandruff",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable",
+        "liveVerdictExpectation": "supportive"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_dandruff"
+    ],
+    "reviewFlags": [
+      {
+        "code": "review_thickness_boundary",
+        "detail": "fine: ideal -> acceptable if weightPotential=moderate (T4)"
+      }
+    ],
+    "informationalNotes": [
+      {
+        "code": "suits_dandruff_with_irritated_scalp",
+        "detail": "'Deine juckende Kopfhaut wird beruhigt und das Spannungsgefühl reduziert.' (manufacturer_de); gate passed via Panthenol 12. Research-only."
+      }
+    ],
+    "researchCombinationTargets": {
+      "value": [
+        "sensitive"
+      ],
+      "confidence": "moderate",
+      "rationale": "E2b layer 2: bundled comfort wording ('juckende Kopfhaut wird beruhigt', 'Spannungsgefühl reduziert'; manufacturer, moderate) + S-SENSITIVE formula gate (CSA; prominent comfort Panthenol 12) -> sensitive. Tension wording feeds sensitive (E2b). No dry or oily wording."
+    },
+    "catalogDependentFieldsNotComputed": [
+      "review_live_value_differs (requires live rows; orchestrator after freeze)"
+    ]
+  },
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedWeightBand": true,
+    "allThreeWeightSubjudgmentsPresent": true,
+    "counterEvidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "noComparisonWithEarlierValuesInsideLane": true,
+    "weightUnchangedAfterUnblind": true
+  },
+  "uncertainties": [
+    {
+      "reading": "Zinc PCA (11) present but no oily-scalp wording, so no oily combination.",
+      "alternative": "-"
+    }
+  ],
+  "status": "classified"
+}

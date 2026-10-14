@@ -1,0 +1,99 @@
+{
+  "slot": "G08",
+  "productId": "a1c3dc8d-2638-497f-8c7f-9b491c9003b0",
+  "name": "Cantu Shampoo Locken Pflege (current dm.de title: cantu Shampoo Cream Cleanse, 400 ml; manufacturer name: Shea Butter Cleansing Cream Shampoo)",
+  "brand": "Cantu",
+  "packSize": "400 ml",
+  "gtins": [
+    "810006945461",
+    "810006943450 (older dm.de GTIN for the same article title 'cantu Shampoo Locken Pflege'; also shown by Rossmann as 0810006943450)"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/1675020/cantu-shampoo-cream-cleanse (via https://products.dm.de/product/products/detail/DE/dan/1675020)",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "retailer_dm_de_exact_gtin",
+      "gtinShown": "810006945461",
+      "inciVerbatim": "INGREDIENTS: AQUA (WATER), SODIUM C14-16 OLEFIN SULFONATE, COCAMIDOPROPYL BETAINE, COCAMIDEDIPA, GLYCERIN, ACRYLATESCOPOLYMER, PHENOXYETHANOL, PEG-150 DISTEARATE, PARFUM (FRAGRANCE), BUTYROSPERMUM PARKII (SHEA) BUTTER, POLYESTER-37, SODIUM HYDROXIDE, GLYCOL DISTEARATE, PANTHENOL (VITAMIN B5), GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, ETHYLHEXYLGLYCERIN, DISODIUM EDTA, STEARETH-4, POLYQUATERNIUM-39, SODIUM BENZOATE, CITRIC ACID, POLYSORBATE 20, SODIUM CHLORIDE, TOCOPHEROL (VITAMIN E), BENZYL BENZOATE, COUMARIN.",
+      "claimsVerbatim": "Reinigendes Creme Shampoo; Mit Sheabutter; Entfernt sanft Produktrückstände; Speziell für strukturiertes Haar entwickelt; Ohne Sulfate, Silikone und Mineralöle. Das cantu Cream Shampoo reinigt mit seiner Formel aus Sheabutter sanft und gründlich. Es wurde speziell für die Bedürfnisse von strukturiertem Haar entwickelt und befreit Haar sowie Kopfhaut wirksam von Produktrückständen. Die milde Rezeptur pflegt das Haar bereits während der Wäsche und hinterlässt ein geschmeidiges Haargefühl. Das Shampoo trägt zu gepflegt aussehendem Haar bei, ohne es zu beschweren. Für eine sanfte Reinigung und Pflege von Haar und Kopfhaut.",
+      "directionsVerbatim": "Haar vollständig anfeuchten. In nasses Haar vom Ansatz bis zu den Spitzen einmassieren. Anschließend gründlich mit kaltem Wasser ausspülen. Zweiter Schaum und zweite Spülung werden für Haar mit starken Produktablagerungen empfohlen. Zusammen mit Cantu Hydrating Cream Conditioner verwenden."
+    },
+    {
+      "url": "https://www.cantubeauty.co.uk/products/cleansing-cream-shampoo/",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "manufacturer_uk_exact_formula_family",
+      "gtinShown": null,
+      "inciVerbatim": "AQUA (WATER), SODIUM C14-16 OLEFIN SULFONATE, COCAMIDOPROPYL BETAINE, COCAMIDE DIPA, GLYCERIN, ACRYLATES COPOLYMER, PHENOXYETHANOL, PEG-150 DISTEARATE, PARFUM (FRAGRANCE), BUTYROSPERMUM PARKII (SHEA) BUTTER, POLYESTER-37, SODIUM HYDROXIDE, GLYCOL DISTEARATE, PANTHENOL (VITAMIN B5), GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE, ETHYLHEXYLGLYCERIN, DISODIUM EDTA, STEARETH-4, POLYQUATERNIUM-39, SODIUM BENZOATE, CITRIC ACID, POLYSORBATE 20, SODIUM CHLORIDE, TOCOPHEROL (VITAMIN E), BENZYL BENZOATE, COUMARIN.",
+      "claimsVerbatim": "Shea Butter Cleansing Cream Shampoo. Key Features: New improved formula! With fair trade shea butter & vitamin B complex; Rich creamy lather removes buildup; Helps protect against breakage; Great for natural & coloured hair; Vegan made with shea butter. This rich, creamy lather gently removes heavy build-up from the hair and scalp, while the unique formula promotes healthy-looking hair. Made with Fair Trade Shea Butter and Vitamin B Complex to nourish curls and coils. Page note: 'our formulations are updated occasionally. As such, the ingredient list shown here may vary from what's on the product packaging, depending on time and region of purchase.'",
+      "directionsVerbatim": "Wet hair completely. Massage into wet hair beginning at the root and work toward ends. Lather then rinse thoroughly with cool water. A second lather and rinse are recommended for hair with heavy product build up."
+    },
+    {
+      "url": "https://www.dm.de/cantu-shampoo-locken-pflege-p810006943450.html (HTTP redirect to https://www.dm.de/p/d/1675020/cantu-shampoo-locken-pflege)",
+      "retrievedAt": "2026-10-08",
+      "sourceType": "retailer_dm_de_legacy_url_identity_evidence",
+      "gtinShown": "810006943450 (in legacy URL)",
+      "inciVerbatim": null,
+      "claimsVerbatim": null,
+      "directionsVerbatim": null
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-cantu-sulfate-free-cleansing-cream-shampoo/p/0810006943450",
+      "retrievedAt": "2026-08-10 (prior v1.3 capture; not re-read, Rossmann bot-walled)",
+      "sourceType": "retailer_rossmann_de_prior_capture",
+      "gtinShown": "0810006943450",
+      "inciVerbatim": "Aqua (Water), Sodium C14-16 Olefin Sulfonate, Cocamidopropyl Betaine, Cocamide DIPA, Glycerin, Acrylates Copolymer, Phenoxyethanol, PEG-150 Distearate, Parfum (Fragrance), Butyrospermum Parkii (Shea) Butter, Polyester-37, Sodium Hydroxide, Glycol Distearate, Panthenol, Guar Hydroxypropyltrimonium Chloride, Ethylhexylglycerin, Disodium EDTA, Steareth-4, Polyquaternium-39, Sodium Benzoate, Citric Acid, Polysorbate 20, Sodium Chloride, Tocopherol, Benzyl Benzoate, Coumarin",
+      "claimsVerbatim": null,
+      "directionsVerbatim": null,
+      "note": "2026-10-08: navigating to this URL redirects to the Rossmann Haarpflege category with 'product.notAvailable' (listing no longer exists), so only the 2026-08-10 capture remains."
+    }
+  ],
+  "conflicts": [
+    {
+      "type": "typographic_only",
+      "between": [
+        "dm.de",
+        "cantubeauty.co.uk"
+      ],
+      "description": "dm.de text has two missing spaces: 'COCAMIDEDIPA' (UK: 'COCAMIDE DIPA') and 'ACRYLATESCOPOLYMER' (UK: 'ACRYLATES COPOLYMER'). Treated as transcription artifacts; after splitting, the two lists are item-for-item identical in order and content (26 items) apart from these two spellings."
+    },
+    {
+      "type": "gtin_alias",
+      "description": "Catalog/dm GTIN 810006945461 (current dm.de) vs 810006943450 (legacy dm.de URL and Rossmann 0810006943450) for the same dm article 1675020 / Cantu 400 ml cleansing cream shampoo. An eBay result showed yet another GTIN (0817513015311; unread). No formula difference seen between the dm and Rossmann lists."
+    }
+  ],
+  "canonicalInci": [
+    "AQUA (WATER)",
+    "SODIUM C14-16 OLEFIN SULFONATE",
+    "COCAMIDOPROPYL BETAINE",
+    "COCAMIDE DIPA",
+    "GLYCERIN",
+    "ACRYLATES COPOLYMER",
+    "PHENOXYETHANOL",
+    "PEG-150 DISTEARATE",
+    "PARFUM (FRAGRANCE)",
+    "BUTYROSPERMUM PARKII (SHEA) BUTTER",
+    "POLYESTER-37",
+    "SODIUM HYDROXIDE",
+    "GLYCOL DISTEARATE",
+    "PANTHENOL (VITAMIN B5)",
+    "GUAR HYDROXYPROPYLTRIMONIUM CHLORIDE",
+    "ETHYLHEXYLGLYCERIN",
+    "DISODIUM EDTA",
+    "STEARETH-4",
+    "POLYQUATERNIUM-39",
+    "SODIUM BENZOATE",
+    "CITRIC ACID",
+    "POLYSORBATE 20",
+    "SODIUM CHLORIDE",
+    "TOCOPHEROL (VITAMIN E)",
+    "BENZYL BENZOATE",
+    "COUMARIN"
+  ],
+  "canonicalReason": "Manufacturer list (cantubeauty.co.uk, correct word spacing) and the GTIN-anchored current dm.de list for the German pack agree item-for-item; Rossmann prior capture also agrees. UK manufacturer page carries a 'may vary by region' disclaimer, which is why the GTIN-anchored dm.de German list is the binding corroboration.",
+  "inciFingerprintSha256": "9ed40828cb9c2c6d4b23d508b6f6cfad1455175d2dd943cdd969e6c7f7f1271d",
+  "identityConfidence": "high",
+  "status": "frozen",
+  "blockReason": null,
+  "notes": "IDENTITY CHECK RESULT (G08): CONFIRMED same SKU, so Cantu is frozen and the Hask substitute is NOT needed. Evidence: (1) the catalog row's GTIN 810006945461 is the exact GTIN on the live dm.de PDP (article 1675020, 400 ml, 6,95 EUR, 'Lieferbar', company address on PDP: Bionok Healthcare SL, Seseña, Spain, www.cantubeauty.de); (2) the legacy dm.de URL 'cantu-shampoo-locken-pflege-p810006943450.html' still redirects to /p/d/1675020/cantu-shampoo-locken-pflege, i.e. dm article 1675020 was literally titled 'cantu Shampoo Locken Pflege' before being renamed 'Shampoo Cream Cleanse'; (3) dm.at lists the same article 1675020 as 'cantu shampoo locken cleansing cream'. So 'Locken Pflege' is an old dm retail title for this very product, 'Cleansing Cream Shampoo' is the manufacturer name. The GTIN is NOT a US-only code: it is the current German dm GTIN. Caveat for Nick: the catalog GTIN was attached in Aug 2026 by a backfill mapping that described the match as 'broad clean-name wording'; the dm legacy-URL redirect now upgrades that to an exact article match. Note the marketing 'Ohne Sulfate' claim sits beside Sodium C14-16 Olefin Sulfonate (an olefin sulfonate, not a sulfate by INCI name) as primary cleanser. Manufacturer UK page says 'New improved formula!' and the GTIN changed (…3450 to …5461), so a reformulation between the two GTINs cannot be excluded, but the dm and Rossmann lists agree.",
+  "normalization": "Split the canonical INCI string on commas (or bullets/pipes where the source uses them), trimmed; lower-case each item, trim, collapse internal whitespace to single spaces, join with '|' (no other change: parentheses, slashes, hyphens, spelling kept), sha256 over the UTF-8 string. Batch/F.I.L. codes, the 'INGREDIENTS:' prefix and the trailing period are removed before splitting."
+}

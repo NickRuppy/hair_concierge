@@ -66,17 +66,3 @@ export function userAnsweredQuestionIds(
 ): Stage2QuestionId[] {
   return completedQuestionIds.filter((id) => (provenance[id] ?? "user") === "user")
 }
-
-/**
- * Read path: ids answered by the user OR assumed via auto-accept defaults
- * (user ∪ assumed). Projection completeness derives from this set. Every
- * completed id carries a provenance value today (`user`, `assumed`, or the
- * legacy-missing default of `user`), so this is exactly the completed set —
- * kept as an explicit named derivation so call sites read as intent, not as
- * an incidental array pass-through.
- */
-export function effectiveAnsweredQuestionIds(
-  completedQuestionIds: readonly Stage2QuestionId[],
-): Stage2QuestionId[] {
-  return [...completedQuestionIds]
-}

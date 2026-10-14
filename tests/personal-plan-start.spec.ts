@@ -38,6 +38,7 @@ const completedRefinement = createStage2RefinementSession({
   answers: {
     currentProductCategories: ["shampoo", "conditioner", "oil"],
     wetWashFrequency: "weekly_2x",
+    bondbuilderTiming: "no_preference",
     scalpIrritationDetail: "mild_sensitive_or_itchy",
     dryShampooBridgePreference: "accept",
     dryShampooVisibleHairColor: "dark",
@@ -54,6 +55,7 @@ const completedRefinement = createStage2RefinementSession({
   completedQuestionIds: [
     "current_product_categories",
     "wet_wash_frequency",
+    "bondbuilder_timing",
     "scalp_irritation_detail",
     "dry_shampoo_bridge_preference",
     "dry_shampoo_visible_hair_color",

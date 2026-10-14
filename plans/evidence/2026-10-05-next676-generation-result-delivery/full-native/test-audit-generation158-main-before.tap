@@ -1,0 +1,862 @@
+TAP version 13
+# Subtest: Stage 1 API derives identity server-side and never accepts a browser user id
+ok 1 - Stage 1 API derives identity server-side and never accepts a browser user id
+  ---
+  duration_ms: 0.807875
+  ...
+# Subtest: Stage 1 rejects an unreachable owner before constructing persistence
+ok 2 - Stage 1 rejects an unreachable owner before constructing persistence
+  ---
+  duration_ms: 0.104375
+  ...
+# Subtest: Stage 1 API preserves typed release and availability responses
+ok 3 - Stage 1 API preserves typed release and availability responses
+  ---
+  duration_ms: 0.137625
+  ...
+# Subtest: precheck accepts a deliverable address without touching persistence
+ok 4 - precheck accepts a deliverable address without touching persistence
+  ---
+  duration_ms: 3.157167
+  ...
+# Subtest: precheck rejects an undeliverable address in the lead route's rejection shape
+ok 5 - precheck rejects an undeliverable address in the lead route's rejection shape
+  ---
+  duration_ms: 0.65525
+  ...
+# Subtest: precheck rejects malformed bodies before any deliverability lookup
+ok 6 - precheck rejects malformed bodies before any deliverability lookup
+  ---
+  duration_ms: 2.004625
+  ...
+# Subtest: precheck fails with 500 when the lookup throws so the client can fail open
+ok 7 - precheck fails with 500 when the lookup throws so the client can fail open
+  ---
+  duration_ms: 0.525292
+  ...
+# Subtest: precheck throttles on its own budget before resolving any domain
+ok 8 - precheck throttles on its own budget before resolving any domain
+  ---
+  duration_ms: 0.611291
+  ...
+# Subtest: precheck answers 503 when the rate limiter itself is unavailable
+ok 9 - precheck answers 503 when the rate limiter itself is unavailable
+  ---
+  duration_ms: 0.204042
+  ...
+# Subtest: preparation credentials use a Web Crypto UUID and 32-byte claim token
+ok 10 - preparation credentials use a Web Crypto UUID and 32-byte claim token
+  ---
+  duration_ms: 0.821208
+  ...
+# Subtest: pending preparation survives a lost response only for the same fresh answers
+ok 11 - pending preparation survives a lost response only for the same fresh answers
+  ---
+  duration_ms: 0.29875
+  ...
+# Subtest: preparation Retry-After accepts only the bounded short-window contract
+ok 12 - preparation Retry-After accepts only the bounded short-window contract
+  ---
+  duration_ms: 0.082708
+  ...
+# Subtest: one 429 waits for the short server boundary and retries exactly once
+ok 13 - one 429 waits for the short server boundary and retries exactly once
+  ---
+  duration_ms: 8.619667
+  ...
+# Subtest: preparation detaches an injected browser fetch before calling it
+ok 14 - preparation detaches an injected browser fetch before calling it
+  ---
+  duration_ms: 0.218334
+  ...
+# Subtest: credential conflicts and mismatched success receipts discard only the poisoned credential
+ok 15 - credential conflicts and mismatched success receipts discard only the poisoned credential
+  ---
+  duration_ms: 0.235584
+  ...
+# Subtest: a second 429 or invalid wait contract stops without a third request
+ok 16 - a second 429 or invalid wait contract stops without a third request
+  ---
+  duration_ms: 0.336416
+  ...
+# Subtest: non-rate failures retain one bounded retry but ordinary 4xx stops
+ok 17 - non-rate failures retain one bounded retry but ordinary 4xx stops
+  ---
+  duration_ms: 0.281042
+  ...
+# Subtest: preparation RPC inserts once and returns the exact replay receipt
+ok 18 - preparation RPC inserts once and returns the exact replay receipt
+  ---
+  duration_ms: 558.967167
+  ...
+# Subtest: preparation RPC fails closed for mismatched replay authority
+ok 19 - preparation RPC fails closed for mismatched replay authority
+  ---
+  duration_ms: 371.547791
+  ...
+# Subtest: preparation RPC replays attached success but rejects an expired unclaimed artifact
+ok 20 - preparation RPC replays attached success but rejects an expired unclaimed artifact
+  ---
+  duration_ms: 356.101334
+  ...
+# Subtest: preparation RPC rejects a new artifact whose requested expiry is not in the future
+ok 21 - preparation RPC rejects a new artifact whose requested expiry is not in the future
+  ---
+  duration_ms: 346.257125
+  ...
+# Subtest: preparation RPC stays service-only and expired limiter windows are cleaned every five minutes
+ok 22 - preparation RPC stays service-only and expired limiter windows are cleaned every five minutes
+  ---
+  duration_ms: 1.135458
+  ...
+# Subtest: prepare protection has dedicated short-window journey and IP budgets
+ok 23 - prepare protection has dedicated short-window journey and IP budgets
+  ---
+  duration_ms: 0.677542
+  ...
+# Subtest: prepare preserves disabled and unavailable context boundaries
+ok 24 - prepare preserves disabled and unavailable context boundaries
+  ---
+  duration_ms: 1.90825
+  ...
+# Subtest: prepare maps an unexpected context throw to its structured server error
+ok 25 - prepare maps an unexpected context throw to its structured server error
+  ---
+  duration_ms: 0.844166
+  ...
+# Subtest: prepare applies the IP ceiling before journey resolution and persists the browser replay identity
+ok 26 - prepare applies the IP ceiling before journey resolution and persists the browser replay identity
+  ---
+  duration_ms: 11.498875
+  ...
+# Subtest: prepare skips the journey bucket when no verified identity resolves
+ok 27 - prepare skips the journey bucket when no verified identity resolves
+  ---
+  duration_ms: 1.084458
+  ...
+# Subtest: prepare returns Retry-After only for a real rejected limiter
+ok 28 - prepare returns Retry-After only for a real rejected limiter
+  ---
+  duration_ms: 0.392792
+  ...
+# Subtest: prepare gives already-open legacy pages a server replay credential
+ok 29 - prepare gives already-open legacy pages a server replay credential
+  ---
+  duration_ms: 0.815709
+  ...
+# Subtest: prepare rejects a partial replay credential before persistence
+ok 30 - prepare rejects a partial replay credential before persistence
+  ---
+  duration_ms: 0.68725
+  ...
+# Subtest: prepare returns a stable conflict response for mismatched replay credentials
+ok 31 - prepare returns a stable conflict response for mismatched replay credentials
+  ---
+  duration_ms: 0.915667
+  ...
+# Subtest: production persistence maps conflicts, validates receipts, and purges only after inserts
+ok 32 - production persistence maps conflicts, validates receipts, and purges only after inserts
+  ---
+  duration_ms: 1.069791
+  ...
+# Subtest: V2 adapter uses the fixed taxonomy, diagnostic priority, and required elasticity answer
+ok 33 - V2 adapter uses the fixed taxonomy, diagnostic priority, and required elasticity answer
+  ---
+  duration_ms: 1.058834
+  ...
+# Subtest: multiple scalp concerns retain the safest supported shampoo direction
+ok 34 - multiple scalp concerns retain the safest supported shampoo direction
+  ---
+  duration_ms: 0.117708
+  ...
+# Subtest: volume balance follows factual hair signals instead of selection order
+ok 35 - volume balance follows factual hair signals instead of selection order
+  ---
+  duration_ms: 0.090708
+  ...
+# Subtest: new damage concern is retained without merging it into Frizz
+ok 36 - new damage concern is retained without merging it into Frizz
+  ---
+  duration_ms: 0.173167
+  ...
+# Subtest: combined hair-loss concern appends profile compatibility without displacing routine concerns
+ok 37 - combined hair-loss concern appends profile compatibility without displacing routine concerns
+  ---
+  duration_ms: 2.50525
+  ...
+# Subtest: prepared artifact contains three public dimensions but keeps products and routine locked
+ok 38 - prepared artifact contains three public dimensions but keeps products and routine locked
+  ---
+  duration_ms: 0.518
+  ...
+# Subtest: prepared artifact keeps email priority separate from the offer assessment
+ok 39 - prepared artifact keeps email priority separate from the offer assessment
+  ---
+  duration_ms: 0.722541
+  ...
+# Subtest: straight, wavy, curly, and coily complete profiles all prepare deterministic plans
+ok 40 - straight, wavy, curly, and coily complete profiles all prepare deterministic plans
+  ---
+  duration_ms: 2.043375
+  ...
+# Subtest: canonical answer hash ignores selection order but changes with durable answers
+ok 41 - canonical answer hash ignores selection order but changes with durable answers
+  ---
+  duration_ms: 7.373083
+  ...
+# personal_plan_transition_performance {
+#   layer: 'client',
+#   operation: 'stage2_optional_entry',
+#   outcome: 'success',
+#   duration_ms: 0.18,
+#   status: 200
+# }
+# personal_plan_transition_performance {
+#   layer: 'client',
+#   operation: 'stage2_load',
+#   outcome: 'success',
+#   duration_ms: 0.12,
+#   status: 200
+# }
+# personal_plan_transition_performance {
+#   layer: 'client',
+#   operation: 'stage2_load',
+#   outcome: 'http_error',
+#   duration_ms: 0.21,
+#   status: 503
+# }
+# personal_plan_transition_performance {
+#   layer: 'client',
+#   operation: 'stage2_load',
+#   outcome: 'success',
+#   duration_ms: 0.15,
+#   status: 200
+# }
+# personal_plan_transition_performance {
+#   layer: 'client',
+#   operation: 'stage2_final_save_complete',
+#   outcome: 'success',
+#   duration_ms: 0.19,
+#   status: 200
+# }
+# personal_plan_transition_performance {
+#   layer: 'client',
+#   operation: 'stage2_final_save_complete',
+#   outcome: 'http_error',
+#   duration_ms: 0.16,
+#   status: 503
+# }
+# personal_plan_transition_performance {
+#   layer: 'client',
+#   operation: 'stage2_module_save_complete',
+#   outcome: 'success',
+#   duration_ms: 0.63,
+#   status: 200
+# }
+# personal_plan_transition_performance {
+#   layer: 'client',
+#   operation: 'stage2_module_save_complete',
+#   outcome: 'success',
+#   duration_ms: 0.18,
+#   status: 200
+# }
+# Subtest: optional inventory entry is a POST separate from baseline draft loading
+ok 42 - optional inventory entry is a POST separate from baseline draft loading
+  ---
+  duration_ms: 11.787041
+  ...
+# Subtest: optional Stage 2 entry uses a separate POST and returns the prepared successor revision
+ok 43 - optional Stage 2 entry uses a separate POST and returns the prepared successor revision
+  ---
+  duration_ms: 1.058791
+  ...
+# Subtest: the browser Stage 2 gateway maps a failed load to a typed error and retries with a fresh request
+ok 44 - the browser Stage 2 gateway maps a failed load to a typed error and retries with a fresh request
+  ---
+  duration_ms: 0.737125
+  ...
+# Subtest: the browser Stage 2 gateway saves and completes the final page in one request
+ok 45 - the browser Stage 2 gateway saves and completes the final page in one request
+  ---
+  duration_ms: 0.333125
+  ...
+# Subtest: the browser Stage 2 gateway preserves the durable final page on completion failure
+ok 46 - the browser Stage 2 gateway preserves the durable final page on completion failure
+  ---
+  duration_ms: 0.313958
+  ...
+# Subtest: the browser Stage 2 gateway passes through a present recompute outcome from a module completion
+ok 47 - the browser Stage 2 gateway passes through a present recompute outcome from a module completion
+  ---
+  duration_ms: 0.76975
+  ...
+# Subtest: the browser Stage 2 gateway leaves an absent recompute field undefined, never invents one
+ok 48 - the browser Stage 2 gateway leaves an absent recompute field undefined, never invents one
+  ---
+  duration_ms: 0.463917
+  ...
+# Subtest: the browser intake client posts a stable UUID idempotency key with valid manual input
+ok 49 - the browser intake client posts a stable UUID idempotency key with valid manual input
+  ---
+  duration_ms: 0.206625
+  ...
+# Subtest: email recovery renders only the current missing group with an honest remaining count
+ok 50 - email recovery renders only the current missing group with an honest remaining count
+  ---
+  duration_ms: 10.579459
+  ...
+# Subtest: a ready email return buyer gets the scanner destination for Personal Plan sources too
+ok 51 - a ready email return buyer gets the scanner destination for Personal Plan sources too
+  ---
+  duration_ms: 2.186917
+  ...
+# Subtest: server-first pending envelope renders approved static copy and no-JS recovery
+ok 52 - server-first pending envelope renders approved static copy and no-JS recovery
+  ---
+  duration_ms: 0.945292
+  ...
+# Subtest: server-first ready envelope renders the signed-off arrival screen (Variante B)
+ok 53 - server-first ready envelope renders the signed-off arrival screen (Variante B)
+  ---
+  duration_ms: 0.850916
+  ...
+# Subtest: missing source facts ask for the fact without claiming no action is needed
+ok 54 - missing source facts ask for the fact without claiming no action is needed
+  ---
+  duration_ms: 0.843375
+  ...
+# Subtest: forbidden and invalid states show support without waiting or payment claims
+ok 55 - forbidden and invalid states show support without waiting or payment claims
+  ---
+  duration_ms: 0.741875
+  ...
+# Subtest: timeout and transient states lead with a retry state instead of a live check
+ok 56 - timeout and transient states lead with a retry state instead of a live check
+  ---
+  duration_ms: 1.380458
+  ...
+# Subtest: client honors none, link, and poll initial actions instead of always posting
+ok 57 - client honors none, link, and poll initial actions instead of always posting
+  ---
+  duration_ms: 0.097167
+  ...
+# Subtest: non-ready /plan-bereit states also retire the 5-stage bar (same relic as the arrival screen, founder field test 27.08.2026)
+ok 58 - non-ready /plan-bereit states also retire the 5-stage bar (same relic as the arrival screen, founder field test 27.08.2026)
+  ---
+  duration_ms: 3.488333
+  ...
+# Subtest: page passes the server-first readiness envelope into the client
+ok 59 - page passes the server-first readiness envelope into the client
+  ---
+  duration_ms: 0.3645
+  ...
+# Subtest: backend readiness enables the CTA on the first successful poll
+ok 60 - backend readiness enables the CTA on the first successful poll
+  ---
+  duration_ms: 0.366916
+  ...
+# Subtest: readiness polling remains bounded to thirty seconds
+ok 61 - readiness polling remains bounded to thirty seconds
+  ---
+  duration_ms: 0.057
+  ...
+# Subtest: read-only polling escalates to one authoritative link request when the server signals it
+ok 62 - read-only polling escalates to one authoritative link request when the server signals it
+  ---
+  duration_ms: 0.076542
+  ...
+# Subtest: an active buyer waits for exact subscription correlation instead of entering onboarding
+ok 63 - an active buyer waits for exact subscription correlation instead of entering onboarding
+  ---
+  duration_ms: 0.059041
+  ...
+# Subtest: readiness failures are recoverable and the ready CTA stays explicit
+ok 64 - readiness failures are recoverable and the ready CTA stays explicit
+  ---
+  duration_ms: 0.928166
+  ...
+# Subtest: builds the hard-paywall payload from only the stored public analysis
+ok 65 - builds the hard-paywall payload from only the stored public analysis
+  ---
+  duration_ms: 4.244416
+  ...
+# Subtest: derives a controlled primary message for compatible stored artifacts
+ok 66 - derives a controlled primary message for compatible stored artifacts
+  ---
+  duration_ms: 0.963125
+  ...
+# Subtest: rejects a corrupted compatibility artifact whose central priority differs from row one
+ok 67 - rejects a corrupted compatibility artifact whose central priority differs from row one
+  ---
+  duration_ms: 0.831875
+  ...
+# Subtest: supports a numeric personal-plan transactional message id
+ok 68 - supports a numeric personal-plan transactional message id
+  ---
+  duration_ms: 0.445541
+  ...
+# Subtest: claims and sends the personal-plan email only once
+ok 69 - claims and sends the personal-plan email only once
+  ---
+  duration_ms: 0.694042
+  ...
+# Subtest: marks a sanitized failure without throwing into the result journey
+ok 70 - marks a sanitized failure without throwing into the result journey
+  ---
+  duration_ms: 0.633875
+  ...
+# Subtest: validates configuration before claiming a personal-plan email
+ok 71 - validates configuration before claiming a personal-plan email
+  ---
+  duration_ms: 0.87025
+  ...
+# Subtest: returns the 200 send result for a valid personal-plan lead and attached public artifact
+ok 72 - returns the 200 send result for a valid personal-plan lead and attached public artifact
+  ---
+  duration_ms: 1.295958
+  ...
+# Subtest: uses the recoverable copy when lead rate limiting is unavailable
+ok 73 - uses the recoverable copy when lead rate limiting is unavailable
+  ---
+  duration_ms: 0.112458
+  ...
+# Subtest: the reveal requests the dedicated email endpoint with keepalive without awaiting it
+ok 74 - the reveal requests the dedicated email endpoint with keepalive without awaiting it
+  ---
+  duration_ms: 0.937167
+  ...
+# Subtest: result-return migration keeps a private, bounded, service-role capability mapping
+ok 75 - result-return migration keeps a private, bounded, service-role capability mapping
+  ---
+  duration_ms: 0.62175
+  ...
+# Subtest: result-return reset rejects requests without same-origin Fetch Metadata
+ok 76 - result-return reset rejects requests without same-origin Fetch Metadata
+  ---
+  duration_ms: 2.141834
+  ...
+# Subtest: result-return reset returns private no-store 204 only after both capabilities reset
+ok 77 - result-return reset returns private no-store 204 only after both capabilities reset
+  ---
+  duration_ms: 0.493459
+  ...
+# Subtest: result-return reset fails closed when rate limiting or server reset fails
+ok 78 - result-return reset fails closed when rate limiting or server reset fails
+  ---
+  duration_ms: 0.765042
+  ...
+# Subtest: server reset revokes both valid capabilities and clears both cookies
+ok 79 - server reset revokes both valid capabilities and clears both cookies
+  ---
+  duration_ms: 1.157625
+  ...
+# Subtest: server reset treats a malformed or missing result cookie as idempotent success
+ok 80 - server reset treats a malformed or missing result cookie as idempotent success
+  ---
+  duration_ms: 0.321375
+  ...
+# Subtest: result-return credentials are opaque 32-byte values and cookies have the host-only contract
+ok 81 - result-return credentials are opaque 32-byte values and cookies have the host-only contract
+  ---
+  duration_ms: 1.039458
+  ...
+# Subtest: malformed cookies fail closed without invoking the resolver
+ok 82 - malformed cookies fail closed without invoking the resolver
+  ---
+  duration_ms: 0.124792
+  ...
+# Subtest: result lookup returns only a lead id and retries exactly once for a transport failure
+ok 83 - result lookup returns only a lead id and retries exactly once for a transport failure
+  ---
+  duration_ms: 0.357417
+  ...
+# Subtest: lookup neither retries application errors nor clears the capability
+ok 84 - lookup neither retries application errors nor clears the capability
+  ---
+  duration_ms: 0.202041
+  ...
+# Subtest: returned transport errors retry once, then warn without disclosing capability data
+ok 85 - returned transport errors retry once, then warn without disclosing capability data
+  ---
+  duration_ms: 0.205792
+  ...
+# Subtest: a resolved PostgREST transport envelope retries before succeeding
+ok 86 - a resolved PostgREST transport envelope retries before succeeding
+  ---
+  duration_ms: 0.222917
+  ...
+# Subtest: issue rotates the single lead capability and revoke clears the host-only cookie
+ok 87 - issue rotates the single lead capability and revoke clears the host-only cookie
+  ---
+  duration_ms: 0.998417
+  ...
+# Subtest: valid result has fixed precedence over an explicit resume token and an existing draft
+ok 88 - valid result has fixed precedence over an explicit resume token and an existing draft
+  ---
+  duration_ms: 0.076042
+  ...
+# Subtest: return-entry trust requires a resolved capability for the requested lead
+ok 89 - return-entry trust requires a resolved capability for the requested lead
+  ---
+  duration_ms: 0.1595
+  ...
+# Subtest: result reveal uses dynamic one-week and four-week dates with certain outcome copy
+ok 90 - result reveal uses dynamic one-week and four-week dates with certain outcome copy
+  ---
+  duration_ms: 0.679209
+  ...
+# Subtest: result reveal exposes all three messages before navigating
+ok 91 - result reveal exposes all three messages before navigating
+  ---
+  duration_ms: 0.23075
+  ...
+# Subtest: result reveal completion records exact trigger and configured timing
+ok 92 - result reveal completion records exact trigger and configured timing
+  ---
+  duration_ms: 0.164167
+  ...
+# Subtest: result reveal completion normalizes numeric boundaries
+ok 93 - result reveal completion normalizes numeric boundaries
+  ---
+  duration_ms: 0.201542
+  ...
+# Subtest: result reveal completion can only be claimed once
+ok 94 - result reveal completion can only be claimed once
+  ---
+  duration_ms: 0.048625
+  ...
+# Subtest: result reveal does not emit a generic page view before the actual offer
+ok 95 - result reveal does not emit a generic page view before the actual offer
+  ---
+  duration_ms: 0.072791
+  ...
+# Subtest: the exit line is held as a real state and the result shell continues it (Follow-up B)
+ok 96 - the exit line is held as a real state and the result shell continues it (Follow-up B)
+  ---
+  duration_ms: 6.941958
+  ...
+# Subtest: real PostgreSQL serializes parallel repairs and rejects a concurrent source change
+ok 97 - real PostgreSQL serializes parallel repairs and rejects a concurrent source change # SKIP
+  ---
+  duration_ms: 0.366958
+  ...
+# Subtest: repair builds server artifact and preserves exact v2/v3 envelope without migration
+ok 98 - repair builds server artifact and preserves exact v2/v3 envelope without migration
+  ---
+  duration_ms: 11.9515
+  ...
+# Subtest: repair refuses missing context and ambiguous historical concerns without a write
+ok 99 - repair refuses missing context and ambiguous historical concerns without a write
+  ---
+  duration_ms: 0.6055
+  ...
+# Subtest: repair preserves conflict, forbidden, and unavailable outcomes
+ok 100 - repair preserves conflict, forbidden, and unavailable outcomes
+  ---
+  duration_ms: 2.926375
+  ...
+# Subtest: SQL repair is service-only, CAS guarded, immutable, and idempotent
+ok 101 - SQL repair is service-only, CAS guarded, immutable, and idempotent
+  ---
+  duration_ms: 610.930666
+  ...
+# Subtest: legacy quiz sources retain their exact lead provenance and canonicalize unordered answers
+ok 102 - legacy quiz sources retain their exact lead provenance and canonicalize unordered answers
+  ---
+  duration_ms: 0.870625
+  ...
+# Subtest: legacy Stage-1 parsing rejects unsupported values instead of trusting TypeScript casts
+ok 103 - legacy Stage-1 parsing rejects unsupported values instead of trusting TypeScript casts
+  ---
+  duration_ms: 1.289958
+  ...
+# Subtest: legacy source migration brackets its one-time backfill with the immutable trigger
+ok 104 - legacy source migration brackets its one-time backfill with the immutable trigger
+  ---
+  duration_ms: 0.347208
+  ...
+# Subtest: INITIAL-01: a valid V3 paid quiz becomes a quiz-faithful initial profile
+ok 105 - INITIAL-01: a valid V3 paid quiz becomes a quiz-faithful initial profile
+  ---
+  duration_ms: 1.919833
+  ...
+# Subtest: INITIAL-12: V2 concerns normalize once without inventing breakage
+ok 106 - INITIAL-12: V2 concerns normalize once without inventing breakage
+  ---
+  duration_ms: 0.674958
+  ...
+# Subtest: malformed mandatory quiz facts return a typed incomplete input
+ok 107 - malformed mandatory quiz facts return a typed incomplete input
+  ---
+  duration_ms: 0.357292
+  ...
+# Subtest: mask-missing-thickness: required Mask target input fails closed at the shared parser
+ok 108 - mask-missing-thickness: required Mask target input fails closed at the shared parser
+  ---
+  duration_ms: 0.162459
+  ...
+# Subtest: mask-missing-elasticResponse: required Mask target input fails closed at the shared parser
+ok 109 - mask-missing-elasticResponse: required Mask target input fails closed at the shared parser
+  ---
+  duration_ms: 0.164625
+  ...
+# Subtest: supported envelope hashing is stable across object key order
+ok 110 - supported envelope hashing is stable across object key order
+  ---
+  duration_ms: 7.028083
+  ...
+# Subtest: INITIAL-02: quiz-led Shampoo cadence keeps current behavior unknown
+ok 111 - INITIAL-02: quiz-led Shampoo cadence keeps current behavior unknown
+  ---
+  duration_ms: 1.062
+  ...
+# Subtest: INITIAL-04: oily scalp contributes one Reset point while product load stays deferred
+ok 112 - INITIAL-04: oily scalp contributes one Reset point while product load stays deferred
+  ---
+  duration_ms: 0.112084
+  ...
+# Subtest: known Shampoo frequency is preserved as known within the partial Reset assessment
+ok 113 - known Shampoo frequency is preserved as known within the partial Reset assessment
+  ---
+  duration_ms: 0.158084
+  ...
+# Subtest: INITIAL-05: absent Hair Tools input is unknown rather than no Heat exposure
+ok 114 - INITIAL-05: absent Hair Tools input is unknown rather than no Heat exposure
+  ---
+  duration_ms: 0.064958
+  ...
+# Subtest: lightened hair preserves the quiz fact and drives high shared repair priority
+ok 115 - lightened hair preserves the quiz fact and drives high shared repair priority
+  ---
+  duration_ms: 0.064792
+  ...
+# Subtest: shared damage lanes distinguish rare from material Heat and keep elasticity contextual
+ok 116 - shared damage lanes distinguish rare from material Heat and keep elasticity contextual
+  ---
+  duration_ms: 0.157208
+  ...
+# Subtest: ordinary airflow retains its route and frequency as a distinct Mask exposure fact
+ok 117 - ordinary airflow retains its route and frequency as a distinct Mask exposure fact
+  ---
+  duration_ms: 0.181
+  ...
+# Subtest: refined mechanical exposure maps rough rubbing to moderate and adds nothing otherwise
+ok 118 - refined mechanical exposure maps rough rubbing to moderate and adds nothing otherwise
+  ---
+  duration_ms: 0.173041
+  ...
+# Subtest: INITIAL-13: hair loss is isolated from repair and exposes the limited-evidence boundary
+ok 119 - INITIAL-13: hair loss is isolated from repair and exposes the limited-evidence boundary
+  ---
+  duration_ms: 0.191292
+  ...
+# Subtest: Stage 1 persists only the authenticated user's active new-buyer artifact
+ok 120 - Stage 1 persists only the authenticated user's active new-buyer artifact
+  ---
+  duration_ms: 11.930875
+  ...
+# Subtest: Stage 1 keeps flag-off, non-cohort, and pending states outside all reads and writes
+ok 121 - Stage 1 keeps flag-off, non-cohort, and pending states outside all reads and writes
+  ---
+  duration_ms: 0.144125
+  ...
+# Subtest: Stage 1 rejects a paid purchase before the rollout cutoff without mutating
+ok 122 - Stage 1 rejects a paid purchase before the rollout cutoff without mutating
+  ---
+  duration_ms: 0.125916
+  ...
+# Subtest: Stage 1 admits verified normal paid pre-cutoff sources only while migration is enabled
+ok 123 - Stage 1 admits verified normal paid pre-cutoff sources only while migration is enabled
+  ---
+  duration_ms: 0.847042
+  ...
+# Subtest: Stage 1 admits a bound paid migration outside the launch cutoff without weakening access
+ok 124 - Stage 1 admits a bound paid migration outside the launch cutoff without weakening access
+  ---
+  duration_ms: 0.364833
+  ...
+# Subtest: a returning migration resumes its persisted Plan without re-reading or recomputing the legacy quiz
+ok 125 - a returning migration resumes its persisted Plan without re-reading or recomputing the legacy quiz
+  ---
+  duration_ms: 0.087292
+  ...
+# Subtest: Stage 1 maps unavailable storage and invalid compute sources to typed safe outcomes
+ok 126 - Stage 1 maps unavailable storage and invalid compute sources to typed safe outcomes
+  ---
+  duration_ms: 0.424
+  ...
+# Subtest: Stage 1 loads and persists an exact legacy lead without a prepared artifact
+ok 127 - Stage 1 loads and persists an exact legacy lead without a prepared artifact
+  ---
+  duration_ms: 0.983917
+  ...
+# Subtest: portfolio non-coily Leave-in owns persistent damp smoothing and demotes damp Oil
+ok 128 - portfolio non-coily Leave-in owns persistent damp smoothing and demotes damp Oil
+  ---
+  duration_ms: 10.423917
+  ...
+# Subtest: portfolio preserves the coily two-layer damp smoothing exception
+ok 129 - portfolio preserves the coily two-layer damp smoothing exception
+  ---
+  duration_ms: 0.381
+  ...
+# Subtest: portfolio keeps Conditioner baseline while repair categories share distinct jobs
+ok 130 - portfolio keeps Conditioner baseline while repair categories share distinct jobs
+  ---
+  duration_ms: 0.368875
+  ...
+# Subtest: portfolio keeps wet-wash ownership and defers Heat carrier allocation
+ok 131 - portfolio keeps wet-wash ownership and defers Heat carrier allocation
+  ---
+  duration_ms: 0.435666
+  ...
+# Subtest: portfolio preserves Dry Shampoo as a bridge inside Shampoo's wet-wash budget
+ok 132 - portfolio preserves Dry Shampoo as a bridge inside Shampoo's wet-wash budget
+  ---
+  duration_ms: 0.225459
+  ...
+# Subtest: portfolio records Shampoo/Scalp Care and Deep Cleansing/exfoliant duplicate coverage
+ok 133 - portfolio records Shampoo/Scalp Care and Deep Cleansing/exfoliant duplicate coverage
+  ---
+  duration_ms: 0.268166
+  ...
+# Subtest: reason salience keeps no more than two primary facts without dropping detail
+ok 134 - reason salience keeps no more than two primary facts without dropping detail
+  ---
+  duration_ms: 0.744583
+  ...
+# Subtest: reason normalization is stable and removes duplicate IDs
+ok 135 - reason normalization is stable and removes duplicate IDs
+  ---
+  duration_ms: 0.077334
+  ...
+# Subtest: Stage 1 keeps the approved stable category order
+ok 136 - Stage 1 keeps the approved stable category order
+  ---
+  duration_ms: 0.575666
+  ...
+# Subtest: the initial routine context represents later facts as typed unknowns
+ok 137 - the initial routine context represents later facts as typed unknowns
+  ---
+  duration_ms: 0.122334
+  ...
+# Subtest: projects current and legacy concern ids to the same email diagnosis
+ok 138 - projects current and legacy concern ids to the same email diagnosis
+  ---
+  duration_ms: 3.751375
+  ...
+# Subtest: encodes the lead id in the attributed result URL
+ok 139 - encodes the lead id in the attributed result URL
+  ---
+  duration_ms: 0.499084
+  ...
+# [quiz-result-artifact] attribution lookup failed: Error: funnel_sessions unavailable
+#     at Object.resolveEmailKind (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/quiz-result-artifact-route.test.ts:298:15)
+#     at handleQuizResultArtifactRequest (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/src/app/api/quiz/result-artifact/route.ts:120:28)
+#     at async TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/quiz-result-artifact-route.test.ts:293:20)
+#     at async Test.run (node:internal/test_runner/test:935:9)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:633:7)
+# Subtest: resolves the latest persisted scanner package without an analytics flag
+ok 140 - resolves the latest persisted scanner package without an analytics flag
+  ---
+  duration_ms: 0.851333
+  ...
+# Subtest: the production claim excludes moderator-owned legacy leads
+ok 141 - the production claim excludes moderator-owned legacy leads
+  ---
+  duration_ms: 1.009542
+  ...
+# Subtest: claims, sends, and marks the result artifact email sent
+ok 142 - claims, sends, and marks the result artifact email sent
+  ---
+  duration_ms: 3.817041
+  ...
+# Subtest: does not claim or mutate when Customer.io transactional config is missing
+ok 143 - does not claim or mutate when Customer.io transactional config is missing
+  ---
+  duration_ms: 0.157333
+  ...
+# Subtest: does not claim a scanner lead when its dedicated Customer.io config is missing
+ok 144 - does not claim a scanner lead when its dedicated Customer.io config is missing
+  ---
+  duration_ms: 0.083542
+  ...
+# Subtest: does not claim when persisted funnel attribution is unavailable
+ok 145 - does not claim when persisted funnel attribution is unavailable
+  ---
+  duration_ms: 2.073
+  ...
+# Subtest: scanner attribution sends the scanner email for an existing lead without a consent gate
+ok 146 - scanner attribution sends the scanner email for an existing lead without a consent gate
+  ---
+  duration_ms: 0.338875
+  ...
+# Subtest: skips personal-plan rows before parsing or sending a legacy result email
+ok 147 - skips personal-plan rows before parsing or sending a legacy result email
+  ---
+  duration_ms: 0.087833
+  ...
+# Subtest: skips when the result artifact email was already sent or is sending
+ok 148 - skips when the result artifact email was already sent or is sending
+  ---
+  duration_ms: 0.239958
+  ...
+# Subtest: skips a failed result artifact email until manual retry resets it
+ok 149 - skips a failed result artifact email until manual retry resets it
+  ---
+  duration_ms: 0.309917
+  ...
+# Subtest: the harmonized result email does not require a first name
+ok 150 - the harmonized result email does not require a first name
+  ---
+  duration_ms: 0.455958
+  ...
+# Subtest: two calls only send once with an atomic store claim
+ok 151 - two calls only send once with an atomic store claim
+  ---
+  duration_ms: 0.522667
+  ...
+# Subtest: two scanner requests only send once with the existing atomic claim
+ok 152 - two scanner requests only send once with the existing atomic claim
+  ---
+  duration_ms: 0.143125
+  ...
+# Subtest: send failure marks failed and redacts secret-ish tokens
+ok 153 - send failure marks failed and redacts secret-ish tokens
+  ---
+  duration_ms: 0.630625
+  ...
+# Subtest: incomplete quiz answers fail before sending
+ok 154 - incomplete quiz answers fail before sending
+  ---
+  duration_ms: 0.460083
+  ...
+# Subtest: persisted attribution distinguishes absent or organic rows from lookup failure
+ok 155 - persisted attribution distinguishes absent or organic rows from lookup failure
+  ---
+  duration_ms: 0.418917
+  ...
+# Subtest: result artifact email trigger waits for a completed lead and access check
+ok 156 - result artifact email trigger waits for a completed lead and access check
+  ---
+  duration_ms: 0.370084
+  ...
+# Subtest: result artifact email trigger sends for active subscriber routine path
+ok 157 - result artifact email trigger sends for active subscriber routine path
+  ---
+  duration_ms: 0.053709
+  ...
+# Subtest: result artifact email trigger does not resend for the same lead
+ok 158 - result artifact email trigger does not resend for the same lead
+  ---
+  duration_ms: 0.04
+  ...
+1..158
+# tests 158
+# suites 0
+# pass 157
+# fail 0
+# cancelled 0
+# skipped 1
+# todo 0
+# duration_ms 13548.958958

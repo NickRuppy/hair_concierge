@@ -1,0 +1,231 @@
+{
+  "blindId": "T314",
+  "inciFingerprintSha256": "4871d6edeb1c4a74bb8123dc09d22d76a8888bf42f570a16fd8b5f91ac931e73",
+  "phase": "blind_formula_pass",
+  "formulaBlock": {
+    "normalization": "No split synonym entries. E3: Parfum at 18; prominent = 1-17.",
+    "formulaCompleteness": "complete",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "rawInciCount": 19
+  },
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: SLES (3) defining, buffered by Cocamidopropyl Hydroxysultaine (4), Coco-Glucoside (7), Cocamidopropyl Betaine (17) -> moderate.",
+      "neighboringAlternative": "none",
+      "counterSignal": "None material."
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "One meaningful system (guar 14) plus light routes (Hydrolyzed Keratin 12, pearlizer Glycol Distearate 16, humectants Glycerin 5/Panthenol 11); C2 not met (no early silicone or payload lipid).",
+      "neighboringAlternative": "low",
+      "counterSignal": "Guar and keratin are late (after extracts), so slip could be little (low)."
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Late keratin (12) and late guar (14) face an effective C1 reset; no silicone or lipid.",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "Two deposition families (protein_film, cationic_polymer) (W2).",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "light",
+          "rationale": "late protein + late guar"
+        },
+        "persistence": {
+          "value": "low",
+          "rationale": "light protein/polymer routes"
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 with three buffers"
+        }
+      },
+      "whyThisBand": "Light, late routes only.",
+      "whyNotNeighborBand": "W2: both families (Hydrolyzed Keratin 12, guar 14) sit late after comfort actives and extracts, face a moderate reset, and nothing persistent (silicone/lipid) reinforces them.",
+      "evidenceByFamily": {
+        "protein_film": [
+          [
+            "Hydrolyzed Keratin",
+            12
+          ]
+        ],
+        "cationic_polymer": [
+          [
+            "Guar Hydroxypropyltrimonium Chloride",
+            14
+          ]
+        ],
+        "context_humectant": [
+          [
+            "Hydrogenated Starch Hydrolysate",
+            2
+          ],
+          [
+            "Glycerin",
+            5
+          ],
+          [
+            "Panthenol",
+            11
+          ]
+        ],
+        "excluded": [
+          [
+            "Glycol Distearate",
+            16,
+            "pearlizer"
+          ],
+          [
+            "Zinc PCA",
+            10,
+            "salt"
+          ],
+          [
+            "Allantoin",
+            8,
+            "comfort active"
+          ],
+          [
+            "Bisabolol",
+            9,
+            "comfort active"
+          ]
+        ],
+        "anionic_surfactant": [
+          [
+            "Sodium Laureth Sulfate",
+            3
+          ]
+        ],
+        "amphoteric_surfactant": [
+          [
+            "Cocamidopropyl Hydroxysultaine",
+            4
+          ],
+          [
+            "Cocamidopropyl Betaine",
+            17
+          ]
+        ],
+        "nonionic_surfactant": [
+          [
+            "Coco-Glucoside",
+            7
+          ]
+        ],
+        "unresolved": []
+      }
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none"
+    },
+    "focusPrimary": {
+      "value": "scalp_active",
+      "confidence": "low",
+      "rationale": "Prominent Allantoin/Bisabolol/Panthenol + Zinc PCA suggest a scalp role; needs SC1 (sensitive) or oily positioning."
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low"
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low"
+    },
+    "scalpComfortTarget": {
+      "value": "unknown",
+      "confidence": "low",
+      "rationale": "CSA passes (Allantoin 8, Bisabolol 9, Panthenol 11; Glycerin 5)."
+    }
+  },
+  "careDirection": {
+    "verdict": "nonspecific",
+    "rationale": "Comfort actives dominate; one late protein token is not repair."
+  },
+  "formulaGateFacts": {
+    "csa": "pass",
+    "promComfortRoute": true,
+    "promHumectantRoute": true,
+    "sOilyFormulaClause": "pass"
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Hydrogenated Starch Hydrolysate",
+      "position": 2,
+      "role": "polyol humectant; not on the closed humectant list"
+    },
+    {
+      "ingredient": "Sodium Laureth Sulfate",
+      "position": 3,
+      "role": "defining anionic, ether type"
+    },
+    {
+      "ingredient": "Cocamidopropyl Hydroxysultaine",
+      "position": 4,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 5,
+      "role": "humectant; E4"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 7,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Allantoin",
+      "position": 8,
+      "role": "E4 comfort route"
+    },
+    {
+      "ingredient": "Bisabolol",
+      "position": 9,
+      "role": "E4 comfort route"
+    },
+    {
+      "ingredient": "Zinc PCA",
+      "position": 10,
+      "role": "sebum-regulating salt; not on E4"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 11,
+      "role": "E4 comfort route"
+    },
+    {
+      "ingredient": "Hydrolyzed Keratin",
+      "position": 12,
+      "role": "protein_film"
+    },
+    {
+      "ingredient": "Camellia Sinensis Leaf Extract",
+      "position": 13,
+      "role": "extract"
+    },
+    {
+      "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+      "position": 14,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Glycol Distearate",
+      "position": 16,
+      "role": "pearlizer"
+    },
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 17,
+      "role": "buffer"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

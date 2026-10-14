@@ -8,6 +8,11 @@ import {
   normalizeLeaveInInciForFingerprint,
   type LeaveInResearchEnvelope,
 } from "../src/lib/leave-in-research/production-adapter"
+import {
+  requiredProtocolRoles,
+  validateProductIntakeCategorySpecs,
+} from "../src/lib/product-intake/category-validators"
+import { deriveRequiredProtocolRoles } from "../src/lib/product-intake/expansion-manifest"
 import { applyLeaveInResearchAdapter } from "../src/lib/product-intake/leave-in-research-adapter"
 import { leaveInResearchPromptContract } from "../src/lib/product-intake/leave-in-research-prompt-contract"
 
@@ -35,6 +40,7 @@ function envelope(): LeaveInResearchEnvelope {
       gtin: null,
       productForm: "spray",
       applicationStage: ["towel_dry"],
+      heatActivation: { value: "not_required", route: null, statements: [], counterSignals: [] },
       identityStatus: "verified",
       categoryBoundaryStatus: "eligible",
       confidence: "high",
@@ -128,6 +134,7 @@ test("Product Intake retains the full research artifact and replaces handwritten
   assert.equal(specs.provides_heat_protection, false)
   assert.ok(!("heat_protection_max_c" in specs))
   assert.equal(specs.heat_activation_required, false)
+  assert.equal(specs.heat_activation_route, null)
   assert.deepEqual(specs.care_benefits, ["moisture", "detangling", "shine"])
   assert.deepEqual(specs.ingredient_flags, ["humectants"])
   assert.deepEqual(specs.application_stage, ["towel_dry"])
@@ -305,4 +312,201 @@ test("Product Intake prompt requires full research before deterministic projecti
     "tail_marker_trace",
     "assumption_notes",
   ])
+})
+
+// ---------------------------------------------------------------------------
+// Leave-In v1.2 (T21): heat activation through intake (AD-7, I1–I8)
+// ---------------------------------------------------------------------------
+
+const NEQI_URL = "https://neqi-hair.com/products/diamond-glass-ultimate-styling-spray"
+
+function activatedEnvelope(): LeaveInResearchEnvelope {
+  const base = envelope()
+  base.identity.applicationStage = ["towel_dry", "pre_heat"]
+  base.identity.heatActivation = {
+    value: "required",
+    route: "airflow_shaping",
+    statements: [
+      {
+        kind: "activation_statement",
+        quote: "Noch mehr hitzeaktivierte Polymere als im goldenen Diamond Glass Styling Spray",
+        sourceTier: "C2",
+        sourceUrl: NEQI_URL,
+        retrievedAt: "2026-10-09",
+      },
+      {
+        kind: "heat_step_direction",
+        quote: "Anschließend die einzelnen Partien mit Hitze und auf Spannung föhnen.",
+        sourceTier: "C2",
+        sourceUrl: NEQI_URL,
+        retrievedAt: "2026-10-09",
+      },
+    ],
+    counterSignals: [],
+  }
+  base.profile.specialistFunctions = evidence({ providesHeatProtection: true })
+  return base
+}
+
+test("Product Intake projects an activated Leave-In to the pre-heat slot only and the validator accepts it", () => {
+  const final = {
+    product: { category_key: "leave_in", suitable_thicknesses: [] as string[] },
+    category_specs: {} as Record<string, unknown>,
+    field_rationales: {},
+  }
+  const artifacts = [
+    { kind: "property_synthesis", payload: { leave_in_research_envelope: activatedEnvelope() } },
+  ]
+  const result = applyLeaveInResearchAdapter({ final, artifacts })
+  assert.deepEqual(result.blockers, [])
+  assert.match(result.warnings.join(" "), /heat_activation_required/)
+
+  const specs = final.category_specs.product_leave_in_specs as Record<string, unknown>
+  assert.equal(specs.heat_activation_required, true)
+  assert.equal(specs.heat_activation_route, "airflow_shaping")
+  assert.deepEqual(specs.roles, ["styling_prep"])
+  assert.deepEqual(specs.plan_roles, ["pre_heat_application"])
+  const fit = final.category_specs.product_leave_in_fit_specs as Record<string, unknown>
+  assert.equal(fit.conditioner_relationship, "booster_only")
+  assert.deepEqual((artifacts[0]!.payload as Record<string, unknown>).required_protocol_roles, [
+    "pre_heat_protection",
+  ])
+
+  const validation = validateProductIntakeCategorySpecs("leave_in", final.category_specs)
+  assert.deepEqual(validation.missingFields, [])
+  assert.equal(validation.ok, true)
+  const specsUpsert = validation.targetSpecOperations.find(
+    (operation) => operation.table === "product_leave_in_specs",
+  )
+  assert.equal(
+    (specsUpsert?.rows[0] as Record<string, unknown> | undefined)?.heat_activation_route,
+    "airflow_shaping",
+  )
+
+  // I8 on both protocol-role derivations.
+  assert.deepEqual(deriveRequiredProtocolRoles("leave_in", final.category_specs), [
+    "pre_heat_protection",
+  ])
+  assert.deepEqual(requiredProtocolRoles("leave_in", final.category_specs), ["pre_heat_protection"])
+})
+
+test("required protocol roles stay unchanged for non-activated Leave-Ins", () => {
+  for (const [hp, expected] of [
+    [true, ["post_wash_leave_in", "pre_heat_protection"]],
+    [false, ["post_wash_leave_in"]],
+  ] as const) {
+    const specs = {
+      product_leave_in_specs: { provides_heat_protection: hp, heat_activation_required: false },
+    }
+    assert.deepEqual(deriveRequiredProtocolRoles("leave_in", specs), expected)
+    assert.deepEqual(requiredProtocolRoles("leave_in", specs), expected)
+  }
+})
+
+test("the Leave-In validator mirrors the heat-activation table CHECKs", () => {
+  const validSpecs = () => {
+    const final = {
+      product: { category_key: "leave_in", suitable_thicknesses: [] as string[] },
+      category_specs: {} as Record<string, unknown>,
+      field_rationales: {},
+    }
+    applyLeaveInResearchAdapter({
+      final,
+      artifacts: [
+        {
+          kind: "property_synthesis",
+          payload: { leave_in_research_envelope: activatedEnvelope() },
+        },
+      ],
+    })
+    return structuredClone(final.category_specs) as {
+      product_leave_in_specs: Record<string, unknown>
+    } & Record<string, unknown>
+  }
+  const missing = (mutate: (specs: Record<string, unknown>) => void) => {
+    const categorySpecs = validSpecs()
+    mutate(categorySpecs.product_leave_in_specs)
+    const result = validateProductIntakeCategorySpecs("leave_in", categorySpecs)
+    assert.equal(result.ok, false)
+    return result.missingFields
+  }
+  const field = (name: string) => `final.category_specs.product_leave_in_specs.${name}`
+
+  // (a) heat_activation_route_iff_required
+  assert.deepEqual(
+    missing((specs) => {
+      specs.heat_activation_route = null
+    }),
+    [field("heat_activation_route")],
+  )
+  assert.deepEqual(
+    missing((specs) => {
+      delete specs.heat_activation_route
+    }),
+    [field("heat_activation_route")],
+  )
+  assert.deepEqual(
+    missing((specs) => {
+      specs.heat_activation_required = false
+    }),
+    [field("heat_activation_route")],
+  )
+  assert.deepEqual(
+    missing((specs) => {
+      specs.heat_activation_route = "steam"
+    }),
+    [field("heat_activation_route")],
+  )
+  // (b) heat_activation_pre_heat_only
+  assert.deepEqual(
+    missing((specs) => {
+      specs.plan_roles = ["post_wash_leave_in", "pre_heat_application"]
+    }),
+    [field("plan_roles")],
+  )
+  assert.deepEqual(
+    missing((specs) => {
+      specs.application_stage = ["towel_dry"]
+    }),
+    [field("application_stage")],
+  )
+  assert.deepEqual(
+    missing((specs) => {
+      specs.roles = ["replacement_conditioner", "styling_prep"]
+    }),
+    [field("roles")],
+  )
+
+  // A non-activated row may omit the route (legacy payloads) or carry null.
+  for (const route of [undefined, null]) {
+    const categorySpecs = validSpecs()
+    const specs = categorySpecs.product_leave_in_specs
+    specs.heat_activation_required = false
+    specs.plan_roles = ["post_wash_leave_in", "pre_heat_application"]
+    specs.roles = ["replacement_conditioner", "styling_prep"]
+    if (route === undefined) delete specs.heat_activation_route
+    else specs.heat_activation_route = route
+    const result = validateProductIntakeCategorySpecs("leave_in", categorySpecs)
+    assert.deepEqual(result.missingFields, [], `route ${String(route)}`)
+  }
+})
+
+test("Product Intake prompt requires the v1.2 heat-activation capture", () => {
+  const contract = leaveInResearchPromptContract()
+  assert.equal(contract.engine.research_method.policyId, "leave-in-classification-v1.2")
+  assert.match(contract.engine.standard, /v1\.2/)
+  assert.match(
+    contract.engine.standard_sources.overlay,
+    /v1\.2\/leave-in-classification-overlay\.v1\.2\.md$/,
+  )
+  const capture = contract.engine.envelope_contract.identity.heatActivation
+  assert.deepEqual(capture.value, ["required", "not_required"])
+  assert.deepEqual(capture.route, ["airflow_shaping", "direct_contact_heat", "either_heat", null])
+  assert.match(capture.statements, /verbatim/)
+  assert.match(capture.statements, /C1/)
+  assert.match(capture.statements, /C2/)
+  for (const clause of ["HA-1", "HA-2", "HA-3", "HA-4", "HA-5", "HA-6", "HA-7", "HA-8", "HA-9"]) {
+    assert.ok(contract.engine.heat_activation_rule.includes(clause), `${clause} in the prompt rule`)
+  }
+  assert.match(contract.engine.heat_activation_rule, /never sets or reads provides_heat_protection/)
 })

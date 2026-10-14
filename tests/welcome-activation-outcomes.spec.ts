@@ -40,7 +40,7 @@ test.describe("@ci checkout recovery", () => {
               contents: `export const useRouter=()=>({replace:p=>location.assign(p)});
         export const usePaymentRuntime=()=>({paypalLive:false});
         export const createClient=()=>({auth:{signInWithPassword:async()=>({error:new URLSearchParams(location.search).has('signinFail')?new Error('fixture failure'):null})}});
-        export const captureCheckoutException=()=>{}; export const addCheckoutBreadcrumb=()=>{}; export const capturePaymentFailure=()=>{};
+        export const captureCheckoutException=()=>{}; export const addCheckoutBreadcrumb=()=>{}; export const capturePaymentFailure=(event)=>{(globalThis.__welcomePaymentFailures??=[]).push(event)};
         export const CheckoutReturnAnalytics=()=>null; export const markPlanOpeningStart=()=>{};
         export const markPersonalPlanStageNavigation=()=>{}; export const PlanBereitArrival=()=>null; export const PlanStartOpening=()=>null;`,
             }))
@@ -123,6 +123,10 @@ test.describe("@ci checkout recovery", () => {
       )
     })
     await page.goto(`${origin}/welcome`)
+    await expect(page.getByLabel("Chaarlie-E-Mail", { exact: true })).toHaveValue(
+      "alex@example.com",
+    )
+    await expect(page.getByText("E-Mail aus deinem Checkout", { exact: true })).toHaveCount(0)
     await page.getByLabel("Passwort", { exact: true }).fill("Example123")
     await page.getByRole("button", { name: "Login-Link senden" }).click()
     await expect(page.getByRole("alert")).toContainText("Dein Konto ist bereit.")
@@ -250,5 +254,27 @@ test.describe("@ci checkout recovery", () => {
     expect(polls).toBe(15)
     await page.clock.runFor(6000)
     expect(polls).toBe(15)
+    const failures = await page.evaluate(
+      () =>
+        (globalThis as typeof globalThis & { __welcomePaymentFailures?: unknown[] })
+          .__welcomePaymentFailures ?? [],
+    )
+    expect(failures).toEqual([
+      {
+        signal: "customer_payment_error_observed",
+        provider: "paypal",
+        stage: "paypal_activation_status_poll",
+        errorFamily: "timeout",
+        commerceKind: "subscription",
+        origin: "browser",
+        method: "paypal",
+        truth: "unknown",
+        live: false,
+        isInternalTest: false,
+        retryable: "true",
+        source: "welcome",
+        providerReferencePresent: true,
+      },
+    ])
   })
 })

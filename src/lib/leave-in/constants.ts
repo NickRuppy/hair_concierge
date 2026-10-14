@@ -1,3 +1,5 @@
+import type { HeatActivationRoute } from "@/lib/heat-activation/contract"
+
 export const POST_WASH_ACTIONS = ["air_dry", "blow_dry_only", "heat_tool_styling"] as const
 export type PostWashAction = (typeof POST_WASH_ACTIONS)[number]
 
@@ -174,6 +176,8 @@ export interface ProductLeaveInSpecs {
   roles: LeaveInRole[]
   provides_heat_protection: boolean
   heat_activation_required: boolean
+  /** Leave-In v1.2 (AD-7): set exactly when `heat_activation_required` is true. */
+  heat_activation_route?: HeatActivationRoute | null
   care_benefits: LeaveInCareBenefit[]
   ingredient_flags: LeaveInIngredientFlag[]
   application_stage: LeaveInApplicationStage[]

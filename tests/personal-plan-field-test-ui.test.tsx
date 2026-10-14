@@ -5,7 +5,6 @@ import { renderToStaticMarkup } from "react-dom/server"
 
 import { PersonalPlanFieldTestBanner } from "../src/components/personal-plan-quiz/personal-plan-quiz"
 import { PersonalPlanOffer } from "../src/components/personal-plan-offer/personal-plan-offer"
-import { PersonalPlanFieldTestEnded } from "../src/components/personal-plan-field-test/personal-plan-field-test-ended"
 import { ResultPageClient } from "../src/app/result/[leadId]/result-client"
 
 const quizSource = readFileSync(
@@ -90,10 +89,6 @@ test("lost field-test authorization renders a dedicated non-commercial end state
   assert.match(html, /Dein Testzugang ist nicht mehr verfügbar/)
   assert.match(html, /Chaarlie-Team/)
   assert.doesNotMatch(html, /Stripe|PayPal|Plan sichern|reactivate|checkout/i)
-})
-
-test("dedicated field-test end surface stays concise and payment-free", () => {
-  const html = renderToStaticMarkup(<PersonalPlanFieldTestEnded />)
   assert.match(html, /Testzeitraum ist beendet oder der Zugang wurde geschlossen/)
   assert.doesNotMatch(html, /Abo|Zahlung|Stripe|PayPal|Preis/)
 })

@@ -155,7 +155,7 @@ test("replacement preserves stable assignment identity and hydrates the frozen p
   ])
 })
 
-test("multiple edits target the stable original assignment regardless of operation order", () => {
+test("cadence edit still targets the stable assignment after replacement", () => {
   const edited = applyRoutineEdits(payload, [
     {
       kind: "assignment_replace",

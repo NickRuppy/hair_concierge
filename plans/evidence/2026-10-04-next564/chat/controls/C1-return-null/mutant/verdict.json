@@ -1,0 +1,8 @@
+{
+  "ok": true,
+  "kind": "pw",
+  "exactSelected": 1,
+  "expectedOutcome": "intended assertion failure",
+  "stdout": "/tmp/test-audit-chat18-controls-q0Mukt/C1-return-null/mutant/stdout.txt",
+  "stderr": "/tmp/test-audit-chat18-controls-q0Mukt/C1-return-null/mutant/stderr.txt"
+}

@@ -5,7 +5,6 @@ import test from "node:test"
 
 import { isPersonalPlanStage3LabEnabled } from "../src/lib/labs/personal-plan-stage3-access"
 import {
-  canAccessPersonalPlanAppV1Rollout,
   getPersonalPlanNewBuyerCohortCutoff,
   isPersonalPlanAppV1Enabled,
   isPersonalPlanLegacyQuizCutoverEnabled,
@@ -13,7 +12,6 @@ import {
   isPersonalPlanStage3Enabled,
   isPersonalPlanStage3ThumbnailsEnabled,
   resolvePersonalPlanAppV1Rollout,
-  resolvePersonalPlanAppV1InternalEmails,
 } from "../src/lib/personal-plan/release"
 
 test("the released Personal Plan app ignores obsolete launch flags", () => {
@@ -42,15 +40,6 @@ test("the released Personal Plan rollout is all and ignores obsolete cohort flag
   assert.equal(resolvePersonalPlanAppV1Rollout({}), "all")
   assert.equal(resolvePersonalPlanAppV1Rollout({ PERSONAL_PLAN_APP_V1_ENABLED: "true" }), "all")
 
-  assert.deepEqual(
-    [
-      ...resolvePersonalPlanAppV1InternalEmails({
-        PERSONAL_PLAN_APP_V1_INTERNAL_EMAILS:
-          " Nick+Plan@Example.com,invalid, nick+plan@example.com ",
-      }),
-    ],
-    ["nick+plan@example.com"],
-  )
   assert.equal(
     resolvePersonalPlanAppV1Rollout({
       PERSONAL_PLAN_APP_V1_ENABLED: "true",
@@ -64,19 +53,6 @@ test("the released Personal Plan rollout is all and ignores obsolete cohort flag
       PERSONAL_PLAN_APP_V1_ROLLOUT: "invalid",
     }),
     "all",
-  )
-
-  assert.equal(
-    canAccessPersonalPlanAppV1Rollout({ appEnabled: true, rollout: "internal", isInternal: true }),
-    true,
-  )
-  assert.equal(
-    canAccessPersonalPlanAppV1Rollout({ appEnabled: true, rollout: "internal", isInternal: false }),
-    false,
-  )
-  assert.equal(
-    canAccessPersonalPlanAppV1Rollout({ appEnabled: false, rollout: "all", isInternal: true }),
-    false,
   )
 })
 

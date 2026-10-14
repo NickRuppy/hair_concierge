@@ -1,0 +1,336 @@
+{
+ "blindId": "W110",
+ "lane": "lane-b",
+ "policyId": "shampoo-classification-v1.6.2",
+ "formulaPassRecord": "out/formula-pass/W110.json (hash-pinned; not edited)",
+ "identity": {
+  "brand": "ISANA",
+  "productName": "ISANA Shampoo & Spülung 2in1 Volumen (Malve & Acai)",
+  "packSize": "300 ml",
+  "market": "DE",
+  "formulaFingerprintSha256": "4eddf07f65699119e28271f06d3321a7a729de2b283c053a659895ef9dda3433",
+  "normalization": "28 entries as frozen; no split synonyms; normalized one-based positions cited (ID-2).",
+  "completeness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high",
+  "e3ProminenceCutoff": "Parfum@20 (prominent = positions 1-19)"
+ },
+ "formulaFacts": {
+  "surfactants": {
+   "definingAnionic": "Sodium Laureth Sulfate@2 (strong anionic, ether/sulfonate type)",
+   "reinforcingRoutes": [],
+   "buffers": [
+    "Cocamidopropyl Betaine@4 (amphoteric)",
+    "Coco-Glucoside@11 (nonionic glucoside)"
+   ],
+   "nonCleansing": [
+    "PEG-3 Distearate@17 (PEG ester pearlizer/opacifier)"
+   ]
+  },
+  "conditioningRoutes": [
+   "Hydrolyzed Wheat Protein@7 (protein_film)",
+   "Glyceryl Oleate@12 (weak_refatter)",
+   "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@13 (cationic_polymer, prominent)",
+   "Tocopherol@15, Hydrogenated Palm Glycerides Citrate@16 (weak_refatter)",
+   "PEG-3 Distearate@17 (pearlizing route)"
+  ],
+  "humectants": [
+   "Panthenol@9",
+   "Pantolactone@10 (not listed)",
+   "Glycerin@19",
+   "Propylene Glycol@18 (solvent)"
+  ],
+  "actives": [
+   "Niacinamide@8"
+  ],
+  "e4ComfortRoutesProminent": [
+   "Niacinamide@8",
+   "Panthenol@9"
+  ],
+  "e4HumectantRoutesProminent": [
+   "Panthenol@9",
+   "Glyceryl Oleate@12",
+   "Glycerin@19"
+  ],
+  "mildBase": "not met: Sodium Laureth Sulfate@2 prominent strong anionic",
+  "exposureFlags": [
+   "Parfum@20",
+   "Benzyl Salicylate@21",
+   "Linalool@22"
+  ],
+  "otherIngredients": [
+   "Malva Sylvestris Flower Extract@5",
+   "Euterpe Oleracea Fruit Extract@6",
+   "Magnesium Sulfate@14 (salt)"
+  ],
+  "preservatives": [
+   "Sodium Benzoate@23",
+   "Potassium Sorbate@24",
+   "Benzoic Acid@25",
+   "Phenoxyethanol@26"
+  ]
+ },
+ "claimUnits": [
+  "name (high): '2in1 Volumen' - volume (2-in-1 never raises conditioning, C7)",
+  "manufacturer_de (Rossmann own brand, moderate): 'Mit seiner speziellen Formel verleiht es auch kraftlosem und feinem Haar Volumen'; 'Soft-Care-Komplex und Weizenprotein'; 'kraftloses & feines Haar'; 'dermatologisch bestätigt und pH-hautneutral' (protective)"
+ ],
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Moderate: C1 - defining anionic Sodium Laureth Sulfate@2 buffered by prominent Cocamidopropyl Betaine@4 and Coco-Glucoside@11, no reinforcing strong anionic.",
+   "ruleIds": [
+    "C1",
+    "C3",
+    "C4"
+   ],
+   "counterSignal": "see rationale (counter-signals recorded there; convention value unchanged by claims, 3.2)",
+   "sourceIds": [
+    "formula/W110.json (stage A, fingerprint 4eddf07f6569...)"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "Moderate: one meaningful system (prominent cationic Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@13) plus light routes - Hydrolyzed Wheat Protein@7, Panthenol@9, Glyceryl Oleate@12, Hydrogenated Palm Glycerides Citrate@16, pearlizer PEG-3 Distearate@17, Glycerin@19. No early silicone or prominent payload lipid, so C2 is not met; high is not supported. Low is the realistic neighbor (single light guar).",
+   "ruleIds": [
+    "C2",
+    "5"
+   ],
+   "counterSignal": "see rationale",
+   "sourceIds": [
+    "formula/W110.json (stage A, fingerprint 4eddf07f6569...)"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidence": {
+    "cationic_polymer": [
+     "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride@13"
+    ],
+    "payload_lipid": [],
+    "weak_refatter": [
+     "Glyceryl Oleate@12",
+     "Tocopherol@15",
+     "Hydrogenated Palm Glycerides Citrate@16"
+    ],
+    "silicone": [],
+    "protein_film": [
+     "Hydrolyzed Wheat Protein@7"
+    ],
+    "film_former": [],
+    "cationic_conditioner": [],
+    "reset": [
+     "Sodium Laureth Sulfate@2",
+     "Cocamidopropyl Betaine@4",
+     "Coco-Glucoside@11"
+    ],
+    "humectantContext": [
+     "Niacinamide@8",
+     "Panthenol@9",
+     "Pantolactone@10",
+     "Glycerin@19"
+    ],
+    "excluded": [
+     "PEG-3 Distearate@17 (PEG-ester pearlizer, excluded like Glycol Distearate, 6.4)",
+     "Propylene Glycol@18 (solvent)",
+     "Malva Sylvestris Flower Extract@5, Euterpe Oleracea Fruit Extract@6 (botanical extracts)",
+     "fragrance materials @20-22"
+    ],
+    "unresolved": []
+   },
+   "wLine": {
+    "position": 20,
+    "inci": "Parfum",
+    "classes": [
+     "fragrance"
+    ],
+    "e3Point": 20,
+    "alphabeticalRun": "none",
+    "skipped": [
+     "w_line_skipped:Niacinamide@8 - clause (ii) failed: cleansing surfactant Coco-Glucoside@11 listed after it before the cap",
+     "w_line_skipped:Panthenol@9 - clause (ii) failed: cleansing surfactant Coco-Glucoside@11 listed after it before the cap",
+     "w_line_skipped:Tocopherol@15 - clause (ii) failed (cautious reading): PEG-3 Distearate@17, a pearlizing wax by function, listed after it before the cap"
+    ],
+    "codes": [],
+    "plausibility": "Parfum@20: (i) Sodium Laureth Sulfate@2 before it; (ii) nothing between 20 and cap 20. No payload_lipid exists, so the PEG-3 Distearate reading cannot change any lipid leg.",
+    "payloadLipidMaterial": [],
+    "payloadLipidNonMaterial": []
+   },
+   "depositionLoad": "light - one guar, one hydrolyzed protein, weak refatters",
+   "persistence": "low - light, rinse-prone routes",
+   "resetCapacity": "moderate - C1 SLES chassis with two buffers",
+   "counterevidence": "Three families (cationic_polymer, protein_film, weak_refatter) present; guar is prominent.",
+   "whyThisBand": "Only light routes against an effective ordinary chassis.",
+   "whyNotNeighborBand": "Not moderate (W2): the non-cationic families are a single hydrolyzed wheat protein (low persistence) and weak_refatter only; there is no silicone, payload lipid or second cationic, so the single guar@13 against an effective C1 reset keeps residue below noticeable.",
+   "confidenceLimitingFactor": "Guar dose unknown; several light routes interact.",
+   "rationale": "Low: single guar + light protein/refatters vs. C1 reset (6.6, W2).",
+   "ruleIds": [
+    "6.3",
+    "6.4",
+    "6.6",
+    "W2",
+    "W-LINE",
+    "N-ALT"
+   ],
+   "counterSignal": "see counterevidence / whyNotNeighborBand",
+   "sourceIds": [
+    "formula/W110.json (stage A, fingerprint 4eddf07f6569...)"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No recognized anti-dandruff active (Section 11).",
+   "ruleIds": [
+    "11"
+   ],
+   "counterSignal": "none (mechanical presence test, Section 11)",
+   "sourceIds": [
+    "formula/W110.json (stage A, fingerprint 4eddf07f6569...)"
+   ]
+  },
+  "focusPrimary": {
+   "value": "volume",
+   "confidence": "moderate",
+   "neighboringAlternative": "general",
+   "claimRole": "candidate",
+   "counterSignal": "2-in-1 conditioning claim; guar + refatters give moderate conditioning.",
+   "decisionTrace": "Claim direction: volume (name + manufacturer). Formula compatible: weightPotential low, no silicone, light guar/protein routes. Decision: volume.",
+   "rationale": "Volume: dominant name claim with a compatible light formula (7.2, C7).",
+   "ruleIds": [
+    "7.2",
+    "C7",
+    "T2"
+   ],
+   "careDirection": {
+    "verdict": "not_applicable",
+    "moistureRoutes": [],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [],
+    "limitation": "chosen focus is not a repair/moisture decision; blind formula verdict was moisture_supported."
+   }
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "decisionTrace": "Empty default considered; 2-in-1 care is a conditioning restatement, not a focus (Section 8 item 3).",
+   "rationale": "Empty.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Regular: no trigger.",
+   "ruleIds": [
+    "9",
+    "U1"
+   ],
+   "decisionTrace": "Default regular considered; trigger none; no losing trigger."
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Not targeted: no scalp claim unit.",
+   "ruleIds": [
+    "10",
+    "CSA",
+    "SC1",
+    "E2a"
+   ]
+  }
+ },
+ "reconciliation": [
+  "focusPrimary general (low) -> volume (moderate).",
+  "usageRole/scalpComfortTarget confirmed (high).",
+  "Claim mapping: Weizenprotein -> Hydrolyzed Wheat Protein@7; Malve -> Malva Sylvestris@5; Acai -> Euterpe Oleracea@6.",
+  "No formula property changed (C7: 2-in-1 claim does not raise conditioning)."
+ ],
+ "projection": {
+  "status": "proposal_blocked_pending_review",
+  "thicknessFit": {
+   "fine": "ideal",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessFitConfidence": {
+   "fine": "moderate",
+   "normal": "moderate",
+   "coarse": "moderate"
+  },
+  "thicknessRationale": "T1 with weightPotential low (moderate, neighbor moderate) and conditioningLevel moderate (moderate, neighbor low): fine ideal, normal ideal, coarse acceptable. Target ordinary: T6 not applied. T4: review_thickness_boundary:fine (weightPotential neighbor moderate -> acceptable). T2: thickness/volume claims ignored for fit.",
+  "weight": "light",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: weightPotential low -> weight light, 1:1; confidence = weightPotential confidence (moderate). Claims ('ohne zu beschweren', 'leicht') never lower it (6.5).",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "confidence": "high",
+    "rationale": "S-ORDINARY way 1; manufacturer source present."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "cleansingIntensity": "regular",
+  "cleansingIntensityConfidence": "high",
+  "cleansingIntensityRationale": "I1: cleansingStrength moderate (high), D1 false -> regular. I3: neighbor none raises no flag (normal expects regular).",
+  "explicitResetPositioning": false,
+  "explicitResetRationale": "No D1 stem (tiefenrein, deep clean, clarifying shampoo, detox-reinigung) in the name or a manufacturer/pack claim, and no occasional-use directions.",
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserListingConfidence": "moderate",
+  "deepCleanserRationale": "D2 not met (cleansingStrength moderate, focusPrimary volume, usageRole regular, D1 false) -> not_flagged.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   "review_thickness_boundary:fine (weightPotential neighbor moderate -> acceptable)"
+  ],
+  "informationalNotes": [],
+  "catalogDependent": "review_live_value_differs not evaluated in-lane (live rows unseen; orchestrator after freeze)."
+ },
+ "selfCheck": "6.11: fingerprint matches the stage-A packet; claims and labels were hidden during the formula pass (phase 1 frozen before reveal); no ingredient, family count or position window assigned the weight band; W-line derived per W-LINE with skipped candidates recorded; depositionLoad/persistence/resetCapacity present; whyNotNeighborBand specific; confidence names its limiting factor; no comparison with earlier values in-lane. Formula properties (cleansing, conditioning, weight, dandruff) unchanged after unblind (3.2: claims cannot move them). N-ALT checked: every high confidence has neighbor none, every moderate/low names one neighbor. Projection derived mechanically from final properties (T1/T6/T4/W-LIVE/I1/I3/D2/13.7/13.8).",
+ "uncertainties": [
+  "weightPotential low vs moderate (prominent guar + protein); neighbor moderate -> T4 fine flag."
+ ]
+}

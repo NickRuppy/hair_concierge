@@ -1,0 +1,1028 @@
+[
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/HANDOFF.json",
+    "archived": "audit/HANDOFF.json",
+    "sha256": "1ab1a6148a17eaa46c908d819451120cb71923c516d5bcdc7bafdfeb9b145928",
+    "bytes": 20975
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/README.md",
+    "archived": "audit/README.md",
+    "sha256": "6e9c2a8828007016d954aa43d35dbdebad69bc08a813ea47fc82922151ca7f9b",
+    "bytes": 1739
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/candidates.json",
+    "archived": "audit/candidates.json",
+    "sha256": "23051327e59c01e5af981aa88cde02c894cb805bd4ecd86e582d6fbd39b5178e",
+    "bytes": 182
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/complete-ledger.md",
+    "archived": "audit/complete-ledger.md",
+    "sha256": "13409d678d1c974b62d0bcabfb57a05eb480eaea805f1ce3a7a56bf7bc9b133f",
+    "bytes": 39763
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/complete.diff",
+    "archived": "audit/complete.diff",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/controls.json",
+    "archived": "audit/controls.json",
+    "sha256": "b0042c8904f7efd84d7fe726344c21177f0723d6cc2a0a043bd703364ced4edb",
+    "bytes": 186
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/cut.diff",
+    "archived": "audit/cut.diff",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/finalize.py",
+    "archived": "audit/finalize.py.txt",
+    "sha256": "114d77a21c644347125afda974e06cb09559b196c27dfb06949d9fc05b8c5610",
+    "bytes": 10629
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/history.txt",
+    "archived": "audit/history.txt",
+    "sha256": "d3324358810f78ca3a40d81715b1cf8bffad8f84ab0a97a5fc2a10bf9aa14cdd",
+    "bytes": 793
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/inventory-summary.txt",
+    "archived": "audit/inventory-summary.txt",
+    "sha256": "6040dde8a15c5f23f98cbde393aa4a2066a15cf0af516a33100d9caca0684d42",
+    "bytes": 8253
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/inventory.cjs",
+    "archived": "audit/inventory.cjs.txt",
+    "sha256": "f160a5aac2c235da207166e3ec1555207ba8c4b1049ef470e5703402a267af4b",
+    "bytes": 3342
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/inventory.json",
+    "archived": "audit/inventory.json",
+    "sha256": "564efea247c6e9e53567cd1259ed844f7fbb5a95ba05878f2aac906dc4f9aeee",
+    "bytes": 282637
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/judgments.json",
+    "archived": "audit/judgments.json",
+    "sha256": "55d986d496a89daf000ce6114356c7fbadc6f471c887fd78e737b460494d0cbf",
+    "bytes": 26596
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/judgments.py",
+    "archived": "audit/judgments.py.txt",
+    "sha256": "d583fdf4299f465b432bc6105402a271179d48d2a10322e722ceb128ec46fa86",
+    "bytes": 23128
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/layer-plan.md",
+    "archived": "audit/layer-plan.md",
+    "sha256": "a5a8baeb459f60cf7b18d22d1375c790b52c0d3c6dc60625d190c454f6caf204",
+    "bytes": 12357
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/ledger.json",
+    "archived": "audit/ledger.json",
+    "sha256": "ad1f3eeda62a7b0f990f7a84156f8b5b87d24b2a6d35a9e57e32b442a8c7f475",
+    "bytes": 269744
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/manifest.json",
+    "archived": "audit/manifest.json",
+    "sha256": "4e2f2388e39ae40f75bb42f99b9c0af002b33c71c0d2db24d6b170aa5761abb6",
+    "bytes": 11280
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/src/app/api/quiz/email-return/choose/route.ts",
+    "archived": "audit/originals/src/app/api/quiz/email-return/choose/route.ts.txt",
+    "sha256": "39175962afc94e53edffe41da10d44b5b2cab05b32984f16cc4a512a3b9150fa",
+    "bytes": 5763
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/src/app/api/quiz/email-return/context/route.ts",
+    "archived": "audit/originals/src/app/api/quiz/email-return/context/route.ts.txt",
+    "sha256": "2828ca1c0e6edc3c4acb4664ec3cff286fff2ac1089fb75b675f3113d5d68181",
+    "bytes": 2812
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/src/components/personal-plan-quiz/quiz-data.ts",
+    "archived": "audit/originals/src/components/personal-plan-quiz/quiz-data.ts.txt",
+    "sha256": "aa4e80b540d84cb6205235ba671ed53b1c6045b50df6bb3a1c269dac3a954b58",
+    "bytes": 21996
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/src/components/quiz/quiz-preparation.tsx",
+    "archived": "audit/originals/src/components/quiz/quiz-preparation.tsx.txt",
+    "sha256": "301aafc3cdd1b517a6c0ad6a41221ae99b8bcea07da36caf76c55b738e3bbc6f",
+    "bytes": 8278
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/src/components/quiz/quiz-results.tsx",
+    "archived": "audit/originals/src/components/quiz/quiz-results.tsx.txt",
+    "sha256": "836bf1a4b1e11f09b281f23dd7c045c1d331c07b94edc1d7ab88a0b6b3a9ae3b",
+    "bytes": 8678
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/src/lib/quiz/browser-history.ts",
+    "archived": "audit/originals/src/lib/quiz/browser-history.ts.txt",
+    "sha256": "863b56c24773eaacf833af9af33ebfc7133d07824fd77b33047fb8cef8024a91",
+    "bytes": 2924
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/src/lib/quiz/diagnostic-input.ts",
+    "archived": "audit/originals/src/lib/quiz/diagnostic-input.ts.txt",
+    "sha256": "964652bf5d3e3d8cd9bc233b18977e59e3cf7264a97ec7de5d5c4ac6cea7149e",
+    "bytes": 3239
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/src/lib/quiz/draft.ts",
+    "archived": "audit/originals/src/lib/quiz/draft.ts.txt",
+    "sha256": "ade503f1a6baebb94afbcb7c5b59225c1b06a0cdfca8a2eeba7ad7bf8e1d0177",
+    "bytes": 4218
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/src/lib/quiz/email-return-credential.ts",
+    "archived": "audit/originals/src/lib/quiz/email-return-credential.ts.txt",
+    "sha256": "9abe0200239d08bba30a797b4f543d0147e507c5317b74706dced5737b90733c",
+    "bytes": 12100
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/src/lib/quiz/email-return-edit.ts",
+    "archived": "audit/originals/src/lib/quiz/email-return-edit.ts.txt",
+    "sha256": "d572c29439be368819e9e5496bf4dfc1bbf78634456447e981204597d6d3455a",
+    "bytes": 1123
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/src/lib/quiz/link-to-profile.ts",
+    "archived": "audit/originals/src/lib/quiz/link-to-profile.ts.txt",
+    "sha256": "5813a8c45eb51d5b3e0e2f8b712d1c2e8e2169cd878c09647da2d7914da3132a",
+    "bytes": 13680
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/src/lib/quiz/need-lane.ts",
+    "archived": "audit/originals/src/lib/quiz/need-lane.ts.txt",
+    "sha256": "01e69e7f79db4d5919a629f2a568c140bdb1a17e05aaf88cbeec387123251344",
+    "bytes": 5649
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/src/lib/quiz/normalization.ts",
+    "archived": "audit/originals/src/lib/quiz/normalization.ts.txt",
+    "sha256": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239",
+    "bytes": 11376
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/src/lib/quiz/offer-preview.ts",
+    "archived": "audit/originals/src/lib/quiz/offer-preview.ts.txt",
+    "sha256": "d436af030c92a7189c79db4d974fe13e5c1e602d94bfc23d3276f96926ab10e4",
+    "bytes": 10165
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/src/lib/quiz/primary-concern.ts",
+    "archived": "audit/originals/src/lib/quiz/primary-concern.ts.txt",
+    "sha256": "fc33b4465dec57bcc2797ca11ab7d521280189c97495ba8c30b41dd4671207d1",
+    "bytes": 2638
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/src/lib/quiz/questions.ts",
+    "archived": "audit/originals/src/lib/quiz/questions.ts.txt",
+    "sha256": "49d978c9ad9f02c716213e81fdf0abe392ed9e8803f8dbea69c9e07576acf683",
+    "bytes": 10293
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/src/lib/quiz/result-narrative.ts",
+    "archived": "audit/originals/src/lib/quiz/result-narrative.ts.txt",
+    "sha256": "1cc0a22b9baeb3552e304b902776b650355767cd624a73bd34764ac103652e50",
+    "bytes": 33317
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/src/lib/quiz/screen-order.ts",
+    "archived": "audit/originals/src/lib/quiz/screen-order.ts.txt",
+    "sha256": "78bc469add4d51a92b8b9e19b2d9376553453b5595c9ac1661e037c60630e204",
+    "bytes": 6490
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/src/lib/quiz/store.ts",
+    "archived": "audit/originals/src/lib/quiz/store.ts.txt",
+    "sha256": "8245d784856dc36fc11c4fad35a1c400a65adf55fb994ad415408a94644f91f5",
+    "bytes": 6040
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/src/lib/quiz/types.ts",
+    "archived": "audit/originals/src/lib/quiz/types.ts.txt",
+    "sha256": "11ec81f1d6f0e5480132ec892301a2437852c2fc80bf95c22abf2207e6b1fce2",
+    "bytes": 2854
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/src/lib/quiz/validators.ts",
+    "archived": "audit/originals/src/lib/quiz/validators.ts.txt",
+    "sha256": "5f972cfa650604ad0255d2cff6879849d34347df650a0d46b1bfc067adcca1e0",
+    "bytes": 4017
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/tests/quiz-draft.test.ts",
+    "archived": "audit/originals/tests/quiz-draft.test.ts.txt",
+    "sha256": "e3c92705b912d3596f1e75568dbb1ba63d5cbe75cc96fb1aced50899b1524c68",
+    "bytes": 12168
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/tests/quiz-email-return-choice.test.ts",
+    "archived": "audit/originals/tests/quiz-email-return-choice.test.ts.txt",
+    "sha256": "755b4d7808f1d6fd69c54aa5ff8af509a13d4d171ac98dc4fa9a45c6909c218c",
+    "bytes": 4593
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/tests/quiz-email-return-edit.test.ts",
+    "archived": "audit/originals/tests/quiz-email-return-edit.test.ts.txt",
+    "sha256": "06fdcb0875fd631ce115c8686e270ebeff3a0b8fbf4aec2b3a9dd91db3c1f3f4",
+    "bytes": 2570
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/tests/quiz-email-return-selection.test.ts",
+    "archived": "audit/originals/tests/quiz-email-return-selection.test.ts.txt",
+    "sha256": "67b77db34c94ed5bb7a8739a274c5f6af64a27cea2502de6bacd66673d5c639b",
+    "bytes": 2842
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/tests/quiz-need-lane.test.ts",
+    "archived": "audit/originals/tests/quiz-need-lane.test.ts.txt",
+    "sha256": "91f87dc6aaaad8d4fa624d1c3620cb1b8a08fa28143516140aac93a67bd472d4",
+    "bytes": 2947
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/tests/quiz-normalization.test.ts",
+    "archived": "audit/originals/tests/quiz-normalization.test.ts.txt",
+    "sha256": "b5e39a58c6c37cccc15e61e6d04d50c01820c9d5b417843b1b03bece1ef36340",
+    "bytes": 8821
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/tests/quiz-preparation.test.ts",
+    "archived": "audit/originals/tests/quiz-preparation.test.ts.txt",
+    "sha256": "2a0d0da8403687934e18e9c148cd505163783b63f46ce5ad25f2bc8978b23f3a",
+    "bytes": 5645
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/tests/quiz-primary-concern.test.ts",
+    "archived": "audit/originals/tests/quiz-primary-concern.test.ts.txt",
+    "sha256": "74b59aef6b5b9de05b6367b25989ead41b17d308cff8709772aaf0897298c9b7",
+    "bytes": 13155
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/tests/quiz-result-routing.test.ts",
+    "archived": "audit/originals/tests/quiz-result-routing.test.ts.txt",
+    "sha256": "39a199e1b2f57d293d9ad871c4b2d896f46a6f051ffdf1458d3892c0b3e02537",
+    "bytes": 2254
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/tests/quiz-screen-order.test.ts",
+    "archived": "audit/originals/tests/quiz-screen-order.test.ts.txt",
+    "sha256": "877d50b822e2838babc191574bbccc816ee97b86e70563b63ebfd52c458a245c",
+    "bytes": 10080
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/originals/tests/quiz-validators.test.ts",
+    "archived": "audit/originals/tests/quiz-validators.test.ts.txt",
+    "sha256": "526e02cb3341ecc27136f329e99e804ddd730cfab5dc94a381d0c697db4bf7ee",
+    "bytes": 4808
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-scope.json",
+    "archived": "audit/read-scope.json",
+    "sha256": "a75703f08f58478add5eeee72aaa48fad637447307c38f40f679fd623ca2a664",
+    "bytes": 39571
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/.github/workflows/ci.yml",
+    "archived": "audit/read-snapshots/.github/workflows/ci.yml",
+    "sha256": "fc592499aab37e12d8b14b6b2ff7b2af8af1d18e29e70a793a73cacce25486cb",
+    "bytes": 17598
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/@types/node/test.d.ts",
+    "archived": "audit/read-snapshots/node_modules/@types/node/test.d.ts.txt",
+    "sha256": "c8d3e5a18ba35629954e48c4cc8f11dc88224650067a172685c736b27a34a4dc",
+    "bytes": 101442
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/next/dist/compiled/@edge-runtime/cookies/index.d.ts",
+    "archived": "audit/read-snapshots/node_modules/next/dist/compiled/@edge-runtime/cookies/index.d.ts.txt",
+    "sha256": "0d891735a21edc75df51f3eb995e18149e119d1ce22fd40db2b260c5960b914e",
+    "bytes": 9669
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/next/dist/server/web/spec-extension/cookies.d.ts",
+    "archived": "audit/read-snapshots/node_modules/next/dist/server/web/spec-extension/cookies.d.ts.txt",
+    "sha256": "3b414b99a73171e1c4b7b7714e26b87d6c5cb03d200352da5342ab4088a54c85",
+    "bytes": 110
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/next/dist/server/web/spec-extension/response.d.ts",
+    "archived": "audit/read-snapshots/node_modules/next/dist/server/web/spec-extension/response.d.ts.txt",
+    "sha256": "74b2a5e5197bd0f2e0077a1ea7c07455bbea67b87b0869d9786d55104006784f",
+    "bytes": 1610
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/next/dist/server/web/spec-extension/response.js",
+    "archived": "audit/read-snapshots/node_modules/next/dist/server/web/spec-extension/response.js.txt",
+    "sha256": "68a5a07540d57a4beb3275fddd0502fd5ef9a42986b414c0bcee99a3f9033366",
+    "bytes": 4977
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/zod/index.cjs",
+    "archived": "audit/read-snapshots/node_modules/zod/index.cjs.txt",
+    "sha256": "2a3455cecff4f7021c92d0a3e2e5fc170c0448dc5cc261160127e08f4888a9c2",
+    "bytes": 1486
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/zod/package.json",
+    "archived": "audit/read-snapshots/node_modules/zod/package.json.txt",
+    "sha256": "c630bd10b52dcf71c112a2bf78dbf2734b9db58d62de663b8d86c2ec2c8cda2e",
+    "bytes": 3796
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/zod/v4/classic/parse.cjs",
+    "archived": "audit/read-snapshots/node_modules/zod/v4/classic/parse.cjs.txt",
+    "sha256": "0fb97825ed1c15a1f6a238df9506e23f2e720edeae4774aa46a60ce7b2a75319",
+    "bytes": 2271
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/zod/v4/classic/schemas.cjs",
+    "archived": "audit/read-snapshots/node_modules/zod/v4/classic/schemas.cjs.txt",
+    "sha256": "fbb612b8ec2f7408653908aec137a855e6763f92fbab19d4bd61c5be13341db5",
+    "bytes": 56344
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/zod/v4/core/api.cjs",
+    "archived": "audit/read-snapshots/node_modules/zod/v4/core/api.cjs.txt",
+    "sha256": "df63ac3f2809bbb806c7bf371baadb21923e9be527e4e02ca27e88c238e1c1fa",
+    "bytes": 31685
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/zod/v4/core/parse.cjs",
+    "archived": "audit/read-snapshots/node_modules/zod/v4/core/parse.cjs.txt",
+    "sha256": "78c3851f57bfeb5e0f4464d3dfe62781ba8292e89692e52b4fc00195d4b02251",
+    "bytes": 6481
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/zod/v4/core/schemas.cjs",
+    "archived": "audit/read-snapshots/node_modules/zod/v4/core/schemas.cjs.txt",
+    "sha256": "cd1cd83d15bb681ff414fd95de6145de88a91e0ef38df3d3f5deb594007a221c",
+    "bytes": 85629
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/zustand/react.js",
+    "archived": "audit/read-snapshots/node_modules/zustand/react.js.txt",
+    "sha256": "4193ec2661359a71f870eb4fe4f8002505d2014934432bd9900afafd3c9f9f96",
+    "bytes": 785
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/node_modules/zustand/vanilla.js",
+    "archived": "audit/read-snapshots/node_modules/zustand/vanilla.js.txt",
+    "sha256": "15dcb1e8a40b51ef580fbb27e05bac872ff0e71f2f2ad4d316d7fb344319453e",
+    "bytes": 1027
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/plans/discovery-refinement-b7/plan.md",
+    "archived": "audit/read-snapshots/plans/discovery-refinement-b7/plan.md",
+    "sha256": "3d38c63740d81a5422789c9805d7d55c6dfef2d1316bf90a00b5179f0f73677e",
+    "bytes": 26813
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/app/api/quiz/email-return/choose/route.ts",
+    "archived": "audit/read-snapshots/src/app/api/quiz/email-return/choose/route.ts.txt",
+    "sha256": "39175962afc94e53edffe41da10d44b5b2cab05b32984f16cc4a512a3b9150fa",
+    "bytes": 5763
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/app/api/quiz/email-return/context/route.ts",
+    "archived": "audit/read-snapshots/src/app/api/quiz/email-return/context/route.ts.txt",
+    "sha256": "2828ca1c0e6edc3c4acb4664ec3cff286fff2ac1089fb75b675f3113d5d68181",
+    "bytes": 2812
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/app/api/quiz/lead/route.ts",
+    "archived": "audit/read-snapshots/src/app/api/quiz/lead/route.ts.txt",
+    "sha256": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+    "bytes": 28830
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/app/quiz/page.tsx",
+    "archived": "audit/read-snapshots/src/app/quiz/page.tsx.txt",
+    "sha256": "d2ada32e0a4cebbd2c5201d434739a4d78200de6522096e56c7edca7d688a60f",
+    "bytes": 16212
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/app/quiz/quiz-shell.tsx",
+    "archived": "audit/read-snapshots/src/app/quiz/quiz-shell.tsx.txt",
+    "sha256": "d1d3e2a68116e12d9008d553973a3c181693ef374cfd097a474dfbb3fed8a66b",
+    "bytes": 10004
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/app/result/[leadId]/page.tsx",
+    "archived": "audit/read-snapshots/src/app/result/[leadId]/page.tsx.txt",
+    "sha256": "83ce34fd0d9d356a66b9e4201a3676236d11c7e06ec09563e0742ee91ca36ae1",
+    "bytes": 22548
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/components/personal-plan-quiz/personal-plan-quiz.tsx",
+    "archived": "audit/read-snapshots/src/components/personal-plan-quiz/personal-plan-quiz.tsx.txt",
+    "sha256": "03c62d161ba8d95900b91307782de9cbd33ac786047e744adc1017cc08ec8ebd",
+    "bytes": 118811
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/components/personal-plan-quiz/quiz-data.ts",
+    "archived": "audit/read-snapshots/src/components/personal-plan-quiz/quiz-data.ts.txt",
+    "sha256": "aa4e80b540d84cb6205235ba671ed53b1c6045b50df6bb3a1c269dac3a954b58",
+    "bytes": 21996
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/components/quiz/quiz-concerns-question.tsx",
+    "archived": "audit/read-snapshots/src/components/quiz/quiz-concerns-question.tsx.txt",
+    "sha256": "f4bb9b5adb3e92d94c7521e5691f8382d8cf0214e1c05db8eef85025b0c90773",
+    "bytes": 9203
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/components/quiz/quiz-lead-capture.tsx",
+    "archived": "audit/read-snapshots/src/components/quiz/quiz-lead-capture.tsx.txt",
+    "sha256": "2708d0f076e24e474ff30587080e92200f8f112dff52ecb9a338820cd1a1efb9",
+    "bytes": 31154
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/components/quiz/quiz-preparation.tsx",
+    "archived": "audit/read-snapshots/src/components/quiz/quiz-preparation.tsx.txt",
+    "sha256": "301aafc3cdd1b517a6c0ad6a41221ae99b8bcea07da36caf76c55b738e3bbc6f",
+    "bytes": 8278
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/components/quiz/quiz-question.tsx",
+    "archived": "audit/read-snapshots/src/components/quiz/quiz-question.tsx.txt",
+    "sha256": "172dac405bc349fd011be368ed26ed24b2cddb0339c235bba8d23a8ae2b72de5",
+    "bytes": 6792
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/components/quiz/quiz-results.tsx",
+    "archived": "audit/read-snapshots/src/components/quiz/quiz-results.tsx.txt",
+    "sha256": "836bf1a4b1e11f09b281f23dd7c045c1d331c07b94edc1d7ab88a0b6b3a9ae3b",
+    "bytes": 8678
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/funnel/cookie.ts",
+    "archived": "audit/read-snapshots/src/lib/funnel/cookie.ts.txt",
+    "sha256": "522741b96f60560c02f92a5445428380de02231b2b3724b4143dfc6da14f7b48",
+    "bytes": 4798
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/onboarding/goal-flow.ts",
+    "archived": "audit/read-snapshots/src/lib/onboarding/goal-flow.ts.txt",
+    "sha256": "18d310d2dbd9382b54aa068d453d480c8a3d5fdf9d0a0c8d82c064371bf5ccea",
+    "bytes": 608
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/personal-plan/input.ts",
+    "archived": "audit/read-snapshots/src/lib/personal-plan/input.ts.txt",
+    "sha256": "22743980e01019fc9834a5a5f6ad3ef566def3757be3b17a2c5994f11ac95c6f",
+    "bytes": 9148
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/profile/chemical-treatment.ts",
+    "archived": "audit/read-snapshots/src/lib/profile/chemical-treatment.ts.txt",
+    "sha256": "b50c624c6955692ace304835c40632ce4176e5fda20603ec9170a9394ada9382",
+    "bytes": 2446
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/browser-history.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/browser-history.ts.txt",
+    "sha256": "863b56c24773eaacf833af9af33ebfc7133d07824fd77b33047fb8cef8024a91",
+    "bytes": 2924
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/diagnostic-input.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/diagnostic-input.ts.txt",
+    "sha256": "964652bf5d3e3d8cd9bc233b18977e59e3cf7264a97ec7de5d5c4ac6cea7149e",
+    "bytes": 3239
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/draft.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/draft.ts.txt",
+    "sha256": "ade503f1a6baebb94afbcb7c5b59225c1b06a0cdfca8a2eeba7ad7bf8e1d0177",
+    "bytes": 4218
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/email-return-constants.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/email-return-constants.ts.txt",
+    "sha256": "e7d8922c1364f7562652439426e5868d6caf95bae7f2d93480772d5f820bb14c",
+    "bytes": 221
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/email-return-context.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/email-return-context.ts.txt",
+    "sha256": "6613c5c7cb21c21cd6b63c6e5a1d03e42b1f88a63018f8513c338801bb2cbd26",
+    "bytes": 2145
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/email-return-credential.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/email-return-credential.ts.txt",
+    "sha256": "9abe0200239d08bba30a797b4f543d0147e507c5317b74706dced5737b90733c",
+    "bytes": 12100
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/email-return-edit.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/email-return-edit.ts.txt",
+    "sha256": "d572c29439be368819e9e5496bf4dfc1bbf78634456447e981204597d6d3455a",
+    "bytes": 1123
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/email-return-prefill.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/email-return-prefill.ts.txt",
+    "sha256": "73fa51284354cc6998e425164133f76a50f794ce38e1e83ba9e6ac9ae44e9c7e",
+    "bytes": 2797
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/email-return-server.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/email-return-server.ts.txt",
+    "sha256": "3972f47ca4d6188ff6f74c956bdd070f5dd512a8618eaea99f98322a4f610fec",
+    "bytes": 2727
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/lead-capture-mode.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/lead-capture-mode.ts.txt",
+    "sha256": "b7bc45bd5f06b200b15e746bd2619890e2e07735b0414c57fe07734057455c78",
+    "bytes": 847
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/link-to-profile.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/link-to-profile.ts.txt",
+    "sha256": "5813a8c45eb51d5b3e0e2f8b712d1c2e8e2169cd878c09647da2d7914da3132a",
+    "bytes": 13680
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/migration-prefill-init.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/migration-prefill-init.ts.txt",
+    "sha256": "d47951d219de5a338224c01bcd0f11e1fccef09013a251962f0c87e8fef1d052",
+    "bytes": 5143
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/need-lane.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/need-lane.ts.txt",
+    "sha256": "01e69e7f79db4d5919a629f2a568c140bdb1a17e05aaf88cbeec387123251344",
+    "bytes": 5649
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/normalization.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/normalization.ts.txt",
+    "sha256": "e89daca55859a901f7fec8d95ccafd4315eaa61510496084eb7dde68588eb239",
+    "bytes": 11376
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/offer-preview-products.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/offer-preview-products.ts.txt",
+    "sha256": "e9b527dc1c8e30a8905bd93d7e8bfbc3e6e0aeff3a6a0001abb4ee826f17b6d1",
+    "bytes": 22555
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/offer-preview-types.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/offer-preview-types.ts.txt",
+    "sha256": "d96d432053eb464859bbecb7b4c10a62e32fc75d93728dd9b343939bce4d49b4",
+    "bytes": 2198
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/offer-preview.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/offer-preview.ts.txt",
+    "sha256": "d436af030c92a7189c79db4d974fe13e5c1e602d94bfc23d3276f96926ab10e4",
+    "bytes": 10165
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/primary-concern.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/primary-concern.ts.txt",
+    "sha256": "fc33b4465dec57bcc2797ca11ab7d521280189c97495ba8c30b41dd4671207d1",
+    "bytes": 2638
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/questions.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/questions.ts.txt",
+    "sha256": "49d978c9ad9f02c716213e81fdf0abe392ed9e8803f8dbea69c9e07576acf683",
+    "bytes": 10293
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/result-narrative.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/result-narrative.ts.txt",
+    "sha256": "1cc0a22b9baeb3552e304b902776b650355767cd624a73bd34764ac103652e50",
+    "bytes": 33317
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/result-navigation.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/result-navigation.ts.txt",
+    "sha256": "a543e752d5c6f7291177585f6b5b1b8a0dcab2a28437db83ec5f778297c838ed",
+    "bytes": 1648
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/screen-order.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/screen-order.ts.txt",
+    "sha256": "78bc469add4d51a92b8b9e19b2d9376553453b5595c9ac1661e037c60630e204",
+    "bytes": 6490
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/store.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/store.ts.txt",
+    "sha256": "8245d784856dc36fc11c4fad35a1c400a65adf55fb994ad415408a94644f91f5",
+    "bytes": 6040
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/types.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/types.ts.txt",
+    "sha256": "11ec81f1d6f0e5480132ec892301a2437852c2fc80bf95c22abf2207e6b1fce2",
+    "bytes": 2854
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/quiz/validators.ts",
+    "archived": "audit/read-snapshots/src/lib/quiz/validators.ts.txt",
+    "sha256": "5f972cfa650604ad0255d2cff6879849d34347df650a0d46b1bfc067adcca1e0",
+    "bytes": 4017
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/recommendation-engine/categories/shared.ts",
+    "archived": "audit/read-snapshots/src/lib/recommendation-engine/categories/shared.ts.txt",
+    "sha256": "d9c09d91541fa50a1fd22cbb132060ff65fa967264c154af6b3ab3b8a5e63c8b",
+    "bytes": 6928
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/recommendation-engine/shampoo-cadence.ts",
+    "archived": "audit/read-snapshots/src/lib/recommendation-engine/shampoo-cadence.ts.txt",
+    "sha256": "5dff9e6d423e674e7e232bdfeece6e344dc6aa5fd64c158fa72ce8a7f5c317c9",
+    "bytes": 8783
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/supabase/admin.ts",
+    "archived": "audit/read-snapshots/src/lib/supabase/admin.ts.txt",
+    "sha256": "bd6ec1538d65a01f82b3f55b2839f0ac347d617c6de29d13cea4b0eff737386a",
+    "bytes": 307
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/vocabulary/concerns-goals.ts",
+    "archived": "audit/read-snapshots/src/lib/vocabulary/concerns-goals.ts.txt",
+    "sha256": "f588c309f78685855551f8270f8dec4fc5e046d5c1165d734a63f168315f28e8",
+    "bytes": 1565
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/vocabulary/frequencies.ts",
+    "archived": "audit/read-snapshots/src/lib/vocabulary/frequencies.ts.txt",
+    "sha256": "d79bb3584473a8f6541feecff58a40633736f9376981ff190b645114dc0eb3a9",
+    "bytes": 6217
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/vocabulary/hair-length.ts",
+    "archived": "audit/read-snapshots/src/lib/vocabulary/hair-length.ts.txt",
+    "sha256": "3dd675892cb15b6021d7365203bdc225e86805bfb15beec305cc90e83d74c9e4",
+    "bytes": 918
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/vocabulary/hair-types.ts",
+    "archived": "audit/read-snapshots/src/lib/vocabulary/hair-types.ts.txt",
+    "sha256": "36c517006e2cf2717a7f9527fe0484c7c117ba7caa8b7ed7008445950cd79b72",
+    "bytes": 1153
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/vocabulary/index.ts",
+    "archived": "audit/read-snapshots/src/lib/vocabulary/index.ts.txt",
+    "sha256": "5e011545b7a6a94b96720af7b225dc12c025dbf0509f8b20cdd352bbcfa3109b",
+    "bytes": 3427
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/vocabulary/onboarding-goals.ts",
+    "archived": "audit/read-snapshots/src/lib/vocabulary/onboarding-goals.ts.txt",
+    "sha256": "71ead0b61b4aeffeb47b53c63acb6fe84acae797e18ea774fa25104854c8a098",
+    "bytes": 1410
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/src/lib/vocabulary/profile-labels.ts",
+    "archived": "audit/read-snapshots/src/lib/vocabulary/profile-labels.ts.txt",
+    "sha256": "e0e8d5df461dc19c3e0eb1a85a8dbac8c5f32316c12cd90352bcec506ac5e466",
+    "bytes": 4702
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-draft.test.ts",
+    "archived": "audit/read-snapshots/tests/quiz-draft.test.ts.txt",
+    "sha256": "e3c92705b912d3596f1e75568dbb1ba63d5cbe75cc96fb1aced50899b1524c68",
+    "bytes": 12168
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-email-return-choice.test.ts",
+    "archived": "audit/read-snapshots/tests/quiz-email-return-choice.test.ts.txt",
+    "sha256": "755b4d7808f1d6fd69c54aa5ff8af509a13d4d171ac98dc4fa9a45c6909c218c",
+    "bytes": 4593
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-email-return-credential.test.ts",
+    "archived": "audit/read-snapshots/tests/quiz-email-return-credential.test.ts.txt",
+    "sha256": "32ddc15cd8935497c142ec08ff8bd5dce75ab035c9f4a716117435fe24e0b263",
+    "bytes": 7818
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-email-return-edit.test.ts",
+    "archived": "audit/read-snapshots/tests/quiz-email-return-edit.test.ts.txt",
+    "sha256": "06fdcb0875fd631ce115c8686e270ebeff3a0b8fbf4aec2b3a9dd91db3c1f3f4",
+    "bytes": 2570
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-email-return-selection.test.ts",
+    "archived": "audit/read-snapshots/tests/quiz-email-return-selection.test.ts.txt",
+    "sha256": "67b77db34c94ed5bb7a8739a274c5f6af64a27cea2502de6bacd66673d5c639b",
+    "bytes": 2842
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-need-lane.test.ts",
+    "archived": "audit/read-snapshots/tests/quiz-need-lane.test.ts.txt",
+    "sha256": "91f87dc6aaaad8d4fa624d1c3620cb1b8a08fa28143516140aac93a67bd472d4",
+    "bytes": 2947
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-normalization.test.ts",
+    "archived": "audit/read-snapshots/tests/quiz-normalization.test.ts.txt",
+    "sha256": "b5e39a58c6c37cccc15e61e6d04d50c01820c9d5b417843b1b03bece1ef36340",
+    "bytes": 8821
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-offer-preview.test.ts",
+    "archived": "audit/read-snapshots/tests/quiz-offer-preview.test.ts.txt",
+    "sha256": "c81dbd9650f3fb25ad4afc2c6bdfb234fcfcf06976546d7c344fb02a351f6835",
+    "bytes": 6986
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-preparation.test.ts",
+    "archived": "audit/read-snapshots/tests/quiz-preparation.test.ts.txt",
+    "sha256": "2a0d0da8403687934e18e9c148cd505163783b63f46ce5ad25f2bc8978b23f3a",
+    "bytes": 5645
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-primary-concern.test.ts",
+    "archived": "audit/read-snapshots/tests/quiz-primary-concern.test.ts.txt",
+    "sha256": "74b59aef6b5b9de05b6367b25989ead41b17d308cff8709772aaf0897298c9b7",
+    "bytes": 13155
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-result-narrative.test.ts",
+    "archived": "audit/read-snapshots/tests/quiz-result-narrative.test.ts.txt",
+    "sha256": "d33028de4355b1cc91008a7e111284f583b27e8dd0c83d4b21bd83b8936cf02a",
+    "bytes": 22549
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-result-routing.test.ts",
+    "archived": "audit/read-snapshots/tests/quiz-result-routing.test.ts.txt",
+    "sha256": "39a199e1b2f57d293d9ad871c4b2d896f46a6f051ffdf1458d3892c0b3e02537",
+    "bytes": 2254
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-screen-order.test.ts",
+    "archived": "audit/read-snapshots/tests/quiz-screen-order.test.ts.txt",
+    "sha256": "877d50b822e2838babc191574bbccc816ee97b86e70563b63ebfd52c458a245c",
+    "bytes": 10080
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/quiz-validators.test.ts",
+    "archived": "audit/read-snapshots/tests/quiz-validators.test.ts.txt",
+    "sha256": "526e02cb3341ecc27136f329e99e804ddd730cfab5dc94a381d0c697db4bf7ee",
+    "bytes": 4808
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/read-snapshots/tests/server-only-register.cjs",
+    "archived": "audit/read-snapshots/tests/server-only-register.cjs.txt",
+    "sha256": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711",
+    "bytes": 391
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/registration-counts.json",
+    "archived": "audit/registration-counts.json",
+    "sha256": "31fa43346df93b101cc2934f59e6604539e79c4175d0187ca0145f834cf91372",
+    "bytes": 2154
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/before/tests/quiz-draft.test.ts",
+    "archived": "audit/snapshots/before/tests/quiz-draft.test.ts.txt",
+    "sha256": "e3c92705b912d3596f1e75568dbb1ba63d5cbe75cc96fb1aced50899b1524c68",
+    "bytes": 12168
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/before/tests/quiz-email-return-choice.test.ts",
+    "archived": "audit/snapshots/before/tests/quiz-email-return-choice.test.ts.txt",
+    "sha256": "755b4d7808f1d6fd69c54aa5ff8af509a13d4d171ac98dc4fa9a45c6909c218c",
+    "bytes": 4593
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/before/tests/quiz-email-return-edit.test.ts",
+    "archived": "audit/snapshots/before/tests/quiz-email-return-edit.test.ts.txt",
+    "sha256": "06fdcb0875fd631ce115c8686e270ebeff3a0b8fbf4aec2b3a9dd91db3c1f3f4",
+    "bytes": 2570
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/before/tests/quiz-email-return-selection.test.ts",
+    "archived": "audit/snapshots/before/tests/quiz-email-return-selection.test.ts.txt",
+    "sha256": "67b77db34c94ed5bb7a8739a274c5f6af64a27cea2502de6bacd66673d5c639b",
+    "bytes": 2842
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/before/tests/quiz-need-lane.test.ts",
+    "archived": "audit/snapshots/before/tests/quiz-need-lane.test.ts.txt",
+    "sha256": "91f87dc6aaaad8d4fa624d1c3620cb1b8a08fa28143516140aac93a67bd472d4",
+    "bytes": 2947
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/before/tests/quiz-normalization.test.ts",
+    "archived": "audit/snapshots/before/tests/quiz-normalization.test.ts.txt",
+    "sha256": "b5e39a58c6c37cccc15e61e6d04d50c01820c9d5b417843b1b03bece1ef36340",
+    "bytes": 8821
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/before/tests/quiz-preparation.test.ts",
+    "archived": "audit/snapshots/before/tests/quiz-preparation.test.ts.txt",
+    "sha256": "2a0d0da8403687934e18e9c148cd505163783b63f46ce5ad25f2bc8978b23f3a",
+    "bytes": 5645
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/before/tests/quiz-primary-concern.test.ts",
+    "archived": "audit/snapshots/before/tests/quiz-primary-concern.test.ts.txt",
+    "sha256": "74b59aef6b5b9de05b6367b25989ead41b17d308cff8709772aaf0897298c9b7",
+    "bytes": 13155
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/before/tests/quiz-result-routing.test.ts",
+    "archived": "audit/snapshots/before/tests/quiz-result-routing.test.ts.txt",
+    "sha256": "39a199e1b2f57d293d9ad871c4b2d896f46a6f051ffdf1458d3892c0b3e02537",
+    "bytes": 2254
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/before/tests/quiz-screen-order.test.ts",
+    "archived": "audit/snapshots/before/tests/quiz-screen-order.test.ts.txt",
+    "sha256": "877d50b822e2838babc191574bbccc816ee97b86e70563b63ebfd52c458a245c",
+    "bytes": 10080
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/before/tests/quiz-validators.test.ts",
+    "archived": "audit/snapshots/before/tests/quiz-validators.test.ts.txt",
+    "sha256": "526e02cb3341ecc27136f329e99e804ddd730cfab5dc94a381d0c697db4bf7ee",
+    "bytes": 4808
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/cut/tests/quiz-draft.test.ts",
+    "archived": "audit/snapshots/cut/tests/quiz-draft.test.ts.txt",
+    "sha256": "e3c92705b912d3596f1e75568dbb1ba63d5cbe75cc96fb1aced50899b1524c68",
+    "bytes": 12168
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/cut/tests/quiz-email-return-choice.test.ts",
+    "archived": "audit/snapshots/cut/tests/quiz-email-return-choice.test.ts.txt",
+    "sha256": "755b4d7808f1d6fd69c54aa5ff8af509a13d4d171ac98dc4fa9a45c6909c218c",
+    "bytes": 4593
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/cut/tests/quiz-email-return-edit.test.ts",
+    "archived": "audit/snapshots/cut/tests/quiz-email-return-edit.test.ts.txt",
+    "sha256": "06fdcb0875fd631ce115c8686e270ebeff3a0b8fbf4aec2b3a9dd91db3c1f3f4",
+    "bytes": 2570
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/cut/tests/quiz-email-return-selection.test.ts",
+    "archived": "audit/snapshots/cut/tests/quiz-email-return-selection.test.ts.txt",
+    "sha256": "67b77db34c94ed5bb7a8739a274c5f6af64a27cea2502de6bacd66673d5c639b",
+    "bytes": 2842
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/cut/tests/quiz-need-lane.test.ts",
+    "archived": "audit/snapshots/cut/tests/quiz-need-lane.test.ts.txt",
+    "sha256": "91f87dc6aaaad8d4fa624d1c3620cb1b8a08fa28143516140aac93a67bd472d4",
+    "bytes": 2947
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/cut/tests/quiz-normalization.test.ts",
+    "archived": "audit/snapshots/cut/tests/quiz-normalization.test.ts.txt",
+    "sha256": "b5e39a58c6c37cccc15e61e6d04d50c01820c9d5b417843b1b03bece1ef36340",
+    "bytes": 8821
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/cut/tests/quiz-preparation.test.ts",
+    "archived": "audit/snapshots/cut/tests/quiz-preparation.test.ts.txt",
+    "sha256": "2a0d0da8403687934e18e9c148cd505163783b63f46ce5ad25f2bc8978b23f3a",
+    "bytes": 5645
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/cut/tests/quiz-primary-concern.test.ts",
+    "archived": "audit/snapshots/cut/tests/quiz-primary-concern.test.ts.txt",
+    "sha256": "74b59aef6b5b9de05b6367b25989ead41b17d308cff8709772aaf0897298c9b7",
+    "bytes": 13155
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/cut/tests/quiz-result-routing.test.ts",
+    "archived": "audit/snapshots/cut/tests/quiz-result-routing.test.ts.txt",
+    "sha256": "39a199e1b2f57d293d9ad871c4b2d896f46a6f051ffdf1458d3892c0b3e02537",
+    "bytes": 2254
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/cut/tests/quiz-screen-order.test.ts",
+    "archived": "audit/snapshots/cut/tests/quiz-screen-order.test.ts.txt",
+    "sha256": "877d50b822e2838babc191574bbccc816ee97b86e70563b63ebfd52c458a245c",
+    "bytes": 10080
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/cut/tests/quiz-validators.test.ts",
+    "archived": "audit/snapshots/cut/tests/quiz-validators.test.ts.txt",
+    "sha256": "526e02cb3341ecc27136f329e99e804ddd730cfab5dc94a381d0c697db4bf7ee",
+    "bytes": 4808
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/transfer/tests/quiz-draft.test.ts",
+    "archived": "audit/snapshots/transfer/tests/quiz-draft.test.ts.txt",
+    "sha256": "e3c92705b912d3596f1e75568dbb1ba63d5cbe75cc96fb1aced50899b1524c68",
+    "bytes": 12168
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/transfer/tests/quiz-email-return-choice.test.ts",
+    "archived": "audit/snapshots/transfer/tests/quiz-email-return-choice.test.ts.txt",
+    "sha256": "755b4d7808f1d6fd69c54aa5ff8af509a13d4d171ac98dc4fa9a45c6909c218c",
+    "bytes": 4593
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/transfer/tests/quiz-email-return-edit.test.ts",
+    "archived": "audit/snapshots/transfer/tests/quiz-email-return-edit.test.ts.txt",
+    "sha256": "06fdcb0875fd631ce115c8686e270ebeff3a0b8fbf4aec2b3a9dd91db3c1f3f4",
+    "bytes": 2570
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/transfer/tests/quiz-email-return-selection.test.ts",
+    "archived": "audit/snapshots/transfer/tests/quiz-email-return-selection.test.ts.txt",
+    "sha256": "67b77db34c94ed5bb7a8739a274c5f6af64a27cea2502de6bacd66673d5c639b",
+    "bytes": 2842
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/transfer/tests/quiz-need-lane.test.ts",
+    "archived": "audit/snapshots/transfer/tests/quiz-need-lane.test.ts.txt",
+    "sha256": "91f87dc6aaaad8d4fa624d1c3620cb1b8a08fa28143516140aac93a67bd472d4",
+    "bytes": 2947
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/transfer/tests/quiz-normalization.test.ts",
+    "archived": "audit/snapshots/transfer/tests/quiz-normalization.test.ts.txt",
+    "sha256": "b5e39a58c6c37cccc15e61e6d04d50c01820c9d5b417843b1b03bece1ef36340",
+    "bytes": 8821
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/transfer/tests/quiz-preparation.test.ts",
+    "archived": "audit/snapshots/transfer/tests/quiz-preparation.test.ts.txt",
+    "sha256": "2a0d0da8403687934e18e9c148cd505163783b63f46ce5ad25f2bc8978b23f3a",
+    "bytes": 5645
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/transfer/tests/quiz-primary-concern.test.ts",
+    "archived": "audit/snapshots/transfer/tests/quiz-primary-concern.test.ts.txt",
+    "sha256": "74b59aef6b5b9de05b6367b25989ead41b17d308cff8709772aaf0897298c9b7",
+    "bytes": 13155
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/transfer/tests/quiz-result-routing.test.ts",
+    "archived": "audit/snapshots/transfer/tests/quiz-result-routing.test.ts.txt",
+    "sha256": "39a199e1b2f57d293d9ad871c4b2d896f46a6f051ffdf1458d3892c0b3e02537",
+    "bytes": 2254
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/transfer/tests/quiz-screen-order.test.ts",
+    "archived": "audit/snapshots/transfer/tests/quiz-screen-order.test.ts.txt",
+    "sha256": "877d50b822e2838babc191574bbccc816ee97b86e70563b63ebfd52c458a245c",
+    "bytes": 10080
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/snapshots/transfer/tests/quiz-validators.test.ts",
+    "archived": "audit/snapshots/transfer/tests/quiz-validators.test.ts.txt",
+    "sha256": "526e02cb3341ecc27136f329e99e804ddd730cfab5dc94a381d0c697db4bf7ee",
+    "bytes": 4808
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/start-pins.json",
+    "archived": "audit/start-pins.json",
+    "sha256": "eda09b74f4e34f681d862ddaa6eb970f9b5822a4ea28d183ae8e06578f10d89d",
+    "bytes": 9307
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/static-check.json",
+    "archived": "audit/static-check.json",
+    "sha256": "f87e1a29b5b7e75bca353714943a442dbdbb4c68050967d268ba594330db8215",
+    "bytes": 1353
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/support-and-tables.json",
+    "archived": "audit/support-and-tables.json",
+    "sha256": "200ad6d36e8246df45e3664c530b822f3ef38beff4f886647a210d67303d37d6",
+    "bytes": 21890
+  },
+  {
+    "original": "/tmp/test-audit-quiz-taxonomy113-nztr_5y_/transfer.diff",
+    "archived": "audit/transfer.diff",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  }
+]

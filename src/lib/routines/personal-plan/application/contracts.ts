@@ -67,6 +67,7 @@ export const APPLICATION_FAMILIES = [
   "pre_shampoo_booster_plus_treatment",
   "post_shampoo_rinse_out_treatment",
   "post_shampoo_timed_leave_in",
+  "overnight_leave_in_treatment",
   "leave_on_scalp_care",
   "rinse_off_scalp_care",
   "styling_product",
@@ -101,13 +102,68 @@ export const EXACT_APPLICATION_WORKFLOW_IDS_V2 = [
   "k18_leave_in_molecular_repair",
   "olaplex_no3plus_complete_repair",
   "bondbuilder_verified_product",
+  "heat_activated_verified_product",
 ] as const
+
+/**
+ * Categories whose reviewed manufacturer directions may use the generic
+ * `heat_activated_verified_product` workflow (S3 §5.1). Styling joins when that category exists.
+ */
+export const HEAT_ACTIVATED_WORKFLOW_CATEGORIES = ["leave_in"] as const
+
+/**
+ * Stored family → runtime placement of a heat-activated product. Damp: only on freshly washed,
+ * towel-dried hair (wash-family days, or a dryer-brush Styling-Tag); never refresh or
+ * between-wash care days. Dry: the between-wash use, on refresh days only.
+ */
+export const HEAT_ACTIVATED_WORKFLOW_RUNTIME = {
+  pre_heat_damp: {
+    runtimeFamily: "damp_hair_protection",
+    anchor: "damp_leave_on",
+    applicationState: "damp_hair",
+    compatibleDayTypes: [
+      "wash_day",
+      "intensive_care_day",
+      "bond_repair_day",
+      "clarifying_wash_day",
+      "styling_day",
+    ],
+  },
+  pre_heat_dry: {
+    runtimeFamily: "dry_hair_protection",
+    anchor: "dry_pre_heat",
+    applicationState: "dry_hair",
+    compatibleDayTypes: ["refresh_day"],
+  },
+} as const
+
+export const HEAT_ACTIVATED_APPLICATION_FAMILIES = ["pre_heat_damp", "pre_heat_dry"] as const
+
+type HeatActivatedFamily = (typeof HEAT_ACTIVATED_APPLICATION_FAMILIES)[number]
+
+export function isHeatActivatedApplicationFamily(family: string): family is HeatActivatedFamily {
+  return (HEAT_ACTIVATED_APPLICATION_FAMILIES as readonly string[]).includes(family)
+}
+
+/** One application, then ≥1 heat-tool step after it, never a rinse (both payload versions). */
+export function heatActivatedStepIssue(steps: ReadonlyArray<{ action: string }>): string | null {
+  const applyIndices = steps.flatMap((step, index) =>
+    step.action === "apply_product" ? [index] : [],
+  )
+  if (applyIndices.length !== 1) return "Heat-activated directions require exactly one application"
+  if (!steps.some((step, index) => step.action === "tool" && index > applyIndices[0]!))
+    return "Heat-activated directions require a heat-tool step after the application"
+  if (steps.some((step) => step.action === "rinse"))
+    return "Heat-activated directions are left in and cannot be rinsed"
+  return null
+}
 
 export const BONDBUILDER_APPLICATION_FAMILIES = [
   "pre_shampoo_single_treatment",
   "pre_shampoo_booster_plus_treatment",
   "post_shampoo_rinse_out_treatment",
   "post_shampoo_timed_leave_in",
+  "overnight_leave_in_treatment",
 ] as const
 
 export const exactContactTimeSchema = z.discriminatedUnion("kind", [
@@ -375,6 +431,9 @@ export const applicationGuidanceProtocolSchema = z
           ])
           .nullable(),
         workflowId: exactApplicationWorkflowIdV2Schema.nullable().optional(),
+        // Reviewed catalog fact (Leave-In v1.2 heat activation): set only by the
+        // `heat_activated_verified_product` generator, never derived from copy (S3 P15).
+        heatActivationRequired: z.boolean().optional(),
         cautionCodes: z.array(applicationCautionCodeV2Schema).optional(),
         // V1 keeps safety-relevant guidance inside the ordered step copy. Keep
         // this reserved field empty until the signed-off UI has a caution slot.
@@ -444,6 +503,57 @@ export const applicationGuidanceProtocolSchema = z
             "Verified Bondbuilder protocol requires its exact product, role, family and runtime sequence",
         })
       }
+    }
+    if (
+      value.protocolFacts.heatActivationRequired !== undefined &&
+      value.protocolFacts.workflowId !== "heat_activated_verified_product"
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["protocolFacts", "heatActivationRequired"],
+        message: "Heat activation is a fact of the reviewed heat-activated workflow only",
+      })
+    }
+    if (value.protocolFacts.workflowId === "heat_activated_verified_product") {
+      const issue = (path: (string | number)[], message: string) =>
+        context.addIssue({ code: "custom", path, message })
+      if (
+        value.scope.kind !== "product" ||
+        !(HEAT_ACTIVATED_WORKFLOW_CATEGORIES as readonly string[]).includes(value.scope.category)
+      )
+        issue(["scope"], "Heat-activated workflow requires an exact product of an allowed category")
+      if (value.role !== "heat_protection")
+        issue(["role"], "Heat-activated workflow requires the heat_protection role")
+      if (!isHeatActivatedApplicationFamily(value.applicationFamily)) {
+        issue(
+          ["applicationFamily"],
+          "Heat-activated workflow requires pre_heat_damp or pre_heat_dry",
+        )
+      } else {
+        const runtime = HEAT_ACTIVATED_WORKFLOW_RUNTIME[value.applicationFamily]
+        if (
+          value.sequence.anchor !== runtime.anchor ||
+          !value.sequence.before.includes("heat_tool")
+        )
+          issue(["sequence"], "Heat-activated application must sit before the heat tool")
+        const days = new Set<string>(value.compatibleDayTypes)
+        if (
+          days.size !== runtime.compatibleDayTypes.length ||
+          runtime.compatibleDayTypes.some((day) => !days.has(day))
+        )
+          issue(["compatibleDayTypes"], "Heat-activated days must mirror the runtime placement")
+      }
+      if (value.protocolFacts.heatActivationRequired !== true)
+        issue(
+          ["protocolFacts", "heatActivationRequired"],
+          "Heat-activated workflow requires its fact",
+        )
+      if (value.protocolFacts.rinse !== "leave_in")
+        issue(["protocolFacts", "rinse"], "Heat-activated products are left in")
+      const stepIssue = heatActivatedStepIssue(value.steps)
+      if (stepIssue) issue(["steps"], stepIssue)
+      if (!value.evidence.some((source) => source.sourceType === "manufacturer"))
+        issue(["evidence"], "Heat-activated directions require manufacturer evidence (D-d)")
     }
     if (
       (value.applicationFamily === "standard_rinse_out_cleanse" ||

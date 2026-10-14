@@ -14,6 +14,7 @@ import {
   type PersonalPlanKeepsakeContent,
 } from "@/lib/personal-plan/keepsake-content"
 import { loadPersonalPlanRoutineView } from "@/lib/personal-plan/routine/load-view"
+import type { RoutinePayloadV1 } from "@/lib/personal-plan/routine/contracts"
 import type { PersonalPlanRoutineReadClient } from "@/lib/personal-plan/routine/repository"
 import {
   loadOwnerPortfolioPresentation,
@@ -23,7 +24,13 @@ import { loadRefinementStatusForUser } from "@/lib/personal-plan/refinement/refi
 import {
   isPersonalPlanAppV1Enabled,
   isPersonalPlanStage4Enabled,
+  isShoppingBudgetEnabled,
 } from "@/lib/personal-plan/release"
+import {
+  loadRoutineProductPricesEur,
+  loadRoutineShoppingBudget,
+  plannedRoutineProductIds,
+} from "@/lib/personal-plan/routine/budget-gate"
 import {
   canAccessPersonalPlanJourneyStage,
   type PersonalPlanJourneyAccess,
@@ -32,7 +39,10 @@ import {
   loadCachedAuthenticatedAppUserId,
   loadCachedPersonalPlanJourneyAccessForUser,
 } from "@/lib/personal-plan/navigation-access"
+import { isPersonalPlanToolsEnabledForUser } from "@/lib/personal-plan/rollout-access"
+import { loadToolFactsSource } from "@/lib/personal-plan/tools/read-view-facts"
 import { createAdminClient } from "@/lib/supabase/admin"
+import type { ShoppingBudget } from "@/lib/user-facts/schema"
 import { reportPersonalPlanTransitionTiming } from "@/lib/personal-plan/transition-performance"
 
 export const dynamic = "force-dynamic"
@@ -40,9 +50,11 @@ export const dynamic = "force-dynamic"
 export type RoutinePageResolverDeps = {
   getUserId: () => Promise<string | null>
   loadJourneyAccess: (userId: string) => Promise<PersonalPlanJourneyAccess>
+  /** `toolsEnabled`: compose the read-time `Deine Tools` section (facts read) — on only. */
   readView: (input: {
     userId: string
     enabled: boolean
+    toolsEnabled?: boolean
   }) => ReturnType<typeof loadPersonalPlanRoutineView>
   stage4Enabled: () => boolean
   readPortfolioPresentation?: (
@@ -56,13 +68,79 @@ export type RoutinePageResolverDeps = {
    * Optional and failure-tolerant like `readPortfolioPresentation` above — a
    * missing dep or a failed read just means no banner, never a broken page.
    */
-  readRefinementBanner?: (userId: string) => Promise<RoutineRefinementBannerViewModel | null>
+  readRefinementBanner?: (
+    userId: string,
+    options: { toolsEnabled: boolean },
+  ) => Promise<RoutineRefinementBannerViewModel | null>
+  /**
+   * Server-resolved Hair Tools rollout for the banner's module states and the read-time tool
+   * section. Fail closed: an unwired or failing dep means off. Browser input never reaches it.
+   */
+  toolsEnabled?: (userId: string) => Promise<boolean>
+  /**
+   * Budget gate (Task 6). Absent or `false` = the projection below is never built and the
+   * page's props are exactly what they were before the budget existed.
+   */
+  shoppingBudgetEnabled?: () => boolean
+  /** The saved budget, `null` when none; a throw means "could not find out". */
+  readShoppingBudget?: (userId: string) => Promise<ShoppingBudget | null>
+  /** Known package prices (EUR) for the accepted routine's planned products. Fail-open. */
+  readProductPricesEur?: (productIds: string[]) => Promise<Record<string, number>>
+}
+
+function resolveToolsEnabled(
+  deps: Pick<RoutinePageResolverDeps, "toolsEnabled">,
+  userId: string,
+): Promise<boolean> {
+  return deps.toolsEnabled
+    ? deps.toolsEnabled(userId).then(
+        (enabled) => enabled === true,
+        () => false,
+      )
+    : Promise.resolve(false)
+}
+
+/**
+ * With the flag on: the saved budget (`null` = none saved, so the client gates a routine edit)
+ * plus the known package prices for the summary notice. A failed budget read yields no
+ * projection at all — the client then does not gate and the proposal route (503/409) stays the
+ * safety net — so a read error can never ask a member who already answered.
+ */
+async function resolveBudgetProjection(
+  deps: RoutinePageResolverDeps,
+  userId: string,
+  activePayload: RoutinePayloadV1 | null,
+): Promise<{
+  shoppingBudget: ShoppingBudget | null
+  productPricesEur: Record<string, number>
+} | null> {
+  if (!deps.shoppingBudgetEnabled?.() || !deps.readShoppingBudget) return null
+  let shoppingBudget: ShoppingBudget | null
+  try {
+    shoppingBudget = await deps.readShoppingBudget(userId)
+  } catch {
+    return null
+  }
+  let productPricesEur: Record<string, number> = {}
+  if (shoppingBudget?.kind === "capped" && deps.readProductPricesEur) {
+    const productIds = plannedRoutineProductIds(activePayload)
+    if (productIds.length > 0) {
+      try {
+        productPricesEur = await deps.readProductPricesEur(productIds)
+      } catch {
+        // Presentation only: no prices means no notice, never a broken page.
+      }
+    }
+  }
+  return { shoppingBudget, productPricesEur }
 }
 
 export async function resolveRoutinePage(deps: RoutinePageResolverDeps) {
   const userId = await deps.getUserId()
   if (!userId) return { kind: "legacy" as const }
 
+  // Started alongside the journey read: in `admin` mode it is one `profiles` read.
+  const toolsEnabledLookup = resolveToolsEnabled(deps, userId)
   try {
     const journey = await deps.loadJourneyAccess(userId)
     if (journey.kind === "legacy") return { kind: "legacy" as const }
@@ -71,7 +149,13 @@ export async function resolveRoutinePage(deps: RoutinePageResolverDeps) {
     }
 
     const enabled = deps.stage4Enabled()
-    const view = await deps.readView({ userId, enabled })
+    const toolsEnabled = await toolsEnabledLookup
+    // Off: the read input stays exactly as it was (no rollout key).
+    const view = await deps.readView({
+      userId,
+      enabled,
+      ...(toolsEnabled ? { toolsEnabled: true } : {}),
+    })
     if (view.status === "no_personal_plan") return { kind: "legacy" as const }
     const routinePayload =
       view.status === "proposal" ? view.pendingProposal?.candidate : view.activeVersion?.payload
@@ -91,19 +175,25 @@ export async function resolveRoutinePage(deps: RoutinePageResolverDeps) {
     let refinementBanner: RoutineRefinementBannerViewModel | null = null
     if (deps.readRefinementBanner) {
       try {
-        refinementBanner = await deps.readRefinementBanner(userId)
+        refinementBanner = await deps.readRefinementBanner(userId, { toolsEnabled })
       } catch {
         // Cosmetic and deliberately failure-tolerant, like the presentation
         // load above: a failed banner read must never hide or break the
         // Routine itself.
       }
     }
+    const budgetProjection = await resolveBudgetProjection(
+      deps,
+      userId,
+      view.activeVersion?.payload ?? null,
+    )
     return {
       kind: "personal_plan" as const,
       view,
       enabled,
       portfolioPresentation,
       refinementBanner,
+      ...(budgetProjection ? { budgetProjection } : {}),
     }
   } catch {
     // The legacy Routine is not a safe substitute once a Personal Plan exists.
@@ -115,11 +205,14 @@ export async function resolveRoutinePage(deps: RoutinePageResolverDeps) {
 const defaultDeps: RoutinePageResolverDeps = {
   getUserId: loadCachedAuthenticatedAppUserId,
   loadJourneyAccess: loadCachedPersonalPlanJourneyAccessForUser,
-  readView: ({ userId, enabled }) =>
+  readView: ({ userId, enabled, toolsEnabled }) =>
     loadPersonalPlanRoutineView({
       client: createAdminClient() as unknown as PersonalPlanRoutineReadClient,
       userId,
       enabled,
+      ...(toolsEnabled
+        ? { tools: { loadFacts: (id: string) => loadToolFactsSource(createAdminClient(), id) } }
+        : {}),
     }),
   stage4Enabled: () => isPersonalPlanAppV1Enabled() && isPersonalPlanStage4Enabled(),
   readPortfolioPresentation: (userId, planId, portfolioVersionId) =>
@@ -129,10 +222,12 @@ const defaultDeps: RoutinePageResolverDeps = {
       planId,
       portfolioVersionId,
     ),
-  readRefinementBanner: async (userId) => {
+  toolsEnabled: async (userId) => isPersonalPlanToolsEnabledForUser(userId, createAdminClient()),
+  readRefinementBanner: async (userId, { toolsEnabled }) => {
     const result = await loadRefinementStatusForUser(
       createAdminClient() as unknown as Parameters<typeof loadRefinementStatusForUser>[0],
       userId,
+      { toolsEnabled },
     )
     if (result.status !== "ok" || !result.data.banner.visible || !result.data.banner.module) {
       return null
@@ -143,6 +238,10 @@ const defaultDeps: RoutinePageResolverDeps = {
       totalSteps: result.data.progress.totalSteps,
     }
   },
+  shoppingBudgetEnabled: () => isShoppingBudgetEnabled(),
+  readShoppingBudget: (userId) => loadRoutineShoppingBudget(createAdminClient(), userId),
+  readProductPricesEur: (productIds) =>
+    loadRoutineProductPricesEur(createAdminClient(), productIds),
 }
 
 export function RoutineUnavailableState({
@@ -213,18 +312,22 @@ export type KeepsakeRoutinePageResolverDeps = {
   readView: (input: {
     userId: string
     enabled: boolean
+    toolsEnabled?: boolean
   }) => ReturnType<typeof loadPersonalPlanRoutineView>
   readPortfolioPresentation?: (
     userId: string,
     planId: string,
     portfolioVersionId: string,
   ) => Promise<PortfolioPresentation | null>
+  /** The keepsake Routine derives its tools from current facts too, while the rollout is on. */
+  toolsEnabled?: (userId: string) => Promise<boolean>
 }
 
 export async function resolveKeepsakeRoutinePage(deps: KeepsakeRoutinePageResolverDeps) {
   const userId = await deps.getUserId()
   if (!userId) return { kind: "unavailable" as const }
 
+  const toolsEnabledLookup = resolveToolsEnabled(deps, userId)
   try {
     const keepsake = await deps.loadKeepsakeContent(userId)
     // PR5 review fix (Z2): "no accepted Routine version" is not the same failure as "the
@@ -234,7 +337,11 @@ export async function resolveKeepsakeRoutinePage(deps: KeepsakeRoutinePageResolv
     // `KeepsakeNoRoutineState`), never the „Beispiel" composition, which would show them a
     // stranger's routine as if it were theirs.
     if (!keepsake) return { kind: "no_routine" as const }
-    const view = await deps.readView({ userId, enabled: false })
+    const view = await deps.readView({
+      userId,
+      enabled: false,
+      ...((await toolsEnabledLookup) ? { toolsEnabled: true } : {}),
+    })
     if (view.status === "no_personal_plan" || !view.activeVersion) {
       return { kind: "no_routine" as const }
     }
@@ -262,6 +369,7 @@ const keepsakeDeps: KeepsakeRoutinePageResolverDeps = {
   loadKeepsakeContent: loadPersonalPlanKeepsakeContentForUser,
   readView: defaultDeps.readView,
   readPortfolioPresentation: defaultDeps.readPortfolioPresentation,
+  toolsEnabled: defaultDeps.toolsEnabled,
 }
 
 async function resolveDefaultRoutinePage() {
@@ -352,6 +460,14 @@ export default async function RoutinePage() {
       enabled={resolved.enabled}
       portfolioPresentation={resolved.portfolioPresentation}
       initialRefinementBanner={resolved.refinementBanner}
+      // Budget gate (Task 6): present only with the flag on and a successful read, so the
+      // flag-off props are unchanged.
+      {...(resolved.budgetProjection
+        ? {
+            shoppingBudget: resolved.budgetProjection.shoppingBudget,
+            productPricesEur: resolved.budgetProjection.productPricesEur,
+          }
+        : {})}
       // Fix round 1 (F1): every freemium-provisioned buyer and every current subscriber
       // resolves HERE, not to the `legacy` branch above — the same flag gate has to reach
       // this branch too, or the „Gemerkt" section (and the scanner bookmark's

@@ -1,0 +1,420 @@
+{
+  "phase": "before",
+  "verified": 1,
+  "controlIds": [
+    "retirement-response-status"
+  ],
+  "cleanRuns": 2,
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "pinsSHA": "693f7db9ff92ae74f9541de924803d5c98322d38e9ddf3c5d9e4f7ba5ab0147f",
+  "receiptSHA256": "8d62139bcb5cf8a87ab5a6bffca5ad6e27927ba5f5b75e9b6cab968208ce30e9",
+  "allPhaseHashes": {
+    "src/lib/funnel/server.ts": "d664770e0103972242ab81c3a3573243695f901e68ecfe4461e61d0410360df6",
+    "src/app/api/stripe/create-checkout-session/route.ts": "0808a083b02a9611deab703bf9fc7a9b3cecb5dce2b5be1889003a0cd06a9bd8",
+    "tests/personal-plan-pricing-experiment.test.ts": "1f3abe43446c8ec3d487bbbec3692b49454dba7ba1310d8bdaa85e8faa252f31"
+  },
+  "sourceGuards": [
+    {
+      "file": ".nvmrc",
+      "sha": "f14b4987904bcb5814e4459a057ed4d20f58a633152288a761214dcd28780b56"
+    },
+    {
+      "file": "docs/free-trial-launch-runbook.md",
+      "sha": "a1c60fbc2dc832110fbff6566df0cde37ba3e167debb5cf747f0e0afe9fba668"
+    },
+    {
+      "file": "next-env.d.ts",
+      "sha": "7b550dda9686c16f36a17bf9051d5dbf31e98555b30d114ac49fc49a1e712651"
+    },
+    {
+      "file": "node_modules/typescript/lib/typescript.js",
+      "sha": "3ae902c92cc44dace175c0e69e13a4b0899f6983c6121d76b9ab8dd5795e7675"
+    },
+    {
+      "file": "package-lock.json",
+      "sha": "bb666257dd07d975c7ca0603993ddaaa78aa83ffc75e634ad9c75102ad8ff799"
+    },
+    {
+      "file": "package.json",
+      "sha": "c61f50814062fb2d71660b7faa3880f9024d9e440a42fcc1e74780969edcff59"
+    },
+    {
+      "file": "plans/free-trial-launch/plan.md",
+      "sha": "a59520782fdb03e1226ae322d687ed6408ed0e2c39cd37727fe1a62b6ebefde0"
+    },
+    {
+      "file": "scripts/billing/one-time-recover.ts",
+      "sha": "6b70d089d22d676fdbcd896c524402624899238d70d9689415a04f19504dfc75"
+    },
+    {
+      "file": "src/app/api/analytics/meta-offer-view/route.ts",
+      "sha": "8b2008675f27a002eea4d9ff2ae61d5733dad963185b3d2baf240e287af0f927"
+    },
+    {
+      "file": "src/app/api/billing/one-time-activation-status/route.ts",
+      "sha": "fab9ef797b506b624e565238129b3ffcc3b82a9830d4f3bdb4a36efa5778d149"
+    },
+    {
+      "file": "src/app/api/billing/payment-support/route.ts",
+      "sha": "f33d08ef477d7dd2c91bb44d155475d2aeaf39218812f43dcacb386db04c1a76"
+    },
+    {
+      "file": "src/app/api/funnel/session/route.ts",
+      "sha": "da657d3e0ab9db46f2c569ae06c08d4a10d98ca64e7dcb8eb336d3513f11ea3d"
+    },
+    {
+      "file": "src/app/api/paypal/capture-order/route.ts",
+      "sha": "e7a7f460c96f21ea4a40dcef06f3f1b5b2c8834b6645ba24a60b06ce788fe968"
+    },
+    {
+      "file": "src/app/api/paypal/create-order-intent/route.ts",
+      "sha": "2e339bc67b9a8bdf0a7f9783a8115bc4bc4d536d57905f0ab6833dfba8796b43"
+    },
+    {
+      "file": "src/app/api/paypal/create-subscription-intent/route.ts",
+      "sha": "cdc24635c7668e5976f8cf812af8dc02109e27d134f71855edb93cf794a12a63"
+    },
+    {
+      "file": "src/app/api/personal-plan/field-test/activate/route.ts",
+      "sha": "cc81676e5f7352f30fafcb84acb7acc5cb65ef36d162bef9aa7138f18c9f6cd9"
+    },
+    {
+      "file": "src/app/api/personal-plan/field-test/moderator/activate/route.ts",
+      "sha": "e039eb061eaa680ea07b2d8a3548232ccba7f1556cf84fff5bc5ffdfcde90186"
+    },
+    {
+      "file": "src/app/api/personal-plan/field-test/moderator/start/route.ts",
+      "sha": "b2603bf9278f809233de2e031dde951d9347b152399f62814fc5b55f9f77fbad"
+    },
+    {
+      "file": "src/app/api/quiz/email-return/choose/route.ts",
+      "sha": "39175962afc94e53edffe41da10d44b5b2cab05b32984f16cc4a512a3b9150fa"
+    },
+    {
+      "file": "src/app/api/quiz/email-return/context/route.ts",
+      "sha": "2828ca1c0e6edc3c4acb4664ec3cff286fff2ac1089fb75b675f3113d5d68181"
+    },
+    {
+      "file": "src/app/api/quiz/field-test/activate/route.ts",
+      "sha": "4a13e5b3862b1572fb1aeb699ef43051e5cc9e3e1949990c973265e01538520d"
+    },
+    {
+      "file": "src/app/api/quiz/lead/route.ts",
+      "sha": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e"
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-draft/resume/route.ts",
+      "sha": "e680907d3e92b488aadbc866ba334da81c42878d3a9c1f072c6f54d570447092"
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-draft/route.ts",
+      "sha": "8dfb645529879cac85e6cf9f62539270094c14b2a6d6b0a774724a081b6fd384"
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-lead/route.ts",
+      "sha": "305fda288afd763743b050c9a5f620ad3742286d4397f49ea657bf7939c52595"
+    },
+    {
+      "file": "src/app/api/quiz/personal-plan-prepare/route.ts",
+      "sha": "1c4b9507d665d79c6451a138e1237077bf1f8aaf9f2e6a94054dc019ad7ddf1f"
+    },
+    {
+      "file": "src/app/lp/[slug]/page.tsx",
+      "sha": "c986d0de667d792caf017dd92d97ea9a946d85812340af9006768da532b01cec"
+    },
+    {
+      "file": "src/app/plan-bereit/page.tsx",
+      "sha": "3266d35f5b0a8f5312e6415d40bc52224dc660a830134dc44089600343d96289"
+    },
+    {
+      "file": "src/app/plan-bereit/readiness.ts",
+      "sha": "aec3ee617b8d3eecc9e60116a00214d08a481b28981c20f707f342d299bea08e"
+    },
+    {
+      "file": "src/app/plan-bereit/status/route.ts",
+      "sha": "1b8f09e7bde788b2ec359a3d937fc84a58fa1ae1b14aa9c7d79c997260f22bff"
+    },
+    {
+      "file": "src/app/result/[leadId]/page.tsx",
+      "sha": "83ce34fd0d9d356a66b9e4201a3676236d11c7e06ec09563e0742ee91ca36ae1"
+    },
+    {
+      "file": "src/app/welcome/page.tsx",
+      "sha": "e6c5c768deee6f4f304e1dc5a4ed27ba8c0a186938069fec0c579ed560fda24e"
+    },
+    {
+      "file": "src/funnels/packages.json",
+      "sha": "fd299fc9fd61f06531fcc9b66fd497fd14c25a38214f8db241dab4e3a0131811"
+    },
+    {
+      "file": "src/funnels/quizzes/registry.json",
+      "sha": "4dce2f7f0eaf19ba28dc063b8a9cd70884a8a468bb401b8ff214853601c44947"
+    },
+    {
+      "file": "src/funnels/quizzes/registry.ts",
+      "sha": "225fa3638b4406aa711b4afda77ef748e24dd35e6b29bcd46f4d3ac6fe320bbe"
+    },
+    {
+      "file": "src/lib/analytics/meta-capi.ts",
+      "sha": "1219f337cca4e3c7141a2048f022f8f1c913dd16094a0d69d75e11e9e3c7e5cd"
+    },
+    {
+      "file": "src/lib/billing/analytics-destinations/funnel.ts",
+      "sha": "7c6d71e7eeb0ec6af41020df967b0126e6ced1436c715d9914674e8dda4ef6bb"
+    },
+    {
+      "file": "src/lib/billing/offer-products.ts",
+      "sha": "3e2c7f6195974480280792b94dd7c27ab3fcd75dc3f12eae7538e5c7382b22b8"
+    },
+    {
+      "file": "src/lib/billing/payment-runtime-config.ts",
+      "sha": "2f5f9414aee446b43f337e5fa3ade5e5a2b6a7e6d1b0685dcf4ed611fcfd0e07"
+    },
+    {
+      "file": "src/lib/billing/personal-plan-one-time-activation.ts",
+      "sha": "1efa98c6055012f5912c22c5e7420b36331ffc702b52344a2db40bc2ade458eb"
+    },
+    {
+      "file": "src/lib/billing/personal-plan-one-time-consent-copy.ts",
+      "sha": "de99a4ad49ef4720b0f5bf08420b1805ceb691b670a575bba1aa89fc87b25fc9"
+    },
+    {
+      "file": "src/lib/billing/personal-plan-one-time-consents.ts",
+      "sha": "9780ca72927361d64c493de99f1780e7b9a58800e3fb52ea0fbad8227b97a544"
+    },
+    {
+      "file": "src/lib/billing/pricing-catalog.ts",
+      "sha": "bf01815cb824ef9cd3346be051d8f94868c9b916c593b2d2cd8e1140bc8dfae7"
+    },
+    {
+      "file": "src/lib/billing/purchases.ts",
+      "sha": "3c4ef0bc20b982ec38e7eff8f3a1e00b40b47412fc5d822151e117e85e53a6b6"
+    },
+    {
+      "file": "src/lib/billing/subscriptions.ts",
+      "sha": "a6ba77a92481e13f6f03bc7b1c8d7fee75c02facfeb8ce747493bc64ecca995c"
+    },
+    {
+      "file": "src/lib/billing/trial-access-projection.ts",
+      "sha": "6bd7a205a589005d2301cf77511709b26f63076538f953e1da77d57e567ba17f"
+    },
+    {
+      "file": "src/lib/billing/trial-admission.ts",
+      "sha": "00dea2cbb5dad16446ee405f289aa7912c9cb895774653512d549ddea02d0017"
+    },
+    {
+      "file": "src/lib/billing/trial-analytics-context.ts",
+      "sha": "8fa707d663a6c657540fc45715f5a6a4e8022604ad0ccdad5cee777eb6bd0647"
+    },
+    {
+      "file": "src/lib/billing/trial-checkout-attempt.ts",
+      "sha": "84ba2d9f52efceb8bc64a499176c5d2c24b479d9907185b8998da05320ac76a9"
+    },
+    {
+      "file": "src/lib/billing/trial-eligibility.ts",
+      "sha": "e911749fe703ff1cdc48fab0f7c6be3eb5ef9faf99fe33e36c4da8cb840734f1"
+    },
+    {
+      "file": "src/lib/billing/trial-identity-claims.ts",
+      "sha": "7e04ea1029da7e6c2c2864b860926fa83297d46c7174ea7310130d2c3536e963"
+    },
+    {
+      "file": "src/lib/billing/trial-management-operations.ts",
+      "sha": "d89bcbcea01fc6e5cb1ec864212c32e2277cfceea6ff0ab21b3a4149a28d6e3c"
+    },
+    {
+      "file": "src/lib/billing/trial-offer.ts",
+      "sha": "14083f0eb5677db3063e22ab585ca9779a51fac4e04ab8852ee2e11f087d4725"
+    },
+    {
+      "file": "src/lib/billing/trial-policy.ts",
+      "sha": "a88f33d5abfefd705629a0ca8ef739b893dd1908aeec639627916fc815daef02"
+    },
+    {
+      "file": "src/lib/billing/trial-runtime.ts",
+      "sha": "0dae1fdc8a90e3b71a6faf4a20fafa9c655c165650fbe952a3b36e66b29bffe0"
+    },
+    {
+      "file": "src/lib/billing/types.ts",
+      "sha": "f99c6f799c5c79a4218a2425fbd1b4ad4565c7f0592d1419b45ae6cb09e5047b"
+    },
+    {
+      "file": "src/lib/checkout/payment-feedback.ts",
+      "sha": "88e3803bd9c586499b24492fabe48491810ed0f437a0343e02027322deabe95f"
+    },
+    {
+      "file": "src/lib/entitlements/flag.ts",
+      "sha": "77e346855d4d309cb4cf87044f64a7a26478382875e8145ce64d3dd263937214"
+    },
+    {
+      "file": "src/lib/freemium/checkout-metadata.ts",
+      "sha": "dc761d436c0d10906da2fc1ed2e94e5ed495ede90b03c0bd0a635a534c5a644c"
+    },
+    {
+      "file": "src/lib/freemium/checkout-return.ts",
+      "sha": "70ddd2ca8499e4de2031e885ce76a7124590e68fcbd5f04c5695857dbb3b6f62"
+    },
+    {
+      "file": "src/lib/funnel/api.ts",
+      "sha": "b1180f5324e78983f63b1a73b1f98f7cd02aabacba1271165446588370356679"
+    },
+    {
+      "file": "src/lib/funnel/client.ts",
+      "sha": "9c3728cffff3810d829afd198c2406e35cf6edb3d4c68dbfc5a1cfa845e100a8"
+    },
+    {
+      "file": "src/lib/funnel/cookie.ts",
+      "sha": "522741b96f60560c02f92a5445428380de02231b2b3724b4143dfc6da14f7b48"
+    },
+    {
+      "file": "src/lib/funnel/flags.ts",
+      "sha": "981bd9436dae7c1fc7cbd8d6dc60e3d6bbaa9dc3bea994e0a33fac525f02528d"
+    },
+    {
+      "file": "src/lib/funnel/journey-kind.ts",
+      "sha": "6088e7e2554b37b0d2da5231dd5361fdeed8cd2ebf1dae5286e107d7543efe88"
+    },
+    {
+      "file": "src/lib/funnel/offer-presentation.ts",
+      "sha": "e38f85f885a9e94b35abef31ed3a73368fb24a8c23bcebe3ba88e5d6602eb4f4"
+    },
+    {
+      "file": "src/lib/funnel/organic-offer-media-experiment.ts",
+      "sha": "8e0882803faa756e7c103c53a16b857a73db8ac9e5f9c261ea013743f7902887"
+    },
+    {
+      "file": "src/lib/funnel/packages.ts",
+      "sha": "66cab34518f29604a37c7a32721f74ca5c930f82a12dcf293db69e3b90a080be"
+    },
+    {
+      "file": "src/lib/funnel/personal-plan-pricing-experiment.ts",
+      "sha": "2df4e53841c87e421524c1cbaaeb0daeed9ac6d2a467cd8ae4da849faf2af516"
+    },
+    {
+      "file": "src/lib/funnel/personal-plan-pricing-qa-token.ts",
+      "sha": "ac0fce778e1594083573a8b4fdb1f8ed5aa00e8d9427338856f8ae22781a0cf4"
+    },
+    {
+      "file": "src/lib/observability/checkout.ts",
+      "sha": "34c41d9cc134da4df6762251af4ba11dcffd5180f21bffd1bb5e8b5f8484d49d"
+    },
+    {
+      "file": "src/lib/observability/offer-experiment.ts",
+      "sha": "9c0d5f6b8038b8dcbeafa3ac0efd7de126965e50022dbed7d2117e606ea20487"
+    },
+    {
+      "file": "src/lib/observability/payment-server-core.ts",
+      "sha": "8b06f22e39bed2ae6d8b4e3dfa6f8aca6c799bfac6b9134c43333144f05d2a4a"
+    },
+    {
+      "file": "src/lib/observability/payment-server.ts",
+      "sha": "fa47b3ddec1601bf85f5d65d481f0bfa13043b3f9fae79d046ec3eaf6be2b172"
+    },
+    {
+      "file": "src/lib/observability/payment.ts",
+      "sha": "866ebbd656bcd23b9d46efa8804b99ae39cbe7cef4424f64cc86b031e7c9f316"
+    },
+    {
+      "file": "src/lib/observability/sentry-scrubbing.ts",
+      "sha": "3980e1d096344f18c4288226d63f9577037fc486bb049a67316d8e157b6a8c60"
+    },
+    {
+      "file": "src/lib/paypal/order-activation.ts",
+      "sha": "f3bce8ac0eed4b1db6517e1a0b63bb942023661c0149a0ed438d4d6c70852435"
+    },
+    {
+      "file": "src/lib/paypal/trial-collection-start.ts",
+      "sha": "d22659e8282e0f18b69971b8948ba5afc4b284774aa1d2330f434ed3358513bc"
+    },
+    {
+      "file": "src/lib/quiz/funnel-package-context.ts",
+      "sha": "69f13a89706944ae8dc09d179e25ab7e75d9c9012d01df8ada8b23bc8ed80d66"
+    },
+    {
+      "file": "src/lib/reactivation/checkout-recovery.ts",
+      "sha": "ae4dc3a9ae881a89fb372cc72f12e4f32a07fdf1094ffb4f24b9a6cbe5957dd9"
+    },
+    {
+      "file": "src/lib/reactivation/checkout-reservations.ts",
+      "sha": "e1e14f2ad3c5ce5a511cf4918f561af1568d924426dc2eb1c18d735ca1eb2377"
+    },
+    {
+      "file": "src/lib/reactivation/return-destination.ts",
+      "sha": "48b88020e14c0e29db0744e616ce9a94d4399d8e52952c2eed95233d307807ab"
+    },
+    {
+      "file": "src/lib/reactivation/stripe-checkout-context.ts",
+      "sha": "c4d51565dd34601e2fb1e5858470c79439f6ddcc8a1ec8ab9589e07604350389"
+    },
+    {
+      "file": "src/lib/reactivation/stripe-checkout-recovery.ts",
+      "sha": "95f2390c0d83060576590bde47a9e3d32ec4ac11cfe9123312fd5aa69e7e313c"
+    },
+    {
+      "file": "src/lib/stripe/checkout-activation.ts",
+      "sha": "f33ca66366ec59a915fdeba82bb397ad20891dd837495de25c6bf4e51deb8bdc"
+    },
+    {
+      "file": "src/lib/stripe/checkout-session-params.ts",
+      "sha": "985f472524ca69289513989e59f39068cde6a1234c0b0a7429f15da343b595b9"
+    },
+    {
+      "file": "src/lib/stripe/client.ts",
+      "sha": "1d608c0c43185db993cbfb4a9219b2bf7e28b8f8d641a92f1d7dd429cb645f68"
+    },
+    {
+      "file": "src/lib/stripe/intervals.ts",
+      "sha": "c6bc97592febb4666b6e9ae9f85e5ce3ffbcaf8bc9cfeaef5db0bde41c3d568a"
+    },
+    {
+      "file": "src/lib/stripe/pricing-plans.ts",
+      "sha": "5852bc9d1f9da7d76a0620df8f2e329cb641f044018804ff832140249bb4b90b"
+    },
+    {
+      "file": "src/lib/stripe/trial-catalog.ts",
+      "sha": "257b15dfcc196342adde6eb919f026fff2944aa5e6ccb635272ef1ddc0a782e0"
+    },
+    {
+      "file": "src/lib/stripe/trial-checkout-session-params.ts",
+      "sha": "9341b1b612522030f2272dcb75a455ea914792c6810567aa2f176dd73ebb51c3"
+    },
+    {
+      "file": "src/lib/stripe/trial-checkout.ts",
+      "sha": "eaf7543533f25be9182842f1bb4678ce6e4a0f405e60d5c8e968d215f28dd408"
+    },
+    {
+      "file": "src/lib/supabase/admin.ts",
+      "sha": "bd6ec1538d65a01f82b3f55b2839f0ac347d617c6de29d13cea4b0eff737386a"
+    },
+    {
+      "file": "src/lib/supabase/server.ts",
+      "sha": "ab2e4b8ccc17f8fb4a43d2a755a563a8549f2ea02feedb9df44ee2112501aa9a"
+    },
+    {
+      "file": "tests/funnel-server.test.ts",
+      "sha": "84aec887c25617e6504b6e574b3dac815c03b96aac69f74556ce73abb956c8fc"
+    },
+    {
+      "file": "tests/funnel-variants.test.ts",
+      "sha": "5a48c8448af9fa1be9effbe4ee3411a1ad61081a97d8a154d48c6a8bb4779c4e"
+    },
+    {
+      "file": "tests/organic-offer-media-experiment.test.ts",
+      "sha": "429e96be662296b1f76bee7e8044ae3ff8a7d4bd4cfb3f498271a50d73048a41"
+    },
+    {
+      "file": "tests/server-only-register.cjs",
+      "sha": "debb28eefaf5c130047019ced32415bc2b2b77f30c735177c486cfa352f08711"
+    },
+    {
+      "file": "tests/stripe-checkout-session-route-contract.test.ts",
+      "sha": "b966b1716f13172213e841b6a3528154579c2fde3bdc63e0758f7734860e12b2"
+    },
+    {
+      "file": "tsconfig.json",
+      "sha": "9a9db173a5d49090aba8ae2e43a8d88777307aa14e90125eff1adee1c745d1dd"
+    }
+  ]
+}

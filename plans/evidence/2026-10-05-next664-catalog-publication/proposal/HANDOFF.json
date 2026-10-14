@@ -1,0 +1,35 @@
+{
+  "status": "conditional proposal; main integration/runtime pending",
+  "packet": "/tmp/test-audit-catalog-publication99-0f7kicd2",
+  "manifestSHA256": "d53bee703b3486be20d12d1e0cd61051efbd08b2f21501da88c87ac9ac52b87d",
+  "layerPlanSHA256": "0f52de3bda2360c7b66bca7e86dd138d191d3de2638ce4ab49cf5c3a2909adef",
+  "controlsSHA256": "38bbcf3ce9e95022b51ca9c0405af8138fe0f2606a12cf1dc41fc7abbdcd635e",
+  "candidatesSHA256": "9be6642c190a674eea5de45aa573140369f7e2bc96ba5c399165fe894f079144",
+  "ledgerSHA256": "1307c881820f83f28a82620b486dd7f6eaeb72ae32fc77b7c7d895b1e4a4b92c",
+  "diffSHA256": "3a70909e7539c6f268ac241060fb7d285ffd2fe69741cab9d7851c07523b4950",
+  "staticReceiptSHA256": "3c5ed3c080e3623052193018dc6989e64d710c6229408510e864a89f99ca1084",
+  "artifactHashesSHA256": "768ab26f78eacbd246b3ebbb9be9c569c971459f5872b30511fe50b7ee561965",
+  "counts": {
+    "files": 16,
+    "phaseSnapshots": 48,
+    "before": 99,
+    "transfer": 99,
+    "cut": 96,
+    "originalCallbackAssertions": 300,
+    "transferredAssertions": 7,
+    "changedKeepers": 2,
+    "unrelatedRetainedByteExact": 94,
+    "controls": 6,
+    "sourceCleanup": 0,
+    "removalCredit": 0
+  },
+  "mainReadFirst": [
+    "layer-plan.md",
+    "complete.diff",
+    "candidates.json",
+    "ledger.json",
+    "readset.json",
+    "controls.json",
+    "final-static-receipt.json"
+  ]
+}

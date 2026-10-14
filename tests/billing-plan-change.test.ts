@@ -443,6 +443,7 @@ test("plan-change ledger and routes enforce the locked safety boundaries", () =>
   assert.match(command, /await auth\.auth\.getUser\(\)/)
   assert.match(command, /return handleChangePlan\(request, \{/)
   assert.match(command, /scheduleStripePlanChange/)
+  assert.match(command, /scheduleStripe: scheduleStripePlanChange/)
   assert.match(command, /reconcileStripe: reconcileStripePlanChange/)
   assert.match(command, /operation\.status === "reconciling"[\s\S]*deps\.reconcileStripe/)
   assert.match(command, /initiatePayPalPlanChange/)
@@ -460,26 +461,6 @@ test("plan-change ledger and routes enforce the locked safety boundaries", () =>
   assert.match(paypalWebhook, /deps: \{ defer: deps\.defer \}/)
   assert.match(stripeWebhook, /deps: \{ defer: deps\.defer \}/)
   assert.match(paypalReturn, /paypal_revision_not_applied[\s\S]*plan-change=pending#mitgliedschaft/)
-})
-
-test("the initial plan-change route attempts the provider before requested analytics", () => {
-  const command = readFileSync("src/app/api/billing/change-plan/route.ts", "utf8")
-  const pendingProviderBranch = command.indexOf('if (operation.status !== "pending_provider")')
-  const stripeMutation = command.indexOf("deps.scheduleStripe({", pendingProviderBranch)
-  const scheduledSideEffects = command.indexOf(
-    "recordScheduledPlanChangeSideEffects(",
-    stripeMutation,
-  )
-
-  assert.notEqual(pendingProviderBranch, -1)
-  assert.match(command, /scheduleStripe: scheduleStripePlanChange/)
-  assert.notEqual(stripeMutation, -1)
-  assert.notEqual(scheduledSideEffects, -1)
-  assert.doesNotMatch(
-    command.slice(pendingProviderBranch, stripeMutation),
-    /recordPlanChangePhase|recordPlanChangePhasesSafely/,
-  )
-  assert.ok(scheduledSideEffects > stripeMutation)
 })
 
 test("cancellation timestamp migration is additive and safely backfills known period ends", () => {
@@ -752,6 +733,10 @@ test("Stripe schedules launch catalog changes at launch prices and rejects mixed
       operationId: "operation-launch",
     }),
   )
+
+  const launchPriceReads = launch.calls.filter((call) => call.name === "price.retrieve")
+  assert.equal(launchPriceReads.length, 1)
+  assert.equal(launchPriceReads[0]?.args[0], "price_launch_year")
 
   const mixed = createStripePlanChangeFake({
     currentPrice: launchMonth,
@@ -1350,6 +1335,8 @@ test("renewal application stays successful when applied analytics fail", async (
   })
   const updated = subscription({ interval: "year", metadata: { preserved: true } })
   const { supabase } = createRenewalSupabaseFake(updated)
+  let appliedAnalyticsCalls = 0
+  const appliedAnalyticsPhases: string[] = []
 
   const result = await applyPlanChangeAtRenewal(supabase as never, {
     subscription: current,
@@ -1359,7 +1346,9 @@ test("renewal application stays successful when applied analytics fail", async (
       findOperation: async () => operation(),
       advanceOperation: async () =>
         operation({ status: "applied", applied_at: "2026-08-14T12:00:01.000Z" }),
-      recordAppliedPhase: async () => {
+      recordAppliedPhase: async (_client, _operation, phase) => {
+        appliedAnalyticsCalls += 1
+        appliedAnalyticsPhases.push(phase)
         throw new Error("analytics unavailable")
       },
     },
@@ -1367,6 +1356,8 @@ test("renewal application stays successful when applied analytics fail", async (
 
   assert.equal(result?.subscription.interval, "year")
   assert.equal(result?.operation.status, "applied")
+  assert.equal(appliedAnalyticsCalls, 1)
+  assert.deepEqual(appliedAnalyticsPhases, ["applied"])
 })
 
 test("billing upsert merges incoming metadata without deleting unrelated provider state", async () => {

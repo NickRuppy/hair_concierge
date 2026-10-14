@@ -1,0 +1,15 @@
+{
+  "executable": "/usr/local/bin/node",
+  "args": [
+    "--import",
+    "./tests/server-only-register.cjs",
+    "--import",
+    "tsx",
+    "--test",
+    "--test-name-pattern=^R28: „Neu dazu“ steps say Essenziell / Optional with the step's benefit, pronoun-free$",
+    "tests/discovery-cockpit-complexity-dom.test.tsx"
+  ],
+  "cwd": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "timeoutMs": 45000,
+  "detached": true
+}

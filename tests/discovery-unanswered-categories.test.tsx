@@ -279,18 +279,18 @@ test("a submitted intake's untouched step says so at the step — never „benut
   assert.ok(oil.includes("Lücke in der Idealroutine"))
   assert.ok(oil.includes(USES_NOTHING))
   assert.ok(!oil.includes(UNANSWERED_STEP))
-})
-
-test("the summary line names only the unanswered categories no step already names", async () => {
-  const markup = await renderCockpit("submitted")
   // Oil is a step that already says she uses nothing for it (consult-runsheet T4 c): the
   // footer does not repeat it.
-  assert.ok(!markup.includes("Öl — nicht benutzt. Keine Entscheidung nötig."))
+  assert.ok(
+    !markup.includes("Öl — nicht benutzt. Keine Entscheidung nötig."),
+    "summary omits explicit none already named by a step",
+  )
   // Leave-in and mask are named at their steps; the line carries the six without a step.
   assert.ok(
     markup.includes(
       "Nicht angegeben: Tiefenreinigung · Conditioner · Bondbuilder · Kopfhautpflege · Hitzeschutz · Trockenshampoo — im Call fragen.",
     ),
+    "summary names exactly the six unanswered categories without steps",
   )
 })
 

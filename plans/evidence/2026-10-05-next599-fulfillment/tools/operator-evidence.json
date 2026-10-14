@@ -1,0 +1,37 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "branch": "codex/test-audit-pruning",
+  "phases": {
+    "before": {
+      "tests/stripe-one-time-confirmation.test.ts": "ca1de738e9ac257063c23524d6f1d8d56c27cf64f70ce5fa7f939d20a497e42c",
+      "tests/one-time-recovery-command.test.ts": "69887834dd8e2df03dd0a5ebe426f02951d55acecfe2749d4e5cdfbe3e194d05",
+      "tests/billing-one-time-fulfillment-reconcile.test.ts": "3d01c66a46f500c9bbd009e770dd1fa0a3488fc0ababc180a9deb129e5fd44c9",
+      "tests/one-time-activation-status-route.test.ts": "61d712bc3a6d4b9111d212b8ef7c9d01f2c5aee3f8812ef7fe20a423b84cb2cf",
+      "tests/personal-plan-one-time-confirmation.test.ts": "afa54c5c0a9463490daccc8809ff267cb0f13cd9e7bb60132fa38376700a5594",
+      "tests/one-time-paid-pending-ux.test.ts": "3857082e8351d940879673c987371b453255bf9826845d4b4ec3f32c350959bf",
+      "tests/one-time-payment-recovery-migration.test.ts": "06b7eaf062f916f8e421104b3cdb7361fbd38a3a7165aa4f228f080845e9e5d0",
+      "tests/personal-plan-one-time-first-access.test.ts": "f389506fb70cfe3e5dba2f7fefdad84d9145dd2233278af54e1f0f20c0a37b78"
+    },
+    "transfer": {
+      "tests/stripe-one-time-confirmation.test.ts": "ca1de738e9ac257063c23524d6f1d8d56c27cf64f70ce5fa7f939d20a497e42c",
+      "tests/one-time-recovery-command.test.ts": "65dbdc081adbad4392c95dccb9908585525f2e859236bc96a481cc11875f0a6b",
+      "tests/billing-one-time-fulfillment-reconcile.test.ts": "3d01c66a46f500c9bbd009e770dd1fa0a3488fc0ababc180a9deb129e5fd44c9",
+      "tests/one-time-activation-status-route.test.ts": "61d712bc3a6d4b9111d212b8ef7c9d01f2c5aee3f8812ef7fe20a423b84cb2cf",
+      "tests/personal-plan-one-time-confirmation.test.ts": "afa54c5c0a9463490daccc8809ff267cb0f13cd9e7bb60132fa38376700a5594",
+      "tests/one-time-paid-pending-ux.test.ts": "3857082e8351d940879673c987371b453255bf9826845d4b4ec3f32c350959bf",
+      "tests/one-time-payment-recovery-migration.test.ts": "06b7eaf062f916f8e421104b3cdb7361fbd38a3a7165aa4f228f080845e9e5d0",
+      "tests/personal-plan-one-time-first-access.test.ts": "f389506fb70cfe3e5dba2f7fefdad84d9145dd2233278af54e1f0f20c0a37b78"
+    },
+    "cut": {
+      "tests/stripe-one-time-confirmation.test.ts": "ca1de738e9ac257063c23524d6f1d8d56c27cf64f70ce5fa7f939d20a497e42c",
+      "tests/one-time-recovery-command.test.ts": "b0ef567977d3953a99cf3c36f2836a947003e577ab0a84aa61fb08f3bd8e29d4",
+      "tests/billing-one-time-fulfillment-reconcile.test.ts": "3d01c66a46f500c9bbd009e770dd1fa0a3488fc0ababc180a9deb129e5fd44c9",
+      "tests/one-time-activation-status-route.test.ts": "61d712bc3a6d4b9111d212b8ef7c9d01f2c5aee3f8812ef7fe20a423b84cb2cf",
+      "tests/personal-plan-one-time-confirmation.test.ts": "afa54c5c0a9463490daccc8809ff267cb0f13cd9e7bb60132fa38376700a5594",
+      "tests/one-time-paid-pending-ux.test.ts": "3857082e8351d940879673c987371b453255bf9826845d4b4ec3f32c350959bf",
+      "tests/one-time-payment-recovery-migration.test.ts": "06b7eaf062f916f8e421104b3cdb7361fbd38a3a7165aa4f228f080845e9e5d0",
+      "tests/personal-plan-one-time-first-access.test.ts": "f389506fb70cfe3e5dba2f7fefdad84d9145dd2233278af54e1f0f20c0a37b78"
+    }
+  }
+}

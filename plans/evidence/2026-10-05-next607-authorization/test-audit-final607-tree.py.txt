@@ -1,0 +1,33 @@
+import json,hashlib,subprocess,datetime,sys
+from pathlib import Path
+root=Path('/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning')
+old=json.load(open('/tmp/test-audit-final585-tested-tree.json'))
+explicit=set(old['explicitFiles'])
+for folder in ['test-audit-stripe-trial128-tools-ptnotcxj','test-audit-partner84-tools-5qofnelt','test-audit-fulfillment75-tools-7ouif76e','test-audit-reactivation83-tools-huh910i2','test-audit-offer87-tools-j3gv5ax6','test-audit-one-time-authorization-tools-89785z66']:
+ pins=json.load(open('/tmp/'+folder+'/operator-pins.json'))
+ explicit.update(x['file'] for x in pins['readset'])
+ explicit.update(x['path'] for x in pins['dependencies'])
+explicit={str(Path(f).relative_to(root)) if Path(f).is_absolute() and Path(f).is_relative_to(root) else f for f in explicit}
+directories={}
+for relative,expected in old['guardedDirectoryMembership'].items():
+ actual=sorted(str(p.relative_to(root)) for p in (root/relative).rglob('*') if p.is_file())
+ if actual!=expected: raise RuntimeError('Guarded research membership drift '+relative)
+ directories[relative]=actual;explicit.update(actual)
+roots=['src','scripts','apps','packages','tests','supabase/migrations']
+exts={'.ts','.tsx','.js','.mjs','.cjs','.sql','.json'}
+files=sorted(set(f for f in subprocess.check_output(['rg','--files',*roots],cwd=root,text=True).splitlines() if Path(f).suffix in exts)|explicit)
+missing=[f for f in files if not (root/f).is_file()]
+if missing: raise RuntimeError('Missing guarded paths '+str(missing))
+hashes={f:hashlib.sha256((root/f).read_bytes()).hexdigest() for f in files}
+identity={k:subprocess.check_output(['git',*args],cwd=root,text=True).strip() for k,args in [('head',['rev-parse','HEAD']),('branch',['branch','--show-current']),('gitDir',['rev-parse','--absolute-git-dir'])]}
+if identity!=old['identity']: raise RuntimeError('Task identity drift')
+path=Path('/tmp/test-audit-final607-tested-tree.json')
+if sys.argv[1]=='freeze':
+ if path.exists(): raise RuntimeError('Refuse existing freeze')
+ d={'root':str(root),'identity':identity,'createdAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'files':files,'sha256':hashes,'explicitFiles':sorted(explicit),'guardedDirectoryMembership':directories,'scope':'Fresh source/test/tooling/migration TS/JS/SQL/JSON membership; prior explicit inputs; new Stripe/Partner/fulfillment/reactivation/offer/authorization owner/support inputs and selected installed dependencies; two prior research directories. No whole vendor or all-data freeze, no human-read credit from hashing. Full native is run anew on these current bytes, including narrow authorization retirement and latest consolidation assertions.'}
+ path.write_text(json.dumps(d,indent=2)+'\n');print('frozen',len(files),'paths; explicit',len(explicit))
+else:
+ d=json.loads(path.read_text());mismatch=[f for f in files if d['sha256'].get(f)!=hashes[f]]
+ result={'sameIdentity':d['identity']==identity,'sameMembership':d['files']==files,'sameSha256':not mismatch,'sameGuardedDirectories':d['guardedDirectoryMembership']==directories,'mismatches':mismatch,'fileCount':len(files)}
+ Path('/tmp/test-audit-final607-tree-verification.json').write_text(json.dumps(result,indent=2)+'\n');print(result)
+ if not all(result[k] for k in ['sameIdentity','sameMembership','sameSha256','sameGuardedDirectories']):raise RuntimeError('Frozen tree changed')

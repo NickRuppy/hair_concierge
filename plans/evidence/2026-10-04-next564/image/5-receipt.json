@@ -1,0 +1,39 @@
+{
+  "mode": "cut",
+  "from": "transfer",
+  "to": "cut",
+  "head": "21e0e41fa996ec6a725c258ab3766971f0edb94d",
+  "manifestSha256": "ffe6d3f280836a25ceb8437f10ed9544645d1fe6a84a3cbeeec6729efb7d501f",
+  "controlProof": {
+    "path": "/tmp/test-audit-next564-image-mutations-new/receipt.json",
+    "sha256": "ce91084de22266e06d373322627de883550d37402e6bb35344d7c0959f967561"
+  },
+  "backup": "/tmp/image19-cut-UP4FYD",
+  "status": "complete",
+  "files": [
+    {
+      "file": "tests/product-thumbnail.test.ts",
+      "before": "d09a91c7edc2b55c04ad6e492765ba151dca5dc134d4c8fbb56419e374bcea4a",
+      "after": "d09a91c7edc2b55c04ad6e492765ba151dca5dc134d4c8fbb56419e374bcea4a",
+      "backup": "/tmp/image19-cut-UP4FYD/tests/product-thumbnail.test.ts"
+    },
+    {
+      "file": "tests/product-thumbnail-backfill.test.ts",
+      "before": "d4bc8321cb853ada95698ec17ef0ff817f3fce9f35c58f409ce6dcc795c92cbb",
+      "after": "d4bc8321cb853ada95698ec17ef0ff817f3fce9f35c58f409ce6dcc795c92cbb",
+      "backup": "/tmp/image19-cut-UP4FYD/tests/product-thumbnail-backfill.test.ts"
+    },
+    {
+      "file": "tests/product-image-thumbnail-migration.test.ts",
+      "before": "2cca3fcd244a2ce8a51d0eb3723c64a58ff72d6aecfa87992eb37a63716abd1f",
+      "after": "2cca3fcd244a2ce8a51d0eb3723c64a58ff72d6aecfa87992eb37a63716abd1f",
+      "backup": "/tmp/image19-cut-UP4FYD/tests/product-image-thumbnail-migration.test.ts"
+    },
+    {
+      "file": "tests/product-images-batch-run.test.ts",
+      "before": "d89fa62e48db960b07f71a0ca4c607eecfe6087e2aaf3ebad185b5e71c603070",
+      "after": "92d64f7855f12b4913789510e2e3ef27c1c17de2226932eac40411304268b313",
+      "backup": "/tmp/image19-cut-UP4FYD/tests/product-images-batch-run.test.ts"
+    }
+  ]
+}

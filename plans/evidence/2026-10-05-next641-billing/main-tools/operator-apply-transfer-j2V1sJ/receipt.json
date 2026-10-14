@@ -1,0 +1,31 @@
+{
+  "mode": "transfer",
+  "from": "transfer",
+  "phase": "transfer",
+  "counts": {
+    "before": 125,
+    "transfer": 125,
+    "cut": 119
+  },
+  "pinsSHA": "7482abb73c692ef3ba51f19850ff33da6eef0ea8630fd056590a75315cd1b92c",
+  "prerequisite": null,
+  "changed": [],
+  "allTestHashes": {
+    "tests/admin-user-billing-summary.test.ts": "b62c33d939c9304e4e38a90890e14e96f3008473902df91ebbe8bbbce47e5295",
+    "tests/billing-subscriptions-access-grace.test.ts": "280c7d42b8b7bf6ae611b3e0e8df5012b717f8e0f6386ead947606aec110987f",
+    "tests/billing-reconcile-analytics.test.ts": "8a8e25f2fc0fe25d2785fb163d1278fd1b7793698c78806484a18e1f8a4791dc",
+    "tests/billing-slack-supabase-ownership.test.ts": "1feb844fd8ae48a26d55ed046bb62e5e1c29fd26c965e6c74b533976436cc3dc",
+    "tests/payment-integrity.test.ts": "645b5a35fd71846215808798ff1be994c3c4d824e71889ed7a33eeb15e522fe3",
+    "tests/payment-monitor-route.test.ts": "2acb9f8404c569cf392156a399e31ab6a0a84b500a1240f3b23fd0c79282e5ff",
+    "tests/payment-monitor-trigger.test.ts": "70040d3b5e009659f7c1f6655dc9593371e554c59c738018d78c9a6cf9a51677",
+    "tests/payment-monitor-paypal-test-classification.test.ts": "15be122a226a9772cdb9a4e9867de32d20acd2b4b1a756b03a9b41d2430292c7",
+    "tests/billing-public-contract-declaration-resolution.test.ts": "e0f5d7b9c9950b657569de8d429e069fe0c182f6024958a3f5aa91f51711139d",
+    "tests/billing-public-contract-declaration-route.test.ts": "6c81989f5649af5a31ea76c177ee4761b65964c19284b727883f27eb7ac9cf05",
+    "tests/billing-public-contract-declaration.test.ts": "270710a69a805ceaf10f4ba479364a6e34b9425300128a384f1467302c70416f",
+    "tests/billing-public-contract-declarations-postgres.test.ts": "89df96b1e1f56bc87dbbe341b34e49f536f47416751533eebe03dcfb5e7b8137",
+    "tests/public-contract-declaration-receipt-delivery.test.ts": "083b4d832c6964496bfcbc00f137f2ff58c434c02dcca774e100f791a6ec130a"
+  },
+  "sourceWrites": 0,
+  "testsRun": 0,
+  "originals": "/tmp/test-audit-billing125-packed-policy-ocbvld5d/operator-apply-transfer-j2V1sJ/originals"
+}

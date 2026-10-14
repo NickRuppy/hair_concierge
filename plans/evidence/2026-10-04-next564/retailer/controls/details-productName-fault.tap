@@ -1,0 +1,34 @@
+TAP version 13
+# Subtest: official SDK accepts JSON framing and sends only numeric GTIN arguments
+not ok 1 - official SDK accepts JSON framing and sends only numeric GTIN arguments
+  ---
+  duration_ms: 16.237458
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-dm-mcp-client.test.ts:2:5056'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'Shampoo Pure Frische, 300 ml__audit'
+    - 'Shampoo Pure Frische, 300 ml'
+                                   ^
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'Shampoo Pure Frische, 300 ml'
+  actual: 'Shampoo Pure Frische, 300 ml__audit'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-dm-mcp-client.test.ts:152:14)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 327.809

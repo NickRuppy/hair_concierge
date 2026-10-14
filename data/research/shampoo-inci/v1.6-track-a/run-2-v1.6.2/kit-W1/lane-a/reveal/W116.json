@@ -1,0 +1,28 @@
+{
+  "blindId": "W116",
+  "productName": "Herbal Essences Shampoo Fiji (Rossmann: Haarshampoo Fiji Schwerelose Feuchtigkeit)",
+  "brand": "Herbal Essences (Procter & Gamble)",
+  "positioningSources": [
+    {
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Feuchtigkeitsshampoo für das Haar | Mit exotischem Kokosnussextrakt | Für weiches und geschmeidiges Haar | Vegan | Das Fiji Shampoo von Herbal Essences reinigt das Haar sanft und spendet Feuchtigkeit. Angereichert mit exotischem Kokosnussextrakt, entführt der Duft in ein tropisches Paradies und verwöhnt die Sinne. Die Formel hinterlässt das Haar spürbar weich und geschmeidig, ohne es zu beschweren. Das Shampoo umhüllt das Haar mit einem herrlichen Schaum und sorgt für ein gepflegtes Haargefühl. | Wirkung: Pflege, Feuchtigkeit | Produkteigenschaften: ohne Silikone, ohne Sulfat | Ohne Silikone | Ohne Sulfat",
+      "directionsVerbatim": "Anwendung: Großzügig auf das nasse Haar auftragen, aufschäumen und gründlich ausspülen. Anschließend Pflegespülung anwenden."
+    },
+    {
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "sourceGrade": "low",
+      "claimsVerbatim": "Erlebe Deinen Fiji Moment und atme den exotischen Kokosnussextrakt ein. Genieße eine sensorische Auszeit mit dem Herbal Essences Fiji Shampoo für schwerelose Feuchtigkeit. Es reinigt sanft und hinterlässt das Haar weich und geschmeidig. Angereichert mit Kokosnussextrakt, enthält dieses sulfatfreie*, vegane*** Shampoo 99 % Inhaltsstoffe natürlichen Ursprungs** und umhüllt deine Sinne mit einem herrlichen Schaum. | mit Kokosnussextrakt | reinigt und hydratisiert sanft das Haar und hinterlässt es weich und geschmeidig | sorgt für schwerelose Feuchtigkeit für weiches Haar | sulfatfreie*, vegane*** und tierversuchsfreie Formel, inspiriert von der Natur | *frei von sulfatierenden Tensiden **siehe Rückseite der Flasche ***keine tierischen Inhaltsstoffe oder Nebenprodukte",
+      "directionsVerbatim": "Großzügig auf das nasse Haar auftragen, aufschäumen und gründlich ausspülen. Anschließend Pflegespülung anwenden."
+    },
+    {
+      "sourceType": "manufacturer_brand_portal_de (P&G 'for me'; herbalessences.de/de-de redirects here)",
+      "sourceKind": "manufacturer_de",
+      "sourceGrade": "moderate",
+      "claimsVerbatim": "Shampoo für schwerelose Feuchtigkeit. Shampoo frei von sulfatierenden Tensiden. Vegan.",
+      "directionsVerbatim": "(none)"
+    }
+  ]
+}

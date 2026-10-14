@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import { loadMobileProfile } from "../src/lib/mobile/profile-service"
+import { loadMobileProfile, mobileProfileAnswers } from "../src/lib/mobile/profile-service"
 import { prepareScannerContext, type ScannerSourceRead } from "../src/lib/scan/scanner-context"
 import { buildLegacyQuizStage1Source } from "../src/lib/personal-plan/input"
 import { hashPersonalPlanNeedVersionInput } from "../src/lib/personal-plan/persistence"
@@ -180,7 +180,7 @@ test("refined owner preserves explicit detailed answers, refreshes assumptions a
     createdAt: "2026-01-01T00:00:00Z",
   })
   if (computed.status !== "ready") throw new Error("fixture")
-  const triggerContext = deriveStage2TriggerContext(computed.snapshot)
+  const triggerContext = deriveStage2TriggerContext(computed.snapshot, { toolsEnabled: false })
   const resolved = resolveAssumedAnswers({
     triggerContext,
     answers: {
@@ -320,7 +320,7 @@ test("complete habits preserve reported heat when only a product question is ass
     createdAt: "2026-01-01T00:00:00Z",
   })
   if (computed.status !== "ready") throw new Error("fixture")
-  const triggerContext = deriveStage2TriggerContext(computed.snapshot)
+  const triggerContext = deriveStage2TriggerContext(computed.snapshot, { toolsEnabled: false })
   const resolution = resolveAssumedAnswers({
     triggerContext,
     answers: {
@@ -460,4 +460,25 @@ test("synthetic profile fixture refuses non-local target and seeds sources accep
     local_test: true,
     seed_source: "mobile_profile_fixture",
   })
+})
+
+test("a Bondbuilder timing answer renders with its German label", () => {
+  const prepared = {
+    source: { kind: "legacy" },
+    userRefinementAnswers: { bondbuilderTiming: "before_wash" },
+  } as unknown as Parameters<typeof mobileProfileAnswers>[1]
+  const expectations = {
+    before_wash: "Vor dem Waschen",
+    after_wash: "Nach dem Waschen",
+    no_preference: "Ist mir egal",
+  } as const
+  for (const [value, label] of Object.entries(expectations)) {
+    const rows = mobileProfileAnswers({}, {
+      ...prepared,
+      userRefinementAnswers: { bondbuilderTiming: value },
+    } as typeof prepared)
+    assert.deepEqual(rows, [
+      { id: "refinement.bondbuilderTiming", label: "Zeitpunkt Bondbuilder", values: [label] },
+    ])
+  }
 })

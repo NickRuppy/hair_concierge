@@ -17,7 +17,6 @@ type Options = {
   recoveredStripeSession?: unknown
   paypalActivation?: unknown
   paypalError?: unknown | ((RecoveryError: new (code: string) => Error) => unknown)
-  bypassStripePreflight?: boolean
 }
 
 function loadWelcome(options: Options = {}) {
@@ -142,21 +141,13 @@ function loadWelcome(options: Options = {}) {
   }
   const filename = path.resolve("src/app/welcome/page.tsx")
   const source = readFileSync(filename, "utf8")
-  const code = ts.transpileModule(
-    options.bypassStripePreflight
-      ? source.replace(
-          "if (recoveryCode) return <CheckoutRecoveryPanel code={recoveryCode} />",
-          "if (false) return <CheckoutRecoveryPanel code={recoveryCode} />",
-        )
-      : source,
-    {
-      compilerOptions: {
-        module: ts.ModuleKind.CommonJS,
-        jsx: ts.JsxEmit.ReactJSX,
-        esModuleInterop: true,
-      },
+  const code = ts.transpileModule(source, {
+    compilerOptions: {
+      module: ts.ModuleKind.CommonJS,
+      jsx: ts.JsxEmit.ReactJSX,
+      esModuleInterop: true,
     },
-  ).outputText
+  }).outputText
   const module = { exports: {} as { default: (props: unknown) => Promise<any> } }
   vm.runInNewContext(`(function(require,module,exports){${code}\n})`, {
     console,
@@ -192,13 +183,6 @@ test("persisted Stripe trial denial renders before account writes or destination
     assertRecoveryPanel(page, f.CheckoutRecoveryPanel, "trial_unavailable")
     assert.deepEqual(f.calls, [])
   }
-})
-
-test("the preflight guard is sensitive to an in-memory bypass", async () => {
-  const f = loadWelcome({ stripeRecoveryCode: "trial_unavailable", bypassStripePreflight: true })
-  const page = await f.render({ session_id: "cs_trial" })
-  assert.notEqual(page.type, f.CheckoutRecoveryPanel)
-  assert.deepEqual(f.calls, ["firstDestination", "createClient"])
 })
 
 test("Stripe verification failures keep paid one-time returns pending and classify terminal failures", async () => {

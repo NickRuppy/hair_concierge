@@ -17,12 +17,20 @@ export class Stage3BootstrapReviewContractError extends Error {
 export const STAGE3_BOOTSTRAP_REVIEW_CONTRACT_VIOLATION = "incomplete_decision_reviews" as const
 
 /** The exact decision-ready gate; callback availability must not influence it. */
-export function stage3BootstrapRequiresReviewBundles(draft: Stage3ProductDraft): boolean {
+export function stage3BootstrapIsDecisionReady(draft: Stage3ProductDraft): boolean {
   return (
     draft.status === "active" &&
     draft.pass !== "product_capture" &&
     draft.pass !== "need_revision_review"
   )
+}
+
+/** A decision-ready draft needs complete reviews unless the budget gate holds the decisions. */
+export function stage3BootstrapRequiresReviewBundles(
+  draft: Stage3ProductDraft,
+  options: { budgetRequired?: boolean } = {},
+): boolean {
+  return stage3BootstrapIsDecisionReady(draft) && !options.budgetRequired
 }
 
 /** Inventory dispositions are acknowledged separately and never receive fit authority. */
@@ -36,8 +44,13 @@ export function hasCompleteStage3DecisionReviews(input: {
   draft: Stage3ProductDraft
   authorityEvaluations: readonly Pick<Stage3AuthorityEvaluation, "subjectKey">[]
   fitComparisons: readonly Pick<Stage3FitComparison, "subjectKey">[]
+  budgetRequired?: boolean
 }): boolean {
-  if (!stage3BootstrapRequiresReviewBundles(input.draft)) return true
+  if (
+    !stage3BootstrapRequiresReviewBundles(input.draft, { budgetRequired: input.budgetRequired })
+  ) {
+    return true
+  }
 
   const required = stage3ReviewDecisionSubjects(input.draft).map((subject) => subject.decisionKey)
   return (
@@ -50,6 +63,7 @@ export function requireCompleteStage3DecisionReviews(input: {
   draft: Stage3ProductDraft
   authorityEvaluations: readonly Pick<Stage3AuthorityEvaluation, "subjectKey">[]
   fitComparisons: readonly Pick<Stage3FitComparison, "subjectKey">[]
+  budgetRequired?: boolean
 }) {
   if (!hasCompleteStage3DecisionReviews(input)) throw new Stage3BootstrapReviewContractError()
 }

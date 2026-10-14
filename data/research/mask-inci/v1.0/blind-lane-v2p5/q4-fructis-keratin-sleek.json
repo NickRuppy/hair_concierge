@@ -1,0 +1,107 @@
+{
+  "productId": "q4-fructis-keratin-sleek",
+  "lane": "blind-v2.5",
+  "standardVersion": "mask-inci-v0.6",
+  "classifiedAt": "2026-10-06",
+  "attestation": {
+    "prohibitedFilesAccessed": false,
+    "inputsRead": [
+      "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1.md",
+      "docs/research/mask-inci/v1.0/02_evidence_lexicon.v0.1.md",
+      "docs/research/mask-inci/v1.0/00_category_charter.md",
+      "docs/research/mask-inci/v1.0/01_property-set-v0.md",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q1-wahre-schaetze-avocado-shea.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q2-swiss-o-par-arganoel.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q3-syoss-intense-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q4-fructis-keratin-sleek.json"
+    ]
+  },
+  "g0": {
+    "outcome": "in_category",
+    "conjuncts": {
+      "afterCleansing": "satisfied — 'Zu Beginn das Haar ... waschen und gründlich ausspülen. Nun die Haarmaske ...'",
+      "statedContactTime": "satisfied as a boundary conjunct — 'für mehrere Minuten einwirken lassen' states a dwell (not an immediate-rinse mode); no numeric duration, so the TPL-MASK contact-time slot is unsourced",
+      "rinsedOut": "satisfied — 'das Haar gründlich unter klarem Wasser ausspülen'"
+    },
+    "placement": "'in das Haar einarbeiten' — unspecific; P5 default",
+    "multiUse": false,
+    "protocolMetadata": { "contactTime": "unsourced ('mehrere Minuten' — no duration)", "source": "packet directionsText (rossmann.de, 2026-10-06)", "classificationCredit": "none" },
+    "note": "Eligible; the research profile completes but the protocol is not stampable without a numeric contact time (missing_sourced_contact_time)."
+  },
+  "tailMarker": {
+    "ingredient": "Caprylyl Glycol",
+    "index": 12,
+    "status": "unresolved",
+    "note": "Earliest marker-eligible species is the booster Caprylyl Glycol @12 (eligible: Phenoxyethanol @15, Benzoic Acid @16, Benzyl Alcohol @20 co-declared). E13 establishing-species limb passes (Cetearyl Alcohol @2, SAPDMA @3, IPM @4, Cetyl Esters @5, sunflower @6, argan @7, shea @8 all outrank @12). Third limb (E2) FIRES on the booster-above-preservative reading, which involves the marker species itself (@12 above Phenoxyethanol @15 / Benzoic Acid @16). Parfum @21 is LAST behind its own allergens (Linalool @17, Amyl Cinnamal @18, Hexyl Cinnamal @19) — the E2 application note's Garnier/L'Oréal house convention, so Parfum cannot serve as a marker either. Conservative reading is final: unresolved."
+  },
+  "bondRoute": "none",
+  "profile": {
+    "conditioning_level": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "A single cationic species on the whole list (Stearamidopropyl Dimethylamine @3), so S1 fails and `high` is unreachable at any boundary. S2 (Cetearyl Alcohol @2) and S3 (Isopropyl Myristate @4, Cetyl Esters @5) hold on early ranks that do not depend on the marker, so `low` is unreachable; S2+S3 without S1 = `moderate`. Confidence capped at `moderate` by the unresolved marker.",
+      "evidenceSignals": ["S2: Cetearyl Alcohol @2", "S3: IPM @4, Cetyl Esters @5 (plus sunflower @6, argan @7, shea @8)"],
+      "counterSignals": ["single cationic species (S1 fails)", "tail_marker unresolved"]
+    },
+    "weight_potential": {
+      "value": "moderate",
+      "confidence": "low",
+      "evidenceLevel": "E2",
+      "rationale": "The only R4b heavy lipid is Shea Butter @8; with a plausible marker it would complete the `high` anchor with the dense fatty base (Cetearyl Alcohol @2). Under the unresolved marker shea cannot be credited as above-tail solely because it outranks the booster @12 (§3.1.1 consequence 2), and it follows two mid-band oils (sunflower @6, argan @7) with no independent ordinal evidence of sitting above ~1 %, so `high` is withheld. `low` is unavailable on an unreadable segment and blocked anyway by the mid-band oils; the value rests on the marker boundary alone, so confidence is `low`.",
+      "evidenceSignals": ["dense fatty base: Cetearyl Alcohol @2", "candidate R4b core: Shea Butter @8", "mid band: Helianthus Annuus Seed Oil @6, Argania Spinosa Kernel Oil @7"],
+      "counterSignals": ["tail_marker unresolved — shea's above-tail status cannot be read"]
+    },
+    "care_direction": {
+      "value": "moisture",
+      "confidence": "low",
+      "evidenceLevel": "E2",
+      "rationale": "Three hydrolyzed proteins sit at @9–@11 (Corn, Soy, Wheat) — above the booster @12 only, so their above-tail status rests on the unresolved marker alone and they may not be credited as a material R5 route (§3.1.1 consequence 2; §1.1: unresolved never resolves toward protein/repair credit). Without a creditable protein leg the coherent cetearyl/amidoamine base with its ester/oil emollient leg reads the category-default `moisture`; no film system exists for reading (b), no humectant for reading (a). The value hinges entirely on the boundary (protein if the proteins are above ~1 %), so confidence is `low` and the field routes to review.",
+      "evidenceSignals": ["R1 base Cetearyl Alcohol @2 + SAPDMA @3", "emollient leg IPM @4, Cetyl Esters @5, sunflower @6, argan @7, shea @8"],
+      "counterSignals": ["Hydrolyzed Corn Protein @9, Hydrolyzed Soy Protein @10, Hydrolyzed Wheat Protein @11 — would be a material R5 route (and a D4 payload) under a plausible marker", "tail_marker unresolved"]
+    },
+    "repair_support_level": {
+      "value": "low",
+      "confidence": "low",
+      "evidenceLevel": "E2",
+      "rationale": "§9.4 `medium` uses the same material-R5 test as §9.3, and the three proteins @9–@11 cannot be credited on an unresolved marker, so only ordinary R1/R4 conditioning is creditable and the value is `low`. No named bond token exists, so `high` is unavailable regardless. The value rests on the marker boundary alone (it would be `medium` under a plausible marker), so confidence is `low`.",
+      "evidenceSignals": ["ordinary conditioning base only (creditable)"],
+      "counterSignals": ["three hydrolyzed proteins @9–@11 whose credit hinges on the boundary", "'Keratin' naming — no keratin species on the list"]
+    },
+    "primary_focus": {
+      "value": "general",
+      "confidence": "low",
+      "evidenceLevel": "E2",
+      "rationale": "Step 3 repair: no bond_route, and the E16 label-strong protein gate needs ≥ 2 distinct hydrolyzed proteins ABOVE the marker — the three @9–@11 are above only an unresolved marker, so the gate cannot be cleared and the repair headline is withheld (it would clear under a plausible marker). Moisture fails criterion 1 (no humectants); shine fails criterion 1 (no silicone or cationic polymer anywhere — the 'Glättung und Glanz' claim cannot create the route); smoothing has no distinct route beyond the M1 lipid base. Verdict `nonspecific` → `general`, `low` confidence because the repair-vs-general choice rests on the boundary.",
+      "evidenceSignals": ["focus_care_verdict: nonspecific (repair gate unreadable on an unresolved marker)", "claim_role: not_applicable"],
+      "counterSignals": ["'Sleek' / 'Glättung und Glanz bis zu drei Tage' positioning — E0, no optical architecture; the 'bis zu drei Tage' persistence claim is banned-wording territory for shine and is recorded only"]
+    },
+    "secondary_focus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No independent secondary route: no humectant cluster for moisture, no silicone/polymer for shine or smoothing, and the lipid base is already the M1 baseline. Repair cannot take a secondary slot for the same unresolved-marker reason it cannot take the headline.",
+      "evidenceSignals": [],
+      "counterSignals": []
+    }
+  },
+  "hinweise": {
+    "fired": [
+      {
+        "flag": "tail_marker",
+        "value": "unresolved",
+        "note": "Caprylyl Glycol @12 is a booster ranked above its preservatives (Phenoxyethanol @15, Benzoic Acid @16) and Parfum @21 is last behind its allergens (@17–@19). Hinging species: Shea Butter @8 (weight high vs moderate) and Hydrolyzed Corn/Soy/Wheat Protein @9–@11 (care_direction protein vs moisture, repair medium vs low, repair headline). No value is auto-decided; routes to review."
+      },
+      {
+        "flag": "claim_formula_mismatch",
+        "value": "'Keratin Sleek' / 'Glättung und Glanz'",
+        "note": "Front-of-pack 'Keratin' with no keratin species on the list (the proteins are corn, soy, wheat), and smoothing/shine positioning with no silicone or cationic-polymer film. Moves no value."
+      }
+    ]
+  },
+  "reviewTriggers": [
+    { "trigger": "tail_marker_unresolved", "fields": ["weight_potential", "care_direction", "repair_support_level", "primary_focus", "conditioning_level"] },
+    { "trigger": "low_confidence_field", "fields": ["weight_potential", "care_direction", "repair_support_level", "primary_focus"] },
+    { "trigger": "missing_sourced_contact_time", "fields": [], "note": "'mehrere Minuten' — no numeric contact time; profile completes, protocol not stampable" }
+  ]
+}

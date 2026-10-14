@@ -397,9 +397,11 @@ test("accepting a proposal while a module is still assumed never clears the assu
 
 test("an unreadable module status leaves the assumption state untouched", async () => {
   const calls: string[] = []
+  const assumptionReads: string[] = []
   const service = createRoutineProposalService({
     repository: repository(),
-    assumptionsActive: async () => {
+    assumptionsActive: async (userId) => {
+      assumptionReads.push(userId)
       throw new Error("refinement draft unavailable")
     },
     rpc: async (name) => {
@@ -417,6 +419,7 @@ test("an unreadable module status leaves the assumption state untouched", async 
     expectedRevision: 3,
   })
   assert.deepEqual(result, { status: "accepted", revision: 4 })
+  assert.deepEqual(assumptionReads, ["owner"])
   assert.deepEqual(calls, ["personal_plan_confirm_routine_proposal"])
 })
 

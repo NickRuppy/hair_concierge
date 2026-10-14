@@ -269,28 +269,6 @@ test("personal plan offer renders approved hierarchy without personalized produc
   assert.doesNotMatch(html, /conditionerModuleId|shampooModuleId|suggestedCategory|needLane/)
 })
 
-test("sticky offer CTA morph preserves pricing navigation before checkout intent", () => {
-  const offerSource = readFileSync(
-    new URL("../src/components/personal-plan-offer/personal-plan-offer.tsx", import.meta.url),
-    "utf8",
-  )
-
-  assert.match(offerSource, /const \[pricingReached, setPricingReached\] = useState\(false\)/)
-  assert.match(offerSource, /const handlePricingReached = useCallback/)
-  assert.match(offerSource, /onPricingReached=\{handlePricingReached\}/)
-  assert.match(offerSource, /onCheckoutSummaryChange=\{setCheckoutSummary\}/)
-  assert.match(offerSource, /pricingReached\s*\?\s*"checkout"\s*:\s*"pricing"/)
-  assert.match(offerSource, /pricingReached\s*\?\s*openCheckout\s*:\s*scrollToPricing/)
-  assert.match(offerSource, /h-11 w-36 sm:w-40/)
-  assert.match(
-    offerSource,
-    /data-offer-sticky-state=\{pricingReached \? "after_pricing" : "before_pricing"\}/,
-  )
-  assert.match(offerSource, /checkoutSummary\.commerceKind === "membership"/)
-  assert.match(offerSource, /data-offer-selected-interval=\{stickySelectedInterval\}/)
-  assert.match(offerSource, /data-offer-cta="sticky_header"/)
-})
-
 test("personal plan FAQ stays native while exposing measured-height motion hooks", () => {
   const offerSource = readFileSync(
     new URL("../src/components/personal-plan-offer/personal-plan-offer.tsx", import.meta.url),
@@ -338,6 +316,14 @@ test("one-time personal plan removes the membership guarantee from the shared of
   )
   assert.doesNotMatch(html, /Warum ist Chaarlie ein Abo|Wie und wann kann ich kündigen/i)
   assert.doesNotMatch(html, /data-offer-faq="personal-plan-/)
+
+  // The actual one-time pricing output owns its launch anchor and trust-copy order.
+  assert.match(html, /Launch-Preis[\s\S]*<s[^>]*>€49,99<\/s>[\s\S]*<strong[^>]*>€29,99<\/strong>/)
+  assert.match(
+    html,
+    /14 Tage Geld-zurück-Garantie · Einmalzahlung · Kein Abo[\s\S]*PayPal · Apple Pay \(auf unterstützten Geräten\) · Visa · Mastercard[\s\S]*Zahlungsdaten verarbeitet dein gewählter Anbieter\.[\s\S]*Mehr zum Datenschutz\./,
+  )
+  assert.doesNotMatch(html, /Sicher bezahlen über deinen gewählten Zahlungsanbieter\./)
 })
 
 test("personal plan result shows recovery instead of falling through to legacy offer", () => {
@@ -556,6 +542,18 @@ test("personal plan result reads only the attached public artifact model", () =>
 })
 
 /**
+ * F4 (ruled 27.08.2026). This surface is Personal-Plan-only, and for those
+ * buyers the middleware's frontier redirect forwards `/routine` on to the stage
+ * they actually reached. (Legacy cohorts are NOT redirected —
+ * `getPersonalPlanFrontierRedirect` returns `null` for `kind === "legacy"` —
+ * which is exactly why the legacy result actions keep their own destinations.)
+ *
+ * A fresh buyer with no Stage-4 routine yet is still not sent to a
+ * "Routinebereich", so the copy must never name that destination or it
+ * contradicts the screen the user lands on.
+ */
+
+/**
  * A1 (founder ruling 27.08.2026), BEHAVIORAL. The paid result surface used to
  * route the buyer into `/onboarding` — a retired flow — and framed the
  * refinement as a gate ("Im nächsten Schritt ergänzt du …; danach öffnet sich
@@ -587,52 +585,8 @@ test("a paid personal-plan result hands the buyer their plan, never the retired 
   assert.doesNotMatch(html, /Meinen Plan verfeinern/)
   assert.doesNotMatch(html, /Im nächsten Schritt/)
   assert.doesNotMatch(html, /Danach öffnet sich dein Routinebereich/)
-})
-
-/**
- * F4 (ruled 27.08.2026). This surface is Personal-Plan-only, and for those
- * buyers the middleware's frontier redirect forwards `/routine` on to the stage
- * they actually reached. (Legacy cohorts are NOT redirected —
- * `getPersonalPlanFrontierRedirect` returns `null` for `kind === "legacy"` —
- * which is exactly why the legacy result actions keep their own destinations.)
- *
- * A fresh buyer with no Stage-4 routine yet is still not sent to a
- * "Routinebereich", so the copy must never name that destination or it
- * contradicts the screen the user lands on.
- */
-test("the paid screen's copy is frontier-agnostic and carries no duplicated eyebrow", () => {
-  const html = renderToStaticMarkup(
-    <ResultPageClient
-      entryContext="quiz_completion"
-      focusRoutine={false}
-      hasAccess
-      leadId="11111111-1111-4111-8111-111111111111"
-      name="Lea Sommer"
-      personalPlanOffer={publicOfferModel}
-      quizAnswers={null}
-      quizKind="personal_plan"
-    />,
-  )
-
-  // No frontier-specific destination claim anywhere on the screen.
   assert.doesNotMatch(html, /Routinebereich/)
   assert.doesNotMatch(html, /Zu meiner Routine/)
-
-  // F15: the removed eyebrow stays removed — it repeated the headline verbatim.
   assert.doesNotMatch(html, /Dein Haarplan ist bereit/)
   assert.equal((html.match(/ist bereit/g) ?? []).length, 1)
-})
-
-test("the paid continuation no longer needs a lead id to build its destination", () => {
-  const offerSource = readFileSync(
-    new URL("../src/components/personal-plan-offer/personal-plan-offer.tsx", import.meta.url),
-    "utf8",
-  )
-  const clientSource = readFileSync(
-    new URL("../src/app/result/[leadId]/result-client.tsx", import.meta.url),
-    "utf8",
-  )
-
-  assert.match(offerSource, /export function PersonalPlanPaidContinuation\(\{ name \}/)
-  assert.match(clientSource, /<PersonalPlanPaidContinuation name=\{name\} \/>/)
 })

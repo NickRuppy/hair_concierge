@@ -1,0 +1,575 @@
+{
+  "blindId": "T215",
+  "inciFingerprintSha256": "926b4f48400d27a381a3854afd2573d0e1c4e1d435d55a78e60691c1f68f60ba",
+  "policyId": "shampoo-classification-v1.6",
+  "identity": {
+    "productName": "Balea Professional Shampoo Ultimate Volume, 250 ml (DELISTED at dm; replaced in catalog by Balea Professional Hydra Volume)",
+    "brand": "Balea Professional",
+    "market": "DE",
+    "packSize": "250 ml",
+    "formulaSourceTier": 2,
+    "identityConfidence": "high",
+    "normalization": "No split entries; positions = packet order (normalized, one-based).",
+    "identityNotes": [
+      "Product is delisted at dm (replaced by Hydra Volume); identity and formula are from the frozen packet; no formula conflict."
+    ]
+  },
+  "claimGrading": [
+    {
+      "claim": "Ultimate Volume (name); Volumen Shampoo; Anti-Platt-Effekt",
+      "source": "product name / dm own brand (manufacturer_de)",
+      "grade": "high / moderate",
+      "use": "volume focus candidate"
+    },
+    {
+      "claim": "Für feines, plattes Haar",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "use": "never a fit input (T2)"
+    },
+    {
+      "claim": "Pflege-Formel mit Biotin & Reis-Extrakt; kräftigt die Haarstruktur",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "use": "no independent repair route"
+    },
+    {
+      "claim": "ohne es zu beschweren",
+      "source": "manufacturer_de",
+      "grade": "moderate",
+      "use": "never lowers weight"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "Moderate (C1): Sodium Laureth Sulfate (2) defining anionic, buffered by Cocamidopropyl Hydroxysultaine (3) and Coco-Glucoside (5); no reinforcing strong anionic.",
+      "counterSignal": "Little refatting; convention unchanged.",
+      "neighboringAlternative": "none",
+      "ruleIds": [
+        "C1",
+        "C3",
+        "C4"
+      ],
+      "sourceIds": [
+        "formula:T215:926b4f48400d"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2
+        },
+        {
+          "ingredient": "Cocamidopropyl Hydroxysultaine",
+          "position": 3
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 5
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Moderate: one meaningful system, Guar Hydroxypropyltrimonium Chloride (10, prominent), with Hydrolyzed Wheat Protein (6) and Glycerin (9). C2 not met (no silicone, payload lipid or pearlizing route).",
+      "counterSignal": "Single polymer and a hydrolyzed protein; a cleansing-led low reading is realistic.",
+      "neighboringAlternative": "low",
+      "ruleIds": [
+        "C2",
+        "Section 5 anchors"
+      ],
+      "sourceIds": [
+        "formula:T215:926b4f48400d"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Hydrolyzed Wheat Protein",
+          "position": 6,
+          "role": "protein_film"
+        },
+        {
+          "ingredient": "Glycerin",
+          "position": 9,
+          "role": "humectant"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 10,
+          "role": "cationic_polymer"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "low",
+      "confidence": "moderate",
+      "rationale": "Low: one cationic guar (10) and a hydrolyzed wheat protein (6) against an effective buffered SLES chassis; no silicone, lipid or film former.",
+      "formulaFacts": [
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 10,
+          "family": "cationic_polymer"
+        },
+        {
+          "ingredient": "Hydrolyzed Wheat Protein",
+          "position": 6,
+          "family": "protein_film"
+        },
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2,
+          "family": "reset"
+        },
+        {
+          "ingredient": "Cocamidopropyl Hydroxysultaine",
+          "position": 3,
+          "family": "reset"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 5,
+          "family": "reset"
+        }
+      ],
+      "counterSignal": "Guar level unknown (neighbor moderate).",
+      "neighboringAlternative": "moderate",
+      "weightRecord": {
+        "canonicalFormula": {
+          "blindId": "T215",
+          "inciFingerprintSha256": "926b4f48400d27a381a3854afd2573d0e1c4e1d435d55a78e60691c1f68f60ba",
+          "sourceTier": 2,
+          "completeness": "complete",
+          "identityConfidence": "high",
+          "captureDate": "not stated in the frozen packet",
+          "normalization": "No split entries; positions = packet order (normalized, one-based)."
+        },
+        "extractedEvidence": {
+          "cationic_polymer": [
+            {
+              "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+              "position": 10
+            }
+          ],
+          "protein_film": [
+            {
+              "ingredient": "Hydrolyzed Wheat Protein",
+              "position": 6
+            }
+          ],
+          "silicone": [],
+          "payload_lipid": [],
+          "weak_refatter": [],
+          "film_former": [],
+          "reset": [
+            {
+              "ingredient": "Sodium Laureth Sulfate",
+              "position": 2
+            },
+            {
+              "ingredient": "Cocamidopropyl Hydroxysultaine",
+              "position": 3
+            },
+            {
+              "ingredient": "Coco-Glucoside",
+              "position": 5
+            }
+          ],
+          "excluded": [
+            {
+              "ingredient": "Laureth-2",
+              "position": 12,
+              "reason": "low-ethoxylate thickener"
+            },
+            {
+              "ingredient": "Biotin",
+              "position": 7,
+              "reason": "vitamin, no deposition role"
+            },
+            {
+              "ingredient": "Oryza Sativa Extract",
+              "position": 8,
+              "reason": "botanical extract, no deposition role"
+            }
+          ],
+          "context_humectants": [
+            {
+              "ingredient": "Glycerin",
+              "position": 9
+            }
+          ]
+        },
+        "subjudgments": {
+          "depositionLoad": {
+            "value": "light",
+            "rationale": "Guar (10) and hydrolyzed protein (6)."
+          },
+          "persistence": {
+            "value": "low",
+            "rationale": "Light polymer and hydrolyzed protein are weakly retained."
+          },
+          "resetCapacity": {
+            "value": "moderate",
+            "rationale": "C1 SLES + sultaine + glucoside."
+          }
+        },
+        "w1Check": "W1 not cited.",
+        "counterevidence": "Guar level unknown (neighbor moderate).",
+        "unresolvedFacts": [],
+        "proposedWeightPotential": "low",
+        "whyThisBand": "One light polymer plus a hydrolyzed protein with moderate reset: low anchor.",
+        "whyNotNeighborBand": "W2: two families present, but they are one guar and a hydrolyzed (small, weakly film-forming) protein; no silicone, lipid or film former converges and the SLES chassis offsets light residue.",
+        "confidence": "moderate",
+        "limitingFactor": "Guar level unknown (neighbor moderate).",
+        "neighboringAlternative": "moderate",
+        "claimsAfterUnblind": "Revealed claims do not move the band (6.5 step 5)."
+      },
+      "ruleIds": [
+        "6.3",
+        "6.4",
+        "6.6",
+        "6.7",
+        "6.8"
+      ],
+      "sourceIds": [
+        "formula:T215:926b4f48400d"
+      ]
+    },
+    "focusPrimary": {
+      "value": "volume",
+      "confidence": "moderate",
+      "neighboringAlternative": "general",
+      "rationale": "Volume: name-level volume positioning with a compatible formula (weight low; one guar 10 and a hydrolyzed wheat protein 6, light).",
+      "counterSignal": "Bounded conditioning (guar) and a strengthening claim; Biotin/rice extract are marketing actives.",
+      "formulaFacts": [
+        {
+          "ingredient": "Hydrolyzed Wheat Protein",
+          "position": 6
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 10
+        }
+      ],
+      "ruleIds": [
+        "7.1",
+        "7.2"
+      ],
+      "sourceIds": [
+        "reveal:product_name",
+        "reveal:dm_own_brand"
+      ],
+      "careDirection": {
+        "verdict": "not_applicable",
+        "moistureRoutes": [],
+        "repairRoutes": [],
+        "sharedRoutes": [],
+        "limitation": "Volume focus."
+      },
+      "claimRole": "candidate"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Empty: 'kräftigt die Haarstruktur' has no independent repair route (single hydrolyzed protein).",
+      "counterSignal": "None material.",
+      "formulaFacts": [],
+      "ruleIds": [
+        "8"
+      ],
+      "sourceIds": [
+        "reveal"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Regular.",
+      "counterSignal": "No competing trigger fired.",
+      "formulaFacts": [],
+      "ruleIds": [
+        "9",
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "CL-SRC"
+      ],
+      "sourceIds": [
+        "reveal"
+      ],
+      "triggerCode": "none"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no scalp claim.",
+      "counterSignal": "None.",
+      "formulaFacts": [],
+      "ruleIds": [
+        "10"
+      ],
+      "sourceIds": [
+        "reveal"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole in the complete INCI.",
+      "neighboringAlternative": "none",
+      "counterSignal": "None: Section 11 is mechanical on the complete INCI.",
+      "formulaFacts": [],
+      "ruleIds": [
+        "11"
+      ]
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "not_applicable",
+      "moistureRoutes": [],
+      "repairRoutes": [],
+      "sharedRoutes": [],
+      "limitation": "Volume focus."
+    },
+    "claimRole": "candidate",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "volume (name, high)",
+        "formulaCompatible": true,
+        "compatibleRoute": "low-weight formula, light guar/protein",
+        "decisionReason": "Dominant compatible job."
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [],
+        "independentRoutes": [],
+        "whyDistinct": "None.",
+        "exceptionCode": null
+      },
+      "usage": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [
+          "No frequency wording."
+        ],
+        "losingTriggers": [],
+        "rationale": "Regular."
+      }
+    }
+  },
+  "weightRecord": {
+    "canonicalFormula": {
+      "blindId": "T215",
+      "inciFingerprintSha256": "926b4f48400d27a381a3854afd2573d0e1c4e1d435d55a78e60691c1f68f60ba",
+      "sourceTier": 2,
+      "completeness": "complete",
+      "identityConfidence": "high",
+      "captureDate": "not stated in the frozen packet",
+      "normalization": "No split entries; positions = packet order (normalized, one-based)."
+    },
+    "extractedEvidence": {
+      "cationic_polymer": [
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 10
+        }
+      ],
+      "protein_film": [
+        {
+          "ingredient": "Hydrolyzed Wheat Protein",
+          "position": 6
+        }
+      ],
+      "silicone": [],
+      "payload_lipid": [],
+      "weak_refatter": [],
+      "film_former": [],
+      "reset": [
+        {
+          "ingredient": "Sodium Laureth Sulfate",
+          "position": 2
+        },
+        {
+          "ingredient": "Cocamidopropyl Hydroxysultaine",
+          "position": 3
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 5
+        }
+      ],
+      "excluded": [
+        {
+          "ingredient": "Laureth-2",
+          "position": 12,
+          "reason": "low-ethoxylate thickener"
+        },
+        {
+          "ingredient": "Biotin",
+          "position": 7,
+          "reason": "vitamin, no deposition role"
+        },
+        {
+          "ingredient": "Oryza Sativa Extract",
+          "position": 8,
+          "reason": "botanical extract, no deposition role"
+        }
+      ],
+      "context_humectants": [
+        {
+          "ingredient": "Glycerin",
+          "position": 9
+        }
+      ]
+    },
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "light",
+        "rationale": "Guar (10) and hydrolyzed protein (6)."
+      },
+      "persistence": {
+        "value": "low",
+        "rationale": "Light polymer and hydrolyzed protein are weakly retained."
+      },
+      "resetCapacity": {
+        "value": "moderate",
+        "rationale": "C1 SLES + sultaine + glucoside."
+      }
+    },
+    "w1Check": "W1 not cited.",
+    "counterevidence": "Guar level unknown (neighbor moderate).",
+    "unresolvedFacts": [],
+    "proposedWeightPotential": "low",
+    "whyThisBand": "One light polymer plus a hydrolyzed protein with moderate reset: low anchor.",
+    "whyNotNeighborBand": "W2: two families present, but they are one guar and a hydrolyzed (small, weakly film-forming) protein; no silicone, lipid or film former converges and the SLES chassis offsets light residue.",
+    "confidence": "moderate",
+    "limitingFactor": "Guar level unknown (neighbor moderate).",
+    "neighboringAlternative": "moderate",
+    "claimsAfterUnblind": "Revealed claims do not move the band (6.5 step 5)."
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal; T4: neighbor weightPotential->moderate gives acceptable (lower tier) -> review_thickness_boundary"
+      },
+      {
+        "thickness": "normal",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W low -> ideal; T4: no neighbor gives a lower final tier"
+      },
+      {
+        "thickness": "coarse",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W low, C moderate -> acceptable; T4: no neighbor gives a lower final tier"
+      }
+    ],
+    "weight": {
+      "value": "light",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential low -> light (1:1)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "confidence": "high",
+        "sOrdinaryWays": [
+          1
+        ],
+        "rationale": "Ordinary (way 1): no E2 claim; dm own-brand manufacturer source -> high.",
+        "ruleIds": [
+          "S-ORDINARY",
+          "13.8"
+        ]
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "regular",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength moderate, D1 false -> regular."
+    },
+    "explicitResetPositioning": {
+      "value": false,
+      "confidence": "high",
+      "rationale": "D1 false: no tiefenrein/deep clean/clarifying shampoo/detox-reinigung stem in name or a manufacturer/pack claim, and no occasional-use directions."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "rationale": "D2 requires strong cleansing, clarifying focus, occasional_reset and D1 true; not met."
+    },
+    "rows": [
+      {
+        "thickness": "fine",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "bucketExpectedIntensity": "regular",
+        "liveMatch": "ideal"
+      },
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "ideal",
+        "bucketExpectedIntensity": "regular",
+        "liveMatch": "ideal"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "regular",
+        "weight": "light",
+        "tier": "acceptable",
+        "bucketExpectedIntensity": "regular",
+        "liveMatch": "supportive"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [
+      "review_thickness_boundary:fine"
+    ],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "researchCombinationDetail": "Not a dandruff-primary product; E2b layer 2 does not apply."
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "general (provisional, low)",
+      "final": "volume (moderate)",
+      "evidence": "name 'Ultimate Volume'",
+      "reason": "Claim identifies volume; formula compatible."
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedBand": true,
+    "threeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "comparisonWithEarlierValuesOutsideLane": true,
+    "blindRecordUnchangedAfterFreeze": true
+  },
+  "uncertainties": []
+}

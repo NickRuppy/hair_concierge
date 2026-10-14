@@ -1,0 +1,266 @@
+[
+  {
+    "id": "D1-ratio",
+    "lane": "tracker",
+    "phase": "new",
+    "intended": "keeper shampoo.weeklyCadence literal 2 fails; donor also fails before cut",
+    "source": "src/lib/tracking/aggregation.ts",
+    "selectedTest": {
+      "file": "tests/tracker-aggregation.test.ts",
+      "name": "shampoo cadence is the measured wash rhythm, not the self-report"
+    },
+    "originalHash": "657c128065c8c126ab7613e3280a15fb84b36cecbfbea69e8fbdb2cab3300332",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next494-tracker-mutations-new/D1-ratio-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next494-tracker-mutations-new/D1-ratio-fault.tap"
+    },
+    "restoredHash": "657c128065c8c126ab7613e3280a15fb84b36cecbfbea69e8fbdb2cab3300332",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next494-tracker-mutations-new/D1-ratio-after.tap"
+    },
+    "keeperAssertionLines": [
+      113,
+      114,
+      115
+    ],
+    "assertionStacks": [
+      115
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "D2-missing-observation",
+    "lane": "tracker",
+    "phase": "new",
+    "intended": "keeper finds emitted shampoo instead of undefined; donor null also fails before cut",
+    "source": "src/lib/tracking/aggregation.ts",
+    "selectedTest": {
+      "file": "tests/tracker-aggregation.test.ts",
+      "name": "shampoo emits no cadence when wash rhythm is unobserved (sparse logging)"
+    },
+    "originalHash": "657c128065c8c126ab7613e3280a15fb84b36cecbfbea69e8fbdb2cab3300332",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next494-tracker-mutations-new/D2-missing-observation-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next494-tracker-mutations-new/D2-missing-observation-fault.tap"
+    },
+    "restoredHash": "657c128065c8c126ab7613e3280a15fb84b36cecbfbea69e8fbdb2cab3300332",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next494-tracker-mutations-new/D2-missing-observation-after.tap"
+    },
+    "keeperAssertionLines": [
+      121
+    ],
+    "assertionStacks": [
+      121
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "C1-basis",
+    "lane": "tracker",
+    "phase": "new",
+    "intended": "transferred mask.basis day_level fails; original keeper without transfer stays green for this isolated projection fault",
+    "source": "src/lib/tracking/aggregation.ts",
+    "selectedTest": {
+      "file": "tests/tracker-aggregation.test.ts",
+      "name": "custom and unconfirmed days do not affect cadence denominators or category usage"
+    },
+    "originalHash": "657c128065c8c126ab7613e3280a15fb84b36cecbfbea69e8fbdb2cab3300332",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next494-tracker-mutations-new/C1-basis-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next494-tracker-mutations-new/C1-basis-fault.tap"
+    },
+    "restoredHash": "657c128065c8c126ab7613e3280a15fb84b36cecbfbea69e8fbdb2cab3300332",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next494-tracker-mutations-new/C1-basis-after.tap"
+    },
+    "keeperAssertionLines": [
+      313,
+      314,
+      315,
+      316,
+      317,
+      318
+    ],
+    "assertionStacks": [
+      314
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "C1-anchor",
+    "lane": "tracker",
+    "phase": "new",
+    "intended": "transferred mask.anchorSource null fails; original keeper without transfer stays green",
+    "source": "src/lib/tracking/aggregation.ts",
+    "selectedTest": {
+      "file": "tests/tracker-aggregation.test.ts",
+      "name": "custom and unconfirmed days do not affect cadence denominators or category usage"
+    },
+    "originalHash": "657c128065c8c126ab7613e3280a15fb84b36cecbfbea69e8fbdb2cab3300332",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next494-tracker-mutations-new/C1-anchor-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next494-tracker-mutations-new/C1-anchor-fault.tap"
+    },
+    "restoredHash": "657c128065c8c126ab7613e3280a15fb84b36cecbfbea69e8fbdb2cab3300332",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next494-tracker-mutations-new/C1-anchor-after.tap"
+    },
+    "keeperAssertionLines": [
+      313,
+      314,
+      315,
+      316,
+      317,
+      318
+    ],
+    "assertionStacks": [
+      315
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  },
+  {
+    "id": "C2-returned-direction",
+    "lane": "tracker",
+    "phase": "new",
+    "intended": "otherDirection still length 1, transferred direction decrease fails; original keeper stays green",
+    "source": "src/lib/tracking/nudges.ts",
+    "selectedTest": {
+      "file": "tests/tracker-nudges.test.ts",
+      "name": "dismissed direction stays hidden; other direction still fires"
+    },
+    "originalHash": "01d34c6d21825ad729f24ce8cc1a9fe13ee3d54290b8935e6373039b8dc0092e",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next494-tracker-mutations-new/C2-returned-direction-before.tap"
+    },
+    "fault": {
+      "status": 1,
+      "signal": null,
+      "timedOut": false,
+      "pass": 0,
+      "fail": 1,
+      "tests": 1,
+      "assert": true,
+      "log": "/tmp/test-audit-next494-tracker-mutations-new/C2-returned-direction-fault.tap"
+    },
+    "restoredHash": "01d34c6d21825ad729f24ce8cc1a9fe13ee3d54290b8935e6373039b8dc0092e",
+    "after": {
+      "status": 0,
+      "signal": null,
+      "timedOut": false,
+      "pass": 1,
+      "fail": 0,
+      "tests": 1,
+      "assert": false,
+      "log": "/tmp/test-audit-next494-tracker-mutations-new/C2-returned-direction-after.tap"
+    },
+    "keeperAssertionLines": [
+      120,
+      133,
+      134
+    ],
+    "assertionStacks": [
+      134
+    ],
+    "requiresMainIntendedAssertionInspection": true
+  }
+]

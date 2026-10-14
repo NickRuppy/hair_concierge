@@ -1,0 +1,42 @@
+TAP version 13
+# Subtest: streamReleasePlan: a stale effect instance cannot stop the newer instance's stream
+not ok 1 - streamReleasePlan: a stale effect instance cannot stop the newer instance's stream
+  ---
+  duration_ms: 3.453584
+  location: '/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-scanner-loop.test.ts:2:11975'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+    +   clearCurrent: true,
+    -   clearCurrent: false,
+        clearVideoSource: false
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    clearCurrent: false
+    clearVideoSource: false
+  actual:
+    clearCurrent: true
+    clearVideoSource: false
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning/tests/scan-scanner-loop.test.ts:339:10)
+    Test.runInAsyncScope (node:async_hooks:211:14)
+    Test.run (node:internal/test_runner/test:934:25)
+    Test.start (node:internal/test_runner/test:833:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 191.44025

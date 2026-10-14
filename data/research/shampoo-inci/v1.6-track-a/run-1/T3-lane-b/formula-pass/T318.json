@@ -1,0 +1,174 @@
+{
+  "blindId": "T318",
+  "inciFingerprintSha256": "7def5e2af9726079ed0af2f394b941672e8bd3f031cb15361f5cad35cf9c8a5c",
+  "phase": "blind_formula_pass",
+  "normalizationNote": "'AQUA/WATER/EAU' one entry; positions as listed.",
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "moderate",
+      "confidence": "high",
+      "rationale": "C1: defining anionic Sodium C14-16 Olefin Sulfonate (3, sulfonate type; earliest prominent strong anionic); prominent buffers Cocamidopropyl Betaine (2), Coco-Glucoside (5), Sodium Cocoyl Isethionate (7, mild anionic); no reinforcing route. Disodium Laureth Sulfosuccinate (15) is after Parfum (12). ",
+      "neighboringAlternative": "none",
+      "counterSignal": "Betaine listed before the olefin sulfonate and two further buffers argue milder; C1 fixes moderate."
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "W-RICH: prominent payload lipids Macadamia Integrifolia Seed Oil (8), Persea Gratissima Oil (9) converge with cationic Polyquaternium-10 (17) and Hydroxypropyl Guar Hydroxypropyltrimonium Chloride (18); humectants Glycerin (6), Panthenol (16). C2 itself not met (no pearlizing/fatty route).",
+      "neighboringAlternative": "moderate",
+      "counterSignal": "Both cationic polymers after Parfum; C2 not met."
+    },
+    "weightPotential": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "rationale": "Two prominent plant oils (8, 9) plus two late cationic polymers (17, 18): W-RICH formally, but resetCapacity moderate (C1), so the rich route to high is not met.",
+      "neighboringAlternative": "high",
+      "subjudgments": {
+        "depositionLoad": {
+          "value": "moderate",
+          "rationale": "Two prominent oils; cationics after Parfum."
+        },
+        "persistence": {
+          "value": "moderate",
+          "rationale": "Liquid oils moderately retained; two cationics small."
+        },
+        "resetCapacity": {
+          "value": "moderate",
+          "rationale": "C1 olefin sulfonate with three buffers."
+        }
+      },
+      "whyThisBand": "Bounded residue; ordinary reset.",
+      "whyNotNeighborBand": "Not low: prominent oils plus two cationic polymers (W2). Not high: reset not limited; cationics late; no silicone or wax.",
+      "counterSignal": "W-RICH and a second cationic polymer; neighbor high per W-RICH rule.",
+      "excluded": [
+        "Acrylates Copolymer (14): acrylate thickener (6.4)",
+        "Propylene Glycol (11): solvent",
+        "Cyclodextrin (20), Sodium Starch Octenylsuccinate (21), Hydroxypropyl Starch Phosphate (24): late thickeners/encapsulants",
+        "Disodium EDTA (19): chelator"
+      ]
+    },
+    "focusPrimary": {
+      "value": "moisture",
+      "confidence": "low",
+      "rationale": "Provisional. Care direction moisture_supported: Glycerin (6), Panthenol (16) with emollient oils (8, 9) and cationic deposition.",
+      "neighboringAlternative": "general",
+      "careDirection": {
+        "verdict": "moisture_supported",
+        "moistureRoutes": [
+          "Glycerin 6",
+          "Panthenol 16"
+        ],
+        "sharedConditioningRoutes": [
+          "Macadamia Integrifolia Seed Oil 8",
+          "Persea Gratissima Oil 9",
+          "Polyquaternium-10 17",
+          "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride 18"
+        ],
+        "repairRoutes": [],
+        "limitation": "Panthenol and cationics after Parfum."
+      }
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "low",
+      "rationale": "Provisional empty default.",
+      "neighboringAlternative": [
+        "repair"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "low",
+      "rationale": "Provisional default.",
+      "neighboringAlternative": "frequent"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "low",
+      "rationale": "Provisional pending SC1. CSA formula half passes via prominent Glycerin (6) and plant oils (8, 9) (humectant/refatting); no prominent comfort route (Panthenol 16 after Parfum).",
+      "neighboringAlternative": "targeted",
+      "csaFormulaHalf": "pass",
+      "prominentComfortRoute": false,
+      "prominentHumectantRefattingRoute": true
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "No Piroctone Olamine or Climbazole.",
+      "neighboringAlternative": "none"
+    }
+  },
+  "formulaFacts": [
+    {
+      "ingredient": "Cocamidopropyl Betaine",
+      "position": 2,
+      "role": "buffer (listed first)"
+    },
+    {
+      "ingredient": "Sodium C14-16 Olefin Sulfonate",
+      "position": 3,
+      "role": "defining anionic, sulfonate type"
+    },
+    {
+      "ingredient": "Coco-Glucoside",
+      "position": 5,
+      "role": "buffer"
+    },
+    {
+      "ingredient": "Glycerin",
+      "position": 6,
+      "role": "humectant"
+    },
+    {
+      "ingredient": "Sodium Cocoyl Isethionate",
+      "position": 7,
+      "role": "mild anionic buffer"
+    },
+    {
+      "ingredient": "Macadamia Integrifolia Seed Oil",
+      "position": 8,
+      "role": "payload_lipid"
+    },
+    {
+      "ingredient": "Persea Gratissima Oil",
+      "position": 9,
+      "role": "payload_lipid"
+    },
+    {
+      "ingredient": "Phenoxyethanol",
+      "position": 10,
+      "role": "preservative"
+    },
+    {
+      "ingredient": "Parfum (Fragrance)",
+      "position": 12,
+      "role": "E3 point"
+    },
+    {
+      "ingredient": "Acrylates Copolymer",
+      "position": 14,
+      "role": "acrylate thickener"
+    },
+    {
+      "ingredient": "Disodium Laureth Sulfosuccinate",
+      "position": 15,
+      "role": "mild anionic, non-prominent"
+    },
+    {
+      "ingredient": "Panthenol",
+      "position": 16,
+      "role": "humectant"
+    },
+    {
+      "ingredient": "Polyquaternium-10",
+      "position": 17,
+      "role": "cationic_polymer"
+    },
+    {
+      "ingredient": "Hydroxypropyl Guar Hydroxypropyltrimonium Chloride",
+      "position": 18,
+      "role": "cationic_polymer"
+    }
+  ],
+  "unresolvedMaterialIngredients": []
+}

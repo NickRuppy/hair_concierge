@@ -1,0 +1,117 @@
+--- before/tests/personal-plan-prepare-route.test.ts
++++ transfer/tests/personal-plan-prepare-route.test.ts
+@@ -53,6 +53,7 @@
+ function dependencies(overrides: Partial<PersonalPlanPrepareRouteDeps> = {}) {
+   const order: string[] = []
+   const rateCalls: Array<{ identifier: string; prefix: string }> = []
++  const rateConfigs: Array<{ prefix: string; limit: number; windowMs: number }> = []
+   const preparations: PersonalPlanPrepareArtifactInput[] = []
+   const warnings: string[] = []
+   const deps: PersonalPlanPrepareRouteDeps = {
+@@ -60,6 +61,7 @@
+     checkRateLimit: async (identifier, config) => {
+       order.push(`rate:${config.prefix}`)
+       rateCalls.push({ identifier, prefix: config.prefix })
++      rateConfigs.push({ ...config })
+       return { allowed: true }
+     },
+     retryAfterSeconds: () => 7,
+@@ -81,7 +83,7 @@
+     warnRateLimited: (scope) => warnings.push(scope),
+     ...overrides,
+   }
+-  return { deps, order, rateCalls, preparations, warnings }
++  return { deps, order, rateCalls, rateConfigs, preparations, warnings }
+ }
+ 
+ test("prepare protection has dedicated short-window journey and IP budgets", () => {
+@@ -155,6 +157,12 @@
+   ])
+   assert.equal(fixture.preparations[0].preparationId, body.preparationId)
+   assert.match(fixture.preparations[0].claimTokenHash, /^[0-9a-f]{64}$/)
++  assert.deepEqual(fixture.rateConfigs, [
++    { prefix: "personal-plan-prepare-ip", limit: 100, windowMs: 10_000 },
++    { prefix: "personal-plan-prepare-journey", limit: 10, windowMs: 10_000 },
++  ])
++  assert.notEqual(fixture.rateConfigs[0].prefix, QUIZ_LEAD_RATE_LIMIT.prefix)
++  assert.notEqual(fixture.rateConfigs[1].prefix, QUIZ_LEAD_RATE_LIMIT.prefix)
+ })
+ 
+ test("prepare skips the journey bucket when no verified identity resolves", async () => {
+--- before/tests/personal-plan-ready-server-first.test.tsx
++++ transfer/tests/personal-plan-ready-server-first.test.tsx
+@@ -96,6 +96,9 @@
+   assert.doesNotMatch(html, /lucide-loader-circle/)
+   assert.doesNotMatch(html, /Deine Zahlung/)
+   assert.doesNotMatch(html, /Bedarfsplan ansehen/)
++  assert.doesNotMatch(html, /role="progressbar"/, "non-ready header must omit the stage progressbar")
++  assert.doesNotMatch(html, /Personal-Plan-Stufen/, "non-ready header must omit retired stage labels")
++  assert.match(html, />chaarlie</, "non-ready header must retain the chaarlie wordmark")
+ })
+ 
+ test("server-first ready envelope renders the signed-off arrival screen (Variante B)", () => {
+@@ -181,6 +184,9 @@
+   assert.match(html, /Wie lang sind deine Haare aktuell?/)
+   assert.doesNotMatch(html, /Du musst nichts tun/)
+   assert.doesNotMatch(html, /Haarplan wird geprüft/)
++  assert.doesNotMatch(html, /role="progressbar"/, "non-ready header must omit the stage progressbar")
++  assert.doesNotMatch(html, /Personal-Plan-Stufen/, "non-ready header must omit retired stage labels")
++  assert.match(html, />chaarlie</, "non-ready header must retain the chaarlie wordmark")
+ })
+ 
+ test("forbidden and invalid states show support without waiting or payment claims", () => {
+@@ -204,6 +210,9 @@
+     assert.match(html, /Support kontaktieren/)
+     assert.doesNotMatch(html, /Haarplan wird geprüft/)
+     assert.doesNotMatch(html, /Zahlung/)
++    assert.doesNotMatch(html, /role="progressbar"/, "non-ready header must omit the stage progressbar")
++    assert.doesNotMatch(html, /Personal-Plan-Stufen/, "non-ready header must omit retired stage labels")
++    assert.match(html, />chaarlie</, "non-ready header must retain the chaarlie wordmark")
+   }
+ })
+ 
+@@ -230,6 +239,9 @@
+     assert.match(html, /Erneut prüfen/)
+     assert.doesNotMatch(html, /Du musst nichts tun/)
+     assert.doesNotMatch(html, /Haarplan wird geprüft/)
++    assert.doesNotMatch(html, /role="progressbar"/, "non-ready header must omit the stage progressbar")
++    assert.doesNotMatch(html, /Personal-Plan-Stufen/, "non-ready header must omit retired stage labels")
++    assert.match(html, />chaarlie</, "non-ready header must retain the chaarlie wordmark")
+   }
+ })
+ 
+--- before/tests/personal-plan/input.test.ts
++++ transfer/tests/personal-plan/input.test.ts
+@@ -25,6 +25,17 @@
+   assert.deepEqual(profile.scalp.concerns, [])
+   assert.equal(profile.routine.shampooFrequency.state, "unknown")
+   assert.equal(profile.routine.heatToolUse.state, "unknown")
++  assert.deepEqual(profile.routine, {
++    currentProductLoad: { state: "unknown", reason: "current_product_load" },
++    shampooFrequency: { state: "unknown", reason: "shampoo_frequency" },
++    heatToolUse: { state: "unknown", reason: "heat_tool_use" },
++    mechanicalExposureSignals: [],
++    dryShampooBridgePreference: {
++      state: "unknown",
++      reason: "dry_shampoo_bridge_preference",
++    },
++    scalpIrritationState: { state: "unknown", reason: "scalp_irritation_detail" },
++  })
+ })
+ 
+ test("INITIAL-12: V2 concerns normalize once without inventing breakage", () => {
+--- before/tests/personal-plan/needs.test.ts
++++ transfer/tests/personal-plan/needs.test.ts
+@@ -35,6 +35,12 @@
+     minimum: "weekly_1x",
+     maximum: "weekly_3_4x",
+     current: { state: "unknown", reason: "shampoo_frequency" },
++  })
++  assert.deepEqual(assessment.heatExposure, {
++    knowledgeState: "unknown",
++    state: "unknown",
++    events: [],
++    sourceFacts: [],
+   })
+ })
+ 

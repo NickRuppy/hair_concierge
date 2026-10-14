@@ -1,0 +1,745 @@
+[
+  {
+    "id": "C1-open-count",
+    "candidate": "C1",
+    "file": "src/lib/personal-plan/refinement/refinement-status.ts",
+    "sourceSha256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "mutatedSha256": "248664ca032d24fe9ea1b943ac4706bb478e3d060c8097e5150444167de58cf7",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildRefinementStatusResponse",
+      "scopeSha256": "f6b26f3b767665b1ab3b2e3c4723aeb9ffaae72635e32f555b04672c507dfac8",
+      "expectedOccurrences": 1
+    },
+    "from": "openQuestionCount: states[stage2Module].openQuestionIds.length,",
+    "to": "openQuestionCount: 0,",
+    "test": {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "name": "fresh plan with no refinement draft: both modules open, progress 2/4"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^fresh plan with no refinement draft: both modules open, progress 2/4$",
+      "tests/personal-plan-refinement-status-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 134,
+        "text": "assert.ok(body.modules[0].openQuestionCount > 0, \"fresh products module must expose open questions\")",
+        "keeperSha256": "a246f2dbedb3e6f1e615e06c94807cff136623c8858a0bd5492e170f83eb729a",
+        "testFileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      },
+      "cut": {
+        "startLine": 134,
+        "text": "assert.ok(body.modules[0].openQuestionCount > 0, \"fresh products module must expose open questions\")",
+        "keeperSha256": "a246f2dbedb3e6f1e615e06c94807cff136623c8858a0bd5492e170f83eb729a",
+        "testFileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      }
+    },
+    "expectedOperator": "==",
+    "expectedValue": true,
+    "actualValue": false,
+    "errorMessageIncludes": [
+      "fresh products module must expose open questions",
+      "must expose open questions"
+    ],
+    "intendedAssertion": "assert.ok(body.modules[0].openQuestionCount > 0, \"fresh products module must expose open questions\")",
+    "limits": "Full pinned Node AssertionError message from exact proposed values, plus header/explicit fragment. Actual runtime error and FIRST assertion frame remain unproved until main runs."
+  },
+  {
+    "id": "C1-schema",
+    "candidate": "C1",
+    "file": "src/lib/personal-plan/refinement/refinement-status.ts",
+    "sourceSha256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "mutatedSha256": "e31acfbc0ae93dca6a8fd92946bbbd44b9a1370aeb3195d058525720789a9ea8",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildRefinementStatusResponse",
+      "scopeSha256": "f6b26f3b767665b1ab3b2e3c4723aeb9ffaae72635e32f555b04672c507dfac8",
+      "expectedOccurrences": 1
+    },
+    "from": "openQuestionCount: states[stage2Module].openQuestionIds.length,",
+    "to": "openQuestionCount: states[stage2Module].openQuestionIds.length + 0.5,",
+    "test": {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "name": "fresh plan with no refinement draft: both modules open, progress 2/4"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^fresh plan with no refinement draft: both modules open, progress 2/4$",
+      "tests/personal-plan-refinement-status-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 125,
+        "text": "assert.equal(res.status, 200)",
+        "keeperSha256": "a246f2dbedb3e6f1e615e06c94807cff136623c8858a0bd5492e170f83eb729a",
+        "testFileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      },
+      "cut": {
+        "startLine": 125,
+        "text": "assert.equal(res.status, 200)",
+        "keeperSha256": "a246f2dbedb3e6f1e615e06c94807cff136623c8858a0bd5492e170f83eb729a",
+        "testFileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": 200,
+    "actualValue": 503,
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\n503 !== 200",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal(res.status, 200)",
+    "limits": "Full pinned Node AssertionError message from exact proposed values, plus header/explicit fragment. Actual runtime error and FIRST assertion frame remain unproved until main runs."
+  },
+  {
+    "id": "C1-order",
+    "candidate": "C1",
+    "file": "src/lib/personal-plan/refinement/refinement-status.ts",
+    "sourceSha256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "mutatedSha256": "125bedfd421af5ca84cc2c2ee4edd726e2803b024db68118b9fd5d66a4e16c2e",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildRefinementStatusResponse",
+      "scopeSha256": "f6b26f3b767665b1ab3b2e3c4723aeb9ffaae72635e32f555b04672c507dfac8",
+      "expectedOccurrences": 1
+    },
+    "from": "STAGE2_MODULES.map((stage2Module)",
+    "to": "[...STAGE2_MODULES].reverse().map((stage2Module)",
+    "test": {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "name": "fresh plan with no refinement draft: both modules open, progress 2/4"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^fresh plan with no refinement draft: both modules open, progress 2/4$",
+      "tests/personal-plan-refinement-status-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 127,
+        "text": "assert.deepEqual(\n    body.modules.map((m: { module: string; status: string }) => [m.module, m.status]),\n    [\n      [\"products\", \"open\"],\n      [\"habits\", \"open\"],\n    ],\n  )",
+        "keeperSha256": "a246f2dbedb3e6f1e615e06c94807cff136623c8858a0bd5492e170f83eb729a",
+        "testFileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      },
+      "cut": {
+        "startLine": 127,
+        "text": "assert.deepEqual(\n    body.modules.map((m: { module: string; status: string }) => [m.module, m.status]),\n    [\n      [\"products\", \"open\"],\n      [\"habits\", \"open\"],\n    ],\n  )",
+        "keeperSha256": "a246f2dbedb3e6f1e615e06c94807cff136623c8858a0bd5492e170f83eb729a",
+        "testFileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": [
+      [
+        "products",
+        "open"
+      ],
+      [
+        "habits",
+        "open"
+      ]
+    ],
+    "actualValue": [
+      [
+        "habits",
+        "open"
+      ],
+      [
+        "products",
+        "open"
+      ]
+    ],
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    [\n+     'habits',\n-     'products',\n      'open'\n    ],\n    [\n+     'products',\n-     'habits',\n      'open'\n    ]\n  ]",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(\n    body.modules.map((m: { module: string; status: string }) => [m.module, m.status]),\n    [\n      [\"products\", \"open\"],\n      [\"habits\", \"open\"],\n    ],\n  )",
+    "limits": "Full pinned Node AssertionError message from exact proposed values, plus header/explicit fragment. Actual runtime error and FIRST assertion frame remain unproved until main runs."
+  },
+  {
+    "id": "C1-progress",
+    "candidate": "C1",
+    "file": "src/lib/personal-plan/refinement/refinement-status.ts",
+    "sourceSha256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "mutatedSha256": "8dc12b1ab1962e36f4f17fd79414ed1bb5b3df788fab923955a41226e0ec6738",
+    "anchor": {
+      "kind": "variable",
+      "scope": "BASE_COMPLETED_STEPS",
+      "scopeSha256": "dd8ab8131d84cae67a174285cdabcf9587f296531015bb642fd6cf61ef02d2ee",
+      "expectedOccurrences": 1
+    },
+    "from": "const BASE_COMPLETED_STEPS = 2",
+    "to": "const BASE_COMPLETED_STEPS = 1",
+    "test": {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "name": "fresh plan with no refinement draft: both modules open, progress 2/4"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^fresh plan with no refinement draft: both modules open, progress 2/4$",
+      "tests/personal-plan-refinement-status-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 135,
+        "text": "assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })",
+        "keeperSha256": "a246f2dbedb3e6f1e615e06c94807cff136623c8858a0bd5492e170f83eb729a",
+        "testFileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      },
+      "cut": {
+        "startLine": 135,
+        "text": "assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })",
+        "keeperSha256": "a246f2dbedb3e6f1e615e06c94807cff136623c8858a0bd5492e170f83eb729a",
+        "testFileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": {
+      "completedSteps": 2,
+      "totalSteps": 4
+    },
+    "actualValue": {
+      "completedSteps": 1,
+      "totalSteps": 4
+    },
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   completedSteps: 1,\n-   completedSteps: 2,\n    totalSteps: 4\n  }",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(body.progress, { completedSteps: 2, totalSteps: 4 })",
+    "limits": "Full pinned Node AssertionError message from exact proposed values, plus header/explicit fragment. Actual runtime error and FIRST assertion frame remain unproved until main runs."
+  },
+  {
+    "id": "C2-open-count",
+    "candidate": "C2",
+    "file": "src/lib/personal-plan/refinement/refinement-status.ts",
+    "sourceSha256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "mutatedSha256": "da3e84be46cd38443bc48a78fa8815c09c817e97491c476aa2904b62baea9a3f",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildRefinementStatusResponse",
+      "scopeSha256": "f6b26f3b767665b1ab3b2e3c4723aeb9ffaae72635e32f555b04672c507dfac8",
+      "expectedOccurrences": 1
+    },
+    "from": "openQuestionCount: states[stage2Module].openQuestionIds.length,",
+    "to": "openQuestionCount: states[stage2Module].openQuestionIds.length + 1,",
+    "test": {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "name": "partial products user-answers: products open with the correct open-question count"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^partial products user-answers: products open with the correct open-question count$",
+      "tests/personal-plan-refinement-status-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 162,
+        "text": "assert.equal(products.openQuestionCount, 1)",
+        "keeperSha256": "f1454bc0bd680f377be7ca39d9b0f2affeb1b42b0652f98c2583c2aa243eec32",
+        "testFileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      },
+      "cut": {
+        "startLine": 162,
+        "text": "assert.equal(products.openQuestionCount, 1)",
+        "keeperSha256": "f1454bc0bd680f377be7ca39d9b0f2affeb1b42b0652f98c2583c2aa243eec32",
+        "testFileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": 1,
+    "actualValue": 2,
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\n2 !== 1",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal(products.openQuestionCount, 1)",
+    "limits": "Full pinned Node AssertionError message from exact proposed values, plus header/explicit fragment. Actual runtime error and FIRST assertion frame remain unproved until main runs."
+  },
+  {
+    "id": "C3-handoff",
+    "candidate": "C3",
+    "file": "src/lib/personal-plan/refinement/refinement-status.ts",
+    "sourceSha256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "mutatedSha256": "699121350ed02290cc288ab07534d8ec6213ea16bc4b14843ee0959a492c478b",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildRefinementStatusResponse",
+      "scopeSha256": "f6b26f3b767665b1ab3b2e3c4723aeb9ffaae72635e32f555b04672c507dfac8",
+      "expectedOccurrences": 1
+    },
+    "from": "module1HandedOff: input.moduleProjections.products?.stage3Handoff === true,",
+    "to": "module1HandedOff: false,",
+    "test": {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "name": "products module complete via lineage: 3/4 and the handoff marker is set"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^products module complete via lineage: 3/4 and the handoff marker is set$",
+      "tests/personal-plan-refinement-status-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 194,
+        "text": "assert.equal(body.module1HandedOff, true)",
+        "keeperSha256": "974961a1b80cd15af0e79c4db7195db243b9e0e483f3fad7cf40e1fac6997f58",
+        "testFileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      },
+      "cut": {
+        "startLine": 194,
+        "text": "assert.equal(body.module1HandedOff, true)",
+        "keeperSha256": "974961a1b80cd15af0e79c4db7195db243b9e0e483f3fad7cf40e1fac6997f58",
+        "testFileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": true,
+    "actualValue": false,
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\nfalse !== true",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal(body.module1HandedOff, true)",
+    "limits": "Full pinned Node AssertionError message from exact proposed values, plus header/explicit fragment. Actual runtime error and FIRST assertion frame remain unproved until main runs."
+  },
+  {
+    "id": "C3-next-module",
+    "candidate": "C3",
+    "file": "src/lib/personal-plan/refinement/refinement-status.ts",
+    "sourceSha256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "mutatedSha256": "2077ed8f384fbcd28fe6d7ac7e35d58211207eee85cd25dfd0f4aa2150bb6a9b",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildRefinementStatusResponse",
+      "scopeSha256": "f6b26f3b767665b1ab3b2e3c4723aeb9ffaae72635e32f555b04672c507dfac8",
+      "expectedOccurrences": 1
+    },
+    "from": "STAGE2_MODULES.find((stage2Module) => states[stage2Module].status === \"open\") ?? null",
+    "to": "STAGE2_MODULES[0]",
+    "test": {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "name": "products module complete via lineage: 3/4 and the handoff marker is set"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^products module complete via lineage: 3/4 and the handoff marker is set$",
+      "tests/personal-plan-refinement-status-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 195,
+        "text": "assert.deepEqual(body.banner, { visible: true, module: \"habits\", dismissed: false })",
+        "keeperSha256": "974961a1b80cd15af0e79c4db7195db243b9e0e483f3fad7cf40e1fac6997f58",
+        "testFileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      },
+      "cut": {
+        "startLine": 195,
+        "text": "assert.deepEqual(body.banner, { visible: true, module: \"habits\", dismissed: false })",
+        "keeperSha256": "974961a1b80cd15af0e79c4db7195db243b9e0e483f3fad7cf40e1fac6997f58",
+        "testFileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": {
+      "visible": true,
+      "module": "habits",
+      "dismissed": false
+    },
+    "actualValue": {
+      "visible": true,
+      "module": "products",
+      "dismissed": false
+    },
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    dismissed: false,\n+   module: 'products',\n-   module: 'habits',\n    visible: true\n  }",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(body.banner, { visible: true, module: \"habits\", dismissed: false })",
+    "limits": "Full pinned Node AssertionError message from exact proposed values, plus header/explicit fragment. Actual runtime error and FIRST assertion frame remain unproved until main runs."
+  },
+  {
+    "id": "C4-progress",
+    "candidate": "C4",
+    "file": "src/lib/personal-plan/refinement/refinement-status.ts",
+    "sourceSha256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "mutatedSha256": "96da3dc52c4e88311ad9560279ab0096ed4663ab0d4cb1037f911228168dcfb0",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildRefinementStatusResponse",
+      "scopeSha256": "f6b26f3b767665b1ab3b2e3c4723aeb9ffaae72635e32f555b04672c507dfac8",
+      "expectedOccurrences": 1
+    },
+    "from": "const completedModuleCount = modules.filter((entry) => entry.status === \"complete\").length",
+    "to": "const completedModuleCount = Math.min(1, modules.filter((entry) => entry.status === \"complete\").length)",
+    "test": {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "name": "both modules complete: 4/4"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^both modules complete: 4/4$",
+      "tests/personal-plan-refinement-status-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 241,
+        "text": "assert.deepEqual(body.progress, { completedSteps: 4, totalSteps: 4 })",
+        "keeperSha256": "3586d769766ff39e1819555a96a17c0364f2b328097d001ec07483f68793c0b2",
+        "testFileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      },
+      "cut": {
+        "startLine": 241,
+        "text": "assert.deepEqual(body.progress, { completedSteps: 4, totalSteps: 4 })",
+        "keeperSha256": "3586d769766ff39e1819555a96a17c0364f2b328097d001ec07483f68793c0b2",
+        "testFileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": {
+      "completedSteps": 4,
+      "totalSteps": 4
+    },
+    "actualValue": {
+      "completedSteps": 3,
+      "totalSteps": 4
+    },
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   completedSteps: 3,\n-   completedSteps: 4,\n    totalSteps: 4\n  }",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(body.progress, { completedSteps: 4, totalSteps: 4 })",
+    "limits": "Full pinned Node AssertionError message from exact proposed values, plus header/explicit fragment. Actual runtime error and FIRST assertion frame remain unproved until main runs."
+  },
+  {
+    "id": "C4-dismissed",
+    "candidate": "C4",
+    "file": "src/lib/personal-plan/refinement/refinement-status.ts",
+    "sourceSha256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "mutatedSha256": "a57741c9e2b8b418e4bf1e1f72a1a6efd295a79c75866898b0a8e60ec280f09f",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildRefinementStatusResponse",
+      "scopeSha256": "f6b26f3b767665b1ab3b2e3c4723aeb9ffaae72635e32f555b04672c507dfac8",
+      "expectedOccurrences": 1
+    },
+    "from": "    : false\n\n  return refinementStatusResponseSchema.parse({",
+    "to": "    : true\n\n  return refinementStatusResponseSchema.parse({",
+    "test": {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "name": "both modules complete: 4/4"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^both modules complete: 4/4$",
+      "tests/personal-plan-refinement-status-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 243,
+        "text": "assert.deepEqual(body.banner, { visible: false, module: null, dismissed: false })",
+        "keeperSha256": "3586d769766ff39e1819555a96a17c0364f2b328097d001ec07483f68793c0b2",
+        "testFileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      },
+      "cut": {
+        "startLine": 243,
+        "text": "assert.deepEqual(body.banner, { visible: false, module: null, dismissed: false })",
+        "keeperSha256": "3586d769766ff39e1819555a96a17c0364f2b328097d001ec07483f68793c0b2",
+        "testFileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": {
+      "visible": false,
+      "module": null,
+      "dismissed": false
+    },
+    "actualValue": {
+      "visible": false,
+      "module": null,
+      "dismissed": true
+    },
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   dismissed: true,\n-   dismissed: false,\n    module: null,\n    visible: false\n  }",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(body.banner, { visible: false, module: null, dismissed: false })",
+    "limits": "Full pinned Node AssertionError message from exact proposed values, plus header/explicit fragment. Actual runtime error and FIRST assertion frame remain unproved until main runs."
+  },
+  {
+    "id": "C5-dismissal",
+    "candidate": "C5",
+    "file": "src/lib/personal-plan/lifecycle/repository.ts",
+    "sourceSha256": "3181f05de828f329aa915ebaac0d64b37290234a1a86aac577c6e968fbe81c84",
+    "mutatedSha256": "6e42e7fc318c7f9d94b1e674005c27f8290feb42213cb546bbaf4d2c5085fce4",
+    "anchor": {
+      "kind": "function",
+      "scope": "isModuleBannerDismissed",
+      "scopeSha256": "825968d6dfd856296d86b06b87b9850573b4f2c6e416435ed66fd41d28bc622c",
+      "expectedOccurrences": 1
+    },
+    "from": "return state.dismissedModules.has(module)",
+    "to": "return false",
+    "test": {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "name": "banner reflects a stored dismissal for the current open module"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^banner reflects a stored dismissal for the current open module$",
+      "tests/personal-plan-refinement-status-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 262,
+        "text": "assert.deepEqual(body.banner, { visible: false, module: \"products\", dismissed: true })",
+        "keeperSha256": "77289bcdf398868005f31dce5a2a5ebeb0ca345e24a43936211e38dfbcbba9eb",
+        "testFileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      },
+      "cut": {
+        "startLine": 262,
+        "text": "assert.deepEqual(body.banner, { visible: false, module: \"products\", dismissed: true })",
+        "keeperSha256": "77289bcdf398868005f31dce5a2a5ebeb0ca345e24a43936211e38dfbcbba9eb",
+        "testFileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      }
+    },
+    "expectedOperator": "deepStrictEqual",
+    "expectedValue": {
+      "visible": false,
+      "module": "products",
+      "dismissed": true
+    },
+    "actualValue": {
+      "visible": true,
+      "module": "products",
+      "dismissed": false
+    },
+    "errorMessageIncludes": [
+      "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   dismissed: false,\n-   dismissed: true,\n    module: 'products',\n+   visible: true\n-   visible: false\n  }",
+      "Expected values to be strictly deep-equal:"
+    ],
+    "intendedAssertion": "assert.deepEqual(body.banner, { visible: false, module: \"products\", dismissed: true })",
+    "limits": "Full pinned Node AssertionError message from exact proposed values, plus header/explicit fragment. Actual runtime error and FIRST assertion frame remain unproved until main runs."
+  },
+  {
+    "id": "C5-status",
+    "candidate": "C5",
+    "file": "src/lib/personal-plan/refinement/refinement-status.ts",
+    "sourceSha256": "58757afa8780dd8fc8dac454732e2edc296a6c5f68850272e575b056eb44c542",
+    "mutatedSha256": "2b7f51a99431281c48ccceea95e7a4189bd66b682a1544f2299984bc903813ba",
+    "anchor": {
+      "kind": "function",
+      "scope": "buildRefinementStatusResponse",
+      "scopeSha256": "f6b26f3b767665b1ab3b2e3c4723aeb9ffaae72635e32f555b04672c507dfac8",
+      "expectedOccurrences": 1
+    },
+    "from": "status: states[stage2Module].status,",
+    "to": "status: input.bannerDismissals.dismissedModules.has(stage2Module) ? \"complete\" : states[stage2Module].status,",
+    "test": {
+      "file": "tests/personal-plan-refinement-status-route.test.ts",
+      "name": "banner reflects a stored dismissal for the current open module"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^banner reflects a stored dismissal for the current open module$",
+      "tests/personal-plan-refinement-status-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 263,
+        "text": "assert.equal(body.modules.find((m: { module: string }) => m.module === \"products\").status, \"open\")",
+        "keeperSha256": "77289bcdf398868005f31dce5a2a5ebeb0ca345e24a43936211e38dfbcbba9eb",
+        "testFileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      },
+      "cut": {
+        "startLine": 263,
+        "text": "assert.equal(body.modules.find((m: { module: string }) => m.module === \"products\").status, \"open\")",
+        "keeperSha256": "77289bcdf398868005f31dce5a2a5ebeb0ca345e24a43936211e38dfbcbba9eb",
+        "testFileSha256": "6bed8a5fbef387aecd46104a185fc786eb2cd9f3494ef04ce7101e2b7be3fd1a"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": "open",
+    "actualValue": "complete",
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\n'complete' !== 'open'",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal(body.modules.find((m: { module: string }) => m.module === \"products\").status, \"open\")",
+    "limits": "Full pinned Node AssertionError message from exact proposed values, plus header/explicit fragment. Actual runtime error and FIRST assertion frame remain unproved until main runs."
+  },
+  {
+    "id": "D1-assumptions",
+    "candidate": "D1",
+    "file": "src/lib/personal-plan/refinement/module-status.ts",
+    "sourceSha256": "0d5e6b0d50555c348beb5a56c38134fb5da4627de4fcd6f95674b8f8c3e1b82e",
+    "mutatedSha256": "405565bf6ed82bcea0a18e8e24835d8f4f7666d1e3539037b733c8842c8b1d52",
+    "anchor": {
+      "kind": "function",
+      "scope": "stage2AssumptionsActive",
+      "scopeSha256": "f76464eb5a13e9275e138adb0be44ad74cfb57e8f6f18fdb578c76c6fe244d3e",
+      "expectedOccurrences": 1
+    },
+    "from": "return STAGE2_MODULES.some((stage2Module) => states[stage2Module].status !== \"complete\")",
+    "to": "return false",
+    "test": {
+      "file": "tests/personal-plan/refinement/module-status.test.ts",
+      "name": "a fully auto-accepted draft leaves both modules open and assumptions active"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^a fully auto-accepted draft leaves both modules open and assumptions active$",
+      "tests/personal-plan/refinement/module-status.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 56,
+        "text": "assert.equal(stage2AssumptionsActive(input), true)",
+        "keeperSha256": "954c9646b451e08f3b856d97c9bb17d093b190fbb70ca48c92a2e0b842a80148",
+        "testFileSha256": "279643c605895bd33b1a7f66f5e9a1e423e565689be834fb020bb7db59f3cfa7"
+      },
+      "cut": {
+        "startLine": 56,
+        "text": "assert.equal(stage2AssumptionsActive(input), true)",
+        "keeperSha256": "954c9646b451e08f3b856d97c9bb17d093b190fbb70ca48c92a2e0b842a80148",
+        "testFileSha256": "3b1eee6eec64647981ea91b6d2b921df324c247930a63102053de6cefc59c67f"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": true,
+    "actualValue": false,
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\nfalse !== true",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal(stage2AssumptionsActive(input), true)",
+    "limits": "Full pinned Node AssertionError message from exact proposed values, plus header/explicit fragment. Actual runtime error and FIRST assertion frame remain unproved until main runs."
+  },
+  {
+    "id": "D2-no-routine",
+    "candidate": "D2",
+    "file": "src/app/api/personal-plan/refinement-presentation/route.ts",
+    "sourceSha256": "0a0410de7b32d02ee2da0b68f4e04df952042864e3b42396d0509bc3d52f7c44",
+    "mutatedSha256": "c85da30a5f634bbe7ccc288fbec719f00b095e2d9f3a018b4ba7c06410f92def",
+    "anchor": {
+      "kind": "function",
+      "scope": "createRefinementPresentationRouteHandlers",
+      "scopeSha256": "2803b618781a0c51ce1b507f726326dfb1fe39c60224417d96e792aec0fbc2ab",
+      "expectedOccurrences": 1
+    },
+    "from": "          : null\n\n        return response({ answers, completedQuestionIds, routineProducts })",
+    "to": "          : []\n\n        return response({ answers, completedQuestionIds, routineProducts })",
+    "test": {
+      "file": "tests/personal-plan-refinement-presentation-route.test.ts",
+      "name": "returns null answers when no complete draft matches the pointer"
+    },
+    "command": [
+      "node",
+      "--import",
+      "./tests/server-only-register.cjs",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=^returns null answers when no complete draft matches the pointer$",
+      "tests/personal-plan-refinement-presentation-route.test.ts"
+    ],
+    "oracles": {
+      "transfer": {
+        "startLine": 248,
+        "text": "assert.equal(body.routineProducts, null)",
+        "keeperSha256": "f105c2ebabac5c1c3d97bc3a98e94f3af89a1800bd4d45e4ef9a23d5a9e550ea",
+        "testFileSha256": "b829abbe2a409006725f60b00dcae90a304068050a752f7215bab0f5bd30a0be"
+      },
+      "cut": {
+        "startLine": 248,
+        "text": "assert.equal(body.routineProducts, null)",
+        "keeperSha256": "f105c2ebabac5c1c3d97bc3a98e94f3af89a1800bd4d45e4ef9a23d5a9e550ea",
+        "testFileSha256": "0b1c469904918e19bb964040d41df3f67f94711868e09863c4d45f411572802b"
+      }
+    },
+    "expectedOperator": "strictEqual",
+    "expectedValue": null,
+    "actualValue": [],
+    "errorMessageIncludes": [
+      "Expected values to be strictly equal:\n\n[] !== null",
+      "Expected values to be strictly equal:"
+    ],
+    "intendedAssertion": "assert.equal(body.routineProducts, null)",
+    "limits": "Full pinned Node AssertionError message from exact proposed values, plus header/explicit fragment. Actual runtime error and FIRST assertion frame remain unproved until main runs."
+  }
+]

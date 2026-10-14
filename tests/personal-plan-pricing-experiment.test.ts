@@ -18,9 +18,7 @@ import {
   verifyPersonalPlanOneTimeQaToken,
 } from "../src/lib/funnel/personal-plan-pricing-qa-token"
 import {
-  assertPersonalPlanOneTimeCheckoutAuthorized,
   assignPersonalPlanOneTimeQa,
-  PersonalPlanOneTimeCheckoutAuthorizationError,
   resolvePersonalPlanPricingExperiment,
 } from "../src/lib/funnel/server"
 
@@ -447,71 +445,4 @@ test("QA token validation binds the atomic assignment to one lead/session/packag
     p_package_key: "meta_personal_plan_v1",
     p_arm: "personal-plan-one-time-v1",
   })
-})
-
-test("one-time checkout authorization uses only the canonical stored session", async () => {
-  const canonical = {
-    id: sessionId,
-    lead_id: leadId,
-    visitor_id: "50000000-0000-4000-8000-000000000005",
-    package_key: "meta_personal_plan_v1",
-    offer_variant: "personal-plan-one-time-v1",
-    offer_viewed_at: "2026-07-31T10:00:00Z",
-    first_seen_at: "2026-07-31T09:30:00Z",
-    is_internal_test: true,
-  }
-  assert.deepEqual(
-    await assertPersonalPlanOneTimeCheckoutAuthorized({
-      leadId,
-      funnelSessionId: sessionId,
-      fetchSession: async () => ({ data: canonical, error: null }),
-    }),
-    {
-      sessionId,
-      leadId,
-      visitorId: "50000000-0000-4000-8000-000000000005",
-      packageKey: "meta_personal_plan_v1",
-      offerVariant: "personal-plan-one-time-v1",
-      issuedAt: Date.parse("2026-07-31T09:30:00Z"),
-      isInternalTest: true,
-    },
-  )
-  for (const row of [
-    { ...canonical, offer_variant: "personal-plan-membership-v1" },
-    { ...canonical, lead_id: "10000000-0000-4000-8000-000000000004" },
-    { ...canonical, offer_viewed_at: null },
-  ]) {
-    await assert.rejects(
-      assertPersonalPlanOneTimeCheckoutAuthorized({
-        leadId,
-        funnelSessionId: sessionId,
-        fetchSession: async () => ({ data: row, error: null }),
-      }),
-      /not authorized/,
-    )
-  }
-})
-
-test("one-time checkout authorization distinguishes lookup failure from expected denial", async () => {
-  await assert.rejects(
-    assertPersonalPlanOneTimeCheckoutAuthorized({
-      leadId,
-      funnelSessionId: sessionId,
-      fetchSession: async () => ({ data: null, error: new Error("database unavailable") }),
-    }),
-    (error) =>
-      error instanceof PersonalPlanOneTimeCheckoutAuthorizationError &&
-      error.reason === "lookup_failed",
-  )
-
-  await assert.rejects(
-    assertPersonalPlanOneTimeCheckoutAuthorized({
-      leadId,
-      funnelSessionId: sessionId,
-      fetchSession: async () => ({ data: null, error: null }),
-    }),
-    (error) =>
-      error instanceof PersonalPlanOneTimeCheckoutAuthorizationError &&
-      error.reason === "not_authorized",
-  )
 })

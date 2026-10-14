@@ -6,6 +6,8 @@ import { createPersonalPlanRoutineRouteHandlers } from "../src/app/api/personal-
 import { createPersonalPlanRoutineProposalRouteHandlers } from "../src/app/api/personal-plan/routine/proposals/route"
 import { createPersonalPlanRoutineResolveRouteHandlers } from "../src/app/api/personal-plan/routine/proposals/[proposalId]/resolve/route"
 import type { PersonalPlanRoutineReadClient } from "../src/lib/personal-plan/routine/repository"
+import { computeNeedPlan } from "../src/lib/personal-plan/compute-stage1"
+import { COMPLETE_V3_PLAN_ENVELOPE } from "./personal-plan/fixtures"
 
 const ids = {
   plan: "11111111-1111-4111-8111-111111111111",
@@ -109,7 +111,7 @@ test("routine read derives auth, owner-scopes admin reads, and returns a no-stor
   assert.equal(body.pendingProposal.id, ids.proposal)
 })
 
-test("routine read preserves no-plan versus incomplete-plan and disables new entry while off", async () => {
+test("routine read returns no-plan and disables entry while off", async () => {
   let response = await createPersonalPlanRoutineRouteHandlers(
     routeDeps({ client: () => client({}) }),
   ).GET()
@@ -136,43 +138,36 @@ test("routine read preserves no-plan versus incomplete-plan and disables new ent
 })
 
 test("attention never leaks proposal facts and is false when Stage 4 is disabled", async () => {
-  let constructed = false
-  let response = await createPersonalPlanRoutineAttentionRouteHandlers(
-    routeDeps({
-      client: () => {
-        constructed = true
-        return client({})
-      },
-    }),
-  ).GET()
+  let response = await createPersonalPlanRoutineAttentionRouteHandlers({
+    enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => stage4Access,
+  }).GET()
   assert.deepEqual(await response.json(), { hasPendingProposal: true })
-  assert.equal(constructed, false)
-  response = await createPersonalPlanRoutineAttentionRouteHandlers(
-    routeDeps({ enabled: () => false }),
-  ).GET()
+  response = await createPersonalPlanRoutineAttentionRouteHandlers({
+    enabled: () => false,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => stage4Access,
+  }).GET()
   assert.deepEqual(await response.json(), { hasPendingProposal: false })
 })
 
-test("attention stays non-exposing before the Stage 4 frontier and journey-loader failure fails closed", async () => {
-  let constructed = false
-  let response = await createPersonalPlanRoutineAttentionRouteHandlers(
-    routeDeps({
-      loadJourneyAccess: async () => ({
-        kind: "personal_plan",
-        personalPlanId: ids.plan,
-        frontier: "stage3",
-        nextHref: "/plan-start",
-        allowed: { stage1: true, stage2: true, stage3: true, stage4: false, stage5: false },
-      }),
-      client: () => {
-        constructed = true
-        return client({})
-      },
+test("attention stays non-exposing before Stage 4; routine read fails closed when its journey loader fails", async () => {
+  let response = await createPersonalPlanRoutineAttentionRouteHandlers({
+    enabled: () => true,
+    getUserId: async () => "owner-1",
+    loadJourneyAccess: async () => ({
+      kind: "personal_plan",
+      personalPlanId: ids.plan,
+      frontier: "stage3",
+      hasPendingRoutineProposal: true,
+      nextHref: "/plan-start",
+      allowed: { stage1: true, stage2: true, stage3: true, stage4: false, stage5: false },
     }),
-  ).GET()
+  }).GET()
   assert.deepEqual(await response.json(), { hasPendingProposal: false })
-  assert.equal(constructed, false)
 
+  let constructed = false
   response = await createPersonalPlanRoutineRouteHandlers(
     routeDeps({
       loadJourneyAccess: async () => {
@@ -306,4 +301,53 @@ test("initial proposal rejection remains a typed unambiguous non-mutating error"
     [response.status, await response.json()],
     [422, { error: "initial_proposal_not_rejectable" }],
   )
+})
+
+test("routine read, Tools on: the V1 payload is untouched and the tool section is present iff a view exists", async () => {
+  const facts = {
+    careHabits: { dryingRoutes: ["ordinary_blow_dry" as const] },
+    fieldProvenance: { dryingRoutes: "user" as const },
+  }
+  const computed = computeNeedPlan({
+    rawEnvelope: COMPLETE_V3_PLAN_ENVELOPE,
+    artifactId: "artifact-1",
+    projection: "initial_quiz",
+    computationVersion: "test",
+    createdAt: "2026-10-10T00:00:00.000Z",
+  })
+  if (computed.status !== "ready") throw new Error("unreachable")
+  const rowsWith = (outputSnapshot: unknown) =>
+    client({
+      personal_plans: {
+        id: ids.plan,
+        revision: 4,
+        source_revision: 7,
+        active_routine_version_id: ids.version,
+        pending_routine_proposal_id: null,
+      },
+      personal_plan_routine_versions: { id: ids.version, payload },
+      personal_plan_need_versions: { id: ids.refined, output_snapshot: outputSnapshot },
+    })
+  const read = async (outputSnapshot: unknown, toolsEnabled: boolean) => {
+    const response = await createPersonalPlanRoutineRouteHandlers({
+      ...routeDeps({ client: () => rowsWith(outputSnapshot) }),
+      toolsEnabled: async () => toolsEnabled,
+      tools: { loadFacts: async () => facts },
+    }).GET()
+    return response.json()
+  }
+
+  // A refined snapshot the engine can read: section on, payload byte-identical.
+  const usable = { ...computed.snapshot, renderedOrder: [] }
+  const on = await read(usable, true)
+  assert.deepEqual(on.activeVersion.payload, payload)
+  assert.ok(on.toolSection.assets.length > 0)
+  const off = await read(usable, false)
+  assert.deepEqual(off.activeVersion.payload, payload)
+  assert.equal("toolSection" in off, false)
+
+  // No readable profile in the refined source: no view, so no section — never a broken read.
+  const unusable = await read({ renderedOrder: [] }, true)
+  assert.equal(unusable.status, "active")
+  assert.equal("toolSection" in unusable, false)
 })

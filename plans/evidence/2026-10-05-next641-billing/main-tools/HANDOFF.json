@@ -1,0 +1,7 @@
+{
+  "directory": "/tmp/test-audit-billing125-packed-policy-ocbvld5d",
+  "pinsSHA256": "7482abb73c692ef3ba51f19850ff33da6eef0ea8630fd056590a75315cd1b92c",
+  "supersedesOnlyMetadataGuard": "/tmp/test-audit-billing125-tools-svsmm1u3",
+  "sourceRepins": 0,
+  "identityRawHashPreserved": true
+}

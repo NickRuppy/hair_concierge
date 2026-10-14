@@ -1,0 +1,914 @@
+[
+  {
+    "id": "ordinary-sync-omitted",
+    "lane": "lead",
+    "phase": "old",
+    "intended": "Transferred syncs counter0!==1 while route response stays200.",
+    "source": "src/app/api/quiz/lead/route.ts",
+    "selectedTest": {
+      "file": "tests/regular-quiz-field-test-lead-route.test.ts",
+      "name": "ordinary lead reuse excludes a moderator-owned lead with the same email and answers"
+    },
+    "originalHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/ordinary-sync-omitted-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/ordinary-sync-omitted-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/ordinary-sync-omitted-after.tap"
+    },
+    "restoredHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+    "oldFalsePass": true
+  },
+  {
+    "id": "ordinary-meta-omitted",
+    "lane": "lead",
+    "phase": "old",
+    "intended": "Transferred metas counter0!==1 while route response stays200.",
+    "source": "src/app/api/quiz/lead/route.ts",
+    "selectedTest": {
+      "file": "tests/regular-quiz-field-test-lead-route.test.ts",
+      "name": "ordinary lead reuse excludes a moderator-owned lead with the same email and answers"
+    },
+    "originalHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/ordinary-meta-omitted-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/ordinary-meta-omitted-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/ordinary-meta-omitted-after.tap"
+    },
+    "restoredHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+    "oldFalsePass": true
+  },
+  {
+    "id": "partner-invitation",
+    "lane": "lead",
+    "phase": "old",
+    "intended": "Transferred complete private save payload deepEqual fails at invitation; existing200 response and saved ID remain.",
+    "source": "src/app/api/quiz/lead/route.ts",
+    "selectedTest": {
+      "file": "tests/regular-quiz-field-test-lead-route.test.ts",
+      "name": "a leftover moderator intent cookie never blocks an authorized partner lead"
+    },
+    "originalHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/partner-invitation-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/partner-invitation-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/partner-invitation-after.tap"
+    },
+    "restoredHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+    "oldFalsePass": true
+  },
+  {
+    "id": "partner-owner",
+    "lane": "lead",
+    "phase": "old",
+    "intended": "Transferred complete private save payload deepEqual fails at owner; existing200 response and saved ID remain.",
+    "source": "src/app/api/quiz/lead/route.ts",
+    "selectedTest": {
+      "file": "tests/regular-quiz-field-test-lead-route.test.ts",
+      "name": "a leftover moderator intent cookie never blocks an authorized partner lead"
+    },
+    "originalHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/partner-owner-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/partner-owner-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/partner-owner-after.tap"
+    },
+    "restoredHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+    "oldFalsePass": true
+  },
+  {
+    "id": "partner-session",
+    "lane": "lead",
+    "phase": "old",
+    "intended": "Transferred complete private save payload deepEqual fails at session; existing200 response and saved ID remain.",
+    "source": "src/app/api/quiz/lead/route.ts",
+    "selectedTest": {
+      "file": "tests/regular-quiz-field-test-lead-route.test.ts",
+      "name": "a leftover moderator intent cookie never blocks an authorized partner lead"
+    },
+    "originalHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/partner-session-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/partner-session-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/partner-session-after.tap"
+    },
+    "restoredHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+    "oldFalsePass": true
+  },
+  {
+    "id": "partner-email",
+    "lane": "lead",
+    "phase": "old",
+    "intended": "Transferred complete private save payload deepEqual fails at email; existing200 response and saved ID remain.",
+    "source": "src/app/api/quiz/lead/route.ts",
+    "selectedTest": {
+      "file": "tests/regular-quiz-field-test-lead-route.test.ts",
+      "name": "a leftover moderator intent cookie never blocks an authorized partner lead"
+    },
+    "originalHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/partner-email-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/partner-email-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/partner-email-after.tap"
+    },
+    "restoredHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+    "oldFalsePass": true
+  },
+  {
+    "id": "partner-name",
+    "lane": "lead",
+    "phase": "old",
+    "intended": "Transferred complete private save payload deepEqual fails at name; existing200 response and saved ID remain.",
+    "source": "src/app/api/quiz/lead/route.ts",
+    "selectedTest": {
+      "file": "tests/regular-quiz-field-test-lead-route.test.ts",
+      "name": "a leftover moderator intent cookie never blocks an authorized partner lead"
+    },
+    "originalHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/partner-name-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/partner-name-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/partner-name-after.tap"
+    },
+    "restoredHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+    "oldFalsePass": true
+  },
+  {
+    "id": "partner-consent",
+    "lane": "lead",
+    "phase": "old",
+    "intended": "Transferred complete private save payload deepEqual fails at consent; existing200 response and saved ID remain.",
+    "source": "src/app/api/quiz/lead/route.ts",
+    "selectedTest": {
+      "file": "tests/regular-quiz-field-test-lead-route.test.ts",
+      "name": "a leftover moderator intent cookie never blocks an authorized partner lead"
+    },
+    "originalHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/partner-consent-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/partner-consent-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/partner-consent-after.tap"
+    },
+    "restoredHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+    "oldFalsePass": true
+  },
+  {
+    "id": "partner-answers",
+    "lane": "lead",
+    "phase": "old",
+    "intended": "Transferred complete private save payload deepEqual fails at answers; existing200 response and saved ID remain.",
+    "source": "src/app/api/quiz/lead/route.ts",
+    "selectedTest": {
+      "file": "tests/regular-quiz-field-test-lead-route.test.ts",
+      "name": "a leftover moderator intent cookie never blocks an authorized partner lead"
+    },
+    "originalHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/partner-answers-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/partner-answers-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/partner-answers-after.tap"
+    },
+    "restoredHash": "86115454cb85a5153a090474c2acc60bb2139e09711181bd8a3fa50e696b539e",
+    "oldFalsePass": true
+  },
+  {
+    "id": "foreign-completed-filter-removed",
+    "lane": "lead",
+    "phase": "old",
+    "intended": "Retained foreign-completed keeper receives null; old foreign-active donor still succeeds. Run old donor separately to establish its insensitivity.",
+    "source": "src/lib/personal-plan/refinement/module1-stage3-resume.ts",
+    "selectedTest": {
+      "file": "tests/personal-plan-module1-stage3-resume.test.tsx",
+      "name": "another owner's Stage-3 draft neither resumes nor blocks \u2014 it is simply not read"
+    },
+    "originalHash": "92135680ac8e368f6f67ed1a7fcee6ceea5c1616add5ccb061aca8bd5305361e",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/foreign-completed-filter-removed-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/foreign-completed-filter-removed-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/foreign-completed-filter-removed-after.tap"
+    },
+    "restoredHash": "92135680ac8e368f6f67ed1a7fcee6ceea5c1616add5ccb061aca8bd5305361e",
+    "oldFalsePass": true
+  },
+  {
+    "id": "accepted-exit-lost",
+    "lane": "lead",
+    "phase": "old",
+    "intended": "Transferred exit assertion stage1!==routine.",
+    "source": "src/components/personal-plan-start/plan-start-flow.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-module1-stage3-resume.test.tsx",
+      "name": "reload after the Modul-1 handoff resumes Stage 3, not Stage 2"
+    },
+    "originalHash": "ebdfd12eb051c082a10501370256537fe25ab391370ee90046d247a969048f40",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/accepted-exit-lost-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/accepted-exit-lost-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/accepted-exit-lost-after.tap"
+    },
+    "restoredHash": "ebdfd12eb051c082a10501370256537fe25ab391370ee90046d247a969048f40",
+    "oldFalsePass": true
+  },
+  {
+    "id": "linear-exit-wrong",
+    "lane": "lead",
+    "phase": "old",
+    "intended": "Transferred exit assertion routine!==stage1 for actual emitted linear journey.",
+    "source": "src/components/personal-plan-start/plan-start-flow.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-resume.test.tsx",
+      "name": "plan-start re-entry selects Stage 3 when refinement is complete and current authority exists"
+    },
+    "originalHash": "ebdfd12eb051c082a10501370256537fe25ab391370ee90046d247a969048f40",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/linear-exit-wrong-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/linear-exit-wrong-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/linear-exit-wrong-after.tap"
+    },
+    "restoredHash": "ebdfd12eb051c082a10501370256537fe25ab391370ee90046d247a969048f40",
+    "oldFalsePass": true
+  },
+  {
+    "id": "accepted-updated-signal-lost",
+    "lane": "lead",
+    "phase": "old",
+    "intended": "Transferred fixed href assertion /routine!==/routine?planUpdated=1.",
+    "source": "src/components/personal-plan-start/plan-start-flow.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-module1-stage3-resume.test.tsx",
+      "name": "reload after the Modul-1 handoff resumes Stage 3, not Stage 2"
+    },
+    "originalHash": "ebdfd12eb051c082a10501370256537fe25ab391370ee90046d247a969048f40",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/accepted-updated-signal-lost-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/accepted-updated-signal-lost-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/accepted-updated-signal-lost-after.tap"
+    },
+    "restoredHash": "ebdfd12eb051c082a10501370256537fe25ab391370ee90046d247a969048f40",
+    "oldFalsePass": true
+  },
+  {
+    "id": "linear-updated-signal-added",
+    "lane": "lead",
+    "phase": "old",
+    "intended": "Transferred fixed href assertion /routine?planUpdated=1!==/routine.",
+    "source": "src/components/personal-plan-start/plan-start-flow.tsx",
+    "selectedTest": {
+      "file": "tests/personal-plan-start-resume.test.tsx",
+      "name": "plan-start re-entry selects Stage 3 when refinement is complete and current authority exists"
+    },
+    "originalHash": "ebdfd12eb051c082a10501370256537fe25ab391370ee90046d247a969048f40",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/linear-updated-signal-added-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/linear-updated-signal-added-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-lead-mutations-old/linear-updated-signal-added-after.tap"
+    },
+    "restoredHash": "ebdfd12eb051c082a10501370256537fe25ab391370ee90046d247a969048f40",
+    "oldFalsePass": true
+  },
+  {
+    "id": "profile-position",
+    "lane": "profile",
+    "phase": "old",
+    "intended": "Transferred real rendered position invariant fails.",
+    "source": "src/components/profile/haar-check-edit-control.tsx",
+    "selectedTest": {
+      "file": "tests/profile-haarcheck-verfeinerung-lock.test.tsx",
+      "name": "HaarCheckEditControl free tier: rendered markup places the lock <svg> after the Button closes, not inside it"
+    },
+    "originalHash": "6a3bb20b74bd399fc8f6271ef125923a314ee346e7ff550127c9e0910be69a13",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-profile-mutations-old/profile-position-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-profile-mutations-old/profile-position-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-profile-mutations-old/profile-position-after.tap"
+    },
+    "restoredHash": "6a3bb20b74bd399fc8f6271ef125923a314ee346e7ff550127c9e0910be69a13",
+    "oldFalsePass": true
+  },
+  {
+    "id": "profile-inline",
+    "lane": "profile",
+    "phase": "old",
+    "intended": "Transferred real rendered inline invariant fails.",
+    "source": "src/components/profile/haar-check-edit-control.tsx",
+    "selectedTest": {
+      "file": "tests/profile-haarcheck-verfeinerung-lock.test.tsx",
+      "name": "HaarCheckEditControl free tier: rendered markup places the lock <svg> after the Button closes, not inside it"
+    },
+    "originalHash": "6a3bb20b74bd399fc8f6271ef125923a314ee346e7ff550127c9e0910be69a13",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-profile-mutations-old/profile-inline-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-profile-mutations-old/profile-inline-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-profile-mutations-old/profile-inline-after.tap"
+    },
+    "restoredHash": "6a3bb20b74bd399fc8f6271ef125923a314ee346e7ff550127c9e0910be69a13",
+    "oldFalsePass": true
+  },
+  {
+    "id": "profile-visible-copy",
+    "lane": "profile",
+    "phase": "old",
+    "intended": "Transferred real rendered visible-copy invariant fails.",
+    "source": "src/components/profile/haar-check-edit-control.tsx",
+    "selectedTest": {
+      "file": "tests/profile-haarcheck-verfeinerung-lock.test.tsx",
+      "name": "HaarCheckEditControl free tier: rendered markup places the lock <svg> after the Button closes, not inside it"
+    },
+    "originalHash": "6a3bb20b74bd399fc8f6271ef125923a314ee346e7ff550127c9e0910be69a13",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-profile-mutations-old/profile-visible-copy-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-profile-mutations-old/profile-visible-copy-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-profile-mutations-old/profile-visible-copy-after.tap"
+    },
+    "restoredHash": "6a3bb20b74bd399fc8f6271ef125923a314ee346e7ff550127c9e0910be69a13",
+    "oldFalsePass": true
+  },
+  {
+    "id": "profile-aria-copy",
+    "lane": "profile",
+    "phase": "old",
+    "intended": "Transferred real rendered aria-copy invariant fails.",
+    "source": "src/components/profile/haar-check-edit-control.tsx",
+    "selectedTest": {
+      "file": "tests/profile-haarcheck-verfeinerung-lock.test.tsx",
+      "name": "HaarCheckEditControl free tier: rendered markup places the lock <svg> after the Button closes, not inside it"
+    },
+    "originalHash": "6a3bb20b74bd399fc8f6271ef125923a314ee346e7ff550127c9e0910be69a13",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-profile-mutations-old/profile-aria-copy-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-profile-mutations-old/profile-aria-copy-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-profile-mutations-old/profile-aria-copy-after.tap"
+    },
+    "restoredHash": "6a3bb20b74bd399fc8f6271ef125923a314ee346e7ff550127c9e0910be69a13",
+    "oldFalsePass": true
+  },
+  {
+    "id": "C1-badge-only-forces-remount",
+    "lane": "cockpit",
+    "phase": "old",
+    "intended": "New exact identityChanged false fails; job queued/status assertions still pass.",
+    "source": "src/app/api/admin/beratung/[enrollmentId]/research/route.ts",
+    "selectedTest": {
+      "file": "tests/discovery-cockpit-research.test.tsx",
+      "name": "an open submission without a live job is enqueued, and the new status comes back"
+    },
+    "originalHash": "ccd320dd65634dc6dab5705067d4a8d8762bb8932a4ebc9c9ae44134953bbd06",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-cockpit-mutations-old/C1-badge-only-forces-remount-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-cockpit-mutations-old/C1-badge-only-forces-remount-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-cockpit-mutations-old/C1-badge-only-forces-remount-after.tap"
+    },
+    "restoredHash": "ccd320dd65634dc6dab5705067d4a8d8762bb8932a4ebc9c9ae44134953bbd06",
+    "oldFalsePass": true
+  },
+  {
+    "id": "C2-header-chrome",
+    "lane": "cockpit",
+    "phase": "old",
+    "intended": "Full table real header-scoped background and uppercase assertions fail; the unknown row cannot satisfy the header oracle.",
+    "source": "src/components/discovery/cockpit/comparison-table.tsx",
+    "selectedTest": {
+      "file": "tests/discovery-comparison-table.test.tsx",
+      "name": "the cockpit shows her product as a comparison table instead of bars and text rows"
+    },
+    "originalHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-cockpit-mutations-old/C2-header-chrome-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-cockpit-mutations-old/C2-header-chrome-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-cockpit-mutations-old/C2-header-chrome-after.tap"
+    },
+    "restoredHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+    "oldFalsePass": true
+  },
+  {
+    "id": "C5-full-font",
+    "lane": "cockpit",
+    "phase": "old",
+    "intended": "Composed full table loses 13px bold value class.",
+    "source": "src/components/discovery/cockpit/comparison-table.tsx",
+    "selectedTest": {
+      "file": "tests/discovery-comparison-table.test.tsx",
+      "name": "the cockpit shows her product as a comparison table instead of bars and text rows"
+    },
+    "originalHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-cockpit-mutations-old/C5-full-font-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-cockpit-mutations-old/C5-full-font-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-cockpit-mutations-old/C5-full-font-after.tap"
+    },
+    "restoredHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+    "oldFalsePass": true
+  },
+  {
+    "id": "C5-compact-font",
+    "lane": "cockpit",
+    "phase": "old",
+    "intended": "Existing compact keeper no13px bold assertion fails (12px header still exists, so positive12px alone is insufficient).",
+    "source": "src/components/discovery/cockpit/comparison-table.tsx",
+    "selectedTest": {
+      "file": "tests/discovery-comparison-table.test.tsx",
+      "name": "an alternative without her product: two columns, ALTERNATIVE | ZIEL"
+    },
+    "originalHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-cockpit-mutations-old/C5-compact-font-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-cockpit-mutations-old/C5-compact-font-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-cockpit-mutations-old/C5-compact-font-after.tap"
+    },
+    "restoredHash": "c535a95e625dd5cb23eea258ef9fbb3b3dab1582b3a4d96778292c9abc2bda24",
+    "oldFalsePass": true
+  },
+  {
+    "id": "C6-removes-only-unreplaced-bar",
+    "lane": "cockpit",
+    "phase": "old",
+    "intended": "Transferred without bar-presence assertion fails; existing withTable suppression/prefix still holds.",
+    "source": "src/components/scan/scan-verdict-sections.tsx",
+    "selectedTest": {
+      "file": "tests/discovery-comparison-table.test.tsx",
+      "name": "only a cockpit-supplied comparison replaces the bars"
+    },
+    "originalHash": "65e52f0528559d66fb06f0809ed9dc0529521be455f22f2d31e4f1caf6649094",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-cockpit-mutations-old/C6-removes-only-unreplaced-bar-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-cockpit-mutations-old/C6-removes-only-unreplaced-bar-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-cockpit-mutations-old/C6-removes-only-unreplaced-bar-after.tap"
+    },
+    "restoredHash": "65e52f0528559d66fb06f0809ed9dc0529521be455f22f2d31e4f1caf6649094",
+    "oldFalsePass": true
+  },
+  {
+    "id": "C6-leaks-glyph-marker-to-scanner",
+    "lane": "cockpit",
+    "phase": "old",
+    "intended": "Transferred without no-data-glyph fails; comparison bars remain suppressed.",
+    "source": "src/components/scan/scan-verdict-sections.tsx",
+    "selectedTest": {
+      "file": "tests/discovery-comparison-table.test.tsx",
+      "name": "only a cockpit-supplied comparison replaces the bars"
+    },
+    "originalHash": "65e52f0528559d66fb06f0809ed9dc0529521be455f22f2d31e4f1caf6649094",
+    "before": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-cockpit-mutations-old/C6-leaks-glyph-marker-to-scanner-before.tap"
+    },
+    "fault": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-cockpit-mutations-old/C6-leaks-glyph-marker-to-scanner-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "signal": null,
+      "pass": 1,
+      "fail": 0,
+      "assert": false,
+      "log": "/tmp/test-audit-next431-cockpit-mutations-old/C6-leaks-glyph-marker-to-scanner-after.tap"
+    },
+    "restoredHash": "65e52f0528559d66fb06f0809ed9dc0529521be455f22f2d31e4f1caf6649094",
+    "oldFalsePass": true
+  }
+]

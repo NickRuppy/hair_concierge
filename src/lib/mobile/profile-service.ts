@@ -44,6 +44,7 @@ const labels: Record<string, string> = {
   products_used: "Verwendete Produkte",
   additional_notes: "Deine Notizen",
   wetWashFrequency: "Waschhäufigkeit",
+  bondbuilderTiming: "Zeitpunkt Bondbuilder",
   currentProductCategories: "Verwendete Produktarten",
   scalpIrritationDetail: "Empfindlichkeit der Kopfhaut",
   dryShampooBridgePreference: "Trockenshampoo zwischen Haarwäschen",
@@ -86,9 +87,9 @@ const common: Record<string, string> = {
   accept: "Ja",
   decline: "Nein",
   air_dry: "Lufttrocknen",
-  ordinary_blow_dry: "Föhnen",
-  diffuser_or_airflow_shaping: "Diffusor oder Formen mit Föhn",
-  diffuser_airflow_shaping: "Diffusor oder Formen mit Föhn",
+  ordinary_blow_dry: "Gewöhnlich föhnen",
+  diffuser_or_airflow_shaping: "Mit Diffusor",
+  diffuser_airflow_shaping: "Mit Diffusor",
   dryer_brush: "Föhnbürste",
   hot_air_styler: "Warmluftstyler",
   straightener: "Glätteisen",
@@ -179,6 +180,11 @@ const dictionaries: Record<string, Record<string, string>> = {
   nightProtection: vocabulary.NIGHT_PROTECTION_LABELS,
   material: vocabulary.TOWEL_MATERIAL_LABELS,
   technique: vocabulary.TOWEL_TECHNIQUE_LABELS,
+  bondbuilderTiming: {
+    before_wash: "Vor dem Waschen",
+    after_wash: "Nach dem Waschen",
+    no_preference: "Ist mir egal",
+  },
 }
 function valuesFor(key: string, value: unknown): string[] {
   if (value === null || value === undefined) return []

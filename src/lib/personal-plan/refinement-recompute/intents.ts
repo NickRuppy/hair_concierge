@@ -9,6 +9,7 @@ import type { Stage3DecisionReviewBundle } from "@/lib/personal-plan/products/pr
 import type { RoutinePayloadV1 } from "@/lib/personal-plan/routine/contracts"
 
 import type {
+  Stage3RecomputeRepick,
   Stage3RecomputeBlockedSubject,
   Stage3RecomputeIntentInput,
   Stage3RecomputeIntentPlan,
@@ -34,11 +35,10 @@ type RoutineSubjectState =
 /**
  * Preservation order. Every non-`select_replacement` action must appear in the
  * evaluation's `allowedActions` (`production-persistence-gateway.ts:1164`), and
- * the real category authorities routinely allow exactly ONE action — an `ideal`
- * owned product allows only `keep_owned`, a `mismatch` one only
- * `acknowledge_override` (`authority/categories/mask.ts:316`,
- * `categories/shampoo.ts:248`). So every chain must keep walking rather than
- * assume `leave_uncovered` is always available.
+ * ideal owned products permit only `keep_owned`. Mismatches permit
+ * `acknowledge_override` and `leave_uncovered` (plus an available recommendation).
+ * Spec §5 / §7a.6, ruled 2026-10-12. Chains still walk when the requested action
+ * is unavailable, including unsupported and unknown evaluations.
  *
  * `keep_owned` ⇄ `acknowledge_override` are each other's fallback: the same
  * owned product, before and after the new verdict decided whether keeping it is
@@ -216,6 +216,8 @@ export function buildStage3RecomputeIntents(
   )
   const intents: Stage3AuthoritySemanticIntent[] = []
   const blocked: Stage3RecomputeBlockedSubject[] = []
+  const repick = new Set(input.repickProductIds ?? [])
+  const repicked: Stage3RecomputeRepick[] = []
 
   function resolve(
     evaluation: Stage3AuthorityEvaluation,
@@ -260,6 +262,27 @@ export function buildStage3RecomputeIntents(
       !carriesCapturedProduct(evaluation)
     ) {
       blocked.push({ subjectKey: evaluation.subjectKey, blocked: "owned_capture_missing" })
+      continue
+    }
+
+    // Catalogue-change re-pick (Nick Q8, 2026-10-13): a planned product that no longer
+    // fits its slot after a catalogue change is replaced by the authority's current
+    // next-best pick — the one deliberate exception to R5's "never plan an unseen
+    // product", ruled for exactly this lane. It is never re-planned itself.
+    if (state.kind === "planned" && state.productId !== null && repick.has(state.productId)) {
+      const next =
+        hasBuyableRecommendation(evaluation) &&
+        evaluation.status === "known" &&
+        evaluation.recommendation!.productId !== state.productId
+          ? evaluation.recommendation!.productId
+          : null
+      if (next) resolve(evaluation, PLAN_RECOMMENDATION_CHAIN)
+      else resolve(evaluation, LEAVE_UNCOVERED_CHAIN, "no_product")
+      repicked.push({
+        subjectKey: evaluation.subjectKey,
+        fromProductId: state.productId,
+        toProductId: next,
+      })
       continue
     }
 
@@ -323,5 +346,5 @@ export function buildStage3RecomputeIntents(
     }
   }
 
-  return { intents, blocked }
+  return repick.size > 0 ? { intents, blocked, repicked } : { intents, blocked }
 }

@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "mask-research-record-v0.1",
+  "lane": "blind",
+  "productId": "12-guhl-panthenol-reparatur-2in1",
+  "g0": {
+    "value": "excluded_product_form",
+    "modeScoped": false,
+    "multiUse": true,
+    "rationale": "Excluded as Conditioner-engine territory under the charter's explicit exclusion for 'a multi-use product whose only rinse-out mode is a short conditioner mode', which names this exact product (Guhl Panthenol + Reparatur 2in1 Kur & Spuelung) in both the charter and standard section 2.1. No profile is produced and the product is not forced through the mask ontology. I record a substantive tension with the section 2.2 procedure below, because a directions-only reading does not reach the same answer.\n\nSection 2.2 walk-through as performed. Step 1: authoritative directions located (aggregated dm.de and guhl.com copy; packet confidence high on the dual-mode structure). Step 2: two stated modes, both rinse-out. (a) 'Als Spuelung (fuer sofortige Regeneration): ins gewaschene, nasse Haar einmassieren, kurz einwirken lassen (ca. 30 Sekunden) und gut ausspuelen' - after cleansing, a stated contact time of about 30 seconds, rinsed. (b) 'Als Kur (fuer Tiefenregeneration): ins gewaschene, nasse Haar einmassieren, 2-3 Minuten einwirken lassen ... dann ausspuelen' - after cleansing, a stated contact time of 2-3 minutes, rinsed. Neither mode states lengths-and-ends placement. Step 3 asks whether exactly one mode qualifies; on the literal section 2.2 test both do, because charter F2 makes dwell duration explicitly not a boundary test (7-second express Kuren are eligible), so a 30-second dwell cannot disqualify mode (a) and a 2-3 minute dwell plainly qualifies mode (b). Steps 3, 4 and 5 cover 'exactly one', 'none', and 'ambiguous/inseparable'; two clearly separable qualifying modes is not among them. The charter's ruled exclusion resolves the gap, and I applied it - but its stated ground ('the only rinse-out mode is a short conditioner mode') is not what this packet's directions show, since a distinct 2-3 minute Kur mode is stated.",
+    "evidenceSignals": [
+      "Boundary evidence - directions, mode (a): 'Als Spuelung ... kurz einwirken lassen (ca. 30 Sekunden) und gut ausspuelen'",
+      "Boundary evidence - directions, mode (b): 'Als Kur (fuer Tiefenregeneration) ... 2-3 Minuten einwirken lassen ... dann ausspuelen'",
+      "Boundary evidence - marketed form: 'Kur & Spuelung' 2in1, i.e. the product is sold as a conditioner-plus-treatment, and section 2.2 step 1 states that marketing names never decide",
+      "Boundary evidence - charter and standard section 2.1 name this exact product in the excluded list, mapping it to excluded_product_form and Conditioner-engine territory",
+      "Boundary evidence - formula shape consistent with a lean conditioner rather than an intensive mask: AQUA (1), CETEARYL ALCOHOL (2), BEHENTRIMONIUM CHLORIDE (3), DIPROPYLENE GLYCOL (4), CETYL ESTERS (5), PANTHENOL (6) - a single cationic species, one wax ester, no butter, no heavy triglyceride, no protein, no silicone, in a fourteen-entry list",
+      "Boundary evidence - identity is otherwise complete: exact DE pack, GTIN 4072600703403, 200 ml, raw INCI present, directions consistent across dm.de, guhl.com and retailer copy",
+      "Stress-case value: this row is retained as a boundary and stress case per section 2.1, never as a mask profile. No product receives two engine profiles",
+      "The 30-second and 2-3 minute contact times are protocol metadata with zero classification credit and were not used as an eligibility test in either direction (charter F2)"
+    ]
+  },
+  "tailMarker": {
+    "ingredient": "PHENOXYETHANOL",
+    "rank": 12,
+    "anomalyNote": "Recorded as an E1 formula fact and boundary evidence only - not as a profile input, since no profile is produced for an excluded form. Two observations for the standard's own maintenance. (1) The marker is PHENOXYETHANOL at 12, ahead of PARFUM at 13 and VANILLIN at 14. (2) TETRASODIUM GLUTAMATE DIACETATE (7) is a chelator that the evidence lexicon lists in family 10 but that is NOT in the section 3.1 trace-chelator tail class (which names Disodium EDTA, Tetrasodium EDTA, Trisodium Ethylenediamine Disuccinate, Etidronic Acid, Phytic Acid). Likewise ETHYLHEXYLGLYCERIN (9) is a preservative booster absent from the section 3.1 preservative list. If either were added to the tail class, the marker would move to rank 7 or 9 and the above-tail segment would shrink by three to five entries. This is a concrete gap in the tail-class enumeration, visible here precisely because the product is otherwise simple."
+  },
+  "bondRoute": {
+    "value": "none",
+    "token": null,
+    "rank": null
+  },
+  "uncertainFields": [],
+  "assumptionNotes": [
+    "No profile was produced. Section 2.1 is explicit that excluded forms stay visible as boundary evidence and stress cases and are never forced through the mask ontology, and section 9.9 confirms that only G0 boundary exclusions omit the profile entirely.",
+    "The charter's ruled exclusion was applied over the literal section 2.2 procedure. I did not treat this as a close call on the product - the formula and the marketed form both read as a conditioner - but I am recording that the procedure and the ruling reach the exclusion by different paths, and that section 2.2 has no step for 'two separable qualifying rinse-out modes'.",
+    "I did NOT fire multi_use_directions_ambiguity, because its trigger condition is directions that cannot be resolved into exactly one qualifying rinse-out mask mode through ambiguity or inseparability. Here the modes are perfectly separable; the difficulty is that there are two of them, which is a different problem. A reviewer may reasonably decide that trigger should be widened to cover this case - I would support that.",
+    "bond_route recorded as none purely as a deterministic E1 formula observation (no maleate, gluconamide pair, or bond-positioned peptide at any rank), not as a profile field. GLYCINE (10) is a free amino acid and an explicit non-qualifier; LACTIC ACID (8) is pH context; PANTHENOL (6) is humectant-class. 'Reparatur' in the product name is E0.",
+    "Review triggers I would fire: product-form ambiguity (inherited Conditioner trigger) - not because the exclusion is doubtful, but because the route to it needs the section 2.2 gap closed. missing_sourced_contact_time does not apply (contact times are stated), and no mask-specific trigger applies to an excluded row.",
+    "No claims summary supplied; none was needed, since G0 stops the analysis before formula classification."
+  ]
+}

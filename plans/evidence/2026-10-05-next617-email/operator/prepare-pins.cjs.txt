@@ -1,0 +1,70 @@
+'use strict'
+// TMP-only static authoring. No tests, owners, child processes, or environment files imported/read.
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),{createRequire}=require('node:module')
+const R='/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning',D=__dirname,P='/tmp/test-audit-email-delivery94',g=require('./operator-guard.cjs'),ts=require(R+'/node_modules/typescript'),req=createRequire(R+'/package.json')
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex'),read=f=>JSON.parse(fs.readFileSync(f)),fail=m=>{throw Error(m)},write=(n,b)=>{const p=path.join(D,n);fs.mkdirSync(path.dirname(p),{recursive:true});fs.writeFileSync(p,b,{flag:'wx',mode:0o444})}
+if(sha(fs.readFileSync(P+'/manifest.json'))!=='682498b63ba6b141d5a88ce476fa824e0a2e623156d8d1cefb94f24459b627ea'||sha(fs.readFileSync(P+'/handoff.json'))!=='8d36c62f094b9503825e060dac55b51b540bfa8d599111564bc8ead1f0405afb')fail('Frozen proposal identity')
+const M=read(P+'/manifest.json'),H=read(P+'/handoff.json'),candidates=read(P+'/candidates.json'),rawControls=read(P+'/controls.json').controls
+for(const[f,h]of Object.entries(H.hashes))if(sha(fs.readFileSync(P+'/'+f))!==h)fail('Frozen artifact drift '+f)
+for(const p of M.readset)if(sha(fs.readFileSync(R+'/'+p.file))!==p.sha256)fail('Original readset drift '+p.file)
+const ownedFiles=M.phases.before.files.map(x=>x.file),support=M.externalKeeper.file,allFiles=[...ownedFiles,support],changedFiles=ownedFiles.filter(f=>M.phases.before.files.find(x=>x.file===f).sha256!==M.phases.cut.files.find(x=>x.file===f).sha256)
+if(changedFiles.length!==3)fail('Exactly three changed tests')
+const evidence={root:M.root,head:M.head,branch:M.branch,ownedFiles,supportingFiles:[support],changedFiles,phases:{}}
+for(const phase of ['before','transfer','cut']){evidence.phases[phase]=Object.fromEntries(M.phases[phase].files.map(f=>[f.file,f.sha256]));evidence.phases[phase][support]=M.externalKeeper.sha256;for(const f of M.phases[phase].files.filter(x=>changedFiles.includes(x.file))){const b=fs.readFileSync(f.path);if(sha(b)!==f.sha256)fail('Phase snapshot');write('snapshots/'+phase+'/'+f.file,b)}}
+write('operator-evidence.json',JSON.stringify(evidence,null,2)+'\n');write('operator-candidates.json',JSON.stringify(candidates,null,2)+'\n')
+const fragments={
+'annual-subject':['Reminder','Dein kostenloser Test endet am 21. September 2026'],
+'annual-trial-time':['The input did not match the regular expression','10:00 Uhr UTC'],
+'annual-first-amount':['The input did not match the regular expression','0,00'],
+'annual-renewal':['The input did not match the regular expression','0,00'],
+'annual-automatic-copy':['The input did not match the regular expression','Dein Tarif startet später'],
+'annual-cancel-copy-link':['The input did not match the regular expression','https://chaarlie.de/profile'],
+'annual-marketing-contamination':['The input was expected to not match the regular expression','Rabatt'],
+'annual-management-data':['https://chaarlie.de/kuendigen','https://chaarlie.de/profile'],
+'annual-cancel-data':['https://chaarlie.de/kuendigen','https://chaarlie.de/profile'],
+'annual-html-amount':['The input did not match the regular expression','0,00'],
+'annual-html-cancel':['The input did not match the regular expression','https://chaarlie.de/profile'],
+'annual-html-postal':['The input did not match the regular expression','ADDRESS OMITTED'],
+'annual-html-script':['The input was expected to not match the regular expression','<script>'],
+'annual-html-unresolved-trigger':['The input was expected to not match the regular expression','{{ trigger.subject }}'],
+'annual-html-link-inventory':['https://chaarlie.de/removed','https://chaarlie.de/profile'],
+'annual-trial-data':['wrong date','21. September 2026 um 12:00 Uhr MESZ'],
+'stripe-charge-data':['22. September 2026','21. September 2026'],
+'stripe-subject-data':['The input did not match the regular expression','22. September 2026'],
+'meta-aggregate-url':['https://chaarlie.de/result/lead-123','eventSourceUrl'],
+'dispatcher-message-substitution':['Reminder','Dein kostenloser Test endet am 21. September 2026'],
+}
+const controls=rawControls.map(c=>{
+ const text=fs.readFileSync(R+'/'+c.source.file,'utf8');if(sha(text)!==c.source.sha256)fail('Source pin');const sf=g.parse(ts,c.source.file,text);let anchor
+ if(c.source.anchor.kind==='function'){const found=sf.statements.filter(n=>ts.isFunctionDeclaration(n)&&n.name?.text===c.source.anchor.name);if(found.length!==1||found[0].getText(sf)!==c.source.anchor.text||sha(c.source.anchor.text)!==c.source.anchor.sha256)fail('Exact function');anchor={kind:'function',scope:c.source.anchor.name,scopeSha256:c.source.anchor.sha256,expectedOccurrences:1}}
+ else anchor={kind:'file',scopeSha256:c.source.sha256,expectedOccurrences:1}
+ const mutant=g.replaceOnce(text,c.source.from,c.source.to,c.id);g.parse(ts,c.source.file,mutant);if(sha(mutant)!==c.source.mutatedSHA256)fail('Frozen source fault mismatch')
+ const oracles={};for(const phase of ['transfer','cut']){const f=M.phases[phase].files.find(x=>x.file===c.keeper.file),b=f?fs.readFileSync(f.path):fs.readFileSync(R+'/'+c.keeper.file);const row=g.registrations(ts,c.keeper.file,b.toString()).get(c.keeper.name),o=c.expected.phaseOracles[phase],a=row?.assertions.filter(x=>x.startLine===o.line);if(a?.length!==1||!a[0].text.startsWith(c.oraclePrefix))fail('Unique intended full assertion');oracles[phase]={startLine:o.line,text:a[0].text,keeperSha256:sha(row.statement),testFileSha256:sha(b)}}
+ if(!fragments[c.id])fail('Missing strict message fragments')
+ return{id:c.id,file:c.source.file,sourceSha256:c.source.sha256,mutatedSha256:c.source.mutatedSHA256,anchor,from:c.source.from,to:c.source.to,test:{file:c.keeper.file,name:c.keeper.name},command:['node',...c.command.argv],oracles,expectedOperator:c.expected.operator,errorMessageIncludes:read('/tmp/test-audit-email94-independent-static.json').controls.find(r=>r.id===c.id).proposedExpectedMessageAllSubstrings,intendedAssertion:c.oraclePrefix,proofKind:c.candidate,oldDonorSensitivity:c.oldDonorExpected}
+});write('operator-controls-normalized.json',JSON.stringify(controls,null,2)+'\n')
+function pin(p){return fs.existsSync(p)?{path:p,realpath:fs.realpathSync(p),sha:sha(fs.readFileSync(p))}:{path:p,realpath:null,sha:null}}
+const disposition='/tmp/test-audit-next607-shared-config-disposition.json',dispBytes=fs.readFileSync(disposition);if(sha(dispBytes)!=='38f962fed8680aaa75a2723158c25d37669e4042e44164d878a6556463143705')fail('Metadata disposition changed');const disp=JSON.parse(dispBytes)
+const gitFile=R+'/.git',gitDir=path.resolve(R,fs.readFileSync(gitFile,'utf8').trim().replace(/^gitdir: /,'')),commonFile=gitDir+'/commondir',commonDir=path.resolve(gitDir,fs.readFileSync(commonFile,'utf8').trim())
+const identityFiles=[gitFile,gitDir+'/HEAD',commonFile,commonDir+'/config',commonDir+'/refs/heads/'+M.branch,commonDir+'/packed-refs'].map(pin)
+for(const p of identityFiles){const old=disp.files.find(x=>x.path===p.path);if(!old||p.sha!==old.current||(!p.path.endsWith('/config')&&!old.same))fail('Unauthorized identity drift '+p.path)}
+write('metadata-disposition.json',dispBytes)
+const readset=new Map(M.readset.filter(p=>!allFiles.includes(p.file)&&!p.file.startsWith('node_modules/')).map(p=>[p.file,p.sha256])),queue=[...new Set(controls.map(c=>c.test.file)),'tests/server-only-register.cjs'],seen=new Set(),edges=[],externals=new Set(),typeOnly=new Set(),nonliteral=[]
+const opts={moduleResolution:ts.ModuleResolutionKind.Bundler,module:ts.ModuleKind.ESNext,allowJs:true,baseUrl:R,paths:{'@/*':['src/*']}}
+while(queue.length){const file=queue.shift();if(seen.has(file))continue;seen.add(file);if(seen.size>180)fail('Selected local closure exceeds bound');const text=fs.readFileSync(R+'/'+file,'utf8');if(!allFiles.includes(file))readset.set(file,sha(text));const sf=g.parse(ts,file,text)
+ function add(spec,kind){if(spec.startsWith('node:'))return;if(!spec.startsWith('.')&&!spec.startsWith('@/')){(kind==='type-only'?typeOnly:externals).add(spec);return}const full=ts.resolveModuleName(spec,R+'/'+file,opts,ts.sys).resolvedModule?.resolvedFileName;if(!full||!full.startsWith(R+'/')||full.includes('/node_modules/'))fail('Unresolved local import '+file+' '+spec);const dest=path.relative(R,full);edges.push({from:file,to:dest,spec,kind});queue.push(dest)}
+ function walk(n){if((ts.isImportDeclaration(n)||ts.isExportDeclaration(n))&&n.moduleSpecifier&&ts.isStringLiteralLike(n.moduleSpecifier)){const clause=n.importClause;const only=clause?.isTypeOnly||n.isTypeOnly||(!clause?.name&&clause?.namedBindings&&ts.isNamedImports(clause.namedBindings)&&clause.namedBindings.elements.every(e=>e.isTypeOnly));add(n.moduleSpecifier.text,only?'type-only':'static')};if(ts.isCallExpression(n)&&(n.expression.kind===ts.SyntaxKind.ImportKeyword||n.expression.getText(sf)==='require')){if(ts.isStringLiteralLike(n.arguments[0]))add(n.arguments[0].text,'literal dynamic');else nonliteral.push({file,line:sf.getLineAndCharacterOfPosition(n.getStart(sf)).line+1})}ts.forEachChild(n,walk)}walk(sf)
+}
+const dependencyTrees=['tsx/dist','esbuild/lib','esbuild/bin','@esbuild/darwin-arm64/bin','get-tsconfig/dist','resolve-pkg-maps/dist'].filter(n=>fs.existsSync(R+'/node_modules/'+n)).map(n=>({path:R+'/node_modules/'+n,names:g.inventory(R+'/node_modules/'+n)})),dependencyFiles=new Set(dependencyTrees.flatMap(t=>t.names.map(n=>t.path+'/'+n))),externalPins=[]
+for(const spec of [...externals,'tsx','typescript','esbuild','get-tsconfig','resolve-pkg-maps']){const entry=req.resolve(spec);if(!path.isAbsolute(entry))continue;dependencyFiles.add(entry);const pkgName=spec.startsWith('@')?spec.split('/').slice(0,2).join('/'):spec.split('/')[0],pkg=R+'/node_modules/'+pkgName+'/package.json';dependencyFiles.add(pkg);externalPins.push({specifier:spec,entry,package:pkg})}
+for(const spec of typeOnly){const name=spec.startsWith('@')?spec.split('/').slice(0,2).join('/'):spec.split('/')[0];dependencyFiles.add(R+'/node_modules/'+name+'/package.json')}
+for(const p of M.readset)if(p.file.startsWith('node_modules/'))dependencyFiles.add(R+'/'+p.file)
+const closure={selectedTests:[...new Set(controls.map(c=>c.test.file))],localFiles:[...seen].sort(),edges,runtimeExternals:[...externals].sort(),typeOnlyExternals:[...typeOnly].sort(),externalPins,nonliteralImports:nonliteral,limits:'Static local import closure of two exact selected test files, including their top-level dependency graph. Bounded loader/transpiler trees plus parser and vendor entry/package/type pins. No all-vendor/source/data crawl; deeper Next/Supabase/Sentry and unselected full18-cohort third-party internals are not exhaustively pinned or runtime-verified. Server-only is erased by existing preload; actual product owners never stubbed by tooling.'}
+write('operator-selected-closure.json',JSON.stringify(closure,null,2)+'\n')
+const artifactHashes={};for(const f of ['/tmp/test-audit-email94-independent-preservation.md','/tmp/test-audit-email94-independent-static.json'])artifactHashes[f]=sha(fs.readFileSync(f));for(const[f,h]of Object.entries(H.hashes))artifactHashes[P+'/'+f]=h;artifactHashes[P+'/handoff.json']=sha(fs.readFileSync(P+'/handoff.json'));artifactHashes[disposition]=sha(dispBytes)
+for(const n of ['operator-guard.cjs','operator-proof.cjs','operator-readonly-preload.cjs','operator-candidates.json','operator-controls-normalized.json','operator-evidence.json','operator-selected-closure.json','metadata-disposition.json'])artifactHashes[D+'/'+n]=sha(fs.readFileSync(D+'/'+n))
+for(const phase of ['before','transfer','cut'])for(const f of changedFiles){const p=path.join(D,'snapshots',phase,f);artifactHashes[p]=sha(fs.readFileSync(p))}
+const entrypointTemplateHashes={};for(const n of ['operator-edit.cjs','operator-run-controls.cjs'])entrypointTemplateHashes[D+'/'+n]=sha(fs.readFileSync(D+'/'+n))
+const pins={root:R,head:M.head,branch:M.branch,gitDir,commonDir,identityFiles,node:{version:process.version,realpath:fs.realpathSync(process.execPath),sha:sha(fs.readFileSync(process.execPath))},typescriptVersion:ts.version,originalReadset76:M.readset,readset:[...readset].sort(([a],[b])=>a.localeCompare(b)).map(([file,sha])=>({file,sha})),dependencies:[...dependencyFiles].sort().map(pin),dependencyTrees,repositoryTrees:[],artifactHashes,entrypointTemplateHashes,limits:closure.limits}
+const raw=JSON.stringify(pins,null,2)+'\n',pinSHA=sha(raw);write('operator-pins.json',raw);for(const n of ['operator-edit.cjs','operator-run-controls.cjs'])fs.writeFileSync(D+'/'+n,fs.readFileSync(D+'/'+n,'utf8').replace("const PIN_SHA='PIN_SHA_PLACEHOLDER'","const PIN_SHA='"+pinSHA+"'"))
+console.log(JSON.stringify({directory:D,pinSHA,originalGuards:M.readset.length,fixedNonphaseGuards:pins.readset.length,selectedLocalClosure:seen.size,dependencies:pins.dependencies.length,controls:controls.length,repositoryWrites:0,ownerImports:0,childrenStarted:0},null,2))

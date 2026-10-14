@@ -1,0 +1,25 @@
+{
+  "mode": "transfer",
+  "from": "before",
+  "phase": "transfer",
+  "counts": {
+    "before": 152,
+    "transfer": 152,
+    "cut": 143
+  },
+  "changed": [
+    "tests/scan-detection-state.test.ts",
+    "tests/scan-scanner-session.test.ts",
+    "tests/scan-scanner-loop.test.ts",
+    "tests/scan-flow-state.test.ts"
+  ],
+  "allTestHashes": {
+    "tests/scan-detection-state.test.ts": "25243105288867ebf0412c520f6a3c2708df886ec6db910595e5cf9531ca4519",
+    "tests/scan-scanner-session.test.ts": "94bc4f49335b080dbb5948569600b97ed7cb7f753f959071700d68966b635d11",
+    "tests/scan-scanner-loop.test.ts": "415b34c381a9c596ae6ab7c606fa422af9c7e07faa37db6590cdde4b739b6742",
+    "tests/scan-flow-state.test.ts": "f8f3a4cc56a21862147cf01cac568cc7fd1b7084feb60bff981ca001f0b0750a"
+  },
+  "sourceWrites": 0,
+  "testsRun": 0,
+  "originals": "/tmp/test-audit-scanner-detection-session-apply-transfer-4hgDFI/originals"
+}

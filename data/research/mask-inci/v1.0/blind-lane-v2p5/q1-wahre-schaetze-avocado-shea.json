@@ -1,0 +1,101 @@
+{
+  "productId": "q1-wahre-schaetze-avocado-shea",
+  "lane": "blind-v2.5",
+  "standardVersion": "mask-inci-v0.6",
+  "classifiedAt": "2026-10-06",
+  "attestation": {
+    "prohibitedFilesAccessed": false,
+    "inputsRead": [
+      "docs/research/mask-inci/v1.0/mask-classification-standard.v0.1.md",
+      "docs/research/mask-inci/v1.0/02_evidence_lexicon.v0.1.md",
+      "docs/research/mask-inci/v1.0/00_category_charter.md",
+      "docs/research/mask-inci/v1.0/01_property-set-v0.md",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q1-wahre-schaetze-avocado-shea.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q2-swiss-o-par-arganoel.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q3-syoss-intense-repair.json",
+      "data/research/mask-inci/v1.0/blind-packets-round2p5/q4-fructis-keratin-sleek.json"
+    ]
+  },
+  "g0": {
+    "outcome": "in_category",
+    "conjuncts": {
+      "afterCleansing": "satisfied — 'ins nasse Haar', rinse stated, no pre-wash positioning (§2.1 wet-hair operational note)",
+      "statedContactTime": "satisfied — '1 Minute einwirken'",
+      "rinsedOut": "satisfied — 'spüle sie anschließend gründlich aus'"
+    },
+    "placement": "unstated → P5 canonical default (Längen und Spitzen, Ansatz aussparen)",
+    "multiUse": false,
+    "protocolMetadata": { "contactTime": "1 Minute", "source": "packet directionsText (rossmann.de, 2026-10-06)", "classificationCredit": "none" },
+    "note": "1-minute express Kur; eligible under F2 — dwell is protocol metadata, never a boundary test. Not in the 7-second segment, so express_dwell_unknown does not fire."
+  },
+  "tailMarker": {
+    "ingredient": "Caprylyl Glycol",
+    "index": 10,
+    "status": "unresolved",
+    "note": "Earliest marker-eligible species is the booster Caprylyl Glycol @10 (eligible because preservatives Benzoic Acid @14 and Benzyl Alcohol @18 are co-declared). E13 establishing-species limb passes (Cetearyl Alcohol @2, SAPDMA @3, IPM @4, Cetyl Esters @5, sunflower @6, avocado @8, shea @9 all outrank @10). Third limb (E2) FIRES via the booster-above-preservative reading: the marker species itself is a booster declared above the preservative it is only permitted to boost (@10 vs Benzoic Acid @14) — this ordering involves the marker species, so the round-2 scope note does not exempt it. Independently, Parfum @19 is the LAST entry behind its own declared allergens Linalool @16 and Coumarin @17 — per the E2 application note a Garnier-style house listing convention, so Parfum carries no concentration position and cannot serve as a fallback marker. Conservative reading is final: unresolved, tail_marker_unresolved."
+  },
+  "bondRoute": "none",
+  "profile": {
+    "conditioning_level": {
+      "value": "moderate",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "S1 fails on the full list: a single cationic species (Stearamidopropyl Dimethylamine @3), so `high` is unreachable whatever the boundary. S2 holds on rank alone (Cetearyl Alcohol @2) and S3 holds on early lipids (Isopropyl Myristate @4, Cetyl Esters @5) without relying on the marker, so `low` is also unreachable; S2+S3 without S1 reads `moderate`. Confidence is capped at `moderate` by the unresolved marker (§3.1.1 consequence 3; §9.1 material counter-signal (a) would anyway bar `high`).",
+      "evidenceSignals": ["S2: Cetearyl Alcohol @2", "S3: Isopropyl Myristate @4, Cetyl Esters @5 (plus sunflower @6, avocado @8, shea @9)", "R1 base: SAPDMA @3 + Cetearyl Alcohol @2"],
+      "counterSignals": ["single cationic species on the full list (S1 fails)", "tail_marker unresolved (material counter-signal (a))"]
+    },
+    "weight_potential": {
+      "value": "moderate",
+      "confidence": "low",
+      "evidenceLevel": "E2",
+      "rationale": "The only R4b heavy lipid is Shea Butter @9, one rank before the nominal marker @10; with a plausible marker it would complete the `high` anchor with the dense fatty base (Cetearyl Alcohol @2, top three). Under an unresolved marker shea may not be credited as above-tail solely because it outranks the marker (§3.1.1 consequence 2), and the ordinal read gives it no independent support (it follows a botanical extract @7 and two mid-band oils), so `high` is withheld. `low` is unavailable on an unreadable segment and is in any case blocked by mid-band sunflower @6 / avocado @8; the value rests on the marker boundary alone, so confidence drops to `low`.",
+      "evidenceSignals": ["dense fatty-alcohol base: Cetearyl Alcohol @2", "candidate R4b core: Shea Butter @9 (= nominal tail_index − 1)", "mid band above nominal marker: Helianthus Annuus Seed Oil @6, Persea Gratissima Oil @8"],
+      "counterSignals": ["tail_marker unresolved — shea's above-tail status cannot be read", "Rosmarinus Officinalis Leaf Extract @7 sits above the oils, suggesting the ~1 % line may fall earlier than @10"]
+    },
+    "care_direction": {
+      "value": "moisture",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No R5 protein, peptide or keratin species appears anywhere on the list, so `protein` and `balanced` (a) are unavailable. There is no silicone or cationic-polymer film, so reading (b) clause 2 fails and reading (b) is unavailable. The coherent cetearyl/amidoamine base with an ester/oil emollient leg (@4–@9) is the category-default `moisture` direction; confidence capped at `moderate` by the unresolved marker.",
+      "evidenceSignals": ["R1 base Cetearyl Alcohol @2 + SAPDMA @3", "emollient leg IPM @4, Cetyl Esters @5, sunflower @6, avocado @8, shea @9"],
+      "counterSignals": ["no humectant cluster (no R9 species on the list; Caprylyl Glycol @10 is a booster, not a humectant)", "tail_marker unresolved"]
+    },
+    "repair_support_level": {
+      "value": "low",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No qualifying R5 species at any rank and no named bond-chemistry token, so only ordinary conditioning/lubrication is present. Oils, shea and the cationic base are explicit non-upgraders (§9.4). The value does not depend on the boundary, but §9.4's confidence rule caps it at `moderate` without a plausible marker.",
+      "evidenceSignals": ["ordinary R1/R4 conditioning only"],
+      "counterSignals": ["'Sehr Trockenes' positioning is E0 and moves nothing"]
+    },
+    "primary_focus": {
+      "value": "general",
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "Step 3: no bond_route, no protein route, no curl or colour route. Step 4: zero R9 humectants, so the moisture guard fails at criterion 1. Step 5: no silicone/polymer optical architecture, so shine fails criterion 1. Step 6/7: the only candidate differentiator is the R1+R4 lipid base, which §6 rule 1 and §9.5.2 step 1 treat as one M1 baseline observation, not a distinct smoothing or detangling route — verdict `nonspecific`, which resolves to `general`; the 'Frizzy Hair' positioning may corroborate but never create a smoothing route.",
+      "evidenceSignals": ["focus_care_verdict: nonspecific", "claim_role: not_applicable (positioning cannot upgrade nonspecific)"],
+      "counterSignals": ["'Sehr Trockenes & Frizzy Hair' positioning (E0) suggests moisture/smoothing; neither route clears on the formula"]
+    },
+    "secondary_focus": {
+      "value": [],
+      "confidence": "moderate",
+      "evidenceLevel": "E2",
+      "rationale": "No secondary route clears independently: the moisture slot needs §9.5.3 criterion 1 (≥ 3 above-tail humectants) and the list carries none, and no shine or smoothing architecture exists beyond the M1 base. Spending a slot on the shared lipid film would double-count the primary (§6 rule 1).",
+      "evidenceSignals": [],
+      "counterSignals": []
+    }
+  },
+  "hinweise": {
+    "fired": [
+      {
+        "flag": "tail_marker",
+        "value": "unresolved",
+        "note": "Caprylyl Glycol @10 is a booster ranked above the preservatives it pairs with (Benzoic Acid @14, Benzyl Alcohol @18) and Parfum @19 is last behind its allergens (Linalool @16, Coumarin @17) — house listing convention; the boundary-hinging species is Shea Butter @9 (weight `high` vs `moderate`). Moves no value toward either extreme; routes to review."
+      }
+    ]
+  },
+  "reviewTriggers": [
+    { "trigger": "tail_marker_unresolved", "fields": ["weight_potential", "conditioning_level", "care_direction", "repair_support_level", "primary_focus"] },
+    { "trigger": "low_confidence_field", "fields": ["weight_potential"] }
+  ]
+}

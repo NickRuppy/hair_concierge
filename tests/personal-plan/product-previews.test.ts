@@ -1,3 +1,5 @@
+import { discoveryEqualOptions } from "../../src/lib/discovery/equal-options"
+import { buildStage3SelectionProfile } from "../../src/lib/personal-plan/products/authority/selection-profile"
 import assert from "node:assert/strict"
 import test from "node:test"
 
@@ -501,7 +503,8 @@ test("evaluates an uncovered Scalp Care recommendation before exposing its image
   assert.equal(recommendation.verdict, "ideal")
 })
 
-test("returns an exact-fit Mask preview and falls back on an unsuitable thickness", async () => {
+test("Mask preview admits adjacent thickness and falls back only on a two-step gap", async () => {
+  // fit-verdict spec §§2–5, ruled 2026-10-12: thickness is a degree axis, never a gate.
   const result = computeNeedPlan({
     rawEnvelope: COMPLETE_V3_PLAN_ENVELOPE,
     artifactId: "11111111-1111-4111-8111-111111111111",
@@ -563,6 +566,13 @@ test("returns an exact-fit Mask preview and falls back on an unsuitable thicknes
     snapshot,
     loadCandidates: async () => [candidate],
   })
+  const adjacent = await computeStage1ProductExamplePreviews({
+    personalPlanId: "plan-1",
+    sourceNeedVersionId: "need-1",
+    snapshot,
+    loadCandidates: async () => [{ ...candidate, suitableThicknesses: ["normal"] }],
+  })
+  assert.equal(asRecommendation(adjacent.previews[0]!).verdict, "supportive")
   const unsuitable = await computeStage1ProductExamplePreviews({
     personalPlanId: "plan-1",
     sourceNeedVersionId: "need-1",
@@ -588,6 +598,7 @@ test("returns an exact-fit Mask preview and falls back on an unsuitable thicknes
 })
 
 test("uses a source-bound supportive Mask for both optional and required (basis) Mask decisions", async () => {
+  // fit-verdict spec §§3–5, ruled 2026-10-12: use one weight step for supportive in both tiers.
   // Mask's uncovered-role candidate search (mask.ts) used to admit a
   // supportive candidate into `eligible` only when needTier === "optional".
   // Task 3d lifted that restriction: supportive candidates are eligible for
@@ -638,7 +649,7 @@ test("uses a source-bound supportive Mask for both optional and required (basis)
     presentationImageUrl: "https://example.com/mask-supportive.webp",
     factFingerprint: "facts-mask-supportive",
     spec: {
-      weight: "rich",
+      weight: "medium",
       careDirection: "moisture",
       repairSupportLevel: "medium",
       functionalBenefits: [],
@@ -670,7 +681,7 @@ test("uses a source-bound supportive Mask for both optional and required (basis)
   assert.equal(basisRecommendation.verdict, "supportive")
 })
 
-test("returns an exact-fit Bondbuilder preview and falls back on an unsuitable thickness", async () => {
+test("Bondbuilder previews ignore legacy diameter fit but still require verified application", async () => {
   const result = computeNeedPlan({
     rawEnvelope: COMPLETE_V3_PLAN_ENVELOPE,
     artifactId: "11111111-1111-4111-8111-111111111111",
@@ -716,6 +727,10 @@ test("returns an exact-fit Bondbuilder preview and falls back on an unsuitable t
       productFormat: "treatment",
       usageProtocol: "course",
       relationship: "standalone",
+      // fit-verdict spec §6, ruled 2026-10-12: reviewed technology fixture.
+      technologyFamily: "sulfur_targeting_dimaleate",
+      trustBasis: "owner_anchor",
+      claimTrustLevel: "high",
     },
   }
   const snapshot = {
@@ -730,40 +745,47 @@ test("returns an exact-fit Bondbuilder preview and falls back on an unsuitable t
     snapshot,
     loadCandidates: async () => [candidate],
   })
-  const unsuitable = await computeStage1ProductExamplePreviews({
-    personalPlanId: "plan-1",
-    sourceNeedVersionId: "need-1",
-    snapshot,
-    loadCandidates: async () => [
-      {
-        ...candidate,
-        suitableThicknesses: [
-          result.snapshot.profile.hair.thickness === "coarse" ? "fine" : "coarse",
-        ],
-      },
-    ],
-  })
-
   assert.equal(exactFit.previews.length, 1)
   const recommendation = asRecommendation(exactFit.previews[0]!)
   assert.equal(recommendation.productId, "bondbuilder-profile-fit")
   assert.equal(recommendation.imageUrl, "https://example.com/bondbuilder-profile-fit.webp")
   assert.equal(recommendation.verdict, "ideal")
 
-  assert.equal(unsuitable.previews.length, 1)
-  assert.equal(asFallback(unsuitable.previews[0]!).fallback, "post_refinement")
+  for (const thickness of ["fine", "normal", "coarse"] as const) {
+    const categoryEligible = await computeStage1ProductExamplePreviews({
+      personalPlanId: "plan-1",
+      sourceNeedVersionId: "need-1",
+      snapshot: {
+        ...snapshot,
+        profile: {
+          ...snapshot.profile,
+          hair: { ...snapshot.profile.hair, thickness },
+        },
+      },
+      loadCandidates: async () => [
+        { ...candidate, suitableThicknesses: [thickness === "coarse" ? "fine" : "coarse"] },
+      ],
+    })
+    assert.equal(categoryEligible.previews.length, 1, thickness)
+    assert.equal(
+      asRecommendation(categoryEligible.previews[0]!).productId,
+      candidate.productId,
+      thickness,
+    )
+  }
+
+  const incomplete = await computeStage1ProductExamplePreviews({
+    personalPlanId: "plan-1",
+    sourceNeedVersionId: "need-1",
+    snapshot,
+    loadCandidates: async () => [{ ...candidate, protocols: [] }],
+  })
+  assert.equal(incomplete.previews.length, 1)
+  assert.equal(asFallback(incomplete.previews[0]!).fallback, "post_refinement")
 })
 
-test("a tied Bondbuilder shortlist previews the authority's tie default, not an illustration", async () => {
-  // History: product-previews.ts once special-cased bondbuilder ties with a
-  // hardcoded product id (STAGE1_BONDBUILDER_EXAMPLE_PRODUCT_ID, K18) as an
-  // illustration-only fallback whenever multiple ideal candidates tied and
-  // the bondbuilder authority itself declined to pick one
-  // (recommendationCandidates.length > 1 => recommendation: null). That
-  // presentation hardcode stays removed. The tie is now resolved where it
-  // belongs — inside the authority, as the `bondbuilder.stage3.tie_default`
-  // rule (BONDBUILDER_TIE_DEFAULT_PRODUCT_ID) — so the preview shows a real,
-  // buyable recommendation with that product's own facts and fingerprint.
+// fit-verdict spec §6, ruled 2026-10-12: trust ties pick cheaper first, including without K18.
+test("a tied Bondbuilder shortlist previews the cheapest reviewed option, not an illustration", async () => {
   const result = computeNeedPlan({
     rawEnvelope: COMPLETE_V3_PLAN_ENVELOPE,
     artifactId: "11111111-1111-4111-8111-111111111111",
@@ -802,6 +824,8 @@ test("a tied Bondbuilder shortlist previews the authority's tie default, not an 
     isActive: true,
     lifecycleStatus: "active",
     recommendable: true,
+    priceEur: productId === "olaplex" ? 34 : productId === "epres" ? 48 : 56.25,
+    currency: "EUR",
     suitableThicknesses: [result.snapshot.profile.hair.thickness],
     knownReaction: false,
     protocols: [{ role, status: "verified_complete", fingerprint: `protocol-${productId}` }],
@@ -817,6 +841,10 @@ test("a tied Bondbuilder shortlist previews the authority's tie default, not an 
       usageProtocol:
         productId === "38dace91-0fba-49ee-a93f-ac36e488fe4b" ? "k18_leave_in" : "course",
       relationship: "standalone",
+      // fit-verdict spec §6, ruled 2026-10-12: reviewed technology fixture.
+      technologyFamily: "sulfur_targeting_dimaleate",
+      trustBasis: "owner_anchor",
+      claimTrustLevel: "high",
     },
   })
   const tiedCandidates = [
@@ -837,6 +865,14 @@ test("a tied Bondbuilder shortlist previews the authority's tie default, not an 
     sourceNeedVersionId: "need-1",
     snapshot: {
       ...result.snapshot,
+      assessments: {
+        ...result.snapshot.assessments,
+        damage: {
+          ...result.snapshot.assessments.damage,
+          knowledgeState: "known" as const,
+          structuralLevel: "high" as const,
+        },
+      },
       decisions: [decision],
       renderedOrder: ["bondbuilder" as const],
     },
@@ -848,14 +884,13 @@ test("a tied Bondbuilder shortlist previews the authority's tie default, not an 
 
   assert.equal(response.previews.length, 1)
   const tied = asRecommendation(response.previews[0]!)
-  assert.equal(tied.productId, "38dace91-0fba-49ee-a93f-ac36e488fe4b")
-  assert.equal(tied.productName, "K18 Leave-In Molecular Repair Hair Mask")
-  assert.equal(tied.imageUrl, "https://example.com/k18.webp")
-  assert.equal(tied.factFingerprint, "facts-38dace91-0fba-49ee-a93f-ac36e488fe4b")
+  assert.equal(tied.productId, "olaplex")
+  assert.equal(tied.productName, "OLAPLEX No.3PLUS Complete Repair Treatment")
+  assert.equal(tied.imageUrl, "https://example.com/olaplex.webp")
+  assert.equal(tied.factFingerprint, "facts-olaplex")
   assert.equal(tied.verdict, "ideal")
 
-  // A tie WITHOUT the default product on the shortlist keeps the honest
-  // fallback: the authority still refuses to pick among equals.
+  // Equal trust still resolves to the cheaper option when K18 is absent.
   const tieWithoutDefault = await computeStage1ProductExamplePreviews({
     ...previewInput,
     loadCandidates: async () =>
@@ -863,22 +898,18 @@ test("a tied Bondbuilder shortlist previews the authority's tie default, not an 
   })
 
   assert.equal(tieWithoutDefault.previews.length, 1)
-  assert.equal(asFallback(tieWithoutDefault.previews[0]!).fallback, "post_refinement")
+  assert.equal(asRecommendation(tieWithoutDefault.previews[0]!).productId, "olaplex")
 
   // If only one ideal candidate remains, the tie resolves and the engine
   // recommends it directly (no tie default involved).
+  // fit-verdict spec §§2,6, ruled 2026-10-12: protocol gaps, not diameter, exclude candidates.
   const untied = await computeStage1ProductExamplePreviews({
     ...previewInput,
     loadCandidates: async () =>
       tiedCandidates.map((item) =>
         item.productId === "38dace91-0fba-49ee-a93f-ac36e488fe4b"
           ? item
-          : {
-              ...item,
-              suitableThicknesses: [
-                result.snapshot.profile.hair.thickness === "coarse" ? "fine" : "coarse",
-              ],
-            },
+          : { ...item, protocols: [] },
       ),
   })
 
@@ -887,6 +918,23 @@ test("a tied Bondbuilder shortlist previews the authority's tie default, not an 
   assert.equal(recommendation.productId, "38dace91-0fba-49ee-a93f-ac36e488fe4b")
   assert.equal(recommendation.imageUrl, "https://example.com/k18.webp")
   assert.equal(recommendation.verdict, "ideal")
+  // Lena (Nick, 2026-10-13): damaged hair, all three reviewed high-trust products fit.
+  const options = discoveryEqualOptions({
+    category: "bondbuilder",
+    role,
+    decision,
+    snapshot: previewInput.snapshot,
+    sourceNeedVersionId: previewInput.sourceNeedVersionId,
+    candidates: tiedCandidates,
+    selectedProductId: tied.productId,
+    selectionProfile: buildStage3SelectionProfile(previewInput.snapshot, null),
+  })
+  assert.deepEqual(
+    options.map((option) => option.productId),
+    ["epres", "38dace91-0fba-49ee-a93f-ac36e488fe4b"],
+  )
+  assert.match(options[0]!.priceLabel ?? "", /48,00/)
+  assert.match(options[1]!.priceLabel ?? "", /56,25/)
 })
 
 test("keeps a matching Shampoo preview and an explicit fallback when another category candidate load fails", async () => {

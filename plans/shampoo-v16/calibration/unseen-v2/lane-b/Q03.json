@@ -1,0 +1,288 @@
+{
+ "blindId": "Q03",
+ "policy": "shampoo-classification-v1.6-candidate",
+ "identity": {
+  "brand": "Garnier Wahre Schätze",
+  "productName": "Wahre Schätze Pflegendes Shampoo Kokosmilch & Macadamia",
+  "packSize": "250 ml",
+  "market": "DE",
+  "formulaSource": "frozen packet canonicalInci (treated as approved canonical full-INCI capture, ID-1)",
+  "normalization": "ID-2: 'Aqua/Water' and 'Cocos Nucifera Oil/Coconut Oil' are single entries; normalized positions = packet positions (19 entries)",
+  "formulaFingerprint": "sha256(newline-joined normalized INCI) = b154c2fcb1e61c169a97f998ccd8229df3f235e306ff110816100227e3bf5a20",
+  "prominenceCutoff": "E3: Parfum/Fragrance at #7 -> prominent = #1-#6",
+  "claimInciConflicts": "ID-3 note only: 'Kokosmilch' has no exact INCI match (Cocos Nucifera Oil #9 is present; no coconut milk/juice entry). A missing botanical/marketing ingredient with no gate or property role -> note, no confidence effect. 'Macadamia' -> Macadamia Integrifolia Seed Oil #8; 'ohne Silikone' consistent.",
+  "sourceGrading": "CL-SRC/E1: retailer sources only = low; product name = high ('Pflegendes Shampoo Kokosmilch & Macadamia')"
+ },
+ "directProperties": {
+  "cleansingStrength": {
+   "value": "moderate",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "C1: defining anionic Sodium Laureth Sulfate #2 (ether type); prominent buffer Coco-Betaine #3; no reinforcing anionic -> moderate. PPG-5-Ceteth-20 #11 is a solubilizer (C3 not a route). Counter-signals: Glycerin #4, Glycol Distearate #5. Retailer 'reinigt sanft' ignored (Section 4).",
+   "ruleIds": [
+    "C3",
+    "C4",
+    "C1",
+    "E3",
+    "3.2",
+    "N-ALT"
+   ]
+  },
+  "conditioningLevel": {
+   "value": "moderate",
+   "confidence": "moderate",
+   "neighboringAlternative": "low",
+   "rationale": "Anchors (Section 5): several light routes - pearlizing Glycol Distearate #5, humectant Glycerin #4 (R11 list), liquid oils Macadamia Integrifolia Seed Oil #8 and Cocos Nucifera Oil #9 (right after Parfum, not prominent), cationic Polyquaternium-10 #14 (late). C2 not met: no early silicone and no prominent payload_lipid. Counter-signal toward low: the only cationic is late and the oils are post-fragrance. 'intensive Pflege' claim ignored (C7, W-RICH).",
+   "ruleIds": [
+    "C2",
+    "R11",
+    "E3",
+    "C7",
+    "W-RICH",
+    "N-ALT"
+   ]
+  },
+  "weightPotential": {
+   "value": "low",
+   "confidence": "moderate",
+   "neighboringAlternative": "moderate",
+   "evidenceByFamily": {
+    "cationic_polymer": [
+     "Polyquaternium-10 #14"
+    ],
+    "payload_lipid": [
+     "Macadamia Integrifolia Seed Oil #8",
+     "Cocos Nucifera Oil #9"
+    ],
+    "weak_refatter": [],
+    "silicone": [],
+    "protein_film": [],
+    "film_former": [],
+    "anionic_surfactant": [
+     "Sodium Laureth Sulfate #2"
+    ],
+    "amphoteric_surfactant": [
+     "Coco-Betaine #3"
+    ],
+    "nonionic_surfactant": [],
+    "humectant_context": [
+     "Glycerin #4"
+    ]
+   },
+   "excluded": [
+    "Glycol Distearate #5 (pearlizing wax, 6.4)",
+    "Carbomer #10 (anionic acrylate rheology polymer, 6.4)",
+    "PPG-5-Ceteth-20 #11 (solubilizer)",
+    "Linalool #16, Limonene #17, Benzyl Salicylate #19 (fragrance allergens)"
+   ],
+   "unresolved": [],
+   "depositionLoad": {
+    "value": "light",
+    "rationale": "Two liquid oils after the fragrance marker and one late cellulose cationic (after the pH adjusters); no silicone."
+   },
+   "persistence": {
+    "value": "low",
+    "rationale": "Liquid oils at sub-fragrance level and a light cellulose quat are weakly retained against an ether-sulfate wash; no waxy lipid or silicone."
+   },
+   "resetCapacity": {
+    "value": "moderate",
+    "rationale": "C1 ether-sulfate chassis with a prominent betaine buffer."
+   },
+   "whyThisBand": "Light, low-persistence deposition faced by an effective ordinary reset.",
+   "whyNotNeighborBand": "W2 (two families): both payload lipids are liquid oils listed after Parfum (#8-#9, at or below fragrance level) and the only cationic, Polyquaternium-10 #14, sits after Citric Acid #13 near the preservative; no silicone, no waxy lipid, no prominent conditioning system - combined residue stays below noticeable against the C1 reset.",
+   "confidenceLimitingFactor": "Oil levels just below fragrance are unknown; if near fragrance level they could make residue noticeable (moderate).",
+   "rationale": "6.6 subjudgments light/low/moderate -> low. W1 n/a. 'cremig', 'intensive Pflege' claims cannot raise the band (6.5).",
+   "ruleIds": [
+    "6.3",
+    "6.4",
+    "6.5",
+    "6.6",
+    "W2",
+    "W3",
+    "W1",
+    "6.8",
+    "N-ALT"
+   ]
+  },
+  "focusPrimary": {
+   "value": "general",
+   "confidence": "moderate",
+   "neighboringAlternative": "moisture",
+   "careDirection": {
+    "verdict": "nonspecific",
+    "moistureRoutes": [
+     "Glycerin #4"
+    ],
+    "repairRoutes": [],
+    "sharedConditioningRoutes": [
+     "Polyquaternium-10 #14",
+     "Macadamia oil #8",
+     "Coconut oil #9",
+     "Glycol Distearate #5"
+    ],
+    "limitation": "One humectant is not a coherent cluster; conditioning support is post-fragrance; nothing distinguishes moisture from generic care."
+   },
+   "claimRole": "not_applicable",
+   "counterSignal": "Retailer copy (low) 'verwöhnt (normales bis) trockenes Haar mit einer intensiven Pflege', 'Nährendes Shampoo', 'seidig glänzt'; name word 'Pflegendes' is generic care.",
+   "decisionTrace": {
+    "claimDirection": "generic care / dry lengths (retailer-only, low)",
+    "formulaCompatible": "no specialist verdict (nonspecific)",
+    "compatibleRoute": "none specialist",
+    "decisionReason": "CL-SRC: low-graded claim can be a candidate only if the formula verdict independently supports it; verdict nonspecific -> F1 general."
+   },
+   "rationale": "7.2/F1: generic 'pflegend'/dry-hair language over a nonspecific formula -> general.",
+   "ruleIds": [
+    "7.2",
+    "7.3",
+    "F1",
+    "CL-SRC",
+    "F-TRACE",
+    "N-ALT"
+   ]
+  },
+  "focusSecondary": {
+   "value": [],
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "decisionTrace": {
+    "emptyDefaultConsidered": true,
+    "selected": [],
+    "matchingDistinctClaims": "only low-graded retailer claims (moisture/softness/'seidig glänzt')",
+    "independentRoutes": "none; shine would be an outcome of the same conditioning routes (F2)",
+    "exceptionCode": null
+   },
+   "rationale": "Section 8 + CL-SRC: no moderate/high-graded distinct positioning and no independent route; empty is robust.",
+   "ruleIds": [
+    "8",
+    "F2",
+    "F3",
+    "CL-SRC"
+   ]
+  },
+  "usageRole": {
+   "value": "regular",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "triggerCode": "none",
+   "triggerEvidence": [],
+   "losingTriggers": [],
+   "rationale": "Section 9 default; no frequency, reset or dandruff trigger; all claims retailer-only (low) and cannot fire triggers anyway (CL-SRC).",
+   "ruleIds": [
+    "9",
+    "CL-SRC",
+    "F-TRACE"
+   ]
+  },
+  "scalpComfortTarget": {
+   "value": "not_targeted",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "No E2 scalp claim unit (SC1); 'trockenes Haar' is hair-length wording (E2).",
+   "ruleIds": [
+    "10",
+    "SC1",
+    "E2"
+   ]
+  },
+  "dandruffSupport": {
+   "value": "not_supported",
+   "confidence": "high",
+   "neighboringAlternative": "none",
+   "rationale": "Section 11: no Piroctone Olamine / Climbazole.",
+   "ruleIds": [
+    "11"
+   ]
+  }
+ },
+ "projection": {
+  "status": "proposal (blocked by review flags)",
+  "thicknesses": [
+   {
+    "thickness": "fine",
+    "fit": "ideal",
+    "confidence": "moderate"
+   },
+   {
+    "thickness": "normal",
+    "fit": "ideal",
+    "confidence": "moderate"
+   },
+   {
+    "thickness": "coarse",
+    "fit": "acceptable",
+    "confidence": "moderate"
+   }
+  ],
+  "thicknessFit": {
+   "fine": "ideal",
+   "normal": "ideal",
+   "coarse": "acceptable"
+  },
+  "thicknessRationale": "T1: W low -> fine/normal ideal; coarse acceptable (C moderate). T2: 'normales bis trockenes Haar' not a thickness input. Confidence lowest T1 input (13.8).",
+  "weight": "light",
+  "weightConfidence": "moderate",
+  "weightRationale": "W-LIVE: low -> light.",
+  "scalpTargets": {
+   "primary": {
+    "target": "ordinary",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "confidence": "moderate",
+    "rationale": "S-ORDINARY way 1; packet has retailer copy only -> moderate (13.8)."
+   },
+   "secondary": null
+  },
+  "researchCombinationTargets": [],
+  "observedCleansingIntensity": "regular",
+  "cleansingIntensity": "regular",
+  "observedCleansingIntensityConfidence": "high",
+  "intensityRationale": "I1 moderate -> regular; matches normal bucket; I3 none.",
+  "positioning": {
+   "explicitResetPositioning": false,
+   "rationale": "D1 not met (no stem; retailer-only sources can never make D1 true)."
+  },
+  "deepCleanserListing": "not_flagged",
+  "deepCleanserRationale": "D2 not met.",
+  "rows": [
+   {
+    "thickness": "fine",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "normal",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "ideal"
+   },
+   {
+    "thickness": "coarse",
+    "shampoo_bucket": "normal",
+    "scalp_route": "balanced",
+    "cleansing_intensity": "regular",
+    "weight": "light",
+    "tier": "acceptable"
+   }
+  ],
+  "requiredProtocolRoles": [
+   "shampoo_everyday"
+  ],
+  "reviewFlags": [
+   {
+    "code": "review_thickness_boundary",
+    "detail": "fine: ideal -> acceptable if weightPotential were moderate (T4)"
+   }
+  ],
+  "informationalNotes": [],
+  "catalogDependent": "review_live_value_differs resolved by orchestrator after freeze (13.9, 14)"
+ },
+ "uncertainties": [
+  "W2/6.6 (weightPotential): low vs moderate turns on how much residue two liquid oils directly after Parfum plus late PQ-10 leave; read as low (moderate confidence).",
+  "ID-3: 'Kokosmilch' claim has no exact INCI entry; treated as immaterial botanical note."
+ ]
+}

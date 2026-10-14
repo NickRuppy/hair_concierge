@@ -1,0 +1,90 @@
+{
+  "slot": "A39",
+  "productId": "6fde3fe2-3850-4502-b9f2-ebb17eb13bad",
+  "name": "Pantene Pro-V Volumen Pur Shampoo",
+  "brand": "Pantene",
+  "packSize": "500 ml (XXL; GTIN-bound) - identical formula also on the 300 ml pack (GTIN 8700216558471, dm.de)",
+  "gtins": [
+    "8700216558761",
+    "8700216558471"
+  ],
+  "sources": [
+    {
+      "url": "https://www.dm.de/p/d/1581103/pantene-pro-v-shampoo-volumen-pur-xxl",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "8700216558761 (page text 'GTIN'; dm-Artikelnummer 1581103; 'Shampoo Volumen Pur XXL, 500 ml')",
+      "inciVerbatim": "Ingredients: Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Xylenesulfonate, Sodium Chloride, Parfum, Citric Acid, Sodium Benzoate, Sodium Citrate, Sodium Salicylate, Hydroxypropyl Methylcellulose, Sodium Hydroxide, Panthenol, Tetrasodium EDTA, Hexyl Cinnamal, Histidine, Glyoxal",
+      "claimsVerbatim": "Für eine sanfte Reinigung | Für voller aussehender Haare | Mit pflegenden Nährstoffen | Ohne Silikone, Mineralöle und Farbstoffe | Das Volumen Pur Shampoo von PANTENE PRO-V in der praktischen XXL Verpackung ist speziell für feines, plattes Haar entwickelt und schützt die Haarbindungen, während es das Haar stärkt. Mit seiner sanften Reinigung sorgt es für schwerelose Fülle und einen strahlenden Glanz. Dieses Shampoo hat eine stärkende Wirkung, die das Haar sichtbar aufpeppt und ihm ein volles Aussehen verleiht. Perfekt geeignet, um das Haar mit neuer Vitalität und Lebendigkeit zu beleben.",
+      "directionsVerbatim": "In das nasse Haar einmassieren und aufschäumen. Gut ausspülen. Für beste Resultate zusammen mit der Volumen Pur Pflegespülung und den Intensiv-Pflegeprodukten verwenden"
+    },
+    {
+      "url": "https://www.dm.de/p/d/1561742/pantene-pro-v-shampoo-volumen-pur",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_dm_de",
+      "sourceKind": "retailer",
+      "gtinShown": "8700216558471 (page text 'GTIN'; dm-Artikelnummer 1561742; 'Shampoo Volumen Pur, 300 ml') - sibling pack size",
+      "inciVerbatim": "Ingredients: Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Xylenesulfonate, Sodium Chloride, Parfum, Citric Acid, Sodium Benzoate, Sodium Citrate, Sodium Salicylate, Hydroxypropyl Methylcellulose, Sodium Hydroxide, Panthenol, Tetrasodium EDTA, Hexyl Cinnamal, Histidine, Glyoxal",
+      "claimsVerbatim": "Für eine sanfte Reinigung | Für voller aussehender Haare | Mit pflegenden Nährstoffen | Ohne Silikone, Mineralöle und Farbstoffe | Das Volumen Pur Shampoo von PANTENE PRO-V ist speziell für feines, plattes Haar entwickelt und schützt die Haarbindungen, während es das Haar stärkt. ...",
+      "directionsVerbatim": "In das nasse Haar einmassieren und aufschäumen. Gut ausspülen. Für beste Resultate zusammen mit der Volumen Pur Pflegespülung und den Intensiv-Pflegeprodukten verwenden"
+    },
+    {
+      "url": "https://www.rossmann.de/de/pflege-und-duft-pantene-pro-v-haarshampoo-volumen-pur/p/8700216558761",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_rossmann_de",
+      "sourceKind": "retailer",
+      "gtinShown": "8700216558761 (product URL id; 500 ml)",
+      "inciVerbatim": "Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Xylenesulfonate, Sodium Chloride, Parfum, Citric Acid, Sodium Benzoate, Sodium Citrate, Sodium Salicylate, Hydroxypropyl Methylcellulose, Sodium Hydroxide, Panthenol, Tetrasodium EDTA, Hexyl Cinnamal, Histidine, Glyoxal",
+      "claimsVerbatim": "Entdecke das Pantene Pro-V Volumen Pur Shampoo, das dein Haar gestärkter* und voller aussehen lässt. Die sanfte Formel mit PRO-V und der innovativen ACTIVE NUTRI-PLEX-Technologie reinigt dein Haar und versorgt es gleichzeitig mit wichtigen Nährstoffen. In Kombination mit der Pflegespülung stärkt das Shampoo feines, plattes Haar und verleiht ein volles Aussehen und einen gesunden Glanz. Getestet vom Schweizerischen Vitamininstitut. | *Gegen Stylingschäden vs. nur Shampoo | schützt deine Haarbindungen und stärkt feines, plattes Haar und verleiht schwerelose Fülle und Glanz | reinigt feines Haar sanft und stärkt es | bis zu 100 % gestärkteres*, voller aussehendes Haar | Shampoo ohne Silikone, Mineralöle und Farbstoffe reinigt sanft das Haar und versorgt es mit Nährstoffen",
+      "directionsVerbatim": "In das nasse Haar einmassieren und aufschäumen. Gut ausspülen. Für beste Resultate zusammen mit der Volumen Pur Pflegespülung und den Intensiv-Pflegeprodukten verwenden."
+    },
+    {
+      "url": "https://www.mueller.de/p/pantene-pro-v-haarshampoo-volumen-pur-IPN2889874/",
+      "retrievedAt": "2026-10-09",
+      "sourceType": "retailer_mueller_de",
+      "sourceKind": "retailer",
+      "gtinShown": "8700216558761 (structured data gtin; Inhalt 500 ml; 300 ml size selectable)",
+      "inciVerbatim": "Ingredients: Aqua, Sodium Laureth Sulfate, Cocamidopropyl Betaine, Sodium Xylenesulfonate, Sodium Chloride, Parfum, Citric Acid, Sodium Benzoate, Sodium Citrate, Sodium Salicylate, Hydroxypropyl Methylcellulose, Sodium Hydroxide, Panthenol, Tetrasodium EDTA, Hexyl Cinnamal, Histidine, Glyoxal",
+      "claimsVerbatim": "Das Pantene PRO-V Volumen Pur Shampoo reinigt das Haar sanft und verleiht ihm ein fülligeres Aussehen. Die Formel wurde speziell für feines und plattes Haar konzipiert. | Unterstützt ein voluminöses Erscheinungsbild bei feinem Haar | Reinigt das Haar von Unreinheiten | Formel mit Active Nutri-Plex Komplex | Für die tägliche Haarwäsche geeignet | Die leichte Rezeptur dieses Shampoos hilft, das Haar zu kräftigen, ohne es zu beschweren. Bei regelmäßiger Anwendung kann das Haar sichtbar an Fülle gewinnen und erhält ein gepflegtes Aussehen.",
+      "directionsVerbatim": "In das nasse Haar einmassieren und aufschäumen. Gut ausspülen. Für beste Resultate zusammen mit der Volumen Pur Pflegespülung und den Intensiv-Pflegeprodukten verwenden"
+    }
+  ],
+  "conflicts": [
+    "Claim vs INCI (branded, not an ingredient claim): 'ACTIVE NUTRI-PLEX-Technologie/Komplex' and 'mit pflegenden Nährstoffen' name a brand complex that has no INCI entry; the only care-type items are Panthenol and Histidine. Not a contradiction with the list, only an unverifiable claim.",
+    "Secondary-database divergence (not selected): codecheck.info, per a web-search summary only (page not opened by this worker), lists two additional items 'Panthenyl Ethyl Ether' and 'Hydroxycitronellal' for a Volumen Pur Shampoo. All four German retailer pages (dm 500 ml, dm 300 ml, Rossmann, Müller) do not list them, so this likely reflects an older formula generation; recorded here so the possibility is not lost."
+  ],
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Betaine",
+    "Sodium Xylenesulfonate",
+    "Sodium Chloride",
+    "Parfum",
+    "Citric Acid",
+    "Sodium Benzoate",
+    "Sodium Citrate",
+    "Sodium Salicylate",
+    "Hydroxypropyl Methylcellulose",
+    "Sodium Hydroxide",
+    "Panthenol",
+    "Tetrasodium EDTA",
+    "Hexyl Cinnamal",
+    "Histidine",
+    "Glyoxal"
+  ],
+  "canonicalReason": "Three independent German retailers agree verbatim on the 17-item list (dm.de two pack sizes with their own GTINs, Rossmann GTIN URL, Müller structured-data GTIN, 500 ml pack). No manufacturer page reachable (pantene.de redirected to a Haircode content hub without the product), so tier 3. Retailer pages are consistent with the prior v1.3/v1.4 capture.",
+  "inciFingerprintSha256": "9b5e9427f281529f077e16f49cad7fe8f7383361a917fd3de236c76e46e7b6ca",
+  "normalization": "Split the canonical raw INCI on ',' (not on commas inside locants such as '1,2-'), merged split synonym entries such as 'Aqua (Water)' / 'Aqua/Water/Eau' into one item each; per ingredient: lower-case, trim, collapse internal whitespace, remove whitespace around '/'; drop a trailing period and any leading label such as 'Inhaltsstoffe:'; keep parentheses, asterisks and hyphens as published; join the normalized ingredients with '|' and sha256 the UTF-8 string.",
+  "identityConfidence": "high",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 3,
+  "status": "frozen",
+  "blockReason": null,
+  "notes": [
+    "Prior v1.3/v1.4 capture (fingerprint 573bbad1154ca805223a89186bbc47e5f426a3357566b0909b70c14bd3e62c78, comma-joined) used the same dm/Rossmann list for GTIN 8700216558761; list unchanged.",
+    "Catalog name is size-less. The 500 ml (8700216558761) and 300 ml (8700216558471) packs share the identical list on dm.de; a 250 ml '3in1' Volumen Pur shampoo and a 'Vita Glow Volumen Pur 300 ml' exist at Müller/dm as different products and were NOT bound. If the catalog row is the 300 ml pack, nothing changes for the formula.",
+    "pantene.de returned the Haircode content hub without product data on one attempt (time-boxed). No pack photo available.",
+    "Claims 'ohne Silikone, Mineralöle und Farbstoffe' consistent with INCI (no silicone, mineral oil, CI colorant). Glyoxal is the last listed item."
+  ]
+}

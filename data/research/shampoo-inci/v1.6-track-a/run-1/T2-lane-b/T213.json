@@ -1,0 +1,688 @@
+{
+  "blindId": "T213",
+  "inciFingerprintSha256": "96713abf4bfbfaf9b4a2843332d8ac3a1436ddf36324a11c21c4b55acd358fc7",
+  "policyId": "shampoo-classification-v1.6",
+  "identity": {
+    "productName": "OGX Renewing + Argan Oil of Morocco Shampoo",
+    "brand": "OGX",
+    "market": "DE",
+    "packSize": "385 ml",
+    "formulaSourceTier": 3,
+    "identityConfidence": "high",
+    "normalization": "Aqua/Water/Eau one entry; positions = packet order (normalized, one-based).",
+    "identityNotes": []
+  },
+  "claimGrading": [
+    {
+      "claim": "repariert trockenes & geschädigtes Haar; regenerierend; kräftigt und nährt",
+      "source": "retailer_dm_de / retailer_rossmann_de",
+      "grade": "low",
+      "use": "repair candidate (formula independently repair_supported)"
+    },
+    {
+      "claim": "intensive Feuchtigkeit; feuchtigkeitsspendend",
+      "source": "retailer",
+      "grade": "low",
+      "use": "moisture wording; no humectant cluster"
+    },
+    {
+      "claim": "UV-Schutz / schützt vor Hitze",
+      "source": "retailer",
+      "grade": "low",
+      "use": "names no INCI ingredient; not a conflict (no gate role)"
+    },
+    {
+      "claim": "ohne sulfathaltige Tenside",
+      "source": "retailer",
+      "grade": "low",
+      "use": "consistent with C6"
+    }
+  ],
+  "directProperties": {
+    "cleansingStrength": {
+      "value": "low",
+      "confidence": "high",
+      "rationale": "Low (C6): no strong anionic; earliest prominent cleansing surfactant is the mild anionic Sodium Methyl Cocoyl Taurate (2) with prominent co-surfactants Decyl Glucoside (3), Cocamidopropyl Betaine (4) and Coco-Glucoside (8).",
+      "counterSignal": "Taurate is an effective mild anionic; Disodium Tetrapropenyl Succinate (13) adds a minor anionic. Neither is a strong anionic.",
+      "neighboringAlternative": "none",
+      "ruleIds": [
+        "C6",
+        "C3",
+        "C4"
+      ],
+      "sourceIds": [
+        "formula:T213:96713abf4bfb"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Sodium Methyl Cocoyl Taurate",
+          "position": 2
+        },
+        {
+          "ingredient": "Decyl Glucoside",
+          "position": 3
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 8
+        },
+        {
+          "ingredient": "Disodium Tetrapropenyl Succinate",
+          "position": 13
+        }
+      ]
+    },
+    "conditioningLevel": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High via W-RICH (Section 5 anchor): prominent payload lipids Argania Spinosa Kernel Oil (6) and Hydrogenated Castor Oil (11) converge with Amodimethicone (9) and Guar Hydroxypropyltrimonium Chloride (10), plus pearlizing Glycol Distearate (14). C2 itself is not met because no listed humectant is present (Hexylene Glycol does not count, R11).",
+      "counterSignal": "Missing deliberate humectant route (C2 R11); oils and silicone sit after salt (5), so levels are modest (neighbor moderate).",
+      "neighboringAlternative": "moderate",
+      "ruleIds": [
+        "W-RICH",
+        "C2",
+        "C2 humectant element (R11)"
+      ],
+      "sourceIds": [
+        "formula:T213:96713abf4bfb"
+      ],
+      "formulaFacts": [
+        {
+          "ingredient": "Argania Spinosa Kernel Oil",
+          "position": 6,
+          "role": "payload_lipid (prominent)"
+        },
+        {
+          "ingredient": "Amodimethicone",
+          "position": 9,
+          "role": "amino-silicone (prominent)"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 10,
+          "role": "cationic_polymer"
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 11,
+          "role": "payload_lipid (waxy, prominent)"
+        },
+        {
+          "ingredient": "Coconut Acid",
+          "position": 12,
+          "role": "fatty acid refatter"
+        },
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 14,
+          "role": "pearlizing route"
+        }
+      ]
+    },
+    "weightPotential": {
+      "value": "high",
+      "confidence": "moderate",
+      "rationale": "High (W-RICH plus limited reset): prominent argan oil (6) and waxy Hydrogenated Castor Oil (11) converge with an amino-silicone (9) and cationic guar (10) in a mild C6 taurate/glucoside chassis whose reset capacity is weak.",
+      "formulaFacts": [
+        {
+          "ingredient": "Argania Spinosa Kernel Oil",
+          "position": 6,
+          "family": "payload_lipid"
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 11,
+          "family": "payload_lipid"
+        },
+        {
+          "ingredient": "Amodimethicone",
+          "position": 9,
+          "family": "silicone"
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 10,
+          "family": "cationic_polymer"
+        },
+        {
+          "ingredient": "Coconut Acid",
+          "position": 12,
+          "family": "weak_refatter"
+        },
+        {
+          "ingredient": "Sodium Methyl Cocoyl Taurate",
+          "position": 2,
+          "family": "reset"
+        },
+        {
+          "ingredient": "Decyl Glucoside",
+          "position": 3,
+          "family": "reset"
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4,
+          "family": "reset"
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 8,
+          "family": "reset"
+        },
+        {
+          "ingredient": "Disodium Tetrapropenyl Succinate",
+          "position": 13,
+          "family": "reset"
+        }
+      ],
+      "counterSignal": "All deposition sits after salt (5) so levels are modest; liquid argan oil persistence is moderate (neighbor moderate).",
+      "neighboringAlternative": "moderate",
+      "weightRecord": {
+        "canonicalFormula": {
+          "blindId": "T213",
+          "inciFingerprintSha256": "96713abf4bfbfaf9b4a2843332d8ac3a1436ddf36324a11c21c4b55acd358fc7",
+          "sourceTier": 3,
+          "completeness": "complete",
+          "identityConfidence": "high",
+          "captureDate": "not stated in the frozen packet",
+          "normalization": "Aqua/Water/Eau one entry; positions = packet order (normalized, one-based)."
+        },
+        "extractedEvidence": {
+          "payload_lipid": [
+            {
+              "ingredient": "Argania Spinosa Kernel Oil",
+              "position": 6
+            },
+            {
+              "ingredient": "Hydrogenated Castor Oil",
+              "position": 11
+            }
+          ],
+          "silicone": [
+            {
+              "ingredient": "Amodimethicone",
+              "position": 9
+            }
+          ],
+          "cationic_polymer": [
+            {
+              "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+              "position": 10
+            }
+          ],
+          "weak_refatter": [
+            {
+              "ingredient": "Coconut Acid",
+              "position": 12,
+              "note": "fatty acid, likely taurate raw-material carry-over"
+            }
+          ],
+          "protein_film": [],
+          "film_former": [],
+          "reset": [
+            {
+              "ingredient": "Sodium Methyl Cocoyl Taurate",
+              "position": 2
+            },
+            {
+              "ingredient": "Decyl Glucoside",
+              "position": 3
+            },
+            {
+              "ingredient": "Cocamidopropyl Betaine",
+              "position": 4
+            },
+            {
+              "ingredient": "Coco-Glucoside",
+              "position": 8
+            },
+            {
+              "ingredient": "Disodium Tetrapropenyl Succinate",
+              "position": 13
+            }
+          ],
+          "excluded": [
+            {
+              "ingredient": "Glycol Distearate",
+              "position": 14,
+              "reason": "pearlizing wax"
+            },
+            {
+              "ingredient": "PEG-150 Distearate",
+              "position": 15,
+              "reason": "PEG thickener"
+            }
+          ],
+          "unresolved": [
+            {
+              "ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+              "position": 7,
+              "reason": "modified anionic starch; emulsion-stabilizing/film-forming role not resolvable from INCI; could only add deposition (toward high), so it cannot move the band lighter"
+            }
+          ],
+          "context_humectants": []
+        },
+        "subjudgments": {
+          "depositionLoad": {
+            "value": "high",
+            "rationale": "Four converging deposition routes (payload_lipid x2, silicone, cationic_polymer) all prominent, plus a coconut-acid refatter."
+          },
+          "persistence": {
+            "value": "moderate",
+            "rationale": "Amodimethicone is substantive and HCO is waxy; liquid argan oil less retained."
+          },
+          "resetCapacity": {
+            "value": "weak",
+            "rationale": "C6 mild taurate/glucoside/betaine system with no strong anionic."
+          }
+        },
+        "w1Check": "W1 not cited.",
+        "counterevidence": "All deposition sits after salt (5) so levels are modest; liquid argan oil persistence is moderate (neighbor moderate).",
+        "unresolvedFacts": [
+          {
+            "ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+            "position": 7,
+            "reason": "weight-relevant function unresolved; direction of any effect is toward more deposition, so it does not undermine the high band but keeps confidence at moderate"
+          }
+        ],
+        "proposedWeightPotential": "high",
+        "whyThisBand": "W-RICH is established by formula evidence and resetCapacity is weak, which is the high anchor's rich route.",
+        "whyNotNeighborBand": "Not moderate: the moderate reading needs reset or limited richness to argue against coating; here richness is formula-established and the mild C6 chassis does not offset it.",
+        "confidence": "moderate",
+        "limitingFactor": "All deposition sits after salt (5) so levels are modest; liquid argan oil persistence is moderate (neighbor moderate).",
+        "neighboringAlternative": "moderate",
+        "claimsAfterUnblind": "Revealed claims do not move the band (6.5 step 5)."
+      },
+      "ruleIds": [
+        "6.3",
+        "6.4",
+        "6.6",
+        "6.7",
+        "6.8"
+      ],
+      "sourceIds": [
+        "formula:T213:96713abf4bfb"
+      ]
+    },
+    "focusPrimary": {
+      "value": "repair",
+      "confidence": "moderate",
+      "neighboringAlternative": "general",
+      "rationale": "Repair: damage/regeneration wording (retailer, low) acts as candidate because the formula verdict independently supports repair (prominent argan oil 6 and hydrogenated castor oil 11 with amodimethicone 9 and guar 10); CL-SRC caps confidence at moderate.",
+      "counterSignal": "Only retailer copy; moisture wording competes but the formula has no deliberate humectant (C2 R11).",
+      "formulaFacts": [
+        {
+          "ingredient": "Argania Spinosa Kernel Oil",
+          "position": 6
+        },
+        {
+          "ingredient": "Amodimethicone",
+          "position": 9
+        },
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 10
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 11
+        }
+      ],
+      "ruleIds": [
+        "7.2",
+        "7.3",
+        "F1",
+        "CL-SRC"
+      ],
+      "sourceIds": [
+        "reveal:retailer_dm_de",
+        "reveal:retailer_rossmann_de"
+      ],
+      "careDirection": {
+        "verdict": "repair_supported",
+        "moistureRoutes": [],
+        "repairRoutes": [
+          "Argan Oil 6",
+          "Amodimethicone 9",
+          "Hydrogenated Castor Oil 11"
+        ],
+        "sharedRoutes": [
+          "Guar 10"
+        ],
+        "limitation": "No humectant cluster; no protein."
+      },
+      "claimRole": "candidate"
+    },
+    "focusSecondary": {
+      "value": [],
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Empty: moisture wording has no independent humectant route; claims are low.",
+      "counterSignal": "None.",
+      "formulaFacts": [],
+      "ruleIds": [
+        "8",
+        "CL-SRC"
+      ],
+      "sourceIds": [
+        "reveal"
+      ]
+    },
+    "usageRole": {
+      "value": "regular",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Regular.",
+      "counterSignal": "No competing trigger fired.",
+      "formulaFacts": [],
+      "ruleIds": [
+        "9",
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "CL-SRC"
+      ],
+      "sourceIds": [
+        "reveal"
+      ],
+      "triggerCode": "none"
+    },
+    "scalpComfortTarget": {
+      "value": "not_targeted",
+      "confidence": "high",
+      "neighboringAlternative": "none",
+      "rationale": "Not targeted: no scalp claim.",
+      "counterSignal": "None.",
+      "formulaFacts": [],
+      "ruleIds": [
+        "10"
+      ],
+      "sourceIds": [
+        "reveal"
+      ]
+    },
+    "dandruffSupport": {
+      "value": "not_supported",
+      "confidence": "high",
+      "rationale": "Neither Piroctone Olamine nor Climbazole in the complete INCI.",
+      "neighboringAlternative": "none",
+      "counterSignal": "None: Section 11 is mechanical on the complete INCI.",
+      "formulaFacts": [],
+      "ruleIds": [
+        "11"
+      ]
+    }
+  },
+  "focusRecord": {
+    "careDirection": {
+      "verdict": "repair_supported",
+      "moistureRoutes": [],
+      "repairRoutes": [
+        "Argan Oil 6",
+        "Amodimethicone 9",
+        "Hydrogenated Castor Oil 11"
+      ],
+      "sharedRoutes": [
+        "Guar 10"
+      ],
+      "limitation": "No humectant cluster; no protein."
+    },
+    "claimRole": "candidate",
+    "decisionTrace": {
+      "primary": {
+        "claimDirection": "repair (low)",
+        "formulaCompatible": true,
+        "compatibleRoute": "argan/HCO payload lipids + amodimethicone + guar",
+        "decisionReason": "Low claim admissible as candidate with independent repair_supported verdict; confidence capped."
+      },
+      "secondary": {
+        "emptyDefaultConsidered": true,
+        "selected": [],
+        "matchingDistinctClaims": [],
+        "independentRoutes": [],
+        "whyDistinct": "None.",
+        "exceptionCode": null
+      },
+      "usage": {
+        "default": "regular",
+        "triggerCode": "none",
+        "triggerEvidence": [
+          "No moderate/high claim."
+        ],
+        "losingTriggers": [],
+        "rationale": "Regular."
+      }
+    }
+  },
+  "weightRecord": {
+    "canonicalFormula": {
+      "blindId": "T213",
+      "inciFingerprintSha256": "96713abf4bfbfaf9b4a2843332d8ac3a1436ddf36324a11c21c4b55acd358fc7",
+      "sourceTier": 3,
+      "completeness": "complete",
+      "identityConfidence": "high",
+      "captureDate": "not stated in the frozen packet",
+      "normalization": "Aqua/Water/Eau one entry; positions = packet order (normalized, one-based)."
+    },
+    "extractedEvidence": {
+      "payload_lipid": [
+        {
+          "ingredient": "Argania Spinosa Kernel Oil",
+          "position": 6
+        },
+        {
+          "ingredient": "Hydrogenated Castor Oil",
+          "position": 11
+        }
+      ],
+      "silicone": [
+        {
+          "ingredient": "Amodimethicone",
+          "position": 9
+        }
+      ],
+      "cationic_polymer": [
+        {
+          "ingredient": "Guar Hydroxypropyltrimonium Chloride",
+          "position": 10
+        }
+      ],
+      "weak_refatter": [
+        {
+          "ingredient": "Coconut Acid",
+          "position": 12,
+          "note": "fatty acid, likely taurate raw-material carry-over"
+        }
+      ],
+      "protein_film": [],
+      "film_former": [],
+      "reset": [
+        {
+          "ingredient": "Sodium Methyl Cocoyl Taurate",
+          "position": 2
+        },
+        {
+          "ingredient": "Decyl Glucoside",
+          "position": 3
+        },
+        {
+          "ingredient": "Cocamidopropyl Betaine",
+          "position": 4
+        },
+        {
+          "ingredient": "Coco-Glucoside",
+          "position": 8
+        },
+        {
+          "ingredient": "Disodium Tetrapropenyl Succinate",
+          "position": 13
+        }
+      ],
+      "excluded": [
+        {
+          "ingredient": "Glycol Distearate",
+          "position": 14,
+          "reason": "pearlizing wax"
+        },
+        {
+          "ingredient": "PEG-150 Distearate",
+          "position": 15,
+          "reason": "PEG thickener"
+        }
+      ],
+      "unresolved": [
+        {
+          "ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+          "position": 7,
+          "reason": "modified anionic starch; emulsion-stabilizing/film-forming role not resolvable from INCI; could only add deposition (toward high), so it cannot move the band lighter"
+        }
+      ],
+      "context_humectants": []
+    },
+    "subjudgments": {
+      "depositionLoad": {
+        "value": "high",
+        "rationale": "Four converging deposition routes (payload_lipid x2, silicone, cationic_polymer) all prominent, plus a coconut-acid refatter."
+      },
+      "persistence": {
+        "value": "moderate",
+        "rationale": "Amodimethicone is substantive and HCO is waxy; liquid argan oil less retained."
+      },
+      "resetCapacity": {
+        "value": "weak",
+        "rationale": "C6 mild taurate/glucoside/betaine system with no strong anionic."
+      }
+    },
+    "w1Check": "W1 not cited.",
+    "counterevidence": "All deposition sits after salt (5) so levels are modest; liquid argan oil persistence is moderate (neighbor moderate).",
+    "unresolvedFacts": [
+      {
+        "ingredient": "Sodium Hydrolyzed Potato Starch Dodecenylsuccinate",
+        "position": 7,
+        "reason": "weight-relevant function unresolved; direction of any effect is toward more deposition, so it does not undermine the high band but keeps confidence at moderate"
+      }
+    ],
+    "proposedWeightPotential": "high",
+    "whyThisBand": "W-RICH is established by formula evidence and resetCapacity is weak, which is the high anchor's rich route.",
+    "whyNotNeighborBand": "Not moderate: the moderate reading needs reset or limited richness to argue against coating; here richness is formula-established and the mild C6 chassis does not offset it.",
+    "confidence": "moderate",
+    "limitingFactor": "All deposition sits after salt (5) so levels are modest; liquid argan oil persistence is moderate (neighbor moderate).",
+    "neighboringAlternative": "moderate",
+    "claimsAfterUnblind": "Revealed claims do not move the band (6.5 step 5)."
+  },
+  "projection": {
+    "thicknesses": [
+      {
+        "thickness": "fine",
+        "fit": "not_suited",
+        "confidence": "moderate",
+        "rationale": "T1: W high -> not_suited; T4: no neighbor gives a lower final tier"
+      },
+      {
+        "thickness": "normal",
+        "fit": "acceptable",
+        "confidence": "moderate",
+        "rationale": "T1: W high -> acceptable; T4: no neighbor gives a lower final tier"
+      },
+      {
+        "thickness": "coarse",
+        "fit": "ideal",
+        "confidence": "moderate",
+        "rationale": "T1: W high, C high -> ideal; T4: no neighbor gives a lower final tier"
+      }
+    ],
+    "weight": {
+      "value": "heavy",
+      "confidence": "moderate",
+      "rationale": "W-LIVE: weightPotential high -> heavy (1:1)."
+    },
+    "scalpTargets": {
+      "primary": {
+        "target": "ordinary",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "confidence": "moderate",
+        "sOrdinaryWays": [
+          1
+        ],
+        "rationale": "Ordinary (way 1): no E2 claim; retailer copy only -> moderate.",
+        "ruleIds": [
+          "S-ORDINARY",
+          "13.8"
+        ]
+      },
+      "secondary": null
+    },
+    "observedCleansingIntensity": {
+      "value": "gentle",
+      "confidence": "high",
+      "rationale": "I1: cleansingStrength low, D1 false -> gentle."
+    },
+    "explicitResetPositioning": {
+      "value": false,
+      "confidence": "high",
+      "rationale": "D1 false: no tiefenrein/deep clean/clarifying shampoo/detox-reinigung stem in name or a manufacturer/pack claim, and no occasional-use directions."
+    },
+    "deepCleanserListing": {
+      "value": "not_flagged",
+      "rationale": "D2 requires strong cleansing, clarifying focus, occasional_reset and D1 true; not met."
+    },
+    "rows": [
+      {
+        "thickness": "normal",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "heavy",
+        "tier": "acceptable",
+        "bucketExpectedIntensity": "regular",
+        "liveMatch": "supportive"
+      },
+      {
+        "thickness": "coarse",
+        "shampoo_bucket": "normal",
+        "scalp_route": "balanced",
+        "cleansing_intensity": "gentle",
+        "weight": "heavy",
+        "tier": "ideal",
+        "bucketExpectedIntensity": "regular",
+        "liveMatch": "supportive"
+      }
+    ],
+    "requiredProtocolRoles": [
+      "shampoo_everyday"
+    ],
+    "reviewFlags": [],
+    "informationalNotes": [],
+    "researchCombinationTargets": [],
+    "researchCombinationDetail": "Not a dandruff-primary product; E2b layer 2 does not apply."
+  },
+  "blindToFinalChanges": [
+    {
+      "property": "focusPrimary",
+      "blind": "repair (provisional, low)",
+      "final": "repair (moderate)",
+      "evidence": "retailer repair claims (low)",
+      "reason": "Formula verdict independently supports repair."
+    }
+  ],
+  "selfCheck": {
+    "fingerprintMatchesFrozenPacket": true,
+    "claimsHiddenDuringFormulaJudgment": true,
+    "noIngredientCountOrPositionWindowAssignedBand": true,
+    "threeSubjudgmentsPresent": true,
+    "counterevidenceAndWhyNotNeighborSpecific": true,
+    "confidenceNamesLimitingUncertainty": true,
+    "comparisonWithEarlierValuesOutsideLane": true,
+    "blindRecordUnchangedAfterFreeze": true
+  },
+  "uncertainties": [
+    "UV-protection claim with no UV filter in the frozen INCI: the claim names no ingredient, so it is a marketing statement with no gate role (ID-3 note only).",
+    "conditioningLevel high via the W-RICH anchor although C2 fails on the humectant element; alternative reading moderate (C2 R11 sentence)."
+  ]
+}

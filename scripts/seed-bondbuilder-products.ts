@@ -17,6 +17,7 @@ type BondbuilderSeedProduct = {
   affiliate_link: string
   price_eur: number | null
   currency: "EUR"
+  market_segment?: "drugstore" | "professional"
   tags: string[]
   suitable_concerns: string[]
   specs: Omit<ProductBondbuilderSpecs, "product_id">
@@ -41,7 +42,6 @@ const BONDBUILDER_SEED_PRODUCTS: BondbuilderSeedProduct[] = [
     tags: ["bondbuilder", "crosslink", "olaplex", "repair"],
     suitable_concerns: ["repair"],
     specs: {
-      bond_repair_intensity: "intensive",
       application_mode: "pre_shampoo",
       bond_repair_axis: "disulfide_crosslink",
       treatment_mode: "rinse_out",
@@ -63,7 +63,6 @@ const BONDBUILDER_SEED_PRODUCTS: BondbuilderSeedProduct[] = [
     tags: ["bondbuilder", "booster", "olaplex", "repair"],
     suitable_concerns: ["repair"],
     specs: {
-      bond_repair_intensity: "intensive",
       application_mode: "pre_shampoo",
       bond_repair_axis: "disulfide_crosslink",
       treatment_mode: "rinse_out",
@@ -89,7 +88,6 @@ const BONDBUILDER_SEED_PRODUCTS: BondbuilderSeedProduct[] = [
     tags: ["bondbuilder", "legacy", "olaplex", "repair"],
     suitable_concerns: ["repair"],
     specs: {
-      bond_repair_intensity: "intensive",
       application_mode: "pre_shampoo",
       bond_repair_axis: "disulfide_crosslink",
       treatment_mode: "rinse_out",
@@ -115,7 +113,6 @@ const BONDBUILDER_SEED_PRODUCTS: BondbuilderSeedProduct[] = [
     tags: ["bondbuilder", "k18", "peptide", "repair"],
     suitable_concerns: ["repair"],
     specs: {
-      bond_repair_intensity: "intensive",
       application_mode: "post_wash_leave_in",
       bond_repair_axis: "peptide_chain",
       treatment_mode: "leave_in",
@@ -137,7 +134,6 @@ const BONDBUILDER_SEED_PRODUCTS: BondbuilderSeedProduct[] = [
     tags: ["bondbuilder", "crosslink", "epres", "repair", "spray"],
     suitable_concerns: ["repair"],
     specs: {
-      bond_repair_intensity: "intensive",
       application_mode: "pre_shampoo",
       bond_repair_axis: "disulfide_crosslink",
       treatment_mode: "rinse_out",
@@ -156,7 +152,6 @@ function printSeedMatrix() {
       lifecycle: product.lifecycle_status,
       price: product.price_eur == null ? "none" : `${product.price_eur} ${product.currency}`,
       default_card: product.default_card ? "yes" : "no",
-      intensity: product.specs.bond_repair_intensity,
       axis: product.specs.bond_repair_axis,
       mode: product.specs.treatment_mode,
       format: product.specs.product_format,
@@ -216,6 +211,7 @@ async function main() {
       is_active: true,
       lifecycle_status: product.lifecycle_status,
       sort_order: product.default_card ? 0 : 50,
+      ...(product.market_segment ? { market_segment: product.market_segment } : {}),
     }
     const embeddingText = [
       payload.name,

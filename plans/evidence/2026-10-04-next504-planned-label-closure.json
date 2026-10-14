@@ -1,0 +1,155 @@
+{
+  "root": "/Users/nick/AI_work/hair_conscierge/.worktrees/test-audit-pruning",
+  "staticOnly": true,
+  "scannedSourcePaths": 3067,
+  "moduleImporters": [
+    {
+      "file": "tests/personal-plan-stage4-ui.test.tsx",
+      "line": 13,
+      "kind": "ImportDeclaration",
+      "clause": "import type { PortfolioPresentation } from \"../src/lib/personal-plan/routine/portfolio-presentation\""
+    },
+    {
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "line": 4,
+      "kind": "ImportDeclaration",
+      "clause": "import {\n  loadOwnerPortfolioPresentation,\n  routinePresentationLabels,\n} from \"../src/lib/personal-plan/routine/portfolio-presentation\""
+    },
+    {
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "line": 9,
+      "kind": "ImportDeclaration",
+      "clause": "import { createPortfolioPresentationRouteHandlers } from \"../src/app/api/personal-plan/portfolio-presentation/route\""
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-section.tsx",
+      "line": 3,
+      "kind": "ImportDeclaration",
+      "clause": "import type { PortfolioPresentation } from \"@/lib/personal-plan/routine/portfolio-presentation\""
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-item-card.tsx",
+      "line": 18,
+      "kind": "ImportDeclaration",
+      "clause": "import {\n  routinePresentationLabels,\n  type PortfolioPresentation,\n} from \"@/lib/personal-plan/routine/portfolio-presentation\""
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-page.tsx",
+      "line": 11,
+      "kind": "ImportDeclaration",
+      "clause": "import type { PortfolioPresentation } from \"@/lib/personal-plan/routine/portfolio-presentation\""
+    },
+    {
+      "file": "src/components/routine/personal-plan/personal-plan-routine-client.tsx",
+      "line": 30,
+      "kind": "ImportDeclaration",
+      "clause": "import type { PortfolioPresentation } from \"@/lib/personal-plan/routine/portfolio-presentation\""
+    },
+    {
+      "file": "src/app/labs/feinschliff-journey/fixtures.ts",
+      "line": 5,
+      "kind": "ImportDeclaration",
+      "clause": "import type { PortfolioPresentation } from \"@/lib/personal-plan/routine/portfolio-presentation\""
+    },
+    {
+      "file": "src/app/profile/page.tsx",
+      "line": 66,
+      "kind": "ImportDeclaration",
+      "clause": "import type { PortfolioPresentation } from \"@/lib/personal-plan/routine/portfolio-presentation\""
+    },
+    {
+      "file": "src/app/api/personal-plan/portfolio-presentation/route.ts",
+      "line": 3,
+      "kind": "ImportDeclaration",
+      "clause": "import {\n  loadOwnerPortfolioPresentation,\n  type PortfolioPresentationReadClient,\n} from \"@/lib/personal-plan/routine/portfolio-presentation\""
+    },
+    {
+      "file": "src/app/routine/page.tsx",
+      "line": 18,
+      "kind": "ImportDeclaration",
+      "clause": "import {\n  loadOwnerPortfolioPresentation,\n  type PortfolioPresentation,\n} from \"@/lib/personal-plan/routine/portfolio-presentation\""
+    }
+  ],
+  "symbolMentions": [
+    {
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "line": 6,
+      "context": "routinePresentationLabels"
+    },
+    {
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "line": 86,
+      "context": "routinePresentationLabels({\n    schemaVersion: 3,\n    plannedPurchaseDecisionKeys: [\"decision-replace\"],\n    retainedOwnedProducts: [],\n  })"
+    },
+    {
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "line": 94,
+      "context": "routinePresentationLabels(null)"
+    },
+    {
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "line": 135,
+      "context": "routinePresentationLabels(presentation)"
+    },
+    {
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "line": 181,
+      "context": "routinePresentationLabels(presentation)"
+    },
+    {
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "line": 215,
+      "context": "routinePresentationLabels(presentation)"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/portfolio-presentation.ts",
+      "line": 93,
+      "context": "export function routinePresentationLabels(presentation: PortfolioPresentation | null) {\n  const hasReplacementPresentation =\n    presentation?.schemaVersion === 3 || presentation?.schemaVersion === 4\n  return {\n    plannedLabelFor(sourceDecisionKeys: readonly string[]) {\n      return hasReplacementPresentation &&\n        sourceDecisionKeys.some((key) => presentation.plannedPurchaseDecisionKeys.includes(key))\n        ? \"Noch kaufen\"\n        : null\n    },\n    fitLabelFor(fitDecision: string) {\n      return hasReplacementPresentation && fitDecision === \"informed_override\"\n        ? \"Mit Einschränkung\"\n        : null\n    },\n  }\n}"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-item-card.tsx",
+      "line": 19,
+      "context": "routinePresentationLabels"
+    },
+    {
+      "file": "src/components/routine/personal-plan/routine-item-card.tsx",
+      "line": 176,
+      "context": "routinePresentationLabels(presentation)"
+    }
+  ],
+  "methodMentions": [
+    {
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "line": 91,
+      "context": "v3.plannedLabelFor"
+    },
+    {
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "line": 95,
+      "context": "legacy.plannedLabelFor"
+    },
+    {
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "line": 135,
+      "context": "routinePresentationLabels(presentation).plannedLabelFor"
+    },
+    {
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "line": 182,
+      "context": "labels.plannedLabelFor"
+    },
+    {
+      "file": "tests/personal-plan-portfolio-presentation.test.ts",
+      "line": 215,
+      "context": "routinePresentationLabels(presentation).plannedLabelFor"
+    },
+    {
+      "file": "src/lib/personal-plan/routine/portfolio-presentation.ts",
+      "line": 97,
+      "context": "plannedLabelFor(sourceDecisionKeys: readonly string[]) {\n      return hasReplacementPresentation &&\n        sourceDecisionKeys.some((key) => presentation.plannedPurchaseDecisionKeys.includes(key))\n        ? \"Noch kaufen\"\n        : null\n    }"
+    }
+  ],
+  "packagePrivate": true,
+  "rootPackageExports": null,
+  "inference": "One actual non-test value import/call: routine-item-card immediately accesses fitLabelFor on returned object; no assigned/escaped object or dynamic consumer there. All other application module imports are reader or types. No module barrel re-export or published package export. Method mentions are owner declaration and test calls only."
+}

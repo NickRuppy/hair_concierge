@@ -9,7 +9,6 @@ import { CONSULT_GUARDRAILS_MARKDOWN } from "../src/lib/discovery/consult-brief/
 import {
   CONSULT_BOUNDARY_LINE,
   CONSULT_FORBIDDEN_PHRASES,
-  CONSULT_MARKET_BRANDS,
   findForbiddenPhrases,
   lintConsultBrief,
   type ConsultLintFinding,
@@ -86,6 +85,7 @@ function nomiInput(overrides: Partial<ConsultInput> = {}): ConsultInput {
     ],
     checklist: [],
     heat: null,
+    heatProtection: null,
     washFrequency: {
       current: null,
       currentLabel: null,
@@ -457,16 +457,14 @@ test("a swap reason for a step that is not in the input fails", () => {
   assert.deepEqual(rules(lintConsultBrief(brief, nomiInput())), ["unknown_swap_key"])
 })
 
-test("the market brand list has no common German word in it", () => {
-  for (const brand of CONSULT_MARKET_BRANDS) {
-    assert.deepEqual(
-      lintConsultBrief(
-        { ...cleanBrief(), diagnose: "Sie wäscht täglich, föhnt heiß und bürstet nass." },
-        nomiInput(),
-      ).filter((finding) => finding.excerpt.includes(brand)),
-      [],
-    )
-  }
+test("ordinary German prose is not classified as a market product", () => {
+  assert.deepEqual(
+    lintConsultBrief(
+      { ...cleanBrief(), diagnose: "Sie wäscht täglich, föhnt heiß und bürstet nass." },
+      nomiInput(),
+    ),
+    [],
+  )
 })
 
 // --- G2 boundary ------------------------------------------------------------------------------
@@ -996,4 +994,56 @@ test("v4: legacy zielLuecken lines on a stored brief are no longer linted", () =
   const brief = cleanBrief()
   brief.zielLuecken = ["Die Bond Kur repariert die gebrochenen Längen."]
   assert.deepEqual(lintConsultBrief(brief, nomiInput()), [])
+})
+
+test("Stil: plan talk in the diagnose is a finding; plan talk in a Hebel is not", () => {
+  const brief = cleanBrief()
+  brief.diagnose = `${brief.diagnose} Eine Spülung ist als neuer Schritt vorgesehen.`
+  const findings = lintConsultBrief(brief, nomiInput())
+  assert.deepEqual(
+    findings.map((finding) => [finding.rule, finding.guardrail, finding.location, finding.excerpt]),
+    [["diagnose_plan_talk", "Stil", "diagnose", "vorgesehen"]],
+  )
+  // A past cause is her state today, not a plan (Codex review).
+  const pastCause = cleanBrief()
+  pastCause.diagnose = `${pastCause.diagnose} Nach der Umstellung auf tägliches Glätten sind ihre Spitzen rau.`
+  assert.deepEqual(lintConsultBrief(pastCause, nomiInput()), [])
+  const inHebel = cleanBrief()
+  inHebel.hebel[0]!.note = `${inHebel.hebel[0]!.note} Die Umstellung ist vorgesehen.`
+  assert.deepEqual(lintConsultBrief(inHebel, nomiInput()), [])
+})
+
+test("Stil: with hot tools, a heat Hebel says „schonender“, never „weniger Hitze“", () => {
+  const brief = cleanBrief()
+  brief.hebel[0]!.title = "Weniger Hitze"
+  assert.deepEqual(
+    lintConsultBrief(brief, nomiInput()).map((finding) => [finding.rule, finding.location]),
+    [["heat_less_framing", "hebel[0].title"]],
+  )
+  // A negated mention recommends the opposite (Codex review).
+  const negated = cleanBrief()
+  negated.hebel[0]!.note =
+    "Sie muss nicht seltener glätten; eine niedrigere Stufe und weniger Durchgänge schonen die Längen."
+  assert.deepEqual(lintConsultBrief(negated, nomiInput()), [])
+  // Without hot tools (blow-drying only) „weniger Hitze" may be the honest advice.
+  assert.deepEqual(
+    lintConsultBrief(brief, nomiInput({ flags: ["bleached", "colored", "breakage_signal"] })),
+    [],
+  )
+})
+
+test("Stil: what heat does is not „weniger Hitze“ advice (prod 2026-10-12)", () => {
+  const brief = cleanBrief()
+  // The note Nomi's generation was discarded for: the protectant reduces heat strain.
+  brief.hebel[0]!.note =
+    "Der Hitzeschutz ist dafür als neuer Produktzug hinterlegt; es kann die Belastung durch Hitze reduzieren."
+  assert.deepEqual(lintConsultBrief(brief, nomiInput()), [])
+  brief.hebel[0]!.note = "Es kann die Belastung durch  Hitze\nreduzieren."
+  assert.deepEqual(lintConsultBrief(brief, nomiInput()), [])
+  // The advice itself is still caught.
+  brief.hebel[0]!.note = "Sie sollte die Hitze reduzieren."
+  assert.deepEqual(
+    lintConsultBrief(brief, nomiInput()).map((finding) => finding.rule),
+    ["heat_less_framing"],
+  )
 })

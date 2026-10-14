@@ -1,0 +1,29 @@
+{
+  "blindId": "W401",
+  "packSize": "400 ml",
+  "canonicalInci": [
+    "Aqua",
+    "Sodium Laureth Sulfate",
+    "Cocamidopropyl Betaine",
+    "Decyl Glucoside",
+    "Coco-Glucoside",
+    "Sodium Chloride",
+    "Citric Acid",
+    "Aloe Barbadensis Leaf Juice Powder",
+    "Guar Hydroxypropyltrimonium Chloride",
+    "Dicaprylyl Ether",
+    "Glyceryl Oleate",
+    "Glycerin",
+    "Glycol Distearate",
+    "Hydrogenated Castor Oil",
+    "Sodium Benzoate",
+    "Benzoic Acid",
+    "Tetramethyl Acetyloctahydronaphthalenes",
+    "Parfum"
+  ],
+  "inciFingerprintSha256": "da8236c75707925b9697352fca702d873b6d0f1b1b186fdc2381434cc9dbb5a9",
+  "normalization": "Runbook step 2: canonical list items lower-cased, trimmed, whitespace collapsed, joined with '|', SHA-256; split synonym entries (e.g. 'Aqua (Water, Eau)') merged before numbering.",
+  "formulaCompleteness": "complete",
+  "formulaSourceTier": 2,
+  "identityConfidence": "high"
+}

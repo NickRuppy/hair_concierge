@@ -7,7 +7,9 @@ import { ADDITIONAL_HEAT_TOOL_IMAGES, type ToolImage } from "@/components/quiz/t
 import type { IconName } from "@/components/ui/icon"
 import { FrequencySliderField } from "@/components/ui/frequency-slider-field"
 import type {
+  NightWear,
   AdditionalHeatTool,
+  BondbuilderTiming,
   DryingRoute,
   DryShampooBridgePreference,
   DryShampooVisibleHairColor,
@@ -112,6 +114,28 @@ export const REFINEMENT_CATEGORY_OPTIONS = [
   },
 ] as const satisfies readonly RefinementOption<Stage2ProductCategory>[]
 
+/**
+ * The order the Produkte page lists the categories in: the wash-day order of a routine, from
+ * cleansing to finishing. Display only — the stored `currentProductCategories` stays in
+ * `STAGE2_PRODUCT_CATEGORIES` order (the path validates that), and so does the option list above.
+ */
+export const REFINEMENT_CATEGORY_DISPLAY_ORDER = [
+  "shampoo",
+  "deep_cleansing_shampoo",
+  "scalp_care",
+  "conditioner",
+  "mask",
+  "bondbuilder",
+  "leave_in",
+  "heat_protectant",
+  "oil",
+  "dry_shampoo",
+] as const satisfies readonly Stage2ProductCategory[]
+
+export const REFINEMENT_CATEGORY_DISPLAY_OPTIONS = REFINEMENT_CATEGORY_DISPLAY_ORDER.map(
+  (value) => REFINEMENT_CATEGORY_OPTIONS.find((option) => option.value === value)!,
+)
+
 export const WET_WASH_FREQUENCY_OPTIONS = [
   ...PRODUCT_FREQUENCIES.map((value) => ({
     value: value as ProductFrequency,
@@ -124,6 +148,23 @@ export const WET_WASH_FREQUENCY_OPTIONS = [
     icon: "heat-protection-no",
   },
 ] as const satisfies readonly RefinementOption<WetWashFrequency>[]
+
+/** X1 (mockup „Neue Frage“): the two ways a Bondbuilder step exists, plus „Ist mir egal“. */
+export const BONDBUILDER_TIMING_OPTIONS = [
+  {
+    value: "before_wash",
+    label: "Vor dem Waschen",
+    description: "Einwirken lassen, dann waschen.",
+    icon: "goal-moisture",
+  },
+  {
+    value: "after_wash",
+    label: "Nach dem Waschen",
+    description: "Drin lassen, nicht ausspülen.",
+    icon: "product-leave-in",
+  },
+  { value: "no_preference", label: "Ist mir egal", icon: "heat-protection-no" },
+] as const satisfies readonly RefinementOption<BondbuilderTiming>[]
 
 export const SCALP_IRRITATION_OPTIONS = [
   {
@@ -232,6 +273,27 @@ export const DRYING_ROUTE_OPTIONS = [
   },
 ] as const satisfies readonly RefinementOption<DryingRoute>[]
 
+/**
+ * The drying page with the tools rollout on (Rev. 5): the Diffusor and the round-brush blow dry
+ * are named for what they are, and the page offers only what the member's owned airflow tools
+ * back (`getStage2DryingRouteOptions`). There is no „Nichts davon" — the hair dries somehow.
+ */
+export const TOOLS_DRYING_ROUTE_OPTIONS = [
+  { value: "air_dry", label: "Lufttrocknen", icon: "drying-air" },
+  {
+    value: "ordinary_blow_dry",
+    label: "Gewöhnlich föhnen",
+    description: "auch mit Rundbürste",
+    icon: "drying-blow",
+  },
+  {
+    value: "diffuser_or_airflow_shaping",
+    label: "Mit Diffusor",
+    description: "Aufsatz für Locken/Wellen",
+    icon: "drying-diffuser",
+  },
+] as const satisfies readonly RefinementOption<DryingRoute>[]
+
 export const ADDITIONAL_HEAT_TOOL_OPTIONS = [
   {
     value: "dryer_brush",
@@ -269,6 +331,13 @@ export const ADDITIONAL_HEAT_TOOL_OPTIONS = [
     image: ADDITIONAL_HEAT_TOOL_IMAGES.thermal_rollers,
   },
 ] as const satisfies readonly RefinementOption<AdditionalHeatTool>[]
+
+/** Rev. 6 „Wie trägst du dein Haar nachts?" — single choice, no icons (mockup 5c). */
+export const NIGHT_WEAR_OPTIONS = [
+  { value: "open", label: "Offen" },
+  { value: "loose_tied", label: "Locker zusammengebunden" },
+  { value: "pineapple", label: "Pineapple", description: "locker oben auf dem Kopf" },
+] as const satisfies readonly RefinementOption<NightWear>[]
 
 export const HEAT_PROTECTION_OPTIONS = [
   { value: "always", label: "Immer", icon: "heat-protection-yes" },

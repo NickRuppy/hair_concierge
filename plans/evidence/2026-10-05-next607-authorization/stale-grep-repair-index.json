@@ -1,0 +1,32 @@
+[
+  {
+    "source": "/tmp/test-audit-authorization-stale-source-grep-independent.md",
+    "sha256": "799afc13719c60942068ff16567ae68f3ab557231422422f9cac61f7e5fb953d",
+    "bytes": 5524,
+    "archive": "plans/evidence/2026-10-05-next607-authorization/test-audit-authorization-stale-source-grep-independent.md"
+  },
+  {
+    "source": "/tmp/test-audit-authorization-stale-source-grep-independent.json",
+    "sha256": "6c2c7db73f0712cec48dac24bea9852f6641833a1d3d2d4f3efa3ed6e68485bb",
+    "bytes": 6094,
+    "archive": "plans/evidence/2026-10-05-next607-authorization/test-audit-authorization-stale-source-grep-independent.json"
+  },
+  {
+    "source": "/tmp/test-audit-authorization-stale-source-grep-main-before.ts.txt",
+    "sha256": "2cfa7a5fb8a637799c158f78d586bb593d7355eeb7b26f392032a0e779fb2efc",
+    "bytes": 34301,
+    "archive": "plans/evidence/2026-10-05-next607-authorization/test-audit-authorization-stale-source-grep-main-before.ts.txt"
+  },
+  {
+    "source": "/tmp/test-audit-authorization-stale-source-grep-main-receipt.json",
+    "sha256": "5a546b719e075705868fcba52cd2938290e36e7a67ab1be69e8c6394ce37d110",
+    "bytes": 635,
+    "archive": "plans/evidence/2026-10-05-next607-authorization/test-audit-authorization-stale-source-grep-main-receipt.json"
+  },
+  {
+    "source": "/tmp/test-audit-authorization-stale-source-grep-main-focused.tap",
+    "sha256": "55f5e6d148874bec77b54d729ea8a8aebd3d011c8f14dfcc7518d4907fe2da7d",
+    "bytes": 13282,
+    "archive": "plans/evidence/2026-10-05-next607-authorization/test-audit-authorization-stale-source-grep-main-focused.tap"
+  }
+]

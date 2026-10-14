@@ -4,10 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server"
 
 import {
   HairPortrait,
-  HairPortraitArtwork,
   getNextPortraitImageFailure,
-  getNextPortraitImageState,
-  normalizePortraitImageSrcForComparison,
   type PortraitImageFailure,
 } from "../src/components/quiz/hair-portrait"
 import { derivePortraitConfig } from "../src/lib/quiz/portrait-config"
@@ -52,50 +49,6 @@ const priorities: [GuidedStoryPriority, GuidedStoryPriority, GuidedStoryPriority
   },
 ]
 
-test("HairPortraitArtwork renders the complete selected portrait without analysis controls", () => {
-  const config = derivePortraitConfig({
-    structure: "coily",
-    density: "medium",
-    hair_length: "short",
-    treatment: ["natur"],
-  })
-  const html = renderToStaticMarkup(
-    <HairPortraitArtwork className="preparation-portrait" config={config} />,
-  )
-
-  const bodyIndex = html.indexOf('data-portrait-layer="body"')
-  const imageIndex = html.indexOf('data-portrait-layer="image"')
-
-  assert.match(html, /class="mx-auto w-full max-w-\[32rem\] preparation-portrait"/)
-  assert.ok(bodyIndex > -1, "hair-only assets must receive the shared body layer")
-  assert.ok(bodyIndex < imageIndex, "body must sit below image")
-  assert.match(html, /src="\/images\/quiz\/hair-portrait\/coily-short\.webp"/)
-  assert.match(html, /Symbolische Darstellung aus deinen Angaben: kurzes, coily Haar\./)
-  assert.match(html, /Das Portrait zeigt deine natürliche Haarstruktur\./)
-  assert.doesNotMatch(
-    html,
-    /data-portrait-layer="leaders"|data-portrait-layer="markers"|data-portrait-marker=|type="button"|role="group"/,
-  )
-  assert.doesNotMatch(html, /Bruchstellen zuerst|Mehr Feuchtigkeit|Ruhigere Oberfläche/)
-})
-
-test("HairPortraitArtwork accepts raw answers and omits the shared body for ownBody assets", () => {
-  const html = renderToStaticMarkup(
-    <HairPortraitArtwork
-      rawAnswers={{
-        structure: "straight",
-        density: "low",
-        hair_length: "very_short",
-        treatment: ["natur"],
-      }}
-    />,
-  )
-
-  assert.match(html, /src="\/images\/quiz\/hair-portrait\/straight-very-short\.webp"/)
-  assert.doesNotMatch(html, /data-portrait-layer="body"/)
-  assert.doesNotMatch(html, /data-portrait-layer="leaders"|data-portrait-layer="markers"/)
-})
-
 test("HairPortrait renders the selected generated portrait as a decorative priority image", () => {
   const config = derivePortraitConfig({
     structure: "wavy",
@@ -123,6 +76,9 @@ test("HairPortrait renders the selected generated portrait as a decorative prior
     /Das Portrait zeigt die dauergewellte Struktur vereinfacht als lockiges Haar\./,
   )
   assert.doesNotMatch(html, /hoher Dichte|Naturansatz|dauergewellte Längen/)
+  assert.equal((html.match(/Symbolische Darstellung aus deinen Angaben/g) ?? []).length, 1)
+  assert.equal((html.match(/dauergewellte Struktur vereinfacht/g) ?? []).length, 1)
+  assert.doesNotMatch(html, /border-t border-\[#e6ddd3\]/)
 })
 
 test("HairPortrait composes the exact visual layers around hair-only assets", () => {
@@ -231,22 +187,6 @@ test("HairPortrait exposes potential labels and percentages in each marker's acc
   assert.equal((html.match(/max-w-\[8\.75rem\]/g) ?? []).length, 3)
 })
 
-test("HairPortrait keeps complete copy in the non-visual equivalent only", () => {
-  const config = derivePortraitConfig({
-    structure: "wavy",
-    density: "high",
-    hair_length: "medium",
-    treatment: ["dauerwelle"],
-  })
-  const html = renderToStaticMarkup(
-    <HairPortrait config={config} priorities={priorities} selectedIndex={0} onSelect={() => {}} />,
-  )
-
-  assert.equal((html.match(/Symbolische Darstellung aus deinen Angaben/g) ?? []).length, 1)
-  assert.equal((html.match(/dauergewellte Struktur vereinfacht/g) ?? []).length, 1)
-  assert.doesNotMatch(html, /border-t border-\[#e6ddd3\]/)
-})
-
 test("HairPortrait keeps generic copy unspecific when portrait axes are incomplete", () => {
   const config = derivePortraitConfig({ structure: "wavy", density: "medium" })
   const html = renderToStaticMarkup(
@@ -290,36 +230,6 @@ test("HairPortrait uses neutral visible labels for legacy fallback markers", () 
   assert.match(html, />Routine</)
 })
 
-test("HairPortrait image fallback advances once to generic and then terminal hidden state", () => {
-  assert.equal(getNextPortraitImageState("selected"), "generic")
-  assert.equal(getNextPortraitImageState("generic"), "hidden")
-  assert.equal(getNextPortraitImageState("hidden"), "hidden")
-})
-
-test("HairPortrait image fallback compares same-origin absolute and relative image paths", () => {
-  assert.equal(
-    normalizePortraitImageSrcForComparison(
-      "http://localhost:3516/images/quiz/hair-portrait/wavy-long.webp",
-      "http://localhost:3516",
-    ),
-    "/images/quiz/hair-portrait/wavy-long.webp",
-  )
-  assert.equal(
-    normalizePortraitImageSrcForComparison(
-      "http://localhost:3516/images/quiz/hair-portrait/curly-long.webp",
-      "http://localhost:3516",
-    ),
-    "/images/quiz/hair-portrait/curly-long.webp",
-  )
-  assert.equal(
-    normalizePortraitImageSrcForComparison(
-      "https://example.com/images/quiz/hair-portrait/wavy-long.webp",
-      "http://localhost:3516",
-    ),
-    "https://example.com/images/quiz/hair-portrait/wavy-long.webp",
-  )
-})
-
 test("HairPortrait image fallback accepts absolute selected failures for the same path only", () => {
   const selectedSrc = "/images/quiz/hair-portrait/wavy-long.webp"
   const initialFailure: PortraitImageFailure = { selectedSrc: "", state: "selected" }
@@ -337,6 +247,15 @@ test("HairPortrait image fallback accepts absolute selected failures for the sam
     getNextPortraitImageFailure(initialFailure, {
       selectedSrc,
       failedSrc: "http://localhost:3516/images/quiz/hair-portrait/curly-long.webp",
+      renderedSrc: selectedSrc,
+      currentOrigin: "http://localhost:3516",
+    }),
+    initialFailure,
+  )
+  assert.deepEqual(
+    getNextPortraitImageFailure(initialFailure, {
+      selectedSrc,
+      failedSrc: "https://example.com/images/quiz/hair-portrait/wavy-long.webp",
       renderedSrc: selectedSrc,
       currentOrigin: "http://localhost:3516",
     }),
@@ -382,6 +301,15 @@ test("HairPortrait image fallback hides only after the rendered generic image fa
       renderedSrc: genericSrc,
     }),
     { selectedSrc, state: "hidden" },
+  )
+  const hidden: PortraitImageFailure = { selectedSrc, state: "hidden" }
+  assert.deepEqual(
+    getNextPortraitImageFailure(hidden, {
+      selectedSrc,
+      failedSrc: genericSrc,
+      renderedSrc: genericSrc,
+    }),
+    hidden,
   )
 })
 

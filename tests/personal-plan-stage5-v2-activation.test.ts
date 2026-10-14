@@ -6,9 +6,7 @@ import test from "node:test"
 import {
   canonicalJson,
   isStage5V2ProductionWriteAuthorized,
-  parseStage5V2ApplicationApplyArgs,
   stage5V2ArtifactFingerprint,
-  verifyStage5V2AppliedArtifact,
 } from "../src/lib/product-intake/catalog-enrichment/stage5-v2-application"
 
 const artifactText = readFileSync(
@@ -81,24 +79,6 @@ test("post-baseline carry-forwards leave the frozen baseline and its pins byte-u
   )
 })
 
-test("Stage 5 V2 activation is a dry-run unless every explicit production gate is present", () => {
-  assert.deepEqual(parseStage5V2ApplicationApplyArgs([]), { apply: false })
-  assert.throws(() => parseStage5V2ApplicationApplyArgs(["--apply"]), /confirm-project/)
-  assert.deepEqual(
-    parseStage5V2ApplicationApplyArgs([
-      "--apply",
-      "--confirm-project=pqdkhefxsxkyeqelqegq",
-      "--reviewed-head=1111111111111111111111111111111111111111",
-      "--expected-fingerprint=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    ]),
-    {
-      apply: true,
-      reviewedHead: "1111111111111111111111111111111111111111",
-      expectedFingerprint: "a".repeat(64),
-    },
-  )
-})
-
 test("Stage 5 V2 production writes require both the explicit gate and exact project host", () => {
   assert.equal(isStage5V2ProductionWriteAuthorized({}), false)
   assert.equal(
@@ -136,34 +116,4 @@ test("Stage 5 V2 executor migration is atomic, idempotent, and service-role only
   assert.match(source, /contract_version/)
   assert.match(source, /REVOKE ALL[\s\S]*FROM PUBLIC, anon, authenticated/)
   assert.match(source, /GRANT EXECUTE[\s\S]*TO service_role/)
-})
-
-test("Stage 5 V2 post-apply verification requires every exact family and product row", async () => {
-  const result = await verifyStage5V2AppliedArtifact(artifact, {
-    listV2Families: async () =>
-      artifact.family_templates.map((payload: { guidanceKey: string }) => ({
-        guidance_key: payload.guidanceKey,
-        contract_version: 2,
-        payload,
-        status: "active",
-      })),
-    listV2Protocols: async () =>
-      artifact.items.map(
-        (item: {
-          product_id: string
-          source_role: string
-          guidance_payload_v2: { scope: { category: string }; applicationFamily: string }
-        }) => ({
-          product_id: item.product_id,
-          category: item.guidance_payload_v2.scope.category,
-          role: item.source_role,
-          application_family: item.guidance_payload_v2.applicationFamily,
-          guidance_payload_v2: item.guidance_payload_v2,
-        }),
-      ),
-  })
-
-  assert.equal(result.ok, true)
-  assert.deepEqual(result.blockers, [])
-  assert.deepEqual(result.observed, { familyRows: 28, productRows: 310 })
 })

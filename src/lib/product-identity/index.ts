@@ -51,6 +51,9 @@ export const PRODUCT_CATEGORY_DISPLAY_LABELS: Record<SupportedProductCategoryKey
 
 const CATEGORY_ALIASES: Array<[KnownProductCategoryKey, string]> = [
   ["shampoo", "Shampoo"],
+  // "Shampoo Profi", "Conditioner (Drogerie)" and "Conditioner Profi" are legacy category
+  // aliases from the old spreadsheet labels. They are unrelated to `products.market_segment`
+  // (the Drogerie/Profi market bucket) and must never be read as one.
   ["shampoo", "Shampoo Profi"],
   ["conditioner", "Conditioner (Drogerie)"],
   ["conditioner", "Conditioner Profi"],

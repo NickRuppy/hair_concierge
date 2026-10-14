@@ -1,0 +1,30 @@
+{
+  "mode": "static-only",
+  "productImports": 0,
+  "testImports": 0,
+  "children": 0,
+  "network": 0,
+  "repositoryWrites": 0,
+  "totals": {
+    "before": {
+      "sites": 99,
+      "assertions": 300
+    },
+    "transfer": {
+      "sites": 99,
+      "assertions": 307
+    },
+    "cut": {
+      "sites": 96,
+      "assertions": 300
+    }
+  },
+  "untouchedRetainedCallbacks": 94,
+  "changedKeepers": 2,
+  "donors": 3,
+  "transferredAssertionSites": 7,
+  "exactAssertionUnion": true,
+  "supportBytesExact": true,
+  "noAddedNonassertCalls": true,
+  "parse": "all48 complete prospective TS snapshots"
+}

@@ -1,0 +1,24 @@
+"""Finalize unpublished TMP preparation pins only; protected originals/runtime/identity never change.
+Run before the final current-code delta and HANDOFF. No repository/old-kit/proposal edits or children.
+"""
+from pathlib import Path
+import json,hashlib
+D=Path(__file__).parent;sha=lambda b:hashlib.sha256(b).hexdigest();raw=(D/'operator-pins.json').read_bytes();old=sha(raw)
+assert old=='253cd5469e9c2dee4f40ba196b9ed4315cfe4b031e1f5e23b523e604e1ea155f'
+pins=json.loads(raw);protected={k:v for k,v in pins.items()if k!='artifactHashes'}
+(D/'preparation-draft-pins.json').write_bytes(raw)
+changes=[]
+for f,h in list(pins['artifactHashes'].items()):
+ current=sha(Path(f).read_bytes())
+ if current!=h:
+  assert f in [str(D/'diagnostic-projection.cjs'),str(D/'proof-attestation.cjs')]
+  changes.append({'path':f,'oldSHA256':h,'newSHA256':current});pins['artifactHashes'][f]=current
+assert len(changes)==2
+for f in ['finalize-pins.py','preparation-draft-pins.json']:pins['artifactHashes'][str(D/f)]=sha((D/f).read_bytes())
+assert protected=={k:v for k,v in pins.items()if k!='artifactHashes'}
+(D/'operator-pins.json').chmod(0o644);(D/'operator-pins.json').write_text(json.dumps(pins,indent=2,ensure_ascii=False)+'\n');(D/'operator-pins.json').chmod(0o444);new=sha((D/'operator-pins.json').read_bytes())
+entry=[]
+for name in ['operator-edit.cjs','operator-run-controls.cjs','operator-native-proof.cjs']:
+ p=D/name;b=p.read_bytes();before=sha(b);oldbytes=("const PIN_SHA='"+old+"'").encode();assert b.count(oldbytes)==1;b=b.replace(oldbytes,("const PIN_SHA='"+new+"'").encode());p.write_bytes(b);entry.append({'path':str(p),'oldSHA256':before,'newSHA256':sha(b),'change':'Only PIN_SHA literal'})
+(D/'preparation-finalization.json').write_text(json.dumps({'preparationPinsSHA256':old,'finalPinsSHA256':new,'unpublishedPreparationArtifactChanges':changes,'reason':'Harden decoder against unconsumed/blank-line diagnostic continuation; fix synthetic SSR negative case to mutate the encoded actual field instead of an unescaped substring. No underlying owner/test/source recipe or diagnostic expected actual value change.','entrypointChanges':entry,'protectedSourceRuntimeIdentityReadsetsUnchanged':True,'finalDeltaMustBeGeneratedAfterThisStep':True,'runtimeRuns':0,'repositoryWrites':0},indent=2)+'\n')
+print(new)

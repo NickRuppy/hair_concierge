@@ -1,0 +1,61 @@
+tests/discovery-b8-review-fixes.test.tsx:16:  DiscoveryProductsScreen,
+tests/discovery-b8-review-fixes.test.tsx:177:const products = (tree: ReactNode) => find(tree, DiscoveryProductsScreen)
+tests/discovery-application.test.tsx:10:  DiscoveryCallCockpit,
+tests/discovery-application.test.tsx:772:      <DiscoveryCallCockpit
+tests/discovery-b8-motion.test.tsx:25:  DiscoveryProductsScreen,
+tests/discovery-b8-motion.test.tsx:174:const products = (tree: ReactNode) => find(tree, DiscoveryProductsScreen)
+tests/discovery-b8-motion.test.tsx:572:  find(tree, DiscoveryProductsScreen)
+tests/discovery-cockpit-complexity-dom.test.tsx:11:import { DiscoveryCallCockpit } from "../src/components/discovery/cockpit/discovery-call-cockpit"
+tests/discovery-cockpit-complexity-dom.test.tsx:139:      <DiscoveryCallCockpit
+tests/discovery-cockpit-page.test.tsx:9:import { createDiscoveryCockpitPage } from "../src/app/admin/beratung/[enrollmentId]/page"
+tests/discovery-cockpit-page.test.tsx:245:  const Page = createDiscoveryCockpitPage(pageDeps(overrides))
+tests/discovery-cockpit-research.test.tsx:7:import { createDiscoveryCockpitPage } from "../src/app/admin/beratung/[enrollmentId]/page"
+tests/discovery-cockpit-research.test.tsx:304:  const Page = createDiscoveryCockpitPage({
+tests/discovery-products-loading.test.tsx:5:import DiscoveryChecklistLoading from "../src/app/beratung/produkte/loading"
+tests/discovery-products-loading.test.tsx:6:import { DiscoveryProductsScreen } from "../src/components/discovery/intake/discovery-products-screen"
+tests/discovery-products-loading.test.tsx:27:    <DiscoveryProductsScreen
+tests/discovery-products-loading.test.tsx:43:  const loading = renderToStaticMarkup(<DiscoveryChecklistLoading />)
+tests/discovery-products-loading.test.tsx:53:  const loading = renderToStaticMarkup(<DiscoveryChecklistLoading />)
+tests/discovery-multi-product.test.tsx:10:  DiscoveryCallCockpit,
+tests/discovery-multi-product.test.tsx:903:      <DiscoveryCallCockpit
+tests/discovery-participant-flow.test.tsx:30:  DiscoveryProductsScreen,
+tests/discovery-participant-flow.test.tsx:215:    <DiscoveryProductsScreen
+tests/discovery-participant-flow.test.tsx:299:  find(tree, DiscoveryProductsScreen).props.onSearch(null)
+tests/discovery-participant-flow.test.tsx:320:  const landing = find(tree, DiscoveryProductsScreen)
+tests/discovery-participant-flow.test.tsx:346:  const screen = find(tree, DiscoveryProductsScreen)
+tests/discovery-participant-flow.test.tsx:360:  find(tree, DiscoveryProductsScreen).props.onSearch("heat_protectant")
+tests/discovery-participant-flow.test.tsx:375:  assert.deepEqual(find(tree, DiscoveryProductsScreen).props.items, [], "the card rolled back")
+tests/discovery-participant-flow.test.tsx:493:  find(tree, DiscoveryProductsScreen).props.onFrequency(legacy)
+tests/discovery-participant-flow.test.tsx:502:  assert.equal(find(tree, DiscoveryProductsScreen).props.items[0].frequency, "weekly_2x")
+tests/discovery-participant-flow.test.tsx:509:  find(tree, DiscoveryProductsScreen).props.onContinue()
+tests/discovery-participant-flow.test.tsx:511:  find(tree, DiscoveryProductsScreen)
+tests/discovery-participant-flow.test.tsx:590:  find(tree, DiscoveryProductsScreen).props.onContinue()
+tests/discovery-participant-flow.test.tsx:593:  absent(tree, DiscoveryProductsScreen)
+tests/discovery-participant-flow.test.tsx:603:  find(tree, DiscoveryProductsScreen)
+tests/discovery-participant-flow.test.tsx:610:  find(tree, DiscoveryProductsScreen).props.onContinue()
+tests/discovery-participant-flow.test.tsx:877:  find(tree, DiscoveryProductsScreen)
+tests/discovery-participant-flow.test.tsx:928:  find(tree, DiscoveryProductsScreen).props.onRemove("item-1")
+tests/discovery-runsheet-page.test.tsx:7:import { createDiscoveryCockpitPage } from "../src/app/admin/beratung/[enrollmentId]/page"
+tests/discovery-runsheet-page.test.tsx:10:  DiscoveryCallCockpit,
+tests/discovery-runsheet-page.test.tsx:293:  const Page = createDiscoveryCockpitPage({
+tests/discovery-runsheet-page.test.tsx:714:      <DiscoveryCallCockpit
+tests/discovery-runsheet-page.test.tsx:843:      <DiscoveryCallCockpit
+tests/discovery-comparison-table.test.tsx:8:import { DiscoveryCallCockpit } from "../src/components/discovery/cockpit/discovery-call-cockpit"
+tests/discovery-comparison-table.test.tsx:296:    <DiscoveryCallCockpit
+tests/discovery-comparison-table.test.tsx:366:    <DiscoveryCallCockpit
+tests/discovery-cockpit-usage.test.tsx:8:import { createDiscoveryCockpitPage } from "../src/app/admin/beratung/[enrollmentId]/page"
+tests/discovery-cockpit-usage.test.tsx:617:  const Page = createDiscoveryCockpitPage({
+tests/discovery-unanswered-categories.test.tsx:6:import { createDiscoveryCockpitPage } from "../src/app/admin/beratung/[enrollmentId]/page"
+tests/discovery-unanswered-categories.test.tsx:237:  const Page = createDiscoveryCockpitPage({
+tests/discovery-runsheet-locked-in-dom.test.tsx:11:import { DiscoveryCallCockpit } from "../src/components/discovery/cockpit/discovery-call-cockpit"
+tests/discovery-runsheet-locked-in-dom.test.tsx:200:      <DiscoveryCallCockpit
+src/components/discovery/intake/discovery-products-screen.tsx:192:export function DiscoveryProductsScreen({
+src/components/discovery/intake/discovery-intake-checklist.tsx:35:import { DiscoveryProductsScreen } from "./discovery-products-screen"
+src/components/discovery/intake/discovery-intake-checklist.tsx:600:      <DiscoveryProductsScreen
+src/components/discovery/cockpit/discovery-call-cockpit.tsx:262:export function DiscoveryCallCockpit({
+src/app/beratung/produkte/loading.tsx:14: * Mirrors `DiscoveryProductsScreen` (src/components/discovery/intake/discovery-products-
+src/app/beratung/produkte/loading.tsx:49:export default function DiscoveryChecklistLoading() {
+src/app/admin/beratung/[enrollmentId]/page.tsx:5:import { DiscoveryCallCockpit } from "@/components/discovery/cockpit/discovery-call-cockpit"
+src/app/admin/beratung/[enrollmentId]/page.tsx:143:export function createDiscoveryCockpitPage(
+src/app/admin/beratung/[enrollmentId]/page.tsx:321:        <DiscoveryCallCockpit
+src/app/admin/beratung/[enrollmentId]/page.tsx:520:export default createDiscoveryCockpitPage()

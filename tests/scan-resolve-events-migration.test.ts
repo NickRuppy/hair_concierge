@@ -56,16 +56,6 @@ test("adds nullable v2 terminal telemetry without changing the legacy outcome co
   assert.doesNotMatch(sql, /drop constraint[^;]*scan_resolve_events_outcome_check/)
 })
 
-test("backfills every legacy event as terminal-unknown, never as a proven resolution", () => {
-  const sql = migration()
-
-  assert.match(
-    sql,
-    /update public\.scan_resolve_events[\s\S]*set telemetry_version = 1,[\s\S]*terminal_outcome = 'legacy_unknown'/,
-  )
-  assert.doesNotMatch(sql, /terminal_outcome\s*=\s*'resolved'[\s\S]{0,250}legacy/)
-})
-
 test("materializes only non-PII aggregates before raw data deletion and remains idempotent", () => {
   const sql = migration()
 

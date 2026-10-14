@@ -1,0 +1,195 @@
+{
+  "mask": {
+    "source": "src/lib/recommendation-engine/categories/mask.ts",
+    "originalHash": "93a7d445a9350f22df4d6c6cb90e85cf2766f1783d753b01fd42f4d4ea033438",
+    "fault": "remove only high-concentration/medium-need caveat emission; supportive unchanged",
+    "before": {
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "log": "/tmp/test-audit-review360-mask-before.tap"
+    },
+    "red": {
+      "status": 1,
+      "pass": 0,
+      "fail": 1,
+      "log": "/tmp/test-audit-review360-mask-emitter-fault.tap"
+    },
+    "after": {
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "log": "/tmp/test-audit-review360-mask-after.tap"
+    },
+    "restoredHash": "93a7d445a9350f22df4d6c6cb90e85cf2766f1783d753b01fd42f4d4ea033438"
+  },
+  "guidance": [
+    {
+      "id": "guidance-default",
+      "file": "src/lib/scan/guidance.ts",
+      "intended": "assert.equal(result, SCAN_HINT_DEFAULT)",
+      "originalHash": "807963d407fb8aec5a657be687ee5ea4a0de16a600d145c63d9e7d11a87f8138",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next405-guidance-mutations/guidance-default-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next405-guidance-mutations/guidance-default-fault.tap"
+      },
+      "restoredHash": "807963d407fb8aec5a657be687ee5ea4a0de16a600d145c63d9e7d11a87f8138",
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next405-guidance-mutations/guidance-default-after.tap"
+      },
+      "expectedAssertionLine": 29,
+      "intendedStackMatched": true
+    },
+    {
+      "id": "guidance-lowlight",
+      "file": "src/lib/scan/guidance.ts",
+      "intended": "assert.equal(result, SCAN_HINT_MORE_LIGHT)",
+      "originalHash": "807963d407fb8aec5a657be687ee5ea4a0de16a600d145c63d9e7d11a87f8138",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next405-guidance-mutations/guidance-lowlight-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next405-guidance-mutations/guidance-lowlight-fault.tap"
+      },
+      "restoredHash": "807963d407fb8aec5a657be687ee5ea4a0de16a600d145c63d9e7d11a87f8138",
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next405-guidance-mutations/guidance-lowlight-after.tap"
+      },
+      "expectedAssertionLine": 35,
+      "intendedStackMatched": true
+    },
+    {
+      "id": "guidance-tilt",
+      "file": "src/lib/scan/guidance.ts",
+      "intended": "assert.equal(result, SCAN_HINT_LESS_TILT)",
+      "originalHash": "807963d407fb8aec5a657be687ee5ea4a0de16a600d145c63d9e7d11a87f8138",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next405-guidance-mutations/guidance-tilt-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next405-guidance-mutations/guidance-tilt-fault.tap"
+      },
+      "restoredHash": "807963d407fb8aec5a657be687ee5ea4a0de16a600d145c63d9e7d11a87f8138",
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next405-guidance-mutations/guidance-tilt-after.tap"
+      },
+      "expectedAssertionLine": 51,
+      "intendedStackMatched": true
+    },
+    {
+      "id": "guidance-smallbox",
+      "file": "src/lib/scan/guidance.ts",
+      "intended": "assert.equal(result, SCAN_HINT_MOVE_CLOSER)",
+      "originalHash": "807963d407fb8aec5a657be687ee5ea4a0de16a600d145c63d9e7d11a87f8138",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next405-guidance-mutations/guidance-smallbox-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next405-guidance-mutations/guidance-smallbox-fault.tap"
+      },
+      "restoredHash": "807963d407fb8aec5a657be687ee5ea4a0de16a600d145c63d9e7d11a87f8138",
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next405-guidance-mutations/guidance-smallbox-after.tap"
+      },
+      "expectedAssertionLine": 71,
+      "intendedStackMatched": true
+    },
+    {
+      "id": "guidance-null-bypass",
+      "file": "src/lib/scan/guidance.ts",
+      "intended": "assert.equal(result, SCAN_HINT_MORE_LIGHT)",
+      "originalHash": "807963d407fb8aec5a657be687ee5ea4a0de16a600d145c63d9e7d11a87f8138",
+      "before": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next405-guidance-mutations/guidance-null-bypass-before.tap"
+      },
+      "fault": {
+        "status": 1,
+        "signal": null,
+        "pass": 0,
+        "fail": 1,
+        "assert": true,
+        "log": "/tmp/test-audit-next405-guidance-mutations/guidance-null-bypass-fault.tap"
+      },
+      "restoredHash": "807963d407fb8aec5a657be687ee5ea4a0de16a600d145c63d9e7d11a87f8138",
+      "after": {
+        "status": 0,
+        "signal": null,
+        "pass": 1,
+        "fail": 0,
+        "assert": false,
+        "log": "/tmp/test-audit-next405-guidance-mutations/guidance-null-bypass-after.tap"
+      },
+      "expectedAssertionLine": 35,
+      "intendedStackMatched": true
+    }
+  ],
+  "currentOwnerHashesVerified": true,
+  "mainInspectedActualAssertions": true
+}

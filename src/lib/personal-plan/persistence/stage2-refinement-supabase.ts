@@ -1,8 +1,14 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
+import { interpretStage2PersistedDraft } from "./stage2-refinement-service"
 import { deriveStage2TriggerContext } from "@/lib/personal-plan/refinement/stage1-adapter"
 import { STAGE2_MODULES, type Stage2ModuleProjections } from "@/lib/personal-plan/refinement/types"
 import type { InitialNeedPlanSnapshot } from "@/lib/personal-plan/types"
+import {
+  stage2PrefillCareFromFacts,
+  type Stage2PrefillCare,
+} from "@/lib/personal-plan/refinement/session"
+import { loadUserFacts } from "@/lib/user-facts/read"
 import type {
   Stage2PersistedDraft,
   Stage2RefinementPersistence,
@@ -11,9 +17,26 @@ import type {
 
 type AdminClient = SupabaseClient
 
+/**
+ * The read-only Tool pre-fill context (`Stage2PrefillCare`) from the member's facts. A failed
+ * read only means no pre-fill — never a broken Feinschliff.
+ */
+export async function loadStage2PrefillCare(
+  client: Pick<SupabaseClient, "from">,
+  userId: string,
+): Promise<Stage2PrefillCare | undefined> {
+  try {
+    const facts = await loadUserFacts(client as SupabaseClient, userId)
+    return stage2PrefillCareFromFacts(facts?.careHabits, facts?.provenance.care_habits?.fields)
+  } catch {
+    return undefined
+  }
+}
+
 /** Server-only persistence adapter. It is intentionally supplied only to route composition. */
 export function createSupabaseStage2RefinementPersistence(
   client: AdminClient,
+  options: { toolsEnabled: boolean },
 ): Stage2RefinementPersistence & Stage2RefinementResumeReader {
   async function loadSource(userId: string) {
     const { data: plan, error: planError } = await client
@@ -44,6 +67,7 @@ export function createSupabaseStage2RefinementPersistence(
       initial,
       triggerContext: deriveStage2TriggerContext(
         initial.output_snapshot as InitialNeedPlanSnapshot,
+        { toolsEnabled: options.toolsEnabled },
       ),
     }
   }
@@ -55,7 +79,7 @@ export function createSupabaseStage2RefinementPersistence(
     const { data: current, error: currentError } = await client
       .from("personal_plan_refinement_drafts")
       .select(
-        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,module_projections,revision,status,result_refined_need_version_id",
+        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,module_projections,revision,status,result_refined_need_version_id,direct_acceptance_owned",
       )
       .eq("personal_plan_id", plan.id)
       .eq("base_initial_need_version_id", initial.id)
@@ -67,7 +91,7 @@ export function createSupabaseStage2RefinementPersistence(
     const { data: completed, error: completedError } = await client
       .from("personal_plan_refinement_drafts")
       .select(
-        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,module_projections,revision,status,result_refined_need_version_id",
+        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,module_projections,revision,status,result_refined_need_version_id,direct_acceptance_owned",
       )
       .eq("personal_plan_id", plan.id)
       .eq("base_initial_need_version_id", initial.id)
@@ -79,45 +103,59 @@ export function createSupabaseStage2RefinementPersistence(
     return completed ? mapDraft(completed, triggerContext, initial) : null
   }
 
+  /** Tools on: attach the pre-fill context, read alongside the draft. Off: nothing is read. */
+  async function withPrefillCare<Draft extends Stage2PersistedDraft | null>(
+    userId: string,
+    draft: Promise<Draft>,
+  ): Promise<Draft> {
+    if (!options.toolsEnabled) return draft
+    const [loaded, prefillCare] = await Promise.all([draft, loadStage2PrefillCare(client, userId)])
+    return loaded && prefillCare ? { ...loaded, prefillCare } : loaded
+  }
+
+  async function loadOrCreateDraft(userId: string): Promise<Stage2PersistedDraft> {
+    const source = await loadSource(userId)
+    const existing = await loadExistingFromSource(source)
+    if (existing) return existing
+    const { plan, initial, triggerContext } = source
+
+    const { data: created, error: createError } = await client
+      .from("personal_plan_refinement_drafts")
+      .insert({
+        user_id: userId,
+        personal_plan_id: plan.id,
+        base_initial_need_version_id: initial.id,
+        schema_version: 1,
+        answers: {},
+        completed_question_ids: [],
+        answer_provenance: {},
+      })
+      .select(
+        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,module_projections,revision,status,result_refined_need_version_id,direct_acceptance_owned",
+      )
+      .single()
+    if (!createError && created) return mapDraft(created, triggerContext, initial)
+
+    // The partial unique index turns concurrent creation into a safe read-after-conflict.
+    const { data: raced, error: racedError } = await client
+      .from("personal_plan_refinement_drafts")
+      .select(
+        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,module_projections,revision,status,result_refined_need_version_id,direct_acceptance_owned",
+      )
+      .eq("personal_plan_id", plan.id)
+      .eq("base_initial_need_version_id", initial.id)
+      .eq("status", "in_progress")
+      .single()
+    if (racedError || !raced) throw new Error("stage2_draft_create_failed")
+    return mapDraft(raced, triggerContext, initial)
+  }
+
   return {
     async loadExisting(userId) {
-      return loadExistingFromSource(await loadSource(userId))
+      return withPrefillCare(userId, loadExistingFromSource(await loadSource(userId)))
     },
     async loadOrCreate(userId) {
-      const source = await loadSource(userId)
-      const existing = await loadExistingFromSource(source)
-      if (existing) return existing
-      const { plan, initial, triggerContext } = source
-
-      const { data: created, error: createError } = await client
-        .from("personal_plan_refinement_drafts")
-        .insert({
-          user_id: userId,
-          personal_plan_id: plan.id,
-          base_initial_need_version_id: initial.id,
-          schema_version: 1,
-          answers: {},
-          completed_question_ids: [],
-          answer_provenance: {},
-        })
-        .select(
-          "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,module_projections,revision,status,result_refined_need_version_id",
-        )
-        .single()
-      if (!createError && created) return mapDraft(created, triggerContext, initial)
-
-      // The partial unique index turns concurrent creation into a safe read-after-conflict.
-      const { data: raced, error: racedError } = await client
-        .from("personal_plan_refinement_drafts")
-        .select(
-          "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,module_projections,revision,status,result_refined_need_version_id",
-        )
-        .eq("personal_plan_id", plan.id)
-        .eq("base_initial_need_version_id", initial.id)
-        .eq("status", "in_progress")
-        .single()
-      if (racedError || !raced) throw new Error("stage2_draft_create_failed")
-      return mapDraft(raced, triggerContext, initial)
+      return withPrefillCare(userId, loadOrCreateDraft(userId))
     },
     async reopen({ userId, draft }) {
       // The successor draft starts with an empty projection lineage: it has not
@@ -133,7 +171,7 @@ export function createSupabaseStage2RefinementPersistence(
         revision: draft.revision,
       }
       const columns =
-        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,module_projections,revision,status,result_refined_need_version_id"
+        "id,personal_plan_id,base_initial_need_version_id,schema_version,answers,completed_question_ids,answer_provenance,module_projections,revision,status,result_refined_need_version_id,direct_acceptance_owned"
       const { data: created, error } = await client
         .from("personal_plan_refinement_drafts")
         .insert(insert)
@@ -156,7 +194,10 @@ export function createSupabaseStage2RefinementPersistence(
       return mapDraft(raced, draft.triggerContext, initial)
     },
     async save(input) {
-      const { data, error } = await client.rpc("personal_plan_save_refinement_draft", {
+      const rpc = input.directAcceptance
+        ? "personal_plan_save_direct_acceptance_draft"
+        : "personal_plan_save_refinement_draft"
+      const { data, error } = await client.rpc(rpc, {
         p_user_id: input.userId,
         p_draft_id: input.draft.id,
         p_expected_revision: input.expectedRevision,
@@ -266,7 +307,10 @@ export function mapDraft(
     initial.prepared_artifact_source_id ?? initial.stage1_source_lead_id ?? null
   if (!stage1SourceId) throw new Error("stage2_initial_source_missing")
 
-  return {
+  // Every persisted-draft read goes through here (loadOrCreate, loadExisting, reopen,
+  // optional entry, direct acceptance): a draft that passed a late-added question is
+  // read with its assumption (S4, `normalizeLateAddedQuestions`).
+  return interpretStage2PersistedDraft({
     id: String(row.id),
     personalPlanId: String(row.personal_plan_id),
     baseInitialNeedVersionId: String(row.base_initial_need_version_id),
@@ -288,5 +332,7 @@ export function mapDraft(
       typeof row.result_refined_need_version_id === "string"
         ? row.result_refined_need_version_id
         : null,
-  }
+    directAcceptanceOwned:
+      typeof row.direct_acceptance_owned === "boolean" ? row.direct_acceptance_owned : null,
+  })
 }
