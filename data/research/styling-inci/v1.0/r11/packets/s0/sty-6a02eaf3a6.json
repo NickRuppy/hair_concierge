@@ -1,0 +1,136 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r10amend",
+  "sample_id": "sty-6a02eaf3a6",
+  "product": {
+    "confirmed_name": "Haargel Hair Jelly (Styling Hair Jelly)",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2_house_brand",
+    "brand": "Balea",
+    "format": "jelly"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 17,
+    "tier": "C2_house_brand",
+    "source_class": "own_brand_retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "AQUA"
+      },
+      {
+        "rank": 2,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 3,
+        "inci": "POLYGLYCERYL-6 CAPRYLATE"
+      },
+      {
+        "rank": 4,
+        "inci": "POLYGLYCERYL-4 CAPRATE"
+      },
+      {
+        "rank": 5,
+        "inci": "CARBOMER"
+      },
+      {
+        "rank": 6,
+        "inci": "PVP"
+      },
+      {
+        "rank": 7,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 8,
+        "inci": "HYDROXYACETOPHENONE"
+      },
+      {
+        "rank": 9,
+        "inci": "SODIUM HYDROXIDE"
+      },
+      {
+        "rank": 10,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 11,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 12,
+        "inci": "HEXYL CINNAMAL"
+      },
+      {
+        "rank": 13,
+        "inci": "LIMONENE"
+      },
+      {
+        "rank": 14,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 15,
+        "inci": "LINALYL ACETATE"
+      },
+      {
+        "rank": 16,
+        "inci": "GERANYL ACETATE"
+      },
+      {
+        "rank": 17,
+        "inci": "GERANIOL"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Auf den Handflächen verteilen, ins feuchte oder trockene Haar einarbeiten und wie gewohnt stylen.",
+    "tier": "C1",
+    "source_class": "pack",
+    "source_host": "products.dm-static.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Styling-Gelee für das Haar",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "text": "Für ein natürliches Haargefühl",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "text": "Ideal für Sleek-Looks & Locken",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "text": "leichte, geleeartige Textur",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": null,
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

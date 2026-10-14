@@ -1,0 +1,148 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r10amend",
+  "sample_id": "sty-2d06e6e4b6",
+  "brand": "Balea PROFESSIONAL",
+  "confirmed_name": "Styling Cream Traumlocken",
+  "confirmed_name_tier": "C2_house_brand",
+  "format": "cream",
+  "product_type_word": "cream",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Für definierte lebendige Locken",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Schützt effektiv vor Frizz",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Verbesserte Geschmeidigkeit",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Anti-Statik-Formel verhindert Frizz",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Perfekt definierte, glänzende Locken und Hitzeschutz bis 220 °C",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-12",
+      "position": "pack_front"
+    },
+    {
+      "type": "promise",
+      "text": "PFLEGE-FORMEL MIT SHEABUTTER UND KERATIN",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-12",
+      "position": "pack_front"
+    },
+    {
+      "type": "promise",
+      "text": "LEISTUNGSSTARKE FORMEL FÜR DEFINIERTE, LEBENDIGE LOCKEN VOLLER SPRUNGKRAFT UND NATÜRLICHEM GLANZ",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-12",
+      "position": "body"
+    },
+    {
+      "type": "promise",
+      "text": "SCHWUNGVOLL. DEFINIERT. VERWÖHNT.",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-12",
+      "position": "body"
+    },
+    {
+      "type": "promise",
+      "text": "Anti-Statik-Formel schützt effektiv vor Frizz, für definierte Locken und gewelltes Haar.",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-12",
+      "position": "body"
+    },
+    {
+      "type": "promise",
+      "text": "Locken-Forming-System für Geschmeidigkeit und verbesserte Kämmbarkeit.",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-12",
+      "position": "body"
+    },
+    {
+      "type": "hold",
+      "text": "Halt: mittlerer Halt",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null,
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "mittlerer Halt"
+    },
+    {
+      "type": "finish",
+      "text": "perfekt definierte und glänzende Locken",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "duration",
+      "text": "BIS ZU 24h DEFINIERTE LOCKEN",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "heat_protection",
+      "text": "Hitzeschutz bis zu 220 °C",
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "source_host": "dm.de",
+      "date": null
+    },
+    {
+      "type": "heat_protection",
+      "text": "Hitzeschutz bis 220 °C",
+      "tier": "C1",
+      "source_class": "pack",
+      "source_host": "products.dm-static.com",
+      "date": "2026-10-12"
+    }
+  ]
+}

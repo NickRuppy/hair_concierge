@@ -1,0 +1,150 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r10amend",
+  "sample_id": "sty-6270710cb7",
+  "brand": "Moroccanoil",
+  "confirmed_name": "Textur- & Volumenpuder fürs Haar (Texture & Volume Hair Powder)",
+  "confirmed_name_tier": "C2",
+  "format": "powder_pump_bottle",
+  "product_type_word": "puder",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Das Moroccanoil Textur- & Volumenpuder sorgt für sofortiges Volumen, hebt die Strähnen an und verbessert jeden Style am Ansatz. Dieser leistungsstarke Puder verleiht Grip und Textur für müheloses Styling, maximales, konzentriertes Volumen und lang anhaltenden, flexiblen Halt.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Um die Vorteile des Volumens während des Tages zu reaktivieren, kannst du das Haar einfach zerzausen. Dadurch bleibt das Haar auch nach der ersten Anwendung des Produkts den ganzen Tag über voluminös und sieht toll aus. Es beschwert das Haar nicht und hinterlässt kein klebriges Gefühl, was es zu einem idealen Produkt für feines, dünnes oder plattes Haar macht.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "• Leichte Formel für fühlbare Ergebnisse",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "• Natürlich aussehendes, halbmattes Finish",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "• Aufbauende Ergebnisse",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "• Haare zur Reaktivierung zerzausen",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "• Desodorier, hinterlässt den typischen Moroccanoil-Duft",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Die Ergebnisse basieren auf Verbraucher- und Instrumententests nach einmaliger Anwendung:",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "• 48 Stunden lang anhaltender Lift1",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "• 98 % stimmen zu, dass das Haar sofort mehr Fülle und Volumen an der Haarwurzel erhält²",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "• 98 % stimmen zu, dass sich das Haar nicht klebrig, spröde oder steif anfühlt²",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "• 93 % stimmen zu, dass dieses Produkt kraftloses und plattes Haar wiederbelebt²",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "lang anhaltenden, flexiblen Halt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "lang anhaltenden, flexiblen Halt"
+    },
+    {
+      "type": "finish",
+      "text": "Natürlich aussehendes, halbmattes Finish",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "duration",
+      "text": "48 Stunden lang anhaltender Lift1",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "de.moroccanoil.com",
+      "date": "2026-10-12"
+    }
+  ]
+}

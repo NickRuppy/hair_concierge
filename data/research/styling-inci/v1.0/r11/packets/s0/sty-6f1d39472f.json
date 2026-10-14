@@ -1,0 +1,169 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r10amend",
+  "sample_id": "sty-6f1d39472f",
+  "product": {
+    "confirmed_name": "Styling WAX STICK",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C1",
+    "brand": "Balea",
+    "format": "stick"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": [
+      {
+        "flag": "typo_as_printed: 'HYRDOGENATED RAPESEED OIL' (rank 7) read as Hydrogenated Rapeseed Oil",
+        "defect_rank": null
+      }
+    ]
+  },
+  "inci": {
+    "inci_item_count": 14,
+    "tier": "C1",
+    "source_class": "pack",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "PRUNUS AMYGDALUS DULCIS OIL"
+      },
+      {
+        "rank": 2,
+        "inci": "MANGIFERA INDICA SEED BUTTER"
+      },
+      {
+        "rank": 3,
+        "inci": "STEARYL ALCOHOL"
+      },
+      {
+        "rank": 4,
+        "inci": "COCOS NUCIFERA OIL"
+      },
+      {
+        "rank": 5,
+        "inci": "BUTYROSPERMUM PARKII BUTTER"
+      },
+      {
+        "rank": 6,
+        "inci": "COPERNICIA CERIFERA CERA"
+      },
+      {
+        "rank": 7,
+        "inci": "HYDROGENATED RAPESEED OIL"
+      },
+      {
+        "rank": 8,
+        "inci": "HYDROGENATED PALM OIL"
+      },
+      {
+        "rank": 9,
+        "inci": "PERSEA GRATISSIMA OIL"
+      },
+      {
+        "rank": 10,
+        "inci": "PARFUM"
+      },
+      {
+        "rank": 11,
+        "inci": "TOCOPHEROL"
+      },
+      {
+        "rank": 12,
+        "inci": "LINALOOL"
+      },
+      {
+        "rank": 13,
+        "inci": "DIMETHYL PHENETHYL ACETATE"
+      },
+      {
+        "rank": 14,
+        "inci": "VANILLIN"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "ANWENDUNG Mit dem Stick sparsam über das trockene Haar streichen, um abstehende Härchen zu fixieren.",
+    "tier": "C1",
+    "source_class": "pack",
+    "source_host": "products.dm-static.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Haarwachs-Stift für trendige Styles",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Praktische Anwendung",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Für ein glattes & [CLAIM] Finish",
+      "redacted": true,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Bändigt abstehende Babyhaare",
+      "redacted": false,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Für ein schnelles und unkompliziertes Haarstyling sorgt der Wax Styling Stick von Balea. Mit seiner Hilfe lassen sich trendige Looks im Handumdrehen umsetzen, ohne dass die Haare verkleben. Der Stift ermöglicht eine einfache und präzise Anwendung, ideal für den angesagten Sleek-Look oder um abstehende Babyhaare zu bändigen. Er verleiht dem Haar ein glattes und [CLAIM] Finish, das den ganzen Tag hält. Dank des praktischen Formats ist der Styling-Stick auch ein idealer Begleiter für unterwegs.",
+      "redacted": true,
+      "tier": "C2_house_brand",
+      "source_class": "own_brand_retailer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "einfache Fixierung",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12",
+      "position": "pack_front"
+    },
+    {
+      "text": "glattes, [CLAIM] Finish",
+      "redacted": true,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12",
+      "position": "pack_front"
+    },
+    {
+      "text": "Ideal für den Sleek-Look",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12",
+      "position": "pack_front"
+    },
+    {
+      "text": "Trendige Styles: schnelle und einfache Fixierung, ohne zu verkleben, auch gegen Babyhaare",
+      "redacted": false,
+      "tier": "C1",
+      "source_class": "pack",
+      "date": "2026-10-12",
+      "position": "headline"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

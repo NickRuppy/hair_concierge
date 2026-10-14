@@ -1,0 +1,140 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v0.5-r10amend",
+  "sample_id": "sty-89f7af23d1",
+  "format": "wax",
+  "inci": {
+    "inci_item_count": 29,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua (Water, Eau)"
+      },
+      {
+        "rank": 2,
+        "inci": "Cera Alba (Beeswax, Cire d'Abeille)"
+      },
+      {
+        "rank": 3,
+        "inci": "Petrolatum"
+      },
+      {
+        "rank": 4,
+        "inci": "PVP"
+      },
+      {
+        "rank": 5,
+        "inci": "C12-15 Alkyl Benzoate"
+      },
+      {
+        "rank": 6,
+        "inci": "Stearic Acid"
+      },
+      {
+        "rank": 7,
+        "inci": "Palmitic Acid"
+      },
+      {
+        "rank": 8,
+        "inci": "Cetyl Alcohol"
+      },
+      {
+        "rank": 9,
+        "inci": "Parfum (Fragrance)"
+      },
+      {
+        "rank": 10,
+        "inci": "Steareth-21"
+      },
+      {
+        "rank": 11,
+        "inci": "Steareth-2"
+      },
+      {
+        "rank": 12,
+        "inci": "Paraffinum Liquidum (Mineral Oil, Huile Minérale)"
+      },
+      {
+        "rank": 13,
+        "inci": "PPG-5-Ceteth-20"
+      },
+      {
+        "rank": 14,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 15,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 16,
+        "inci": "Niacinamide"
+      },
+      {
+        "rank": 17,
+        "inci": "Oleth-20"
+      },
+      {
+        "rank": 18,
+        "inci": "VP/DMAPA Acrylates Copolymer"
+      },
+      {
+        "rank": 19,
+        "inci": "Cetearyl Alcohol"
+      },
+      {
+        "rank": 20,
+        "inci": "Caprylyl Glycol"
+      },
+      {
+        "rank": 21,
+        "inci": "Acrylates/C10-30 Alkyl Acrylate Crosspolymer"
+      },
+      {
+        "rank": 22,
+        "inci": "Aminomethyl Propanol"
+      },
+      {
+        "rank": 23,
+        "inci": "Benzyl Alcohol"
+      },
+      {
+        "rank": 24,
+        "inci": "Dicetyl Phosphate"
+      },
+      {
+        "rank": 25,
+        "inci": "Ceteth-10 Phosphate"
+      },
+      {
+        "rank": 26,
+        "inci": "C12-15 Alcohols"
+      },
+      {
+        "rank": 27,
+        "inci": "Ethylhexylglycerin"
+      },
+      {
+        "rank": 28,
+        "inci": "Benzalkonium Chloride"
+      },
+      {
+        "rank": 29,
+        "inci": "Tropolone"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Eine kleine Menge entnehmen und in den Handflächen verreiben Auf trockenem Haar anwenden, um den gewünschten Look zu erzielen Bei Bedarf etwas mehr Wax nehmen",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "syoss.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

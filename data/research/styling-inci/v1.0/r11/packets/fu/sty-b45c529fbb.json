@@ -1,0 +1,140 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v0.5-r10amend",
+  "sample_id": "sty-b45c529fbb",
+  "format": "cream",
+  "inci": {
+    "inci_item_count": 29,
+    "tier": "C1",
+    "source_class": "pack",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "WATER/AQUA/EAU"
+      },
+      {
+        "rank": 2,
+        "inci": "ACRYLATES COPOLYMER"
+      },
+      {
+        "rank": 3,
+        "inci": "SODIUM POLYSTYRENE SULFONATE"
+      },
+      {
+        "rank": 4,
+        "inci": "STEARYL ALCOHOL"
+      },
+      {
+        "rank": 5,
+        "inci": "CETYL ALCOHOL"
+      },
+      {
+        "rank": 6,
+        "inci": "HYDROXYETHYLCELLULOSE"
+      },
+      {
+        "rank": 7,
+        "inci": "LAURETH-3"
+      },
+      {
+        "rank": 8,
+        "inci": "SODIUM HYDROXIDE"
+      },
+      {
+        "rank": 9,
+        "inci": "CETEARETH-25"
+      },
+      {
+        "rank": 10,
+        "inci": "SIMMONDSIA CHINENSIS (JOJOBA) SEED OIL"
+      },
+      {
+        "rank": 11,
+        "inci": "COCAMIDOPROPYL PG- DIMONIUM CHLORIDE PHOSPHATE"
+      },
+      {
+        "rank": 12,
+        "inci": "BEHENYL ALCOHOL"
+      },
+      {
+        "rank": 13,
+        "inci": "SILICONE QUATERNIUM-18"
+      },
+      {
+        "rank": 14,
+        "inci": "CAPRYLHYDROXAMIC ACID"
+      },
+      {
+        "rank": 15,
+        "inci": "TETRASODIUM GLUTAMATE DIACETATE"
+      },
+      {
+        "rank": 16,
+        "inci": "METHYLPROPANEDIOL"
+      },
+      {
+        "rank": 17,
+        "inci": "TRIDECETH-6"
+      },
+      {
+        "rank": 18,
+        "inci": "TRIDECETH-12"
+      },
+      {
+        "rank": 19,
+        "inci": "ROSA CANINA FRUIT OIL"
+      },
+      {
+        "rank": 20,
+        "inci": "DISODIUM PHOSPHATE"
+      },
+      {
+        "rank": 21,
+        "inci": "POLYSORBATE 60"
+      },
+      {
+        "rank": 22,
+        "inci": "SODIUM PHOSPHATE"
+      },
+      {
+        "rank": 23,
+        "inci": "TOCOPHEROL"
+      },
+      {
+        "rank": 24,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 25,
+        "inci": "FRAGRANCE/PARFUM"
+      },
+      {
+        "rank": 26,
+        "inci": "CITRONELLOL"
+      },
+      {
+        "rank": 27,
+        "inci": "HEXYL CINNAMAL"
+      },
+      {
+        "rank": 28,
+        "inci": "POGOSTEMON CABLIN OIL"
+      },
+      {
+        "rank": 29,
+        "inci": "TETRAMETHYL ACETYLOCTAHYDRONAPHTHALENES"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Anwendung: Sparsam verwenden. Eine erbsengroße Menge der Creme in den Handflächen verreiben und gleichmäßig vom Ansatz bis in die Spitzen im feuchten Haar verteilen. Je nach Haarlänge und -struktur eine größere oder kleinere Menge des Produkts verwenden. Wie gewohnt Stylen. Styling Tipp: Zum Auffrischen am 2.Tag eine erbsengroße Menge auf besonders widerspenstige Locken geben.",
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "source_host": "products.dm.de",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

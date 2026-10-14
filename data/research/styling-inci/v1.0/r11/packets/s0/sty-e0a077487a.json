@@ -1,0 +1,120 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r10amend",
+  "sample_id": "sty-e0a077487a",
+  "product": {
+    "confirmed_name": "Thermashape 2-in-1 Spray",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "KMS",
+    "format": "aerosol_spray"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 13,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Alcohol Denat."
+      },
+      {
+        "rank": 2,
+        "inci": "Dimethyl Ether"
+      },
+      {
+        "rank": 3,
+        "inci": "Acrylates Copolymer"
+      },
+      {
+        "rank": 4,
+        "inci": "Aminomethyl Propanol"
+      },
+      {
+        "rank": 5,
+        "inci": "Propylene Glycol"
+      },
+      {
+        "rank": 6,
+        "inci": "Polysorbate 80"
+      },
+      {
+        "rank": 7,
+        "inci": "Alcohol"
+      },
+      {
+        "rank": 8,
+        "inci": "Polysilicone-9"
+      },
+      {
+        "rank": 9,
+        "inci": "Water/Aqua/Eau"
+      },
+      {
+        "rank": 10,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 11,
+        "inci": "Punica Granatum Peel Extract"
+      },
+      {
+        "rank": 12,
+        "inci": "Citric Acid"
+      },
+      {
+        "rank": 13,
+        "inci": "Fragrance/Parfum"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Auf das trockene Haar sprühen, bevor Hot Tools verwendet werden. Für beste Ergebnisse Strähne für Strähne einsprühen. Als letzten Schritt erneut aufsprühen, um den Style zu fixieren.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "kmshair.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Hitzereaktives Spray für schnelles, einfaches und lang anhaltendes Styling auf trockenem Haar. Ideal zum Glätten und für Lockenstylings mit Hot Tools. Reduziert Hitzeschädigungen und Haarbruch. Verleiht zusätzlichen Halt und Glanz als Finish-Spray.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Gibt dem Haar Form für vielseitige Looks von glatt bis lockig beim Styling mit Hitze-Tools.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "text": "Sorgt für [CLAIM] Halt und Styles, die bis zu 72 Stunden halten.",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": [
+    {
+      "text": "Reduziert Hitzeschädigungen und Haarbruch.",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12"
+    }
+  ]
+}

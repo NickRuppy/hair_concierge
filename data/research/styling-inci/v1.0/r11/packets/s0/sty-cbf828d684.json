@@ -1,0 +1,136 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r10amend",
+  "sample_id": "sty-cbf828d684",
+  "product": {
+    "confirmed_name": "Trockenes Texturspray (Dry Texture Spray)",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "Moroccanoil",
+    "format": "aerosol"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 21,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "DIMETHYL ETHER"
+      },
+      {
+        "rank": 2,
+        "inci": "SD ALCOHOL 40B (ALCOHOL DENAT.)"
+      },
+      {
+        "rank": 3,
+        "inci": "BUTANE"
+      },
+      {
+        "rank": 4,
+        "inci": "PROPANE"
+      },
+      {
+        "rank": 5,
+        "inci": "VP/VA COPOLYMER"
+      },
+      {
+        "rank": 6,
+        "inci": "ZEOLITE"
+      },
+      {
+        "rank": 7,
+        "inci": "ARGANIA SPINOSA (ARGAN) KERNEL OIL"
+      },
+      {
+        "rank": 8,
+        "inci": "HYDROLYZED VERBASCUM THAPSUS FLOWER"
+      },
+      {
+        "rank": 9,
+        "inci": "AMP-ISOSTEAROYL HYDROLYZED WHEAT PROTEIN"
+      },
+      {
+        "rank": 10,
+        "inci": "ISOBUTANE"
+      },
+      {
+        "rank": 11,
+        "inci": "GLYCERIN"
+      },
+      {
+        "rank": 12,
+        "inci": "ACETYL TRIETHYL CITRATE"
+      },
+      {
+        "rank": 13,
+        "inci": "CITRIC ACID"
+      },
+      {
+        "rank": 14,
+        "inci": "FRAGRANCE"
+      },
+      {
+        "rank": 15,
+        "inci": "WATER/AQUA"
+      },
+      {
+        "rank": 16,
+        "inci": "PEG/PPG-17/18 DIMETHICONE"
+      },
+      {
+        "rank": 17,
+        "inci": "PEG/PPG-15/15 ALLYL ETHER ACETATE"
+      },
+      {
+        "rank": 18,
+        "inci": "METHOXYCINNAMIDOPROPYL HYDROXYSULTAINE"
+      },
+      {
+        "rank": 19,
+        "inci": "OCTADECYL DI-T-BUTYL-4-HYDROXYHYDROCINNAMATE"
+      },
+      {
+        "rank": 20,
+        "inci": "SODIUM BENZOATE"
+      },
+      {
+        "rank": 21,
+        "inci": "POTASSIUM SORBATE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Gut schütteln. Ins trockene Haar sprühen.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "de.moroccanoil.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Partikelmatrix aus hochwirksamen Harzen und Zeolith",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": null,
+      "position": "unknown"
+    },
+    {
+      "text": "Für alle Haartypen",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": null,
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}

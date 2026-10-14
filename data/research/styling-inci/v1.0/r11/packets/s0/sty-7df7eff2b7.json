@@ -1,0 +1,125 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r10amend",
+  "sample_id": "sty-7df7eff2b7",
+  "product": {
+    "confirmed_name": "Sleek Stick Brows & Edges",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "Bali Curls",
+    "format": "gel"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": [
+      {
+        "flag": "repaired_split_token: '1' + '2-Hexanediol' -> '1,2-Hexanediol'",
+        "defect_rank": 10
+      }
+    ]
+  },
+  "inci": {
+    "inci_item_count": 19,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": null,
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua"
+      },
+      {
+        "rank": 2,
+        "inci": "Acrylates Crosspolymer-3"
+      },
+      {
+        "rank": 3,
+        "inci": "Pvp"
+      },
+      {
+        "rank": 4,
+        "inci": "Carbomer"
+      },
+      {
+        "rank": 5,
+        "inci": "Sodium Hydroxide"
+      },
+      {
+        "rank": 6,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 7,
+        "inci": "Hydroxyacetophenone"
+      },
+      {
+        "rank": 8,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 9,
+        "inci": "Sodium Lactate"
+      },
+      {
+        "rank": 10,
+        "inci": "1,2-Hexanediol"
+      },
+      {
+        "rank": 11,
+        "inci": "Caprylyl Glycol"
+      },
+      {
+        "rank": 12,
+        "inci": "Parfum"
+      },
+      {
+        "rank": 13,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 14,
+        "inci": "Cananga Odorata Flower Extract"
+      },
+      {
+        "rank": 15,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 16,
+        "inci": "Amyl Salicylate"
+      },
+      {
+        "rank": 17,
+        "inci": "Linalyl Acetate"
+      },
+      {
+        "rank": 18,
+        "inci": "Benzoic Acid"
+      },
+      {
+        "rank": 19,
+        "inci": "Methyl Benzoate"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Sanft über die Augenbrauen oder trockenes Haar streichen und nach Wunsch in Form bringen.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "bali-care.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Präziser Halt für Brows & Babyhaare - bringt selbst feine Härchen zuverlässig in Form",
+      "redacted": false,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-09",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}
