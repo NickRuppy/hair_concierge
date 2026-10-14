@@ -108,7 +108,8 @@ const rows = C.records.map(c => {
 const bySlug = new Map(rows.map(r => [r.slug, r]));
 // R9-P: choose HEAD at scoring time; every rule quote is read from that commit.
 // --rules-revision=<sha> permits later replay of this exact recorded revision.
-const RULE_REVISION = execFileSync('git', ['rev-parse', process.argv.find(x=>x.startsWith('--rules-revision='))?.split('=')[1] || 'HEAD'], {cwd:REPO,encoding:'utf8'}).trim();
+// Pinned default: dcaff25e = HEAD when round 10 was scored (R9-P); override with --rules-revision.
+const RULE_REVISION = execFileSync('git', ['rev-parse', process.argv.find(x=>x.startsWith('--rules-revision='))?.split('=')[1] || 'dcaff25e'], {cwd:REPO,encoding:'utf8'}).trim();
 const revisionFiles = execFileSync('git',['ls-tree','-r','--name-only',RULE_REVISION,'docs/research/styling-inci/v1.0'],{cwd:REPO,encoding:'utf8'}).trim().split('\n').filter(p=>p.endsWith('.md'));
 const cache = new Map();
 function pinnedBytes(p) { if(!cache.has(p))cache.set(p,execFileSync('git',['show',`${RULE_REVISION}:${p}`],{cwd:REPO}));return cache.get(p); }

@@ -498,4 +498,4 @@ Calculation log: 1051/1800 cells agree; 749 differences, none blocking. Raw/norm
 
 Run `node data/research/styling-inci/v1.0/round-10/diff.js --summary` twice at the same HEAD and unchanged inputs. Compare SHA-256 of diff.json and report.md. Later replay: add `--rules-revision=dcaff25e6406783b6853ecdd3b942303b8362157`. Only the sibling diff.json/report.md are written; no timestamps/randomness/absolute paths. Script/input hashes and every quoted source revision are recorded.
 
-diff.json SHA-256: `f7ba86f444f78d5910aa78342aa6a70767882e688630c3dc9fdbe1133f096b82`.
+diff.json SHA-256: `a63386bf0c9933f831061773a0048707ef7b33e473417d855b8898c0fbac7c01`.
