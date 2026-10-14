@@ -1,8 +1,14 @@
 # Styling evidence lexicon — v0.5
 
-Status: **v0.5 amended (R6/R7) — lock suspended pending targeted re-check r8 (LOCK-1-S)**.
-Lexicon version: `styling-lexicon-v0.5-r7amend` (consumed by `styling-classification-standard.md` v0.5, engine `styling-inci-v0.5-r7amend`).
+Status: **v0.5 amended (R6/R7/R8) — lock suspended; targeted re-check r9 pending (LOCK-1-S)**.
+Lexicon version: `styling-lexicon-v0.5-r7amend` (consumed by `styling-classification-standard.md` v0.5, engine `styling-inci-v0.5-r8amend`).
 Scope: leave-on styling products (12 subtypes), German/EU market, plus the boundary families the S0 gate reads at the edges of Leave-in, Heat Protectant, Oil and Dry Shampoo.
+
+### Amendment (R8, 2026-10-14)
+
+| Change | Ruling | Where |
+|---|---|---|
+| R8 changes promise/name interpretation and border outcomes only. Formula families, memberships and the lexicon stamp remain unchanged; the consuming engine is `styling-inci-v0.5-r8amend`, targeted r9 pending. | R8, 2026-10-14 — R8-Q1, R8-Q2, R8-H | standard §4.2 / §4.6 / §6.10; header |
 
 ### Amendment (R7 rulings, 2026-10-13)
 
