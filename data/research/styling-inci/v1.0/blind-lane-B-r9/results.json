@@ -1,0 +1,1305 @@
+{
+ "lane": "B",
+ "model": "codex",
+ "standard": "v0.5-r8amend",
+ "records": [
+  {
+   "id": "sty-00dfa34561",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 8,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "refresh",
+   "route": "dry_shampoo",
+   "reason_code": "refresh_plus_volume_texture",
+   "rule_path": [
+    "§4.1",
+    "§4.2 tie precedence",
+    "§4.3 3.2",
+    "§4.7"
+   ],
+   "subtype": null,
+   "result_mechanisms": [
+    {
+     "value": "particulate",
+     "members": [
+      {
+       "inci": "Oryza Sativa Starch",
+       "rank": 4
+      },
+      {
+       "inci": "Tapioca Starch",
+       "rank": 6
+      },
+      {
+       "inci": "Silica",
+       "rank": 7
+      }
+     ]
+    }
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": false,
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_finish",
+    "also": []
+   },
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "No C1/C2 strength claim.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "refresh",
+   "secondary_jobs": [
+    "volume",
+    "texture"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "claim_authority_gap"
+   ],
+   "notes": {
+    "product": "Batiste TROCKENSHAMPOO ALL IN ONE fruchtig frischer Duft",
+    "informational_and_non_authoritative": true,
+    "rationale": "The confirmed dry-shampoo name and C1 oil-removal/freshness promises establish refresh alongside volume and texture. Styling properties are informational; no Styling subtype or user-facing cautions are emitted."
+   }
+  },
+  {
+   "id": "sty-04ce2b9c9d",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 6,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Parfum",
+     "rank": 3,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_leave_in_functions",
+   "rule_path": [
+    "§4.1",
+    "§4.2 name step",
+    "R8-Q2",
+    "§4.3 3.4(ii)",
+    "§4.5",
+    "§5 hair_powder"
+   ],
+   "subtype": "hair_powder",
+   "result_mechanisms": [
+    {
+     "value": "particulate",
+     "members": [
+      {
+       "inci": "Silica Silylate",
+       "rank": 2
+      }
+     ]
+    }
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": false,
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "No C1/C2 strength claim; maximal qualifies volume.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "candidate_below_tail",
+    "claim_authority_gap"
+   ],
+   "notes": {
+    "product": "BALI GENTS VOLUMIZING STYLING POWDER",
+    "rationale": "Powder and Volumizing name the same volume job. The either/or application names roots; §6.12 RG-9 gives roots. Oryza Sativa Starch r5 is below T_S and receives no natural-film credit. C3 grip and flexible-restyling statements cannot set jobs or flexibility. Natürlich strukturierter Look does not set a natural finish.",
+    "review": "Whether the C2 phrase natürlich strukturierten Look independently supplies texture is not explicitly mapped; no texture secondary is inferred."
+   }
+  },
+  {
+   "id": "sty-2c706dc461",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Caprylyl Glycol",
+     "rank": 14,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "FRAGRANCE",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "leave_in",
+   "reason_code": "li_g0_in_category",
+   "rule_path": [
+    "§4.1",
+    "§4.2 name step",
+    "R7-Q2",
+    "R8-H",
+    "§4.3 3.4(iii)",
+    "LI G0/T15",
+    "D6 care present",
+    "§4.7"
+   ],
+   "subtype": null,
+   "result_mechanisms": [
+    {
+     "value": "silicone_coat",
+     "members": [
+      {
+       "inci": "DIMETHICONE",
+       "rank": 3
+      }
+     ]
+    }
+   ],
+   "hold_route": "absent",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": false,
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "before_heat",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "No C1/C2 strength claim.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "sleek",
+   "secondary_jobs": [
+    "frizz_control"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "candidate_below_tail",
+    "weight_claim_conflict",
+    "claim_authority_gap"
+   ],
+   "notes": {
+    "product": "Moroccanoil Glättende Creme (Smoothing Lotion)",
+    "informational_and_non_authoritative": true,
+    "rationale": "R8-H rules Leave-in: generic Definition for krauses Haar plus a separate curl suitability sentence does not promise curl definition. No FX-1…FX-4 member establishes the straightening extension. D6 fails because effective care is present. T_LI uses Caprylyl Glycol in a preservative pair. Styling weight reads silicone family d at r3 and fatty-alcohol family c at r4, with neither a rich member nor an above-T_S LGN pair; therefore medium. Behentrimonium Chloride r7 and Polyquaternium-70/-11 r8–9 are below T_S. Styling properties are informational; no Styling subtype or user-facing cautions are emitted."
+   }
+  },
+  {
+   "id": "sty-538d6056fb",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "SODIUM BENZOATE",
+     "rank": 7,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "PARFUM/FRAGRANCE",
+     "rank": 5,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_leave_in_functions",
+   "rule_path": [
+    "§4.1",
+    "§4.2 multiple-job name",
+    "§4.2 first C2 lead",
+    "§4.3 3.4(ii)",
+    "§4.5",
+    "§5 hair_powder"
+   ],
+   "subtype": "hair_powder",
+   "result_mechanisms": [
+    {
+     "value": "wax_lipid",
+     "members": [
+      {
+       "inci": "ARGANIA SPINOSA (ARGAN) KERNEL OIL",
+       "rank": 4
+      }
+     ]
+    },
+    {
+     "value": "particulate",
+     "members": [
+      {
+       "inci": "SILICA SILYLATE",
+       "rank": 3
+      }
+     ]
+    }
+   ],
+   "hold_route": "absent",
+   "weight": "medium",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": false,
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": true,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Lang anhaltenden, flexiblen Halt states duration/flexibility, not strength.",
+   "flexibility": "beweglich",
+   "finish": "matt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "texture"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "weight_claim_conflict"
+   ],
+   "notes": {
+    "product": "Moroccanoil Textur- & Volumenpuder fürs Haar",
+    "rationale": "The name supplies texture and volume, so the first C2 lead decides primary volume. Texture follows from the name. Halbmatt plus natürlich aussehendes Finish resolves to matt. Flexible hold and negated stiffness support beweglich. Argan oil is one medium-band persistent family at T_S−1. The light/no-weight claims conflict with medium. No border rule reads the vacuous T_LI, so no tail_marker_vacuous trigger fires."
+   }
+  },
+  {
+   "id": "sty-57ff4053a1",
+   "identity_status": "provisional_formula_conflict",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Phenoxyethanol",
+     "rank": 7,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Phenoxyethanol",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": null,
+   "route": "provisional_boundary",
+   "reason_code": "formula_conflict",
+   "rule_path": [
+    "§2.3 inci_conflict",
+    "§2.2 A2",
+    "LI T18 tier 2",
+    "§4.0",
+    "§4.1 input 3",
+    "§4.7 no Styling values"
+   ],
+   "subtype": null,
+   "result_mechanisms": null,
+   "hold_route": null,
+   "weight": null,
+   "alcohol_note": null,
+   "buildup_note": null,
+   "ingredient_flags": null,
+   "provides_heat_protection": null,
+   "application_moment": null,
+   "target_zone": null,
+   "heat_activated": null,
+   "hold_level": null,
+   "hold_basis": null,
+   "flexibility": null,
+   "finish": null,
+   "primary_job": null,
+   "secondary_jobs": null,
+   "d8b_flags": null,
+   "neutral_fact": null,
+   "review_triggers": [
+    "formula_source_conflict"
+   ],
+   "notes": {
+    "product": "Kevin.Murphy Powder.Puff Volume",
+    "packet_identity_status": "inci_conflict",
+    "rationale": "The S0 identity block contains two different lists. Neither a newer/higher-tier description nor agreement on some potential properties meets T18 convergence or the dated GTIN-matched C1 release test. S0 stops before promise classification and property emission. The displayed markers describe the S0 list only; the alternative list has the same marker positions.",
+    "capture_work_order": "Obtain a dated C1 pack INCI carrying the record's GTIN and newer than both conflicting captures, or establish the complete T18 tier-1 convergence evidence."
+   }
+  },
+  {
+   "id": "sty-72256d1a5c",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Parfum (Fragrance)",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "refresh",
+   "route": "dry_shampoo",
+   "reason_code": "refresh_plus_volume_texture",
+   "rule_path": [
+    "§4.1",
+    "§4.2 tie precedence",
+    "§4.3 3.2",
+    "§4.6 matched registry",
+    "§4.7"
+   ],
+   "subtype": null,
+   "result_mechanisms": [
+    {
+     "value": "particulate",
+     "members": [
+      {
+       "inci": "Oryza Sativa (Rice) Starch",
+       "rank": 4
+      },
+      {
+       "inci": "Cellulose",
+       "rank": 6
+      }
+     ]
+    }
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": false,
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "No C1/C2 strength claim; Extra qualifies volume.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "refresh",
+   "secondary_jobs": [
+    "volume"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "claim_authority_gap"
+   ],
+   "notes": {
+    "product": "got2b Trocken SHAMPOO Extra Volumen",
+    "informational_and_non_authoritative": true,
+    "rationale": "The dry-shampoo positioning with volume routes through the refresh tie. The non-aqueous formula credits rice starch and cellulose as particles. Alcohol Denat. r3 meets the alcohol-note formula trigger. The directions explicitly require einarbeiten. Styling properties are informational; no Styling subtype or user-facing cautions are emitted."
+   }
+  },
+  {
+   "id": "sty-7857e24eab",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 3,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Sodium Benzoate",
+     "rank": 3,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_leave_in_functions",
+   "rule_path": [
+    "§4.1",
+    "§4.2 name step",
+    "R8-Q2",
+    "§4.3 3.4(ii)",
+    "§4.5",
+    "§5 hair_powder"
+   ],
+   "subtype": "hair_powder",
+   "result_mechanisms": [
+    {
+     "value": "particulate",
+     "members": [
+      {
+       "inci": "Silica Silylate (nano)",
+       "rank": 2
+      }
+     ]
+    }
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": false,
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Halt für bis zu 24 Stunden is duration, not strength.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "claim_authority_gap"
+   ],
+   "notes": {
+    "product": "Schwarzkopf taft Haarpuder VOLUMEN",
+    "rationale": "Haarpuder and Volumen supply one volume job. The main required application spans roots to tips, so target_zone is all; the later tip does not replace it. Natürliche Haarbewegungen is neither a finish nor a listed flexibility word. No border rule reads the vacuous T_LI."
+   }
+  },
+  {
+   "id": "sty-7cf2250921",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "BENZYL ALCOHOL",
+     "rank": 13,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "DIMETHYL PHENETHYL ACETATE",
+     "rank": 10,
+     "status": "unresolved",
+     "alt": {
+      "inci": "BENZYL ALCOHOL",
+      "rank": 13,
+      "status": "plausible"
+     }
+    }
+   },
+   "promise_class": "refresh",
+   "route": "dry_shampoo",
+   "reason_code": "refresh_plus_volume_texture",
+   "rule_path": [
+    "§4.1",
+    "§4.2 tie precedence",
+    "R8-Q1",
+    "§4.3 3.2",
+    "§4.6 matched registry",
+    "§4.7"
+   ],
+   "subtype": null,
+   "result_mechanisms": [
+    {
+     "value": "particulate",
+     "members": [
+      {
+       "inci": "CELLULOSE",
+       "rank": 3
+      },
+      {
+       "inci": "STEARALKONIUM HECTORITE",
+       "rank": 6
+      }
+     ]
+    }
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": false,
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "No C1/C2 strength claim.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "refresh",
+   "secondary_jobs": [
+    "volume"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "tail_marker_unresolved",
+    "candidate_below_tail",
+    "claim_authority_gap"
+   ],
+   "notes": {
+    "product": "L'ORÉAL PARiS ELVITAL Volumenspray Big Hair Day (Erfrischendes Volumen Spray)",
+    "informational_and_non_authoritative": true,
+    "promise_tie": "refresh_plus_volume_texture",
+    "rationale": "R8-Q1 establishes Dry Shampoo from the C1 freshness promise alongside volume, despite the volume-first name. The named aroma chemical r10 lies before Parfum r29, making T_S unresolved; Benzyl Alcohol r13 lies before Parfum and reads as preservative. Both T_S readings yield the same credited mechanisms, absent hold route and light weight. Perlite is not promoted into an enumerated mechanism. Isopropyl Myristate r14 is a below-tail candidate that would add a persistent family. Styling properties are informational; no Styling subtype or user-facing cautions are emitted."
+   }
+  },
+  {
+   "id": "sty-8648adfa69",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": "Fragrance",
+     "rank": 9,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "refresh",
+   "route": "dry_shampoo",
+   "reason_code": "refresh_plus_volume_texture",
+   "rule_path": [
+    "§4.1",
+    "§4.2 tie precedence",
+    "§4.3 3.2",
+    "§4.7"
+   ],
+   "subtype": null,
+   "result_mechanisms": [
+    {
+     "value": "particulate",
+     "members": [
+      {
+       "inci": "Tapioca Starch",
+       "rank": 5
+      },
+      {
+       "inci": "Silica",
+       "rank": 7
+      }
+     ]
+    }
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "fires",
+   "buildup_note": false,
+   "ingredient_flags": {
+    "silicones": true,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 1,
+   "hold_basis": "C2 Haltegrad 1; Wella EIMI x/4, R3-H5: 1–2 maps to 1.",
+   "flexibility": "unbekannt",
+   "finish": "matt",
+   "primary_job": "refresh",
+   "secondary_jobs": [
+    "volume",
+    "texture"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "claim_authority_gap"
+   ],
+   "notes": {
+    "product": "Wella Professionals EIMI Volume Dry Me (Trockenshampoo)",
+    "informational_and_non_authoritative": true,
+    "rationale": "C2 refresh/oil absorption alongside volume and texture routes to Dry Shampoo. Propellants above Water make the formula non-aqueous, so tapioca is particulate. Polymethylsilsesquioxane sets the silicone flag only. Style mich supplies a shaping instruction. The level is claim-derived despite absent fixative hold. Styling properties are informational; no Styling subtype or user-facing cautions are emitted."
+   }
+  },
+  {
+   "id": "sty-91b4864fd7",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 6,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "PHENOXYETHANOL",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "provisional_boundary",
+   "reason_code": "pending_leave_in_addendum",
+   "rule_path": [
+    "§4.1",
+    "§4.2 multiple-job name",
+    "§4.2 first C2 lead: curl revival",
+    "§4.3 3.4(iii)",
+    "LI G0 in_category",
+    "D6",
+    "§4.5 PH1-16/PH2-2",
+    "§5 refresher"
+   ],
+   "subtype": "refresher",
+   "result_mechanisms": [
+    {
+     "value": "salt",
+     "members": [
+      {
+       "inci": "MAGNESIUM SULFATE",
+       "rank": 2
+      }
+     ]
+    }
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": false,
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": true,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "damp_before_drying",
+    "also": [
+     "dry_finish"
+    ]
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "No C1/C2 strength claim.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "refresh",
+   "secondary_jobs": [
+    "volume",
+    "texture"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "pending_leave_in_addendum",
+    "claim_authority_gap"
+   ],
+   "notes": {
+    "product": "BALI CURLS Volumizing Curl Spray",
+    "provisional": true,
+    "lean_route": "styling",
+    "recommendable": false,
+    "matchable": false,
+    "rationale": "Volumizing plus Curl leaves a multiple-job name; the first C2 line leads with curl revival. Ingredient call-outs are not promised care jobs. There is no real fixative or effective care, so D6 fires and the unchanged Leave-in letter creates the hold. Curl revival is refresh, not a definition secondary; voluminous Beachlook supplies volume and beach texture. Main directions allow wet/dry use and lead with wet application; the tips-to-roots range is all. Maris Sal r10 adds no new mechanism because salt is already established at r2."
+   }
+  },
+  {
+   "id": "sty-9e36684be9",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": null,
+     "rank": null,
+     "status": "none_visible"
+    },
+    "T_S": {
+     "inci": null,
+     "rank": null,
+     "status": "absent"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "non_aqueous",
+   "rule_path": [
+    "§4.1",
+    "§4.2 name step",
+    "R8-Q2",
+    "§4.3 3.5",
+    "§4.5",
+    "§5 aerosol powder as applied"
+   ],
+   "subtype": "texture_spray",
+   "result_mechanisms": [
+    {
+     "value": "particulate",
+     "members": [
+      {
+       "inci": "Aluminum starch octenylsuccinate",
+       "rank": 5
+      },
+      {
+       "inci": "Corn starch modified",
+       "rank": 6
+      },
+      {
+       "inci": "Silica",
+       "rank": 7
+      }
+     ]
+    }
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": false,
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": false,
+    "salt": false,
+    "propellant": true,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "roots",
+   "heat_activated": "no",
+   "hold_level": 1,
+   "hold_basis": "C2 house-brand attribute Halt: leichter Halt maps to 1.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "house_brand_ownership",
+    "tail_marker_absent",
+    "claim_authority_gap"
+   ],
+   "notes": {
+    "product": "Balea Styling Spray Volumenpuder Pure Styling",
+    "rationale": "Powder supplies volume, but aerosol dispensing makes the subtype texture_spray. No T_S class exists, so the entire list is read with confidence capped at moderate. Alcohol r4 does not meet the first-three trigger. Required roots application followed by conditional lengths application remains roots under R6-T(1). The typed hold claim supplies hold_fix through RG3-16; the texture text is typed other, outside the explicit RG4-17 promise-line candidate sequence."
+   }
+  },
+  {
+   "id": "sty-af4b2fc4ec",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Potassium Sorbate",
+     "rank": 6,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Potassium Sorbate",
+     "rank": 6,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_leave_in_functions",
+   "rule_path": [
+    "§4.1",
+    "§4.2 name step",
+    "R8-Q2",
+    "§4.3 3.4(ii)",
+    "§4.5",
+    "§5 hair_powder"
+   ],
+   "subtype": "hair_powder",
+   "result_mechanisms": [
+    {
+     "value": "natural_film",
+     "members": [
+      {
+       "inci": "Carrageenan",
+       "rank": 4
+      }
+     ]
+    },
+    {
+     "value": "particulate",
+     "members": [
+      {
+       "inci": "Silica Silylate",
+       "rank": 2
+      }
+     ]
+    }
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": false,
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "natural_film"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 3,
+   "hold_basis": "C2 house-brand attribute Halt: starker Halt maps to 3.",
+   "flexibility": "beweglich",
+   "finish": "matt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "texture",
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "house_brand_ownership",
+    "natural_film_unsettled"
+   ],
+   "notes": {
+    "product": "Balea MEN Styling Powder",
+    "rationale": "Powder supplies volume. C2 promise text supplies texture and flexible styling; the typed strength claim supplies hold_fix. Carrageenan is credited as aqueous NF-U with review, never real fixative hold. The main required application is through dry hair; the later roots step is conditional on maximum volume, so the zone remains all."
+   }
+  },
+  {
+   "id": "sty-b9e3c5327c",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "SODIUM BENZOATE",
+     "rank": 7,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "SODIUM BENZOATE",
+     "rank": 7,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_leave_in_functions",
+   "rule_path": [
+    "§4.1",
+    "§4.2 multiple-job name",
+    "R8-Q2 Powder Grip",
+    "§4.2 first C2 lead",
+    "§4.3 3.4(ii)",
+    "§4.5",
+    "§5 hair_powder"
+   ],
+   "subtype": "hair_powder",
+   "result_mechanisms": [
+    {
+     "value": "fixative_film",
+     "members": [
+      {
+       "inci": "VP/VA COPOLYMER",
+       "rank": 5
+      }
+     ]
+    },
+    {
+     "value": "particulate",
+     "members": [
+      {
+       "inci": "SILICA SILYLATE",
+       "rank": 1
+      }
+     ]
+    }
+   ],
+   "hold_route": "present",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": false,
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": false,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": [
+     "pvp_vp"
+    ]
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "No C1/C2 strength claim; 03 is not captured as a hold-scale claim.",
+   "flexibility": "beweglich",
+   "finish": "matt",
+   "primary_job": "texture",
+   "secondary_jobs": [
+    "volume"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "claim_authority_gap"
+   ],
+   "notes": {
+    "product": "Redken Powder Grip (03 Mattifying Hair Powder)",
+    "rationale": "Powder names volume and Grip names texture, so the first C2 lead decides primary texture from Griffigkeit. Volume follows from the name. C2 flexibler supplies beweglich. Alcohol r4 does not fire the alcohol note. Directions have no moisture state but explicitly require kneading, so RG2-9 gives dry_restyle. Hair powder is outside the six hold-relevant subtypes, so absent strength plus present fixative does not emit the neutral fact. No border rule reads the vacuous T_LI."
+   }
+  },
+  {
+   "id": "sty-c72484e23e",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 3,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Sodium Benzoate",
+     "rank": 3,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_leave_in_functions",
+   "rule_path": [
+    "§4.1",
+    "§4.2 no-job name",
+    "§4.2 first C2 lead",
+    "R8-Q2",
+    "§4.3 3.4(ii)",
+    "§4.5",
+    "§5 hair_powder"
+   ],
+   "subtype": "hair_powder",
+   "result_mechanisms": [
+    {
+     "value": "particulate",
+     "members": [
+      {
+       "inci": "Silica Silylate",
+       "rank": 2
+      }
+     ]
+    }
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": false,
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": false,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 3,
+   "hold_basis": "C2 starken Halt maps to 3.",
+   "flexibility": "unbekannt",
+   "finish": "matt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "hold_fix",
+    "texture"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "claim_authority_gap"
+   ],
+   "notes": {
+    "product": "Schwarzkopf Professional OSiS Dust It",
+    "rationale": "The no-job name falls to the C2 volume lead. Strong hold then grip supplies the secondary order. Particulate supplies the required mechanism for both. Required roots and lengths application gives all. The hold level comes only from the claim. No border rule reads the vacuous T_LI."
+   }
+  },
+  {
+   "id": "sty-f3f4819e95",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Sodium Benzoate",
+     "rank": 3,
+     "status": "vacuous"
+    },
+    "T_S": {
+     "inci": "Sodium Benzoate",
+     "rank": 3,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_leave_in_functions",
+   "rule_path": [
+    "§4.1",
+    "§4.2 name step",
+    "R8-Q2",
+    "§4.3 3.4(ii)",
+    "§4.5",
+    "§5 hair_powder"
+   ],
+   "subtype": "hair_powder",
+   "result_mechanisms": [
+    {
+     "value": "particulate",
+     "members": [
+      {
+       "inci": "Silica Silylate",
+       "rank": 2
+      }
+     ]
+    }
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": false,
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": false,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": null,
+   "hold_basis": "Natürlichem Halt is a look/unquantified hold phrase, not a strength word.",
+   "flexibility": "unbekannt",
+   "finish": "unbekannt",
+   "primary_job": "volume",
+   "secondary_jobs": [],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "claim_authority_gap"
+   ],
+   "notes": {
+    "product": "got2b Styling Puder Volumen Powderfull",
+    "rationale": "Puder and Volumen supply one volume job. The required roots-to-tips range gives all. Natural hold does not set strength, finish, flexibility or a strength-based hold_fix secondary. No neutral fact is emitted for particles. No border rule reads the vacuous T_LI."
+   }
+  },
+  {
+   "id": "sty-f9cc6d6e83",
+   "identity_status": "verified",
+   "tail_markers": {
+    "T_LI": {
+     "inci": "Potassium Sorbate",
+     "rank": 5,
+     "status": "plausible"
+    },
+    "T_S": {
+     "inci": "Potassium Sorbate",
+     "rank": 5,
+     "status": "plausible"
+    }
+   },
+   "promise_class": "styling_result",
+   "route": "styling",
+   "reason_code": "outside_leave_in_functions",
+   "rule_path": [
+    "§4.1",
+    "§4.2 name step",
+    "R8-Q2",
+    "§4.3 3.4(ii)",
+    "§4.5",
+    "§5 hair_powder"
+   ],
+   "subtype": "hair_powder",
+   "result_mechanisms": [
+    {
+     "value": "particulate",
+     "members": [
+      {
+       "inci": "Silica Silylate",
+       "rank": 2
+      }
+     ]
+    }
+   ],
+   "hold_route": "absent",
+   "weight": "light",
+   "alcohol_note": "does_not_fire",
+   "buildup_note": false,
+   "ingredient_flags": {
+    "silicones": false,
+    "oils": false,
+    "fragrance": true,
+    "salt": false,
+    "propellant": false,
+    "fixative_family": []
+   },
+   "provides_heat_protection": false,
+   "application_moment": {
+    "primary": "dry_restyle",
+    "also": []
+   },
+   "target_zone": "all",
+   "heat_activated": "no",
+   "hold_level": 3,
+   "hold_basis": "C2 house-brand attribute Halt: starker Halt maps to 3.",
+   "flexibility": "unbekannt",
+   "finish": "matt",
+   "primary_job": "volume",
+   "secondary_jobs": [
+    "texture",
+    "hold_fix"
+   ],
+   "d8b_flags": [],
+   "neutral_fact": null,
+   "review_triggers": [
+    "house_brand_ownership",
+    "candidate_below_tail",
+    "claim_authority_gap"
+   ],
+   "notes": {
+    "product": "Balea Haarpuder Volumen (Pomegranate)",
+    "rationale": "Powder supplies volume; the C2 promise supplies texture and the typed strength claim supplies hold_fix. The main whole-hair application remains all despite the conditional maximum-volume roots step. Carrageenan r7 is below T_S, receives no natural-film or fixative-family credit, and is recorded as a value-changing below-tail candidate."
+   }
+  }
+ ],
+ "ambiguous_rules": [
+  {
+   "scope": "user_facing",
+   "rule_path": [
+    "§6.10",
+    "property set §2.12"
+   ],
+   "records": [
+    "sty-04ce2b9c9d"
+   ],
+   "issue": "The C2 phrase natürlich strukturierten Look describes structure, but the written job mappings do not explicitly say whether strukturiert alone supplies texture. Explicit Griffigkeit and flexible-restyling statements for this record are C3.",
+   "conservative_output": "primary_job remains volume; no texture secondary is inferred. Review whether the C2 structure phrase qualifies under the texture job vocabulary."
+  },
+  {
+   "scope": "user_facing",
+   "rule_path": [
+    "§6.10 general secondary-claim wording",
+    "§6.10 RG4-17",
+    "R4-H(5)",
+    "property set §2.12"
+   ],
+   "records": [
+    "sty-9e36684be9"
+   ],
+   "issue": "The general wording allows further jobs explicitly stated by C1/C2 claims, but the executable candidate sequence names confirmed-name jobs and promise lines, with a specific exception for typed hold lines. This packet places griffige Textur direkt am Ansatz in a C2 other line.",
+   "conservative_output": "The explicit RG4-17 sequence is applied: secondary_jobs contains hold_fix from the typed strength claim; texture from the other line is withheld pending clarification."
+  }
+ ],
+ "run_note": "Codex CLI read-only; executed commands scanned for forbidden reads (none)"
+}

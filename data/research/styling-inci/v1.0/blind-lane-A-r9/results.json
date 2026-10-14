@@ -1,0 +1,1112 @@
+{
+  "lane": "A",
+  "model": "claude-opus",
+  "standard": "v0.5-r8amend",
+  "run_at": "2026-10-14T06:05:50+00:00",
+  "records": [
+    {
+      "id": "sty-00dfa34561",
+      "identity_status": "verified",
+      "tail_markers": {
+        "T_S": {
+          "inci": "Parfum",
+          "rank": 8,
+          "status": "plausible",
+          "alt": null
+        },
+        "T_LI": {
+          "inci": null,
+          "rank": null,
+          "status": "none_visible"
+        }
+      },
+      "promise_class": "refresh",
+      "route": "dry_shampoo",
+      "reason_code": "pair_rule_3.2_refresh_tie_precedence",
+      "rule_path": [
+        "4.1 gate met (C1 pack name + C1 promise lines; C3 verbatim directions; complete C3 INCI, verified)",
+        "4.2 step 1: confirmed name 'TROCKENSHAMPOO' names one job = refresh (Dry Shampoo sense)",
+        "4.2 tie precedence: C1 'Entfernt sanft Fett' / 'Lang anhaltende Frische' (refresh) + 'Zusaetzlicher Volumenboost' / 'Textur & Griffigkeit' (volume/texture) => class refresh",
+        "4.3 3.1 out of scope; 3.2 class refresh => dry_shampoo",
+        "4.7 emission: route + markers only; Styling properties not emitted"
+      ],
+      "subtype": null,
+      "result_mechanisms": null,
+      "hold_route": null,
+      "weight": null,
+      "alcohol_note": null,
+      "buildup_note": null,
+      "ingredient_flags": null,
+      "provides_heat_protection": null,
+      "application_moment": null,
+      "target_zone": null,
+      "heat_activated": null,
+      "hold_level": null,
+      "hold_basis": null,
+      "flexibility": null,
+      "finish": null,
+      "primary_job": null,
+      "secondary_jobs": null,
+      "d8b_flags": [],
+      "neutral_fact": null,
+      "review_triggers": [],
+      "confidence_internal": "high",
+      "notes": "Non-aqueous (propellant-led, no water). Dry Shampoo with volume/texture direction. Styling values not emitted (§4.7: optional/informational for non-styling routes)."
+    },
+    {
+      "id": "sty-04ce2b9c9d",
+      "identity_status": "verified",
+      "tail_markers": {
+        "T_S": {
+          "inci": "Parfum",
+          "rank": 3,
+          "status": "plausible",
+          "alt": null
+        },
+        "T_LI": {
+          "inci": "Sodium Benzoate",
+          "rank": 6,
+          "status": "plausible"
+        }
+      },
+      "promise_class": "styling_result",
+      "route": "styling",
+      "reason_code": "pair_rule_3.4(ii)_li_function_no",
+      "rule_path": [
+        "4.1 gate met (C2 promise line; C3 verbatim directions; complete C3 INCI, verified)",
+        "4.2 step 1: name 'VOLUMIZING STYLING POWDER': Volumizing + Powder both name volume (R8-Q2) => one job, volume; lead volume",
+        "class styling_result, li_function no",
+        "aqueous (Aqua r1 above T_S Parfum r3)",
+        "3.4 (i) no fixative => D7 no; (i') no smoothing film; (ii) li_function no => styling directly, not held (4.5)",
+        "5: job volume, dry, powder form => hair_powder"
+      ],
+      "subtype": "hair_powder",
+      "result_mechanisms": [
+        {
+          "value": "particulate",
+          "members": [
+            {
+              "inci": "Silica Silylate",
+              "rank": 2
+            }
+          ]
+        }
+      ],
+      "hold_route": "absent",
+      "weight": "light",
+      "alcohol_note": "does_not_fire",
+      "buildup_note": "not_fired",
+      "ingredient_flags": {
+        "silicones": false,
+        "oils": false,
+        "fragrance": true,
+        "salt": false,
+        "propellant": false,
+        "fixative_family": []
+      },
+      "provides_heat_protection": {
+        "value": false,
+        "trace": "not_claimed"
+      },
+      "application_moment": {
+        "primary": "dry_restyle",
+        "also": []
+      },
+      "target_zone": "roots",
+      "heat_activated": "no",
+      "hold_level": null,
+      "hold_basis": "no C1/C2 strength statement (C3 only) => null, 'Halt: keine Herstellerangabe' (stored only; hair_powder)",
+      "flexibility": "unbekannt",
+      "finish": "unbekannt",
+      "primary_job": "volume",
+      "secondary_jobs": [],
+      "d8b_flags": [],
+      "neutral_fact": null,
+      "review_triggers": [],
+      "confidence_internal": "moderate",
+      "notes": "Target zone per RG-9 either/or ('in den Handflaechen verreiben oder direkt auf den Haaransatz streuen' => roots). Finish: C2 'natuerlich strukturierten Look' is natuerlich + another word => look word => unbekannt. 'strukturierten Look' read as a result phrase (analogy R6-T(3) 'definierter Look'), so no texture secondary - see handback ambiguity. Fructose r4 below T_S (HU-1) credits nothing. Directions C3 => U confidence moderate."
+    },
+    {
+      "id": "sty-2c706dc461",
+      "identity_status": "verified",
+      "tail_markers": {
+        "T_S": {
+          "inci": "FRAGRANCE",
+          "rank": 6,
+          "status": "plausible",
+          "alt": null
+        },
+        "T_LI": {
+          "inci": "CAPRYLYL GLYCOL",
+          "rank": 14,
+          "status": "plausible"
+        }
+      },
+      "promise_class": "styling_result",
+      "route": "leave_in",
+      "reason_code": "pair_rule_3.4(iii)_li_g0_in_category_d6_not_fired",
+      "rule_path": [
+        "4.1 gate met (C2 brand-page name and lines; C2 verbatim directions; complete C2 INCI, verified)",
+        "4.2 step 1: name 'Glaettende Creme (Smoothing Lotion)' names one job (smoothing/sleek); Creme/Lotion are product nouns",
+        "R8-H / R7-Q2: 'Definition' for 'krauses Haar' + separate 'Ideal fuer lockiges Haar' is no curl-definition promise => no care + definition tie => not mixed",
+        "li_function yes (smoothing/anti-frizz, damp-hair use)",
+        "3.1: smoothing lead but not sold as Oel/Serum => continue",
+        "aqueous (Water r1); 3.4 (i) no FX-1..4 above T_S => D7 no; (i') no Polysilicone-29/Silicone Quaternium-18 => no",
+        "3.4 (iii) LI G0: no LI L5 fixative (PQ-11 r9 is FX-R), conditioning film => in_category => D6: limb 2 fails (Dimethicone r3, Cetearyl Alcohol r4, Behentrimonium Chloride r7 above T_LI = real care) => leave_in",
+        "4.6 registry row Moroccanoil 'Glaettende Creme (Smoothing Lotion)' (R8-H) => leave_in: same as letter",
+        "4.7 emission: route + markers only"
+      ],
+      "subtype": null,
+      "result_mechanisms": null,
+      "hold_route": null,
+      "weight": null,
+      "alcohol_note": null,
+      "buildup_note": null,
+      "ingredient_flags": null,
+      "provides_heat_protection": null,
+      "application_moment": null,
+      "target_zone": null,
+      "heat_activated": null,
+      "hold_level": null,
+      "hold_basis": null,
+      "flexibility": null,
+      "finish": null,
+      "primary_job": null,
+      "secondary_jobs": null,
+      "d8b_flags": [],
+      "neutral_fact": null,
+      "review_triggers": [],
+      "confidence_internal": "high",
+      "notes": "Letter and registry (R8-H) agree; record carries the letter's pair rule 3.4 (iii) with ruled_route leave_in (RG3-14). T_LI = Caprylyl Glycol r14 in a preservative pair with Chlorphenesin r20 / Phenoxyethanol r21. Styling values not emitted."
+    },
+    {
+      "id": "sty-538d6056fb",
+      "identity_status": "verified",
+      "tail_markers": {
+        "T_S": {
+          "inci": "PARFUM/FRAGRANCE",
+          "rank": 5,
+          "status": "plausible",
+          "alt": null
+        },
+        "T_LI": {
+          "inci": "SODIUM BENZOATE",
+          "rank": 7,
+          "status": "plausible"
+        }
+      },
+      "promise_class": "styling_result",
+      "route": "styling",
+      "reason_code": "pair_rule_3.4(ii)_li_function_no",
+      "rule_path": [
+        "4.1 gate met (C2 promise lines; C2 verbatim directions; complete C2 INCI, verified)",
+        "4.2 step 1: name 'Textur- & Volumenpuder' names texture + volume => two jobs => name decides nothing",
+        "4.2 step 2: no C1 line; step 3: first C2 line, first job phrase 'sorgt fuer sofortiges Volumen' => lead volume",
+        "class styling_result, li_function no",
+        "aqueous (Aqua r1); 3.4 (ii) => styling directly, not held",
+        "5: job volume, dry roots, pump-dispensed powder (not aerosol) => hair_powder"
+      ],
+      "subtype": "hair_powder",
+      "result_mechanisms": [
+        {
+          "value": "particulate",
+          "members": [
+            {
+              "inci": "SILICA SILYLATE",
+              "rank": 3
+            }
+          ]
+        },
+        {
+          "value": "wax_lipid",
+          "members": [
+            {
+              "inci": "ARGANIA SPINOSA (ARGAN) KERNEL OIL",
+              "rank": 4
+            }
+          ]
+        }
+      ],
+      "hold_route": "absent",
+      "weight": "medium",
+      "alcohol_note": "does_not_fire",
+      "buildup_note": "not_fired",
+      "ingredient_flags": {
+        "silicones": false,
+        "oils": true,
+        "fragrance": true,
+        "salt": false,
+        "propellant": false,
+        "fixative_family": []
+      },
+      "provides_heat_protection": {
+        "value": false,
+        "trace": "not_claimed"
+      },
+      "application_moment": {
+        "primary": "dry_restyle",
+        "also": []
+      },
+      "target_zone": "roots",
+      "heat_activated": "no",
+      "hold_level": null,
+      "hold_basis": "C2 hold line 'lang anhaltenden, flexiblen Halt': unquantified + flexibility word, no strength word => null (stored only; hair_powder)",
+      "flexibility": "beweglich",
+      "finish": "matt",
+      "primary_job": "volume",
+      "secondary_jobs": [
+        "texture"
+      ],
+      "d8b_flags": [],
+      "neutral_fact": null,
+      "review_triggers": [
+        "weight_claim_conflict"
+      ],
+      "confidence_internal": "moderate",
+      "notes": "Weight medium = one family (WL-6 Argan Oil r4) at T_S-1 => boundary position, confidence moderate (§3.5); C2 'beschwert das Haar nicht' / 'Leichte Formel' vs medium => weight_claim_conflict, value unchanged. Finish: 'halbmattes' (matt) + 'Natuerlich aussehendes ... Finish' (natuerlich) => matt (RG-10). Flex: 'flexiblen Halt' + negated 'nicht ... steif' => beweglich. Secondary texture from the name (Textur) first, gate particulate ok. 'Halt' has no strength word => no hold_fix. 'reaktivieren'/'wiederbelebt' read as volume reactivation / consumer-test line, not the refresh job. Main required site 'von den trockenen Wurzeln' => roots; tousling later is optional."
+    },
+    {
+      "id": "sty-57ff4053a1",
+      "identity_status": "provisional_formula_conflict",
+      "tail_markers": {
+        "T_S": {
+          "inci": "Phenoxyethanol",
+          "rank": 7,
+          "status": "plausible",
+          "alt": null
+        },
+        "T_LI": {
+          "inci": "Phenoxyethanol",
+          "rank": 7,
+          "status": "plausible"
+        }
+      },
+      "promise_class": "styling_result",
+      "route": "provisional_boundary",
+      "reason_code": "formula_conflict",
+      "rule_path": [
+        "2.3: packet identity_status inci_conflict (two INCI lists: Zinc Myristate/Undaria vs Nylon-12/Alaria; no T18 tier-1 convergence) => provisional_formula_conflict",
+        "4.1 input 3 fails => provisional_boundary (formula_conflict); never overridden (4.1)",
+        "4.7: no Styling values emitted"
+      ],
+      "subtype": null,
+      "result_mechanisms": null,
+      "hold_route": null,
+      "weight": null,
+      "alcohol_note": null,
+      "buildup_note": null,
+      "ingredient_flags": null,
+      "provides_heat_protection": null,
+      "application_moment": null,
+      "target_zone": null,
+      "heat_activated": null,
+      "hold_level": null,
+      "hold_basis": null,
+      "flexibility": null,
+      "finish": null,
+      "primary_job": null,
+      "secondary_jobs": null,
+      "d8b_flags": [],
+      "neutral_fact": null,
+      "review_triggers": [
+        "formula_source_conflict"
+      ],
+      "confidence_internal": "high",
+      "notes": "Promise (C2 'Fixierprodukt mit langanhaltendem Halt. Sorgt muehelos fuer Fuelle') and C3 directions present; the block is the formula conflict only. Stays in its current category until a C1 pack capture settles the formula. Markers read on the list of record."
+    },
+    {
+      "id": "sty-72256d1a5c",
+      "identity_status": "verified",
+      "tail_markers": {
+        "T_S": {
+          "inci": "Parfum (Fragrance)",
+          "rank": 7,
+          "status": "plausible",
+          "alt": null
+        },
+        "T_LI": {
+          "inci": null,
+          "rank": null,
+          "status": "none_visible"
+        }
+      },
+      "promise_class": "refresh",
+      "route": "dry_shampoo",
+      "reason_code": "pair_rule_3.2_refresh_tie_precedence",
+      "rule_path": [
+        "4.1 gate met (C1 pack name; C2 promise line; C3 verbatim directions; complete C3 INCI, verified)",
+        "4.2: name 'Trocken SHAMPOO Extra Volumen' + C2 'Trockenshampoo fuer sofortigen Volumen-Boost & 48 h frischen Duft' => refresh + volume tie => class refresh",
+        "4.3 3.2 => dry_shampoo",
+        "4.6 registry row got2b 'Trocken SHAMPOO Extra Volumen' => dry_shampoo (charter §5.1): same",
+        "4.7 emission: route + markers only"
+      ],
+      "subtype": null,
+      "result_mechanisms": null,
+      "hold_route": null,
+      "weight": null,
+      "alcohol_note": null,
+      "buildup_note": null,
+      "ingredient_flags": null,
+      "provides_heat_protection": null,
+      "application_moment": null,
+      "target_zone": null,
+      "heat_activated": null,
+      "hold_level": null,
+      "hold_basis": null,
+      "flexibility": null,
+      "finish": null,
+      "primary_job": null,
+      "secondary_jobs": null,
+      "d8b_flags": [],
+      "neutral_fact": null,
+      "review_triggers": [],
+      "confidence_internal": "high",
+      "notes": "Non-aqueous (propellant-led, Aqua r10 in the tail). Matches §11.10 'with a C1/C2 capture' reading. Styling values not emitted."
+    },
+    {
+      "id": "sty-7857e24eab",
+      "identity_status": "verified",
+      "tail_markers": {
+        "T_S": {
+          "inci": "Sodium Benzoate",
+          "rank": 3,
+          "status": "plausible",
+          "alt": null
+        },
+        "T_LI": {
+          "inci": "Sodium Benzoate",
+          "rank": 3,
+          "status": "plausible"
+        }
+      },
+      "promise_class": "styling_result",
+      "route": "styling",
+      "reason_code": "pair_rule_3.4(ii)_li_function_no",
+      "rule_path": [
+        "4.1 gate met (C2 name + C2 promise line; C3 verbatim directions; complete C3 INCI, verified)",
+        "4.2 step 1: name 'Haarpuder VOLUMEN': Puder + Volumen name the same job => volume (R8-Q2)",
+        "class styling_result, li_function no; aqueous (Aqua r1)",
+        "3.4 (ii) => styling directly, not held",
+        "5: job volume, dry, powder => hair_powder"
+      ],
+      "subtype": "hair_powder",
+      "result_mechanisms": [
+        {
+          "value": "particulate",
+          "members": [
+            {
+              "inci": "Silica Silylate (nano)",
+              "rank": 2
+            }
+          ]
+        }
+      ],
+      "hold_route": "absent",
+      "weight": "light",
+      "alcohol_note": "does_not_fire",
+      "buildup_note": "not_fired",
+      "ingredient_flags": {
+        "silicones": false,
+        "oils": false,
+        "fragrance": true,
+        "salt": false,
+        "propellant": false,
+        "fixative_family": []
+      },
+      "provides_heat_protection": {
+        "value": false,
+        "trace": "not_claimed"
+      },
+      "application_moment": {
+        "primary": "dry_restyle",
+        "also": []
+      },
+      "target_zone": "all",
+      "heat_activated": "no",
+      "hold_level": null,
+      "hold_basis": "C2 'Halt fuer bis zu 24 Stunden' is duration only, no strength word => null (stored only; hair_powder)",
+      "flexibility": "unbekannt",
+      "finish": "unbekannt",
+      "primary_job": "volume",
+      "secondary_jobs": [],
+      "d8b_flags": [],
+      "neutral_fact": null,
+      "review_triggers": [],
+      "confidence_internal": "moderate",
+      "notes": "'vom Ansatz bis in die Spitzen verteilen' is a range => all (RG2-10); the Tipp is optional. 'natuerliche Haarbewegungen' is a movement word, not a finish. Humidity line 'schuetzt vor Feuchtigkeit' has no anti-frizz word => no job. Benzyl Alcohol r7 after Parfum r4 = allergen declaration. Directions C3 => moderate."
+    },
+    {
+      "id": "sty-7cf2250921",
+      "identity_status": "verified",
+      "tail_markers": {
+        "T_S": {
+          "inci": "DIMETHYL PHENETHYL ACETATE",
+          "rank": 10,
+          "status": "unresolved",
+          "alt": {
+            "inci": "BENZYL ALCOHOL",
+            "rank": 13,
+            "reason": "named aroma chemical above own Parfum r29 (third limb (i)); next ordinally consistent T_S member = Benzyl Alcohol r13 (above Parfum => PR-1)"
+          }
+        },
+        "T_LI": {
+          "inci": "BENZYL ALCOHOL",
+          "rank": 13,
+          "status": "plausible"
+        }
+      },
+      "promise_class": "refresh",
+      "route": "dry_shampoo",
+      "reason_code": "pair_rule_3.2_refresh_tie_precedence_R8-Q1",
+      "rule_path": [
+        "4.1 gate met (C1 pack lines; C3 verbatim directions; complete C3 INCI, verified)",
+        "4.2 R8-Q1 tie precedence: C1 'Bis zu 48h frischeres Haargefuehl' (refresh, Dry Shampoo sense) alongside 'ERFRISCHENDES VOLUMEN SPRAY' / 'Mehr Volumen in 3 Sekunden' => class refresh, even with volume-first name; 'Big Hair Day' is a slogan (no job)",
+        "4.3 3.2 => dry_shampoo (volume direction)",
+        "4.6 registry row L'OREAL PARiS ELVITAL 'BIG HAIR DAY - ERFRISCHENDES VOLUMEN SPRAY' (R8-Q1) => dry_shampoo: same",
+        "4.7 emission: route + markers only"
+      ],
+      "subtype": null,
+      "result_mechanisms": null,
+      "hold_route": null,
+      "weight": null,
+      "alcohol_note": null,
+      "buildup_note": null,
+      "ingredient_flags": null,
+      "provides_heat_protection": null,
+      "application_moment": null,
+      "target_zone": null,
+      "heat_activated": null,
+      "hold_level": null,
+      "hold_basis": null,
+      "flexibility": null,
+      "finish": null,
+      "primary_job": null,
+      "secondary_jobs": null,
+      "d8b_flags": [],
+      "neutral_fact": null,
+      "review_triggers": [
+        "tail_marker_unresolved"
+      ],
+      "confidence_internal": "high",
+      "notes": "promise_tie: refresh_plus_volume_texture. Non-aqueous (Dimethyl Ether r1; Aqua r24). T_S unresolved moves no route (formula never decides the Dry Shampoo boundary). Styling values not emitted."
+    },
+    {
+      "id": "sty-8648adfa69",
+      "identity_status": "verified",
+      "tail_markers": {
+        "T_S": {
+          "inci": "Fragrance",
+          "rank": 9,
+          "status": "plausible",
+          "alt": null
+        },
+        "T_LI": {
+          "inci": null,
+          "rank": null,
+          "status": "none_visible"
+        }
+      },
+      "promise_class": "refresh",
+      "route": "dry_shampoo",
+      "reason_code": "pair_rule_3.2_refresh_tie_precedence",
+      "rule_path": [
+        "4.1 gate met (C2 name and lines; C2 verbatim directions; complete C2 INCI, verified)",
+        "4.2: name 'EIMI Volume Dry Me (Trockenshampoo)' names volume + dry shampoo (EIMI is a brand line); C2 '... Trockenshampoo ... erfrischt Ihr Haar und absorbiert Oel' => refresh + volume/texture tie => class refresh",
+        "4.3 3.2 => dry_shampoo",
+        "4.7 emission: route + markers only"
+      ],
+      "subtype": null,
+      "result_mechanisms": null,
+      "hold_route": null,
+      "weight": null,
+      "alcohol_note": null,
+      "buildup_note": null,
+      "ingredient_flags": null,
+      "provides_heat_protection": null,
+      "application_moment": null,
+      "target_zone": null,
+      "heat_activated": null,
+      "hold_level": null,
+      "hold_basis": null,
+      "flexibility": null,
+      "finish": null,
+      "primary_job": null,
+      "secondary_jobs": null,
+      "d8b_flags": [],
+      "neutral_fact": null,
+      "review_triggers": [],
+      "confidence_internal": "high",
+      "notes": "Non-aqueous (Alcohol Denat. r1, propellants r2-r4; Water r6 below a leading propellant/carrier). 'Haltegrad: 1' is captured but not used (non-styling route). Styling values not emitted."
+    },
+    {
+      "id": "sty-91b4864fd7",
+      "identity_status": "verified",
+      "tail_markers": {
+        "T_S": {
+          "inci": "PHENOXYETHANOL",
+          "rank": 6,
+          "status": "plausible",
+          "alt": null
+        },
+        "T_LI": {
+          "inci": "PHENOXYETHANOL",
+          "rank": 6,
+          "status": "plausible"
+        }
+      },
+      "promise_class": "styling_result",
+      "route": "provisional_boundary",
+      "reason_code": "pending_leave_in_addendum",
+      "rule_path": [
+        "4.1 gate met (C2 name and lines; C2 verbatim directions; complete C2 INCI, verified)",
+        "4.2 step 1: name 'Volumizing Curl Spray': Volumizing (volume) + Curl (curl job word; refresh for a curl reviver) => two jobs => name decides nothing",
+        "4.2 step 3: first C2 line, first job phrase 'erfrischt deine Locken' => curl revival = refresh job (styling_result)",
+        "no C1/C2 care job ('pflegenden Inhaltsstoffen' is an ingredient call-out) and no explicit curl-definition promise => not mixed",
+        "li_function yes (curl support: revival); aqueous (Aqua r1)",
+        "3.4 (i) no fixative => D7 no; (i') no",
+        "3.4 (iii) LI G0 (no fixative, aqueous curl-support spray) => in_category => D6",
+        "D6 limb 1: no FX above T_LI; limb 2: no real care (above T_LI r6 only salt, EM-1 polyglyceryl esters, glycerin; no cationic down to yardstick Lactic Acid r13; rice protein never counts); limb 3: C2 styling-look promise => D6 fires => styling",
+        "4.5 D6 route => held: provisional_boundary (pending_leave_in_addendum), lean styling refresher",
+        "5: job refresh => refresher"
+      ],
+      "subtype": "refresher",
+      "result_mechanisms": [
+        {
+          "value": "salt",
+          "members": [
+            {
+              "inci": "MAGNESIUM SULFATE",
+              "rank": 2
+            }
+          ]
+        }
+      ],
+      "hold_route": "absent",
+      "weight": "light",
+      "alcohol_note": "does_not_fire",
+      "buildup_note": "not_fired",
+      "ingredient_flags": {
+        "silicones": false,
+        "oils": false,
+        "fragrance": true,
+        "salt": true,
+        "propellant": false,
+        "fixative_family": []
+      },
+      "provides_heat_protection": {
+        "value": false,
+        "trace": "not_claimed"
+      },
+      "application_moment": {
+        "primary": "damp_before_drying",
+        "also": [
+          "dry_finish"
+        ]
+      },
+      "target_zone": "all",
+      "heat_activated": "no",
+      "hold_level": null,
+      "hold_basis": "no C1/C2 hold statement => null (stored only; refresher)",
+      "flexibility": "unbekannt",
+      "finish": "unbekannt",
+      "primary_job": "refresh",
+      "secondary_jobs": [
+        "volume",
+        "texture"
+      ],
+      "d8b_flags": [],
+      "neutral_fact": null,
+      "review_triggers": [
+        "pending_leave_in_addendum"
+      ],
+      "confidence_internal": "moderate",
+      "notes": "Held (PH1-16/PH2-2): complete provisional profile, lean subtype refresher; not matchable until the Leave-in addendum. Moment: 'auf nassem oder trockenem Haar' equal alternatives => first-named (wet) primary; the spraying instruction is 'in das feucht oder nasse Haar', drying unspecified => damp_before_drying; dry use in also[]. Zone: 'beginnend an den Spitzen ... zum Ansatz' range => all. Secondaries: name word Volumizing => volume; C2 'voluminoesen Beachlook' => Beachlook read as the beachy texture look (R4-Q2) => texture; gate: salt mechanism satisfies both. Maris Sal r10 sits below T_S (salt already credited). Finish line 'Beachlook' has no finish word => unbekannt."
+    },
+    {
+      "id": "sty-9e36684be9",
+      "identity_status": "verified",
+      "tail_markers": {
+        "T_S": {
+          "inci": null,
+          "rank": null,
+          "status": "absent",
+          "alt": null
+        },
+        "T_LI": {
+          "inci": null,
+          "rank": null,
+          "status": "none_visible"
+        }
+      },
+      "promise_class": "styling_result",
+      "route": "styling",
+      "reason_code": "pair_rule_3.5_non_aqueous",
+      "rule_path": [
+        "4.1 gate met (C2 house-brand name and lines; C2 house-brand verbatim directions; complete INCI, verified)",
+        "4.2 step 1: name 'Styling Spray Volumenpuder' (Pure Styling = line name; Spray = form): Volumenpuder names one job => volume (R8-Q2)",
+        "class styling_result, li_function no",
+        "non-aqueous (no water declared) => 3.5 => styling, not held",
+        "5: job volume; powder dispensed as an aerosol spray => texture_spray (RG4-13)"
+      ],
+      "subtype": "texture_spray",
+      "result_mechanisms": [
+        {
+          "value": "particulate",
+          "members": [
+            {
+              "inci": "Aluminum starch octenylsuccinate",
+              "rank": 5
+            },
+            {
+              "inci": "Corn starch modified",
+              "rank": 6
+            },
+            {
+              "inci": "Silica",
+              "rank": 7
+            }
+          ]
+        }
+      ],
+      "hold_route": "absent",
+      "weight": "light",
+      "alcohol_note": "does_not_fire",
+      "buildup_note": "not_fired",
+      "ingredient_flags": {
+        "silicones": false,
+        "oils": false,
+        "fragrance": false,
+        "salt": false,
+        "propellant": true,
+        "fixative_family": []
+      },
+      "provides_heat_protection": {
+        "value": false,
+        "trace": "not_claimed"
+      },
+      "application_moment": {
+        "primary": "dry_restyle",
+        "also": []
+      },
+      "target_zone": "roots",
+      "heat_activated": "no",
+      "hold_level": 1,
+      "hold_basis": "C2_house_brand dm attribute 'Halt: leichter Halt' => leicht => 1 (§7.4, PH2-7; stored only, texture_spray)",
+      "flexibility": "unbekannt",
+      "finish": "unbekannt",
+      "primary_job": "volume",
+      "secondary_jobs": [
+        "hold_fix"
+      ],
+      "d8b_flags": [],
+      "neutral_fact": null,
+      "review_triggers": [
+        "tail_marker_absent",
+        "house_brand_ownership"
+      ],
+      "confidence_internal": "moderate",
+      "notes": "T_S absent (no fragrance, preservative, allergen, chelator) => whole list read above tail, confidence <= moderate. Alcohol denat. at r4 is outside the first 3 => no note. Zone: required 'Auf trockenen Haaransatz spruehen' => roots; lengths use is conditional ('Fuer mehr Textur ...') => not widened (R6-T (1)). Moment: 'wie gewohnt stylen' is a named shaping act => dry_restyle. Secondary hold_fix from the house-brand hold claim with a strength word (RG-12/R4-H (5)); gate passes (particulate). 'griffige Textur' is a typed 'other' line => no texture job."
+    },
+    {
+      "id": "sty-af4b2fc4ec",
+      "identity_status": "verified",
+      "tail_markers": {
+        "T_S": {
+          "inci": "Potassium Sorbate",
+          "rank": 6,
+          "status": "plausible",
+          "alt": null
+        },
+        "T_LI": {
+          "inci": "Potassium Sorbate",
+          "rank": 6,
+          "status": "plausible"
+        }
+      },
+      "promise_class": "styling_result",
+      "route": "styling",
+      "reason_code": "pair_rule_3.4(ii)_li_function_no",
+      "rule_path": [
+        "4.1 gate met (C2 house-brand name and lines; C2 house-brand verbatim directions; complete INCI, verified)",
+        "4.2 step 1: name 'Styling Powder': Powder names one job => volume (R8-Q2)",
+        "class styling_result, li_function no; aqueous (Aqua r3 above T_S, no propellant)",
+        "3.4 (ii) => styling directly, not held",
+        "5: job volume, dry, powder => hair_powder"
+      ],
+      "subtype": "hair_powder",
+      "result_mechanisms": [
+        {
+          "value": "particulate",
+          "members": [
+            {
+              "inci": "Silica Silylate",
+              "rank": 2
+            }
+          ]
+        },
+        {
+          "value": "natural_film",
+          "members": [
+            {
+              "inci": "Carrageenan",
+              "rank": 4
+            }
+          ]
+        }
+      ],
+      "hold_route": "absent",
+      "weight": "light",
+      "alcohol_note": "does_not_fire",
+      "buildup_note": "not_fired",
+      "ingredient_flags": {
+        "silicones": false,
+        "oils": false,
+        "fragrance": true,
+        "salt": false,
+        "propellant": false,
+        "fixative_family": [
+          "natural_film"
+        ]
+      },
+      "provides_heat_protection": {
+        "value": false,
+        "trace": "not_claimed"
+      },
+      "application_moment": {
+        "primary": "dry_restyle",
+        "also": []
+      },
+      "target_zone": "all",
+      "heat_activated": "no",
+      "hold_level": 3,
+      "hold_basis": "C2_house_brand dm attribute 'Halt: starker Halt' => stark => 3 (§7.4, PH2-7; stored only, hair_powder)",
+      "flexibility": "beweglich",
+      "finish": "matt",
+      "primary_job": "volume",
+      "secondary_jobs": [
+        "texture",
+        "hold_fix"
+      ],
+      "d8b_flags": [],
+      "neutral_fact": null,
+      "review_triggers": [
+        "natural_film_unsettled",
+        "house_brand_ownership"
+      ],
+      "confidence_internal": "moderate",
+      "notes": "Carrageenan r4 = NF-U in an aqueous formula => natural_film + natural_film_unsettled; fixative_family natural_film (RG4-27). Undecane r5 = VC-2, Glycerin r1 = HU-1. Zone: main required 'in das trockene Haar einarbeiten' (whole hair); roots step is conditional ('Fuer maximales Volumen') => all (R6-T (1)). Flex: 'flexibles Styling' => beweglich. Finish: 'Matt-Effekt', 'mattes Finish' => matt. Secondaries: C2 'Fuer Volumen & Textur' => texture; then 'nach Wunsch modelliert' (shaping) / house-brand 'starker Halt' => hold_fix; gate: particulate/natural_film pass. D8b: stark with hold mechanisms present => no flag."
+    },
+    {
+      "id": "sty-b9e3c5327c",
+      "identity_status": "verified",
+      "tail_markers": {
+        "T_S": {
+          "inci": "SODIUM BENZOATE",
+          "rank": 7,
+          "status": "plausible",
+          "alt": null
+        },
+        "T_LI": {
+          "inci": "SODIUM BENZOATE",
+          "rank": 7,
+          "status": "plausible"
+        }
+      },
+      "promise_class": "styling_result",
+      "route": "styling",
+      "reason_code": "pair_rule_3.4(ii)_li_function_no",
+      "rule_path": [
+        "4.1 gate met (C2 name and lines; C2 verbatim directions; complete C2 INCI, verified)",
+        "4.2 step 1: 'Powder Grip' = Powder (volume) + Grip (texture) => two-job name (R8-Q2) => name decides nothing",
+        "4.2 step 3: first C2 line 'HAARPUDER FUER MEHR GRIFFIGKEIT' => first job-bearing phrase 'mehr Griffigkeit' (product noun not job-bearing) => texture",
+        "class styling_result, li_function no; aqueous (Aqua r2)",
+        "3.4 (i) VP/VA r5 above T_S but no substantive conditioning and no curl/straightening sale => D7 no; (ii) li_function no => styling directly, not held",
+        "5: job texture leaves texture_spray / hair_powder open; form powder (shaker) => hair_powder"
+      ],
+      "subtype": "hair_powder",
+      "result_mechanisms": [
+        {
+          "value": "particulate",
+          "members": [
+            {
+              "inci": "SILICA SILYLATE",
+              "rank": 1
+            }
+          ]
+        },
+        {
+          "value": "fixative_film",
+          "members": [
+            {
+              "inci": "VP/VA COPOLYMER",
+              "rank": 5
+            }
+          ]
+        }
+      ],
+      "hold_route": "present",
+      "weight": "light",
+      "alcohol_note": "does_not_fire",
+      "buildup_note": "not_fired",
+      "ingredient_flags": {
+        "silicones": false,
+        "oils": false,
+        "fragrance": false,
+        "salt": false,
+        "propellant": false,
+        "fixative_family": [
+          "pvp_vp"
+        ]
+      },
+      "provides_heat_protection": {
+        "value": false,
+        "trace": "not_claimed"
+      },
+      "application_moment": {
+        "primary": "dry_restyle",
+        "also": []
+      },
+      "target_zone": "all",
+      "heat_activated": "no",
+      "hold_level": null,
+      "hold_basis": "no C1/C2 hold statement => null (stored only; hair_powder)",
+      "flexibility": "beweglich",
+      "finish": "matt",
+      "primary_job": "texture",
+      "secondary_jobs": [
+        "volume"
+      ],
+      "d8b_flags": [],
+      "neutral_fact": null,
+      "review_triggers": [],
+      "confidence_internal": "moderate",
+      "notes": "Alcohol Denat. r4 outside the first 3 => no note. No fragrance declared. Moment per RG2-9 (redken-powder-grip-03: streuen + kneten, no moisture state => dry_restyle, moderate). Zone: 'ueber das Haar streuen' => whole hair => all; step 4 optional. Finish: name 'Mattifying', 'mattierendes', 'ultra-matten Finish' => matt. Flex: C2 'fuehlt sich ... flexibler an' read as the flexibility word flexibel => beweglich (see handback ambiguity: it is phrased as a feel). Secondary: name job word Powder => volume (Grip = primary job). Neutral fact not shown (hair_powder not a hold-relevant subtype)."
+    },
+    {
+      "id": "sty-c72484e23e",
+      "identity_status": "verified",
+      "tail_markers": {
+        "T_S": {
+          "inci": "Sodium Benzoate",
+          "rank": 3,
+          "status": "plausible",
+          "alt": null
+        },
+        "T_LI": {
+          "inci": "Sodium Benzoate",
+          "rank": 3,
+          "status": "plausible"
+        }
+      },
+      "promise_class": "styling_result",
+      "route": "styling",
+      "reason_code": "pair_rule_3.4(ii)_li_function_no",
+      "rule_path": [
+        "4.1 gate met (C2 lines; C2 verbatim directions; complete C2 INCI, verified)",
+        "4.2 step 1: 'OSiS Dust It' (OSiS = brand line) names no job => step 3",
+        "4.2 step 3: first C2 line '... Volumenpuder fuer unglaubliches Volumen, [] Halt und intensive Griffigkeit' => first job phrase volume",
+        "class styling_result, li_function no; aqueous (Aqua r1)",
+        "3.4 (ii) => styling directly, not held",
+        "5: job volume, dry, powder => hair_powder"
+      ],
+      "subtype": "hair_powder",
+      "result_mechanisms": [
+        {
+          "value": "particulate",
+          "members": [
+            {
+              "inci": "Silica Silylate",
+              "rank": 2
+            }
+          ]
+        }
+      ],
+      "hold_route": "absent",
+      "weight": "light",
+      "alcohol_note": "does_not_fire",
+      "buildup_note": "not_fired",
+      "ingredient_flags": {
+        "silicones": false,
+        "oils": false,
+        "fragrance": false,
+        "salt": false,
+        "propellant": false,
+        "fixative_family": []
+      },
+      "provides_heat_protection": {
+        "value": false,
+        "trace": "not_claimed"
+      },
+      "application_moment": {
+        "primary": "dry_restyle",
+        "also": []
+      },
+      "target_zone": "all",
+      "heat_activated": "no",
+      "hold_level": 3,
+      "hold_basis": "C2 'starken Halt' => stark => 3 (§7.4; stored only, hair_powder)",
+      "flexibility": "unbekannt",
+      "finish": "matt",
+      "primary_job": "volume",
+      "secondary_jobs": [
+        "hold_fix",
+        "texture"
+      ],
+      "d8b_flags": [],
+      "neutral_fact": null,
+      "review_triggers": [],
+      "confidence_internal": "high",
+      "notes": "Moment dry_restyle (RG3-7, osis-dust-it example); zone all (RG3-20, 'auf den Haaransatz und die Laengen'). Finish 'mattierendes Volumenpuder' => matt. Secondaries in text order: 'starken Halt' => hold_fix, 'intensive Griffigkeit' => texture; gate: particulate passes both. No fragrance declared. D8b: stark with particulate => no flag."
+    },
+    {
+      "id": "sty-f3f4819e95",
+      "identity_status": "verified",
+      "tail_markers": {
+        "T_S": {
+          "inci": "Sodium Benzoate",
+          "rank": 3,
+          "status": "plausible",
+          "alt": null
+        },
+        "T_LI": {
+          "inci": "Sodium Benzoate",
+          "rank": 3,
+          "status": "plausible"
+        }
+      },
+      "promise_class": "styling_result",
+      "route": "styling",
+      "reason_code": "pair_rule_3.4(ii)_li_function_no",
+      "rule_path": [
+        "4.1 gate met (C2 name + C2 line; C3 verbatim directions; complete C3 INCI, verified)",
+        "4.2 step 1: name 'Styling Puder Volumen Powderfull': Puder/Volumen/Powderfull all name volume => one job, volume",
+        "class styling_result, li_function no; aqueous (Aqua r1)",
+        "3.4 (ii) => styling directly, not held",
+        "5: job volume, dry, powder => hair_powder"
+      ],
+      "subtype": "hair_powder",
+      "result_mechanisms": [
+        {
+          "value": "particulate",
+          "members": [
+            {
+              "inci": "Silica Silylate",
+              "rank": 2
+            }
+          ]
+        }
+      ],
+      "hold_route": "absent",
+      "weight": "light",
+      "alcohol_note": "does_not_fire",
+      "buildup_note": "not_fired",
+      "ingredient_flags": {
+        "silicones": false,
+        "oils": false,
+        "fragrance": false,
+        "salt": false,
+        "propellant": false,
+        "fixative_family": []
+      },
+      "provides_heat_protection": {
+        "value": false,
+        "trace": "not_claimed"
+      },
+      "application_moment": {
+        "primary": "dry_restyle",
+        "also": []
+      },
+      "target_zone": "all",
+      "heat_activated": "no",
+      "hold_level": null,
+      "hold_basis": "C2 'natuerlichem Halt' is a look word, never strength (§7.4) => null (stored only; hair_powder)",
+      "flexibility": "unbekannt",
+      "finish": "unbekannt",
+      "primary_job": "volume",
+      "secondary_jobs": [],
+      "d8b_flags": [],
+      "neutral_fact": null,
+      "review_triggers": [],
+      "confidence_internal": "moderate",
+      "notes": "Powder rubbed in the palms and distributed in dry hair by hand => dry_restyle (RG3-7). 'vom Ansatz bis in die Spitzen' => all (RG2-10). 'natuerlichem Halt' is natuerlich + Halt, not Finish/Look/Glanz => no finish word; hold line without a strength word => no hold_fix secondary (S0 mask '[CLAIM] Halt' resolved by the claims packet to a look word). No fragrance declared. Directions C3 => moderate."
+    },
+    {
+      "id": "sty-f9cc6d6e83",
+      "identity_status": "verified",
+      "tail_markers": {
+        "T_S": {
+          "inci": "Potassium Sorbate",
+          "rank": 5,
+          "status": "plausible",
+          "alt": null
+        },
+        "T_LI": {
+          "inci": "Potassium Sorbate",
+          "rank": 5,
+          "status": "plausible"
+        }
+      },
+      "promise_class": "styling_result",
+      "route": "styling",
+      "reason_code": "pair_rule_3.4(ii)_li_function_no",
+      "rule_path": [
+        "4.1 gate met (C2 house-brand name and line; C2 house-brand verbatim directions; complete INCI, verified)",
+        "4.2 step 1: name 'Haarpuder Volumen' => one job, volume (R8-Q2)",
+        "class styling_result, li_function no; aqueous (Aqua r1)",
+        "3.4 (ii) => styling directly, not held",
+        "5: job volume, dry, powder => hair_powder"
+      ],
+      "subtype": "hair_powder",
+      "result_mechanisms": [
+        {
+          "value": "particulate",
+          "members": [
+            {
+              "inci": "Silica Silylate",
+              "rank": 2
+            }
+          ]
+        }
+      ],
+      "hold_route": "absent",
+      "weight": "light",
+      "alcohol_note": "does_not_fire",
+      "buildup_note": "not_fired",
+      "ingredient_flags": {
+        "silicones": false,
+        "oils": false,
+        "fragrance": true,
+        "salt": false,
+        "propellant": false,
+        "fixative_family": []
+      },
+      "provides_heat_protection": {
+        "value": false,
+        "trace": "not_claimed"
+      },
+      "application_moment": {
+        "primary": "dry_restyle",
+        "also": []
+      },
+      "target_zone": "all",
+      "heat_activated": "no",
+      "hold_level": 3,
+      "hold_basis": "C2_house_brand dm attribute 'Halt: starker Halt' => stark => 3 (§7.4, PH2-7; stored only, hair_powder)",
+      "flexibility": "unbekannt",
+      "finish": "matt",
+      "primary_job": "volume",
+      "secondary_jobs": [
+        "texture",
+        "hold_fix"
+      ],
+      "d8b_flags": [],
+      "neutral_fact": null,
+      "review_triggers": [
+        "house_brand_ownership",
+        "candidate_below_tail"
+      ],
+      "confidence_internal": "moderate",
+      "notes": "Carrageenan r7 sits below T_S Potassium Sorbate r5: not credited; crediting it would add natural_film (and fixative_family natural_film) => candidate_below_tail (Carrageenan r7, marker Potassium Sorbate r5). PEG-8 r3 = HU-1, Undecane r4 = VC-2. Citrus Aurantium Peel Oil is an essential oil (no oils flag). Zone: main required 'in das trockene Haar einarbeiten'; roots step conditional ('Fuer maximales Volumen') => all. Finish: house-brand 'ein mattes Finish' => matt. Secondaries: C2 'Puder fuer mehr Volumen & Textur' => texture; house-brand 'starker Halt' => hold_fix; gate passes (particulate). 'Frisuren zu fixieren' is a typed 'other' line only."
+    }
+  ]
+}
