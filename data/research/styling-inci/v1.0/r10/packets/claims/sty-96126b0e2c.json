@@ -1,0 +1,69 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r9amend",
+  "sample_id": "sty-96126b0e2c",
+  "brand": "Schwarzkopf Professional",
+  "confirmed_name": "OSiS Super Shield",
+  "confirmed_name_tier": "C2",
+  "format": "aerosol",
+  "product_type_word": "aerosol",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "OSiS Super Shield ist ein wahrer Allrounder, ein multifunktionales Schutzspray, das speziell für langes Haar formuliert wurde, um es vor Umweltbelastungen, Hitze und Feuchtigkeit zu schützen. Es bekämpft Frizz, während es das Haar entwirrt, und gibt stumpfem Haar einen dringend benötigten Glanzschub!",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf-professional.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "PERFEKT FÜR SMOOTH GLANZ ANTI LUFTFEUCHTIGKEIT",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf-professional.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "promise",
+      "text": "Wir sind der Meinung, dass umwerfendes Haar um jeden Preis geschützt werden sollte! Ein echter Allrounder: Dieses multifunktionale Schutzspray mit hydriertem Olivenöl bewahrt langes Haar vor Umweltbelastungen, Luftfeuchtigkeit und Hitze bis zu 230 °C.",
+      "tier": "C2",
+      "source_class": "manufacturer_pdf",
+      "source_host": "dm.henkel-dam.com",
+      "date": "2026-10-12",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Kein Halt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf-professional.com",
+      "date": "2026-10-12",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "Kein Halt"
+    },
+    {
+      "type": "finish",
+      "text": "Glanzschub",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "schwarzkopf-professional.com",
+      "date": "2026-10-12"
+    },
+    {
+      "type": "heat_protection",
+      "text": "Ein echter Allrounder: Dieses multifunktionale Schutzspray mit hydriertem Olivenöl bewahrt langes Haar vor Umweltbelastungen, Luftfeuchtigkeit und Hitze bis zu 230 °C.",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "dm.henkel-dam.com",
+      "date": "2026-10-12"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r9amend",
+  "sample_id": "sty-da76aee060",
+  "brand": "Kevin.Murphy",
+  "confirmed_name": "Powder.Puff Volume",
+  "confirmed_name_tier": "C2",
+  "format": "powder",
+  "product_type_word": "powder",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "Fixierprodukt mit langanhaltendem Halt. Sorgt mühelos für Fülle",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "kevinmurphy.com.au",
+      "date": "2026-10-11",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "Sanfter Halt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "kevinmurphy.com.au",
+      "date": "2026-10-11",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "Sanfter Halt"
+    },
+    {
+      "type": "flexibility",
+      "text": "sanft",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "kevinmurphy.com.au",
+      "date": "2026-10-11"
+    },
+    {
+      "type": "duration",
+      "text": "langanhaltendem Halt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "kevinmurphy.com.au",
+      "date": "2026-10-11"
+    }
+  ]
+}

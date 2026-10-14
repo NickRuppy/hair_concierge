@@ -1,0 +1,140 @@
+{
+  "packet": "fu",
+  "packet_version": "styling-inci-v0.5-r9amend",
+  "sample_id": "sty-9f34436d95",
+  "format": "pump_spray",
+  "inci": {
+    "inci_item_count": 29,
+    "tier": "C3",
+    "source_class": "retailer_page",
+    "date": "2026-10-11",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "Aqua/Water/Eau"
+      },
+      {
+        "rank": 2,
+        "inci": "Propylene Glycol"
+      },
+      {
+        "rank": 3,
+        "inci": "PEG-40 Hydrogenated Castor Oil"
+      },
+      {
+        "rank": 4,
+        "inci": "Glycerin"
+      },
+      {
+        "rank": 5,
+        "inci": "Alcohol Denat."
+      },
+      {
+        "rank": 6,
+        "inci": "Phenoxyethanol"
+      },
+      {
+        "rank": 7,
+        "inci": "Parfum/Fragrance"
+      },
+      {
+        "rank": 8,
+        "inci": "Caprylyl Glycol"
+      },
+      {
+        "rank": 9,
+        "inci": "PVP"
+      },
+      {
+        "rank": 10,
+        "inci": "Panthenol"
+      },
+      {
+        "rank": 11,
+        "inci": "AMP-Acrylates/Allyl Methacrylate Copolymer"
+      },
+      {
+        "rank": 12,
+        "inci": "Simmondsia Chinensis (Jojoba) Seed Oil"
+      },
+      {
+        "rank": 13,
+        "inci": "Polyquaternium-10"
+      },
+      {
+        "rank": 14,
+        "inci": "Linalool"
+      },
+      {
+        "rank": 15,
+        "inci": "Hexyl Cinnamal"
+      },
+      {
+        "rank": 16,
+        "inci": "Trisodium Ethylenediamine Disuccinate"
+      },
+      {
+        "rank": 17,
+        "inci": "Citric Acid"
+      },
+      {
+        "rank": 18,
+        "inci": "Limonene"
+      },
+      {
+        "rank": 19,
+        "inci": "Geraniol"
+      },
+      {
+        "rank": 20,
+        "inci": "Citronellol"
+      },
+      {
+        "rank": 21,
+        "inci": "Polyquaternium-72"
+      },
+      {
+        "rank": 22,
+        "inci": "Sodium Hydroxide"
+      },
+      {
+        "rank": 23,
+        "inci": "Cetearyl Nonanoate"
+      },
+      {
+        "rank": 24,
+        "inci": "Ethylhexyl Isononanoate"
+      },
+      {
+        "rank": 25,
+        "inci": "Triticum Vulgare (Wheat) Germ Oil"
+      },
+      {
+        "rank": 26,
+        "inci": "Triticum Vulgare (Wheat) Bran Extract"
+      },
+      {
+        "rank": 27,
+        "inci": "Linoleic Acid"
+      },
+      {
+        "rank": 28,
+        "inci": "Camellia Oleifera Seed Oil"
+      },
+      {
+        "rank": 29,
+        "inci": "Tocopherol"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Auf feuchtes oder trockenes Haar aufsprühen. Kann jederzeit im Laufe des Tages erneut angewendet werden, um die Locken zu reaktivieren.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "wella.com",
+    "date": "2026-10-12",
+    "masked_with": "[CLAIM]"
+  }
+}

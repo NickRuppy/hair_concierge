@@ -1,0 +1,67 @@
+{
+  "packet": "claims",
+  "packet_version": "styling-inci-v0.5-r9amend",
+  "sample_id": "sty-9334ee1e4f",
+  "brand": "L'Oréal Men Expert",
+  "confirmed_name": "Barber Club Styling Pomade Bart & Haar mit ätherischem Zedernholzöl",
+  "confirmed_name_tier": "C2",
+  "format": "pomade",
+  "product_type_word": "pomade",
+  "scale_info": null,
+  "claims": [
+    {
+      "type": "promise",
+      "text": "speziell entwickelt für das optimale Styling von Bart und Haar",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "loreal-paris.de",
+      "date": "2026-10-09",
+      "position": "unknown"
+    },
+    {
+      "type": "hold",
+      "text": "perfekten Halt",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "loreal-paris.de",
+      "date": "2026-10-09",
+      "number": null,
+      "scale_as_written": null,
+      "scale_max": null,
+      "scale_max_stated": false,
+      "words": "perfekten Halt"
+    },
+    {
+      "type": "flexibility",
+      "text": "leicht",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "loreal-paris.de",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "flexibility",
+      "text": "nicht klebend",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "loreal-paris.de",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "finish",
+      "text": "verleiht sie dem Haar natürlichen Glanz",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "loreal-paris.de",
+      "date": "2026-10-09"
+    },
+    {
+      "type": "duration",
+      "text": "langanhaltende Bartkontrolle",
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "source_host": "loreal-paris.de",
+      "date": "2026-10-09"
+    }
+  ]
+}

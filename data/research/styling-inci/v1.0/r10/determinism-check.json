@@ -1,0 +1,15 @@
+{
+  "round": "r10",
+  "verified_on": "2026-10-14",
+  "algorithm": "sha256",
+  "runs": 2,
+  "generated_artifact_count_including_manifest": 304,
+  "all_generated_artifact_hashes_identical": true,
+  "manifest_sha256_first": "fbf592147e875365ebf22fbf294660db6bad191551f5185d676ac8f2a4ca9811",
+  "manifest_sha256_second": "fbf592147e875365ebf22fbf294660db6bad191551f5185d676ac8f2a4ca9811",
+  "all_manifest_artifacts_verified": true,
+  "all_inputs_verified": true,
+  "cohort_records": 100,
+  "leak_hits": 0,
+  "prior_id_overlap": 0
+}

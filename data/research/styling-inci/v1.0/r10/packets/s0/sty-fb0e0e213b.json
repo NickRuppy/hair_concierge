@@ -1,0 +1,108 @@
+{
+  "packet": "s0",
+  "packet_version": "styling-inci-v0.5-r9amend",
+  "sample_id": "sty-fb0e0e213b",
+  "product": {
+    "confirmed_name": "Root Boost",
+    "confirmed_name_redacted": false,
+    "confirmed_name_tier": "C2",
+    "brand": "Moroccanoil",
+    "format": "aerosol"
+  },
+  "identity": {
+    "identity_status": "verified",
+    "inci_flags": []
+  },
+  "inci": {
+    "inci_item_count": 16,
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "date": "2026-10-12",
+    "items": [
+      {
+        "rank": 1,
+        "inci": "WATER/AQUA"
+      },
+      {
+        "rank": 2,
+        "inci": "DIMETHYL ETHER"
+      },
+      {
+        "rank": 3,
+        "inci": "VP/VA COPOLYMER"
+      },
+      {
+        "rank": 4,
+        "inci": "PVP"
+      },
+      {
+        "rank": 5,
+        "inci": "ARGANIA SPINOSA KERNEL OIL"
+      },
+      {
+        "rank": 6,
+        "inci": "FRAGRANCE"
+      },
+      {
+        "rank": 7,
+        "inci": "CARBOMER"
+      },
+      {
+        "rank": 8,
+        "inci": "PEG-45 KERNEL GLYCERIDES"
+      },
+      {
+        "rank": 9,
+        "inci": "PPG-5-CETETH-20"
+      },
+      {
+        "rank": 10,
+        "inci": "AMINOMETHYL PROPANOL"
+      },
+      {
+        "rank": 11,
+        "inci": "TETRASODIUM EDTA"
+      },
+      {
+        "rank": 12,
+        "inci": "POLYQUATERNIUM-7"
+      },
+      {
+        "rank": 13,
+        "inci": "POLYSORBATE 20"
+      },
+      {
+        "rank": 14,
+        "inci": "BENZOPHENONE-4"
+      },
+      {
+        "rank": 15,
+        "inci": "PHENOXYETHANOL"
+      },
+      {
+        "rank": 16,
+        "inci": "POTASSIUM SORBATE"
+      }
+    ]
+  },
+  "directions_status": "verbatim",
+  "directions": {
+    "directions_verbatim": true,
+    "text": "Flasche gut Schütteln. Moroccanoil® Root Boost großzügig auf die Haaransätze des handtuchtrockenen Haares sprühen. Haare scheitelweise mit einer Rundbürste föhnen und diese von der Kopfhaut wegführen.\nTIPP: Moroccanoil® Volumenschaum für zusätzliche Fülle, Bewegung und Halt vor dem Föhnen mit Moroccanoil® Root Boost kombinieren.",
+    "tier": "C2",
+    "source_class": "manufacturer_page",
+    "source_host": "de.moroccanoil.com",
+    "date": "2026-10-12"
+  },
+  "promise_claims_c1_c2": [
+    {
+      "text": "Großes Volumen dank Fülle vom Ansatz an: Vor dem Föhnstyling sorgt Moroccanoil® Root Boost für eine starke Textur an den Haaransätzen und erzeugt so mühelos großes Volumen. Angereichert mit antioxidantienreichem Arganöl, verleiht dieser Ansatz-Booster normalem bis feinem Haar lang anhaltende Textur, Fülle und Bewegung. Unsere hochwirksame Formel kontrolliert statische Aufladung und sorgt für ein [CLAIM] aussehendes Finish.",
+      "redacted": true,
+      "tier": "C2",
+      "source_class": "manufacturer_page",
+      "date": "2026-10-12",
+      "position": "unknown"
+    }
+  ],
+  "heat_protection_claims_c1_c2": []
+}
